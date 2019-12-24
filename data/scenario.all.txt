@@ -1,0 +1,31 @@
+button1 = 1
+buttonSet 2 1
+buttonSet 3 1
+pwmSet 2 1024
+end
+button1 = 0
+buttonSet 2 0
+buttonSet 3 0
+pwmSet 2 0
+end
+analog > value1
+buttonSet 4 1
+end
+button5 = 1
+timerStart 1 value2 sec
+end
+button5 = 0
+timerStart 2 value2 sec
+end
+timer1 = 0
+buttonSet 6 1
+end
+timer2 = 0
+buttonSet 6 0
+end
+switch1 = 1
+textSet 1 закрыто-time
+end
+switch1 = 0
+textSet 1 открыто-time
+end

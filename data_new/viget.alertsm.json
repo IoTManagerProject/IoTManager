@@ -1,0 +1,12 @@
+{
+      "id" : "",
+     "page" : "",
+     "widget" : "anydata",
+     "class1" : "item col-xs-12 text-center",
+     "class2": "ballanced",
+     "style2": "font-size:20px;float:left;font-weight:bold;",
+      "class3":"ballanced",
+      "style3": "font-size:17px;float:right;",
+     "descr" : "",
+     "topic" : ""
+   }

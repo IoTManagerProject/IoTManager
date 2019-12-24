@@ -1,0 +1,144 @@
+{
+ "configs": [
+
+  "/config.live.json",
+  "/config.setup.json",
+  "/config.option.json"
+ ],
+ "class":"col-sm-offset-1 col-sm-10",
+ "content": [
+  {
+   "type": "h5",
+   "title": "{{SSDP}}",
+   "class":"alert-warning"
+  },
+{
+   "type": "h4",
+   "title": "Device ID: {{chipID}}"
+  },
+{
+   "type": "h4",
+   "title": "IP address: {{ip}}"
+  },
+ {
+   "type": "hr"
+  },
+{
+   "type": "h2",
+   "title": "Конфигурация устройства"
+  },
+ {
+   "type":"file",
+   "state":"config.all.txt",
+   "style":"width:100%;height:400px",
+   "title": "Сохранить",
+   "action": "/all_modules_init",
+   "class":"btn btn-block btn-success"
+  },
+ {
+   "type": "link",
+   "title": "Инструкция",
+   "action": "https://github.com/DmitryBorisenko33/esp8266_iot-manager_modules_firmware/wiki/Instruction",
+   "class": "btn btn-block btn-primary"
+  },
+{
+   "type": "h2",
+   "title": "Сценарии"
+  },
+{
+"type": "checkbox",
+"name":"scenario",
+"title": "Включить сценарии",
+"action": "/scenario?status=[[scenario]]",
+"state": "{{scenario}}"
+},
+{
+   "type": "h6",
+   "title": ""
+  },
+{
+   "type":"file",
+   "state":"scenario.all.txt",
+   "style":"width:100%;height:400px",
+   "title": "Сохранить и включить",
+   "action": "/scenario?status=1",
+   "class":"btn btn-block btn-success"
+  },
+{
+   "type": "h2",
+"title": "Данные модулей"
+ },
+{
+   "type": "hr"
+ },
+{
+   "type": "h4",
+   "title": "Модуль уровня воды (level)",
+"style": "width:100%"
+  },
+
+ {
+   "type": "h6",
+   "title": "Расстояние от датчика до воды: {{level_in}} см"
+  },
+{
+   "type": "h6",
+   "title": " Заполнение бака: {{level}} %"
+  },
+{
+   "type": "hr"
+ },
+{
+   "type": "h4",
+   "title": "Модуль аналогового входа (analog)",
+"style": "width:100%"
+  },
+{
+   "type": "h6",
+   "title": "Прочитанное значение: {{analog_in}}"
+  },
+{
+   "type": "h6",
+   "title": "Преобразованное значение: {{analog}}"
+  },
+ {
+   "type": "hr"
+ },
+{
+   "type": "h4",
+   "title": "Модуль температурного датчика (dallas)",
+"style": "width:100%"
+  },
+{
+   "type": "h6",
+   "title": "Текущее значение: {{dallas}} °C"
+  },
+{
+   "type": "hr"
+ },
+{
+   "type": "h4",
+   "title": "Модуль pH сенсора от df robot (ph)",
+"style": "width:100%"
+  },
+{
+   "type": "h6",
+   "title": "Текущее значение: {{ph}}"
+  },
+{
+   "type": "hr"
+ },
+ {
+   "type": "link",
+   "title": "Очистить все логи",
+   "action": "/cleanlog",
+   "class": "btn btn-block btn-success"
+  },
+  {
+   "type": "link",
+   "title": "Главная",
+   "action": "/page.htm?index",
+   "class": "btn btn-block btn-danger btn-sm"
+  }
+ ]
+}

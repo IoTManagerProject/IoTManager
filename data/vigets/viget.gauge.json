@@ -1,0 +1,18 @@
+{
+  "id"     : "",
+  "pageId": "",
+  "widget" : "gauge",
+  "topic"  : "",
+  "class1" : "item no-border no-padding text-center",
+  "descr"  : "",
+  "widgetConfig" : {
+    "type"   : "full",
+    "cap"    : "round",
+    "append" : "",
+    "size"   : 300,
+    "thick"  : 20,
+    "maximum": 1024,
+    "color"  : "#11c1f3",
+    "backgroundColor": "rgba(0,0,0, 0.2)"
+  }
+}

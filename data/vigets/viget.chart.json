@@ -1,0 +1,13 @@
+{
+  "id"     : "",
+  "pageId": "",
+  "widget" : "chart",
+  "topic"  : "",
+  "widgetConfig": {
+    
+      "maxCount": 200,
+      "type": "line",
+      "height": 200
+      
+  }
+}

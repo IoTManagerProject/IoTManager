@@ -1,0 +1,13 @@
+{ 
+      "id" : "1",
+     "page" : "",
+     "pageId":"",
+     "widget" : "anydata",
+     "class1" : "item rounded text-center no-padding",
+     "class2": "ballanced",
+      "style2": "",
+      "class3":"ballanced",
+      "style3": "font-size:10px;float:right;",
+     "descr" : "",
+     "topic" : ""
+   }

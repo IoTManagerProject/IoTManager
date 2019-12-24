@@ -1,0 +1,92 @@
+{
+ "configs": [
+"/config.setup.json"
+ ],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content": [
+  {
+   "type": "h5",
+   "title": "{{SSDP}}",
+   "class":"alert-warning"
+  },
+ {
+   "type": "h4",
+   "title": "Host name:"
+  },
+{
+   "type": "input",
+   "title": "",
+   "name":"1",
+   "state": "{{pushHost}}"
+  },
+{
+   "type": "h4",
+   "title": "Port:"
+  },
+{
+   "type": "input",
+   "title": "",
+   "name":"2",
+   "state": "{{pushPort}}"
+  },
+{
+   "type": "h4",
+   "title": "Fingerprint:"
+  },
+{
+   "type": "input",
+   "title": "",
+   "name":"3",
+   "state": "{{pushFingerprint}}"
+  },
+{
+   "type": "h4",
+   "title": "Access Token:"
+  },
+{
+   "type": "input",
+   "title": "",
+   "name":"4",
+   "state": "{{pushAccessToken}}"
+  },
+{
+  "type":"h3",
+  "name":"my-block",
+"style":"position:fixed;top:30%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+  "class":"hidden"
+ },
+{
+   "type": "button",
+  "title":"Сохранить и проверить соединение",
+    "action": "pushDate?pushHost=[[1]]&pushPort=[[2]]&pushFingerprint=[[3]]&pushAccessToken=[[4]]",
+    "response":"[[my-block]]",
+   "class": "btn btn-block btn-success",
+   "style": "width:100%;display:inline"
+  },
+{
+   "type": "hr"
+  },
+{
+"type": "checkbox",
+"name":"start-push",
+"title": "Отправлять push при включении устройства",
+"action": "startPush?status=[[start-push]]",
+"state": "{{startPush}}"
+},
+{
+   "type": "hr"
+  },
+ {
+   "type": "link",
+   "title": "Перезагрузить устройство",
+   "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
+   "class": "btn btn-block btn-warning"
+  },
+  {
+   "type": "link",
+   "title": "Главная",
+   "action": "/page.htm?index",
+   "class": "btn btn-block btn-danger btn-sm"
+  }
+ ]
+}

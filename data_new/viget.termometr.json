@@ -1,0 +1,15 @@
+   {
+      "id": "",
+      "page": "",
+      "pageId": "",
+      "widget": "steel",
+      "topic": "/DS",
+      "widgetConfig": {
+        "width": "auto",
+        "height": 150,
+        "type": "Linear",
+        "titleString": "Спальня",
+        "unitString": "°C",
+        "threshold": 30
+      }
+    }

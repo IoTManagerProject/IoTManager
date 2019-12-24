@@ -1,0 +1,16 @@
+    {
+      "id": "",
+      "pageId": "",
+      "descr": "",
+      "class1": "col-xs-3 text-center",
+      "page": "",
+      "widget": "steel",
+      "topic": "",
+      "widgetConfig": {
+        "width": 60,
+        "height": 60,
+        "type": "Led",
+        "blink": false,
+        "LedColor": "RED_LED"
+      }
+      }

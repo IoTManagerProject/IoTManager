@@ -1,0 +1,46 @@
+{
+ "configs": [
+"/config.setup.json"
+ ],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content": [
+  {
+   "type": "h5",
+   "title": "{{SSDP}}",
+   "class":"alert-warning"
+  },
+ {
+   "type": "h4",
+   "title": "Device id:"
+  },
+{
+   "type": "input",
+   "title": "",
+   "name":"1",
+   "state": "{{pushingbox_id}}"
+  },
+
+{
+   "type": "button",
+  "title":"Сохранить",
+    "action": "pushingboxDate?pushingbox_id=[[1]]",
+   "class": "btn btn-block btn-success",
+   "style": "width:100%;display:inline"
+  },
+{
+   "type": "hr"
+  },
+ {
+   "type": "link",
+   "title": "Перезагрузить устройство",
+   "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
+   "class": "btn btn-block btn-warning"
+  },
+  {
+   "type": "link",
+   "title": "Главная",
+   "action": "/page.htm?index",
+   "class": "btn btn-block btn-danger btn-sm"
+  }
+ ]
+}

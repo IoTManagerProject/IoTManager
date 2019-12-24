@@ -1,0 +1,57 @@
+{
+ "configs": [
+
+  "/config.live.json",
+  "/config.option.json",
+  "/config.setup.json",
+  "/lang/lang.ru.json",
+   "socket {{ip}}:81/"
+ 
+ ],
+ "title": "Главная",
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content": [
+  {
+   "type": "h5",
+   "title": "{{SSDP}}",
+   "class":"alert-warning"
+  },
+{
+   "type": "h4",
+   "title": "Module tank level:",
+  "style": "width:80%;float:left;"
+  },
+{
+   "type": "h4",
+   "title": "{{module_tank_level_s}}",
+  "style": "width:20%;float:right;"
+  },
+{
+   "type": "h4",
+   "title": "Module analog:",
+  "style": "width:80%;float:left;"
+  },
+{
+   "type": "h4",
+   "title": "{{module_analog_s}}",
+  "style": "width:20%;float:right;"
+  },
+{
+   "type": "h4",
+   "title": "Module ds18b20:",
+  "style": "width:80%;float:left;"
+  },
+{
+   "type": "h4",
+   "title": "{{module_ds18b20_s}}",
+  "style": "width:20%;float:right;"
+  },
+{
+   "type": "link",
+   "title": "Главная",
+   "action": "/page.htm?index",
+   "class": "btn btn-block btn-danger btn-sm",
+"style": "width:100%;float:right;"
+  }
+ ]
+}

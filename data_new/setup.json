@@ -1,0 +1,154 @@
+{
+ "configs": [ 
+   "/config.setup.json"
+ ],
+ "title": "Конфигурация",
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content": [
+  {
+   "type": "h5",
+   "title": "{{SSDP}}",
+   "class":"alert-warning"
+  },
+  {
+   "type": "link",
+   "title": "Главная",
+   "action": "/",
+   "class": "btn btn-block btn-danger"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "h2",
+   "title": "Имя устройства"
+  },
+  {
+   "type": "input",
+   "title": "Имя устройства",
+   "name":"ssdp",
+   "state": "{{SSDP}}",
+   "pattern": "[0-9a-zA-Zа-яА-Я.\\- ]{1,20}"
+  },
+  {
+   "type": "button",
+   "title": "Сохранить",
+   "action": "ssdp?ssdp=[[ssdp]]",
+   "class": "btn btn-block btn-success"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "h2",
+   "title": "Подключение к Wi-Fi роутеру"
+  },
+  {
+   "type": "input",
+   "title":"Сеть",
+   "name":"ssid",
+   "state": "{{ssid}}"
+  },
+  {
+   "type": "password",
+   "title": "Введите пароль",
+   "name":"ssidPass",
+   "state": "{{password}}",
+   "pattern": ".{8,20}"
+  },
+  {
+   "type": "button",
+   "title": "Сохранить",
+   "class": "btn btn-block btn-success",
+   "action": "ssid?ssid=[[ssid]]&password=[[ssidPass]]"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "h2",
+   "title": "Временная зона GMT"
+  },
+  {
+   "type": "input",
+   "title": "{{LangSpace}}",
+   "name":"timeZone",
+   "state": "{{timezone}}",
+   "pattern": "[0-9-]{1,3}"
+  },
+  {
+   "type": "button",
+   "module":"",
+   "title": "Сохранить",
+   "class": "btn btn-block btn-success",
+   "action": "timeZone?timeZone=[[timeZone]]"
+  },
+  {
+   "type": "link",
+   "title": "Автоопределение зоны",
+   "action": "javascript:set_time_zone(this);",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "time",
+   "name":"times1",
+   "title": "На устройстве сейчас",
+   "state":"{{time}}"
+  },
+  {
+   "type": "button",
+   "response":"[[&#116imes1]]",
+   "title": "Синхронизировать",
+   "class": "btn btn-block btn-primary",
+   "action": "Time"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "h2",
+   "title": "Точка доступа"
+  },
+  {
+   "type": "text",
+   "title": "После того как устройство подключается к роутеру, его Wi-Fi исчезнет.",
+   "class": "alert alert-warning",
+   "style": "width:45%;float:right;"
+  },
+  {
+   "type": "input",
+   "title": "Имя WI-FI сети",
+   "name":"ssidap",
+   "state": "{{ssidAP}}",
+   "style": "width:50%;display:inline",
+   "pattern": ".{1,20}"
+  },
+  {
+   "type": "password",
+   "title": "Пароль",
+   "name":"ssidApPass",
+   "state": "{{passwordAP}}",
+   "style": "width:50%;display:inline",
+   "pattern": ".{8,20}"
+  },
+  {
+   "type": "button",
+   "title": "Сохранить",
+   "action": "ssidap?ssidAP=[[ssidap]]&passwordAP=[[ssidApPass]]",
+   "class": "btn btn-block btn-success",
+   "style": "width:50%;display:inline"
+  },
+  {
+   "type": "hr"
+  }, 
+{
+   "type": "hr"
+  },
+  {
+   "type": "link",
+   "title": "Перезагрузить устройство",
+   "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
+   "class": "btn btn-block btn-warning"
+  }
+ ]
+}
