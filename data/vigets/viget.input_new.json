@@ -1,0 +1,10 @@
+{
+  "id"     : "5",
+  "widget" : "input",
+  "topic"  : "",
+  descr  : "",
+  size   : "small",
+  color  : "orange",
+  type   : "number",
+  status : 321
+}

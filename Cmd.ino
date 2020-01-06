@@ -21,6 +21,8 @@ void CMD_init() {
   sCmd.addCommand("valueUpSet",  valueUpSet);
   sCmd.addCommand("valueDownSet",  valueDownSet);
 
+  sCmd.addCommand("input_new",  input_new);
+
   sCmd.addCommand("text",  text);
   sCmd.addCommand("textSet",  textSet);
 
@@ -35,6 +37,17 @@ void CMD_init() {
   //!sCmd.addCommand("push",  pushControl);
 
   //handleCMD_ticker();
+}
+
+void input_new() {
+
+  String input_number = sCmd.next();
+  String viget_name = sCmd.next();
+  String page_name = sCmd.next();
+  String page_number = sCmd.next();
+
+
+  createViget (viget_name, page_name, page_number, "vigets/viget.input_new.json", "inputSet" + input_number);
 }
 
 
