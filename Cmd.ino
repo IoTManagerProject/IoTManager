@@ -1,4 +1,16 @@
 void CMD_init() {
+  
+  //======новые виджеты ver2.0=======//
+  sCmd.addCommand("inputNumber",  inputNumber);
+  sCmd.addCommand("inputText",  inputText);
+  sCmd.addCommand("inputTime",  inputTime);
+  sCmd.addCommand("inputDate",  inputDate);
+  sCmd.addCommand("inputDropdown",  inputDropdown);
+  
+  //======новые виджеты ver2.0=======//
+
+  
+  sCmd.addCommand("input_new",  input_new);
 
   sCmd.addCommand("button",  button);
   sCmd.addCommand("buttonSet",  buttonSet);
@@ -21,7 +33,7 @@ void CMD_init() {
   sCmd.addCommand("valueUpSet",  valueUpSet);
   sCmd.addCommand("valueDownSet",  valueDownSet);
 
-  sCmd.addCommand("input_new",  input_new);
+  
 
   sCmd.addCommand("text",  text);
   sCmd.addCommand("textSet",  textSet);
