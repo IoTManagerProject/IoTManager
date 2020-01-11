@@ -128,6 +128,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   if (str == "HELLO") outcoming_date();
   //if (str == "work") outcoming_date();     //Для приема получения work и подтверждения связи (для приложения mqtt IOT MQTT Panel)
+  
   //превращает название топика в команду, а значение в параметр команды
 
   if (topic_str.indexOf("control") > 0) {                        //IoTmanager/800324-1458415/RelaySet1/control 1   /IoTmanager/9139530-1458400/RelaySet1/control -> 1
@@ -222,7 +223,9 @@ void sendAllWigets() {
 
       psn_2 = all_vigets.indexOf("\r\n", psn_1);
       line = all_vigets.substring(psn_1, psn_2);
-      jsonWrite(line, "id", String(counter));
+      line.replace("\r\n", "");
+      //jsonWrite(line, "id", String(counter));
+      //jsonWrite(line, "pageId", String(counter));
       counter++;
       sendMQTT("config", line);
       Serial.println("[V] " + line);
