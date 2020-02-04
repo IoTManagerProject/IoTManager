@@ -127,7 +127,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println(" => " + str);
 
   if (str == "HELLO") outcoming_date();
-  //if (str == "work") outcoming_date();     //Для приема получения work и подтверждения связи (для приложения mqtt IOT MQTT Panel)
   
   //превращает название топика в команду, а значение в параметр команды
 

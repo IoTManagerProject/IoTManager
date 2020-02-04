@@ -3,3 +3,5 @@ inputNumber 2 Температура#минимальная moscow 30 2
 inputText 1 Введите#текст moscow привет 3
 inputTime 1 Введите#время moscow 12.00 4
 inputDate 1 Введите#дату novorossiysk 10-01-2020 5
+button 1 na Включить#все Освещение 0 6
+analog Аналоговый#вход,#% Датчики progress-line 1 1024 1 1024 6

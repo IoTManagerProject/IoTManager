@@ -105,3 +105,55 @@ Toggle:
           [icon]="item.icon"
           [iconOff]="item.iconOff"
           [disabled]="item.disabled"
+
+
+
+
+<range
+        *ngIf="item.widget === 'range'"
+        [descr]="item.descr"
+        [descrColor]="item.descrColor"
+        [descrIcon]="item.descrIcon"
+        [color]="item.color"
+        [icon]="item.icon"
+        [licon]="item.licon"
+        [lsize]="item.lsize"
+        [rsize]="item.rsize"
+        [ricon]="item.ricon"
+        [min]="item.min"
+        [max]="item.max"
+        [topic]="item.topic"
+        [disabled]="item.disabled"
+        [debounce]="item.debounce"
+        [before]="item.before"
+        [status]="item.status"
+        [after]="item.after"
+      ></range>
+      <progress-round
+        *ngIf="item.widget === 'progress-round'"
+        [descr]="item.descr"
+        [descrColor]="item.descrColor"
+        [color]="item.color"
+        [icon]="item.icon"
+        [max]="item.max"
+        [background]="item.background"
+        [stroke]="item.stroke"
+        [topic]="item.topic"
+        [disabled]="item.disabled"
+        [before]="item.before"
+        [status]="item.status"
+        []="item.after"
+      ></progress-round>
+      <progress-line
+        *ngIf="item.widget === 'progress-line'"
+        [descr]="item.descr"
+        [descrColor]="item.descrColor"
+        [color]="item.color"
+        [icon]="item.icon"
+        [max]="item.max"
+        [topic]="item.topic"
+        [disabled]="item.disabled"
+        [before]="item.before"
+        [status]="item.status"
+        [after]="item.after"
+      ></progress-line>

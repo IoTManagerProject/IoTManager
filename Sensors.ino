@@ -1,7 +1,6 @@
 //===============================================================================================================================
 //=========================================Модуль аналогового сенсора============================================================
 void analog() {
-
   static boolean flag = true;
   String viget_name = sCmd.next();
   String page_name = sCmd.next();
@@ -17,16 +16,13 @@ void analog() {
   jsonWrite(optionJson, "analog_start_out", analog_start_out);
   jsonWrite(optionJson, "analog_end_out", analog_end_out);
 
-  if (type == "text") createViget (viget_name, page_name, page_number, "vigets/viget.alertsm.json", "analog");
-  if (type == "gauge") createViget (viget_name, page_name, page_number, "vigets/viget.fillgauge.json", "analog");
-  if (type == "gauge2") createViget (viget_name, page_name, page_number, "vigets/viget.gauge.json", "analog", "maximum", analog_end_out);
-  if (type == "termometr") createViget (viget_name, page_name, page_number, "vigets/viget.termometr.json", "analog", "titleString", viget_name);
+  choose_viget_and_create(viget_name, page_name, page_number, type, "analog");
 
   ts.add(ANALOG_, analog_update_int, [&](void*) {
 
     static int analog_old;
 
-    int analog_in = analogRead(35);
+    int analog_in = analogRead(A0);
     jsonWrite(configJson, "analog_in", analog_in);
 
     int analog = map(analog_in,
@@ -38,13 +34,13 @@ void analog() {
     jsonWrite(configJson, "analog", analog);
 
     // if (analog_old != analog) {
-
     eventGen ("analog", "");
     sendSTATUS("analog", String(analog));
     if (client.connected()) {
       Serial.println("[i] sensor analog send date " + String(analog));
     }
     // }
+    
     analog_old = analog;
   }, nullptr, true);
 }
@@ -198,7 +194,6 @@ void dallas() {
     jsonWrite(configJson, "dallas", String(temp));
 
     //if (temp_old != temp) {
-
     eventGen ("dallas", "");
     sendSTATUS("dallas", String(temp));
     if (client.connected()) {
@@ -210,6 +205,13 @@ void dallas() {
   }, nullptr, true);
 }
 
+
+void choose_viget_and_create(String viget_name, String page_name, String page_number, String type, String topik) {
+  
+  if (type == "progress-line") createViget (viget_name, page_name, page_number, "vigets/viget.progressL.json", topik);
+  if (type == "progress-round") createViget (viget_name, page_name, page_number,"vigets/viget.progressR.json", topik);
+  
+}
 //======================================================================================================================
 //===============================================Логирование============================================================
 

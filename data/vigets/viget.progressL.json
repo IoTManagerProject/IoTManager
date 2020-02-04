@@ -1,0 +1,12 @@
+{
+  "widget" : "progress-line",
+  "icon"   : "sunny",
+  "descrColor" : "",
+  "color" : "",
+  "max" : "100",
+  "background" : "",
+  "stroke" : "10",
+  "disabled" : "",
+  "before" : "",
+  "after" : ""
+}

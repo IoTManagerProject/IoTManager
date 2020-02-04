@@ -54,10 +54,12 @@ void CMD_init() {
   sCmd.addCommand("inputDate",  inputDate);
   sCmd.addCommand("inputDateSet",  inputDateSet);
 
+  sCmd.addCommand("inputDate",  inputDate);
+
+
   //sCmd.addCommand("inputDropdown",  inputDropdown);
 
   //=================================//
-
 }
 
 void inputNumber() {
@@ -115,6 +117,7 @@ void inputTimeSet() {
   value.replace(".", ":");
   sendSTATUS("inputTimeSet" + number, value);
 }
+
 
 void inputDate() {
   String number = sCmd.next();
@@ -176,8 +179,6 @@ void button() {
       str = deleteBeforeDelimiter(str, ",");
     }
   }
-
-
   createViget (viget_name, page_name, page_number, "vigets/viget.toggle.json", "buttonSet" + button_number);
 }
 
@@ -491,7 +492,7 @@ void createViget (String viget_name, String  page_name, String page_number, Stri
   page_name.replace("#", " ");
 
   jsonWrite(viget, "page", page_name);
-  jsonWrite(viget, "id", page_number);//"pageId"
+  jsonWrite(viget, "order", page_number);
   jsonWrite(viget, "descr", viget_name);
   jsonWrite(viget, "topic", prex + "/" + topic);
   all_vigets += viget + "\r\n";

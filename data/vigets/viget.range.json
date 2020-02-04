@@ -1,0 +1,9 @@
+ {
+  "widget" : "range",
+  "descrColor": "red",
+  "after"  : "%",
+  "k"      : 0.0977,
+  "min"    : 10, 
+  "max"    : 90, 
+  "debounce": 500
+}
