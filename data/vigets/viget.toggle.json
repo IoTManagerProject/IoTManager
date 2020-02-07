@@ -1,6 +1,5 @@
 {
   "widget" : "toggle",
   "icon"   : "sunny",
-  "iconOff"   : "moon",
-  
+  "iconOff"   : "moon"
 }

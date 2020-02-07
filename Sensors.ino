@@ -2,6 +2,7 @@
 //=========================================Модуль аналогового сенсора============================================================
 void analog() {
   static boolean flag = true;
+  String pin = sCmd.next();
   String viget_name = sCmd.next();
   String page_name = sCmd.next();
   String type = sCmd.next();
@@ -22,7 +23,7 @@ void analog() {
 
     static int analog_old;
 
-    int analog_in = analogRead(A0);
+    int analog_in = analogRead(pin.toInt());
     jsonWrite(configJson, "analog_in", analog_in);
 
     int analog = map(analog_in,

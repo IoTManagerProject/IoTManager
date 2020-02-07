@@ -73,19 +73,6 @@ void WIFI_init() {
 }
 
 bool StartAPMode() {
-  /*
-    Serial.println("WiFi up AP");
-    IPAddress apIP(192, 168, 4, 1);
-    IPAddress staticGateway(192, 168, 4, 1);
-    IPAddress staticSubnet(255, 255, 255, 0);
-    WiFi.disconnect();
-    WiFi.mode(WIFI_AP);
-    WiFi.softAPConfig(apIP, staticGateway, staticSubnet);
-    String _ssidAP = jsonRead(configSetup, "ssidAP");
-    String _passwordAP = jsonRead(configSetup, "passwordAP");
-    WiFi.softAP(_ssidAP.c_str(), _passwordAP.c_str());
-    jsonWrite(configJson, "ip", apIP.toString());
-  */
   Serial.println("WiFi up AP");
   WiFi.disconnect();
 
@@ -114,11 +101,19 @@ bool StartAPMode() {
 
 boolean RouterFind(String ssid) {
   int n = WiFi.scanComplete ();
+  Serial.println("n = " + String(n));
   if (n == -2) {                       //Сканирование не было запущено, запускаем
+    Serial.println("[WIFI][i] scanning has not been triggered, starting scanning");
     WiFi.scanNetworks (true, false);   //async, show_hidden
     return false;
   }
   if (n == -1) {                       //Сканирование все еще выполняется
+    Serial.println("[WIFI][i] scanning still in progress");
+    return false;
+  }
+  if (n == 0) {                       //Сканирование все еще выполняется
+    Serial.println("[WIFI][i] no any wifi sations, starting scanning");
+    WiFi.scanNetworks (true, false);
     return false;
   }
   if (n > 0) {
@@ -131,58 +126,16 @@ boolean RouterFind(String ssid) {
         Serial.print(")");
         Serial.print(ssid);
         Serial.print("<=>");
-        Serial.println(WiFi.SSID(i));
+        if (i == n) {
+          Serial.print(WiFi.SSID(i));
+          Serial.println("; ");
+        } else {
+          Serial.print(WiFi.SSID(i));
+          Serial.print("; ");
+        }
       }
     }
     WiFi.scanDelete();
     return false;
   }
 }
-
-
-/*
-  boolean RouterFind(String ssid) {
-
-  int n = WiFi.scanComplete();
-
-  Serial.print("status=");
-  Serial.println(n);
-
-  if (n == -2) {                       //Сканирование не было запущено, запускаем
-    Serial.println("->enter to scanning function");
-    WiFi.mode(WIFI_AP);
-    WiFi.scanNetworks (true, false, false, 5000);   //async, show_hidden
-    Serial.println("->out of scanning function");
-    return false;
-
-  }
-  if (n == -1) {                       //Сканирование все еще выполняется
-    Serial.println("->scanning in progress");
-    return false;
-
-  }
-  if (n > 0) {                         //Найдено несколько сетей
-    for (int i = 0; i <= n; i++) {
-      if (WiFi.SSID(i) == ssid) {
-        Serial.println("router found");
-        WiFi.scanDelete();
-        return true;
-      } else {
-        Serial.print(i);
-        Serial.print(")");
-        Serial.print(ssid);
-        Serial.print("<=>");
-        Serial.println(WiFi.SSID(i));
-      }
-    }
-    WiFi.scanDelete();
-    Serial.println("->scanning deleted");
-    return false;
-  }
-  }
-
-  void wifi_reset() {
-  WiFi.mode(WIFI_STA);
-  WiFi.disconnect(true, true);
-  }
-*/

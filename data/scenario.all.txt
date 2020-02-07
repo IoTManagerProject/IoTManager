@@ -1,7 +1,16 @@
-inputNumber 1 Температура#максимальная moscow 60 1
-inputNumber 2 Температура#минимальная moscow 30 2
-inputText 1 Введите#текст moscow привет 3
-inputTime 1 Введите#время moscow 12.00 4
-inputDate 1 Введите#дату novorossiysk 10-01-2020 5
-button 1 na Включить#все Освещение 0 6
-analog Аналоговый#вход,#% Датчики progress-line 1 1024 1 1024 7
+button1 = 1
+buttonSet 2 1
+buttonSet 3 1
+pwmSet 2 1024
+end
+button1 = 0
+buttonSet 2 0
+buttonSet 3 0
+pwmSet 2 0
+end
+analog > digit1
+buttonSet 4 1
+end
+analog < digit1
+buttonSet 4 0
+end

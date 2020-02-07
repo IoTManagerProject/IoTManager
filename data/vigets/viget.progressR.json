@@ -7,5 +7,6 @@
   "color"  : "#45ccce",
   "background": "#777",
   "before" : "",
+  "semicircle" : "1",
   "after" : ""
 }

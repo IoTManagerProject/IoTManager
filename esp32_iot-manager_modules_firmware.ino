@@ -23,6 +23,7 @@ void setup() {
 #ifdef ESP8266
   chipID = String( ESP.getChipId() ) + "-" + String( ESP.getFlashChipId());
   jsonWrite(configSetup, "chipID", chipID);
+  Serial.setDebugOutput(0);
 #endif
 
   prex = prefix + "/" + chipID;

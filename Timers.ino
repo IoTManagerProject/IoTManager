@@ -48,7 +48,8 @@ void timerStart() {
   String period_of_time = sCmd.next();
   String type = sCmd.next();
 
-  if (period_of_time.indexOf("value") != -1) {
+  if (period_of_time.indexOf("digit") != -1) {
+    period_of_time = add_set(period_of_time);
     period_of_time = jsonRead(configJson, period_of_time);
   }
 

@@ -18,9 +18,8 @@ void CMD_init() {
 
   sCmd.addCommand("logging",  logging);
 
-  sCmd.addCommand("input",  input);
-  sCmd.addCommand("valueUpSet",  valueUpSet);
-  sCmd.addCommand("valueDownSet",  valueDownSet);
+  sCmd.addCommand("inputDigit",  inputDigit);
+  sCmd.addCommand("digitSet",  digitSet);
 
 
 
@@ -42,8 +41,7 @@ void CMD_init() {
 
   //======новые виджеты ver2.0=======//
 
-  sCmd.addCommand("inputNumber",  inputNumber);
-  sCmd.addCommand("inputNumberSet",  inputNumberSet);
+ 
 
   sCmd.addCommand("inputText",  inputText);
   sCmd.addCommand("inputTextSet",  inputTextSet);
@@ -62,23 +60,7 @@ void CMD_init() {
   //=================================//
 }
 
-void inputNumber() {
-  String number = sCmd.next();
-  String viget_name = sCmd.next();
-  viget_name.replace("#", " ");
-  String page_name = sCmd.next();
-  page_name.replace("#", " ");
-  String start_state = sCmd.next();
-  String page_number = sCmd.next();
-  jsonWrite(configJson, "inputNumberSet" + number, start_state);
-  createViget (viget_name, page_name, page_number, "vigets/viget.inputNumber.json", "inputNumberSet" + number);
-}
-void inputNumberSet() {
-  String number = sCmd.next();
-  String value = sCmd.next();
-  jsonWrite(configJson, "inputNumberSet" + number, value);
-  sendSTATUS("inputNumberSet" + number, value);
-}
+
 
 void inputText() {
   String number = sCmd.next();
@@ -301,63 +283,24 @@ void handleButton()  {
 
 //=====================================================================================================================================
 //=========================================Добавление окна ввода переменной============================================================
-void input() {
-
-  String name_ = sCmd.next();
-  String number = name_.substring(5);
-  String start_value = sCmd.next();
-  String step_ = sCmd.next();
+void inputDigit() {
   String value_name = sCmd.next();
+  String number = value_name.substring(5);
+  String viget_name = sCmd.next();
+  viget_name.replace("#", " ");
   String page_name = sCmd.next();
+  page_name.replace("#", " ");
+  String start_state = sCmd.next();
   String page_number = sCmd.next();
-
-  int psn1 = start_value.indexOf(".");                         //ищем позицию запятой
-  int digits = 0;
-  if (psn1 != -1) {                                            //если она есть
-    String last_part = deleteBeforeDelimiter(start_value, ".");
-    digits = last_part.length() + 1;
-  }
-
-  createViget ("", page_name, page_number, "vigets/viget.button.json", "valueDownSet" + number, "title", "-");
-  createViget (value_name, page_name, String(page_number.toInt() + 1), "vigets/viget.alertbg.json", name_);
-  createViget ("", page_name, String(page_number.toInt() + 2), "vigets/viget.button.json", "valueUpSet" + number , "title", "+");
-
-  //jsonWrite(valuesJson, name_, start_value);
-  //saveValues ();
-  sendSTATUS(name_, start_value);
-
-  jsonWrite(configJson, name_ + "step", step_);
-  jsonWrite(configJson, name_ + "digits", digits);
+  jsonWrite(configJson, "digitSet" + number, start_state);
+  createViget (viget_name, page_name, page_number, "vigets/viget.inputNum.json", "digitSet" + number);
 }
-
-void valueUpSet() {
+void digitSet() {
   String number = sCmd.next();
-  float val = jsonRead(configJson, "value" + number).toFloat();
-  float step_ = jsonRead(configJson, "value" + number + "step").toFloat();
-  int digits = jsonRead(configJson, "value" + number + "digits").toInt();
-  val = val + step_;
-  String val_str = String(val);
-  val_str = selectToMarkerPlus (val_str, ".", digits);
-  jsonWrite(configJson, "value" + number, val_str);
-  //jsonWrite(valuesJson, "value" + number, val_str);
-  //saveValues ();
-  sendSTATUS("value" + number, val_str);
+  String value = sCmd.next();
+  jsonWrite(configJson, "digitSet" + number, value);
+  sendSTATUS("digitSet" + number, value);
 }
-
-void valueDownSet() {
-  String number = sCmd.next();
-  float val = jsonRead(configJson, "value" + number).toFloat();
-  float step_ = jsonRead(configJson, "value" + number + "step").toFloat();
-  int digits = jsonRead(configJson, "value" + number + "digits").toInt();
-  val = val - step_;
-  String val_str = String(val);
-  val_str = selectToMarkerPlus (val_str, ".", digits);
-  jsonWrite(configJson, "value" + number, val_str);
-  //jsonWrite(valuesJson, "value" + number, val_str);
-  //saveValues ();
-  sendSTATUS("value" + number, val_str);
-}
-
 //=====================================================================================================================================
 //=========================================Добавление текстового виджета============================================================
 void text() {

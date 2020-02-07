@@ -3,7 +3,7 @@
   "descrColor": "red",
   "after"  : "%",
   "k"      : 0.0977,
-  "min"    : 10, 
-  "max"    : 90, 
+  "min"    : 0, 
+  "max"    : 100, 
   "debounce": 500
 }

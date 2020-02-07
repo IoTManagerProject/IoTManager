@@ -222,11 +222,12 @@ void sendAllWigets() {
 
       psn_2 = all_vigets.indexOf("\r\n", psn_1);
       line = all_vigets.substring(psn_1, psn_2);
+      line.replace("\n", "");
       line.replace("\r\n", "");
       //jsonWrite(line, "id", String(counter));
       //jsonWrite(line, "pageId", String(counter));
       counter++;
-      sendMQTT("config", line);
+      sendMQTT("config",line);
       Serial.println("[V] " + line);
       psn_1 = psn_2 + 1;
 
