@@ -21,8 +21,9 @@ timer1 = 0
 buttonSet 6 1
 end
 switch1 = 1
-textSet 1 закрыто
+textSet 1 закрыто-time
+push закрыто вход
 end
 switch1 = 0
-textSet 1 открыто
+textSet 1 открыто-time
 end
