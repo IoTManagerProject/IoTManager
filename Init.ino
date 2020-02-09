@@ -1,6 +1,6 @@
 void All_init() {
 
-  server.on("/all_modules_init", HTTP_GET, [](AsyncWebServerRequest * request) { 
+  server.on("/all_modules_init", HTTP_GET, [](AsyncWebServerRequest * request) {
     Device_init();
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
@@ -31,15 +31,17 @@ void All_init() {
 
 void Device_init() {
 
-  ts.remove(LEVEL);
+  //SENSORS-SECTION
   ts.remove(ANALOG_);
-  ts.remove(PH);
+  ts.remove(LEVEL);
   ts.remove(DALLAS);
-
+  ts.remove(DHTT);
+  ts.remove(DHTH);
+  //================
+  
   all_vigets = "";
   txtExecution("config.all.txt");
   //outcoming_date();
-  
 }
 //-------------------------------сценарии-----------------------------------------------------
 

@@ -1,9 +1,7 @@
 void CMD_init() {
-
-
+  
   sCmd.addCommand("button",  button);
   sCmd.addCommand("buttonSet",  buttonSet);
-
   sCmd.addCommand("pinSet",  pinSet);
 
   sCmd.addCommand("pwm",  pwm);
@@ -12,37 +10,31 @@ void CMD_init() {
   sCmd.addCommand("switch",  switch_);
 
   sCmd.addCommand("analog",  analog);
-  sCmd.addCommand("ph",  ph);
   sCmd.addCommand("level",  level);
   sCmd.addCommand("dallas",  dallas);
+  
+  sCmd.addCommand("dhtT",  dhtT);
+  sCmd.addCommand("dhtH",  dhtH);
 
   sCmd.addCommand("logging",  logging);
 
   sCmd.addCommand("inputDigit",  inputDigit);
   sCmd.addCommand("digitSet",  digitSet);
 
-
-
   sCmd.addCommand("text",  text);
   sCmd.addCommand("textSet",  textSet);
-
-  // sCmd.addCommand("time",  time);
-  // sCmd.addCommand("timeSet",  timeSet);
 
   sCmd.addCommand("timerStart",  timerStart);
   sCmd.addCommand("timerStop",  timerStop);
 
   sCmd.addCommand("mqtt",  mqttOrderSend);
   sCmd.addCommand("http",  httpOrderSend);
-  //!sCmd.addCommand("push",  pushControl);
+  sCmd.addCommand("push",  pushControl);
 
-  //handleCMD_ticker();
-
+  // sCmd.addCommand("time",  time);
+  // sCmd.addCommand("timeSet",  timeSet);
 
   //======новые виджеты ver2.0=======//
-
- 
-
   sCmd.addCommand("inputText",  inputText);
   sCmd.addCommand("inputTextSet",  inputTextSet);
 
@@ -54,72 +46,9 @@ void CMD_init() {
 
   sCmd.addCommand("inputDate",  inputDate);
 
-
   //sCmd.addCommand("inputDropdown",  inputDropdown);
-
   //=================================//
 }
-
-
-
-void inputText() {
-  String number = sCmd.next();
-  String viget_name = sCmd.next();
-  viget_name.replace("#", " ");
-  String page_name = sCmd.next();
-  page_name.replace("#", " ");
-  String start_state = sCmd.next();
-  String page_number = sCmd.next();
-  jsonWrite(configJson, "inputTextSet" + number, start_state);
-  createViget (viget_name, page_name, page_number, "vigets/viget.inputText.json", "inputTextSet" + number);
-}
-void inputTextSet() {
-  String number = sCmd.next();
-  String value = sCmd.next();
-  jsonWrite(configJson, "inputTextSet" + number, value);
-  sendSTATUS("inputTextSet" + number, value);
-}
-
-void inputTime() {
-  String number = sCmd.next();
-  String viget_name = sCmd.next();
-  viget_name.replace("#", " ");
-  String page_name = sCmd.next();
-  page_name.replace("#", " ");
-  String start_state = sCmd.next();
-  String page_number = sCmd.next();
-  jsonWrite(configJson, "inputTimeSet" + number, start_state);
-  createViget (viget_name, page_name, page_number, "vigets/viget.inputTime.json", "inputTimeSet" + number);
-}
-void inputTimeSet() {
-  String number = sCmd.next();
-  String value = sCmd.next();
-  value.replace(":", ".");
-  jsonWrite(configJson, "inputTimeSet" + number, value);
-  value.replace(".", ":");
-  sendSTATUS("inputTimeSet" + number, value);
-}
-
-
-void inputDate() {
-  String number = sCmd.next();
-  String viget_name = sCmd.next();
-  viget_name.replace("#", " ");
-  String page_name = sCmd.next();
-  page_name.replace("#", " ");
-  String start_state = sCmd.next();
-  String page_number = sCmd.next();
-  jsonWrite(configJson, "inputDateSet" + number, start_state);
-  createViget (viget_name, page_name, page_number, "vigets/viget.inputDate.json", "inputDateSet" + number);
-}
-void inputDateSet() {
-  String number = sCmd.next();
-  String value = sCmd.next();
-  jsonWrite(configJson, "inputDateSet" + number, value);
-  sendSTATUS("inputDateSet" + number, value);
-}
-
-
 
 
 
@@ -310,7 +239,7 @@ void text() {
   String page_name = sCmd.next();
   String page_number = sCmd.next();
 
-  createViget (viget_name, page_name, page_number, "vigets/viget.alertsm.json", "textSet" + number);
+  createViget (viget_name, page_name, page_number, "vigets/viget.anydata.json", "textSet" + number);
 }
 
 
@@ -331,6 +260,64 @@ void textSet() {
   sendSTATUS("textSet" + number, text);
 }
 
+
+//====================================================================================================================================================
+void inputText() {
+  String number = sCmd.next();
+  String viget_name = sCmd.next();
+  viget_name.replace("#", " ");
+  String page_name = sCmd.next();
+  page_name.replace("#", " ");
+  String start_state = sCmd.next();
+  String page_number = sCmd.next();
+  jsonWrite(configJson, "inputTextSet" + number, start_state);
+  createViget (viget_name, page_name, page_number, "vigets/viget.inputText.json", "inputTextSet" + number);
+}
+void inputTextSet() {
+  String number = sCmd.next();
+  String value = sCmd.next();
+  jsonWrite(configJson, "inputTextSet" + number, value);
+  sendSTATUS("inputTextSet" + number, value);
+}
+
+void inputTime() {
+  String number = sCmd.next();
+  String viget_name = sCmd.next();
+  viget_name.replace("#", " ");
+  String page_name = sCmd.next();
+  page_name.replace("#", " ");
+  String start_state = sCmd.next();
+  String page_number = sCmd.next();
+  jsonWrite(configJson, "inputTimeSet" + number, start_state);
+  createViget (viget_name, page_name, page_number, "vigets/viget.inputTime.json", "inputTimeSet" + number);
+}
+void inputTimeSet() {
+  String number = sCmd.next();
+  String value = sCmd.next();
+  value.replace(":", ".");
+  jsonWrite(configJson, "inputTimeSet" + number, value);
+  value.replace(".", ":");
+  sendSTATUS("inputTimeSet" + number, value);
+}
+
+
+void inputDate() {
+  String number = sCmd.next();
+  String viget_name = sCmd.next();
+  viget_name.replace("#", " ");
+  String page_name = sCmd.next();
+  page_name.replace("#", " ");
+  String start_state = sCmd.next();
+  String page_number = sCmd.next();
+  jsonWrite(configJson, "inputDateSet" + number, start_state);
+  createViget (viget_name, page_name, page_number, "vigets/viget.inputDate.json", "inputDateSet" + number);
+}
+void inputDateSet() {
+  String number = sCmd.next();
+  String value = sCmd.next();
+  jsonWrite(configJson, "inputDateSet" + number, value);
+  sendSTATUS("inputDateSet" + number, value);
+}
 //=================================================Глобальные команды удаленного управления===========================================================
 
 void mqttOrderSend() {
@@ -441,6 +428,8 @@ void createViget (String viget_name, String  page_name, String page_number, Stri
   all_vigets += viget + "\r\n";
   viget = "";
 }
+
+/*
 void createViget (String viget_name, String  page_name, String page_number, String file, String topic, String key, String value) {
 
   String viget;
@@ -489,7 +478,7 @@ void createViget (String viget_name, String  page_name, String page_number, Stri
   all_vigets += viget + "\r\n";
   viget = "";
 }
-
+*/
 String vidgetConfigWrite(String viget, String key, String value) {
 
   if (viget == "") return "";

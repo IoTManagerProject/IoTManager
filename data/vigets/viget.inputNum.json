@@ -1,6 +1,5 @@
 {
-  "widget" : "input",
-  "size"   : "small",
-  "color"  : "orange",
+  "widget" : "input", 
+  "color"  : "blue",
   "type"   : "number"
 }

@@ -1,6 +1,6 @@
 void Web_server_init() {
 
-//========================================OTA============================================
+  //========================================OTA============================================
 #ifdef OTA_enable
   //Send OTA events to the browser
   ArduinoOTA.onStart([]() {
@@ -28,14 +28,14 @@ void Web_server_init() {
 
   ArduinoOTA.begin();
 #endif
-//========================================MDNS============================================
+  //========================================MDNS============================================
 #ifdef MDNS_enable
   MDNS.addService("http", "tcp", 80);
 #endif
 
   //SPIFFS.begin();
-  
-//========================================WS============================================  
+
+  //========================================WS============================================
 #ifdef WS_enable
   ws.onEvent(onWsEvent);
   server.addHandler(&ws);
@@ -46,12 +46,12 @@ void Web_server_init() {
 
   server.addHandler(&events);
 #endif
-//====================================================================================== 
+  //======================================================================================
 
 #ifdef ESP32
-  server.addHandler(new SPIFFSEditor(SPIFFS, http_username, http_password));
+  server.addHandler(new SPIFFSEditor(SPIFFS, jsonRead(configSetup, "web_login").c_str(), jsonRead(configSetup, "web_pass").c_str()));
 #elif defined(ESP8266)
-  server.addHandler(new SPIFFSEditor(http_username, http_password));
+  server.addHandler(new SPIFFSEditor(jsonRead(configSetup, "web_login").c_str(), jsonRead(configSetup, "web_pass").c_str()));
 #endif
 
   server.on("/heap", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -64,7 +64,7 @@ void Web_server_init() {
   server.serveStatic("/", SPIFFS, "/favicon.ico").setCacheControl("max-age=31536000");
 
   server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.htm")
-  .setAuthentication(http_username, http_password);
+  .setAuthentication(jsonRead(configSetup, "web_login").c_str(), jsonRead(configSetup, "web_pass").c_str());
 
 
   server.onNotFound([](AsyncWebServerRequest * request) {
@@ -145,7 +145,7 @@ void Web_server_init() {
     request->send(200, "application/json", configSetup);
   });
 }
-//========================================WS========================================================================================= 
+//========================================WS=========================================================================================
 #ifdef WS_enable
 void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len) {
   if (type == WS_EVT_CONNECT) {

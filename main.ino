@@ -271,9 +271,11 @@ void getMemoryLoad(String text) {
   int memory_load = memory_used * 100 / all_memory;
   if (memory_load > 65) Serial.print("Attention!!! too match memory used!!!");
   Serial.print(text + " memory used:");
-  Serial.println(String(memory_load) + "%");
+  Serial.print(String(memory_load) + "%; ");
+  Serial.print("memory remain:");
+  Serial.println(String(memory_remain) + " k bytes");
   
 }
 
-//esp32 full memory = 362868
-//esp8266 full memory = 53312
+//esp32 full memory = 362868 k bytes
+//esp8266 full memory = 53312 k bytes

@@ -5,7 +5,6 @@ void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   Serial.println("--------------started----------------");
-
   //--------------------------------------------------------------
   SPIFFS.begin();
   configSetup = readFile("config.json", 4096);
@@ -47,25 +46,28 @@ void setup() {
   MQTT_init();
   Serial.println("[V] MQTT_init");
   //--------------------------------------------------------------
+  Push_init();
+  Serial.println("[V] Push_init");
+
 
   getMemoryLoad("[i] After loading");
 
 
-  ts.add(TEST, 1000, [&](void*) {
+  //  ts.add(TEST, 1000, [&](void*) {
 
-     //getMemoryLoad("[i] Periodic check");
-   
-  }, nullptr, true);
+  //getMemoryLoad("[i] Periodic check");
+
+  //  }, nullptr, true);
 
 }
 
 void loop() {
-  
-#ifdef OTA_enable  
-  ArduinoOTA.handle();
-#endif  
 
-#ifdef WS_enable 
+#ifdef OTA_enable
+  ArduinoOTA.handle();
+#endif
+
+#ifdef WS_enable
   ws.cleanupClients();
 #endif
 

@@ -35,7 +35,7 @@ AsyncEventSource events("/events");
 #include "time.h"
 #include <TickerScheduler.h>
 TickerScheduler ts(30);
-enum { ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, PH, DALLAS,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, PH_LOG, CMD , TIMER_COUNTDOWN, TIMERS, TEST};
+enum { ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, PH_LOG, CMD , TIMER_COUNTDOWN, TIMERS, TEST};
 
 //ssl//#include "dependencies/WiFiClientSecure/WiFiClientSecure.h" //using older WiFiClientSecure
 #include <PubSubClient.h>
@@ -58,9 +58,15 @@ GMedian medianFilter;
 #include <DallasTemperature.h>
 OneWire *oneWire;
 DallasTemperature sensors;
-
-
+//----------------------------------------------------------------
+#include <DHT.h> //https://github.com/markruys/arduino-DHT
+DHT dht;
+//----------------------------------------------------------------
+#include "Adafruit_Si7021.h" //https://github.com/adafruit/Adafruit_Si7021
+Adafruit_Si7021 sensor_Si7021 = Adafruit_Si7021();
 //-----------------------------------------------------------------
+
+
 //#define OTA_enable
 //-----------------------------------------------------------------
 //#define MDNS_enable
@@ -68,9 +74,7 @@ DallasTemperature sensors;
 //#define WS_enable
 //-----------------------------------------------------------------
 
-
-
-#define wifi_mqtt_reconnecting 60000
+#define wifi_mqtt_reconnecting 20000
 //-----------------------------------------------------------------
 #define analog_update_int 5000
 //-----------------------------------------------------------------
@@ -82,11 +86,12 @@ DallasTemperature sensors;
 #define tank_level_shooting_interval 500 //интервал выстрела датчика
 #define tank_level_times_to_send 20 //после скольки выстрелов делать отправку данных
 //-----------------------------------------------------------------
+#define dhtT_update_int 5000
+#define dhtH_update_int 5000
+//-----------------------------------------------------------------
 
 
 const char* hostName = "esp-async";
-const char* http_username = "admin";
-const char* http_password = "admin";
 
 String configSetup = "{}";
 String configJson = "{}";
@@ -96,7 +101,7 @@ String chipID = "";
 String prefix   = "/IoTmanager";
 String prex;
 String ids;
-//boolean busy;  
+//boolean busy;
 String all_vigets = "";
 String scenario;
 

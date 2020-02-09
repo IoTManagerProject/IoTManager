@@ -14,3 +14,15 @@ end
 analog < digit1
 buttonSet 4 0
 end
+button5 = 1
+timerStart 1 digit2 sec
+end
+timer1 = 0
+buttonSet 6 1
+end
+switch1 = 1
+textSet 1 закрыто
+end
+switch1 = 0
+textSet 1 открыто
+end

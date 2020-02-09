@@ -23,6 +23,26 @@ void WIFI_init() {
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
 
+  // --------------------Получаем логин и пароль для web со страницы
+  server.on("/web", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (request->hasArg("web_login")) {
+      jsonWrite(configSetup, "web_login", request->getParam("web_login")->value());
+    }
+    if (request->hasArg("web_pass")) {
+      jsonWrite(configSetup, "web_pass", request->getParam("web_pass")->value());
+    }
+    saveConfig();                 // Функция сохранения данных во Flash
+    //Web_server_init();
+    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+  });
+
+  server.on("/restart", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (request->hasArg("device")) {
+      if (request->getParam("device")->value() == "ok") ESP.restart();
+    }
+    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+  });
+
 
   // Попытка подключения к точке доступа
 
@@ -86,7 +106,7 @@ bool StartAPMode() {
   Serial.println(myIP);
 
   if (jsonReadtoInt(optionJson, "pass_status") != 1) {
-    ts.add(ROUTER_SEARCHING, 30 * 1000, [&](void*) {
+    ts.add(ROUTER_SEARCHING, 10 * 1000, [&](void*) {
       Serial.println("->try find router");
       if (RouterFind(jsonRead(configSetup, "ssid"))) {
         ts.remove(ROUTER_SEARCHING);
