@@ -26,7 +26,8 @@ void MQTT_init() {
     jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + stateMQTT());
     jsonWrite(tmp, "class", "pop-up");
 
-    request->send(200, "text/text", tmp); // отправляем ответ о выполнении
+    request->send(200, "text/text", "ok");
+    //request->send(200, "text/text", tmp); // отправляем ответ о выполнении
   });
 
 
@@ -310,7 +311,7 @@ String stateMQTT() {
 
   //SCENARIO ANALOG > 5 800324-1458415 rel1 0
   if (jsonRead(configSetup, "scenario") == "1") {
-    //String all_text = readFile("scenario.all.txt", 1024) + "\r\n";
+    //String all_text = readFile("firmware.scenario.txt", 1024) + "\r\n";
     String all_text = scenario + "\r\n";
     all_text.replace("\r\n", "\n");
     all_text.replace("\r", "\n");

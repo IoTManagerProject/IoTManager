@@ -22,7 +22,7 @@
 		{
 			"type": "link",
 			"title": "Конфигурация устройства",
-			"action": "/page.htm?config.all",
+			"action": "/page.htm?configuration",
 			"class": "btn btn-block btn-primary"
 		},
 		{
@@ -48,9 +48,15 @@
 		},
 		{
 			"type": "link",
-			"title": "Скачать приложение IoT Manager",
-			"action": "https://github.com/DmitryBorisenko33/esp8266_iot-manager_modules_firmware/raw/master/iot_manager/IoT%20Manager%201.5.5.apk",
-			"class": "btn btn-block btn-success"
+			"title": "Скачать приложение IoT Manager для android",
+			"action": "https://play.google.com/store/apps/details?id=ru.esp8266.iotmanager",
+			"class": "btn btn-block btn-warning"
+		},
+		{
+			"type": "link",
+			"title": "Скачать приложение IoT Manager для iphone",
+			"action": "https://apps.apple.com/ru/app/iot-manager/id1155934877",
+			"class": "btn btn-block btn-warning"
 		}
 	]
 }

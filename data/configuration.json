@@ -29,7 +29,7 @@
   },
  {
    "type":"file",
-   "state":"config.all.txt",
+   "state":"firmware.config.txt",
    "style":"width:100%;height:400px",
    "title": "Сохранить",
    "action": "/all_modules_init",
@@ -58,7 +58,7 @@
   },
 {
    "type":"file",
-   "state":"scenario.all.txt",
+   "state":"firmware.scenario.txt",
    "style":"width:100%;height:400px",
    "title": "Сохранить и включить",
    "action": "/scenario?status=1",

@@ -116,7 +116,6 @@ const char* ntpServer = "pool.ntp.org";
 const long  gmtOffset_sec = 3600;
 const int   daylightOffset_sec = 3600;
 
-const String scenarioFileNameS = "scenario.all.txt";
 const String ssdpS = "SSDP";
 String current_time;
 

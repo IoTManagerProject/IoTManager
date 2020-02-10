@@ -40,13 +40,13 @@ void Device_init() {
   //================
   
   all_vigets = "";
-  txtExecution("config.all.txt");
+  txtExecution("firmware.config.txt");
   //outcoming_date();
 }
 //-------------------------------сценарии-----------------------------------------------------
 
 void Scenario_init() {
   if (jsonRead(configSetup, "scenario") == "1") {
-    scenario = readFile(scenarioFileNameS, 2048);
+    scenario = readFile("firmware.scenario.txt", 2048);
   }
 }
