@@ -57,11 +57,17 @@
  },
 {
    "type": "button",
-  "title":"Сохранить и проверить соединение",
+  "title":"Сохранить",
     "action": "mqttSave?mqttServer=[[1]]&mqttPort=[[2]]&mqttUser=[[3]]&mqttPass=[[4]]",
     "response":"[[my-block]]",
    "class": "btn btn-block btn-success",
    "style": "width:100%;display:inline"
+  },
+  {
+   "type": "link",
+   "title": "Перезагрузить устройство",
+   "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
+   "class": "btn btn-block btn-warning"
   },
   {
    "type": "link",
