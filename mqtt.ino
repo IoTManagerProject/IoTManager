@@ -251,6 +251,9 @@ void sendAllData() {   //берет строку json и ключи превра
 
     String tmp = selectToMarker (current_config, ",");
     String topic =  selectToMarker (tmp, ":");
+    if (topic.indexOf("time") < 0) {
+      state.replace(".", ":");
+    }
     topic.replace("\"", "");
     String state =  selectToMarkerLast (tmp, ":");
     state.replace("\"", "");

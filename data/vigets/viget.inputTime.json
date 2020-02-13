@@ -1,6 +1,5 @@
 {
   "widget" : "input",
-  "size"   : "small",
-  "color"  : "orange",
+  "color"  : "blue",
   "type"   : "time"
 }

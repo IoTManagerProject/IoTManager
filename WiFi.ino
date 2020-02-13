@@ -85,8 +85,9 @@ void WIFI_init() {
     // о подключении и выводим адрес IP
     Serial.println("");
     Serial.println("[V] WiFi connected");
-    Serial.println("[V] IP address: ");
-    Serial.println(WiFi.localIP());
+    Serial.print("[V] IP address: ");
+    Serial.print(WiFi.localIP());
+    Serial.println("");
     jsonWrite(configJson, "ip", WiFi.localIP().toString());
 
   }

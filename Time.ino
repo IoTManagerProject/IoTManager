@@ -1,53 +1,49 @@
-#ifdef ESP8266
-
-#include <time.h>
 void Time_Init() {
-  server.on("/Time", HTTP_GET, [](AsyncWebServerRequest * request) {
-    //handle_Time();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
   server.on("/timeZone", HTTP_GET, [](AsyncWebServerRequest * request) {
-    //handle_time_zone();
+    if (request->hasArg("timezone")) {
+      jsonWrite(configSetup, "timezone", request->getParam("timezone")->value());
+    }
+    saveConfig();
+    reconfigTime();
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
-
-  timeSynch(jsonReadtoInt(configSetup, "timezone"));
+  reconfigTime();
 }
 
-
-void timeSynch(int zone) {
+void reconfigTime() {
   if (WiFi.status() == WL_CONNECTED) {
-    // Настройка соединения с NTP сервером
-    configTime(zone * 3600, 0, "pool.ntp.org", "ru.pool.ntp.org");
-    // int i = 0;
-    // Serial.println("\nWaiting for time");
-    // while (!time(nullptr) && i < 10) {
-    //   Serial.print(".");
-    //   i++;
-    //   delay(1000);
-    // }
-    Serial.println("");
-    Serial.println("ITime Ready!");
-    delay(1000);
-    Serial.println(GetTime());
-    Serial.println(GetDate());
-  }
-}
-/*// Установка параметров времянной зоны по запросу вида http://192.168.0.101/timeZone?timeZone=3
-void handle_time_zone() {
-  if (request->hasArg("timeZone")) {
-    jsonWrite(configSetup, "timeZone", request->getParam("timeZone")->value());
-  }
-  saveConfig();
-  //request->send(200, "text/text", "OK");
-}
 
-void handle_Time() {
-  timeSynch(jsonReadtoInt(configSetup, "timezone"));
-  //request->send(200, "text/text", "OK");
-}
-*/
+    configTime(jsonRead(configSetup, "timezone").toInt() * 3600, 0, ntpServer);
+
+    int i = 0;
+    Serial.println("[i]Awaiting for time ");
+
+#ifdef ESP32
+    struct tm timeinfo;
+    while (!getLocalTime(&timeinfo) && i <= 4) {
+      Serial.print(".");
+      i++;
+      delay(1000);
+    }
 #endif
+
+#ifdef ESP8266
+   // while (!time(nullptr) && i < 4) {
+   //   Serial.print(".");
+   //   i++;
+      delay(2000);
+   // }
+#endif
+
+    Serial.print("Time = ");
+    Serial.print(GetDataDigital());
+    Serial.print(" ");
+    Serial.println(GetTime());
+
+  } else {
+    Serial.println("[E] Get time impossible, no wifi connection");
+  }
+}
 
 // Получение текущего времени
 String GetTime() {

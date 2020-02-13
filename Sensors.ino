@@ -18,7 +18,8 @@ void analog() {
   ts.add(ANALOG_, analog_update_int, [&](void*) {
     static int analog_old;
 #ifdef ESP32
-    int analog_in = analogRead(pin.toInt());
+    //int pin_int = pin.toInt();
+    int analog_in;// = analogRead(pin_int);
 #endif
 #ifdef ESP8266
     int analog_in = analogRead(A0);

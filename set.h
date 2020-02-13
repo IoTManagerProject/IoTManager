@@ -20,6 +20,7 @@ HTTPClient http;
 #endif
 
 //==общие библиотеки и объекты==//
+#include "time.h"
 #ifdef OTA_enable
 #include <ArduinoOTA.h>
 #endif
@@ -35,7 +36,7 @@ AsyncEventSource events("/events");
 #include "time.h"
 #include <TickerScheduler.h>
 TickerScheduler ts(30);
-enum { ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, PH_LOG, CMD , TIMER_COUNTDOWN, TIMERS, TEST};
+enum { ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, PH_LOG, CMD , TIMER_COUNTDOWN, TIMERS, TIME, TEST};
 
 //ssl//#include "dependencies/WiFiClientSecure/WiFiClientSecure.h" //using older WiFiClientSecure
 #include <PubSubClient.h>
