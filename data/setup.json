@@ -103,17 +103,21 @@
    "state": "{{web_login}}",
    "pattern": ".{1,20}"
   },
+{
+   "type": "h2",
+   "title": "Временная зона"
+  },
   {
-   "type": "password",
-   "title": "Пароль",
-   "name":"web-pass",
-   "state": "{{web_pass}}",
+   "type": "input",
+   "title": "Логин",
+   "name":"time-zone",
+   "state": "{{timezone}}",
    "pattern": ".{1,20}"
   },
   {
    "type": "button",
    "title": "Сохранить",
-   "action": "web?web_login=[[web-login]]&web_pass=[[web-pass]]",
+   "action": "timeZone?timezone=[[time-zone]]",
    "class": "btn btn-block btn-success"
   },
 {
