@@ -11,14 +11,17 @@ end
 analog > digit1
 buttonSet 4 1
 end
-analog < digit1
+analog < digit2
 buttonSet 4 0
 end
 button5 = 1
-timerStart 1 digit2 sec
+timerStart 1 digit3 sec
 end
 timer1 = 0
 buttonSet 6 1
+end
+timenow = time1
+buttonSet 7 1
 end
 switch1 = 1
 textSet 1 закрыто-time

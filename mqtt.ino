@@ -250,12 +250,12 @@ void sendAllData() {   //берет строку json и ключи превра
   while (current_config.length() != 0) {
 
     String tmp = selectToMarker (current_config, ",");
-    String topic =  selectToMarker (tmp, ":");
+    String topic =  selectToMarker (tmp, ":"); 
+    topic.replace("\"", "");
+    String state =  selectToMarkerLast (tmp, ":");
     if (topic.indexOf("time") < 0) {
       state.replace(".", ":");
     }
-    topic.replace("\"", "");
-    String state =  selectToMarkerLast (tmp, ":");
     state.replace("\"", "");
     if (topic != ssdpS && topic != "lang" && topic != "ip" && topic.indexOf("_in") < 0) {
       sendSTATUS(topic, state);
