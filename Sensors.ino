@@ -124,16 +124,22 @@ void dallas() {
 //======================================================================================================================
 //=========================================Модуль сенсоров DHT==========================================================
 void dhtT() {
+  String sensor_type = sCmd.next();
   String pin = sCmd.next();
   String viget_name = sCmd.next();
   String page_name = sCmd.next();
   String type = sCmd.next();
   String page_number = sCmd.next();
-  dht.setup(pin.toInt());
+  if (sensor_type == "DHT11") {
+    dht.setup(pin.toInt(), DHTesp::DHT11);
+  }
+  if (sensor_type == "DHT22") {
+    dht.setup(pin.toInt(), DHTesp::DHT22);
+  }
   choose_viget_and_create(viget_name, page_name, page_number, type, "dhtT");
-  ts.add(DHTT, dhtT_update_int, [&](void*) {
-    int value = 0;
-    static int value_old;
+  ts.add(DHTT, dhtT_update_int + dht.getMinimumSamplingPeriod(), [&](void*) {
+    float value = 0;
+    static float value_old;
     value = dht.getTemperature();
     jsonWrite(configJson, "dhtT", String(value));
     //if (value_old != value) {
@@ -149,14 +155,20 @@ void dhtT() {
 
 
 void dhtH() {
+  String sensor_type = sCmd.next();
   String pin = sCmd.next();
   String viget_name = sCmd.next();
   String page_name = sCmd.next();
   String type = sCmd.next();
   String page_number = sCmd.next();
-  dht.setup(pin.toInt());
+  if (sensor_type == "DHT11") {
+    dht.setup(pin.toInt(), DHTesp::DHT11);
+  }
+  if (sensor_type == "DHT22") {
+    dht.setup(pin.toInt(), DHTesp::DHT22);
+  }
   choose_viget_and_create(viget_name, page_name, page_number, type, "dhtH");
-  ts.add(DHTH, dhtH_update_int, [&](void*) {
+  ts.add(DHTH, dhtH_update_int + dht.getMinimumSamplingPeriod(), [&](void*) {
     int value = 0;
     static int value_old;
     value = dht.getHumidity();
@@ -172,6 +184,107 @@ void dhtH() {
   }, nullptr, true);
 }
 
+void dhtPerception() {
+  String viget_name = sCmd.next();
+  String page_name = sCmd.next();
+  String page_number = sCmd.next();
+  choose_viget_and_create(viget_name, page_name, page_number, "any-data", "dhtPerception");
+  ts.add(DHTP, dhtPerception_update_int, [&](void*) {
+    byte value;
+    ComfortState cf;
+    value = dht.computePerception(jsonRead(configJson, "dhtT").toFloat(), jsonRead(configJson, "dhtH").toInt(), false);
+    String final_line = perception(value);  
+    jsonWrite(configJson, "dhtPerception", final_line);
+    eventGen ("dhtPerception", "");
+    sendSTATUS("dhtPerception", final_line);
+    if (client.connected()) {
+      Serial.println("[i] sensor dhtPerception send date " + final_line);
+    }
+  }, nullptr, true);
+}
+
+String perception(byte value) {
+  if (value == 0) return "Сухой воздух";
+  if (value == 1) return "Комфортно";
+  if (value == 2) return "Уютно";
+  if (value == 3) return "Хорошо";
+  if (value == 4) return "Неудобно";
+  if (value == 5) return "Довольно неудобно";
+  if (value == 6) return "Очень неудобно";
+  if (value == 7) return "Сильно неудобно, полный звиздец";
+}
+
+
+void dhtComfort() {
+  String viget_name = sCmd.next();
+  String page_name = sCmd.next();
+  String page_number = sCmd.next();
+  choose_viget_and_create(viget_name, page_name, page_number, "any-data", "dhtComfort");
+  ts.add(DHTC, dhtComfort_update_int, [&](void*) {
+    float value;
+    ComfortState cf;
+    value = dht.getComfortRatio(cf, jsonRead(configJson, "dhtT").toFloat(), jsonRead(configJson, "dhtH").toInt(), false);
+    String comfortStatus;
+    switch (cf) {
+      case Comfort_OK:
+        comfortStatus = "Отлично";
+        break;
+      case Comfort_TooHot:
+        comfortStatus = "Очень жарко";
+        break;
+      case Comfort_TooCold:
+        comfortStatus = "Очень холодно";
+        break;
+      case Comfort_TooDry:
+        comfortStatus = "Очень сухо";
+        break;
+      case Comfort_TooHumid:
+        comfortStatus = "Очень влажно";
+        break;
+      case Comfort_HotAndHumid:
+        comfortStatus = "Жарко и влажно";
+        break;
+      case Comfort_HotAndDry:
+        comfortStatus = "Жарко и сухо";
+        break;
+      case Comfort_ColdAndHumid:
+        comfortStatus = "Холодно и влажно";
+        break;
+      case Comfort_ColdAndDry:
+        comfortStatus = "Холодно и сухо";
+        break;
+      default:
+        comfortStatus = "Неизвестно";
+        break;
+    };
+    String final_line = comfortStatus;   
+    jsonWrite(configJson, "dhtComfort", final_line);
+    eventGen ("dhtComfort", "");
+    sendSTATUS("dhtComfort", final_line);
+    if (client.connected()) {
+      Serial.println("[i] sensor dhtComfort send date " + final_line);
+    }
+  }, nullptr, true);
+}
+
+void dhtDewPoint() {
+  String viget_name = sCmd.next();
+  String page_name = sCmd.next();
+  String page_number = sCmd.next();
+  choose_viget_and_create(viget_name, page_name, page_number, "any-data", "dhtPerception");
+  ts.add(DHTP, dhtPerception_update_int, [&](void*) {
+    byte value;
+    ComfortState cf;
+    value = dht.computePerception(jsonRead(configJson, "dhtT").toFloat(), jsonRead(configJson, "dhtH").toInt(), false);
+    String final_line = perception(value);  
+    jsonWrite(configJson, "dhtPerception", final_line);
+    eventGen ("dhtPerception", "");
+    sendSTATUS("dhtPerception", final_line);
+    if (client.connected()) {
+      Serial.println("[i] sensor dhtPerception send date " + final_line);
+    }
+  }, nullptr, true);
+}
 
 
 void choose_viget_and_create(String viget_name, String page_name, String page_number, String type, String topik) {
@@ -201,12 +314,12 @@ void logging() {
   if (sensor_name == "level") jsonWrite(optionJson, "level_logging_count", maxCount);
   if (sensor_name == "dallas") jsonWrite(optionJson, "dallas_logging_count", maxCount);
   if (sensor_name == "ph") jsonWrite(optionJson, "ph_logging_count", maxCount);
-/*
-  if (sensor_name == "analog") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "loganalog", "maxCount", maxCount);
-  if (sensor_name == "level") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "loglevel", "maxCount", maxCount);
-  if (sensor_name == "dallas") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "logdallas", "maxCount", maxCount);
-  if (sensor_name == "ph") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "logph", "maxCount", maxCount);
-*/
+  /*
+    if (sensor_name == "analog") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "loganalog", "maxCount", maxCount);
+    if (sensor_name == "level") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "loglevel", "maxCount", maxCount);
+    if (sensor_name == "dallas") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "logdallas", "maxCount", maxCount);
+    if (sensor_name == "ph") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "logph", "maxCount", maxCount);
+  */
   if (sensor_name == "analog") {
     flagLoggingAnalog = true;
     ts.remove(ANALOG_LOG);

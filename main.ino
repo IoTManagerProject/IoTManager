@@ -268,7 +268,7 @@ void getMemoryLoad(String text) {
   #endif
   int memory_remain = ESP.getFreeHeap();
   int memory_used = all_memory - memory_remain;
-  int memory_load = memory_used * 100 / all_memory;
+  int memory_load = (memory_used * 100) / all_memory;
   if (memory_load > 65) Serial.print("Attention!!! too match memory used!!!");
   Serial.print(text + " memory used:");
   Serial.print(String(memory_load) + "%; ");

@@ -38,7 +38,7 @@ void Device_init() {
   ts.remove(DHTT);
   ts.remove(DHTH);
   //================
-  
+
   all_vigets = "";
   txtExecution("firmware.config.txt");
   //outcoming_date();
@@ -48,5 +48,25 @@ void Device_init() {
 void Scenario_init() {
   if (jsonRead(configSetup, "scenario") == "1") {
     scenario = readFile("firmware.scenario.txt", 2048);
+  }
+}
+
+void up_time() {
+  uint32_t ss = millis() / 1000;
+  uint32_t mm = ss / 60;
+  uint32_t hh = mm / 60;
+  uint32_t dd = hh / 24;
+
+  if (mm != 0) {
+    Serial.println(String(mm) + " min");
+    jsonWrite(configJson, "uptime", String(mm) + " min");
+  }
+  if (hh != 0) {
+    Serial.println(String(hh) + " hours");
+    jsonWrite(configJson, "uptime", String(hh) + " hours");
+  }
+  if (dd != 0) {
+    Serial.println(String(dd) + " days");
+    jsonWrite(configJson, "uptime", String(dd) + " days");
   }
 }

@@ -15,6 +15,8 @@ void CMD_init() {
 
   sCmd.addCommand("dhtT",  dhtT);
   sCmd.addCommand("dhtH",  dhtH);
+  sCmd.addCommand("dhtPerception",  dhtPerception);
+  sCmd.addCommand("dhtComfort",  dhtComfort);
 
   sCmd.addCommand("logging",  logging);
 

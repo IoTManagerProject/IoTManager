@@ -53,11 +53,11 @@ void setup() {
   getMemoryLoad("[i] After loading");
 
 
-  //  ts.add(TEST, 1000, [&](void*) {
+  ts.add(TEST, 5000, [&](void*) {
 
-  //getMemoryLoad("[i] Periodic check");
+    up_time();
 
-  //  }, nullptr, true);
+  }, nullptr, true);
 
 }
 

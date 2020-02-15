@@ -36,7 +36,7 @@ AsyncEventSource events("/events");
 #include "time.h"
 #include <TickerScheduler.h>
 TickerScheduler ts(30);
-enum { ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, PH_LOG, CMD , TIMER_COUNTDOWN, TIMERS, TIME, TEST};
+enum { ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, PH_LOG, CMD , TIMER_COUNTDOWN, TIMERS, TIME, TEST};
 
 //ssl//#include "dependencies/WiFiClientSecure/WiFiClientSecure.h" //using older WiFiClientSecure
 #include <PubSubClient.h>
@@ -60,8 +60,8 @@ GMedian medianFilter;
 OneWire *oneWire;
 DallasTemperature sensors;
 //----------------------------------------------------------------
-#include <DHT.h> //https://github.com/markruys/arduino-DHT
-DHT dht;
+#include "DHTesp.h"
+DHTesp dht;
 //----------------------------------------------------------------
 #include "Adafruit_Si7021.h" //https://github.com/adafruit/Adafruit_Si7021
 Adafruit_Si7021 sensor_Si7021 = Adafruit_Si7021();
@@ -89,6 +89,8 @@ Adafruit_Si7021 sensor_Si7021 = Adafruit_Si7021();
 //-----------------------------------------------------------------
 #define dhtT_update_int 5000
 #define dhtH_update_int 5000
+#define dhtComfort_update_int 5000
+#define dhtPerception_update_int 5000
 //-----------------------------------------------------------------
 
 

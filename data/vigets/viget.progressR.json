@@ -1,7 +1,6 @@
 {
   "widget" : "progress-round",
-  "icon"   : "globe",
-  "descrColor" : "orange",
+  "descrColor" : "",
   "max" : "100",
   "stroke" : "20",
   "color"  : "#45ccce",
