@@ -35,7 +35,7 @@ void analog() {
     eventGen ("analog", "");
     sendSTATUS("analog", String(analog));
     if (client.connected()) {
-      Serial.println("[i] sensor analog send date " + String(analog));
+      Serial.println("[i] sensor 'analog' send date " + String(analog));
     }
     // }
     analog_old = analog;
@@ -82,7 +82,7 @@ void level() {
       eventGen ("level", "");
       sendSTATUS("level", String(level));
       if (client.connected()) {
-        Serial.println("[i] sensor tank level send date " + String(level));
+        Serial.println("[i] sensor tank 'level' send date " + String(level));
       }
       //}
       level_old = level;
@@ -113,7 +113,7 @@ void dallas() {
     eventGen ("dallas", "");
     sendSTATUS("dallas", String(temp));
     if (client.connected()) {
-      Serial.println("[i] sensor dallas send date " + String(temp));
+      Serial.println("[i] sensor 'dallas' send date " + String(temp));
     }
     //}
     temp_old = temp;
@@ -146,7 +146,7 @@ void dhtT() {
     eventGen ("dhtT", "");
     sendSTATUS("dhtT", String(value));
     if (client.connected()) {
-      Serial.println("[i] sensor dhtT send date " + String(value));
+      Serial.println("[i] sensor 'dhtT' send date " + String(value));
     }
     //}
     value_old = value;
@@ -177,7 +177,7 @@ void dhtH() {
     eventGen ("dhtH", "");
     sendSTATUS("dhtH", String(value));
     if (client.connected()) {
-      Serial.println("[i] sensor dhtH send date " + String(value));
+      Serial.println("[i] sensor 'dhtH' send date " + String(value));
     }
     //}
     value_old = value;
@@ -189,16 +189,15 @@ void dhtPerception() {
   String page_name = sCmd.next();
   String page_number = sCmd.next();
   choose_viget_and_create(viget_name, page_name, page_number, "any-data", "dhtPerception");
-  ts.add(DHTP, dhtPerception_update_int, [&](void*) {
+  ts.add(DHTP, dht_calculation_update_int, [&](void*) {
     byte value;
-    ComfortState cf;
-    value = dht.computePerception(jsonRead(configJson, "dhtT").toFloat(), jsonRead(configJson, "dhtH").toInt(), false);
+    value = dht.computePerception(jsonRead(configJson, "dhtT").toFloat(), jsonRead(configJson, "dhtH").toFloat(), false);
     String final_line = perception(value);  
     jsonWrite(configJson, "dhtPerception", final_line);
     eventGen ("dhtPerception", "");
     sendSTATUS("dhtPerception", final_line);
     if (client.connected()) {
-      Serial.println("[i] sensor dhtPerception send date " + final_line);
+      Serial.println("[i] sensor 'dhtPerception' send date " + final_line);
     }
   }, nullptr, true);
 }
@@ -220,10 +219,10 @@ void dhtComfort() {
   String page_name = sCmd.next();
   String page_number = sCmd.next();
   choose_viget_and_create(viget_name, page_name, page_number, "any-data", "dhtComfort");
-  ts.add(DHTC, dhtComfort_update_int, [&](void*) {
+  ts.add(DHTC, dht_calculation_update_int, [&](void*) {
     float value;
     ComfortState cf;
-    value = dht.getComfortRatio(cf, jsonRead(configJson, "dhtT").toFloat(), jsonRead(configJson, "dhtH").toInt(), false);
+    value = dht.getComfortRatio(cf, jsonRead(configJson, "dhtT").toFloat(), jsonRead(configJson, "dhtH").toFloat(), false);
     String comfortStatus;
     switch (cf) {
       case Comfort_OK:
@@ -262,26 +261,24 @@ void dhtComfort() {
     eventGen ("dhtComfort", "");
     sendSTATUS("dhtComfort", final_line);
     if (client.connected()) {
-      Serial.println("[i] sensor dhtComfort send date " + final_line);
+      Serial.println("[i] sensor 'dhtComfort' send date " + final_line);
     }
   }, nullptr, true);
 }
 
-void dhtDewPoint() {
+void dhtDewpoint() {
   String viget_name = sCmd.next();
   String page_name = sCmd.next();
   String page_number = sCmd.next();
-  choose_viget_and_create(viget_name, page_name, page_number, "any-data", "dhtPerception");
-  ts.add(DHTP, dhtPerception_update_int, [&](void*) {
-    byte value;
-    ComfortState cf;
-    value = dht.computePerception(jsonRead(configJson, "dhtT").toFloat(), jsonRead(configJson, "dhtH").toInt(), false);
-    String final_line = perception(value);  
-    jsonWrite(configJson, "dhtPerception", final_line);
-    eventGen ("dhtPerception", "");
-    sendSTATUS("dhtPerception", final_line);
+  choose_viget_and_create(viget_name, page_name, page_number, "any-data", "dhtDewpoint");
+  ts.add(DHTD, dht_calculation_update_int, [&](void*) {
+    float value;
+    value = dht.computeDewPoint(jsonRead(configJson, "dhtT").toFloat(), jsonRead(configJson, "dhtH").toFloat(), false);  
+    jsonWrite(configJson, "dhtDewpoint", value);
+    eventGen ("dhtDewpoint", "");
+    sendSTATUS("dhtDewpoint", String(value));
     if (client.connected()) {
-      Serial.println("[i] sensor dhtPerception send date " + final_line);
+      Serial.println("[i] sensor 'dhtDewpoint' send date " + String(value));
     }
   }, nullptr, true);
 }

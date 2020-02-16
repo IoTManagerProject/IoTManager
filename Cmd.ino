@@ -2,7 +2,10 @@ void CMD_init() {
 
   sCmd.addCommand("button",  button);
   sCmd.addCommand("buttonSet",  buttonSet);
+  sCmd.addCommand("buttonChange",  buttonChange);
+
   sCmd.addCommand("pinSet",  pinSet);
+  sCmd.addCommand("pinChange",  pinChange);
 
   sCmd.addCommand("pwm",  pwm);
   sCmd.addCommand("pwmSet",  pwmSet);
@@ -17,6 +20,7 @@ void CMD_init() {
   sCmd.addCommand("dhtH",  dhtH);
   sCmd.addCommand("dhtPerception",  dhtPerception);
   sCmd.addCommand("dhtComfort",  dhtComfort);
+  sCmd.addCommand("dhtDewpoint",  dhtDewpoint);
 
   sCmd.addCommand("logging",  logging);
 
@@ -137,13 +141,30 @@ void buttonSet() {
   sendSTATUS("buttonSet" + button_number, button_state);
 }
 
-void pinSet() {
+void buttonChange() {
+  String button_number = sCmd.next();
+  String current_state = jsonRead(configJson, "buttonSet" + button_number);
+  if (current_state == "1") {
+    current_state = "0";
+  } else if (current_state == "0") {
+    current_state = "1";
+  }
+  order_loop += "buttonSet " + button_number + " " + current_state + ",";
+  jsonWrite(configJson, "buttonSet" + button_number, current_state);
+  sendSTATUS("buttonSet" + button_number, current_state);
+}
 
+void pinSet() {
   String pin_number = sCmd.next();
   String pin_state = sCmd.next();
   pinMode(pin_number.toInt(), OUTPUT);
   digitalWrite(pin_number.toInt(), pin_state.toInt());
+}
 
+void pinChange() {
+  String pin_number = sCmd.next();
+  pinMode(pin_number.toInt(), OUTPUT);
+  digitalWrite(pin_number.toInt(), !digitalRead(pin_number.toInt()));
 }
 //==================================================================================================================
 //==========================================Модуль управления ШИМ===================================================
