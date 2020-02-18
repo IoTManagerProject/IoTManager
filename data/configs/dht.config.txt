@@ -1,0 +1,5 @@
+dhtT DHT11 2 Температура#DHT,#t°C Датчики any-data 1
+dhtH DHT11 2 Влажность#DHT,#% Датчики any-data 2
+dhtComfort Степень#комфорта: Датчики 3
+dhtPerception Восприятие: Датчики 4
+dhtDewpoint Точка#росы: Датчики 5

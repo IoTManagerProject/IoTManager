@@ -27,6 +27,87 @@
  {
    "type": "hr"
   },
+  
+  {
+   "type": "h2",
+   "title": "Чтобы превратить ESP во что либо из списка, нажмите на соответствующию кнопку:"
+  },
+  {
+   "type": "h4",
+   "title": "Раздел 1. Управление нагрузкой"
+  },
+  {
+   "type": "button",
+   "title": "Включение выключение реле",
+   "action": "/relay",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "button",
+   "title": "Включение выключение реле в определенное время",
+   "action": "/relay_timer",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "button",
+   "title": "Включение выключение реле на определенный период времени",
+   "action": "/relay_countdown",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "button",
+   "title": "Включение выключение нескольких реле одной кнопкой в приложении",
+   "action": "/relay_several",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "h4",
+   "title": "Раздел 2. Сенсоры"
+  },
+  {
+   "type": "button",
+   "title": "Термостат на ds18b20",
+   "action": "/termostat",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "button",
+   "title": "Датчик движения включающий свет",
+   "action": "/moution-relay",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "button",
+   "title": "Охранный датчик движения",
+   "action": "/moution-security",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "button",
+   "title": "Выключатель",
+   "action": "/switch",
+   "class": "btn btn-block btn-primary"
+  },
+  
+  {
+   "type": "button",
+   "title": "Чтение датчика dht",
+   "action": "/dht",
+   "class": "btn btn-block btn-primary"
+  },
+   {
+   "type": "hr"
+  },
+   {
+   "type": "button",
+   "title": "Сбросить сценарии и конфигурации по умолчанию",
+   "action": "/default",
+   "class": "btn btn-block btn-danger"
+  },
+  
+  {
+   "type": "hr"
+  },
 {
    "type": "h2",
    "title": "Конфигурация устройства"
@@ -68,6 +149,10 @@
    "action": "/scenario?status=1",
    "class":"btn btn-block btn-success"
   },
+  {
+   "type": "hr"
+ },
+  
 {
    "type": "h2",
 "title": "Данные модулей"

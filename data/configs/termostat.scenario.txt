@@ -1,0 +1,6 @@
+dallas > digit1
+buttonSet 1 1
+end
+dallas < digit2
+buttonSet 1 0
+end
