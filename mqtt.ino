@@ -40,9 +40,11 @@ void MQTT_init() {
         Serial.println("[V] MQTT-ok");
       } else {
         MQTT_Connecting(true);
+        mqtt_lost_error++;
       }
     } else {
       Serial.println("[E] Lost WiFi connection");
+      wifi_lost_error++;
       ts.remove(WIFI_MQTT_CONNECTION_CHECK);
       StartAPMode();
     }
@@ -68,6 +70,7 @@ void MQTT_Connecting(boolean out_date_send) {
     static boolean first = true;
     if (!first) Serial.println("[E] Lost MQTT connection, start reconnecting");
     first = false;
+    
 
     //ssl//espClient.setCACert(local_root_ca1);
 

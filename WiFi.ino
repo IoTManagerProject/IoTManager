@@ -58,6 +58,8 @@ void WIFI_init() {
   }
   else {
     WiFi.begin(_ssid.c_str(), _password.c_str());
+    Serial.print("ssid: ");
+    Serial.println(_ssid);
   }
   // Делаем проверку подключения до тех пор пока счетчик tries
   // не станет равен нулю или не получим подключение

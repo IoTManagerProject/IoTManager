@@ -38,26 +38,44 @@
   },
   {
    "type": "button",
-   "title": "Включение выключение реле",
+   "title": "Вкл. выкл. локального реле",
    "action": "/relay",
    "class": "btn btn-block btn-primary"
-  },
+  }, 
   {
    "type": "button",
-   "title": "Включение выключение реле в определенное время",
+   "title": "Вкл. выкл. локального реле в определенное время",
    "action": "/relay_timer",
    "class": "btn btn-block btn-primary"
   },
   {
    "type": "button",
-   "title": "Включение выключение реле на определенный период времени",
+   "title": "Вкл. выкл. локального реле на определенный период времени",
    "action": "/relay_countdown",
    "class": "btn btn-block btn-primary"
   },
   {
    "type": "button",
-   "title": "Включение выключение нескольких реле одной кнопкой в приложении",
+   "title": "Вкл. выкл. нескольких локальных реле кнопкой в приложении",
    "action": "/relay_several",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "button",
+   "title": "Вкл. выкл. локального реле физической кнопкой (кнопка так же дублируется в приложении)",
+   "action": "/relay_switch",
+   "class": "btn btn-block btn-primary"
+  },
+   {
+   "type": "button",
+   "title": "Вкл. выкл. нескольких удаленных реле кнопкой в приложении (нужно указать Device ID)",
+   "action": "/relay_button_remote",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "button",
+   "title": "Вкл. выкл. нескольких удаленных реле физической кнопкой (нужно указать Device ID)",
+   "action": "/relay_switch_remote",
    "class": "btn btn-block btn-primary"
   },
   {
@@ -66,7 +84,25 @@
   },
   {
    "type": "button",
-   "title": "Термостат на ds18b20",
+   "title": "Сенсор DHT11",
+   "action": "/dht11",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "button",
+   "title": "Сенсор DHT22, DHT33, DHT44, AM2302, RHT03",
+   "action": "/dht22",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "button",
+   "title": "Сенсор DS18B20",
+   "action": "/dallas",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "button",
+   "title": "Термостат на DS18B20",
    "action": "/termostat",
    "class": "btn btn-block btn-primary"
   },
@@ -89,12 +125,7 @@
    "class": "btn btn-block btn-primary"
   },
   
-  {
-   "type": "button",
-   "title": "Чтение датчика dht",
-   "action": "/dht",
-   "class": "btn btn-block btn-primary"
-  },
+  
    {
    "type": "hr"
   },

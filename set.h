@@ -122,3 +122,6 @@ const String ssdpS = "SSDP";
 String current_time;
 
 int scenario_line_status [] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+
+int wifi_lost_error = 0;
+int mqtt_lost_error = -1;

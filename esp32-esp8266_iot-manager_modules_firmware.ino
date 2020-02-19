@@ -53,7 +53,7 @@ void setup() {
   getMemoryLoad("[i] After loading");
 
 
-  ts.add(TEST, 5000, [&](void*) {
+  ts.add(TEST, 20000, [&](void*) {
 
     up_time();
 

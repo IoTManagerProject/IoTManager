@@ -53,7 +53,9 @@ void Scenario_init() {
 }
 
 void prsets_init() {
+
   //part 1===============================================================================
+
   server.on("/relay", HTTP_GET, [](AsyncWebServerRequest * request) {
     writeFile("firmware.config.txt", readFile("configs/relay.config.txt", 2048));
     writeFile("firmware.scenario.txt", readFile("configs/relay.scenario.txt", 2048));
@@ -85,7 +87,60 @@ void prsets_init() {
     Scenario_init();
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
+
+  server.on("/relay_switch", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/relay_sw.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/relay_sw.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+  });
+
+  server.on("/relay_button_remote", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/relay_br.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/relay_br.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+  });
+
+  server.on("/relay_switch_remote", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/relay_sr.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/relay_sr.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+  });
+
   //part 2===============================================================================
+
+  server.on("/dht11", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/dht11.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/dht11.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+  });
+
+  server.on("/dht22", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/dht22.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/dht22.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+  });
+
+
+  server.on("/dallas", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/dallas.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/dallas.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+  });
+
+
+
   server.on("/termostat", HTTP_GET, [](AsyncWebServerRequest * request) {
     writeFile("firmware.config.txt", readFile("configs/termostat.config.txt", 2048));
     writeFile("firmware.scenario.txt", readFile("configs/termostat.scenario.txt", 2048));
@@ -94,13 +149,7 @@ void prsets_init() {
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
 
-  server.on("/dht", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/dht.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/dht.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
+
 
   server.on("/default", HTTP_GET, [](AsyncWebServerRequest * request) {
     writeFile("firmware.config.txt", readFile("configs/firmware.config.txt", 2048));
@@ -116,21 +165,24 @@ void up_time() {
   uint32_t mm = ss / 60;
   uint32_t hh = mm / 60;
   uint32_t dd = hh / 24;
+  
+  String out = "";
 
   if (ss != 0) {
-    Serial.println(String(ss) + " sec");
+    out = "[i] uptime = " + String(ss) + " sec";
     jsonWrite(configJson, "uptime", String(ss) + " sec");
   }
   if (mm != 0) {
-    Serial.println(String(mm) + " min");
+    out = "[i] uptime = " + String(mm) + " min";
     jsonWrite(configJson, "uptime", String(mm) + " min");
   }
   if (hh != 0) {
-    Serial.println(String(hh) + " hours");
+    out = "[i] uptime = " + String(hh) + " hours";
     jsonWrite(configJson, "uptime", String(hh) + " hours");
   }
   if (dd != 0) {
-    Serial.println(String(dd) + " days");
+    out = "[i] uptime = " + String(dd) + " days";
     jsonWrite(configJson, "uptime", String(dd) + " days");
   }
+  Serial.println(out + ", mqtt_lost_error: " + String(mqtt_lost_error) + ", wifi_lost_error: " + String(wifi_lost_error));
 }
