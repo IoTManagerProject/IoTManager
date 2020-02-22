@@ -3,7 +3,7 @@
 void setup() {
 
   Serial.begin(115200);
-  Serial.setDebugOutput(true);
+  //Serial.setDebugOutput(true);
   Serial.println("--------------started----------------");
   //--------------------------------------------------------------
   SPIFFS.begin();
@@ -48,16 +48,16 @@ void setup() {
   //--------------------------------------------------------------
   Push_init();
   Serial.println("[V] Push_init");
-
-
+  //--------------------------------------------------------------
+  statistics();
+  Serial.println("[V] statistics");
+  //--------------------------------------------------------------
+  
   getMemoryLoad("[i] After loading");
 
+ // ts.add(TEST, 20000, [&](void*) {
 
-  ts.add(TEST, 20000, [&](void*) {
-
-    up_time();
-
-  }, nullptr, true);
+ // }, nullptr, true);
 
 }
 

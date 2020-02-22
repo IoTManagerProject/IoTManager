@@ -149,7 +149,7 @@ void prsets_init() {
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
 
-
+  //default===============================================================================
 
   server.on("/default", HTTP_GET, [](AsyncWebServerRequest * request) {
     writeFile("firmware.config.txt", readFile("configs/firmware.config.txt", 2048));
@@ -165,7 +165,7 @@ void up_time() {
   uint32_t mm = ss / 60;
   uint32_t hh = mm / 60;
   uint32_t dd = hh / 24;
-  
+
   String out = "";
 
   if (ss != 0) {
@@ -185,4 +185,30 @@ void up_time() {
     jsonWrite(configJson, "uptime", String(dd) + " days");
   }
   Serial.println(out + ", mqtt_lost_error: " + String(mqtt_lost_error) + ", wifi_lost_error: " + String(wifi_lost_error));
+}
+
+void statistics() {
+  String urls = "http://backup.privet.lv/visitors/?";
+  
+  urls += WiFi.macAddress().c_str();
+  urls += "&";
+  
+#ifdef ESP8266
+  urls += "iot-manager_esp8266";
+#endif
+#ifdef ESP32
+  urls += "iot-manager_esp32";
+#endif
+  urls += "&";
+  
+#ifdef ESP8266
+  urls += ESP.getResetReason();
+#endif
+#ifdef ESP32
+  urls += "unknow";
+#endif
+  urls += "&";
+  
+  urls += DATE_COMPILING;
+  String stat = getURL(urls);
 }

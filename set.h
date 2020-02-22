@@ -75,6 +75,9 @@ Adafruit_Si7021 sensor_Si7021 = Adafruit_Si7021();
 //#define WS_enable
 //-----------------------------------------------------------------
 
+#define TIME_COMPILING String(__TIME__)
+#define DATE_COMPILING String(__DATE__)
+
 #define wifi_mqtt_reconnecting 20000
 //-----------------------------------------------------------------
 #define analog_update_int 5000
@@ -87,9 +90,9 @@ Adafruit_Si7021 sensor_Si7021 = Adafruit_Si7021();
 #define tank_level_shooting_interval 500 //интервал выстрела датчика
 #define tank_level_times_to_send 20 //после скольки выстрелов делать отправку данных
 //-----------------------------------------------------------------
-#define dhtT_update_int 5000
-#define dhtH_update_int 5000
-#define dht_calculation_update_int 5000
+#define dhtT_update_int 10000
+#define dhtH_update_int 10000
+#define dht_calculation_update_int 10000
 //-----------------------------------------------------------------
 
 

@@ -16,7 +16,7 @@ void reconfigTime() {
     configTime(jsonRead(configSetup, "timezone").toInt() * 3600, 0, ntpServer);
 
     int i = 0;
-    Serial.println("[i]Awaiting for time ");
+    Serial.println("[i] Awaiting for time ");
 
 #ifdef ESP32
     struct tm timeinfo;
@@ -35,7 +35,7 @@ void reconfigTime() {
    // }
 #endif
 
-    Serial.print("Time = ");
+    Serial.print("[i] Time = ");
     Serial.print(GetDataDigital());
     Serial.print(" ");
     Serial.println(GetTime());
