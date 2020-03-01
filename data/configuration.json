@@ -4,6 +4,7 @@
   "/config.live.json",
   "/config.setup.json",
   "/config.option.json"
+  
  ],
  "class":"col-sm-offset-1 col-sm-10",
  "content": [
@@ -29,115 +30,30 @@
   },
   
   {
-   "type": "h2",
-   "title": "Чтобы превратить ESP во что либо из списка, нажмите на соответствующию кнопку:"
-  },
-  {
-   "type": "h4",
-   "title": "Раздел 1. Управление нагрузкой"
-  },
-  {
-   "type": "button",
-   "title": "Вкл. выкл. локального реле",
-   "action": "/relay",
-   "class": "btn btn-block btn-primary"
-  }, 
-  {
-   "type": "button",
-   "title": "Вкл. выкл. локального реле в определенное время",
-   "action": "/relay_timer",
-   "class": "btn btn-block btn-primary"
-  },
-  {
-   "type": "button",
-   "title": "Вкл. выкл. локального реле на определенный период времени",
-   "action": "/relay_countdown",
-   "class": "btn btn-block btn-primary"
-  },
-  {
-   "type": "button",
-   "title": "Вкл. выкл. нескольких локальных реле кнопкой в приложении",
-   "action": "/relay_several",
-   "class": "btn btn-block btn-primary"
-  },
-  {
-   "type": "button",
-   "title": "Вкл. выкл. локального реле физической кнопкой (кнопка так же дублируется в приложении)",
-   "action": "/relay_switch",
-   "class": "btn btn-block btn-primary"
-  },
-   {
-   "type": "button",
-   "title": "Вкл. выкл. нескольких удаленных реле кнопкой в приложении (нужно указать Device ID)",
-   "action": "/relay_button_remote",
-   "class": "btn btn-block btn-primary"
-  },
-  {
-   "type": "button",
-   "title": "Вкл. выкл. нескольких удаленных реле физической кнопкой (нужно указать Device ID)",
-   "action": "/relay_switch_remote",
-   "class": "btn btn-block btn-primary"
-  },
-  {
-   "type": "h4",
-   "title": "Раздел 2. Сенсоры"
-  },
-  {
-   "type": "button",
-   "title": "Сенсор DHT11",
-   "action": "/dht11",
-   "class": "btn btn-block btn-primary"
-  },
-  {
-   "type": "button",
-   "title": "Сенсор DHT22, DHT33, DHT44, AM2302, RHT03",
-   "action": "/dht22",
-   "class": "btn btn-block btn-primary"
-  },
-  {
-   "type": "button",
-   "title": "Сенсор DS18B20",
-   "action": "/dallas",
-   "class": "btn btn-block btn-primary"
-  },
-  {
-   "type": "button",
-   "title": "Термостат на DS18B20",
-   "action": "/termostat",
-   "class": "btn btn-block btn-primary"
-  },
-  {
-   "type": "button",
-   "title": "Датчик движения включающий свет",
-   "action": "/moution-relay",
-   "class": "btn btn-block btn-primary"
-  },
-  {
-   "type": "button",
-   "title": "Охранный датчик движения",
-   "action": "/moution-security",
-   "class": "btn btn-block btn-primary"
-  },
-  {
-   "type": "button",
-   "title": "Выключатель",
-   "action": "/switch",
-   "class": "btn btn-block btn-primary"
-  },
-  
-  
-   {
-   "type": "hr"
-  },
-   {
-   "type": "button",
-   "title": "Сбросить сценарии и конфигурации по умолчанию",
-   "action": "/default",
-   "class": "btn btn-block btn-danger"
-  },
-  
-  {
-   "type": "hr"
+   "type":"dropdown",
+   "name":"help-url",
+   "class":"btn btn-warning btn-lg",
+   "style":"display:inline",
+   "title": {
+   "#":"Выбирите то, во что Вы хотите превратить ESP <span class=\"caret\"></span>",
+   "/relay":"Вкл. выкл. локального реле",
+   "/relay_timer":"Вкл. выкл. локального реле в определенное время",
+   "/relay_countdown":"Вкл. выкл. локального реле на определенный период времени",
+   "/relay_several":"Вкл. выкл. нескольких локальных реле кнопкой в приложении",
+   "/relay_switch":"Вкл. выкл. локального реле физической кнопкой (кнопка так же дублируется в приложении)",
+   "/relay_button_remote":"Вкл. выкл. нескольких удаленных реле кнопкой в приложении (нужно указать Device ID)",
+   "/relay_switch_remote":"Вкл. выкл. нескольких удаленных реле физической кнопкой (нужно указать Device ID)",
+   "/pwm":"Широтно импульсная модуляция",
+   "/dht11":"Сенсор DHT11",
+   "/dht22":"Сенсор DHT22, DHT33, DHT44, AM2302, RHT03",
+   "/analog":"Аналоговый сенсор",
+   "/dallas":"Сенсор DS18B20",
+   "/termostat":"Термостат на DS18B20 с переключением в ручной режим",
+   "/level":"Контроль уровня в баке на сенсорах: JSN-SR04T, HC-SR04, HY-SRF05 (управление насосом)",
+   "/moution_relay":"Датчик движения включающий свет",
+   "/moution_security":"Охранный датчик движения",
+   "/default":"Настройки по умолчанию"
+   }
   },
 {
    "type": "h2",
@@ -179,71 +95,6 @@
    "title": "Сохранить и включить",
    "action": "/scenario?status=1",
    "class":"btn btn-block btn-success"
-  },
-  {
-   "type": "hr"
- },
-  
-{
-   "type": "h2",
-"title": "Данные модулей"
- },
-{
-   "type": "hr"
- },
-{
-   "type": "h4",
-   "title": "Модуль уровня воды (level)",
-"style": "width:100%"
-  },
-
- {
-   "type": "h6",
-   "title": "Расстояние от датчика до воды: {{level_in}} см"
-  },
-{
-   "type": "h6",
-   "title": " Заполнение бака: {{level}} %"
-  },
-{
-   "type": "hr"
- },
-{
-   "type": "h4",
-   "title": "Модуль аналогового входа (analog)",
-"style": "width:100%"
-  },
-{
-   "type": "h6",
-   "title": "Прочитанное значение: {{analog_in}}"
-  },
-{
-   "type": "h6",
-   "title": "Преобразованное значение: {{analog}}"
-  },
- {
-   "type": "hr"
- },
-{
-   "type": "h4",
-   "title": "Модуль температурного датчика (dallas)",
-"style": "width:100%"
-  },
-{
-   "type": "h6",
-   "title": "Текущее значение: {{dallas}} °C"
-  },
-{
-   "type": "hr"
- },
-{
-   "type": "h4",
-   "title": "Модуль pH сенсора от df robot (ph)",
-"style": "width:100%"
-  },
-{
-   "type": "h6",
-   "title": "Текущее значение: {{ph}}"
   },
 {
    "type": "hr"

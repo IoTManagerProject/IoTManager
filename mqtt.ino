@@ -19,23 +19,29 @@ void MQTT_init() {
 
     saveConfig();
 
-    client.disconnect();   
+    client.disconnect();
     MQTT_Connecting();
 
-
-    int i = 0;
-    while (!client.connected() && i <= 25) {
-      delay(1000);
-      Serial.print(".");
-      i++;
-    }
+    /*
+        int i = 0;
+        while (!client.connected() && i <= 25) {
+          delay(1000);
+          Serial.print(".");
+          i++;
+        }
+    */
 
     String tmp = "{}";
     jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + stateMQTT());
     jsonWrite(tmp, "class", "pop-up");
 
-    //request->send(200, "text/text", "ok");
-    request->send(200, "text/text", tmp); // отправляем ответ о выполнении
+#ifdef ESP8266
+    request->send(200, "text/text", "ok");
+#endif
+
+#ifdef ESP32
+    request->send(200, "text/text", tmp); 
+#endif
   });
 
   //проверка подключения к серверу
@@ -206,9 +212,6 @@ void sendAllData() {   //берет строку json и ключи превра
     String topic =  selectToMarker (tmp, ":");
     topic.replace("\"", "");
     String state =  selectToMarkerLast (tmp, ":");
-    if (topic.indexOf("time") < 0) {
-      state.replace(".", ":");
-    }
     state.replace("\"", "");
     if (topic != ssdpS && topic != "lang" && topic != "ip" && topic.indexOf("_in") < 0) {
       sendSTATUS(topic, state);

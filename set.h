@@ -1,9 +1,40 @@
+String firmware_version = "2.2";
+
+//#define OTA_enable
+//#define MDNS_enable
+//#define WS_enable
+
+#define TIME_COMPILING String(__TIME__)
+#define DATE_COMPILING String(__DATE__)
+
+#define wifi_mqtt_reconnecting 20000
+//-----------------------------------------------------------------
+#define analog_update_int 5000
+//-----------------------------------------------------------------
+#define ph_shooting_interval 500 //интервал выстрела датчика
+#define ph_times_to_send 10      //после скольки выстрелов делать отправку данных
+//-----------------------------------------------------------------
+#define temp_update_int 5000
+//-----------------------------------------------------------------
+#define tank_level_shooting_interval 500 //интервал выстрела датчика
+#define tank_level_times_to_send 20 //после скольки выстрелов делать отправку данных
+//-----------------------------------------------------------------
+#define dhtT_update_int 10000
+#define dhtH_update_int 10000
+#define dht_calculation_update_int 10000
+//-----------------------------------------------------------------
+
+
 //==библиотеки и объекты для ESP8266==//
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ESPAsyncTCP.h>
 #include <ESP8266mDNS.h>
+
+#include <ESP8266httpUpdate.h>
+#include <ESP8266HTTPUpdateServer.h>
+ESP8266HTTPUpdateServer httpUpdater;
 #endif
 
 //==библиотеки и объекты для ESP32==//
@@ -15,8 +46,12 @@
 #endif
 #include <AsyncTCP.h>
 #include <analogWrite.h>
+
+#include <HTTPUpdate.h>
 #include <HTTPClient.h>
-HTTPClient http;
+//HTTPClient http;
+
+
 #endif
 
 //==общие библиотеки и объекты==//
@@ -67,36 +102,7 @@ DHTesp dht;
 Adafruit_Si7021 sensor_Si7021 = Adafruit_Si7021();
 //-----------------------------------------------------------------
 
-
-//#define OTA_enable
-//-----------------------------------------------------------------
-//#define MDNS_enable
-//-----------------------------------------------------------------
-//#define WS_enable
-//-----------------------------------------------------------------
-
-#define TIME_COMPILING String(__TIME__)
-#define DATE_COMPILING String(__DATE__)
-
-#define wifi_mqtt_reconnecting 20000
-//-----------------------------------------------------------------
-#define analog_update_int 5000
-//-----------------------------------------------------------------
-#define ph_shooting_interval 500 //интервал выстрела датчика
-#define ph_times_to_send 10      //после скольки выстрелов делать отправку данных
-//-----------------------------------------------------------------
-#define temp_update_int 5000
-//-----------------------------------------------------------------
-#define tank_level_shooting_interval 500 //интервал выстрела датчика
-#define tank_level_times_to_send 20 //после скольки выстрелов делать отправку данных
-//-----------------------------------------------------------------
-#define dhtT_update_int 10000
-#define dhtH_update_int 10000
-#define dht_calculation_update_int 10000
-//-----------------------------------------------------------------
-
-
-const char* hostName = "esp-async";
+const char* hostName = "IoT Manager";
 
 String configSetup = "{}";
 String configJson = "{}";
@@ -128,3 +134,5 @@ int scenario_line_status [] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 
 int wifi_lost_error = 0;
 int mqtt_lost_error = -1;
+
+String var;

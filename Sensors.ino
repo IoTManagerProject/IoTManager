@@ -77,7 +77,7 @@ void level() {
       level = map(distance_cm,
                   jsonReadtoInt(optionJson, "empty_level"),
                   jsonReadtoInt(optionJson, "full_level"), 0, 100);
-      //jsonWrite(configJson, "level", level);
+      jsonWrite(configJson, "level", level);
       //if (level_old != level) {
       eventGen ("level", "");
       sendSTATUS("level", String(level));

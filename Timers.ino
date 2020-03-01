@@ -131,6 +131,8 @@ int readTimer(int number) {
 }*/
 
 //------------------------------таймеры------------------------------------------------------
+
+/*
 void time() {
 
   String time_number = sCmd.next();
@@ -183,3 +185,4 @@ void time() {
     }
   }, nullptr, true);
 }
+*/

@@ -52,12 +52,15 @@ void setup() {
   statistics();
   Serial.println("[V] statistics");
   //--------------------------------------------------------------
-  
+  initUpgrade();
+  Serial.println("[V] initUpgrade");
+  //--------------------------------------------------------------
+
   getMemoryLoad("[i] After loading");
 
- // ts.add(TEST, 20000, [&](void*) {
+  // ts.add(TEST, 20000, [&](void*) {
 
- // }, nullptr, true);
+  // }, nullptr, true);
 
 }
 

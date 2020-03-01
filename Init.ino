@@ -61,7 +61,8 @@ void prsets_init() {
     writeFile("firmware.scenario.txt", readFile("configs/relay.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    String tmp = "";
+    request->redirect("/page.htm?configuration");
   });
 
   server.on("/relay_timer", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -69,7 +70,7 @@ void prsets_init() {
     writeFile("firmware.scenario.txt", readFile("configs/relay_t.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    request->redirect("/page.htm?configuration");
   });
 
   server.on("/relay_countdown", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -77,7 +78,7 @@ void prsets_init() {
     writeFile("firmware.scenario.txt", readFile("configs/relay_c.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    request->redirect("/page.htm?configuration");
   });
 
   server.on("/relay_several", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -85,7 +86,7 @@ void prsets_init() {
     writeFile("firmware.scenario.txt", readFile("configs/relay_s.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    request->redirect("/page.htm?configuration");
   });
 
   server.on("/relay_switch", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -93,7 +94,7 @@ void prsets_init() {
     writeFile("firmware.scenario.txt", readFile("configs/relay_sw.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    request->redirect("/page.htm?configuration");
   });
 
   server.on("/relay_button_remote", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -101,7 +102,7 @@ void prsets_init() {
     writeFile("firmware.scenario.txt", readFile("configs/relay_br.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    request->redirect("/page.htm?configuration");
   });
 
   server.on("/relay_switch_remote", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -109,7 +110,15 @@ void prsets_init() {
     writeFile("firmware.scenario.txt", readFile("configs/relay_sr.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    request->redirect("/page.htm?configuration");
+  });
+
+   server.on("/pwm", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/pwm.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/pwm.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->redirect("/page.htm?configuration");
   });
 
   //part 2===============================================================================
@@ -119,7 +128,7 @@ void prsets_init() {
     writeFile("firmware.scenario.txt", readFile("configs/dht11.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    request->redirect("/page.htm?configuration");
   });
 
   server.on("/dht22", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -127,27 +136,57 @@ void prsets_init() {
     writeFile("firmware.scenario.txt", readFile("configs/dht22.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    request->redirect("/page.htm?configuration");
   });
 
+  server.on("/analog", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/analog.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/analog.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->redirect("/page.htm?configuration");
+  });
 
   server.on("/dallas", HTTP_GET, [](AsyncWebServerRequest * request) {
     writeFile("firmware.config.txt", readFile("configs/dallas.config.txt", 2048));
     writeFile("firmware.scenario.txt", readFile("configs/dallas.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    request->redirect("/page.htm?configuration");
   });
-
-
 
   server.on("/termostat", HTTP_GET, [](AsyncWebServerRequest * request) {
     writeFile("firmware.config.txt", readFile("configs/termostat.config.txt", 2048));
     writeFile("firmware.scenario.txt", readFile("configs/termostat.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    request->redirect("/page.htm?configuration");
   });
+
+  server.on("/level", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/level.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/level.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->redirect("/page.htm?configuration");
+  });
+
+  server.on("/moution_relay", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/moution_r.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/moution_r.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->redirect("/page.htm?configuration");
+  });
+
+  server.on("/moution_security", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/moution_s.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/moution_s.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->redirect("/page.htm?configuration");
+  });
+
 
   //default===============================================================================
 
@@ -156,7 +195,7 @@ void prsets_init() {
     writeFile("firmware.scenario.txt", readFile("configs/firmware.scenario.txt", 2048));
     Device_init();
     Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    request->redirect("/page.htm?configuration");
   });
 }
 
@@ -189,10 +228,10 @@ void up_time() {
 
 void statistics() {
   String urls = "http://backup.privet.lv/visitors/?";
-  
+
   urls += WiFi.macAddress().c_str();
   urls += "&";
-  
+
 #ifdef ESP8266
   urls += "iot-manager_esp8266";
 #endif
@@ -200,7 +239,7 @@ void statistics() {
   urls += "iot-manager_esp32";
 #endif
   urls += "&";
-  
+
 #ifdef ESP8266
   urls += ESP.getResetReason();
 #endif
@@ -208,7 +247,7 @@ void statistics() {
   urls += "unknow";
 #endif
   urls += "&";
-  
+
   urls += DATE_COMPILING;
   String stat = getURL(urls);
 }

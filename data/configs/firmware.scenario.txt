@@ -24,9 +24,10 @@ timenow = time1
 buttonSet 7 1
 end
 switch1 = 1
-textSet 1 закрыто-time
-push закрыто вход
+textSet 1 обнаружено#движение-time
+push Внимание обнаружено#движение!
 end
-switch1 = 0
-textSet 1 открыто-time
+button8 = 1
+textSet 1 не#обнаружено-time
+buttonSet 8 0
 end

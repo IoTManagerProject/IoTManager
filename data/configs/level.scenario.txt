@@ -1,6 +1,6 @@
-dallas > digit1
+level > digit1
 buttonSet 1 0
 end
-dallas < digit2
+level < digit2
 buttonSet 1 1
 end

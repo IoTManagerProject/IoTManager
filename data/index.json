@@ -47,6 +47,25 @@
 			"class": "btn btn-block btn-success"
 		},
 		{
+			"type": "hr"
+		},
+		{
+         "type":"h3",
+         "name":"my-block",
+         "style":"position:fixed;top:30%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+         "class":"hidden"
+         },
+		{
+         "type": "button",
+         "title":"Обновить прошивку",
+         "action": "/upgrade",
+         "response":"[[my-block]]",
+         "class": "btn btn-block btn-success"
+        },
+		{
+			"type": "hr"
+		},
+		{
 			"type": "link",
 			"title": "Скачать приложение IoT Manager для android",
 			"action": "https://play.google.com/store/apps/details?id=ru.esp8266.iotmanager",

@@ -270,18 +270,25 @@ void inputTime() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  start_state.replace(":", ".");
   jsonWrite(configJson, "timeSet" + number, start_state);
-  start_state.replace(".", ":");
   createViget (viget_name, page_name, page_number, "vigets/viget.inputTime.json", "timeSet" + number);
 }
 void timeSet() {
   String number = sCmd.next();
   String value = sCmd.next();
-  value.replace(":", ".");
   jsonWrite(configJson, "timeSet" + number, value);
-  value.replace(".", ":");
   sendSTATUS("timeSet" + number, value);
+}
+
+void handle_time_init() {
+  ts.add(TIME, 1000, [&](void*) {
+
+    String tmp = GetTime();
+    tmp.replace(":", "-");
+    jsonWrite(configJson, "timenowSet", tmp);
+    eventGen ("timenowSet", "");
+
+  }, nullptr, true);
 }
 
 //=====================================================================================================================================
@@ -305,25 +312,17 @@ void textSet() {
 
   if (text.indexOf("-time") >= 0) {
     text.replace("-time", "");
+    text.replace("#", " ");
     String time = GetTime();
     time.replace(":", ".");
-    text = GetDataDigital() + " " + time + " " + text;
+    text = text + " " + GetDataDigital() + " " + time;
   }
 
   jsonWrite(configJson, "textSet" + number, text);
   sendSTATUS("textSet" + number, text);
 }
 
-void handle_time_init() {
-  ts.add(TIME, 1000, [&](void*) {
 
-    String tmp = GetTimeWOsec();
-    tmp.replace(":", ".");
-    jsonWrite(configJson, "timenowSet", tmp);
-    eventGen ("timenowSet", "");
-
-  }, nullptr, true);
-}
 //====================================================================================================================================================
 /*
   void inputText() {
