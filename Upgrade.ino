@@ -5,11 +5,12 @@ void initUpgrade() {
     new_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
 #endif
 #ifdef ESP8266
-    new_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
+    //new_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
 #endif
 
-    Serial.println(new_version);
-   
+    Serial.println("[i] Last firmware version: ");
+    Serial.print(new_version);
+
     String tmp = "{}";
 
     if (new_version != "error") {
@@ -81,7 +82,7 @@ void upgrade_firmware() {
 void handle_upgrade() {
   if (upgrade_flag) {
     upgrade_flag = false;
-    upgrade_firmware(); 
+    upgrade_firmware();
   }
 }
 
