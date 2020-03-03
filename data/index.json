@@ -20,6 +20,18 @@
 			"title": "IP address: {{ip}}"
 		},
 		{
+            "type": "h4",
+            "title": "Uptime: {{uptime}}"
+         },
+		{
+			"type": "h4",
+			"title": "Build version: {{firmware_version}}"
+		},
+		{
+			"type": "h4",
+			"title": "SPIFFS version: 2.2"
+		},
+		{
 			"type": "link",
 			"title": "Конфигурация устройства",
 			"action": "/page.htm?configuration",

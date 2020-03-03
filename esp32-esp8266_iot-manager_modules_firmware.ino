@@ -25,6 +25,8 @@ void setup() {
   Serial.setDebugOutput(0);
 #endif
 
+  jsonWrite(configSetup, "firmware_version", firmware_version);
+
   prex = prefix + "/" + chipID;
   Serial.println(chipID);
   //--------------------------------------------------------------
@@ -58,10 +60,11 @@ void setup() {
 
   getMemoryLoad("[i] After loading");
 
-  // ts.add(TEST, 20000, [&](void*) {
+  ts.add(TEST, 14400, [&](void*) {
 
-  // }, nullptr, true);
+    statistics();
 
+  }, nullptr, false);
 }
 
 void loop() {
@@ -81,4 +84,5 @@ void loop() {
   handleScenario();
 
   ts.update();
+  handle_upgrade();
 }

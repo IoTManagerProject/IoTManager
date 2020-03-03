@@ -137,8 +137,7 @@ String getURL(String urls) {
   if (httpCode == HTTP_CODE_OK) {
     answer = http.getString();
   }
-  else
-  {
+  else {
     answer = "error";
   }
   http.end();
