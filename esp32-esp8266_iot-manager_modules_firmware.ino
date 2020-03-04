@@ -57,7 +57,9 @@ void setup() {
   initUpgrade();
   Serial.println("[V] initUpgrade");
   //--------------------------------------------------------------
-
+  Serial.print("[i] Date compiling: ");
+  Serial.println(DATE_COMPILING);
+  
   getMemoryLoad("[i] After loading");
 
 #ifdef ESP8266

@@ -36,8 +36,8 @@ void upgrade_firmware() {
   String scenario_for_update;
   String config_for_update;
   String configSetup_for_update;
-  scenario_for_update = readFile("firmware.scenario.txt", 2048);
-  config_for_update = readFile("firmware.config.txt", 2048);
+  scenario_for_update = readFile("firmware.scenario.txt", 3072);
+  config_for_update = readFile("firmware.config.txt", 3072);
   configSetup_for_update = configSetup;
 
   Serial.println("Start upgrade SPIFFS, please wait...");

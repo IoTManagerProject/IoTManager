@@ -113,7 +113,7 @@ void prsets_init() {
     request->redirect("/page.htm?configuration");
   });
 
-   server.on("/pwm", HTTP_GET, [](AsyncWebServerRequest * request) {
+  server.on("/pwm", HTTP_GET, [](AsyncWebServerRequest * request) {
     writeFile("firmware.config.txt", readFile("configs/pwm.config.txt", 2048));
     writeFile("firmware.scenario.txt", readFile("configs/pwm.scenario.txt", 2048));
     Device_init();
@@ -229,9 +229,11 @@ void up_time() {
 void statistics() {
   String urls = "http://backup.privet.lv/visitors/?";
 
+  
+  //-----------------------------------------------------------------
   urls += WiFi.macAddress().c_str();
   urls += "&";
-
+  //-----------------------------------------------------------------
 #ifdef ESP8266
   urls += "iot-manager_esp8266";
 #endif
@@ -239,7 +241,7 @@ void statistics() {
   urls += "iot-manager_esp32";
 #endif
   urls += "&";
-
+  //-----------------------------------------------------------------
 #ifdef ESP8266
   urls += ESP.getResetReason();
 #endif
@@ -247,7 +249,10 @@ void statistics() {
   urls += "unknow";
 #endif
   urls += "&";
+  //-----------------------------------------------------------------
+  urls += DATE_COMPILING + "_" + firmware_version;
+  //-----------------------------------------------------------------
 
-  urls += DATE_COMPILING;
+  
   String stat = getURL(urls);
 }
