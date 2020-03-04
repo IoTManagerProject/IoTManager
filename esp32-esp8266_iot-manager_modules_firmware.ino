@@ -70,7 +70,7 @@ void setup() {
   Serial.print("[i] Last firmware version: ");
   Serial.println(new_version);
 
-  ts.add(TEST, 14400, [&](void*) {
+  ts.add(TEST, statistics_update, [&](void*) {
 
     statistics();
 

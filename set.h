@@ -1,4 +1,4 @@
-String firmware_version = "2.2";
+String firmware_version = "2.3";
 String new_version;
 
 
@@ -24,6 +24,7 @@ String new_version;
 #define dhtT_update_int 10000
 #define dhtH_update_int 10000
 #define dht_calculation_update_int 10000
+#define statistics_update 1000 * 60 * 60 * 12
 //-----------------------------------------------------------------
 
 
