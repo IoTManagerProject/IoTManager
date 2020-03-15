@@ -53,8 +53,7 @@
    "type": "password",
    "title": "Введите пароль",
    "name":"ssidPass",
-   "state": "{{password}}",
-   "pattern": ".{8,20}"
+   "state": "{{password}}"
   },
   {
    "type": "button",

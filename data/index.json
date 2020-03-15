@@ -3,6 +3,11 @@
 		"/config.live.json",
 		"/config.setup.json"
 	],
+
+      "socket": [
+      "ws://{{ip}}/ws"
+        ],
+
 	"title": "Главная",
 	"class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
 	"content": [
@@ -30,6 +35,36 @@
 		{
 			"type": "h4",
 			"title": "SPIFFS version: 2.3"
+		},
+               {
+			"type": "hr"
+		},
+               {
+			"type": "h6",
+			"title": "{{test1}}"
+		},
+                {
+			"type": "h6",
+			"title": "{{test2}}"
+		},
+               {
+			"type": "h6",
+			"title": "{{test3}}"
+		},
+                {
+			"type": "h6",
+			"title": "{{test4}}"
+		},
+                {
+			"type": "h6",
+			"title": "{{test5}}"
+		},
+                {
+			"type": "h6",
+			"title": "{{test6}}"
+		},
+                {
+			"type": "hr"
 		},
 		{
 			"type": "link",
@@ -64,7 +99,7 @@
 		{
          "type":"h3",
          "name":"my-block",
-         "style":"position:fixed;top:30%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+         "style":"position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
          "class":"hidden"
          },
 		{

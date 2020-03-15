@@ -147,14 +147,14 @@ boolean RouterFind(String ssid) {
       } else {
         Serial.print(i);
         Serial.print(")");
-        Serial.print(ssid);
-        Serial.print("<=>");
+        //Serial.print(ssid);
+        //Serial.print("<=>");
         if (i == n) {
           Serial.print(WiFi.SSID(i));
           Serial.println("; ");
         } else {
           Serial.print(WiFi.SSID(i));
-          Serial.print("; ");
+          Serial.println("; ");
         }
       }
     }

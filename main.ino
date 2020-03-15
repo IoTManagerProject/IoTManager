@@ -156,7 +156,7 @@ String safeDataToFile(String data, String Folder)
   fileName.replace("..", ".");
   fileName = Folder + "/" + fileName + ".txt";
 
- // addFile(fileName, GetTime() + "/" + data);
+  // addFile(fileName, GetTime() + "/" + data);
 
   Serial.println(fileName);
   jsonWrite(configJson, "test", fileName);
@@ -259,12 +259,12 @@ void led_blink(int pin, int fq, String blink_satus) {
 #endif
 
 void getMemoryLoad(String text) {
-  #ifdef ESP8266
+#ifdef ESP8266
   int all_memory = 53312;
-  #endif
-  #ifdef ESP32
+#endif
+#ifdef ESP32
   int all_memory = 362868;
-  #endif
+#endif
   int memory_remain = ESP.getFreeHeap();
   int memory_used = all_memory - memory_remain;
   int memory_load = (memory_used * 100) / all_memory;
@@ -273,8 +273,21 @@ void getMemoryLoad(String text) {
   Serial.print(String(memory_load) + "%; ");
   Serial.print("memory remain:");
   Serial.println(String(memory_remain) + " k bytes");
-  
+
 }
 
 //esp32 full memory = 362868 k bytes
 //esp8266 full memory = 53312 k bytes
+
+void web_print (String text) {
+
+  jsonWrite(json, "test1",  jsonRead(json, "test2"));
+  jsonWrite(json, "test2",  jsonRead(json, "test3"));
+  jsonWrite(json, "test3",  jsonRead(json, "test4"));
+  jsonWrite(json, "test4",  jsonRead(json, "test5"));
+  jsonWrite(json, "test5",  jsonRead(json, "test6"));
+
+  jsonWrite(json, "test6", GetTime() + " " + text);
+
+  ws.textAll(json);
+}

@@ -19,7 +19,7 @@ void analog() {
     static int analog_old;
 #ifdef ESP32
     //int pin_int = pin.toInt();
-    int analog_in;// = analogRead(pin_int);
+    int analog_in = analogRead(34);
 #endif
 #ifdef ESP8266
     int analog_in = analogRead(A0);
@@ -36,6 +36,7 @@ void analog() {
     sendSTATUS("analog", String(analog));
     if (client.connected()) {
       Serial.println("[i] sensor 'analog' send date " + String(analog));
+      //web_print("sensor 'analog' send date " + String(analog));
     }
     // }
     analog_old = analog;
@@ -83,6 +84,7 @@ void level() {
       sendSTATUS("level", String(level));
       if (client.connected()) {
         Serial.println("[i] sensor tank 'level' send date " + String(level));
+        //web_print("sensor tank 'level' send date " + String(level));
       }
       //}
       level_old = level;
@@ -114,6 +116,7 @@ void dallas() {
     sendSTATUS("dallas", String(temp));
     if (client.connected()) {
       Serial.println("[i] sensor 'dallas' send date " + String(temp));
+      //web_print("sensor 'dallas' send date " + String(temp));
     }
     //}
     temp_old = temp;
@@ -153,6 +156,7 @@ void dhtT() {
       sendSTATUS("dhtT", String(value));
       if (client.connected()) {
         Serial.println("[i] sensor 'dhtT' send date " + String(value));
+        //web_print("sensor 'dhtT' send date " + String(value));
       }
       //}
       value_old = value;
@@ -191,6 +195,7 @@ void dhtH() {
       sendSTATUS("dhtH", String(value));
       if (client.connected()) {
         Serial.println("[i] sensor 'dhtH' send date " + String(value));
+        //web_print("sensor 'dhtH' send date " + String(value));
       }
       //}
       value_old = value;

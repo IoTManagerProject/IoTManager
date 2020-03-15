@@ -41,6 +41,8 @@ void upgrade_firmware() {
   configSetup_for_update = configSetup;
 
   Serial.println("Start upgrade SPIFFS, please wait...");
+  web_print("Start upgrade SPIFFS, please wait...");
+
   WiFiClient client_for_upgrade;
 
 #ifdef ESP32
@@ -61,21 +63,25 @@ void upgrade_firmware() {
 
     Serial.println("SPIFFS upgrade done!");
     Serial.println("Start upgrade BUILD, please wait...");
+    web_print("SPIFFS upgrade done!");
+    web_print("Start upgrade BUILD, please wait...");
 
 #ifdef ESP32
-    httpUpdate.rebootOnUpdate(true);
+    //httpUpdate.rebootOnUpdate(true);
     t_httpUpdate_return ret = httpUpdate.update(client_for_upgrade, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
 #endif
 #ifdef ESP8266
-    ESPhttpUpdate.rebootOnUpdate(true);
+    //ESPhttpUpdate.rebootOnUpdate(true);
     t_httpUpdate_return ret = ESPhttpUpdate.update(client_for_upgrade, "http://91.204.228.124:1100/update/esp8266/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
 #endif
 
-    Serial.println("BUILD upgrade done!");
-    Serial.println("Restart ESP....");
-
-  } else {
-    //upgrade_status(t_httpUpdate_return ret);
+    if (ret == HTTP_UPDATE_OK) {
+      web_print("BUILD upgrade done!");
+      web_print("Restart ESP....");
+      Serial.println("BUILD upgrade done!");
+      Serial.println("Restart ESP....");
+      ESP.restart();
+    }
   }
 }
 

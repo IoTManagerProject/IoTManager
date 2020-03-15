@@ -41,7 +41,7 @@ void Web_server_init() {
   server.addHandler(&ws);
 
   events.onConnect([](AsyncEventSourceClient * client) {
-    client->send("hello!", NULL, millis(), 1000);
+    //!!!client->send("hello!", NULL, millis(), 1000);
   });
 
   server.addHandler(&events);
@@ -144,14 +144,22 @@ void Web_server_init() {
   server.on("/config.setup.json", HTTP_GET, [](AsyncWebServerRequest * request) {
     request->send(200, "application/json", configSetup);
   });
+
+  // ------------------Выполнение команды из запроса
+  server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest * request) {             //http://192.168.88.45/cmd?command=rel 1 1
+    String com = request->getParam("command")->value();
+    Serial.println(com);
+    order_loop += com + ",";
+    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+  });
 }
 //========================================WS=========================================================================================
 #ifdef WS_enable
 void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len) {
   if (type == WS_EVT_CONNECT) {
     Serial.printf("ws[%s][%u] connect\n", server->url(), client->id());
-    client->printf(configJson.c_str(), client->id());
-    client->ping();
+    client->printf(json.c_str(), client->id());
+    //client->ping();
   } else if (type == WS_EVT_DISCONNECT) {
     Serial.printf("ws[%s][%u] disconnect\n", server->url(), client->id());
   } else if (type == WS_EVT_ERROR) {

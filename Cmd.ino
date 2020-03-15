@@ -4,6 +4,8 @@ void CMD_init() {
   sCmd.addCommand("buttonSet",  buttonSet);
   sCmd.addCommand("buttonChange",  buttonChange);
 
+  //sCmd.addCommand("button_touch",  button_touch);
+
   sCmd.addCommand("pinSet",  pinSet);
   sCmd.addCommand("pinChange",  pinChange);
 
@@ -21,6 +23,9 @@ void CMD_init() {
   sCmd.addCommand("dhtPerception",  dhtPerception);
   sCmd.addCommand("dhtComfort",  dhtComfort);
   sCmd.addCommand("dhtDewpoint",  dhtDewpoint);
+
+  sCmd.addCommand("stepper",  stepper);
+  sCmd.addCommand("stepperSet",  stepperSet);
 
   sCmd.addCommand("logging",  logging);
 
@@ -320,6 +325,44 @@ void textSet() {
 
   jsonWrite(configJson, "textSet" + number, text);
   sendSTATUS("textSet" + number, text);
+}
+
+//=====================================================================================================================================
+//=========================================Модуль шагового мотора======================================================================
+
+//stepper 1 12 13
+void stepper() {
+  String stepper_number = sCmd.next();
+  String pin_step = sCmd.next();
+  String pin_dir = sCmd.next();
+
+  jsonWrite(optionJson, "stepper" + stepper_number, pin_step + " " + pin_dir);
+  pinMode(pin_step.toInt(), OUTPUT);
+  pinMode(pin_dir.toInt(), OUTPUT);
+}
+
+//stepperSet 1 100 5
+void stepperSet() {
+  String stepper_number = sCmd.next();
+  String steps = sCmd.next();
+  String stepper_speed = sCmd.next();
+  
+  String pin_step = selectToMarker (jsonRead(optionJson, "stepper" + stepper_number), " ");
+  String pin_dir =  deleteBeforeDelimiter (jsonRead(optionJson, "stepper" + stepper_number), " ");
+
+   Serial.println(pin_step);
+   Serial.println(pin_dir); 
+
+  if (steps.toInt() > 0) digitalWrite(pin_dir.toInt(), HIGH);
+  if (steps.toInt() < 0) digitalWrite(pin_dir.toInt(), LOW);
+  
+  for (int x = 0; x < abs(steps.toInt()); x++)
+  {
+    digitalWrite(pin_step.toInt(), HIGH);
+    delay(stepper_speed.toInt());
+    digitalWrite(pin_step.toInt(), LOW);
+    delay(stepper_speed.toInt());
+  }
 }
 
 

@@ -187,6 +187,13 @@ void prsets_init() {
     request->redirect("/page.htm?configuration");
   });
 
+  server.on("/stepper", HTTP_GET, [](AsyncWebServerRequest * request) {
+    writeFile("firmware.config.txt", readFile("configs/stepper.config.txt", 2048));
+    writeFile("firmware.scenario.txt", readFile("configs/stepper.scenario.txt", 2048));
+    Device_init();
+    Scenario_init();
+    request->redirect("/page.htm?configuration");
+  });
 
   //default===============================================================================
 

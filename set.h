@@ -4,7 +4,7 @@ String new_version;
 
 //#define OTA_enable
 //#define MDNS_enable
-//#define WS_enable
+#define WS_enable
 
 #define TIME_COMPILING String(__TIME__)
 #define DATE_COMPILING String(__DATE__)
@@ -58,6 +58,7 @@ ESP8266HTTPUpdateServer httpUpdater;
 #endif
 
 //==общие библиотеки и объекты==//
+#include <Arduino.h>
 #include "time.h"
 #ifdef OTA_enable
 #include <ArduinoOTA.h>
@@ -105,11 +106,15 @@ DHTesp dht;
 Adafruit_Si7021 sensor_Si7021 = Adafruit_Si7021();
 //-----------------------------------------------------------------
 
+
+
 const char* hostName = "IoT Manager";
 
 String configSetup = "{}";
 String configJson = "{}";
 String optionJson = "{}";
+
+String json = "{}";
 
 String chipID = "";
 String prefix   = "/IoTmanager";

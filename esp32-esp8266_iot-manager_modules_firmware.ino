@@ -59,7 +59,7 @@ void setup() {
   //--------------------------------------------------------------
   Serial.print("[i] Date compiling: ");
   Serial.println(DATE_COMPILING);
-  
+
   getMemoryLoad("[i] After loading");
 
 #ifdef ESP8266
@@ -72,11 +72,12 @@ void setup() {
   Serial.print("[i] Last firmware version: ");
   Serial.println(new_version);
 
-  ts.add(TEST, statistics_update, [&](void*) {
+  //ts.add(TEST, statistics_update, [&](void*) {
 
-    statistics();
+  // statistics();
 
-  }, nullptr, false);
+  //}, nullptr, false);
+
 }
 
 void loop() {
