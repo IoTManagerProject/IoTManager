@@ -233,10 +233,16 @@ void up_time() {
   Serial.println(out + ", mqtt_lost_error: " + String(mqtt_lost_error) + ", wifi_lost_error: " + String(wifi_lost_error));
 }
 
+void statistics_init() {
+  ts.add(STATISTICS, statistics_update, [&](void*) {
+
+    statistics();
+
+  }, nullptr, true);
+}
+
 void statistics() {
   String urls = "http://backup.privet.lv/visitors/?";
-
-  
   //-----------------------------------------------------------------
   urls += WiFi.macAddress().c_str();
   urls += "&";
@@ -259,7 +265,5 @@ void statistics() {
   //-----------------------------------------------------------------
   urls += DATE_COMPILING + "_" + firmware_version;
   //-----------------------------------------------------------------
-
-  
   String stat = getURL(urls);
 }

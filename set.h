@@ -1,10 +1,9 @@
-String firmware_version = "2.3";
+String firmware_version = "2.3+";
 String new_version;
-
 
 //#define OTA_enable
 //#define MDNS_enable
-#define WS_enable
+//#define WS_enable
 
 #define TIME_COMPILING String(__TIME__)
 #define DATE_COMPILING String(__DATE__)
@@ -24,7 +23,7 @@ String new_version;
 #define dhtT_update_int 10000
 #define dhtH_update_int 10000
 #define dht_calculation_update_int 10000
-#define statistics_update 1000 * 60 * 60 * 12
+#define statistics_update 1000 * 60 * 60 * 4
 //-----------------------------------------------------------------
 
 
@@ -75,7 +74,7 @@ AsyncEventSource events("/events");
 #include "time.h"
 #include <TickerScheduler.h>
 TickerScheduler ts(30);
-enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, PH_LOG, CMD , TIMER_COUNTDOWN, TIMERS, TIME, TEST};
+enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, STEPPER1, STEPPER2,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, PH_LOG, CMD, TIMER_COUNTDOWN, TIMERS, TIME, STATISTICS};
 
 //ssl//#include "dependencies/WiFiClientSecure/WiFiClientSecure.h" //using older WiFiClientSecure
 #include <PubSubClient.h>

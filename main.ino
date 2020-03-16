@@ -278,16 +278,49 @@ void getMemoryLoad(String text) {
 
 //esp32 full memory = 362868 k bytes
 //esp8266 full memory = 53312 k bytes
-
+/*
 void web_print (String text) {
+  if (WiFi.status() == WL_CONNECTED) {
+    jsonWrite(json, "test1",  jsonRead(json, "test2"));
+    jsonWrite(json, "test2",  jsonRead(json, "test3"));
+    jsonWrite(json, "test3",  jsonRead(json, "test4"));
+    jsonWrite(json, "test4",  jsonRead(json, "test5"));
+    jsonWrite(json, "test5",  jsonRead(json, "test6"));
 
-  jsonWrite(json, "test1",  jsonRead(json, "test2"));
-  jsonWrite(json, "test2",  jsonRead(json, "test3"));
-  jsonWrite(json, "test3",  jsonRead(json, "test4"));
-  jsonWrite(json, "test4",  jsonRead(json, "test5"));
-  jsonWrite(json, "test5",  jsonRead(json, "test6"));
+    jsonWrite(json, "test6", GetTime() + " " + text);
 
-  jsonWrite(json, "test6", GetTime() + " " + text);
-
-  ws.textAll(json);
+    ws.textAll(json);
+  }
 }
+
+ {
+      "type": "hr"
+    },
+               {
+      "type": "h6",
+      "title": "{{test1}}"
+    },
+                {
+      "type": "h6",
+      "title": "{{test2}}"
+    },
+               {
+      "type": "h6",
+      "title": "{{test3}}"
+    },
+                {
+      "type": "h6",
+      "title": "{{test4}}"
+    },
+                {
+      "type": "h6",
+      "title": "{{test5}}"
+    },
+                {
+      "type": "h6",
+      "title": "{{test6}}"
+    },
+                {
+      "type": "hr"
+    },
+*/

@@ -34,38 +34,11 @@
 		},
 		{
 			"type": "h4",
-			"title": "SPIFFS version: 2.3"
+			"title": "SPIFFS version: 2.3+"
 		},
-               {
+        {
 			"type": "hr"
-		},
-               {
-			"type": "h6",
-			"title": "{{test1}}"
-		},
-                {
-			"type": "h6",
-			"title": "{{test2}}"
-		},
-               {
-			"type": "h6",
-			"title": "{{test3}}"
-		},
-                {
-			"type": "h6",
-			"title": "{{test4}}"
-		},
-                {
-			"type": "h6",
-			"title": "{{test5}}"
-		},
-                {
-			"type": "h6",
-			"title": "{{test6}}"
-		},
-                {
-			"type": "hr"
-		},
+		},   
 		{
 			"type": "link",
 			"title": "Конфигурация устройства",

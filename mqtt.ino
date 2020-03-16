@@ -51,7 +51,7 @@ void MQTT_init() {
       Serial.println("[V] WiFi-ok");
       if (client.connected()) {
         Serial.println("[V] MQTT-ok");
-        web_print("MQTT-ok");
+        //web_print("MQTT-ok");
       } else {
         MQTT_Connecting();
         mqtt_lost_error++;
@@ -80,7 +80,7 @@ boolean MQTT_Connecting() {
   if ((mqtt_server != "")) {
     static boolean first = true;
     if (!first) Serial.println("[E] Lost MQTT connection, start reconnecting");
-    web_print("Lost MQTT connection, start reconnecting");
+    //web_print("Lost MQTT connection, start reconnecting");
     first = false;
     //ssl//espClient.setCACert(local_root_ca1);
     client.setServer(mqtt_server.c_str(), jsonReadtoInt(configSetup, "mqttPort"));
@@ -89,7 +89,7 @@ boolean MQTT_Connecting() {
         Serial.println("[V] Connecting to MQTT server commenced");
         if (client.connect(chipID.c_str(), jsonRead(configSetup, "mqttUser").c_str(), jsonRead(configSetup, "mqttPass").c_str())) {
           Serial.println("[V] MQTT connected");
-          web_print("MQTT connected");
+          //web_print("MQTT connected");
           client.setCallback(callback);
           client.subscribe(prefix.c_str());  // Для приема получения HELLOW и подтверждения связи
           client.subscribe((prefix + "/" + chipID + "/+/control").c_str()); // Подписываемся на топики control
@@ -98,7 +98,7 @@ boolean MQTT_Connecting() {
           client.subscribe((prefix + "/ids").c_str()); // Подписываемся на топики ids
           sendMQTT("test", "work");
           Serial.println("[V] Callback set, subscribe done");
-          web_print("Callback set, subscribe done");
+          //web_print("Callback set, subscribe done");
           //if (out_date_send) outcoming_date(); //отправляем данные в виджеты
           return true;
         } else {
@@ -109,7 +109,7 @@ boolean MQTT_Connecting() {
     }
   } else {
     Serial.println("[E] No date for MQTT connection");
-    web_print("No date for MQTT connection");
+    //web_print("No date for MQTT connection");
     return false;
   }
 }

@@ -51,8 +51,8 @@ void setup() {
   Push_init();
   Serial.println("[V] Push_init");
   //--------------------------------------------------------------
-  statistics();
-  Serial.println("[V] statistics");
+  statistics_init();
+  Serial.println("[V] statistics_init");
   //--------------------------------------------------------------
   initUpgrade();
   Serial.println("[V] initUpgrade");
@@ -71,13 +71,6 @@ void setup() {
 
   Serial.print("[i] Last firmware version: ");
   Serial.println(new_version);
-
-  //ts.add(TEST, statistics_update, [&](void*) {
-
-  // statistics();
-
-  //}, nullptr, false);
-
 }
 
 void loop() {

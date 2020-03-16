@@ -345,23 +345,41 @@ void stepper() {
 void stepperSet() {
   String stepper_number = sCmd.next();
   String steps = sCmd.next();
+  jsonWrite(optionJson, "steps" + stepper_number, steps);
   String stepper_speed = sCmd.next();
-  
   String pin_step = selectToMarker (jsonRead(optionJson, "stepper" + stepper_number), " ");
   String pin_dir =  deleteBeforeDelimiter (jsonRead(optionJson, "stepper" + stepper_number), " ");
-
-   Serial.println(pin_step);
-   Serial.println(pin_dir); 
-
+  Serial.println(pin_step);
+  Serial.println(pin_dir);
   if (steps.toInt() > 0) digitalWrite(pin_dir.toInt(), HIGH);
   if (steps.toInt() < 0) digitalWrite(pin_dir.toInt(), LOW);
-  
-  for (int x = 0; x < abs(steps.toInt()); x++)
-  {
-    digitalWrite(pin_step.toInt(), HIGH);
-    delay(stepper_speed.toInt());
-    digitalWrite(pin_step.toInt(), LOW);
-    delay(stepper_speed.toInt());
+  if (stepper_number == "1") {
+    ts.add(STEPPER1, stepper_speed.toInt(), [&](void*) {
+      int steps_int = abs(jsonReadtoInt(optionJson, "steps1"));
+      static int count;
+      count++;
+      String pin_step = selectToMarker (jsonRead(optionJson, "stepper1"), " ");
+      digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
+      if (count > steps_int) {
+        digitalWrite(pin_step.toInt(), LOW);
+        ts.remove(STEPPER1);
+        count = 0;
+      }
+    }, nullptr, true);
+  }
+   if (stepper_number == "2") {
+    ts.add(STEPPER2, stepper_speed.toInt(), [&](void*) {
+      int steps_int = abs(jsonReadtoInt(optionJson, "steps2"));
+      static int count;
+      count++;
+      String pin_step = selectToMarker (jsonRead(optionJson, "stepper2"), " ");
+      digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
+      if (count > steps_int) {
+        digitalWrite(pin_step.toInt(), LOW);
+        ts.remove(STEPPER2);
+        count = 0;
+      }
+    }, nullptr, true);
   }
 }
 

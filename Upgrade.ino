@@ -19,7 +19,7 @@ void initUpgrade() {
         jsonWrite(tmp, "class", "pop-up");
       } else {
         upgrade_flag = true;
-        jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Идет обновление прошивки... После завершения устройство перезагрузится.");
+        jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Идет обновление прошивки... После завершения устройство перезагрузится. Подождите минуту...");
         jsonWrite(tmp, "class", "pop-up");
       }
     } else {
@@ -41,7 +41,7 @@ void upgrade_firmware() {
   configSetup_for_update = configSetup;
 
   Serial.println("Start upgrade SPIFFS, please wait...");
-  web_print("Start upgrade SPIFFS, please wait...");
+  //web_print("Start upgrade SPIFFS, please wait...");
 
   WiFiClient client_for_upgrade;
 
@@ -63,8 +63,8 @@ void upgrade_firmware() {
 
     Serial.println("SPIFFS upgrade done!");
     Serial.println("Start upgrade BUILD, please wait...");
-    web_print("SPIFFS upgrade done!");
-    web_print("Start upgrade BUILD, please wait...");
+    //web_print("SPIFFS upgrade done!");
+    //web_print("Start upgrade BUILD, please wait...");
 
 #ifdef ESP32
     //httpUpdate.rebootOnUpdate(true);
@@ -76,8 +76,8 @@ void upgrade_firmware() {
 #endif
 
     if (ret == HTTP_UPDATE_OK) {
-      web_print("BUILD upgrade done!");
-      web_print("Restart ESP....");
+      //web_print("BUILD upgrade done!");
+      //web_print("Restart ESP....");
       Serial.println("BUILD upgrade done!");
       Serial.println("Restart ESP....");
       ESP.restart();
