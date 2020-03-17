@@ -189,6 +189,7 @@ void pwm() {
   jsonWrite(optionJson, "pwm_pin" + pwm_number, pwm_pin);
   pinMode(pwm_pin_int, INPUT);
   analogWrite(pwm_pin_int, start_state.toInt());
+  //analogWriteFreq(32000);
   jsonWrite(configJson, "pwmSet" + pwm_number, start_state);
 
   createViget (viget_name, page_name, page_number, "vigets/viget.range.json", "pwmSet" + pwm_number);
@@ -355,7 +356,7 @@ void stepperSet() {
   if (steps.toInt() < 0) digitalWrite(pin_dir.toInt(), LOW);
   if (stepper_number == "1") {
     ts.add(STEPPER1, stepper_speed.toInt(), [&](void*) {
-      int steps_int = abs(jsonReadtoInt(optionJson, "steps1"));
+      int steps_int = abs(jsonReadtoInt(optionJson, "steps1") * 2);
       static int count;
       count++;
       String pin_step = selectToMarker (jsonRead(optionJson, "stepper1"), " ");
@@ -367,9 +368,9 @@ void stepperSet() {
       }
     }, nullptr, true);
   }
-   if (stepper_number == "2") {
+  if (stepper_number == "2") {
     ts.add(STEPPER2, stepper_speed.toInt(), [&](void*) {
-      int steps_int = abs(jsonReadtoInt(optionJson, "steps2"));
+      int steps_int = abs(jsonReadtoInt(optionJson, "steps2") * 2);
       static int count;
       count++;
       String pin_step = selectToMarker (jsonRead(optionJson, "stepper2"), " ");

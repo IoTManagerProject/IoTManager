@@ -51,7 +51,7 @@ void MQTT_init() {
       Serial.println("[V] WiFi-ok");
       if (client.connected()) {
         Serial.println("[V] MQTT-ok");
-        //web_print("MQTT-ok");
+        web_print("MQTT-ok");
       } else {
         MQTT_Connecting();
         mqtt_lost_error++;

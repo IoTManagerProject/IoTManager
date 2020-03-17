@@ -1,116 +1,113 @@
 {
- "configs": [
-
-  "/config.live.json",
-  "/config.setup.json",
-  "/config.option.json"
-  
- ],
- "class":"col-sm-offset-1 col-sm-10",
- "content": [
-  {
-   "type": "h5",
-   "title": "{{SSDP}}",
-   "class":"alert-warning"
-  },
-{
-   "type": "h4",
-   "title": "Device ID: {{chipID}}"
-  },
-{
-   "type": "h4",
-   "title": "IP address: {{ip}}"
-  },
-{
-   "type": "h4",
-   "title": "Uptime: {{uptime}}"
-  },
- {
-   "type": "hr"
-  },
-  
-  {
-   "type":"dropdown",
-   "name":"help-url",
-   "class":"btn btn-warning btn-lg",
-   "style":"display:inline",
-   "title": {
-   "#":"Выбирите то, во что Вы хотите превратить ESP <span class=\"caret\"></span>",
-   "/relay":"1.Вкл. выкл. локального реле",
-   "/relay_timer":"2.Вкл. выкл. локального реле в определенное время",
-   "/relay_countdown":"3.Вкл. выкл. локального реле на определенный период времени",
-   "/relay_several":"4.Вкл. выкл. нескольких локальных реле кнопкой в приложении",
-   "/relay_switch":"5.Вкл. выкл. локального реле физической кнопкой (кнопка так же дублируется в приложении)",
-   "/relay_button_remote":"6.Вкл. выкл. нескольких удаленных реле кнопкой в приложении (нужно указать Device ID)",
-   "/relay_switch_remote":"7.Вкл. выкл. нескольких удаленных реле физической кнопкой (нужно указать Device ID)",
-   "/pwm":"8.Широтно импульсная модуляция",
-   "/dht11":"9.Сенсор DHT11",
-   "/dht22":"10.Сенсор DHT22, DHT33, DHT44, AM2302, RHT03",
-   "/analog":"11.Аналоговый сенсор",
-   "/dallas":"12.Сенсор DS18B20",
-   "/termostat":"13.Термостат на DS18B20 с переключением в ручной режим",
-   "/level":"14.Контроль уровня в баке на сенсорах: JSN-SR04T, HC-SR04, HY-SRF05 (управление насосом)",
-   "/moution_relay":"15.Датчик движения включающий свет",
-   "/moution_security":"16.Охранный датчик движения",
-   "/stepper":"17.Система управления шаговыми двигателями на основе драйвера A4988 (открытие закрытие штор)",
-   "/default":"Настройки по умолчанию"
-   }
-  },
-{
-   "type": "h2",
-   "title": "Конфигурация устройства"
-  },
- {
-   "type":"file",
-   "state":"firmware.config.txt",
-   "style":"width:100%;height:400px",
-   "title": "Сохранить",
-   "action": "/all_modules_init",
-   "class":"btn btn-block btn-success"
-  },
- {
-   "type": "link",
-   "title": "Инструкция",
-   "action": "https://github.com/DmitryBorisenko33/esp8266_iot-manager_modules_firmware/wiki/Instruction",
-   "class": "btn btn-block btn-primary"
-  },
-{
-   "type": "h2",
-   "title": "Сценарии"
-  },
-{
-"type": "checkbox",
-"name":"scenario",
-"title": "Включить сценарии",
-"action": "/scenario?status=[[scenario]]",
-"state": "{{scenario}}"
-},
-{
-   "type": "h6",
-   "title": ""
-  },
-{
-   "type":"file",
-   "state":"firmware.scenario.txt",
-   "style":"width:100%;height:400px",
-   "title": "Сохранить и включить",
-   "action": "/scenario?status=1",
-   "class":"btn btn-block btn-success"
-  },
-{
-   "type": "hr"
- },
- {
-   "type": "link",
-   "title": "Очистить все логи",
-   "action": "/cleanlog",
-   "class": "btn btn-block btn-success"
-  },
-  {
-   "type": "link",
-   "title": "Главная",
-   "action": "/page.htm?index",
-   "class": "btn btn-block btn-danger btn-sm"
-  }
- ]
+  "configs": [
+    "/config.live.json",
+    "/config.setup.json",
+    "/config.option.json"
+  ],
+  "class": "col-sm-offset-1 col-sm-10",
+  "content": [
+    {
+      "type": "h5",
+      "title": "{{SSDP}}",
+      "class": "alert-warning"
+    },
+    {
+      "type": "h4",
+      "title": "Device ID: {{chipID}}"
+    },
+    {
+      "type": "h4",
+      "title": "IP address: {{ip}}"
+    },
+    {
+      "type": "h4",
+      "title": "Uptime: {{uptime}}"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "dropdown",
+      "name": "help-url",
+      "class": "btn btn-warning btn-lg",
+      "style": "display:inline",
+      "title": {
+        "#": "Выбирите то, во что Вы хотите превратить ESP <span class=\"caret\"></span>",
+        "/relay": "1.Вкл. выкл. локального реле",
+        "/relay_timer": "2.Вкл. выкл. локального реле в определенное время",
+        "/relay_countdown": "3.Вкл. выкл. локального реле на определенный период времени",
+        "/relay_several": "4.Вкл. выкл. нескольких локальных реле кнопкой в приложении",
+        "/relay_switch": "5.Вкл. выкл. локального реле физической кнопкой (кнопка так же дублируется в приложении)",
+        "/relay_button_remote": "6.Вкл. выкл. нескольких удаленных реле кнопкой в приложении (нужно указать Device ID)",
+        "/relay_switch_remote": "7.Вкл. выкл. нескольких удаленных реле физической кнопкой (нужно указать Device ID)",
+        "/pwm": "8.Широтно импульсная модуляция",
+        "/dht11": "9.Сенсор DHT11",
+        "/dht22": "10.Сенсор DHT22, DHT33, DHT44, AM2302, RHT03",
+        "/analog": "11.Аналоговый сенсор",
+        "/dallas": "12.Сенсор DS18B20",
+        "/termostat": "13.Термостат на DS18B20 с переключением в ручной режим",
+        "/level": "14.Контроль уровня в баке на сенсорах: JSN-SR04T, HC-SR04, HY-SRF05 (управление насосом)",
+        "/moution_relay": "15.Датчик движения включающий свет",
+        "/moution_security": "16.Охранный датчик движения",
+        "/stepper": "17.Система управления шаговыми двигателями на основе драйвера A4988 (открытие закрытие штор)",
+        "/default": "Настройки по умолчанию"
+      }
+    },
+    {
+      "type": "h2",
+      "title": "Конфигурация устройства"
+    },
+    {
+      "type": "file",
+      "state": "firmware.config.txt",
+      "style": "width:100%;height:400px",
+      "title": "Сохранить",
+      "action": "/all_modules_init",
+      "class": "btn btn-block btn-success"
+    },
+    {
+      "type": "link",
+      "title": "Инструкция",
+      "action": "https://github.com/DmitryBorisenko33/esp8266_iot-manager_modules_firmware/wiki/Instruction",
+      "class": "btn btn-block btn-primary"
+    },
+    {
+      "type": "h2",
+      "title": "Сценарии"
+    },
+    {
+      "type": "checkbox",
+      "name": "scenario",
+      "title": "Включить сценарии",
+      "action": "/scenario?status=[[scenario]]",
+      "state": "{{scenario}}"
+    },
+    {
+      "type": "h6",
+      "title": ""
+    },
+    {
+      "type": "file",
+      "state": "firmware.scenario.txt",
+      "style": "width:100%;height:400px",
+      "title": "Сохранить и включить",
+      "action": "/scenario?status=1",
+      "class": "btn btn-block btn-success"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "link",
+      "title": "Очистить все логи",
+      "action": "/cleanlog",
+      "class": "btn btn-block btn-success"
+    },
+    {
+      "type": "link",
+      "title": "Главная",
+      "action": "/page.htm?index",
+      "class": "btn btn-block btn-danger btn-sm"
+    }
+  ]
 }

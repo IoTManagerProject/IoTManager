@@ -1,4 +1,4 @@
-String firmware_version = "2.3+";
+String firmware_version = "2.3.1";
 String new_version;
 
 //#define OTA_enable
