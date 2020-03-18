@@ -275,10 +275,12 @@ void getMemoryLoad(String text) {
   Serial.println(String(memory_remain) + " k bytes");
 
 }
-
 //esp32 full memory = 362868 k bytes
 //esp8266 full memory = 53312 k bytes
 
+
+//===================================================================
+/*
 void web_print (String text) {
   if (WiFi.status() == WL_CONNECTED) {
     jsonWrite(json, "test1",  jsonRead(json, "test2"));
@@ -292,13 +294,21 @@ void web_print (String text) {
     ws.textAll(json);
   }
 }
+*/
+//===================================================================
+/*
+  "socket": [
+      "ws://{{ip}}/ws"
+        ],
+*/
+//===================================================================
 /*
   {
       "type": "h4",
       "title": "('{{build2}}'=='{{firmware_version}}'?'NEW':'OLD')"
     },
 */
-
+//===================================================================
 /*
   {
       "type": "hr"
@@ -331,3 +341,4 @@ void web_print (String text) {
       "type": "hr"
     },
 */
+//===================================================================

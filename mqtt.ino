@@ -19,6 +19,7 @@ void MQTT_init() {
 
     saveConfig();
 
+
     client.disconnect();
     MQTT_Connecting();
 
@@ -40,9 +41,12 @@ void MQTT_init() {
 #endif
 
 #ifdef ESP32
-    request->send(200, "text/text", tmp); 
+    request->send(200, "text/text", tmp);
 #endif
   });
+
+  MQTT_Connecting();
+
 
   //проверка подключения к серверу
   ts.add(WIFI_MQTT_CONNECTION_CHECK, wifi_mqtt_reconnecting, [&](void*) {
@@ -51,7 +55,7 @@ void MQTT_init() {
       Serial.println("[V] WiFi-ok");
       if (client.connected()) {
         Serial.println("[V] MQTT-ok");
-        web_print("MQTT-ok");
+        //web_print("MQTT-ok");
       } else {
         MQTT_Connecting();
         mqtt_lost_error++;
@@ -62,7 +66,7 @@ void MQTT_init() {
       ts.remove(WIFI_MQTT_CONNECTION_CHECK);
       StartAPMode();
     }
-  }, nullptr, true);
+  }, nullptr, false);
 }
 
 //================================================ОБНОВЛЕНИЕ====================================================

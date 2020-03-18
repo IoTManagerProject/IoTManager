@@ -7,7 +7,7 @@ String new_version;
 
 #define TIME_COMPILING String(__TIME__)
 #define DATE_COMPILING String(__DATE__)
-
+//-----------------------------------------------------------------
 #define wifi_mqtt_reconnecting 20000
 //-----------------------------------------------------------------
 #define analog_update_int 5000
@@ -52,8 +52,6 @@ ESP8266HTTPUpdateServer httpUpdater;
 #include <HTTPUpdate.h>
 #include <HTTPClient.h>
 //HTTPClient http;
-
-
 #endif
 
 //==общие библиотеки и объекты==//
@@ -74,9 +72,10 @@ AsyncEventSource events("/events");
 #include "time.h"
 #include <TickerScheduler.h>
 TickerScheduler ts(30);
-enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, STEPPER1, STEPPER2,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, PH_LOG, CMD, TIMER_COUNTDOWN, TIMERS, TIME, STATISTICS};
+enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, STEPPER1, STEPPER2,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, PH_LOG, CMD, TIMER_COUNTDOWN, TIMERS, TIME, STATISTICS, TEST};
 
 //ssl//#include "dependencies/WiFiClientSecure/WiFiClientSecure.h" //using older WiFiClientSecure
+//#include "Ticker_for_TickerScheduler/Ticker/Ticker.h" 
 #include <PubSubClient.h>
 WiFiClient espClient;
 //ssl//WiFiClientSecure espClient;
@@ -140,7 +139,7 @@ String current_time;
 int scenario_line_status [] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
 int wifi_lost_error = 0;
-int mqtt_lost_error = -1;
+int mqtt_lost_error = 0;
 
 String var;
 

@@ -263,7 +263,8 @@ void statistics() {
 #endif
   urls += "&";
   //-----------------------------------------------------------------
-  urls += DATE_COMPILING + "_" + firmware_version;
+  urls += "firm version: " + firmware_version + " " + DATE_COMPILING + " " + TIME_COMPILING; 
   //-----------------------------------------------------------------
   String stat = getURL(urls);
+  //Serial.println(stat);
 }

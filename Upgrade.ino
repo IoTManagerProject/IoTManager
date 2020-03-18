@@ -8,8 +8,8 @@ void initUpgrade() {
     //new_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
 #endif
 
-    Serial.println("[i] Last firmware version: ");
-    Serial.print(new_version);
+    Serial.print("[i] Last firmware version: ");
+    Serial.println(new_version);
 
     String tmp = "{}";
 

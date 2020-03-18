@@ -107,6 +107,7 @@ bool StartAPMode() {
   IPAddress myIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(myIP);
+  jsonWrite(configJson, "ip", myIP.toString());
 
   if (jsonReadtoInt(optionJson, "pass_status") != 1) {
     ts.add(ROUTER_SEARCHING, 10 * 1000, [&](void*) {
