@@ -52,6 +52,7 @@ ESP8266HTTPUpdateServer httpUpdater;
 #include <HTTPUpdate.h>
 #include <HTTPClient.h>
 //HTTPClient http;
+#include <rom/rtc.h>
 #endif
 
 //==общие библиотеки и объекты==//
@@ -108,8 +109,8 @@ Adafruit_Si7021 sensor_Si7021 = Adafruit_Si7021();
 
 const char* hostName = "IoT Manager";
 
-String configSetup = "{}";
-String configJson = "{}";
+String configSetup = "{}"; //setup
+String configJson = "{}";  //live
 String optionJson = "{}";
 
 String json = "{}";

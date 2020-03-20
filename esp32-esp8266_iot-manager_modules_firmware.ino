@@ -47,8 +47,8 @@ void setup() {
   initUpgrade();
   Serial.println("[V] initUpgrade");
   //--------------------------------------------------------------
-  //Web_server_init();
-  //Serial.println("[V] Web_server_init");
+  Web_server_init();
+  Serial.println("[V] Web_server_init");
   //--------------------------------------------------------------
   MQTT_init();
   Serial.println("[V] MQTT_init");
@@ -59,7 +59,7 @@ void setup() {
   Push_init();
   Serial.println("[V] Push_init");
   //--------------------------------------------------------------
-  
+
   Serial.print("[i] Date compiling: ");
   Serial.println(DATE_COMPILING);
 
@@ -74,6 +74,8 @@ void setup() {
 
   Serial.print("[i] Last firmware version: ");
   Serial.println(new_version);
+
+  //Serial.println(scanWIFI());
 
 }
 

@@ -1,6 +1,13 @@
 void WIFI_init() {
 
   // --------------------Получаем ssid password со страницы
+  server.on("/wifi.scan.json", HTTP_GET, [](AsyncWebServerRequest * request) {
+    String tmp; 
+    //tmp = scanWIFI();
+    //Serial.println(tmp);
+    request->send(200, "application/json", tmp); // отправляем ответ о выполнении
+  });
+  // --------------------Получаем ssid password со страницы
   server.on("/ssid", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("ssid")) {
       jsonWrite(configSetup, "ssid", request->getParam("ssid")->value());
@@ -47,6 +54,7 @@ void WIFI_init() {
   // Попытка подключения к точке доступа
 
   WiFi.mode(WIFI_STA);
+  // WiFi.mode(WIFI_NONE_SLEEP);
 
   byte tries = 20;
   String _ssid = jsonRead(configSetup, "ssid");
@@ -163,3 +171,41 @@ boolean RouterFind(String ssid) {
     return false;
   }
 }
+/*
+String scanWIFI() {
+  uint8_t n = WiFi.scanNetworks();
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject& json = jsonBuffer.createObject();
+  JsonArray& networks = json.createNestedArray("networks");
+  for (uint8_t i = 0; i < n; i++) {
+    JsonObject& data = networks.createNestedObject();
+    String ssidMy = WiFi.SSID(i);
+    data["ssid"] = ssidMy;
+    data["pass"] = (WiFi.encryptionType(i) == ENC_TYPE_NONE) ? "" : "*";
+    int8_t dbm = WiFi.RSSI(i);
+    data["dbm"] = dbm;
+    if (ssidMy == jsonRead(configSetup, "ssid")) {
+      jsonWrite(configJson, "dbm", dbm);
+    }
+  }
+  String root;
+  json.printTo(root);
+  return root;
+}
+*/
+/*
+  {
+   "type":"wifi",
+   "title":"{{LangWiFi1}}",
+   "name":"ssid",
+   "state":"{{ssid}}",
+   "pattern":".{1,}"
+  },
+  {
+   "type":"password",
+   "title":"{{LangPass}}",
+   "name":"ssidPass",
+   "state":"{{ssidPass}}",
+   "pattern":".{8,}"
+  },
+*/

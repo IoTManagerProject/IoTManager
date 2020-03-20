@@ -259,7 +259,7 @@ void statistics() {
   urls += ESP.getResetReason();
 #endif
 #ifdef ESP32
-  urls += "unknow";
+  urls += "Unknown";
 #endif
   urls += "&";
   //-----------------------------------------------------------------

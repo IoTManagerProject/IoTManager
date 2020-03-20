@@ -277,11 +277,55 @@ void getMemoryLoad(String text) {
 }
 //esp32 full memory = 362868 k bytes
 //esp8266 full memory = 53312 k bytes
+/*
+String getResetReason(uint8_t core) {
+  int reason = rtc_get_reset_reason(core);
+  switch (reason) {
+    case 1  : return "Power on"; break;                                  //Vbat power on reset
+    case 3  : return "Software reset digital core"; break;               //Software reset digital core
+    case 4  : return "Legacy watch dog reset digital core"; break;       //Legacy watch dog reset digital core
+    case 5  : return "Deep Sleep reset digital core"; break;             //Deep Sleep reset digital core
+    case 6  : return "Reset by SLC module, reset digital core"; break;   //Reset by SLC module, reset digital core
+    case 7  : return "Timer Group0 Watch dog reset digital core"; break; //Timer Group0 Watch dog reset digital core
+    case 8  : return "Timer Group1 Watch dog reset digital core"; break; //Timer Group1 Watch dog reset digital core
+    case 9  : return "RTC Watch dog Reset digital core"; break;          //
+    case 10 : return "Instrusion tested to reset CPU"; break;
+    case 11 : return "Time Group reset CPU"; break;
+    case 12 : return "Software reset CPU"; break;
+    case 13 : return "RTC Watch dog Reset CPU"; break;
+    case 14 : return "for APP CPU, reseted by PRO CPU"; break;
+    case 15 : return "Reset when the vdd voltage is not stable"; break;
+    case 16 : return "RTC Watch dog reset digital core and rtc module"; break;
+    default : return "NO_MEAN";
+  }
+}
 
 
+String EspClass::getResetReason(void) {
+  char buff[32];
+  if (resetInfo.reason == REASON_DEFAULT_RST) { // normal startup by power on
+    strcpy_P(buff, PSTR("Power on"));
+  } else if (resetInfo.reason == REASON_WDT_RST) { // hardware watch dog reset
+    strcpy_P(buff, PSTR("Hardware Watchdog"));
+  } else if (resetInfo.reason == REASON_EXCEPTION_RST) { // exception reset, GPIO status won’t change
+    strcpy_P(buff, PSTR("Exception"));
+  } else if (resetInfo.reason == REASON_SOFT_WDT_RST) { // software watch dog reset, GPIO status won’t change
+    strcpy_P(buff, PSTR("Software Watchdog"));
+  } else if (resetInfo.reason == REASON_SOFT_RESTART) { // software restart ,system_restart , GPIO status won’t change
+    strcpy_P(buff, PSTR("Software/System restart"));
+  } else if (resetInfo.reason == REASON_DEEP_SLEEP_AWAKE) { // wake up from deep-sleep
+    strcpy_P(buff, PSTR("Deep-Sleep Wake"));
+  } else if (resetInfo.reason == REASON_EXT_SYS_RST) { // external system reset
+    strcpy_P(buff, PSTR("External System"));
+  } else {
+    strcpy_P(buff, PSTR("Unknown"));
+  }
+  return String(buff);
+}
+*/
 //===================================================================
 /*
-void web_print (String text) {
+  void web_print (String text) {
   if (WiFi.status() == WL_CONNECTED) {
     jsonWrite(json, "test1",  jsonRead(json, "test2"));
     jsonWrite(json, "test2",  jsonRead(json, "test3"));
@@ -293,7 +337,7 @@ void web_print (String text) {
 
     ws.textAll(json);
   }
-}
+  }
 */
 //===================================================================
 /*

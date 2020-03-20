@@ -100,10 +100,9 @@ boolean MQTT_Connecting() {
           client.subscribe((prefix + "/" + chipID + "/order").c_str()); // Подписываемся на топики order
           //client.subscribe((prefix + "/" + chipID + "/test").c_str());  //Для приема получения work и подтверждения связи (для приложения mqtt IOT MQTT Panel)
           client.subscribe((prefix + "/ids").c_str()); // Подписываемся на топики ids
-          sendMQTT("test", "work");
+          //sendMQTT("test", "work");
           Serial.println("[V] Callback set, subscribe done");
           //web_print("Callback set, subscribe done");
-          //if (out_date_send) outcoming_date(); //отправляем данные в виджеты
           return true;
         } else {
           Serial.println("[E] try again in " + String(wifi_mqtt_reconnecting / 1000) +  " sec");
@@ -155,10 +154,10 @@ void outcoming_date() {
   sendAllWigets();
   sendAllData();
 
-  if (flagLoggingAnalog) sendLogData("log.analog.txt", "loganalog");
-  if (flagLoggingPh) sendLogData("log.ph.txt", "logph");
-  if (flagLoggingDallas) sendLogData("log.dallas.txt", "logdallas");
-  if (flagLoggingLevel) sendLogData("log.level.txt", "loglevel");
+ // if (flagLoggingAnalog) sendLogData("log.analog.txt", "loganalog");
+ // if (flagLoggingPh) sendLogData("log.ph.txt", "logph");
+ // if (flagLoggingDallas) sendLogData("log.dallas.txt", "logdallas");
+ // if (flagLoggingLevel) sendLogData("log.level.txt", "loglevel");
 
   Serial.println("[V] Sending all date to iot manager completed");
 
@@ -241,7 +240,7 @@ void sendLogData(String file, String topic) {
   while (log_date.length() != 0) {
     String tmp = selectToMarker (log_date, "\n");
 
-    //sendSTATUS(topic, selectFromMarkerToMarker(tmp, " ", 2));
+    sendSTATUS(topic, selectFromMarkerToMarker(tmp, " ", 2));
     if (tmp != "") sendSTATUS(topic, tmp);
 
     log_date = deleteBeforeDelimiter(log_date, "\n");
