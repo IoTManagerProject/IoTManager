@@ -67,8 +67,8 @@
     },
     {
       "type": "link",
-      "title": "Инструкция",
-      "action": "https://github.com/DmitryBorisenko33/esp8266_iot-manager_modules_firmware/wiki/Instruction",
+      "title": "Подробная инструкция",
+      "action": "https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/wiki/Instruction",
       "class": "btn btn-block btn-primary"
     },
     {

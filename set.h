@@ -116,7 +116,7 @@ String optionJson = "{}";
 String json = "{}";
 
 String chipID = "";
-String prefix   = "/IoTmanager";
+//String prefix;   //= "/IoTmanager";
 String prex;
 String ids;
 //boolean busy;

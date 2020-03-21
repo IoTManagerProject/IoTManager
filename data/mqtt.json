@@ -31,12 +31,22 @@
   },
 {
    "type": "h4",
-   "title": "User name:"
+   "title": "Prefix:"
   },
 {
    "type": "input",
    "title": "",
    "name":"3",
+   "state": "{{mqttPrefix}}"
+  },
+{
+   "type": "h4",
+   "title": "User name:"
+  },
+{
+   "type": "input",
+   "title": "",
+   "name":"4",
    "state": "{{mqttUser}}"
   },
 {
@@ -46,7 +56,7 @@
 {
    "type": "input",
    "title": "",
-   "name":"4",
+   "name":"5",
    "state": "{{mqttPass}}"
   },
 {
@@ -58,7 +68,7 @@
 {
    "type": "button",
   "title":"Сохранить",
-    "action": "mqttSave?mqttServer=[[1]]&mqttPort=[[2]]&mqttUser=[[3]]&mqttPass=[[4]]",
+    "action": "mqttSave?mqttServer=[[1]]&mqttPort=[[2]]&mqttPrefix=[[3]]&mqttUser=[[4]]&mqttPass=[[5]]",
     "response":"[[my-block]]",
    "class": "btn btn-block btn-success",
    "style": "width:100%;display:inline"

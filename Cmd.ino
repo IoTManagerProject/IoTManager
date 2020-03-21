@@ -451,7 +451,7 @@ void mqttOrderSend() {
   String id = sCmd.next();
   String order = sCmd.next();
 
-  String  all_line = prefix + "/" + id + "/order";
+  String  all_line = jsonRead(configSetup, "mqttPrefix") + "/" + id + "/order";
   //Serial.print(all_line);
   //Serial.print("->");
   //Serial.println(order);

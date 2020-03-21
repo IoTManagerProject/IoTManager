@@ -29,7 +29,7 @@ void setup() {
 
   jsonWrite(configSetup, "firmware_version", firmware_version);
 
-  prex = prefix + "/" + chipID;
+  prex = jsonRead(configSetup, "mqttPrefix") + "/" + chipID;
   Serial.println(chipID);
   //--------------------------------------------------------------
   CMD_init();
