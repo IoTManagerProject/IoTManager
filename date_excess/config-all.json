@@ -8,6 +8,7 @@
     "timezone": 3,
     "mqttServer": "",
     "mqttPort": 0,
+    "mqttPrefix": "/IoTmanager",
     "mqttUser": "",
     "mqttPass": "",
     "scenario": "1",

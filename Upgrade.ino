@@ -1,34 +1,49 @@
 void initUpgrade() {
   server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest * request) {
 
-#ifdef ESP32
-    new_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
-#endif
-#ifdef ESP8266
-    //new_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
-#endif
+    start_check_version = true;
 
     Serial.print("[i] Last firmware version: ");
-    Serial.println(new_version);
+    Serial.println(last_version);
 
     String tmp = "{}";
-
-    if (new_version != "error") {
-      if (new_version == firmware_version) {
-        jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
-        jsonWrite(tmp, "class", "pop-up");
+    if (!flash_1mb) {
+      if (last_version != "") {
+        if (last_version != "error") {
+          if (last_version == firmware_version) {
+            jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
+            jsonWrite(tmp, "class", "pop-up");
+          } else {
+            upgrade_flag = true;
+            jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Идет обновление прошивки... После завершения устройство перезагрузится. Подождите одну минуту!!!");
+            jsonWrite(tmp, "class", "pop-up");
+          }
+        } else {
+          jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Ошибка... Cервер не найден. Попробуйте позже...");
+          jsonWrite(tmp, "class", "pop-up");
+        }
       } else {
-        upgrade_flag = true;
-        jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Идет обновление прошивки... После завершения устройство перезагрузится. Подождите минуту...");
+        jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Нажмите на кнопку \"обновить прошивку\" повторно...");
         jsonWrite(tmp, "class", "pop-up");
       }
     } else {
-      jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Ошибка... Cервер не найден. Попробуйте позже...");
+      jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Обновление по воздуху не поддерживается, модуль имеет меньше 4 мб памяти...");
       jsonWrite(tmp, "class", "pop-up");
     }
-
     request->send(200, "text/text", tmp);
   });
+}
+
+void handle_get_url() {
+  if (start_check_version) {
+    start_check_version = false;
+#ifdef ESP32
+    last_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
+#endif
+#ifdef ESP8266
+    last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
+#endif
+  }
 }
 
 void upgrade_firmware() {

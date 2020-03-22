@@ -59,20 +59,26 @@ void setup() {
   Push_init();
   Serial.println("[V] Push_init");
   //--------------------------------------------------------------
+  //SSDP_init();
+  //Serial.println("[V] SSDP_init");
+  //--------------------------------------------------------------
+  
   Serial.print("[i] Date compiling: ");
   Serial.println(DATE_COMPILING);
 
   getMemoryLoad("[i] After loading");
 
 #ifdef ESP8266
-  new_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
+  last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
 #endif
 #ifdef ESP32
-  new_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
+  last_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
 #endif
 
+  jsonWrite(configSetup, "last_version", last_version);
+
   Serial.print("[i] Last firmware version: ");
-  Serial.println(new_version);
+  Serial.println(last_version);
 
   just_load = false;
 }
@@ -90,7 +96,9 @@ void loop() {
 #endif
 
   handleMQTT();
+
   handle_connection();
+  handle_get_url();
 
   handleCMD_loop();
   handleButton();

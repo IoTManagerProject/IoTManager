@@ -1,12 +1,5 @@
 void WIFI_init() {
-
-  // --------------------Получаем ssid password со страницы
-  server.on("/wifi.scan.json", HTTP_GET, [](AsyncWebServerRequest * request) {
-    String tmp; 
-    //tmp = scanWIFI();
-    //Serial.println(tmp);
-    request->send(200, "application/json", tmp); // отправляем ответ о выполнении
-  });
+   
   // --------------------Получаем ssid password со страницы
   server.on("/ssid", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("ssid")) {

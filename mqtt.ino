@@ -38,7 +38,8 @@ void MQTT_init() {
       jsonWrite(configSetup, "mqttPass", request->getParam("mqttPass")->value());
     }
     saveConfig();
-    start_connection = true;
+    start_connecting_to_mqtt = true;
+   
     request->send(200, "text/text", "ok");
   });
 
@@ -51,8 +52,8 @@ void MQTT_init() {
 }
 
 void handle_connection() {
-  if (start_connection) {
-    start_connection = false;
+  if (start_connecting_to_mqtt) {
+    start_connecting_to_mqtt = false;
     client.disconnect();
     MQTT_Connecting();
   }

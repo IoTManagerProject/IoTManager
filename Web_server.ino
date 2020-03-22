@@ -146,7 +146,7 @@ void Web_server_init() {
   });
 
   // ------------------Выполнение команды из запроса
-  server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest * request) {             //http://192.168.88.45/cmd?command=rel 1 1
+  server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest * request) {             //http://192.168.88.45/cmd?command=rel%201%201
     String com = request->getParam("command")->value();
     Serial.println(com);
     order_loop += com + ",";

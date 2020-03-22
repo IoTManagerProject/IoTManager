@@ -1,7 +1,7 @@
 String firmware_version = "2.3.1";
-String new_version;
-
-//23560
+boolean flash_1mb = true;
+String last_version;
+boolean start_check_version = false;
 
 //#define OTA_enable
 //#define MDNS_enable
@@ -33,9 +33,11 @@ String new_version;
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
-#include <ESPAsyncTCP.h>
+//#include <ESPAsyncTCP.h>
+#ifdef MDNS_enable
 #include <ESP8266mDNS.h>
-
+#endif
+//#include <ESP8266SSDP.h>
 #include <ESP8266httpUpdate.h>
 #include <ESP8266HTTPUpdateServer.h>
 ESP8266HTTPUpdateServer httpUpdater;
@@ -50,11 +52,11 @@ ESP8266HTTPUpdateServer httpUpdater;
 #endif
 #include <AsyncTCP.h>
 #include <analogWrite.h>
-
+//#include <ESP32SSDP.h>
 #include <HTTPUpdate.h>
 #include <HTTPClient.h>
 //HTTPClient http;
-#include <rom/rtc.h>
+//#include <rom/rtc.h>
 #endif
 
 //==общие библиотеки и объекты==//
@@ -149,4 +151,4 @@ String var;
 boolean upgrade_flag = false;
 boolean get_url_flag = false;
 
-boolean start_connection = false;
+boolean start_connecting_to_mqtt = false;
