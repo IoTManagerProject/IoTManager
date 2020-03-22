@@ -41,7 +41,6 @@ void upgrade_firmware() {
   configSetup_for_update = configSetup;
 
   Serial.println("Start upgrade SPIFFS, please wait...");
-  //web_print("Start upgrade SPIFFS, please wait...");
 
   WiFiClient client_for_upgrade;
 
@@ -63,8 +62,6 @@ void upgrade_firmware() {
 
     Serial.println("SPIFFS upgrade done!");
     Serial.println("Start upgrade BUILD, please wait...");
-    //web_print("SPIFFS upgrade done!");
-    //web_print("Start upgrade BUILD, please wait...");
 
 #ifdef ESP32
     //httpUpdate.rebootOnUpdate(true);
@@ -76,8 +73,6 @@ void upgrade_firmware() {
 #endif
 
     if (ret == HTTP_UPDATE_OK) {
-      //web_print("BUILD upgrade done!");
-      //web_print("Restart ESP....");
       Serial.println("BUILD upgrade done!");
       Serial.println("Restart ESP....");
       ESP.restart();

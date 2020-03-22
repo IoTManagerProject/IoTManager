@@ -32,13 +32,16 @@ void All_init() {
 
 void Device_init() {
 
-  //SENSORS-SECTION
   ts.remove(ANALOG_);
   ts.remove(LEVEL);
   ts.remove(DALLAS);
   ts.remove(DHTT);
   ts.remove(DHTH);
-  //================
+  ts.remove(DHTC);
+  ts.remove(DHTP);
+  ts.remove(DHTD);
+  ts.remove(STEPPER1);
+  ts.remove(STEPPER2);
 
   all_vigets = "";
   txtExecution("firmware.config.txt");

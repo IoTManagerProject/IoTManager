@@ -59,7 +59,6 @@ void setup() {
   Push_init();
   Serial.println("[V] Push_init");
   //--------------------------------------------------------------
-
   Serial.print("[i] Date compiling: ");
   Serial.println(DATE_COMPILING);
 
@@ -75,8 +74,7 @@ void setup() {
   Serial.print("[i] Last firmware version: ");
   Serial.println(new_version);
 
-  //Serial.println(scanWIFI());
-
+  just_load = false;
 }
 
 
@@ -92,6 +90,7 @@ void loop() {
 #endif
 
   handleMQTT();
+  handle_connection();
 
   handleCMD_loop();
   handleButton();

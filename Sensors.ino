@@ -36,7 +36,6 @@ void analog() {
     sendSTATUS("analog", String(analog));
     if (client.connected()) {
       Serial.println("[i] sensor 'analog' send date " + String(analog));
-      //web_print("sensor 'analog' send date " + String(analog));
     }
     // }
     analog_old = analog;
@@ -84,7 +83,6 @@ void level() {
       sendSTATUS("level", String(level));
       if (client.connected()) {
         Serial.println("[i] sensor tank 'level' send date " + String(level));
-        //web_print("sensor tank 'level' send date " + String(level));
       }
       //}
       level_old = level;
@@ -116,7 +114,6 @@ void dallas() {
     sendSTATUS("dallas", String(temp));
     if (client.connected()) {
       Serial.println("[i] sensor 'dallas' send date " + String(temp));
-      //web_print("sensor 'dallas' send date " + String(temp));
     }
     //}
     temp_old = temp;
@@ -156,7 +153,6 @@ void dhtT() {
       sendSTATUS("dhtT", String(value));
       if (client.connected()) {
         Serial.println("[i] sensor 'dhtT' send date " + String(value));
-        //web_print("sensor 'dhtT' send date " + String(value));
       }
       //}
       value_old = value;
@@ -195,7 +191,6 @@ void dhtH() {
       sendSTATUS("dhtH", String(value));
       if (client.connected()) {
         Serial.println("[i] sensor 'dhtH' send date " + String(value));
-        //web_print("sensor 'dhtH' send date " + String(value));
       }
       //}
       value_old = value;
@@ -368,14 +363,6 @@ void logging() {
     ts.remove(DALLAS_LOG);
     ts.add(DALLAS_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
       deleteOldDate("log.dallas.txt", jsonReadtoInt(optionJson, "dallas_logging_count"), jsonRead(configJson, "dallas"), false);
-    }, nullptr, true);
-  }
-
-  if (sensor_name == "ph") {
-    flagLoggingPh = true;
-    ts.remove(PH_LOG);
-    ts.add(PH_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.ph.txt", jsonReadtoInt(optionJson, "ph_logging_count"), jsonRead(configJson, "ph"), false);
     }, nullptr, true);
   }
 }

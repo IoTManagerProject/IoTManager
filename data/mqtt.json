@@ -69,6 +69,13 @@
    "type": "button",
   "title":"Сохранить",
     "action": "mqttSave?mqttServer=[[1]]&mqttPort=[[2]]&mqttPrefix=[[3]]&mqttUser=[[4]]&mqttPass=[[5]]",
+   "class": "btn btn-block btn-success",
+   "style": "width:100%;display:inline"
+  },
+{
+   "type": "button",
+  "title":"Проверить соединение с MQTT",
+    "action": "mqttCheck",
     "response":"[[my-block]]",
    "class": "btn btn-block btn-success",
    "style": "width:100%;display:inline"

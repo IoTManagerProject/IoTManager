@@ -1,6 +1,8 @@
 String firmware_version = "2.3.1";
 String new_version;
 
+//23560
+
 //#define OTA_enable
 //#define MDNS_enable
 //#define WS_enable
@@ -70,13 +72,16 @@ AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 #endif
 AsyncEventSource events("/events");
+//---------------------------------------------------------------
 #include "time.h"
+//---------------------------------------------------------------
 #include <TickerScheduler.h>
 TickerScheduler ts(30);
-enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, STEPPER1, STEPPER2,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, PH_LOG, CMD, TIMER_COUNTDOWN, TIMERS, TIME, STATISTICS, TEST};
-
+enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, STEPPER1, STEPPER2,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, CMD, TIMER_COUNTDOWN, TIMERS, TIME, STATISTICS, TEST};
+//---------------------------------------------------------------
 //ssl//#include "dependencies/WiFiClientSecure/WiFiClientSecure.h" //using older WiFiClientSecure
 //#include "Ticker_for_TickerScheduler/Ticker/Ticker.h" 
+//---------------------------------------------------------------
 #include <PubSubClient.h>
 WiFiClient espClient;
 //ssl//WiFiClientSecure espClient;
@@ -101,11 +106,11 @@ DallasTemperature sensors;
 #include "DHTesp.h"
 DHTesp dht;
 //----------------------------------------------------------------
-#include "Adafruit_Si7021.h" //https://github.com/adafruit/Adafruit_Si7021
-Adafruit_Si7021 sensor_Si7021 = Adafruit_Si7021();
+//#include "Adafruit_Si7021.h" //https://github.com/adafruit/Adafruit_Si7021
+//Adafruit_Si7021 sensor_Si7021 = Adafruit_Si7021();
 //-----------------------------------------------------------------
 
-
+boolean just_load = true;
 
 const char* hostName = "IoT Manager";
 
@@ -116,10 +121,8 @@ String optionJson = "{}";
 String json = "{}";
 
 String chipID = "";
-//String prefix;   //= "/IoTmanager";
 String prex;
 String ids;
-//boolean busy;
 String all_vigets = "";
 String scenario;
 
@@ -143,7 +146,7 @@ int wifi_lost_error = 0;
 int mqtt_lost_error = 0;
 
 String var;
-
 boolean upgrade_flag = false;
-
 boolean get_url_flag = false;
+
+boolean start_connection = false;

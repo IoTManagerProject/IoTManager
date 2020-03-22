@@ -604,7 +604,7 @@ void createViget (String viget_name, String  page_name, String page_number, Stri
   all_vigets += viget + "\r\n";
   viget = "";
   }
-*/
+
 String vidgetConfigWrite(String viget, String key, String value) {
 
   if (viget == "") return "";
@@ -623,7 +623,7 @@ String vidgetConfigWrite(String viget, String key, String value) {
     }
   }
 }
-
+*/
 
 
 

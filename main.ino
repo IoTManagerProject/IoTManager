@@ -271,7 +271,7 @@ void getMemoryLoad(String text) {
   if (memory_load > 65) Serial.print("Attention!!! too match memory used!!!");
   Serial.print(text + " memory used:");
   Serial.print(String(memory_load) + "%; ");
-  Serial.print("memory remain:");
+  Serial.print("memory remain: ");
   Serial.println(String(memory_remain) + " k bytes");
 
 }

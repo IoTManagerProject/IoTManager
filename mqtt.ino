@@ -1,8 +1,26 @@
 //===============================================ИНИЦИАЛИЗАЦИЯ================================================
 void MQTT_init() {
 
-  server.on("/mqttSave", HTTP_GET, [](AsyncWebServerRequest * request) {
+  ts.add(WIFI_MQTT_CONNECTION_CHECK, wifi_mqtt_reconnecting, [&](void*) {
+    up_time();
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.println("[V] WiFi-ok");
+      if (client.connected()) {
+        Serial.println("[V] MQTT-ok");
+      } else {
+        MQTT_Connecting();
+        if (!just_load) mqtt_lost_error++;
+      }
+    } else {
+      Serial.println("[E] Lost WiFi connection");
+      wifi_lost_error++;
+      ts.remove(WIFI_MQTT_CONNECTION_CHECK);
+      StartAPMode();
+    }
+  }, nullptr, true);
 
+
+  server.on("/mqttSave", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("mqttServer")) {
       jsonWrite(configSetup, "mqttServer", request->getParam("mqttServer")->value());
     }
@@ -19,57 +37,25 @@ void MQTT_init() {
     if (request->hasArg("mqttPass")) {
       jsonWrite(configSetup, "mqttPass", request->getParam("mqttPass")->value());
     }
-
     saveConfig();
+    start_connection = true;
+    request->send(200, "text/text", "ok");
+  });
 
-
-    //client.disconnect();
-    MQTT_Connecting();
-
-    /*
-        int i = 0;
-        while (!client.connected() && i <= 25) {
-          delay(1000);
-          Serial.print(".");
-          i++;
-        }
-    */
-
+  server.on("/mqttCheck", HTTP_GET, [](AsyncWebServerRequest * request) {
     String tmp = "{}";
     jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + stateMQTT());
     jsonWrite(tmp, "class", "pop-up");
-
-#ifdef ESP8266
-    request->send(200, "text/text", "ok");
-#endif
-
-#ifdef ESP32
     request->send(200, "text/text", tmp);
-#endif
   });
+}
 
-  MQTT_Connecting();
-
-
-  //проверка подключения к серверу
-  ts.add(WIFI_MQTT_CONNECTION_CHECK, wifi_mqtt_reconnecting, [&](void*) {
-    up_time();
-    if (WiFi.status() == WL_CONNECTED) {
-      Serial.println("[V] WiFi-ok");
-      if (client.connected()) {
-        Serial.println("[V] MQTT-ok");
-        //web_print("MQTT-ok");
-      } else {
-        MQTT_Connecting();
-        mqtt_lost_error++;
-      }
-    } else {
-      Serial.println("[E] Lost WiFi connection");
-      wifi_lost_error++;
-      ts.remove(WIFI_MQTT_CONNECTION_CHECK);
-      StartAPMode();
-    }
-  }, nullptr, false);
+void handle_connection() {
+  if (start_connection) {
+    start_connection = false;
+    client.disconnect();
+    MQTT_Connecting();
+  }
 }
 
 //================================================ОБНОВЛЕНИЕ====================================================
@@ -85,10 +71,7 @@ void  handleMQTT() {
 boolean MQTT_Connecting() {
   String mqtt_server = jsonRead(configSetup, "mqttServer");
   if ((mqtt_server != "")) {
-    static boolean first = true;
-    if (!first) Serial.println("[E] Lost MQTT connection, start reconnecting");
-    //web_print("Lost MQTT connection, start reconnecting");
-    first = false;
+    Serial.println("[E] Lost MQTT connection, start reconnecting");
     //ssl//espClient.setCACert(local_root_ca1);
     client.setServer(mqtt_server.c_str(), jsonReadtoInt(configSetup, "mqttPort"));
     if (WiFi.status() == WL_CONNECTED) {
@@ -96,16 +79,11 @@ boolean MQTT_Connecting() {
         Serial.println("[V] Connecting to MQTT server commenced");
         if (client.connect(chipID.c_str(), jsonRead(configSetup, "mqttUser").c_str(), jsonRead(configSetup, "mqttPass").c_str())) {
           Serial.println("[V] MQTT connected");
-          //web_print("MQTT connected");
           client.setCallback(callback);
           client.subscribe(jsonRead(configSetup, "mqttPrefix").c_str());  // Для приема получения HELLOW и подтверждения связи
           client.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/+/control").c_str()); // Подписываемся на топики control
           client.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/order").c_str()); // Подписываемся на топики order
-          //client.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/test").c_str());  //Для приема получения work и подтверждения связи (для приложения mqtt IOT MQTT Panel)
-          client.subscribe((jsonRead(configSetup, "mqttPrefix") + "/ids").c_str()); // Подписываемся на топики ids
-          //sendMQTT("test", "work");
           Serial.println("[V] Callback set, subscribe done");
-          //web_print("Callback set, subscribe done");
           return true;
         } else {
           Serial.println("[E] try again in " + String(wifi_mqtt_reconnecting / 1000) +  " sec");
@@ -115,7 +93,6 @@ boolean MQTT_Connecting() {
     }
   } else {
     Serial.println("[E] No date for MQTT connection");
-    //web_print("No date for MQTT connection");
     return false;
   }
 }
@@ -157,10 +134,10 @@ void outcoming_date() {
   sendAllWigets();
   sendAllData();
 
- // if (flagLoggingAnalog) sendLogData("log.analog.txt", "loganalog");
- // if (flagLoggingPh) sendLogData("log.ph.txt", "logph");
- // if (flagLoggingDallas) sendLogData("log.dallas.txt", "logdallas");
- // if (flagLoggingLevel) sendLogData("log.level.txt", "loglevel");
+  // if (flagLoggingAnalog) sendLogData("log.analog.txt", "loganalog");
+  // if (flagLoggingPh) sendLogData("log.ph.txt", "logph");
+  // if (flagLoggingDallas) sendLogData("log.dallas.txt", "logdallas");
+  // if (flagLoggingLevel) sendLogData("log.level.txt", "loglevel");
 
   Serial.println("[V] Sending all date to iot manager completed");
 
