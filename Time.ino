@@ -40,6 +40,9 @@ void reconfigTime() {
     Serial.print(" ");
     Serial.println(GetTime());
 
+    time_t now = time(nullptr);
+    Serial.println(now);
+
   } else {
     Serial.println("[E] Get time impossible, no wifi connection");
   }

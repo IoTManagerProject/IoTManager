@@ -1,5 +1,6 @@
 String firmware_version = "2.3.1";
-boolean flash_1mb = true;
+boolean flash_1mb = false;
+//-----------------------------------------------------------------
 String last_version;
 boolean start_check_version = false;
 
