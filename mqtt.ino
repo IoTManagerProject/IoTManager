@@ -238,7 +238,7 @@ void sendLogData(String file, String topic) {
   unix_time.replace(",,", "");
   value.replace(",,", "");
   String to_send = "{\"status\":[" + value + "],\"time\": [" + unix_time + "]}";
-  //sendCHART(topic, to_send);
+  sendCHART(topic, to_send);
 
   getMemoryLoad("[i] after send log date");
 }
