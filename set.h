@@ -126,7 +126,7 @@ String json = "{}";
 String chipID = "";
 String prex;
 String ids;
-String all_vigets = "";
+String all_widgets = "";
 String scenario;
 
 String order_loop;

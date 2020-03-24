@@ -9,7 +9,7 @@ void Timer_countdown_init() {
 
     if (old_line != "") {
 
-      Serial.println(old_line);
+      //Serial.println(old_line);
 
       int i = 0;
 

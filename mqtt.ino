@@ -39,7 +39,7 @@ void MQTT_init() {
     }
     saveConfig();
     start_connecting_to_mqtt = true;
-   
+
     request->send(200, "text/text", "ok");
   });
 
@@ -135,10 +135,9 @@ void outcoming_date() {
   sendAllWigets();
   sendAllData();
 
-  // if (flagLoggingAnalog) sendLogData("log.analog.txt", "loganalog");
-  // if (flagLoggingPh) sendLogData("log.ph.txt", "logph");
-  // if (flagLoggingDallas) sendLogData("log.dallas.txt", "logdallas");
-  // if (flagLoggingLevel) sendLogData("log.level.txt", "loglevel");
+  if (flagLoggingAnalog) sendLogData("log.analog.txt", "loganalog");
+  if (flagLoggingDallas) sendLogData("log.dallas.txt", "logdallas");
+  if (flagLoggingLevel) sendLogData("log.level.txt", "loglevel");
 
   Serial.println("[V] Sending all date to iot manager completed");
 
@@ -146,6 +145,13 @@ void outcoming_date() {
 //======================================CONFIG==================================================
 boolean sendMQTT(String end_of_topik, String data) {
   String topik = jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/" + end_of_topik;
+  boolean send_status = client.beginPublish(topik.c_str(), data.length(), false);
+  client.print(data);
+  client.endPublish();
+  return send_status;
+}
+boolean sendCHART(String topik, String data) {
+  topik = jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
   boolean send_status = client.beginPublish(topik.c_str(), data.length(), false);
   client.print(data);
   client.endPublish();
@@ -166,14 +172,14 @@ void sendCONTROL(String id, String topik, String state) {
 
 //=====================================================ОТПРАВЛЯЕМ ВИДЖЕТЫ========================================================
 void sendAllWigets() {
-  if (all_vigets != "") {
+  if (all_widgets != "") {
     int counter = 0;
     String line;
     int psn_1 = 0;
     int psn_2;
     do  {
-      psn_2 = all_vigets.indexOf("\r\n", psn_1);
-      line = all_vigets.substring(psn_1, psn_2);
+      psn_2 = all_widgets.indexOf("\r\n", psn_1);
+      line = all_widgets.substring(psn_1, psn_2);
       line.replace("\n", "");
       line.replace("\r\n", "");
       //jsonWrite(line, "id", String(counter));
@@ -182,8 +188,8 @@ void sendAllWigets() {
       sendMQTT("config", line);
       Serial.println("[V] " + line);
       psn_1 = psn_2 + 1;
-    } while (psn_2 + 2 < all_vigets.length());
-    getMemoryLoad("[i] after send all vigets");
+    } while (psn_2 + 2 < all_widgets.length());
+    getMemoryLoad("[i] after send all widgets");
   }
 }
 //=====================================================ОТПРАВЛЯЕМ ДАННЫЕ В ВИДЖЕТЫ ПРИ ОБНОВЛЕНИИ СТРАНИЦЫ========================================================
@@ -213,19 +219,28 @@ void sendAllData() {   //берет строку json и ключи превра
 void sendLogData(String file, String topic) {
 
   String log_date = readFile(file, 5000) + "\r\n";
-  getMemoryLoad("[i] after send log date");
-
+  
   log_date.replace("\r\n", "\n");
   log_date.replace("\r", "\n");
+
+  String unix_time;
+  String value;
 
   while (log_date.length() != 0) {
     String tmp = selectToMarker (log_date, "\n");
 
-    sendSTATUS(topic, selectFromMarkerToMarker(tmp, " ", 2));
-    if (tmp != "") sendSTATUS(topic, tmp);
+    unix_time += (selectToMarker (tmp, " ") + ",");
+    value += (deleteBeforeDelimiter(tmp, " ") + ",");
 
     log_date = deleteBeforeDelimiter(log_date, "\n");
   }
+  
+  unix_time.replace(",,", "");
+  value.replace(",,", "");
+  String to_send = "{\"status\":[" + value + "],\"time\": [" + unix_time + "]}";
+  //sendCHART(topic, to_send);
+
+  getMemoryLoad("[i] after send log date");
 }
 
 String stateMQTT() {
@@ -313,7 +328,7 @@ String stateMQTT() {
         String state =  selectToMarkerLast (tmp, ":");      //"1"
         state.replace("\"", "");                            //1
 
-        //if (viget.lastIndexOf(topic) > 0) {
+        //if (widget.lastIndexOf(topic) > 0) {
           jsonWrite(tmp, "status", state);
         //}
         current_config = deleteBeforeDelimiter(current_config, ",");

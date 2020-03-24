@@ -7,27 +7,32 @@ void initUpgrade() {
     Serial.println(last_version);
 
     String tmp = "{}";
-    if (!flash_1mb) {
-      if (last_version != "") {
-        if (last_version != "error") {
-          if (last_version == firmware_version) {
-            jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
-            jsonWrite(tmp, "class", "pop-up");
+    if (WiFi.status() == WL_CONNECTED) {
+      if (!flash_1mb) {
+        if (last_version != "") {
+          if (last_version != "error") {
+            if (last_version == firmware_version) {
+              jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
+              jsonWrite(tmp, "class", "pop-up");
+            } else {
+              upgrade_flag = true;
+              jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Идет обновление прошивки... После завершения устройство перезагрузится. Подождите одну минуту!!!");
+              jsonWrite(tmp, "class", "pop-up");
+            }
           } else {
-            upgrade_flag = true;
-            jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Идет обновление прошивки... После завершения устройство перезагрузится. Подождите одну минуту!!!");
+            jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Ошибка... Cервер не найден. Попробуйте позже...");
             jsonWrite(tmp, "class", "pop-up");
           }
         } else {
-          jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Ошибка... Cервер не найден. Попробуйте позже...");
+          jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Нажмите на кнопку \"обновить прошивку\" повторно...");
           jsonWrite(tmp, "class", "pop-up");
         }
       } else {
-        jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Нажмите на кнопку \"обновить прошивку\" повторно...");
+        jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Обновление по воздуху не поддерживается, модуль имеет меньше 4 мб памяти...");
         jsonWrite(tmp, "class", "pop-up");
       }
     } else {
-      jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Обновление по воздуху не поддерживается, модуль имеет меньше 4 мб памяти...");
+      jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Модуль не подключен к роутеру...");
       jsonWrite(tmp, "class", "pop-up");
     }
     request->send(200, "text/text", tmp);

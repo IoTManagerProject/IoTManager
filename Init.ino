@@ -43,7 +43,7 @@ void Device_init() {
   ts.remove(STEPPER1);
   ts.remove(STEPPER2);
 
-  all_vigets = "";
+  all_widgets = "";
   txtExecution("firmware.config.txt");
   //outcoming_date();
 }

@@ -2,7 +2,7 @@
 //=========================================Модуль аналогового сенсора============================================================
 void analog() {
   String pin = sCmd.next();
-  String viget_name = sCmd.next();
+  String widget_name = sCmd.next();
   String page_name = sCmd.next();
   String type = sCmd.next();
   String analog_start = sCmd.next();
@@ -14,7 +14,7 @@ void analog() {
   jsonWrite(optionJson, "analog_end", analog_end);
   jsonWrite(optionJson, "analog_start_out", analog_start_out);
   jsonWrite(optionJson, "analog_end_out", analog_end_out);
-  choose_viget_and_create(viget_name, page_name, page_number, type, "analog");
+  choose_widget_and_create(widget_name, page_name, page_number, type, "analog");
   ts.add(ANALOG_, analog_update_int, [&](void*) {
     static int analog_old;
 #ifdef ESP32
@@ -45,7 +45,7 @@ void analog() {
 //===================================================================================================================================
 //=========================================Модуль измерения уровня в баке============================================================
 void level() {
-  String viget_name = sCmd.next();
+  String widget_name = sCmd.next();
   String page_name = sCmd.next();
   String type = sCmd.next();
   String empty_level = sCmd.next();
@@ -55,7 +55,7 @@ void level() {
   jsonWrite(optionJson, "full_level", full_level);
   pinMode(14, OUTPUT);
   pinMode(12, INPUT);
-  choose_viget_and_create(viget_name, page_name, page_number, type, "level");
+  choose_widget_and_create(widget_name, page_name, page_number, type, "level");
   ts.add(LEVEL, tank_level_shooting_interval, [&](void*) {
     long duration_;
     int distance_cm;
@@ -94,7 +94,7 @@ void level() {
 //=========================================Модуль температурного сенсора ds18b20============================================================
 void dallas() {
   String pin = sCmd.next();
-  String viget_name = sCmd.next();
+  String widget_name = sCmd.next();
   String page_name = sCmd.next();
   String type = sCmd.next();
   String page_number = sCmd.next();
@@ -102,7 +102,7 @@ void dallas() {
   sensors.setOneWire(oneWire);
   sensors.begin();
   sensors.setResolution(12);
-  choose_viget_and_create(viget_name, page_name, page_number, type, "dallas");
+  choose_widget_and_create(widget_name, page_name, page_number, type, "dallas");
   ts.add(DALLAS, temp_update_int, [&](void*) {
     float temp = 0;
     static float temp_old;
@@ -126,7 +126,7 @@ void dallas() {
 void dhtT() {
   String sensor_type = sCmd.next();
   String pin = sCmd.next();
-  String viget_name = sCmd.next();
+  String widget_name = sCmd.next();
   String page_name = sCmd.next();
   String type = sCmd.next();
   String page_number = sCmd.next();
@@ -136,7 +136,7 @@ void dhtT() {
   if (sensor_type == "DHT22") {
     dht.setup(pin.toInt(), DHTesp::DHT22);
   }
-  choose_viget_and_create(viget_name, page_name, page_number, type, "dhtT");
+  choose_widget_and_create(widget_name, page_name, page_number, type, "dhtT");
   ts.add(DHTT, dhtT_update_int, [&](void*) { //dht.getMinimumSamplingPeriod()
     float value = 0;
     static float value_old;
@@ -164,7 +164,7 @@ void dhtT() {
 void dhtH() {
   String sensor_type = sCmd.next();
   String pin = sCmd.next();
-  String viget_name = sCmd.next();
+  String widget_name = sCmd.next();
   String page_name = sCmd.next();
   String type = sCmd.next();
   String page_number = sCmd.next();
@@ -174,7 +174,7 @@ void dhtH() {
   if (sensor_type == "DHT22") {
     dht.setup(pin.toInt(), DHTesp::DHT22);
   }
-  choose_viget_and_create(viget_name, page_name, page_number, type, "dhtH");
+  choose_widget_and_create(widget_name, page_name, page_number, type, "dhtH");
   ts.add(DHTH, dhtH_update_int , [&](void*) {  //dht.getMinimumSamplingPeriod()
     int value = 0;
     static int value_old;
@@ -199,10 +199,10 @@ void dhtH() {
 }
 
 void dhtPerception() {
-  String viget_name = sCmd.next();
+  String widget_name = sCmd.next();
   String page_name = sCmd.next();
   String page_number = sCmd.next();
-  choose_viget_and_create(viget_name, page_name, page_number, "any-data", "dhtPerception");
+  choose_widget_and_create(widget_name, page_name, page_number, "any-data", "dhtPerception");
   ts.add(DHTP, dht_calculation_update_int, [&](void*) {
     byte value;
     if (dht.getStatus() != 0) {
@@ -232,10 +232,10 @@ String perception(byte value) {
 }
 
 void dhtComfort() {
-  String viget_name = sCmd.next();
+  String widget_name = sCmd.next();
   String page_name = sCmd.next();
   String page_number = sCmd.next();
-  choose_viget_and_create(viget_name, page_name, page_number, "any-data", "dhtComfort");
+  choose_widget_and_create(widget_name, page_name, page_number, "any-data", "dhtComfort");
   ts.add(DHTC, dht_calculation_update_int, [&](void*) {
     float value;
     ComfortState cf;
@@ -288,10 +288,10 @@ void dhtComfort() {
 }
 
 void dhtDewpoint() {
-  String viget_name = sCmd.next();
+  String widget_name = sCmd.next();
   String page_name = sCmd.next();
   String page_number = sCmd.next();
-  choose_viget_and_create(viget_name, page_name, page_number, "any-data", "dhtDewpoint");
+  choose_widget_and_create(widget_name, page_name, page_number, "any-data", "dhtDewpoint");
   ts.add(DHTD, dht_calculation_update_int, [&](void*) {
     float value;
     if (dht.getStatus() != 0) {
@@ -309,12 +309,12 @@ void dhtDewpoint() {
 }
 
 
-void choose_viget_and_create(String viget_name, String page_name, String page_number, String type, String topik) {
+void choose_widget_and_create(String widget_name, String page_name, String page_number, String type, String topik) {
 
-  if (type == "any-data") createViget (viget_name, page_name, page_number, "vigets/viget.anydata.json", topik);
-  if (type == "progress-line") createViget (viget_name, page_name, page_number, "vigets/viget.progressL.json", topik);
-  if (type == "progress-round") createViget (viget_name, page_name, page_number, "vigets/viget.progressR.json", topik);
-
+  if (type == "any-data") createWidget (widget_name, page_name, page_number, "widgets/widget.anyData.json", topik);
+  if (type == "progress-line") createWidget (widget_name, page_name, page_number, "widgets/widget.progLine.json", topik);
+  if (type == "progress-round") createWidget (widget_name, page_name, page_number, "widgets/widget.progRound.json", topik);
+  if (type == "fill-gauge") createWidget (widget_name, page_name, page_number, "widgets/widget.fillGauge.json", topik);
 
 }
 //======================================================================================================================
@@ -327,26 +327,24 @@ void logging() {
   String sensor_name = sCmd.next();
   String period_min = sCmd.next();
   String maxCount = sCmd.next();
-  String viget_name = sCmd.next();
-  viget_name.replace("#", " ");
+  String widget_name = sCmd.next();
+  widget_name.replace("#", " ");
   String page_name = sCmd.next();
   String page_number = sCmd.next();
 
   if (sensor_name == "analog") jsonWrite(optionJson, "analog_logging_count", maxCount);
   if (sensor_name == "level") jsonWrite(optionJson, "level_logging_count", maxCount);
   if (sensor_name == "dallas") jsonWrite(optionJson, "dallas_logging_count", maxCount);
-  if (sensor_name == "ph") jsonWrite(optionJson, "ph_logging_count", maxCount);
-  /*
-    if (sensor_name == "analog") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "loganalog", "maxCount", maxCount);
-    if (sensor_name == "level") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "loglevel", "maxCount", maxCount);
-    if (sensor_name == "dallas") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "logdallas", "maxCount", maxCount);
-    if (sensor_name == "ph") createViget (viget_name, page_name, page_number, "vigets/viget.chart.json", "logph", "maxCount", maxCount);
-  */
+
+  if (sensor_name == "analog") createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", "loganalog", maxCount);
+  if (sensor_name == "level") createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", "loglevel", maxCount);
+  if (sensor_name == "dallas") createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", "logdallas", maxCount);
+
   if (sensor_name == "analog") {
     flagLoggingAnalog = true;
     ts.remove(ANALOG_LOG);
     ts.add(ANALOG_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.analog.txt", jsonReadtoInt(optionJson, "analog_logging_count"), jsonRead(configJson, "analog"), false);
+      deleteOldDate("log.analog.txt", jsonReadtoInt(optionJson, "analog_logging_count"), jsonRead(configJson, "analog"));
     }, nullptr, true);
   }
 
@@ -354,7 +352,7 @@ void logging() {
     flagLoggingLevel = true;
     ts.remove(LEVEL_LOG);
     ts.add(LEVEL_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.level.txt", jsonReadtoInt(optionJson, "level_logging_count"), jsonRead(configJson, "level"), false);
+      deleteOldDate("log.level.txt", jsonReadtoInt(optionJson, "level_logging_count"), jsonRead(configJson, "level"));
     }, nullptr, true);
   }
 
@@ -362,26 +360,16 @@ void logging() {
     flagLoggingDallas = true;
     ts.remove(DALLAS_LOG);
     ts.add(DALLAS_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.dallas.txt", jsonReadtoInt(optionJson, "dallas_logging_count"), jsonRead(configJson, "dallas"), false);
+      deleteOldDate("log.dallas.txt", jsonReadtoInt(optionJson, "dallas_logging_count"), jsonRead(configJson, "dallas"));
     }, nullptr, true);
   }
 }
 
-void deleteOldDate(String file, int seted_number_of_lines, String date_to_add, boolean date_time) {
-
-  String current_time;
-
-  if (date_time) {
-    current_time = GetDataDigital() + " " + GetTimeWOsec();
-    current_time.replace(".", "");
-    current_time.replace(":", "");
-  } else {
-    current_time = "";
-  }
+void deleteOldDate(String file, int seted_number_of_lines, String date_to_add) {
 
   String log_date = readFile(file, 5000);
-  getMemoryLoad("[i] after logging procedure");
-
+  
+  //getMemoryLoad("[i] after logging procedure");
   //предел количества строк 255
 
   log_date.replace("\r\n", "\n");
@@ -389,7 +377,6 @@ void deleteOldDate(String file, int seted_number_of_lines, String date_to_add, b
 
   int current_number_of_lines = count(log_date, "\n");
   Serial.println("[i] in log file " + file + " " + current_number_of_lines + " lines");
-
 
   if (current_number_of_lines > seted_number_of_lines + 1) {
     SPIFFS.remove("/" + file);
@@ -401,14 +388,9 @@ void deleteOldDate(String file, int seted_number_of_lines, String date_to_add, b
   }
   if (current_number_of_lines > seted_number_of_lines) {
     log_date = deleteBeforeDelimiter(log_date, "\n");
-    log_date += current_time + " " +  date_to_add + "\n";
+    log_date += String(GetTimeUnix()) + " " +  date_to_add + "\n";
     writeFile(file, log_date);
-
   } else {
-    if (date_time) {
-      addFile(file, current_time + " " +  date_to_add);
-    } else {
-      addFile(file, date_to_add);
-    }
+    addFile(file, String(GetTimeUnix()) + " " +  date_to_add);
   }
 }

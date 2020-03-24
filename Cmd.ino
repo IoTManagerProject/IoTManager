@@ -4,8 +4,6 @@ void CMD_init() {
   sCmd.addCommand("buttonSet",  buttonSet);
   sCmd.addCommand("buttonChange",  buttonChange);
 
-  //sCmd.addCommand("button_touch",  button_touch);
-
   sCmd.addCommand("pinSet",  pinSet);
   sCmd.addCommand("pinChange",  pinChange);
 
@@ -49,22 +47,6 @@ void CMD_init() {
 
   handle_time_init();
 
-  //======новые виджеты ver2.0=======//
-  /*
-    sCmd.addCommand("inputText",  inputText);
-    sCmd.addCommand("inputTextSet",  inputTextSet);
-
-    sCmd.addCommand("inputTime",  inputTime);
-    sCmd.addCommand("inputTimeSet",  inputTimeSet);
-
-    sCmd.addCommand("inputDate",  inputDate);
-    sCmd.addCommand("inputDateSet",  inputDateSet);
-
-    sCmd.addCommand("inputDate",  inputDate);
-
-    //sCmd.addCommand("inputDropdown",  inputDropdown);
-  */
-  //=================================//
 }
 
 
@@ -75,7 +57,7 @@ void button() {
 
   String button_number = sCmd.next();
   String button_param = sCmd.next();
-  String viget_name = sCmd.next();
+  String widget_name = sCmd.next();
   String page_name = sCmd.next();
   String start_state = sCmd.next();
   String page_number = sCmd.next();
@@ -107,7 +89,7 @@ void button() {
       str = deleteBeforeDelimiter(str, ",");
     }
   }
-  createViget (viget_name, page_name, page_number, "vigets/viget.toggle.json", "buttonSet" + button_number);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.toggle.json", "buttonSet" + button_number);
 }
 
 void buttonSet() {
@@ -178,8 +160,8 @@ void pwm() {
   static boolean flag = true;
   String pwm_number = sCmd.next();
   String pwm_pin = sCmd.next();
-  String viget_name = sCmd.next();
-  viget_name.replace("#", " ");
+  String widget_name = sCmd.next();
+  widget_name.replace("#", " ");
   String page_name = sCmd.next();
   String start_state = sCmd.next();
   String page_number = sCmd.next();
@@ -192,7 +174,7 @@ void pwm() {
   //analogWriteFreq(32000);
   jsonWrite(configJson, "pwmSet" + pwm_number, start_state);
 
-  createViget (viget_name, page_name, page_number, "vigets/viget.range.json", "pwmSet" + pwm_number);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.range.json", "pwmSet" + pwm_number);
 }
 
 void pwmSet() {
@@ -250,14 +232,14 @@ void handleButton()  {
 void inputDigit() {
   String value_name = sCmd.next();
   String number = value_name.substring(5);
-  String viget_name = sCmd.next();
-  viget_name.replace("#", " ");
+  String widget_name = sCmd.next();
+  widget_name.replace("#", " ");
   String page_name = sCmd.next();
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
   jsonWrite(configJson, "digitSet" + number, start_state);
-  createViget (viget_name, page_name, page_number, "vigets/viget.inputNum.json", "digitSet" + number);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.inputNum.json", "digitSet" + number);
 }
 void digitSet() {
   String number = sCmd.next();
@@ -270,14 +252,14 @@ void digitSet() {
 void inputTime() {
   String value_name = sCmd.next();
   String number = value_name.substring(4);
-  String viget_name = sCmd.next();
-  viget_name.replace("#", " ");
+  String widget_name = sCmd.next();
+  widget_name.replace("#", " ");
   String page_name = sCmd.next();
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
   jsonWrite(configJson, "timeSet" + number, start_state);
-  createViget (viget_name, page_name, page_number, "vigets/viget.inputTime.json", "timeSet" + number);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.inputTime.json", "timeSet" + number);
 }
 void timeSet() {
   String number = sCmd.next();
@@ -302,11 +284,11 @@ void handle_time_init() {
 void text() {
 
   String number = sCmd.next();
-  String viget_name = sCmd.next();
+  String widget_name = sCmd.next();
   String page_name = sCmd.next();
   String page_number = sCmd.next();
 
-  createViget (viget_name, page_name, page_number, "vigets/viget.anydata.json", "textSet" + number);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.anyData.json", "textSet" + number);
 }
 
 
@@ -389,14 +371,14 @@ void stepperSet() {
 /*
   void inputText() {
   String number = sCmd.next();
-  String viget_name = sCmd.next();
-  viget_name.replace("#", " ");
+  String widget_name = sCmd.next();
+  widget_name.replace("#", " ");
   String page_name = sCmd.next();
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
   jsonWrite(configJson, "inputTextSet" + number, start_state);
-  createViget (viget_name, page_name, page_number, "vigets/viget.inputText.json", "inputTextSet" + number);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.inputText.json", "inputTextSet" + number);
   }
   void inputTextSet() {
   String number = sCmd.next();
@@ -407,14 +389,14 @@ void stepperSet() {
 
   void inputTime() {
   String number = sCmd.next();
-  String viget_name = sCmd.next();
-  viget_name.replace("#", " ");
+  String widget_name = sCmd.next();
+  widget_name.replace("#", " ");
   String page_name = sCmd.next();
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
   jsonWrite(configJson, "inputTimeSet" + number, start_state);
-  createViget (viget_name, page_name, page_number, "vigets/viget.inputTime.json", "inputTimeSet" + number);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.inputTime.json", "inputTimeSet" + number);
   }
   void inputTimeSet() {
   String number = sCmd.next();
@@ -428,14 +410,14 @@ void stepperSet() {
 
   void inputDate() {
   String number = sCmd.next();
-  String viget_name = sCmd.next();
-  viget_name.replace("#", " ");
+  String widget_name = sCmd.next();
+  widget_name.replace("#", " ");
   String page_name = sCmd.next();
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
   jsonWrite(configJson, "inputDateSet" + number, start_state);
-  createViget (viget_name, page_name, page_number, "vigets/viget.inputDate.json", "inputDateSet" + number);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.inputDate.json", "inputDateSet" + number);
   }
   void inputDateSet() {
   String number = sCmd.next();
@@ -504,7 +486,7 @@ void handleCMD_loop() {
 //=======================================================================================================================================
 void txtExecution(String file) {
 
-  String command_all = readFile(file, 2048) + "\r\n";  //2048
+  String command_all = readFile(file, 2048) + "\r\n";  
 
   command_all.replace("\r\n", "\n");
   command_all.replace("\r", "\n");
@@ -512,113 +494,133 @@ void txtExecution(String file) {
   while (command_all.length() != 0) {
 
     String tmp = selectToMarker (command_all, "\n");
-    //if (tmp.indexOf("//") < 0)
     sCmd.readStr(tmp);
     command_all = deleteBeforeDelimiter(command_all, "\n");
   }
 }
+
 void stringExecution(String str) {
 
-  String command_all = str + "\r\n";  //"\r\n"
+  str = str + "\r\n";
 
-  command_all.replace("\r\n", "\n");
-  command_all.replace("\r", "\n");
+  str.replace("\r\n", "\n");
+  str.replace("\r", "\n");
 
-  while (command_all.length() != 0) {
+  while (str.length() != 0) {
 
-    String tmp = selectToMarker (command_all, "\n");
-    //if (tmp.indexOf("//") < 0)
+    String tmp = selectToMarker (str, "\n");
     sCmd.readStr(tmp);
-    command_all = deleteBeforeDelimiter(command_all, "\n");
+    str = deleteBeforeDelimiter(str, "\n");
   }
 }
 
 //======================================================================================================================
 //===============================================Создание виджетов=======================================================
 
-void createViget (String viget_name, String  page_name, String page_number, String file, String topic) {
+void createWidget (String widget_name, String  page_name, String page_number, String file, String topic) {
 
-  String viget;
-  viget = readFile(file, 1024);
+  String widget;
+  widget = readFile(file, 1024);
 
-  if (viget == "Failed") return;
-  if (viget == "Large") return;
+  if (widget == "Failed") return;
+  if (widget == "Large") return;
 
-  viget_name.replace("#", " ");
+  widget_name.replace("#", " ");
   page_name.replace("#", " ");
 
-  jsonWrite(viget, "page", page_name);
-  jsonWrite(viget, "order", page_number);
-  jsonWrite(viget, "descr", viget_name);
-  jsonWrite(viget, "topic", prex + "/" + topic);
-  all_vigets += viget + "\r\n";
-  viget = "";
+  jsonWrite(widget, "page", page_name);
+  jsonWrite(widget, "order", page_number);
+  jsonWrite(widget, "descr", widget_name);
+  jsonWrite(widget, "topic", prex + "/" + topic);
+  all_widgets += widget + "\r\n";
+  widget = "";
+}
+
+void createChart (String widget_name, String  page_name, String page_number, String file, String topic, String maxCount) {
+
+  String widget;
+  widget = readFile(file, 1024);
+
+  if (widget == "Failed") return;
+  if (widget == "Large") return;
+
+  widget_name.replace("#", " ");
+  page_name.replace("#", " ");
+
+  jsonWrite(widget, "page", page_name);
+  jsonWrite(widget, "order", page_number);
+  jsonWrite(widget, "descr", widget_name);
+  jsonWrite(widget, "series", widget_name);
+  jsonWrite(widget, "maxCount", maxCount);
+  jsonWrite(widget, "topic", prex + "/" + topic);
+  all_widgets += widget + "\r\n";
+  widget = "";
 }
 
 /*
-  void createViget (String viget_name, String  page_name, String page_number, String file, String topic, String key, String value) {
+  void createWidget (String widget_name, String  page_name, String page_number, String file, String topic, String key, String value) {
 
-  String viget;
-  viget = readFile(file, 1024);
+  String widget;
+  widget = readFile(file, 1024);
 
-  if (viget == "Failed") return;
-  if (viget == "Large") return;
+  if (widget == "Failed") return;
+  if (widget == "Large") return;
 
-  viget_name.replace("#", " ");
+  widget_name.replace("#", " ");
   page_name.replace("#", " ");
 
   value.replace("#", " ");
 
-  viget = vidgetConfigWrite(viget, key, value);
+  widget = vidgetConfigWrite(widget, key, value);
 
-  jsonWrite(viget, "page", page_name);
-  jsonWrite(viget, "pageId", page_number);
-  jsonWrite(viget, "descr", viget_name);
-  jsonWrite(viget, "topic", prex + "/" + topic);
+  jsonWrite(widget, "page", page_name);
+  jsonWrite(widget, "pageId", page_number);
+  jsonWrite(widget, "descr", widget_name);
+  jsonWrite(widget, "topic", prex + "/" + topic);
 
-  all_vigets += viget + "\r\n";
-  viget = "";
+  all_widgets += widget + "\r\n";
+  widget = "";
   }
 
-  void createViget (String viget_name, String  page_name, String page_number, String file, String topic, String key, String value, String key2, String value2) {
+  void createWidget (String widget_name, String  page_name, String page_number, String file, String topic, String key, String value, String key2, String value2) {
 
-  String viget;
-  viget = readFile(file, 1024);
+  String widget;
+  widget = readFile(file, 1024);
 
-  if (viget == "Failed") return;
-  if (viget == "Large") return;
+  if (widget == "Failed") return;
+  if (widget == "Large") return;
 
-  viget_name.replace("#", " ");
+  widget_name.replace("#", " ");
   page_name.replace("#", " ");
 
   value.replace("#", " ");
 
-  viget = vidgetConfigWrite(viget, key, value);
-  viget = vidgetConfigWrite(viget, key2, value2);
+  widget = vidgetConfigWrite(widget, key, value);
+  widget = vidgetConfigWrite(widget, key2, value2);
 
-  jsonWrite(viget, "page", page_name);
-  jsonWrite(viget, "pageId", page_number);
-  jsonWrite(viget, "descr", viget_name);
-  jsonWrite(viget, "topic", prex + "/" + topic);
+  jsonWrite(widget, "page", page_name);
+  jsonWrite(widget, "pageId", page_number);
+  jsonWrite(widget, "descr", widget_name);
+  jsonWrite(widget, "topic", prex + "/" + topic);
 
-  all_vigets += viget + "\r\n";
-  viget = "";
+  all_widgets += widget + "\r\n";
+  widget = "";
   }
 
-String vidgetConfigWrite(String viget, String key, String value) {
+String vidgetConfigWrite(String widget, String key, String value) {
 
-  if (viget == "") return "";
-  if (viget == "{}") return "";
-  int psn1 = viget.indexOf("{");
+  if (widget == "") return "";
+  if (widget == "{}") return "";
+  int psn1 = widget.indexOf("{");
   if (psn1 != -1) {
-    psn1 = viget.indexOf("{", psn1 + 1);
+    psn1 = widget.indexOf("{", psn1 + 1);
     if (psn1 != -1) {
-      int psn2 = viget.indexOf("}", psn1);
-      String WigetConfig = viget.substring(psn1, psn2) + "}";
+      int psn2 = widget.indexOf("}", psn1);
+      String WigetConfig = widget.substring(psn1, psn2) + "}";
       jsonWrite(WigetConfig, key, value);
-      String part1 = viget.substring(0, psn1);
-      viget = part1 + WigetConfig + "}";
-      return viget;
+      String part1 = widget.substring(0, psn1);
+      widget = part1 + WigetConfig + "}";
+      return widget;
 
     }
   }
@@ -641,23 +643,23 @@ String vidgetConfigWrite(String viget, String key, String value) {
   void delAlert() {
 
   String alert_id = sCmd.next();
-  delViget(alert_id);
+  delwidget(alert_id);
   sendAllWigets();
   }
 
 
-  void delViget(String text_in_viget) {
-  String viget = all_vigets;
-  while (viget.length() != 0) {
-    String tmp = selectToMarkerPlus (viget, "\r\n", 2);
-    if (tmp.indexOf(text_in_viget) > 0) {
+  void delwidget(String text_in_widget) {
+  String widget = all_widgets;
+  while (widget.length() != 0) {
+    String tmp = selectToMarkerPlus (widget, "\r\n", 2);
+    if (tmp.indexOf(text_in_widget) > 0) {
 
-      all_vigets.replace(tmp, "");
-      //Serial.println(all_vigets);
+      all_widgets.replace(tmp, "");
+      //Serial.println(all_widgets);
 
-      viget = deleteBeforeDelimiter(viget, "\r\n");
+      widget = deleteBeforeDelimiter(widget, "\r\n");
     } else {
-      viget = deleteBeforeDelimiter(viget, "\r\n");
+      widget = deleteBeforeDelimiter(widget, "\r\n");
     }
   }
   }

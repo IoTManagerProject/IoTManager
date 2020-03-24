@@ -1,4 +1,4 @@
 dallas 2 Водонагреватель,#t°C Датчики any-data 1
 
 //2 - номер пина датчика
-//варианты отображения: any-data, progress-round, progress-line
+//варианты отображения: any-data, progress-round, progress-line, fill-gauge

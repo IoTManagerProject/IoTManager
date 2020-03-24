@@ -28,11 +28,11 @@ void reconfigTime() {
 #endif
 
 #ifdef ESP8266
-   // while (!time(nullptr) && i < 4) {
-   //   Serial.print(".");
-   //   i++;
-      delay(2000);
-   // }
+    // while (!time(nullptr) && i < 4) {
+    //   Serial.print(".");
+    //   i++;
+    delay(2000);
+    // }
 #endif
 
     Serial.print("[i] Time = ");
@@ -40,14 +40,17 @@ void reconfigTime() {
     Serial.print(" ");
     Serial.println(GetTime());
 
-    time_t now = time(nullptr);
-    Serial.println(now);
+
 
   } else {
     Serial.println("[E] Get time impossible, no wifi connection");
   }
 }
-
+//Получаем время в формате linux
+int GetTimeUnix() {
+  time_t now = time(nullptr);
+  return (now);
+}
 // Получение текущего времени
 String GetTime() {
   time_t now = time(nullptr); // получаем время с помощью библиотеки time.h

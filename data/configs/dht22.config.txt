@@ -5,4 +5,4 @@ dhtPerception Восприятие: Датчики 4
 dhtDewpoint Точка#росы: Датчики 5
 
 //2 - номер пина датчика
-//варианты отображения: any-data, progress-round, progress-line
+//варианты отображения: any-data, progress-round, progress-line, fill-gauge
