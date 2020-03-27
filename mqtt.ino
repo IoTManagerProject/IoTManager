@@ -22,20 +22,20 @@ void MQTT_init() {
 
   server.on("/mqttSave", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("mqttServer")) {
-      jsonWrite(configSetup, "mqttServer", request->getParam("mqttServer")->value());
+      jsonWriteStr(configSetup, "mqttServer", request->getParam("mqttServer")->value());
     }
     if (request->hasArg("mqttPort")) {
       int port = (request->getParam("mqttPort")->value()).toInt();
-      jsonWrite(configSetup, "mqttPort", port);
+      jsonWriteInt(configSetup, "mqttPort", port);
     }
     if (request->hasArg("mqttPrefix")) {
-      jsonWrite(configSetup, "mqttPrefix", request->getParam("mqttPrefix")->value());
+      jsonWriteStr(configSetup, "mqttPrefix", request->getParam("mqttPrefix")->value());
     }
     if (request->hasArg("mqttUser")) {
-      jsonWrite(configSetup, "mqttUser", request->getParam("mqttUser")->value());
+      jsonWriteStr(configSetup, "mqttUser", request->getParam("mqttUser")->value());
     }
     if (request->hasArg("mqttPass")) {
-      jsonWrite(configSetup, "mqttPass", request->getParam("mqttPass")->value());
+      jsonWriteStr(configSetup, "mqttPass", request->getParam("mqttPass")->value());
     }
     saveConfig();
     start_connecting_to_mqtt = true;
@@ -45,8 +45,8 @@ void MQTT_init() {
 
   server.on("/mqttCheck", HTTP_GET, [](AsyncWebServerRequest * request) {
     String tmp = "{}";
-    jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + stateMQTT());
-    jsonWrite(tmp, "class", "pop-up");
+    jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + stateMQTT());
+    jsonWriteStr(tmp, "class", "pop-up");
     request->send(200, "text/text", tmp);
   });
 }
@@ -134,14 +134,12 @@ void outcoming_date() {
 
   sendAllWigets();
   sendAllData();
-
-  if (flagLoggingAnalog) sendLogData("log.analog.txt", "loganalog");
-  if (flagLoggingDallas) sendLogData("log.dallas.txt", "logdallas");
-  if (flagLoggingLevel) sendLogData("log.level.txt", "loglevel");
+  choose_log_date_and_send();
 
   Serial.println("[V] Sending all date to iot manager completed");
-
 }
+
+
 //======================================CONFIG==================================================
 boolean sendMQTT(String end_of_topik, String data) {
   String topik = jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/" + end_of_topik;
@@ -161,7 +159,7 @@ boolean sendCHART(String topik, String data) {
 void sendSTATUS(String topik, String state) {
   topik = jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
   String json_ = "{}";
-  jsonWrite(json_, "status", state);
+  jsonWriteStr(json_, "status", state);
   int send_status =  client.publish (topik.c_str(), json_.c_str(), false);
 }
 //======================================CONTROL==================================================
@@ -172,26 +170,46 @@ void sendCONTROL(String id, String topik, String state) {
 
 //=====================================================ОТПРАВЛЯЕМ ВИДЖЕТЫ========================================================
 void sendAllWigets() {
+
+#ifndef layout_in_rom
+  all_widgets = readFile("layout.txt", 5000);
+#endif
+
   if (all_widgets != "") {
     int counter = 0;
     String line;
     int psn_1 = 0;
     int psn_2;
     do  {
-      psn_2 = all_widgets.indexOf("\r\n", psn_1);
+      psn_2 = all_widgets.indexOf("\r\n", psn_1); //\r\n
       line = all_widgets.substring(psn_1, psn_2);
       line.replace("\n", "");
       line.replace("\r\n", "");
-      //jsonWrite(line, "id", String(counter));
-      //jsonWrite(line, "pageId", String(counter));
+      //jsonWriteStr(line, "id", String(counter));
+      //jsonWriteStr(line, "pageId", String(counter));
       counter++;
       sendMQTT("config", line);
       Serial.println("[V] " + line);
       psn_1 = psn_2 + 1;
     } while (psn_2 + 2 < all_widgets.length());
     getMemoryLoad("[i] after send all widgets");
+#ifndef layout_in_rom
+    all_widgets = "";
+#endif
   }
 }
+/*
+void sendAllWigets2() {
+  File configFile = SPIFFS.open("/layout.txt", "r");
+  if (!configFile) {
+    return;
+  }
+ // while (str.length() != 0) {
+
+ //   configFile.readStringUntil("\r\n");
+
+ // }
+}*/
 //=====================================================ОТПРАВЛЯЕМ ДАННЫЕ В ВИДЖЕТЫ ПРИ ОБНОВЛЕНИИ СТРАНИЦЫ========================================================
 void sendAllData() {   //берет строку json и ключи превращает в топики а значения колючей в них посылает
 
@@ -216,32 +234,7 @@ void sendAllData() {   //берет строку json и ключи превра
   }
 }
 
-void sendLogData(String file, String topic) {
 
-  String log_date = readFile(file, 5000) + "\r\n";
-  
-  log_date.replace("\r\n", "\n");
-  log_date.replace("\r", "\n");
-
-  String unix_time;
-  String value;
-
-  while (log_date.length() != 0) {
-    String tmp = selectToMarker (log_date, "\n");
-
-    unix_time += (selectToMarker (tmp, " ") + ",");
-    value += (deleteBeforeDelimiter(tmp, " ") + ",");
-
-    log_date = deleteBeforeDelimiter(log_date, "\n");
-  }
-  
-  unix_time.replace(",,", "");
-  value.replace(",,", "");
-  String to_send = "{\"status\":[" + value + "],\"time\": [" + unix_time + "]}";
-  sendCHART(topic, to_send);
-
-  getMemoryLoad("[i] after send log date");
-}
 
 String stateMQTT() {
 
@@ -312,7 +305,7 @@ String stateMQTT() {
 
 /*
       //-----------------------------------------------------------------------------------------------------------------------------------------------
-      //jsonWrite(tmp, "status", "1");
+      //jsonWriteStr(tmp, "status", "1");
 
       String current_config = configJson;                  //{"SSDP":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
       current_config.replace("{", "");
@@ -329,7 +322,7 @@ String stateMQTT() {
         state.replace("\"", "");                            //1
 
         //if (widget.lastIndexOf(topic) > 0) {
-          jsonWrite(tmp, "status", state);
+          jsonWriteStr(tmp, "status", state);
         //}
         current_config = deleteBeforeDelimiter(current_config, ",");
       }

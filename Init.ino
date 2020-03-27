@@ -7,7 +7,7 @@ void All_init() {
 
   server.on("/scenario", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("status")) {
-      jsonWrite(configSetup, "scenario", request->getParam("status")->value());
+      jsonWriteStr(configSetup, "scenario", request->getParam("status")->value());
     }
     saveConfig();
     Scenario_init();
@@ -15,11 +15,9 @@ void All_init() {
   });
 
   server.on("/cleanlog", HTTP_GET, [](AsyncWebServerRequest * request) {
-    SPIFFS.remove("/log.analog.txt");
-    SPIFFS.remove("/log.dallas.txt");
-    SPIFFS.remove("/log.level.txt");
-    SPIFFS.remove("/log.ph.txt");
-    SPIFFS.remove("/log.txt");
+
+    clean_log_date();
+
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
 
@@ -43,7 +41,12 @@ void Device_init() {
   ts.remove(STEPPER1);
   ts.remove(STEPPER2);
 
+  #ifdef layout_in_rom
   all_widgets = "";
+  #else
+  SPIFFS.remove("/layout.txt");
+  #endif
+  
   txtExecution("firmware.config.txt");
   //outcoming_date();
 }
@@ -219,19 +222,19 @@ void up_time() {
 
   if (ss != 0) {
     out = "[i] uptime = " + String(ss) + " sec";
-    jsonWrite(configJson, "uptime", String(ss) + " sec");
+    jsonWriteStr(configJson, "uptime", String(ss) + " sec");
   }
   if (mm != 0) {
     out = "[i] uptime = " + String(mm) + " min";
-    jsonWrite(configJson, "uptime", String(mm) + " min");
+    jsonWriteStr(configJson, "uptime", String(mm) + " min");
   }
   if (hh != 0) {
     out = "[i] uptime = " + String(hh) + " hours";
-    jsonWrite(configJson, "uptime", String(hh) + " hours");
+    jsonWriteStr(configJson, "uptime", String(hh) + " hours");
   }
   if (dd != 0) {
     out = "[i] uptime = " + String(dd) + " days";
-    jsonWrite(configJson, "uptime", String(dd) + " days");
+    jsonWriteStr(configJson, "uptime", String(dd) + " days");
   }
   Serial.println(out + ", mqtt_lost_error: " + String(mqtt_lost_error) + ", wifi_lost_error: " + String(wifi_lost_error));
 }
@@ -245,29 +248,31 @@ void statistics_init() {
 }
 
 void statistics() {
-  String urls = "http://backup.privet.lv/visitors/?";
-  //-----------------------------------------------------------------
-  urls += WiFi.macAddress().c_str();
-  urls += "&";
-  //-----------------------------------------------------------------
+  if (WiFi.status() == WL_CONNECTED) {
+    String urls = "http://backup.privet.lv/visitors/?";
+    //-----------------------------------------------------------------
+    urls += WiFi.macAddress().c_str();
+    urls += "&";
+    //-----------------------------------------------------------------
 #ifdef ESP8266
-  urls += "iot-manager_esp8266";
+    urls += "iot-manager_esp8266";
 #endif
 #ifdef ESP32
-  urls += "iot-manager_esp32";
+    urls += "iot-manager_esp32";
 #endif
-  urls += "&";
-  //-----------------------------------------------------------------
+    urls += "&";
+    //-----------------------------------------------------------------
 #ifdef ESP8266
-  urls += ESP.getResetReason();
+    urls += ESP.getResetReason();
 #endif
 #ifdef ESP32
-  urls += "Unknown";
+    urls += "Unknown";
 #endif
-  urls += "&";
-  //-----------------------------------------------------------------
-  urls += "firm version: " + firmware_version + " " + DATE_COMPILING + " " + TIME_COMPILING; 
-  //-----------------------------------------------------------------
-  String stat = getURL(urls);
-  //Serial.println(stat);
+    urls += "&";
+    //-----------------------------------------------------------------
+    urls += "firm version: " + firmware_version + " " + DATE_COMPILING + " " + TIME_COMPILING;
+    //-----------------------------------------------------------------
+    String stat = getURL(urls);
+    //Serial.println(stat);
+  }
 }

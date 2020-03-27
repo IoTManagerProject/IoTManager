@@ -69,7 +69,7 @@ void handleScenario() {
       }
       String tmp2 = jsonRead(optionJson, "scenario_status");                           //читаем файл событий
       tmp2 = deleteBeforeDelimiter(tmp2, ",");                                         //удаляем выполненное событие
-      jsonWrite(optionJson, "scenario_status", tmp2);                                  //записываем обновленный файл событий
+      jsonWriteStr(optionJson, "scenario_status", tmp2);                                  //записываем обновленный файл событий
       i = 0;
     }
   }
@@ -80,7 +80,7 @@ void eventGen (String event_name, String number) {   //событие выгля
   if (jsonRead(configSetup, "scenario") == "1") {
     String tmp = jsonRead(optionJson, "scenario_status") ;    //генерирование события
     //Serial.println(event_name);
-    jsonWrite(optionJson, "scenario_status", tmp + event_name + number + ",");
+    jsonWriteStr(optionJson, "scenario_status", tmp + event_name + number + ",");
   }
 }
 

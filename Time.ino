@@ -1,23 +1,26 @@
 void Time_Init() {
   server.on("/timeZone", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("timezone")) {
-      jsonWrite(configSetup, "timezone", request->getParam("timezone")->value());
+      jsonWriteStr(configSetup, "timezone", request->getParam("timezone")->value());
     }
     saveConfig();
     reconfigTime();
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
-  reconfigTime();
+
+  ts.add(TIME_SYNC, 30000, [&](void*) {
+    if (GetTimeUnix() == "failed") {
+      Serial.println("[i] Time is not synchronized, start synchronization");
+      reconfigTime();
+    }
+  }, nullptr, true);
 }
 
 void reconfigTime() {
   if (WiFi.status() == WL_CONNECTED) {
-
-    configTime(jsonRead(configSetup, "timezone").toInt() * 3600, 0, ntpServer);
-
+    configTime(0, 0, ntpServer);
     int i = 0;
     Serial.println("[i] Awaiting for time ");
-
 #ifdef ESP32
     struct tm timeinfo;
     while (!getLocalTime(&timeinfo) && i <= 4) {
@@ -26,7 +29,6 @@ void reconfigTime() {
       delay(1000);
     }
 #endif
-
 #ifdef ESP8266
     // while (!time(nullptr) && i < 4) {
     //   Serial.print(".");
@@ -34,26 +36,33 @@ void reconfigTime() {
     delay(2000);
     // }
 #endif
-
-    Serial.print("[i] Time = ");
-    Serial.print(GetDataDigital());
-    Serial.print(" ");
-    Serial.println(GetTime());
-
-
-
+    if (GetTimeUnix() != "failed") {
+      Serial.print("[V] Time synchronized = ");
+      Serial.print(GetDataDigital());
+      Serial.print(" ");
+      Serial.println(GetTime());
+    } else {
+      Serial.println("[E] Time server or internet connection error, will try again in 30 sec");
+    }
   } else {
     Serial.println("[E] Get time impossible, no wifi connection");
   }
 }
-//Получаем время в формате linux
-int GetTimeUnix() {
+
+//Получаем время в формате linux gmt
+String GetTimeUnix() {
   time_t now = time(nullptr);
-  return (now);
+  if (now < 30000) {
+    return "failed";
+  } else {
+    return String(now);
+  }
 }
 // Получение текущего времени
 String GetTime() {
   time_t now = time(nullptr); // получаем время с помощью библиотеки time.h
+  int zone = 3600 * jsonRead(configSetup, "timezone").toInt();
+  now = now + zone;
   String Time = ""; // Строка для результатов времени
   Time += ctime(&now); // Преобразуем время в строку формата Thu Jan 19 00:55:35 2017
   int i = Time.indexOf(":"); //Ишем позицию первого символа :
@@ -63,6 +72,8 @@ String GetTime() {
 
 String GetTimeWOsec() {
   time_t now = time(nullptr); // получаем время с помощью библиотеки time.h
+  int zone = 3600 * jsonRead(configSetup, "timezone").toInt();
+  now = now + zone;
   String Time = ""; // Строка для результатов времени
   Time += ctime(&now); // Преобразуем время в строку формата Thu Jan 19 00:55:35 2017
   int i = Time.indexOf(":"); //Ишем позицию первого символа :
@@ -73,6 +84,8 @@ String GetTimeWOsec() {
 // Получение даты
 String GetDate() {
   time_t now = time(nullptr); // получаем время с помощью библиотеки time.h
+  int zone = 3600 * jsonRead(configSetup, "timezone").toInt();
+  now = now + zone;
   String Data = ""; // Строка для результатов времени
   Data += ctime(&now); // Преобразуем время в строку формата Thu Jan 19 00:55:35 2017
   Data.replace("\n", "");

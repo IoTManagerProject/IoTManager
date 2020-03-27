@@ -10,10 +10,10 @@ void analog() {
   String analog_start_out = sCmd.next();
   String analog_end_out = sCmd.next();
   String page_number = sCmd.next();
-  jsonWrite(optionJson, "analog_start", analog_start);
-  jsonWrite(optionJson, "analog_end", analog_end);
-  jsonWrite(optionJson, "analog_start_out", analog_start_out);
-  jsonWrite(optionJson, "analog_end_out", analog_end_out);
+  jsonWriteStr(optionJson, "analog_start", analog_start);
+  jsonWriteStr(optionJson, "analog_end", analog_end);
+  jsonWriteStr(optionJson, "analog_start_out", analog_start_out);
+  jsonWriteStr(optionJson, "analog_end_out", analog_end_out);
   choose_widget_and_create(widget_name, page_name, page_number, type, "analog");
   ts.add(ANALOG_, analog_update_int, [&](void*) {
     static int analog_old;
@@ -24,13 +24,13 @@ void analog() {
 #ifdef ESP8266
     int analog_in = analogRead(A0);
 #endif
-    jsonWrite(configJson, "analog_in", analog_in);
+    jsonWriteInt(configJson, "analog_in", analog_in);
     int analog = map(analog_in,
                      jsonReadtoInt(optionJson, "analog_start") ,
                      jsonReadtoInt(optionJson, "analog_end"),
                      jsonReadtoInt(optionJson, "analog_start_out"),
                      jsonReadtoInt(optionJson, "analog_end_out"));
-    jsonWrite(configJson, "analog", analog);
+    jsonWriteInt(configJson, "analog", analog);
     // if (analog_old != analog) {
     eventGen ("analog", "");
     sendSTATUS("analog", String(analog));
@@ -51,8 +51,8 @@ void level() {
   String empty_level = sCmd.next();
   String full_level = sCmd.next();
   String page_number = sCmd.next();
-  jsonWrite(optionJson, "empty_level", empty_level);
-  jsonWrite(optionJson, "full_level", full_level);
+  jsonWriteStr(optionJson, "empty_level", empty_level);
+  jsonWriteStr(optionJson, "full_level", full_level);
   pinMode(14, OUTPUT);
   pinMode(12, INPUT);
   choose_widget_and_create(widget_name, page_name, page_number, type, "level");
@@ -73,11 +73,11 @@ void level() {
     counter++;
     if (counter > tank_level_times_to_send) {
       counter = 0;
-      jsonWrite(configJson, "level_in", distance_cm);
+      jsonWriteInt(configJson, "level_in", distance_cm);
       level = map(distance_cm,
                   jsonReadtoInt(optionJson, "empty_level"),
                   jsonReadtoInt(optionJson, "full_level"), 0, 100);
-      jsonWrite(configJson, "level", level);
+      jsonWriteInt(configJson, "level", level);
       //if (level_old != level) {
       eventGen ("level", "");
       sendSTATUS("level", String(level));
@@ -108,7 +108,7 @@ void dallas() {
     static float temp_old;
     sensors.requestTemperatures();
     temp = sensors.getTempCByIndex(0);
-    jsonWrite(configJson, "dallas", String(temp));
+    jsonWriteStr(configJson, "dallas", String(temp));
     //if (temp_old != temp) {
     eventGen ("dallas", "");
     sendSTATUS("dallas", String(temp));
@@ -147,14 +147,16 @@ void dhtT() {
     } else {
       counter = 0;
       value = dht.getTemperature();
-      jsonWrite(configJson, "dhtT", String(value));
       //if (value_old != value) {
-      eventGen ("dhtT", "");
-      sendSTATUS("dhtT", String(value));
-      if (client.connected()) {
-        Serial.println("[i] sensor 'dhtT' send date " + String(value));
+      if (String(value) != "nan") {
+        eventGen ("dhtT", "");
+        jsonWriteStr(configJson, "dhtT", String(value));
+        sendSTATUS("dhtT", String(value));
+        if (client.connected()) {
+          Serial.println("[i] sensor 'dhtT' send date " + String(value));
+        }
+        //}
       }
-      //}
       value_old = value;
     }
   }, nullptr, true);
@@ -185,14 +187,16 @@ void dhtH() {
     } else {
       counter = 0;
       value = dht.getHumidity();
-      jsonWrite(configJson, "dhtH", String(value));
-      //if (value_old != value) {
-      eventGen ("dhtH", "");
-      sendSTATUS("dhtH", String(value));
-      if (client.connected()) {
-        Serial.println("[i] sensor 'dhtH' send date " + String(value));
+      if (String(value) != "nan") {
+        //if (value_old != value) {
+        eventGen ("dhtH", "");
+        jsonWriteStr(configJson, "dhtH", String(value));
+        sendSTATUS("dhtH", String(value));
+        if (client.connected()) {
+          Serial.println("[i] sensor 'dhtH' send date " + String(value));
+        }
+        //}
       }
-      //}
       value_old = value;
     }
   }, nullptr, true);
@@ -210,7 +214,7 @@ void dhtPerception() {
     } else {
       value = dht.computePerception(jsonRead(configJson, "dhtT").toFloat(), jsonRead(configJson, "dhtH").toFloat(), false);
       String final_line = perception(value);
-      jsonWrite(configJson, "dhtPerception", final_line);
+      jsonWriteStr(configJson, "dhtPerception", final_line);
       eventGen ("dhtPerception", "");
       sendSTATUS("dhtPerception", final_line);
       if (client.connected()) {
@@ -277,7 +281,7 @@ void dhtComfort() {
           break;
       };
       String final_line = comfortStatus;
-      jsonWrite(configJson, "dhtComfort", final_line);
+      jsonWriteStr(configJson, "dhtComfort", final_line);
       eventGen ("dhtComfort", "");
       sendSTATUS("dhtComfort", final_line);
       if (client.connected()) {
@@ -298,7 +302,7 @@ void dhtDewpoint() {
       sendSTATUS("dhtDewpoint", String(dht.getStatusString()));
     } else {
       value = dht.computeDewPoint(jsonRead(configJson, "dhtT").toFloat(), jsonRead(configJson, "dhtH").toFloat(), false);
-      jsonWrite(configJson, "dhtDewpoint", value);
+      jsonWriteInt(configJson, "dhtDewpoint", value);
       eventGen ("dhtDewpoint", "");
       sendSTATUS("dhtDewpoint", String(value));
       if (client.connected()) {
@@ -316,81 +320,4 @@ void choose_widget_and_create(String widget_name, String page_name, String page_
   if (type == "progress-round") createWidget (widget_name, page_name, page_number, "widgets/widget.progRound.json", topik);
   if (type == "fill-gauge") createWidget (widget_name, page_name, page_number, "widgets/widget.fillGauge.json", topik);
 
-}
-//======================================================================================================================
-//===============================================Логирование============================================================
-
-void logging() {
-
-  static boolean flag = true;
-
-  String sensor_name = sCmd.next();
-  String period_min = sCmd.next();
-  String maxCount = sCmd.next();
-  String widget_name = sCmd.next();
-  widget_name.replace("#", " ");
-  String page_name = sCmd.next();
-  String page_number = sCmd.next();
-
-  if (sensor_name == "analog") jsonWrite(optionJson, "analog_logging_count", maxCount);
-  if (sensor_name == "level") jsonWrite(optionJson, "level_logging_count", maxCount);
-  if (sensor_name == "dallas") jsonWrite(optionJson, "dallas_logging_count", maxCount);
-
-  if (sensor_name == "analog") createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", "loganalog", maxCount);
-  if (sensor_name == "level") createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", "loglevel", maxCount);
-  if (sensor_name == "dallas") createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", "logdallas", maxCount);
-
-  if (sensor_name == "analog") {
-    flagLoggingAnalog = true;
-    ts.remove(ANALOG_LOG);
-    ts.add(ANALOG_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.analog.txt", jsonReadtoInt(optionJson, "analog_logging_count"), jsonRead(configJson, "analog"));
-    }, nullptr, true);
-  }
-
-  if (sensor_name == "level") {
-    flagLoggingLevel = true;
-    ts.remove(LEVEL_LOG);
-    ts.add(LEVEL_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.level.txt", jsonReadtoInt(optionJson, "level_logging_count"), jsonRead(configJson, "level"));
-    }, nullptr, true);
-  }
-
-  if (sensor_name == "dallas") {
-    flagLoggingDallas = true;
-    ts.remove(DALLAS_LOG);
-    ts.add(DALLAS_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.dallas.txt", jsonReadtoInt(optionJson, "dallas_logging_count"), jsonRead(configJson, "dallas"));
-    }, nullptr, true);
-  }
-}
-
-void deleteOldDate(String file, int seted_number_of_lines, String date_to_add) {
-
-  String log_date = readFile(file, 5000);
-  
-  //getMemoryLoad("[i] after logging procedure");
-  //предел количества строк 255
-
-  log_date.replace("\r\n", "\n");
-  log_date.replace("\r", "\n");
-
-  int current_number_of_lines = count(log_date, "\n");
-  Serial.println("[i] in log file " + file + " " + current_number_of_lines + " lines");
-
-  if (current_number_of_lines > seted_number_of_lines + 1) {
-    SPIFFS.remove("/" + file);
-    current_number_of_lines = 0;
-  }
-  if (current_number_of_lines == 0) {
-    SPIFFS.remove("/" + file);
-    current_number_of_lines = 0;
-  }
-  if (current_number_of_lines > seted_number_of_lines) {
-    log_date = deleteBeforeDelimiter(log_date, "\n");
-    log_date += String(GetTimeUnix()) + " " +  date_to_add + "\n";
-    writeFile(file, log_date);
-  } else {
-    addFile(file, String(GetTimeUnix()) + " " +  date_to_add);
-  }
 }

@@ -14,7 +14,7 @@ int jsonReadtoInt(String &json, String name) {
 }
 
 // ------------- Запись значения json String
-String jsonWrite(String &json, String name, String volume) {
+String jsonWriteStr(String &json, String name, String volume) {
   DynamicJsonBuffer jsonBuffer;
   JsonObject& root = jsonBuffer.parseObject(json);
   root[name] = volume;
@@ -24,7 +24,7 @@ String jsonWrite(String &json, String name, String volume) {
 }
 
 // ------------- Запись значения json int
-String jsonWrite(String &json, String name, int volume) {
+String jsonWriteInt(String &json, String name, int volume) {
   DynamicJsonBuffer jsonBuffer;
   JsonObject& root = jsonBuffer.parseObject(json);
   root[name] = volume;
@@ -34,7 +34,7 @@ String jsonWrite(String &json, String name, int volume) {
 }
 
 // ------------- Запись значения json float
-String jsonWrite(String &json, String name, float volume) {
+String jsonWriteFloat(String &json, String name, float volume) {
   DynamicJsonBuffer jsonBuffer;
   JsonObject& root = jsonBuffer.parseObject(json);
   root[name] = volume;
@@ -42,6 +42,26 @@ String jsonWrite(String &json, String name, float volume) {
   root.printTo(json);
   return json;
 }
+/*
+String jsonWriteArray(String &json, String value1, String value2, String value3) {
+
+  const int capacity = JSON_ARRAY_SIZE(1) + 3 * JSON_OBJECT_SIZE(3);
+  
+  StaticJsonBuffer<capacity> jb;
+  JsonArray& arr = jb.createArray();
+  JsonObject& obj1 = jb.createObject();
+
+  obj1[value1] = 1;
+  obj1[value2] = 2;
+  obj1[value3] = 3;
+  
+  arr.add(obj1);
+  
+  arr.printTo(json);
+
+  return json;
+}
+*/
 //=============================================CONFIG===========================================================
 void saveConfig () {
   writeFile("config.json", configSetup);
@@ -159,7 +179,7 @@ String safeDataToFile(String data, String Folder)
   // addFile(fileName, GetTime() + "/" + data);
 
   Serial.println(fileName);
-  jsonWrite(configJson, "test", fileName);
+  jsonWriteStr(configJson, "test", fileName);
 }
 // ------------- Чтение файла в строку
 String readFile(String fileName, size_t len ) {
@@ -218,9 +238,8 @@ String readFileString(String fileName, String found)
     return "Failed";
   }
   if (configFile.find(found.c_str())) {
-    return configFile.readStringUntil('\r\n');  //'\r'
+    //return configFile.readStringUntil('\r');  //'\r'
   }
-  //return "|-|-|";
   configFile.close();
 }
 
@@ -260,7 +279,7 @@ void led_blink(int pin, int fq, String blink_satus) {
 
 void getMemoryLoad(String text) {
 #ifdef ESP8266
-  int all_memory = 53312;
+  int all_memory = 52864;
 #endif
 #ifdef ESP32
   int all_memory = 362868;
@@ -276,19 +295,19 @@ void getMemoryLoad(String text) {
 
 }
 //esp32 full memory = 362868 k bytes
-//esp8266 full memory = 53312 k bytes
+//esp8266 full memory = 52864 k bytes
 
 //===================================================================
 /*
   void web_print (String text) {
   if (WiFi.status() == WL_CONNECTED) {
-    jsonWrite(json, "test1",  jsonRead(json, "test2"));
-    jsonWrite(json, "test2",  jsonRead(json, "test3"));
-    jsonWrite(json, "test3",  jsonRead(json, "test4"));
-    jsonWrite(json, "test4",  jsonRead(json, "test5"));
-    jsonWrite(json, "test5",  jsonRead(json, "test6"));
+    jsonWriteStr(json, "test1",  jsonRead(json, "test2"));
+    jsonWriteStr(json, "test2",  jsonRead(json, "test3"));
+    jsonWriteStr(json, "test3",  jsonRead(json, "test4"));
+    jsonWriteStr(json, "test4",  jsonRead(json, "test5"));
+    jsonWriteStr(json, "test5",  jsonRead(json, "test6"));
 
-    jsonWrite(json, "test6", GetTime() + " " + text);
+    jsonWriteStr(json, "test6", GetTime() + " " + text);
 
     ws.textAll(json);
   }
@@ -345,7 +364,7 @@ void getMemoryLoad(String text) {
 
 
 /*
-String getResetReason(uint8_t core) {
+  String getResetReason(uint8_t core) {
   int reason = rtc_get_reset_reason(core);
   switch (reason) {
     case 1  : return "Power on"; break;                                  //Vbat power on reset
@@ -365,10 +384,10 @@ String getResetReason(uint8_t core) {
     case 16 : return "RTC Watch dog reset digital core and rtc module"; break;
     default : return "NO_MEAN";
   }
-}
+  }
 
 
-String EspClass::getResetReason(void) {
+  String EspClass::getResetReason(void) {
   char buff[32];
   if (resetInfo.reason == REASON_DEFAULT_RST) { // normal startup by power on
     strcpy_P(buff, PSTR("Power on"));
@@ -388,5 +407,5 @@ String EspClass::getResetReason(void) {
     strcpy_P(buff, PSTR("Unknown"));
   }
   return String(buff);
-}
+  }
 */

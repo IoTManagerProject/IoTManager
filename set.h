@@ -1,12 +1,13 @@
 String firmware_version = "2.3.1";
-boolean flash_1mb = false;
 //-----------------------------------------------------------------
 String last_version;
 boolean start_check_version = false;
 
 //#define OTA_enable
 //#define MDNS_enable
-//#define WS_enable
+#define WS_enable
+
+//#define layout_in_rom
 
 #define TIME_COMPILING String(__TIME__)
 #define DATE_COMPILING String(__DATE__)
@@ -14,9 +15,6 @@ boolean start_check_version = false;
 #define wifi_mqtt_reconnecting 20000
 //-----------------------------------------------------------------
 #define analog_update_int 5000
-//-----------------------------------------------------------------
-#define ph_shooting_interval 500 //интервал выстрела датчика
-#define ph_times_to_send 10      //после скольки выстрелов делать отправку данных
 //-----------------------------------------------------------------
 #define temp_update_int 5000
 //-----------------------------------------------------------------
@@ -26,7 +24,8 @@ boolean start_check_version = false;
 #define dhtT_update_int 10000
 #define dhtH_update_int 10000
 #define dht_calculation_update_int 10000
-#define statistics_update 1000 * 60 * 60 * 4
+//-----------------------------------------------------------------
+#define statistics_update 1000 * 60 * 60 * 2
 //-----------------------------------------------------------------
 
 
@@ -80,10 +79,10 @@ AsyncEventSource events("/events");
 //---------------------------------------------------------------
 #include <TickerScheduler.h>
 TickerScheduler ts(30);
-enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, STEPPER1, STEPPER2,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, CMD, TIMER_COUNTDOWN, TIMERS, TIME, STATISTICS, TEST};
+enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, STEPPER1, STEPPER2,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, dhtT_LOG, dhtH_LOG, CMD, TIMER_COUNTDOWN, TIMERS, TIME, TIME_SYNC, STATISTICS, TEST};
 //---------------------------------------------------------------
 //ssl//#include "dependencies/WiFiClientSecure/WiFiClientSecure.h" //using older WiFiClientSecure
-//#include "Ticker_for_TickerScheduler/Ticker/Ticker.h" 
+//#include "Ticker_for_TickerScheduler/Ticker/Ticker.h"
 //---------------------------------------------------------------
 #include <PubSubClient.h>
 WiFiClient espClient;
@@ -134,7 +133,8 @@ String order_loop;
 boolean flagLoggingAnalog = false;
 boolean flagLoggingLevel = false;
 boolean flagLoggingDallas = false;
-boolean flagLoggingPh = false;
+boolean flagLoggingdhtT = false;
+boolean flagLoggingdhtH = false;
 
 const char* ntpServer = "pool.ntp.org";
 const long  gmtOffset_sec = 3600;
@@ -153,3 +153,5 @@ boolean upgrade_flag = false;
 boolean get_url_flag = false;
 
 boolean start_connecting_to_mqtt = false;
+
+String test;

@@ -1,11 +1,20 @@
-/*
 void SSDP_init() {
+  server.on("/ssdp", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (request->hasArg("ssdp")) {
+      jsonWriteStr(configSetup, "SSDP", request->getParam("ssdp")->value());
+      jsonWriteStr(configJson, "SSDP", request->getParam("ssdp")->value());
+    }
+    saveConfig();
+    request->send(200, "text/text", "OK");
+  });
+}
 
+/*
   // --------------------Получаем ssdp со страницы
   server.on("/ssdp", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("ssdp")) {
-      jsonWrite(configSetup, "SSDP", request->getParam("ssdp")->value());
-      jsonWrite(configJson, "SSDP", request->getParam("ssdp")->value());
+      jsonWriteStr(configSetup, "SSDP", request->getParam("ssdp")->value());
+      jsonWriteStr(configJson, "SSDP", request->getParam("ssdp")->value());
       SSDP.setName(jsonRead(configSetup, "SSDP"));
     }
     saveConfig();
@@ -13,7 +22,7 @@ void SSDP_init() {
   });
 
   // SSDP дескриптор
-  server.on("/description.xml", [](AsyncWebServerRequest * request) {    
+  server.on("/description.xml", [](AsyncWebServerRequest * request) {
     //SSDP.schema(http.client());
     request->send(200, "text/text", "OK");
   });
@@ -36,5 +45,5 @@ void SSDP_init() {
     SSDP.setManufacturerURL("https://www.instagram.com/rriissee3");
     SSDP.begin();
   }
-}
+  }
 */

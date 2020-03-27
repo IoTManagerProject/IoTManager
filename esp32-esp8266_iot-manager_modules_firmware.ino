@@ -1,36 +1,9 @@
 #include "set.h"
 
 void setup() {
-
-  Serial.begin(115200);
-  //Serial.setDebugOutput(true);
-  Serial.println("--------------started----------------");
   //--------------------------------------------------------------
-  SPIFFS.begin();
-  configSetup = readFile("config.json", 4096);
-  configSetup.replace(" ", "");
-  configSetup.replace("\r\n", "");
-  Serial.println(configSetup);
-  jsonWrite(configJson, "SSDP", jsonRead(configSetup, "SSDP"));
-  jsonWrite(configJson, "lang", jsonRead(configSetup, "lang"));
+  File_system_init();
   Serial.println("SPIFFS_init");
-
-#ifdef ESP32
-  uint32_t chipID_u = ESP.getEfuseMac();
-  chipID = String(chipID_u);
-  jsonWrite(configSetup, "chipID", chipID);
-#endif
-
-#ifdef ESP8266
-  chipID = String( ESP.getChipId() ) + "-" + String(ESP.getFlashChipId());
-  jsonWrite(configSetup, "chipID", chipID);
-  Serial.setDebugOutput(0);
-#endif
-
-  jsonWrite(configSetup, "firmware_version", firmware_version);
-
-  prex = jsonRead(configSetup, "mqttPrefix") + "/" + chipID;
-  Serial.println(chipID);
   //--------------------------------------------------------------
   CMD_init();
   Serial.println("[V] CMD_init");
@@ -59,26 +32,21 @@ void setup() {
   Push_init();
   Serial.println("[V] Push_init");
   //--------------------------------------------------------------
-  //SSDP_init();
-  //Serial.println("[V] SSDP_init");
+  SSDP_init();
+  Serial.println("[V] SSDP_init");
   //--------------------------------------------------------------
-  
-  Serial.print("[i] Date compiling: ");
-  Serial.println(DATE_COMPILING);
+  ts.add(TEST, 3000, [&](void*) {
 
-  getMemoryLoad("[i] After loading");
+    String json = "{}";
+    jsonWriteStr(json, "test", GetTime());
+    ws.textAll(json);
 
-#ifdef ESP8266
-  last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
-#endif
-#ifdef ESP32
-  last_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
-#endif
+    getMemoryLoad("[i] After loading");
+    //Serial.print(GetDataDigital());
+    //Serial.print(" ");
+    //Serial.println(GetTime());
 
-  jsonWrite(configSetup, "last_version", last_version);
-
-  Serial.print("[i] Last firmware version: ");
-  Serial.println(last_version);
+  }, nullptr, true);
 
   just_load = false;
 }

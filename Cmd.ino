@@ -62,8 +62,8 @@ void button() {
   String start_state = sCmd.next();
   String page_number = sCmd.next();
 
-  jsonWrite(optionJson, "button_param" + button_number, button_param);
-  jsonWrite(configJson, "buttonSet" + button_number, start_state);
+  jsonWriteStr(optionJson, "button_param" + button_number, button_param);
+  jsonWriteStr(configJson, "buttonSet" + button_number, start_state);
 
   if (isDigitStr (button_param)) {
     pinMode(button_param.toInt(), OUTPUT);
@@ -71,7 +71,7 @@ void button() {
   }
 
   if  (button_param == "scenario") {
-    jsonWrite(configSetup, "scenario", start_state);
+    jsonWriteStr(configSetup, "scenario", start_state);
     Scenario_init();
     saveConfig();
   }
@@ -103,7 +103,7 @@ void buttonSet() {
   }
 
   if  (button_param == "scenario") {
-    jsonWrite(configSetup, "scenario", button_state);
+    jsonWriteStr(configSetup, "scenario", button_state);
     Scenario_init();
     saveConfig();
   }
@@ -124,7 +124,7 @@ void buttonSet() {
 
   eventGen ("buttonSet", button_number);
 
-  jsonWrite(configJson, "buttonSet" + button_number, button_state);
+  jsonWriteStr(configJson, "buttonSet" + button_number, button_state);
   sendSTATUS("buttonSet" + button_number, button_state);
 }
 
@@ -137,7 +137,7 @@ void buttonChange() {
     current_state = "1";
   }
   order_loop += "buttonSet " + button_number + " " + current_state + ",";
-  jsonWrite(configJson, "buttonSet" + button_number, current_state);
+  jsonWriteStr(configJson, "buttonSet" + button_number, current_state);
   sendSTATUS("buttonSet" + button_number, current_state);
 }
 
@@ -168,11 +168,11 @@ void pwm() {
 
 
   uint8_t pwm_pin_int = pwm_pin.toInt();
-  jsonWrite(optionJson, "pwm_pin" + pwm_number, pwm_pin);
+  jsonWriteStr(optionJson, "pwm_pin" + pwm_number, pwm_pin);
   pinMode(pwm_pin_int, INPUT);
   analogWrite(pwm_pin_int, start_state.toInt());
   //analogWriteFreq(32000);
-  jsonWrite(configJson, "pwmSet" + pwm_number, start_state);
+  jsonWriteStr(configJson, "pwmSet" + pwm_number, start_state);
 
   createWidget (widget_name, page_name, page_number, "widgets/widget.range.json", "pwmSet" + pwm_number);
 }
@@ -188,7 +188,7 @@ void pwmSet() {
 
   eventGen ("pwmSet", pwm_number);
 
-  jsonWrite(configJson, "pwmSet" + pwm_number, pwm_state);
+  jsonWriteStr(configJson, "pwmSet" + pwm_number, pwm_state);
   sendSTATUS("pwmSet" + pwm_number, pwm_state);
 }
 //==================================================================================================================
@@ -214,13 +214,13 @@ void handleButton()  {
 
       eventGen ("switchSet", String(switch_number));
 
-      jsonWrite(configJson, "switchSet" + String(switch_number), "1");
+      jsonWriteStr(configJson, "switchSet" + String(switch_number), "1");
     }
     if (buttons[switch_number].rose()) {
 
       eventGen ("switchSet", String(switch_number));
 
-      jsonWrite(configJson, "switchSet" + String(switch_number), "0");
+      jsonWriteStr(configJson, "switchSet" + String(switch_number), "0");
     }
   }
   switch_number++;
@@ -238,13 +238,13 @@ void inputDigit() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWrite(configJson, "digitSet" + number, start_state);
+  jsonWriteStr(configJson, "digitSet" + number, start_state);
   createWidget (widget_name, page_name, page_number, "widgets/widget.inputNum.json", "digitSet" + number);
 }
 void digitSet() {
   String number = sCmd.next();
   String value = sCmd.next();
-  jsonWrite(configJson, "digitSet" + number, value);
+  jsonWriteStr(configJson, "digitSet" + number, value);
   sendSTATUS("digitSet" + number, value);
 }
 //=====================================================================================================================================
@@ -258,13 +258,13 @@ void inputTime() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWrite(configJson, "timeSet" + number, start_state);
+  jsonWriteStr(configJson, "timeSet" + number, start_state);
   createWidget (widget_name, page_name, page_number, "widgets/widget.inputTime.json", "timeSet" + number);
 }
 void timeSet() {
   String number = sCmd.next();
   String value = sCmd.next();
-  jsonWrite(configJson, "timeSet" + number, value);
+  jsonWriteStr(configJson, "timeSet" + number, value);
   sendSTATUS("timeSet" + number, value);
 }
 
@@ -273,7 +273,7 @@ void handle_time_init() {
 
     String tmp = GetTime();
     tmp.replace(":", "-");
-    jsonWrite(configJson, "timenowSet", tmp);
+    jsonWriteStr(configJson, "timenowSet", tmp);
     eventGen ("timenowSet", "");
 
   }, nullptr, true);
@@ -306,7 +306,7 @@ void textSet() {
     text = text + " " + GetDataDigital() + " " + time;
   }
 
-  jsonWrite(configJson, "textSet" + number, text);
+  jsonWriteStr(configJson, "textSet" + number, text);
   sendSTATUS("textSet" + number, text);
 }
 
@@ -319,7 +319,7 @@ void stepper() {
   String pin_step = sCmd.next();
   String pin_dir = sCmd.next();
 
-  jsonWrite(optionJson, "stepper" + stepper_number, pin_step + " " + pin_dir);
+  jsonWriteStr(optionJson, "stepper" + stepper_number, pin_step + " " + pin_dir);
   pinMode(pin_step.toInt(), OUTPUT);
   pinMode(pin_dir.toInt(), OUTPUT);
 }
@@ -328,7 +328,7 @@ void stepper() {
 void stepperSet() {
   String stepper_number = sCmd.next();
   String steps = sCmd.next();
-  jsonWrite(optionJson, "steps" + stepper_number, steps);
+  jsonWriteStr(optionJson, "steps" + stepper_number, steps);
   String stepper_speed = sCmd.next();
   String pin_step = selectToMarker (jsonRead(optionJson, "stepper" + stepper_number), " ");
   String pin_dir =  deleteBeforeDelimiter (jsonRead(optionJson, "stepper" + stepper_number), " ");
@@ -377,13 +377,13 @@ void stepperSet() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWrite(configJson, "inputTextSet" + number, start_state);
+  jsonWriteStr(configJson, "inputTextSet" + number, start_state);
   createWidget (widget_name, page_name, page_number, "widgets/widget.inputText.json", "inputTextSet" + number);
   }
   void inputTextSet() {
   String number = sCmd.next();
   String value = sCmd.next();
-  jsonWrite(configJson, "inputTextSet" + number, value);
+  jsonWriteStr(configJson, "inputTextSet" + number, value);
   sendSTATUS("inputTextSet" + number, value);
   }
 
@@ -395,14 +395,14 @@ void stepperSet() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWrite(configJson, "inputTimeSet" + number, start_state);
+  jsonWriteStr(configJson, "inputTimeSet" + number, start_state);
   createWidget (widget_name, page_name, page_number, "widgets/widget.inputTime.json", "inputTimeSet" + number);
   }
   void inputTimeSet() {
   String number = sCmd.next();
   String value = sCmd.next();
   value.replace(":", ".");
-  jsonWrite(configJson, "inputTimeSet" + number, value);
+  jsonWriteStr(configJson, "inputTimeSet" + number, value);
   value.replace(".", ":");
   sendSTATUS("inputTimeSet" + number, value);
   }
@@ -416,13 +416,13 @@ void stepperSet() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWrite(configJson, "inputDateSet" + number, start_state);
+  jsonWriteStr(configJson, "inputDateSet" + number, start_state);
   createWidget (widget_name, page_name, page_number, "widgets/widget.inputDate.json", "inputDateSet" + number);
   }
   void inputDateSet() {
   String number = sCmd.next();
   String value = sCmd.next();
-  jsonWrite(configJson, "inputDateSet" + number, value);
+  jsonWriteStr(configJson, "inputDateSet" + number, value);
   sendSTATUS("inputDateSet" + number, value);
   }
 */
@@ -464,24 +464,6 @@ void handleCMD_loop() {
   }
 }
 
-//=============================выполнение команд (через период) по очереди из строки order=======================================
-/*void handleCMD_ticker() {
-
-  ts.add(CMD, CMD_update_int, [&](void*) {
-    if (!busy) {
-      if (order_ticker != "") {
-
-        String tmp = selectToMarker(order_ticker, ",");                //выделяем из страки order первую команду pus title body
-        if (tmp != "no_command") sCmd.readStr(tmp);                                             //выполняем первую команду
-        Serial.println("order_ticker => " + order_ticker);
-        order_ticker = deleteBeforeDelimiter(order_ticker, ",");       //осекаем выполненную команду
-      }
-    }
-  }, nullptr, true);
-  }*/
-
-
-
 //=======================================================================================================================================
 //=======================================================================================================================================
 void txtExecution(String file) {
@@ -497,6 +479,7 @@ void txtExecution(String file) {
     sCmd.readStr(tmp);
     command_all = deleteBeforeDelimiter(command_all, "\n");
   }
+  command_all = "";
 }
 
 void stringExecution(String str) {
@@ -513,154 +496,3 @@ void stringExecution(String str) {
     str = deleteBeforeDelimiter(str, "\n");
   }
 }
-
-//======================================================================================================================
-//===============================================Создание виджетов=======================================================
-
-void createWidget (String widget_name, String  page_name, String page_number, String file, String topic) {
-
-  String widget;
-  widget = readFile(file, 1024);
-
-  if (widget == "Failed") return;
-  if (widget == "Large") return;
-
-  widget_name.replace("#", " ");
-  page_name.replace("#", " ");
-
-  jsonWrite(widget, "page", page_name);
-  jsonWrite(widget, "order", page_number);
-  jsonWrite(widget, "descr", widget_name);
-  jsonWrite(widget, "topic", prex + "/" + topic);
-  all_widgets += widget + "\r\n";
-  widget = "";
-}
-
-void createChart (String widget_name, String  page_name, String page_number, String file, String topic, String maxCount) {
-
-  String widget;
-  widget = readFile(file, 1024);
-
-  if (widget == "Failed") return;
-  if (widget == "Large") return;
-
-  widget_name.replace("#", " ");
-  page_name.replace("#", " ");
-
-  jsonWrite(widget, "page", page_name);
-  jsonWrite(widget, "order", page_number);
-  jsonWrite(widget, "descr", widget_name);
-  jsonWrite(widget, "series", widget_name);
-  jsonWrite(widget, "maxCount", maxCount);
-  jsonWrite(widget, "topic", prex + "/" + topic);
-  all_widgets += widget + "\r\n";
-  widget = "";
-}
-
-/*
-  void createWidget (String widget_name, String  page_name, String page_number, String file, String topic, String key, String value) {
-
-  String widget;
-  widget = readFile(file, 1024);
-
-  if (widget == "Failed") return;
-  if (widget == "Large") return;
-
-  widget_name.replace("#", " ");
-  page_name.replace("#", " ");
-
-  value.replace("#", " ");
-
-  widget = vidgetConfigWrite(widget, key, value);
-
-  jsonWrite(widget, "page", page_name);
-  jsonWrite(widget, "pageId", page_number);
-  jsonWrite(widget, "descr", widget_name);
-  jsonWrite(widget, "topic", prex + "/" + topic);
-
-  all_widgets += widget + "\r\n";
-  widget = "";
-  }
-
-  void createWidget (String widget_name, String  page_name, String page_number, String file, String topic, String key, String value, String key2, String value2) {
-
-  String widget;
-  widget = readFile(file, 1024);
-
-  if (widget == "Failed") return;
-  if (widget == "Large") return;
-
-  widget_name.replace("#", " ");
-  page_name.replace("#", " ");
-
-  value.replace("#", " ");
-
-  widget = vidgetConfigWrite(widget, key, value);
-  widget = vidgetConfigWrite(widget, key2, value2);
-
-  jsonWrite(widget, "page", page_name);
-  jsonWrite(widget, "pageId", page_number);
-  jsonWrite(widget, "descr", widget_name);
-  jsonWrite(widget, "topic", prex + "/" + topic);
-
-  all_widgets += widget + "\r\n";
-  widget = "";
-  }
-
-String vidgetConfigWrite(String widget, String key, String value) {
-
-  if (widget == "") return "";
-  if (widget == "{}") return "";
-  int psn1 = widget.indexOf("{");
-  if (psn1 != -1) {
-    psn1 = widget.indexOf("{", psn1 + 1);
-    if (psn1 != -1) {
-      int psn2 = widget.indexOf("}", psn1);
-      String WigetConfig = widget.substring(psn1, psn2) + "}";
-      jsonWrite(WigetConfig, key, value);
-      String part1 = widget.substring(0, psn1);
-      widget = part1 + WigetConfig + "}";
-      return widget;
-
-    }
-  }
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-//============разное
-
-/*
-  void delAlert() {
-
-  String alert_id = sCmd.next();
-  delwidget(alert_id);
-  sendAllWigets();
-  }
-
-
-  void delwidget(String text_in_widget) {
-  String widget = all_widgets;
-  while (widget.length() != 0) {
-    String tmp = selectToMarkerPlus (widget, "\r\n", 2);
-    if (tmp.indexOf(text_in_widget) > 0) {
-
-      all_widgets.replace(tmp, "");
-      //Serial.println(all_widgets);
-
-      widget = deleteBeforeDelimiter(widget, "\r\n");
-    } else {
-      widget = deleteBeforeDelimiter(widget, "\r\n");
-    }
-  }
-  }
-*/

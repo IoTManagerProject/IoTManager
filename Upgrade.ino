@@ -1,39 +1,55 @@
 void initUpgrade() {
+
+#ifdef ESP8266
+  if (WiFi.status() == WL_CONNECTED) last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
+#endif
+#ifdef ESP32
+  if (WiFi.status() == WL_CONNECTED) last_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
+#endif
+  jsonWriteStr(configSetup, "last_version", last_version);
+  Serial.print("[i] Last firmware version: ");
+  Serial.println(last_version);
+
   server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest * request) {
 
     start_check_version = true;
 
     Serial.print("[i] Last firmware version: ");
     Serial.println(last_version);
-
+#ifdef ESP8266
+    int ChipRealSize = ESP.getFlashChipRealSize() / 1048576;
+#endif
+#ifdef ESP32
+    int ChipRealSize = 4;
+#endif
     String tmp = "{}";
     if (WiFi.status() == WL_CONNECTED) {
-      if (!flash_1mb) {
+      if (ChipRealSize >= 4) {
         if (last_version != "") {
           if (last_version != "error") {
             if (last_version == firmware_version) {
-              jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
-              jsonWrite(tmp, "class", "pop-up");
+              jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
+              jsonWriteStr(tmp, "class", "pop-up");
             } else {
               upgrade_flag = true;
-              jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Идет обновление прошивки... После завершения устройство перезагрузится. Подождите одну минуту!!!");
-              jsonWrite(tmp, "class", "pop-up");
+              jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Идет обновление прошивки... После завершения устройство перезагрузится. Подождите одну минуту!!!");
+              jsonWriteStr(tmp, "class", "pop-up");
             }
           } else {
-            jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Ошибка... Cервер не найден. Попробуйте позже...");
-            jsonWrite(tmp, "class", "pop-up");
+            jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Ошибка... Cервер не найден. Попробуйте позже...");
+            jsonWriteStr(tmp, "class", "pop-up");
           }
         } else {
-          jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Нажмите на кнопку \"обновить прошивку\" повторно...");
-          jsonWrite(tmp, "class", "pop-up");
+          jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Нажмите на кнопку \"обновить прошивку\" повторно...");
+          jsonWriteStr(tmp, "class", "pop-up");
         }
       } else {
-        jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Обновление по воздуху не поддерживается, модуль имеет меньше 4 мб памяти...");
-        jsonWrite(tmp, "class", "pop-up");
+        jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Обновление по воздуху не поддерживается, модуль имеет меньше 4 мб памяти...");
+        jsonWriteStr(tmp, "class", "pop-up");
       }
     } else {
-      jsonWrite(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Модуль не подключен к роутеру...");
-      jsonWrite(tmp, "class", "pop-up");
+      jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Устройство не подключен к роутеру...");
+      jsonWriteStr(tmp, "class", "pop-up");
     }
     request->send(200, "text/text", tmp);
   });
@@ -44,9 +60,11 @@ void handle_get_url() {
     start_check_version = false;
 #ifdef ESP32
     last_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
+    jsonWriteStr(configSetup, "last_version", last_version);
 #endif
 #ifdef ESP8266
     last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
+    jsonWriteStr(configSetup, "last_version", last_version);
 #endif
   }
 }
@@ -232,24 +250,24 @@ void handle_upgrade() {
     case HTTP_UPDATE_FAILED:
       Serial.println(mode + "_FAILED");
       var = "{}";
-      jsonWrite(var, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>_FAILED");
-      jsonWrite(var, "class", "pop-up");
+      jsonWriteStr(var, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>_FAILED");
+      jsonWriteStr(var, "class", "pop-up");
       //request->send(200, "text/text", var);
       break;
 
     case HTTP_UPDATE_NO_UPDATES:
       Serial.println(mode + "_NO_UPDATES");
       var = "{}";
-      jsonWrite(var, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>_NO_UPDATES");
-      jsonWrite(var, "class", "pop-up");
+      jsonWriteStr(var, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>_NO_UPDATES");
+      jsonWriteStr(var, "class", "pop-up");
       //request->send(200, "text/text", var);
       break;
 
     case HTTP_UPDATE_OK:
       Serial.println(mode + "_UPDATE_OK");
       var = "{}";
-      jsonWrite(var, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>_UPDATE_OK");
-      jsonWrite(var, "class", "pop-up");
+      jsonWriteStr(var, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>_UPDATE_OK");
+      jsonWriteStr(var, "class", "pop-up");
       //request->send(200, "text/text", var);
       break;
   }

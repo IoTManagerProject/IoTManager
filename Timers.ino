@@ -25,7 +25,7 @@ void Timer_countdown_init() {
 
           delTimer (String (number));
 
-          jsonWrite(configJson, "timerSet" + String(number), "0");
+          jsonWriteStr(configJson, "timerSet" + String(number), "0");
 
           eventGen ("timerSet", String(number));
 
@@ -58,7 +58,7 @@ void timerStart() {
   if (type == "hours") period_of_time = String(period_of_time.toInt() * 60 * 60);
 
   addTimer(number, period_of_time);
-  jsonWrite(configJson, "timerSet" + number, "1");
+  jsonWriteStr(configJson, "timerSet" + number, "1");
 }
 void addTimer(String number, String time) {
 
@@ -78,7 +78,7 @@ void addTimer(String number, String time) {
   } else {                                       //если его нет
     tmp += new_timer + ",";
   }
-  jsonWrite(optionJson, "timers", tmp);
+  jsonWriteStr(optionJson, "timers", tmp);
   //Serial.println("ura");
 }
 
@@ -98,7 +98,7 @@ void delTimer (String number) {
     int psn2 = tmp.indexOf(",", psn1);               //4    от этой позиции находим позицию запятой
     String timer = tmp.substring(psn1, psn2) + ",";  //1:60,  выделяем таймер который надо удалить
     tmp.replace(timer, "");                          //удаляем таймер
-    jsonWrite(optionJson, "timers", tmp);
+    jsonWriteStr(optionJson, "timers", tmp);
   }
 }
 
@@ -157,9 +157,9 @@ void time() {
   }
 
 
-  jsonWrite(optionJson, "times", replace_line);
+  jsonWriteStr(optionJson, "times", replace_line);
 
-  jsonWrite(configJson, "timeSet" + time_number, "1");
+  jsonWriteStr(configJson, "timeSet" + time_number, "1");
 
   ts.add(TIMERS, 1000, [&](void*) {
 
@@ -177,7 +177,7 @@ void time() {
       Serial.println(seted_time);
 
       if (current_time == seted_time) {
-        jsonWrite(configJson, "timeSet" + time_number, "0");
+        jsonWriteStr(configJson, "timeSet" + time_number, "0");
         eventGen ("timeSet", time_number);
       }
 

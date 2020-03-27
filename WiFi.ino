@@ -3,10 +3,10 @@ void WIFI_init() {
   // --------------------Получаем ssid password со страницы
   server.on("/ssid", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("ssid")) {
-      jsonWrite(configSetup, "ssid", request->getParam("ssid")->value());
+      jsonWriteStr(configSetup, "ssid", request->getParam("ssid")->value());
     }
     if (request->hasArg("password")) {
-      jsonWrite(configSetup, "password", request->getParam("password")->value());
+      jsonWriteStr(configSetup, "password", request->getParam("password")->value());
     }
     saveConfig();                 // Функция сохранения данных во Flash
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
@@ -14,10 +14,10 @@ void WIFI_init() {
   // --------------------Получаем ssidAP passwordAP со страницы
   server.on("/ssidap", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("ssidAP")) {
-      jsonWrite(configSetup, "ssidAP", request->getParam("ssidAP")->value());
+      jsonWriteStr(configSetup, "ssidAP", request->getParam("ssidAP")->value());
     }
     if (request->hasArg("passwordAP")) {
-      jsonWrite(configSetup, "passwordAP", request->getParam("passwordAP")->value());
+      jsonWriteStr(configSetup, "passwordAP", request->getParam("passwordAP")->value());
     }
     saveConfig();                 // Функция сохранения данных во Flash
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
@@ -26,10 +26,10 @@ void WIFI_init() {
   // --------------------Получаем логин и пароль для web со страницы
   server.on("/web", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("web_login")) {
-      jsonWrite(configSetup, "web_login", request->getParam("web_login")->value());
+      jsonWriteStr(configSetup, "web_login", request->getParam("web_login")->value());
     }
     if (request->hasArg("web_pass")) {
-      jsonWrite(configSetup, "web_pass", request->getParam("web_pass")->value());
+      jsonWriteStr(configSetup, "web_pass", request->getParam("web_pass")->value());
     }
     saveConfig();                 // Функция сохранения данных во Flash
     //Web_server_init();
@@ -69,7 +69,7 @@ void WIFI_init() {
     if (WiFi.status() == WL_CONNECT_FAILED) {
       Serial.println("[E] password is not correct");
       tries = 1;
-      jsonWrite(optionJson, "pass_status", 1);
+      jsonWriteInt(optionJson, "pass_status", 1);
     }
     Serial.print(".");
     delay(1000);
@@ -88,10 +88,10 @@ void WIFI_init() {
     // о подключении и выводим адрес IP
     Serial.println("");
     Serial.println("[V] WiFi connected");
-    Serial.print("[V] IP address: ");
+    Serial.print("[V] IP address: http://");
     Serial.print(WiFi.localIP());
     Serial.println("");
-    jsonWrite(configJson, "ip", WiFi.localIP().toString());
+    jsonWriteStr(configJson, "ip", WiFi.localIP().toString());
 
   }
 }
@@ -108,7 +108,7 @@ bool StartAPMode() {
   IPAddress myIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(myIP);
-  jsonWrite(configJson, "ip", myIP.toString());
+  jsonWriteStr(configJson, "ip", myIP.toString());
 
   if (jsonReadtoInt(optionJson, "pass_status") != 1) {
     ts.add(ROUTER_SEARCHING, 10 * 1000, [&](void*) {
@@ -178,7 +178,7 @@ String scanWIFI() {
     int8_t dbm = WiFi.RSSI(i);
     data["dbm"] = dbm;
     if (ssidMy == jsonRead(configSetup, "ssid")) {
-      jsonWrite(configJson, "dbm", dbm);
+      jsonWriteStr(configJson, "dbm", dbm);
     }
   }
   String root;
