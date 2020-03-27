@@ -15,7 +15,7 @@ void createWidget (String widget_name, String  page_name, String page_number, St
   jsonWriteStr(widget, "order", page_number);
   jsonWriteStr(widget, "descr", widget_name);
   jsonWriteStr(widget, "topic", prex + "/" + topic);
-  #ifdef layout_in_rom
+  #ifdef layout_in_ram
   all_widgets += widget + "\r\n";
   #else
   addFile("layout.txt", widget);
@@ -40,7 +40,7 @@ void createChart (String widget_name, String  page_name, String page_number, Str
   jsonWriteStr(widget, "series", widget_name);
   jsonWriteStr(widget, "maxCount", maxCount);
   jsonWriteStr(widget, "topic", prex + "/" + topic);
-  #ifdef layout_in_rom
+  #ifdef layout_in_ram
   all_widgets += widget + "\r\n";
   #else
   addFile("layout.txt", widget);

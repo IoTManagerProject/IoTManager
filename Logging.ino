@@ -103,7 +103,25 @@ void choose_log_date_and_send() {
 }
 
 //=========================================Отправка данных===================================================================================
+//прямое выкидывание данных из файла в файловой системе в mqtt, без загрузки оперативной памяти
 void sendLogData(String file, String topic) {
+  File configFile = SPIFFS.open("/" + file, "r");
+  if (!configFile) {
+    return;
+  }
+  configFile.seek(0, SeekSet); //поставим курсор в начало файла
+  while (configFile.position() != configFile.size()) {
+    String tmp = configFile.readStringUntil('\r\n');
+    String unix_time = selectToMarker (tmp, " ");
+    String value = deleteBeforeDelimiter(tmp, " ");
+    String final_line = "{\"status\":{\"x\":" + unix_time + ",\"y1\":" + value + "}}";
+    //Serial.println(final_line);
+    sendCHART(topic, final_line);
+  }
+  getMemoryLoad("[i] after send log date");
+}
+//старый метод выкидывания данных с использованием оперативной памяти
+void sendLogData2(String file, String topic) {
   String log_date = readFile(file, 5000);
   log_date.replace("\r\n", "\n");
   log_date.replace("\r", "\n");
@@ -134,7 +152,6 @@ void sendLogData(String file, String topic) {
   json_array = "";
   getMemoryLoad("[i] after send log date");
 }
-
 //=========================================Очистка данных===================================================================================
 void clean_log_date() {
   SPIFFS.remove("/log.analog.txt");

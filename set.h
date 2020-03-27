@@ -5,9 +5,9 @@ boolean start_check_version = false;
 
 //#define OTA_enable
 //#define MDNS_enable
-#define WS_enable
+//#define WS_enable
 
-//#define layout_in_rom
+//#define layout_in_ram
 
 #define TIME_COMPILING String(__TIME__)
 #define DATE_COMPILING String(__DATE__)

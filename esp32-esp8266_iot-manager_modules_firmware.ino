@@ -35,18 +35,21 @@ void setup() {
   SSDP_init();
   Serial.println("[V] SSDP_init");
   //--------------------------------------------------------------
-  ts.add(TEST, 3000, [&](void*) {
 
-    String json = "{}";
-    jsonWriteStr(json, "test", GetTime());
-    ws.textAll(json);
 
-    getMemoryLoad("[i] After loading");
+  ts.add(TEST, 10000, [&](void*) {
+
+    //String json = "{}";
+    //jsonWriteStr(json, "test", GetTime());
+    //ws.textAll(json);
+
+    //getMemoryLoad("[i] After loading");
     //Serial.print(GetDataDigital());
     //Serial.print(" ");
     //Serial.println(GetTime());
 
-  }, nullptr, true);
+
+  }, nullptr, false);
 
   just_load = false;
 }

@@ -12,7 +12,21 @@ int jsonReadtoInt(String &json, String name) {
   JsonObject& root = jsonBuffer.parseObject(json);
   return root[name];
 }
+/*
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject& root = jsonBuffer.parseObject(json);
+  root[name] = volume;
+  json = "";
+  root.printTo(json);
+  return json;
 
+   DynamicJsonDocument  jsonBuffer(1024);
+  deserializeJson(jsonBuffer,json);
+  jsonBuffer[name] = volume;
+  json = "";
+  serializeJson(jsonBuffer,json);
+  return json;
+*/
 // ------------- Запись значения json String
 String jsonWriteStr(String &json, String name, String volume) {
   DynamicJsonBuffer jsonBuffer;
@@ -43,10 +57,10 @@ String jsonWriteFloat(String &json, String name, float volume) {
   return json;
 }
 /*
-String jsonWriteArray(String &json, String value1, String value2, String value3) {
+  String jsonWriteArray(String &json, String value1, String value2, String value3) {
 
   const int capacity = JSON_ARRAY_SIZE(1) + 3 * JSON_OBJECT_SIZE(3);
-  
+
   StaticJsonBuffer<capacity> jb;
   JsonArray& arr = jb.createArray();
   JsonObject& obj1 = jb.createObject();
@@ -54,13 +68,13 @@ String jsonWriteArray(String &json, String value1, String value2, String value3)
   obj1[value1] = 1;
   obj1[value2] = 2;
   obj1[value3] = 3;
-  
+
   arr.add(obj1);
-  
+
   arr.printTo(json);
 
   return json;
-}
+  }
 */
 //=============================================CONFIG===========================================================
 void saveConfig () {
@@ -231,14 +245,14 @@ String addFile(String fileName, String strings ) {
 }
 
 // ------------- Чтение строки из файла
-String readFileString(String fileName, String found)
-{
+//возвращает стоку из файла в которой есть искомое слово found
+String readFileString(String fileName, String found) {
   File configFile = SPIFFS.open("/" + fileName, "r");
   if (!configFile) {
     return "Failed";
   }
   if (configFile.find(found.c_str())) {
-    //return configFile.readStringUntil('\r');  //'\r'
+    return configFile.readStringUntil('\n');  //'\r'
   }
   configFile.close();
 }
@@ -328,6 +342,12 @@ void getMemoryLoad(String text) {
 */
 //===================================================================
 /*
+    {
+      "type": "button",
+      "title": "Конфигурация устройства",
+      "socket": "test2",
+      "class": "btn btn-block btn-primary"
+    },
   {
       "type": "hr"
     },

@@ -41,7 +41,7 @@ void Device_init() {
   ts.remove(STEPPER1);
   ts.remove(STEPPER2);
 
-  #ifdef layout_in_rom
+  #ifdef layout_in_ram
   all_widgets = "";
   #else
   SPIFFS.remove("/layout.txt");

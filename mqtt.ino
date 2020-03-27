@@ -169,12 +169,9 @@ void sendCONTROL(String id, String topik, String state) {
 }
 
 //=====================================================ОТПРАВЛЯЕМ ВИДЖЕТЫ========================================================
+
+#ifdef layout_in_ram
 void sendAllWigets() {
-
-#ifndef layout_in_rom
-  all_widgets = readFile("layout.txt", 5000);
-#endif
-
   if (all_widgets != "") {
     int counter = 0;
     String line;
@@ -193,23 +190,23 @@ void sendAllWigets() {
       psn_1 = psn_2 + 1;
     } while (psn_2 + 2 < all_widgets.length());
     getMemoryLoad("[i] after send all widgets");
-#ifndef layout_in_rom
-    all_widgets = "";
-#endif
   }
 }
-/*
-void sendAllWigets2() {
+#endif
+
+//прямое выкидывание данных из файла в файловой системе в mqtt, без загрузки оперативной памяти
+void sendAllWigets() {
   File configFile = SPIFFS.open("/layout.txt", "r");
   if (!configFile) {
     return;
   }
- // while (str.length() != 0) {
-
- //   configFile.readStringUntil("\r\n");
-
- // }
-}*/
+  configFile.seek(0, SeekSet); //поставим курсор в начало файла
+  while (configFile.position() != configFile.size()) {
+    String widget_to_send = configFile.readStringUntil('\r\n');
+    Serial.println("[V] " + widget_to_send);
+    sendMQTT("config", widget_to_send);
+  }
+}
 //=====================================================ОТПРАВЛЯЕМ ДАННЫЕ В ВИДЖЕТЫ ПРИ ОБНОВЛЕНИИ СТРАНИЦЫ========================================================
 void sendAllData() {   //берет строку json и ключи превращает в топики а значения колючей в них посылает
 
