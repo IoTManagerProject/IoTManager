@@ -257,6 +257,56 @@ String readFileString(String fileName, String found) {
   configFile.close();
 }
 
+// Запись данных в файл с частотой 1 секунда и более. Максимальное количество данных в суточном файле 1440 значений
+void safeDataToFile(int inter, String par, uint16_t data) {
+  yield();
+  // Формируем зоголовок (префикс) Интервал, Параметр, размер_параметра
+  uint16_t dataSize = sizeof(data);
+  String prifexFile;
+  prifexFile += inter;
+  prifexFile += "," + par;
+  prifexFile += ",";
+  prifexFile += dataSize;
+  prifexFile += ":";
+  uint16_t prifexLen = prifexFile.length(); //Размер префикса
+
+  // Сделаем имя файла
+  String fileName = GetDate();
+  fileName = deleteBeforeDelimiter(fileName, " "); // удалим день недели
+  fileName.replace(" ", ".");
+  fileName.replace("..", "."); // Заменяем пробелы точками
+  fileName = par + "/" + fileName + ".txt"; // Имя файла параметр в виде директории и дата
+  fileName.toLowerCase(); //fileName = "san aug 31 2018"; Имя файла строчными буквами
+  Serial.println(fileName);
+  File configFile = SPIFFS.open("/" + fileName, "a"); // Открываем файл на добавление
+  size_t size = configFile.size();
+  yield();
+  if (size == 0) {
+    configFile.print(prifexFile);
+  }
+  size = configFile.size();
+  // Получим время и определим позицию в файле
+  String time = GetTime();
+  //time = "00:15:00";
+  int timeM = timeToMin(time); // Здесь количество минут с начала суток
+  timeM = timeM / inter;
+  int poz = timeM * dataSize + prifexLen + 1; // позиция в которую нужно записать.
+  int endF = (size - prifexLen) * dataSize + prifexLen + 1; // позиция конца файла
+  if (poz >= endF) { // если файл имел пропуски в записи данных
+    int i = (poz - endF) / dataSize;
+    for (int j = 0; j < i; j++) { // Заполним недостающие данные
+      for (int d = 0; d < dataSize; d++) {
+        yield();
+        configFile.write(0);    // нулями
+      }
+    }
+  }
+  yield();
+  configFile.write(data >> 8); // добавим текущие
+  configFile.write(data);      // данные
+  configFile.close();
+}
+
 //=======================================УПРАВЛЕНИЕ ВИДЖЕТАМИ MQTT======================================================================
 
 

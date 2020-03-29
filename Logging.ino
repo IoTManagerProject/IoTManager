@@ -7,10 +7,15 @@ void logging() {
   String period_min = sCmd.next();
   String maxCount = sCmd.next();
 
+  String optimozation = sCmd.next();
+
   String widget_name = sCmd.next();
   widget_name.replace("#", " ");
   String page_name = sCmd.next();
   String page_number = sCmd.next();
+
+  if (optimozation == "fast") chart_data_in_solid_array = true;
+  if (optimozation == "slow") chart_data_in_solid_array = false;
 
   if (sensor_name == "analog") jsonWriteStr(optionJson, "analog_logging_count", maxCount);
   if (sensor_name == "level") jsonWriteStr(optionJson, "level_logging_count", maxCount);
@@ -68,7 +73,7 @@ void logging() {
 //=========================================Удаление стрых данных и запись новых==================================================================
 void deleteOldDate(String file, int seted_number_of_lines, String date_to_add) {
   String log_date = readFile(file, 5000);
-  int current_number_of_lines = count(log_date, "\n");
+  int current_number_of_lines = count(log_date, "\r\n");
   Serial.println("=====> [i] in log file " + file + " " + current_number_of_lines + " lines");
 
   if (current_number_of_lines > seted_number_of_lines + 1) {
@@ -80,9 +85,9 @@ void deleteOldDate(String file, int seted_number_of_lines, String date_to_add) {
     current_number_of_lines = 0;
   }
   if (current_number_of_lines > seted_number_of_lines) {
-    log_date = deleteBeforeDelimiter(log_date, "\n");
+    log_date = deleteBeforeDelimiter(log_date, "\r\n");
     if (GetTimeUnix() != "failed") {
-      log_date += GetTimeUnix() + " " +  date_to_add + "\n";
+      log_date += GetTimeUnix() + " " +  date_to_add + "\r\n";
       writeFile(file, log_date);
     }
   } else {
@@ -95,62 +100,66 @@ void deleteOldDate(String file, int seted_number_of_lines, String date_to_add) {
 
 //=========================================Выбор какие данные отправлять==================================================================
 void choose_log_date_and_send() {
-  if (flagLoggingAnalog) sendLogData("log.analog.txt", "loganalog");
-  if (flagLoggingLevel) sendLogData("log.level.txt", "loglevel");
-  if (flagLoggingDallas) sendLogData("log.dallas.txt", "logdallas");
-  if (flagLoggingdhtT) sendLogData("log.dhtT.txt", "logdhtT");
-  if (flagLoggingdhtH) sendLogData("log.dhtH.txt", "logdhtH");
+
+  if (flagLoggingAnalog) sendLogData("log.analog.txt", "loganalog", chart_data_in_solid_array);
+  if (flagLoggingLevel) sendLogData("log.level.txt", "loglevel", chart_data_in_solid_array);
+  if (flagLoggingDallas) sendLogData("log.dallas.txt", "logdallas", chart_data_in_solid_array);
+  if (flagLoggingdhtT) sendLogData("log.dhtT.txt", "logdhtT", chart_data_in_solid_array);
+  if (flagLoggingdhtH) sendLogData("log.dhtH.txt", "logdhtH", chart_data_in_solid_array);
 }
 
 //=========================================Отправка данных===================================================================================
-//прямое выкидывание данных из файла в файловой системе в mqtt, без загрузки оперативной памяти
-void sendLogData(String file, String topic) {
-  File configFile = SPIFFS.open("/" + file, "r");
-  if (!configFile) {
-    return;
-  }
-  configFile.seek(0, SeekSet); //поставим курсор в начало файла
-  while (configFile.position() != configFile.size()) {
-    String tmp = configFile.readStringUntil('\r\n');
-    String unix_time = selectToMarker (tmp, " ");
-    String value = deleteBeforeDelimiter(tmp, " ");
-    String final_line = "{\"status\":{\"x\":" + unix_time + ",\"y1\":" + value + "}}";
-    //Serial.println(final_line);
-    sendCHART(topic, final_line);
-  }
-  getMemoryLoad("[i] after send log date");
-}
-//старый метод выкидывания данных с использованием оперативной памяти
-void sendLogData2(String file, String topic) {
-  String log_date = readFile(file, 5000);
-  log_date.replace("\r\n", "\n");
-  log_date.replace("\r", "\n");
-  String buf = "{}";
-  String json_array;
-  String unix_time;
-  String value;
-  while (log_date.length() != 0) {
-    String tmp = selectToMarker (log_date, "\n");
-    log_date = deleteBeforeDelimiter(log_date, "\n");
-    unix_time = selectToMarker (tmp, " ");
-    jsonWriteInt(buf, "x", unix_time.toInt());
-    value = deleteBeforeDelimiter(tmp, " ");
-    jsonWriteFloat(buf, "y1", value.toFloat());
-    if (log_date.length() < 3) {
-      json_array += buf;
-    } else {
-      json_array += buf + ",";
+void sendLogData(String file, String topic, boolean type) {
+  if (type) {
+    //----------------------------------------------
+    String log_date = readFile(file, 5000);
+    log_date.replace("\r\n", "\n");
+    log_date.replace("\r", "\n");
+    String buf = "{}";
+    String json_array;
+    String unix_time;
+    String value;
+    while (log_date.length() != 0) {
+      String tmp = selectToMarker (log_date, "\n");
+      log_date = deleteBeforeDelimiter(log_date, "\n");
+      unix_time = selectToMarker (tmp, " ");
+      jsonWriteInt(buf, "x", unix_time.toInt());
+      value = deleteBeforeDelimiter(tmp, " ");
+      jsonWriteFloat(buf, "y1", value.toFloat());
+      if (log_date.length() < 3) {
+        json_array += buf;
+      } else {
+        json_array += buf + ",";
+      }
+      buf = "{}";
     }
-    buf = "{}";
+    unix_time = "";
+    value = "";
+    log_date = "";
+    json_array = "{\"status\":[" + json_array + "]}";
+    Serial.println(json_array);
+    sendCHART(topic, json_array);
+    json_array = "";
+    getMemoryLoad("[i] after send log date");
+    //----------------------------------------------
+  } else {
+    //----------------------------------------------
+    File configFile = SPIFFS.open("/" + file, "r");
+    if (!configFile) {
+      return;
+    }
+    configFile.seek(0, SeekSet); //поставим курсор в начало файла
+    while (configFile.position() != configFile.size()) {
+      String tmp = configFile.readStringUntil('\r\n');
+      String unix_time = selectToMarker (tmp, " ");
+      String value = deleteBeforeDelimiter(tmp, " ");
+      String final_line = "{\"status\":{\"x\":" + unix_time + ",\"y1\":" + value + "}}";
+      //Serial.println(final_line);
+      sendCHART(topic, final_line);
+    }
+    getMemoryLoad("[i] after send log date");
   }
-  unix_time = "";
-  value = "";
-  log_date = "";
-  json_array = "{\"status\":[" + json_array + "]}";
-  Serial.println(json_array);
-  sendCHART(topic, json_array);
-  json_array = "";
-  getMemoryLoad("[i] after send log date");
+  //----------------------------------------------
 }
 //=========================================Очистка данных===================================================================================
 void clean_log_date() {

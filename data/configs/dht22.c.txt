@@ -3,8 +3,8 @@ dhtH DHT22 2 Влажность#DHT,#% Датчики any-data 2
 dhtComfort Степень#комфорта: Датчики 3
 dhtPerception Восприятие: Датчики 4
 dhtDewpoint Точка#росы: Датчики 5
-logging dhtT 1 10 Температура Датчики  6
-logging dhtH 1 10 Влажность Датчики  7
+logging dhtT 5 50 slow Температура Датчики  6
+logging dhtH 5 50 slow Влажность Датчики  7
 
 //2 - номер пина датчика
 //варианты отображения: any-data, progress-round, progress-line, fill-gauge

@@ -74,8 +74,8 @@ void upgrade_firmware() {
   String scenario_for_update;
   String config_for_update;
   String configSetup_for_update;
-  scenario_for_update = readFile("firmware.scenario.txt", 3072);
-  config_for_update = readFile("firmware.config.txt", 3072);
+  scenario_for_update = readFile("firmware.s.txt", 3072);
+  config_for_update = readFile("firmware.c.txt", 3072);
   configSetup_for_update = configSetup;
 
   Serial.println("Start upgrade SPIFFS, please wait...");
@@ -93,8 +93,8 @@ void upgrade_firmware() {
 
   if (ret == HTTP_UPDATE_OK) {
 
-    writeFile("firmware.scenario.txt", scenario_for_update);
-    writeFile("firmware.config.txt", config_for_update);
+    writeFile("firmware.s.txt", scenario_for_update);
+    writeFile("firmware.c.txt", config_for_update);
     writeFile("config.json", configSetup_for_update);
     saveConfig();
 
@@ -212,12 +212,12 @@ void handle_upgrade() {
     String config_for_update;
     String configSetup_for_update;
     Serial.println(spiffsData);
-    scenario_for_update = readFile("firmware.scenario.txt", 2048);
+    scenario_for_update = readFile("firmware.s.txt", 2048);
     config_for_update = readFile("config.all.txt", 2048);
     configSetup_for_update = configSetup;
     ESPhttpUpdate.rebootOnUpdate(false); // Отключим перезагрузку после обновления
     updateHTTP(spiffsData, true);
-    writeFile("firmware.scenario.txt", scenario_for_update);
+    writeFile("firmware.s.txt", scenario_for_update);
     writeFile("config.all.txt", config_for_update);
     writeFile("config.json", configSetup_for_update);
     saveConfig();

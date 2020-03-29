@@ -36,24 +36,12 @@ void setup() {
   Serial.println("[V] SSDP_init");
   //--------------------------------------------------------------
 
-
   ts.add(TEST, 10000, [&](void*) {
-
-    //String json = "{}";
-    //jsonWriteStr(json, "test", GetTime());
-    //ws.textAll(json);
-
-    //getMemoryLoad("[i] After loading");
-    //Serial.print(GetDataDigital());
-    //Serial.print(" ");
-    //Serial.println(GetTime());
-
-
-  }, nullptr, false);
+    getMemoryLoad("[i] periodic check of");
+  }, nullptr, true);
 
   just_load = false;
 }
-
 
 
 void loop() {

@@ -155,3 +155,5 @@ boolean get_url_flag = false;
 boolean start_connecting_to_mqtt = false;
 
 String test;
+
+boolean chart_data_in_solid_array;

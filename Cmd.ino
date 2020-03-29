@@ -46,7 +46,6 @@ void CMD_init() {
 
 
   handle_time_init();
-
 }
 
 

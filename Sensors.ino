@@ -187,7 +187,7 @@ void dhtH() {
     } else {
       counter = 0;
       value = dht.getHumidity();
-      if (String(value) != "nan") {
+      if (String(value) != "nan" || value <= 100 || value >= 0) {
         //if (value_old != value) {
         eventGen ("dhtH", "");
         jsonWriteStr(configJson, "dhtH", String(value));

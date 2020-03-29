@@ -76,14 +76,14 @@ boolean MQTT_Connecting() {
     //ssl//espClient.setCACert(local_root_ca1);
     client.setServer(mqtt_server.c_str(), jsonReadtoInt(configSetup, "mqttPort"));
     if (WiFi.status() == WL_CONNECTED) {
-      if (!client.connected()) {
+      if (!client.connected()) {       
         Serial.println("[V] Connecting to MQTT server commenced");
-        if (client.connect(chipID.c_str(), jsonRead(configSetup, "mqttUser").c_str(), jsonRead(configSetup, "mqttPass").c_str())) {
+        if (client.connect(chipID.c_str(), jsonRead(configSetup, "mqttUser").c_str(), jsonRead(configSetup, "mqttPass").c_str())) {         
           Serial.println("[V] MQTT connected");
           client.setCallback(callback);
           client.subscribe(jsonRead(configSetup, "mqttPrefix").c_str());  // Для приема получения HELLOW и подтверждения связи
           client.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/+/control").c_str()); // Подписываемся на топики control
-          client.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/order").c_str()); // Подписываемся на топики order
+          client.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/order").c_str()); // Подписываемся на топики order          
           Serial.println("[V] Callback set, subscribe done");
           return true;
         } else {
@@ -153,6 +153,11 @@ boolean sendCHART(String topik, String data) {
   boolean send_status = client.beginPublish(topik.c_str(), data.length(), false);
   client.print(data);
   client.endPublish();
+  return send_status;
+}
+boolean sendCHART_test(String topik, String data) {
+  topik = jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
+  boolean send_status = client.publish (topik.c_str(), data.c_str(), false);
   return send_status;
 }
 //======================================STATUS==================================================
@@ -264,7 +269,7 @@ String stateMQTT() {
 
   //SCENARIO ANALOG > 5 800324-1458415 rel1 0
   if (jsonRead(configSetup, "scenario") == "1") {
-    //String all_text = readFile("firmware.scenario.txt", 1024) + "\r\n";
+    //String all_text = readFile("firmware.s.txt", 1024) + "\r\n";
     String all_text = scenario + "\r\n";
     all_text.replace("\r\n", "\n");
     all_text.replace("\r", "\n");

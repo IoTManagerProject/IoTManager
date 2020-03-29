@@ -4,7 +4,6 @@ void All_init() {
     Device_init();
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
-
   server.on("/scenario", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("status")) {
       jsonWriteStr(configSetup, "scenario", request->getParam("status")->value());
@@ -13,11 +12,8 @@ void All_init() {
     Scenario_init();
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
-
   server.on("/cleanlog", HTTP_GET, [](AsyncWebServerRequest * request) {
-
     clean_log_date();
-
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
 
@@ -41,171 +37,101 @@ void Device_init() {
   ts.remove(STEPPER1);
   ts.remove(STEPPER2);
 
-  #ifdef layout_in_ram
+#ifdef layout_in_ram
   all_widgets = "";
-  #else
+#else
   SPIFFS.remove("/layout.txt");
-  #endif
-  
-  txtExecution("firmware.config.txt");
+#endif
+
+  txtExecution("firmware.c.txt");
   //outcoming_date();
 }
 //-------------------------------сценарии-----------------------------------------------------
 
 void Scenario_init() {
   if (jsonRead(configSetup, "scenario") == "1") {
-    scenario = readFile("firmware.scenario.txt", 2048);
+    scenario = readFile("firmware.s.txt", 2048);
   }
 }
 
 void prsets_init() {
-
-  //part 1===============================================================================
-
-  server.on("/relay", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/relay.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/relay.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    String tmp = "";
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/relay_timer", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/relay_t.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/relay_t.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/relay_countdown", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/relay_c.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/relay_c.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/relay_several", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/relay_s.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/relay_s.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/relay_switch", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/relay_sw.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/relay_sw.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/relay_button_remote", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/relay_br.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/relay_br.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/relay_switch_remote", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/relay_sr.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/relay_sr.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/pwm", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/pwm.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/pwm.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  //part 2===============================================================================
-
-  server.on("/dht11", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/dht11.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/dht11.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/dht22", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/dht22.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/dht22.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/analog", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/analog.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/analog.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/dallas", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/dallas.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/dallas.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/termostat", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/termostat.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/termostat.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/level", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/level.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/level.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/moution_relay", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/moution_r.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/moution_r.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/moution_security", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/moution_s.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/moution_s.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  server.on("/stepper", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/stepper.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/stepper.scenario.txt", 2048));
-    Device_init();
-    Scenario_init();
-    request->redirect("/page.htm?configuration");
-  });
-
-  //default===============================================================================
-
-  server.on("/default", HTTP_GET, [](AsyncWebServerRequest * request) {
-    writeFile("firmware.config.txt", readFile("configs/firmware.config.txt", 2048));
-    writeFile("firmware.scenario.txt", readFile("configs/firmware.scenario.txt", 2048));
+  server.on("/preset", HTTP_GET, [](AsyncWebServerRequest * request) {
+    String value;
+    if (request->hasArg("arg")) {
+      value = request->getParam("arg")->value();
+    }
+    if (value == "1") {
+      writeFile("firmware.c.txt", readFile("configs/relay.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/relay.s.txt", 2048));
+    }
+    if (value == "2") {
+      writeFile("firmware.c.txt", readFile("configs/relay_t.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/relay_t.s.txt", 2048));
+    }
+    if (value == "3") {
+      writeFile("firmware.c.txt", readFile("configs/relay_c.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/relay_c.s.txt", 2048));
+    }
+    if (value == "4") {
+      writeFile("firmware.c.txt", readFile("configs/relay_s.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/relay_s.s.txt", 2048));
+    }
+    if (value == "5") {
+      writeFile("firmware.c.txt", readFile("configs/relay_sw.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/relay_sw.s.txt", 2048));
+    }
+    if (value == "6") {
+      writeFile("firmware.c.txt", readFile("configs/relay_br.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/relay_br.s.txt", 2048));
+    }
+    if (value == "7") {
+      writeFile("firmware.c.txt", readFile("configs/relay_sr.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/relay_sr.s.txt", 2048));
+    }
+    if (value == "8") {
+      writeFile("firmware.c.txt", readFile("configs/pwm.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/pwm.s.txt", 2048));
+    }
+    if (value == "9") {
+      writeFile("firmware.c.txt", readFile("configs/dht11.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/dht11.s.txt", 2048));
+    }
+    if (value == "10") {
+      writeFile("firmware.c.txt", readFile("configs/dht22.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/dht22.s.txt", 2048));
+    }
+    if (value == "11") {
+      writeFile("firmware.c.txt", readFile("configs/analog.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/analog.s.txt", 2048));
+    }
+    if (value == "12") {
+      writeFile("firmware.c.txt", readFile("configs/dallas.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/dallas.s.txt", 2048));
+    }
+    if (value == "13") {
+      writeFile("firmware.c.txt", readFile("configs/termostat.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/termostat.s.txt", 2048));
+    }
+    if (value == "14") {
+      writeFile("firmware.c.txt", readFile("configs/level.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/level.s.txt", 2048));
+    }
+    if (value == "15") {
+      writeFile("firmware.c.txt", readFile("configs/moution_r.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/moution_r.s.txt", 2048));
+    }
+    if (value == "16") {
+      writeFile("firmware.c.txt", readFile("configs/moution_s.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/moution_s.s.txt", 2048));
+    }
+    if (value == "17") {
+      writeFile("firmware.c.txt", readFile("configs/stepper.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/stepper.s.txt", 2048));
+    }
+    if (value == "18") {
+      writeFile("firmware.c.txt", readFile("configs/firmware.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/firmware.s.txt", 2048));
+    }
     Device_init();
     Scenario_init();
     request->redirect("/page.htm?configuration");
