@@ -1,4 +1,4 @@
-String firmware_version = "2.3.1";
+String firmware_version = "2.3.2";
 //-----------------------------------------------------------------
 String last_version;
 boolean start_check_version = false;
@@ -75,7 +75,7 @@ AsyncWebSocket ws("/ws");
 #endif
 AsyncEventSource events("/events");
 //---------------------------------------------------------------
-#include "time.h"
+#include <time.h>
 //---------------------------------------------------------------
 #include <TickerScheduler.h>
 TickerScheduler ts(30);
@@ -105,11 +105,16 @@ GMedian medianFilter;
 OneWire *oneWire;
 DallasTemperature sensors;
 //----------------------------------------------------------------
-#include "DHTesp.h"
+#include <DHTesp.h>
 DHTesp dht;
 //----------------------------------------------------------------
-//#include "Adafruit_Si7021.h" //https://github.com/adafruit/Adafruit_Si7021
-//Adafruit_Si7021 sensor_Si7021 = Adafruit_Si7021();
+//#include <ModbusMaster.h>
+//#include "SoftwareSerial.h"
+//SoftwareSerial SoftSerial(12, 13, false, 128);
+//ModbusMaster modbus;
+
+//swSer.begin(9600);
+//modbus.begin(1, SoftSerial);
 //-----------------------------------------------------------------
 
 boolean just_load = true;
