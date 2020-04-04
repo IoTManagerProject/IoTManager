@@ -1,24 +1,33 @@
 void All_init() {
 
-  server.on("/all_modules_init", HTTP_GET, [](AsyncWebServerRequest * request) {
-    Device_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
-  server.on("/scenario", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (request->hasArg("status")) {
-      jsonWriteStr(configSetup, "scenario", request->getParam("status")->value());
+  server.on("/init", HTTP_GET, [](AsyncWebServerRequest * request) {
+    String value;
+    if (request->hasArg("arg")) {
+      value = request->getParam("arg")->value();
     }
-    saveConfig();
-    Scenario_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
-  server.on("/cleanlog", HTTP_GET, [](AsyncWebServerRequest * request) {
-    clean_log_date();
+    if (value == "0") {
+      jsonWriteStr(configSetup, "scenario", value);
+      saveConfig();
+      Scenario_init();
+    }
+    if (value == "1") {
+      jsonWriteStr(configSetup, "scenario", value);
+      saveConfig();
+      Scenario_init();
+    }
+    if (value == "2") {
+      Device_init();
+    }
+    if (value == "3") {
+      clean_log_date();
+    }
+    if (value == "4") {
+      Scenario_init();
+    }
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
 
   prsets_init();
-
   Device_init();
   Scenario_init();
   Timer_countdown_init();
@@ -134,7 +143,7 @@ void prsets_init() {
     }
     Device_init();
     Scenario_init();
-    request->redirect("/page.htm?configuration");
+    request->redirect("/?configuration");
   });
 }
 

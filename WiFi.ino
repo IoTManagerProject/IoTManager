@@ -1,5 +1,5 @@
 void WIFI_init() {
-   
+
   // --------------------Получаем ssid password со страницы
   server.on("/ssid", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("ssid")) {
@@ -42,12 +42,12 @@ void WIFI_init() {
     }
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
+  ROUTER_Connecting();
+}
 
-
-  // Попытка подключения к точке доступа
+void ROUTER_Connecting() {
 
   WiFi.mode(WIFI_STA);
-  // WiFi.mode(WIFI_NONE_SLEEP);
 
   byte tries = 20;
   String _ssid = jsonRead(configSetup, "ssid");
@@ -92,6 +92,8 @@ void WIFI_init() {
     Serial.print(WiFi.localIP());
     Serial.println("");
     jsonWriteStr(configJson, "ip", WiFi.localIP().toString());
+    
+    //add_dev_in_list("dev.txt", chipID, WiFi.localIP().toString());
 
   }
 }
@@ -115,8 +117,8 @@ bool StartAPMode() {
       Serial.println("->try find router");
       if (RouterFind(jsonRead(configSetup, "ssid"))) {
         ts.remove(ROUTER_SEARCHING);
-        WIFI_init();
-        MQTT_init();
+        ROUTER_Connecting();
+        MQTT_Connecting();
       }
     }, nullptr, true);
   }
@@ -164,8 +166,9 @@ boolean RouterFind(String ssid) {
     return false;
   }
 }
+
 /*
-String scanWIFI() {
+  String scanWIFI() {
   uint8_t n = WiFi.scanNetworks();
   DynamicJsonBuffer jsonBuffer;
   JsonObject& json = jsonBuffer.createObject();
@@ -184,7 +187,7 @@ String scanWIFI() {
   String root;
   json.printTo(root);
   return root;
-}
+  }
 */
 /*
   {

@@ -8,7 +8,7 @@
   "content": [
     {
       "type": "h5",
-      "title": "{{SSDP}}",
+      "title": "{{name}}",
       "class": "alert-warning"
     },
     {
@@ -37,7 +37,7 @@
     {
       "type": "link",
       "title": "Конфигурация устройства",
-      "action": "/page.htm?configuration",
+      "action": "/?configuration",
       "class": "btn btn-block btn-primary"
     },
     {
@@ -45,20 +45,29 @@
     },
     {
       "type": "link",
+      "title": "Список других устройств в сети",
+      "action": "/?dev",
+      "class": "btn btn-block btn-warning"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "link",
       "title": "Конфигурация WIFI",
-      "action": "/page.htm?setup",
+      "action": "/?setup",
       "class": "btn btn-block btn-success"
     },
     {
       "type": "link",
       "title": "Конфигурация MQTT",
-      "action": "/page.htm?mqtt",
+      "action": "/?mqtt",
       "class": "btn btn-block btn-success"
     },
     {
       "type": "link",
       "title": "Конфигурация push",
-      "action": "/page.htm?pushingbox",
+      "action": "/?pushingbox",
       "class": "btn btn-block btn-success"
     },
     {
@@ -73,7 +82,7 @@
     {
       "type": "button",
       "title": "Обновить прошивку",
-      "action": "/upgrade",
+      "action": "/check",
       "response": "[[my-block]]",
       "class": "btn btn-block btn-success"
     },

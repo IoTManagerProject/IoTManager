@@ -38,7 +38,7 @@ void MQTT_init() {
       jsonWriteStr(configSetup, "mqttPass", request->getParam("mqttPass")->value());
     }
     saveConfig();
-    start_connecting_to_mqtt = true;
+    mqtt_connection = true;
 
     request->send(200, "text/text", "ok");
   });
@@ -49,11 +49,20 @@ void MQTT_init() {
     jsonWriteStr(tmp, "class", "pop-up");
     request->send(200, "text/text", tmp);
   });
+
+  
 }
 
-void handle_connection() {
-  if (start_connecting_to_mqtt) {
-    start_connecting_to_mqtt = false;
+void do_mqtt_send_settings_to_udp() {
+  if (mqtt_send_settings_to_udp) {
+    mqtt_send_settings_to_udp = false;
+    send_mqtt_to_udp();
+  }
+}
+
+void do_mqtt_connection() {
+  if (mqtt_connection) {
+    mqtt_connection = false;
     client.disconnect();
     MQTT_Connecting();
   }
@@ -76,14 +85,14 @@ boolean MQTT_Connecting() {
     //ssl//espClient.setCACert(local_root_ca1);
     client.setServer(mqtt_server.c_str(), jsonReadtoInt(configSetup, "mqttPort"));
     if (WiFi.status() == WL_CONNECTED) {
-      if (!client.connected()) {       
+      if (!client.connected()) {
         Serial.println("[V] Connecting to MQTT server commenced");
-        if (client.connect(chipID.c_str(), jsonRead(configSetup, "mqttUser").c_str(), jsonRead(configSetup, "mqttPass").c_str())) {         
+        if (client.connect(chipID.c_str(), jsonRead(configSetup, "mqttUser").c_str(), jsonRead(configSetup, "mqttPass").c_str())) {
           Serial.println("[V] MQTT connected");
           client.setCallback(callback);
           client.subscribe(jsonRead(configSetup, "mqttPrefix").c_str());  // Для приема получения HELLOW и подтверждения связи
           client.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/+/control").c_str()); // Подписываемся на топики control
-          client.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/order").c_str()); // Подписываемся на топики order          
+          client.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/order").c_str()); // Подписываемся на топики order
           Serial.println("[V] Callback set, subscribe done");
           return true;
         } else {
@@ -99,7 +108,7 @@ boolean MQTT_Connecting() {
 }
 
 //=====================================================ВХОДЯЩИЕ ДАННЫЕ========================================================
-void callback(char* topic, byte* payload, unsigned int length) {
+void callback(char* topic, byte * payload, unsigned int length) {
   Serial.print("[MQTT] ");
   Serial.print(topic);
   String topic_str = String(topic);
@@ -228,7 +237,7 @@ void sendAllData() {   //берет строку json и ключи превра
     topic.replace("\"", "");
     String state =  selectToMarkerLast (tmp, ":");
     state.replace("\"", "");
-    if (topic != ssdpS && topic != "lang" && topic != "ip" && topic.indexOf("_in") < 0) {
+    if (topic != "name" && topic != "lang" && topic != "ip" && topic.indexOf("_in") < 0) {
       sendSTATUS(topic, state);
       //Serial.println("-->" + topic + " " + state);
     }

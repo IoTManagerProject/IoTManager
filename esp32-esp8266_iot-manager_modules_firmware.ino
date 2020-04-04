@@ -32,13 +32,21 @@ void setup() {
   Push_init();
   Serial.println("[V] Push_init");
   //--------------------------------------------------------------
-  SSDP_init();
-  Serial.println("[V] SSDP_init");
+  UDP_init();
+  Serial.println("[V] UDP_init");
   //--------------------------------------------------------------
 
-  ts.add(TEST, 10000, [&](void*) {
+
+
+  ts.add(TEST, 5000, [&](void*) {
+
     getMemoryLoad("[i] periodic check of");
+    //String json = "{}";
+    //jsonWriteStr(json, "test6", GetTime());
+    //ws.textAll(json);
+
   }, nullptr, true);
+
 
   just_load = false;
 }
@@ -54,15 +62,21 @@ void loop() {
   ws.cleanupClients();
 #endif
 
+  not_async_actions();
+
   handleMQTT();
-
-  handle_connection();
-  handle_get_url();
-
   handleCMD_loop();
   handleButton();
   handleScenario();
+  handleUdp();
 
   ts.update();
-  handle_upgrade();
+}
+
+void not_async_actions() {
+  do_mqtt_connection();
+  do_upgrade_url();
+  do_upgrade();
+  do_udp_data_parse();
+  do_mqtt_send_settings_to_udp();
 }

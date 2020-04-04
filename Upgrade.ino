@@ -10,29 +10,20 @@ void initUpgrade() {
   Serial.print("[i] Last firmware version: ");
   Serial.println(last_version);
 
-  server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest * request) {
-
-    start_check_version = true;
-
+  server.on("/check", HTTP_GET, [](AsyncWebServerRequest * request) {
+    upgrade_url = true;
     Serial.print("[i] Last firmware version: ");
     Serial.println(last_version);
-#ifdef ESP8266
-    int ChipRealSize = ESP.getFlashChipRealSize() / 1048576;
-#endif
-#ifdef ESP32
-    int ChipRealSize = 4;
-#endif
     String tmp = "{}";
     if (WiFi.status() == WL_CONNECTED) {
-      if (ChipRealSize >= 4) {
+      if (mb_4_of_memory) {
         if (last_version != "") {
           if (last_version != "error") {
             if (last_version == firmware_version) {
               jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
               jsonWriteStr(tmp, "class", "pop-up");
-            } else {
-              upgrade_flag = true;
-              jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Идет обновление прошивки... После завершения устройство перезагрузится. Подождите одну минуту!!!");
+            } else {               
+              jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Имеется новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 30000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
               jsonWriteStr(tmp, "class", "pop-up");
             }
           } else {
@@ -53,11 +44,18 @@ void initUpgrade() {
     }
     request->send(200, "text/text", tmp);
   });
+
+  server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest * request) {
+     upgrade = true; 
+     String tmp = "{}";  
+     //jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Есть новая версия <a href=\"#\" onclick=\"setTimeout(function(){ location.href='/'; }, 5000);}\">Установить?</a>");
+     request->send(200, "text/text", "ok");
+  });
 }
 
-void handle_get_url() {
-  if (start_check_version) {
-    start_check_version = false;
+void do_upgrade_url() {
+  if (upgrade_url) {
+    upgrade_url = false;
 #ifdef ESP32
     last_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
     jsonWriteStr(configSetup, "last_version", last_version);
@@ -118,9 +116,9 @@ void upgrade_firmware() {
   }
 }
 
-void handle_upgrade() {
-  if (upgrade_flag) {
-    upgrade_flag = false;
+void do_upgrade() {
+  if (upgrade) {
+    upgrade = false;
     upgrade_firmware();
   }
 }

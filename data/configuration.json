@@ -8,7 +8,7 @@
   "content": [
     {
       "type": "h5",
-      "title": "{{SSDP}}",
+      "title": "{{name}}",
       "class": "alert-warning"
     },
     {
@@ -62,7 +62,7 @@
       "state": "firmware.c.txt",
       "style": "width:100%;height:400px",
       "title": "Сохранить",
-      "action": "/all_modules_init",
+      "action": "/init?arg=2",
       "class": "btn btn-block btn-success"
     },
     {
@@ -79,7 +79,7 @@
       "type": "checkbox",
       "name": "scenario",
       "title": "Включить сценарии",
-      "action": "/scenario?status=[[scenario]]",
+      "action": "/init?arg=[[scenario]]",
       "state": "{{scenario}}"
     },
     {
@@ -90,8 +90,8 @@
       "type": "file",
       "state": "firmware.s.txt",
       "style": "width:100%;height:400px",
-      "title": "Сохранить и включить",
-      "action": "/scenario?status=1",
+      "title": "Сохранить",
+      "action": "/init?arg=4",
       "class": "btn btn-block btn-success"
     },
     {
@@ -100,13 +100,13 @@
     {
       "type": "link",
       "title": "Очистить логи сенсоров",
-      "action": "/cleanlog",
+      "action": "/init?arg=3",
       "class": "btn btn-block btn-success"
     },
     {
       "type": "link",
       "title": "Главная",
-      "action": "/page.htm?index",
+      "action": "/",
       "class": "btn btn-block btn-danger btn-sm"
     }
   ]

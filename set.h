@@ -1,7 +1,8 @@
-String firmware_version = "2.3.2";
+String firmware_version = "2.3.1";
 //-----------------------------------------------------------------
+boolean mb_4_of_memory = true;
 String last_version;
-boolean start_check_version = false;
+
 
 //#define OTA_enable
 //#define MDNS_enable
@@ -79,10 +80,13 @@ AsyncEventSource events("/events");
 //---------------------------------------------------------------
 #include <TickerScheduler.h>
 TickerScheduler ts(30);
-enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, STEPPER1, STEPPER2,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, dhtT_LOG, dhtH_LOG, CMD, TIMER_COUNTDOWN, TIMERS, TIME, TIME_SYNC, STATISTICS, TEST};
+enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, STEPPER1, STEPPER2,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, dhtT_LOG, dhtH_LOG, CMD, TIMER_COUNTDOWN, TIMERS, TIME, TIME_SYNC, STATISTICS, UDP, UDP_DB, TEST};
 //---------------------------------------------------------------
 //ssl//#include "dependencies/WiFiClientSecure/WiFiClientSecure.h" //using older WiFiClientSecure
 //#include "Ticker_for_TickerScheduler/Ticker/Ticker.h"
+//---------------------------------------------------------------
+#include <WiFiUdp.h>
+WiFiUDP Udp;
 //---------------------------------------------------------------
 #include <PubSubClient.h>
 WiFiClient espClient;
@@ -145,7 +149,6 @@ const char* ntpServer = "pool.ntp.org";
 const long  gmtOffset_sec = 3600;
 const int   daylightOffset_sec = 3600;
 
-const String ssdpS = "SSDP";
 String current_time;
 
 int scenario_line_status [] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -154,11 +157,25 @@ int wifi_lost_error = 0;
 int mqtt_lost_error = 0;
 
 String var;
-boolean upgrade_flag = false;
-boolean get_url_flag = false;
 
-boolean start_connecting_to_mqtt = false;
+//flags for not async actions
+boolean upgrade_url = false;
+boolean upgrade = false;
+boolean mqtt_connection = false;
+boolean udp_data_parse = false;
+boolean mqtt_send_settings_to_udp = false;
+
+boolean udp_busy = false;
+
 
 String test;
 
 boolean chart_data_in_solid_array;
+
+
+unsigned int udp_port = 4210;
+char udp_incomingPacket[255];
+//char  udp_replyPacket[] = "Multicast packet 1";
+IPAddress udp_multicastIP (255, 255, 255, 255);
+String received_ip;
+String received_udp_line;

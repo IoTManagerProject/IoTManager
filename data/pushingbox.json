@@ -6,7 +6,7 @@
  "content": [
   {
    "type": "h5",
-   "title": "{{SSDP}}",
+   "title": "{{name}}",
    "class":"alert-warning"
   },
  {
@@ -39,7 +39,7 @@
   {
    "type": "link",
    "title": "Главная",
-   "action": "/page.htm?index",
+   "action": "/",
    "class": "btn btn-block btn-danger btn-sm"
   }
  ]

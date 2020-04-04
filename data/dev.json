@@ -1,0 +1,65 @@
+{
+  "configs": [
+    "/config.live.json",
+    "/config.setup.json"
+  ],
+  "title": "Главная",
+  "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+  "content": [
+    {
+      "type": "h5",
+      "title": "{{name}}",
+      "class": "alert-warning"
+    },
+    {
+      "type": "h3",
+      "title": "Список других устройств в сети:"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "csv",
+      "title": [
+        "html",
+        "html",
+        "html"
+      ],
+      "state": "dev.csv",
+      "style": "width:100%;",
+      "class": "nan"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "link",
+      "title": "Переформировать список устройств",
+      "action": "udp?arg=2",
+      "class": "btn btn-block btn-success"
+    },
+    {
+      "type": "link",
+      "title": "Обновить страницу",
+      "action": "udp?arg=3",
+      "class": "btn btn-block btn-success"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "text",
+      "class": "alert alert-warning",
+      "title": "После нажатия на кнопку 'Переформировать список устройств' ждите примерно минуту, а затем обновите страницу и список появится вновь"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "link",
+      "title": "Главная",
+      "action": "/",
+      "class": "btn btn-block btn-danger"
+    }
+  ]
+}
