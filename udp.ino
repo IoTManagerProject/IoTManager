@@ -32,7 +32,7 @@ void UDP_init() {
   ts.add(UDP, 30000, [&](void*) {
     if (WiFi.status() == WL_CONNECTED) {
       if (!udp_busy) {
-        String line_to_send = chipID + ";" + jsonRead(configSetup, "SSDP");
+        String line_to_send = chipID + ";" + jsonRead(configSetup, "name");
 #ifdef ESP8266
         Udp.beginPacketMulticast(udp_multicastIP, udp_port, WiFi.localIP());
         Udp.write(line_to_send.c_str());

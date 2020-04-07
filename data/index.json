@@ -47,10 +47,7 @@
       "type": "link",
       "title": "Список других устройств в сети",
       "action": "/?dev",
-      "class": "btn btn-block btn-warning"
-    },
-    {
-      "type": "hr"
+      "class": "btn btn-block btn-success"
     },
     {
       "type": "link",
@@ -71,20 +68,20 @@
       "class": "btn btn-block btn-success"
     },
     {
-      "type": "hr"
-    },
-    {
       "type": "h3",
       "name": "my-block",
       "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
       "class": "hidden"
     },
     {
+      "type": "hr"
+    },
+    {
       "type": "button",
       "title": "Обновить прошивку",
       "action": "/check",
       "response": "[[my-block]]",
-      "class": "btn btn-block btn-success"
+      "class": "btn btn-block btn-danger"
     },
     {
       "type": "hr"

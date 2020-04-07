@@ -9,7 +9,7 @@ void File_system_init() {
   configSetup.replace(" ", "");
   configSetup.replace("\r\n", "");
   Serial.println(configSetup);
-  jsonWriteStr(configJson, "SSDP", jsonRead(configSetup, "SSDP"));
+  jsonWriteStr(configJson, "name", jsonRead(configSetup, "name"));
   jsonWriteStr(configJson, "lang", jsonRead(configSetup, "lang"));
   
 

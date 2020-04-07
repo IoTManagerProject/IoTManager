@@ -34,11 +34,9 @@ String last_version;
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
-//#include <ESPAsyncTCP.h>
 #ifdef MDNS_enable
 #include <ESP8266mDNS.h>
 #endif
-//#include <ESP8266SSDP.h>
 #include <ESP8266httpUpdate.h>
 #include <ESP8266HTTPUpdateServer.h>
 ESP8266HTTPUpdateServer httpUpdater;
@@ -53,11 +51,8 @@ ESP8266HTTPUpdateServer httpUpdater;
 #endif
 #include <AsyncTCP.h>
 #include <analogWrite.h>
-//#include <ESP32SSDP.h>
 #include <HTTPUpdate.h>
 #include <HTTPClient.h>
-//HTTPClient http;
-//#include <rom/rtc.h>
 #endif
 
 //==общие библиотеки и объекты==//
@@ -83,7 +78,6 @@ TickerScheduler ts(30);
 enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, STEPPER1, STEPPER2,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, dhtT_LOG, dhtH_LOG, CMD, TIMER_COUNTDOWN, TIMERS, TIME, TIME_SYNC, STATISTICS, UDP, UDP_DB, TEST};
 //---------------------------------------------------------------
 //ssl//#include "dependencies/WiFiClientSecure/WiFiClientSecure.h" //using older WiFiClientSecure
-//#include "Ticker_for_TickerScheduler/Ticker/Ticker.h"
 //---------------------------------------------------------------
 #include <WiFiUdp.h>
 WiFiUDP Udp;
