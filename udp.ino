@@ -10,6 +10,7 @@ void UDP_init() {
     }
     if (value == "2") {
       SPIFFS.remove("/dev.csv");
+      addFile("dev.csv", "device id;device name;ip address");
       request->redirect("/?dev");
     }
     if (value == "3") {
@@ -26,8 +27,13 @@ void UDP_init() {
   });
 
   SPIFFS.remove("/dev.csv");
+  addFile("dev.csv", "device id;device name;ip address");
 
+#ifdef ESP8266
   Udp.begin(udp_port);
+#endif
+
+  handleUdp_esp32();
 
   ts.add(UDP, 30000, [&](void*) {
     if (WiFi.status() == WL_CONNECTED) {
@@ -36,32 +42,24 @@ void UDP_init() {
 #ifdef ESP8266
         Udp.beginPacketMulticast(udp_multicastIP, udp_port, WiFi.localIP());
         Udp.write(line_to_send.c_str());
+        Udp.endPacket();
 #endif
 #ifdef ESP32
-        Udp.beginMulticast(udp_multicastIP, udp_port);
+        udp.broadcast(line_to_send.c_str());
 #endif
-        Udp.endPacket();
         Serial.println("[UDP<=] dev info send");
       }
     }
   }, nullptr, false);
 }
 
-void add_dev_in_list(String fileName, String id, String dev_name, String ip) {
-  File configFile = SPIFFS.open("/" + fileName, "r");
-  if (!configFile) {
-    addFile(fileName, "device id;device name;ip adress");
-  }
-  if (!configFile.find(id.c_str())) {
-    addFile(fileName, id + ";" + dev_name + "; <a href=\"http://" + ip + "\" target=\"_blank\"\">" + ip + "</a>");
-  }
-}
-
 void handleUdp() {
+#ifdef ESP8266
   if (WiFi.status() == WL_CONNECTED) {
     int packetSize = Udp.parsePacket();
     if (packetSize) {
-      //Serial.printf("Received %d bytes from %s, port %d\n", packetSize, Udp.remoteIP().toString().c_str(), Udp.remotePort());
+      char udp_incomingPacket[255];
+      Serial.printf("[UDP=>] Received %d bytes from %s, port %d\n", packetSize, Udp.remoteIP().toString().c_str(), Udp.remotePort());
       received_ip = Udp.remoteIP().toString();
       int len = Udp.read(udp_incomingPacket, 255);
       if (len > 0) {
@@ -71,6 +69,19 @@ void handleUdp() {
       udp_data_parse = true;
     }
   }
+#endif
+}
+
+void handleUdp_esp32() {
+#ifdef ESP32
+  if (udp.listenMulticast(udp_multicastIP, udp_port)) {
+    udp.onPacket([](AsyncUDPPacket packet) {
+      received_udp_line = (char*)packet.data();
+      received_ip = packet.remoteIP().toString();
+      udp_data_parse = true;
+    });
+  }
+#endif
 }
 
 void do_udp_data_parse() {
@@ -94,6 +105,13 @@ void do_udp_data_parse() {
   }
 }
 
+void add_dev_in_list(String fileName, String id, String dev_name, String ip) {
+  File configFile = SPIFFS.open("/" + fileName, "r");
+  if (!configFile.find(id.c_str())) {
+    addFile(fileName, id + ";" + dev_name + "; <a href=\"http://" + ip + "\" target=\"_blank\"\">" + ip + "</a>");
+  }
+}
+
 void send_mqtt_to_udp() {
   if (WiFi.status() == WL_CONNECTED) {
     udp_busy = true;
@@ -107,15 +125,11 @@ void send_mqtt_to_udp() {
 #ifdef ESP8266
     Udp.beginPacketMulticast(udp_multicastIP, udp_port, WiFi.localIP());
     Udp.write(mqtt_data.c_str());
+    Udp.endPacket();
 #endif
 #ifdef ESP32
-    Udp.beginMulticast(udp_multicastIP, udp_port);
-    int size_of = sizeof(mqtt_data);
-    uint8_t msg[10] = (uint8_t)atoi(mqtt_data.c_str());
-    //Udp.write(msg, sizeof(mqtt_data));
-    //Udp.write(mqtt_data.c_str(), strlen(mqtt_data.c_str()));
+    udp.broadcast(mqtt_data.c_str());
 #endif
-    Udp.endPacket();
     Serial.println("[UDP<=] mqtt info send");
     udp_busy = false;
   }

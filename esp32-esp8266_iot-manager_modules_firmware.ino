@@ -38,9 +38,10 @@ void setup() {
 
 
 
-  ts.add(TEST, 5000, [&](void*) {
+  ts.add(TEST, 10000, [&](void*) {
 
     getMemoryLoad("[i] periodic check of");
+
     //String json = "{}";
     //jsonWriteStr(json, "test6", GetTime());
     //ws.textAll(json);
