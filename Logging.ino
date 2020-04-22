@@ -7,15 +7,15 @@ void logging() {
   String period_min = sCmd.next();
   String maxCount = sCmd.next();
 
-  String optimozation = sCmd.next();
+  String optimization = sCmd.next();
 
   String widget_name = sCmd.next();
   widget_name.replace("#", " ");
   String page_name = sCmd.next();
   String page_number = sCmd.next();
 
-  if (optimozation == "fast") chart_data_in_solid_array = true;
-  if (optimozation == "slow") chart_data_in_solid_array = false;
+  if (optimization == "fast") chart_data_in_solid_array = true;
+  if (optimization == "slow") chart_data_in_solid_array = false;
 
   if (sensor_name == "analog") jsonWriteStr(optionJson, "analog_logging_count", maxCount);
   if (sensor_name == "level") jsonWriteStr(optionJson, "level_logging_count", maxCount);

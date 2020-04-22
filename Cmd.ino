@@ -342,6 +342,7 @@ void stepperSet() {
       count++;
       String pin_step = selectToMarker (jsonRead(optionJson, "stepper1"), " ");
       digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
+      yield();
       if (count > steps_int) {
         digitalWrite(pin_step.toInt(), LOW);
         ts.remove(STEPPER1);
@@ -356,6 +357,7 @@ void stepperSet() {
       count++;
       String pin_step = selectToMarker (jsonRead(optionJson, "stepper2"), " ");
       digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
+      yield();
       if (count > steps_int) {
         digitalWrite(pin_step.toInt(), LOW);
         ts.remove(STEPPER2);

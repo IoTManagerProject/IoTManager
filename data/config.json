@@ -6,13 +6,13 @@
     "ssid": "rise",
     "password": "hostel3333",
     "timezone": 2,
-    "mqttServer": "mqtt.ioty.ru",
+    "mqttServer": "91.204.228.124",
     "mqttPort": 1883,
     "mqttPrefix": "/rise",
     "mqttUser": "test",
     "mqttPass": "test",
     "scenario": "1",
-    "pushingbox_id": "",
+    "pushingbox_id": "v7C133E426B0C69E",
     "web_login": "admin",
     "web_pass": "admin"
 }

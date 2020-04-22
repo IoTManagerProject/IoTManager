@@ -22,8 +22,8 @@ void initUpgrade() {
             if (last_version == firmware_version) {
               jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
               jsonWriteStr(tmp, "class", "pop-up");
-            } else {               
-              jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Имеется новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 90000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
+            } else {
+              jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Имеется новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
               jsonWriteStr(tmp, "class", "pop-up");
             }
           } else {
@@ -46,10 +46,9 @@ void initUpgrade() {
   });
 
   server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest * request) {
-     upgrade = true; 
-     String tmp = "{}";  
-     //jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Есть новая версия <a href=\"#\" onclick=\"setTimeout(function(){ location.href='/'; }, 5000);}\">Установить?</a>");
-     request->send(200, "text/text", "ok");
+    upgrade = true;
+    String tmp = "{}";
+    request->send(200, "text/text", "ok");
   });
 }
 
@@ -72,8 +71,8 @@ void upgrade_firmware() {
   String scenario_for_update;
   String config_for_update;
   String configSetup_for_update;
-  scenario_for_update = readFile("firmware.s.txt", 3072);
-  config_for_update = readFile("firmware.c.txt", 3072);
+  scenario_for_update = readFile("firmware.s.txt", 4000);
+  config_for_update = readFile("firmware.c.txt", 4000);
   configSetup_for_update = configSetup;
 
   Serial.println("Start upgrade SPIFFS, please wait...");
@@ -109,10 +108,15 @@ void upgrade_firmware() {
 #endif
 
     if (ret == HTTP_UPDATE_OK) {
+      
       Serial.println("BUILD upgrade done!");
       Serial.println("Restart ESP....");
       ESP.restart();
+    } else {
+      Serial.println("!!!!BUILD upgrade ERROR");
     }
+  } else {
+    Serial.println("!!!!SPIFFS upgrade ERROR");
   }
 }
 

@@ -34,11 +34,14 @@ void UDP_init() {
 #endif
 
   handleUdp_esp32();
-
-  ts.add(UDP, 30000, [&](void*) {
+  
+  randomSeed(micros());
+  udp_period = random(20000, 40000);
+  
+  ts.add(UDP, udp_period, [&](void*) {
     if (WiFi.status() == WL_CONNECTED) {
       if (!udp_busy) {
-        String line_to_send = chipID + ";" + jsonRead(configSetup, "name");
+        String line_to_send = "iotm;" + chipID + ";" + jsonRead(configSetup, "name");
 #ifdef ESP8266
         Udp.beginPacketMulticast(udp_multicastIP, udp_port, WiFi.localIP());
         Udp.write(line_to_send.c_str());
@@ -66,7 +69,14 @@ void handleUdp() {
         udp_incomingPacket[len] = 0;
       }
       received_udp_line = String(udp_incomingPacket);
-      udp_data_parse = true;
+      
+      if (received_udp_line.indexOf("iotm;") >= 0) {
+        udp_data_parse = true;
+      }
+      if (received_udp_line.indexOf("mqttServer") >= 0) {
+        udp_data_parse = true;
+      }
+      
     }
   }
 #endif
@@ -78,7 +88,14 @@ void handleUdp_esp32() {
     udp.onPacket([](AsyncUDPPacket packet) {
       received_udp_line = (char*)packet.data();
       received_ip = packet.remoteIP().toString();
-      udp_data_parse = true;
+      
+      if (received_udp_line.indexOf("iotm;") >= 0) {
+        udp_data_parse = true;
+      }
+      if (received_udp_line.indexOf("mqttServer") >= 0) {
+        udp_data_parse = true;
+      }
+      
     });
   }
 #endif
@@ -90,7 +107,7 @@ void do_udp_data_parse() {
     Serial.print("[UDP=>] " + received_ip);
     Serial.print(" ");
     Serial.println(received_udp_line);
-    if (received_udp_line.indexOf("mqttServer") > 0) {
+    if (received_udp_line.indexOf("mqttServer") >= 0) {
       jsonWriteStr(configSetup, "mqttServer", jsonRead(received_udp_line, "mqttServer"));
       jsonWriteInt(configSetup, "mqttPort", jsonReadtoInt(received_udp_line, "mqttPort"));
       jsonWriteStr(configSetup, "mqttPrefix", jsonRead(received_udp_line, "mqttPrefix"));
@@ -99,8 +116,9 @@ void do_udp_data_parse() {
       saveConfig();
       Serial.println("[V] new mqtt setting received from udp and saved");
       mqtt_connection = true;
-    } else {
-      add_dev_in_list("dev.csv", selectFromMarkerToMarker(received_udp_line, ";", 0), selectFromMarkerToMarker(received_udp_line, ";", 1), received_ip);
+    }
+     if (received_udp_line.indexOf("iotm;") >= 0) {
+      add_dev_in_list("dev.csv", selectFromMarkerToMarker(received_udp_line, ";", 1), selectFromMarkerToMarker(received_udp_line, ";", 2), received_ip);
     }
   }
 }

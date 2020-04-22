@@ -1,5 +1,5 @@
 //===============FIRMWARE SETTINGS=====================================
-String firmware_version = "2.3.2";
+String firmware_version = "2.3.3";
 boolean mb_4_of_memory = true;
 //#define OTA_enable
 //#define MDNS_enable
@@ -151,3 +151,4 @@ IPAddress udp_multicastIP (239, 255, 255, 255);
 #endif
 String received_ip;
 String received_udp_line;
+int udp_period;

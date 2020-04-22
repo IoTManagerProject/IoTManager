@@ -25,10 +25,10 @@ void pushControl() {
 
   Serial.println("- starting client");
 
-  WiFiClient client;
+  WiFiClient client_push;
 
   Serial.println("- connecting to pushing server: " + String(logServer));
-  if (client.connect(logServer, 80)) {
+  if (client_push.connect(logServer, 80)) {
     Serial.println("- succesfully connected");
 
     String postStr = "devid=";
@@ -44,15 +44,15 @@ void pushControl() {
 
     Serial.println("- sending data...");
 
-    client.print("POST /pushingbox HTTP/1.1\n");
-    client.print("Host: api.pushingbox.com\n");
-    client.print("Connection: close\n");
-    client.print("Content-Type: application/x-www-form-urlencoded\n");
-    client.print("Content-Length: ");
-    client.print(postStr.length());
-    client.print("\n\n");
-    client.print(postStr);
+    client_push.print("POST /pushingbox HTTP/1.1\n");
+    client_push.print("Host: api.pushingbox.com\n");
+    client_push.print("Connection: close\n");
+    client_push.print("Content-Type: application/x-www-form-urlencoded\n");
+    client_push.print("Content-Length: ");
+    client_push.print(postStr.length());
+    client_push.print("\n\n");
+    client_push.print(postStr);
   }
-  client.stop();
+  client_push.stop();
   Serial.println("- stopping the client");
 }

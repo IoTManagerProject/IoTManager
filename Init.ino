@@ -199,13 +199,14 @@ void statistics() {
     //-----------------------------------------------------------------
 #ifdef ESP8266
     urls += ESP.getResetReason();
+    Serial.println(ESP.getResetReason());
 #endif
 #ifdef ESP32
-    urls += "Unknown";
+    urls += "Power on";
 #endif
     urls += "&";
     //-----------------------------------------------------------------
-    urls += "firm version: " + firmware_version + " " + DATE_COMPILING + " " + TIME_COMPILING;
+    urls += "ver: " + firmware_version; // + " " + DATE_COMPILING + " " + TIME_COMPILING;
     //-----------------------------------------------------------------
     String stat = getURL(urls);
     //Serial.println(stat);
