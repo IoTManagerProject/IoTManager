@@ -14,5 +14,6 @@
     "scenario": "1",
     "pushingbox_id": "v7C133E426B0C69E",
     "web_login": "admin",
-    "web_pass": "admin"
+    "web_pass": "admin",
+    "udponoff": "1"
 }

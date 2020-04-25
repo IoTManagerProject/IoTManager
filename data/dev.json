@@ -35,13 +35,13 @@
     {
       "type": "link",
       "title": "Переформировать список устройств",
-      "action": "udp?arg=2",
+      "action": "udp?arg=3",
       "class": "btn btn-block btn-success"
     },
     {
       "type": "link",
       "title": "Обновить страницу",
-      "action": "udp?arg=3",
+      "action": "udp?arg=4",
       "class": "btn btn-block btn-success"
     },
     {
@@ -55,20 +55,30 @@
     {
       "type": "h3",
       "title": "Имя этого устройства:"
-     },
+    },
     {
       "type": "input",
       "title": "Имя устройства",
-      "name":"dev_name",
+      "name": "dev_name",
       "state": "{{name}}",
       "pattern": "[A-Za-z0-9]{6,12}"
-     },
-     {
+    },
+    {
       "type": "button",
       "title": "Сохранить",
       "action": "name?arg=[[dev_name]]",
       "class": "btn btn-block btn-success"
-     },
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "checkbox",
+      "name": "udponoff",
+      "title": "Включить обмен данными между устройствами",
+      "action": "/udp?arg=[[udponoff]]",
+      "state": "{{udponoff}}"
+    },
     {
       "type": "hr"
     },

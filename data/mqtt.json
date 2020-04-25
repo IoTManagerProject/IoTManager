@@ -84,7 +84,7 @@
     {
       "type": "button",
       "title": "Отправить настройки MQTT с этого устройства на все остальные",
-      "action": "udp?arg=1",
+      "action": "udp?arg=2",
       "class": "btn btn-block btn-success"
     },
     

@@ -137,7 +137,11 @@ void prsets_init() {
       writeFile("firmware.c.txt", readFile("configs/stepper.c.txt", 2048));
       writeFile("firmware.s.txt", readFile("configs/stepper.s.txt", 2048));
     }
-    if (value == "18") {
+     if (value == "18") {
+      writeFile("firmware.c.txt", readFile("configs/servo.c.txt", 2048));
+      writeFile("firmware.s.txt", readFile("configs/servo.s.txt", 2048));
+    }
+    if (value == "19") {
       writeFile("firmware.c.txt", readFile("configs/firmware.c.txt", 2048));
       writeFile("firmware.s.txt", readFile("configs/firmware.s.txt", 2048));
     }

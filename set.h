@@ -31,6 +31,9 @@ boolean mb_4_of_memory = true;
 ESP8266HTTPUpdateServer httpUpdater;
 #include <WiFiUdp.h>
 WiFiUDP Udp;
+#include <Servo.h>
+Servo myServo1;
+Servo myServo2;
 
 #ifdef MDNS_enable
 #include <ESP8266mDNS.h>
@@ -40,13 +43,16 @@ WiFiUDP Udp;
 //===============библиотеки и объекты для ESP32===========================
 #ifdef ESP32
 #include <WiFi.h>
+#include <HTTPClient.h>
+#include <HTTPUpdate.h>
 #include <SPIFFS.h>
 #include <AsyncTCP.h>
 #include <analogWrite.h>
-#include <HTTPUpdate.h>
-#include <HTTPClient.h>
 #include "AsyncUDP.h"
 AsyncUDP udp;
+#include <ESP32_Servo.h> 
+Servo myServo1;
+Servo myServo2;
 
 #ifdef MDNS_enable
 #include <ESPmDNS.h>
@@ -103,6 +109,7 @@ DallasTemperature sensors;
 #include <DHTesp.h>
 DHTesp dht;
 
+#include <Wire.h>
 //===============FIRMWARE VARS========================
 boolean just_load = true;
 const char* hostName = "IoT Manager";

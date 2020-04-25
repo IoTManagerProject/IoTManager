@@ -28,7 +28,9 @@ void pushControl() {
   WiFiClient client_push;
 
   Serial.println("- connecting to pushing server: " + String(logServer));
-  if (client_push.connect(logServer, 80)) {
+  if (!client_push.connect(logServer, 80)) {
+    Serial.println("- not connected");
+  } else {
     Serial.println("- succesfully connected");
 
     String postStr = "devid=";

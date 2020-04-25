@@ -113,34 +113,36 @@ void sendLogData(String file, String topic, boolean type) {
   if (type) {
     //----------------------------------------------
     String log_date = readFile(file, 5000);
-    log_date.replace("\r\n", "\n");
-    log_date.replace("\r", "\n");
-    String buf = "{}";
-    String json_array;
-    String unix_time;
-    String value;
-    while (log_date.length() != 0) {
-      String tmp = selectToMarker (log_date, "\n");
-      log_date = deleteBeforeDelimiter(log_date, "\n");
-      unix_time = selectToMarker (tmp, " ");
-      jsonWriteInt(buf, "x", unix_time.toInt());
-      value = deleteBeforeDelimiter(tmp, " ");
-      jsonWriteFloat(buf, "y1", value.toFloat());
-      if (log_date.length() < 3) {
-        json_array += buf;
-      } else {
-        json_array += buf + ",";
+    if (log_date != "Failed") {
+      log_date.replace("\r\n", "\n");
+      log_date.replace("\r", "\n");
+      String buf = "{}";
+      String json_array;
+      String unix_time;
+      String value;
+      while (log_date.length() != 0) {
+        String tmp = selectToMarker (log_date, "\n");
+        log_date = deleteBeforeDelimiter(log_date, "\n");
+        unix_time = selectToMarker (tmp, " ");
+        jsonWriteInt(buf, "x", unix_time.toInt());
+        value = deleteBeforeDelimiter(tmp, " ");
+        jsonWriteFloat(buf, "y1", value.toFloat());
+        if (log_date.length() < 3) {
+          json_array += buf;
+        } else {
+          json_array += buf + ",";
+        }
+        buf = "{}";
       }
-      buf = "{}";
+      unix_time = "";
+      value = "";
+      log_date = "";
+      json_array = "{\"status\":[" + json_array + "]}";
+      Serial.println(json_array);
+      sendCHART(topic, json_array);
+      json_array = "";
+      getMemoryLoad("[i] after send log date");
     }
-    unix_time = "";
-    value = "";
-    log_date = "";
-    json_array = "{\"status\":[" + json_array + "]}";
-    Serial.println(json_array);
-    sendCHART(topic, json_array);
-    json_array = "";
-    getMemoryLoad("[i] after send log date");
     //----------------------------------------------
   } else {
     //----------------------------------------------

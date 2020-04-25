@@ -25,6 +25,9 @@ void CMD_init() {
   sCmd.addCommand("stepper",  stepper);
   sCmd.addCommand("stepperSet",  stepperSet);
 
+  sCmd.addCommand("servo",  servo_);
+  sCmd.addCommand("servoSet",  servoSet);
+
   sCmd.addCommand("logging",  logging);
 
   sCmd.addCommand("inputDigit",  inputDigit);
@@ -271,6 +274,7 @@ void handle_time_init() {
   ts.add(TIME, 1000, [&](void*) {
 
     String tmp = GetTime();
+    jsonWriteStr(configJson, "time", tmp);
     tmp.replace(":", "-");
     jsonWriteStr(configJson, "timenowSet", tmp);
     eventGen ("timenowSet", "");
@@ -367,7 +371,96 @@ void stepperSet() {
   }
 }
 
+//servo 1 13 50 Мой#сервопривод Сервоприводы 0 100 0 180 2
+void servo_() {
+  String servo_number = sCmd.next();
+  String servo_pin = sCmd.next();
+  String start_state = sCmd.next();
+  int start_state_int = start_state.toInt();
+  String widget_name = sCmd.next();
+  String page_name = sCmd.next();
 
+  String min_value = sCmd.next();
+  String max_value = sCmd.next();
+
+  String min_deg = sCmd.next();
+  String max_deg = sCmd.next();
+
+  String page_number = sCmd.next();
+
+  jsonWriteStr(optionJson, "servo_pin" + servo_number, servo_pin);
+  start_state_int = map(start_state_int, min_value.toInt(), max_value.toInt(), min_deg.toInt(), max_deg.toInt());
+
+  if (servo_number == "1") {
+#ifdef ESP8266
+    myServo1.attach(servo_pin.toInt());
+    myServo1.write(start_state_int);
+#endif
+#ifdef ESP32
+    myServo1.attach(servo_pin.toInt(), 500, 2400);
+    myServo1.write(start_state_int);
+#endif
+  }
+
+  if (servo_number == "2") {
+#ifdef ESP8266
+    myServo2.attach(servo_pin.toInt());
+    myServo2.write(start_state_int);
+#endif
+#ifdef ESP32
+    myServo2.attach(servo_pin.toInt(), 500, 2400);
+    myServo2.write(start_state_int);
+#endif
+  }
+
+  jsonWriteStr(optionJson, "s_min_val" + servo_number, min_value);
+  jsonWriteStr(optionJson, "s_max_val" + servo_number, max_value);
+  jsonWriteStr(optionJson, "s_min_deg" + servo_number, min_deg);
+  jsonWriteStr(optionJson, "s_max_deg" + servo_number, max_deg);
+
+  jsonWriteStr(configJson, "servoSet" + servo_number, start_state);
+
+  createWidgetParam (widget_name, page_name, page_number, "widgets/widget.range.json", "servoSet" + servo_number, "min", min_value, "max", max_value, "k", "1");
+}
+
+void servoSet() {
+  String servo_number = sCmd.next();
+  String servo_state = sCmd.next();
+  int servo_state_int = servo_state.toInt();
+
+  int pin = jsonReadtoInt(optionJson, "servo_pin" + servo_number);
+
+  servo_state_int = map(servo_state_int,
+                        jsonReadtoInt(optionJson, "s_min_val" + servo_number),
+                        jsonReadtoInt(optionJson, "s_max_val" + servo_number),
+                        jsonReadtoInt(optionJson, "s_min_deg" + servo_number),
+                        jsonReadtoInt(optionJson, "s_max_deg" + servo_number));
+
+  if (servo_number == "1") {
+#ifdef ESP8266
+    myServo1.write(servo_state_int);
+#endif
+#ifdef ESP32
+    myServo1.write(servo_state_int);
+#endif
+  }
+
+  if (servo_number == "2") {
+#ifdef ESP8266
+    myServo2.write(servo_state_int);
+#endif
+#ifdef ESP32
+    myServo2.write(servo_state_int);
+#endif
+  }
+
+  //Serial.println(servo_state_int);
+
+  eventGen ("servoSet", servo_number);
+
+  jsonWriteStr(configJson, "servoSet" + servo_number, servo_state);
+  sendSTATUS("servoSet" + servo_number, servo_state);
+}
 //====================================================================================================================================================
 /*
   void inputText() {
@@ -469,7 +562,7 @@ void handleCMD_loop() {
 //=======================================================================================================================================
 void txtExecution(String file) {
 
-  String command_all = readFile(file, 2048) + "\r\n";  
+  String command_all = readFile(file, 2048) + "\r\n";
 
   command_all.replace("\r\n", "\n");
   command_all.replace("\r", "\n");

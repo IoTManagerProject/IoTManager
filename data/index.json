@@ -25,6 +25,10 @@
     },
     {
       "type": "h4",
+      "title": "Time: {{time}}"
+    },
+    {
+      "type": "h4",
       "title": "Build version: {{firmware_version}}"
     },
     {
