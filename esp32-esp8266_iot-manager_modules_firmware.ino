@@ -8,6 +8,9 @@ void setup() {
   CMD_init();
   Serial.println("[V] CMD_init");
   //--------------------------------------------------------------
+  sensors_init();
+  Serial.println("[V] sensors_init");
+  //--------------------------------------------------------------
   All_init();
   Serial.println("[V] All_init");
   //--------------------------------------------------------------
@@ -41,9 +44,6 @@ void setup() {
   ts.add(TEST, 10000, [&](void*) {
 
     getMemoryLoad("[i] periodic check of");
-
-    //String json = "{}";
-    //jsonWriteStr(json, "test6", GetTime());
     //ws.textAll(json);
 
   }, nullptr, true);
@@ -80,4 +80,5 @@ void not_async_actions() {
   do_upgrade();
   do_udp_data_parse();
   do_mqtt_send_settings_to_udp();
+  do_i2c_scanning();
 }

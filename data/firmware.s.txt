@@ -8,3 +8,6 @@ buttonSet 2 0
 buttonSet 3 0
 pwmSet 2 0
 end
+adc > 50
+buttonSet 2 1
+end

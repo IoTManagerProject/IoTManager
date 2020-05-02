@@ -117,8 +117,9 @@ bool StartAPMode() {
       Serial.println("->try find router");
       if (RouterFind(jsonRead(configSetup, "ssid"))) {
         ts.remove(ROUTER_SEARCHING);
+        WiFi.scanDelete();
         ROUTER_Connecting();
-        MQTT_Connecting();
+        MQTT_init();
       }
     }, nullptr, true);
   }

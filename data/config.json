@@ -1,11 +1,12 @@
 {
     "name": "IoTmanager",
     "chipID": "",
-    "ssidAP": "WiFi",
+    "ssidAP": "WiFi2",
     "passwordAP": "",
     "ssid": "rise",
     "password": "hostel3333",
     "timezone": 2,
+    "ntp": "pool.ntp.org",
     "mqttServer": "91.204.228.124",
     "mqttPort": 1883,
     "mqttPrefix": "/rise",

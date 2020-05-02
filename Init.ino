@@ -5,26 +5,34 @@ void All_init() {
     if (request->hasArg("arg")) {
       value = request->getParam("arg")->value();
     }
-    if (value == "0") {
+    if (value == "0") {  //выкл сценариев
       jsonWriteStr(configSetup, "scenario", value);
       saveConfig();
       Scenario_init();
+      request->send(200, "text/text", "OK");
     }
-    if (value == "1") {
+    if (value == "1") {   //вкл сценариев
       jsonWriteStr(configSetup, "scenario", value);
       saveConfig();
       Scenario_init();
+      request->send(200, "text/text", "OK");
     }
-    if (value == "2") {
+    if (value == "2") {    //инициализация
       Device_init();
+      request->send(200, "text/text", "OK");
     }
     if (value == "3") {
       clean_log_date();
+      request->send(200, "text/text", "OK");
     }
     if (value == "4") {
       Scenario_init();
+      request->send(200, "text/text", "OK");
     }
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
+    if (value == "5") {
+      i2c_scanning = true;
+      request->redirect("/?utilities");
+    }
   });
 
   prsets_init();
@@ -35,16 +43,33 @@ void All_init() {
 
 void Device_init() {
 
-  ts.remove(ANALOG_);
-  ts.remove(LEVEL);
-  ts.remove(DALLAS);
-  ts.remove(DHTT);
-  ts.remove(DHTH);
-  ts.remove(DHTC);
-  ts.remove(DHTP);
-  ts.remove(DHTD);
-  ts.remove(STEPPER1);
-  ts.remove(STEPPER2);
+  logging_value_names_list = "";
+  enter_to_logging_counter = LOG1 - 1;
+
+  analog_value_names_list = "";
+  enter_to_analog_counter = 0; //ANALOG1 - 1;
+
+  level_value_name = "";
+
+  dhtT_value_name = "";
+  dhtH_value_name = "";
+
+  bmp280T_value_name = "";
+  bmp280P_value_name = "";
+
+  bme280T_value_name = "";
+  
+  for (int i = 0; i <= sensors_count; i++) {
+    sensors_reading_map[i] = 0;
+  }
+  
+  for (int i = LOG1; i <= LOG5; i++) {
+    ts.remove(i);
+  }
+
+//  for (int i = LEVEL; i <= STEPPER2; i++) {
+//    ts.remove(i);
+//  }
 
 #ifdef layout_in_ram
   all_widgets = "";
@@ -137,7 +162,7 @@ void prsets_init() {
       writeFile("firmware.c.txt", readFile("configs/stepper.c.txt", 2048));
       writeFile("firmware.s.txt", readFile("configs/stepper.s.txt", 2048));
     }
-     if (value == "18") {
+    if (value == "18") {
       writeFile("firmware.c.txt", readFile("configs/servo.c.txt", 2048));
       writeFile("firmware.s.txt", readFile("configs/servo.s.txt", 2048));
     }
@@ -203,7 +228,7 @@ void statistics() {
     //-----------------------------------------------------------------
 #ifdef ESP8266
     urls += ESP.getResetReason();
-    Serial.println(ESP.getResetReason());
+    //Serial.println(ESP.getResetReason());
 #endif
 #ifdef ESP32
     urls += "Power on";

@@ -18,9 +18,15 @@ void CMD_init() {
 
   sCmd.addCommand("dhtT",  dhtT);
   sCmd.addCommand("dhtH",  dhtH);
-  sCmd.addCommand("dhtPerception",  dhtPerception);
-  sCmd.addCommand("dhtComfort",  dhtComfort);
-  sCmd.addCommand("dhtDewpoint",  dhtDewpoint);
+  sCmd.addCommand("dhtPerception",  dhtP);
+  sCmd.addCommand("dhtComfort",  dhtC);
+  sCmd.addCommand("dhtDewpoint",  dhtD);
+
+  sCmd.addCommand("bmp280T",  bmp280T);
+  sCmd.addCommand("bmp280P",  bmp280P);
+
+  sCmd.addCommand("bme280T",  bme280T);
+  //sCmd.addCommand("bme280P",  bme280P);
 
   sCmd.addCommand("stepper",  stepper);
   sCmd.addCommand("stepperSet",  stepperSet);
@@ -65,7 +71,7 @@ void button() {
   String page_number = sCmd.next();
 
   jsonWriteStr(optionJson, "button_param" + button_number, button_param);
-  jsonWriteStr(configJson, "buttonSet" + button_number, start_state);
+  jsonWriteStr(configJson, "button" + button_number, start_state);
 
   if (isDigitStr (button_param)) {
     pinMode(button_param.toInt(), OUTPUT);
@@ -91,7 +97,7 @@ void button() {
       str = deleteBeforeDelimiter(str, ",");
     }
   }
-  createWidget (widget_name, page_name, page_number, "widgets/widget.toggle.json", "buttonSet" + button_number);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.toggle.json", "button" + button_number);
 }
 
 void buttonSet() {
@@ -124,23 +130,23 @@ void buttonSet() {
     }
   }
 
-  eventGen ("buttonSet", button_number);
+  eventGen ("button", button_number);
 
-  jsonWriteStr(configJson, "buttonSet" + button_number, button_state);
-  sendSTATUS("buttonSet" + button_number, button_state);
+  jsonWriteStr(configJson, "button" + button_number, button_state);
+  sendSTATUS("button" + button_number, button_state);
 }
 
 void buttonChange() {
   String button_number = sCmd.next();
-  String current_state = jsonRead(configJson, "buttonSet" + button_number);
+  String current_state = jsonRead(configJson, "button" + button_number);
   if (current_state == "1") {
     current_state = "0";
   } else if (current_state == "0") {
     current_state = "1";
   }
   order_loop += "buttonSet " + button_number + " " + current_state + ",";
-  jsonWriteStr(configJson, "buttonSet" + button_number, current_state);
-  sendSTATUS("buttonSet" + button_number, current_state);
+  jsonWriteStr(configJson, "button" + button_number, current_state);
+  sendSTATUS("button" + button_number, current_state);
 }
 
 void pinSet() {
@@ -174,9 +180,9 @@ void pwm() {
   pinMode(pwm_pin_int, INPUT);
   analogWrite(pwm_pin_int, start_state.toInt());
   //analogWriteFreq(32000);
-  jsonWriteStr(configJson, "pwmSet" + pwm_number, start_state);
+  jsonWriteStr(configJson, "pwm" + pwm_number, start_state);
 
-  createWidget (widget_name, page_name, page_number, "widgets/widget.range.json", "pwmSet" + pwm_number);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.range.json", "pwm" + pwm_number);
 }
 
 void pwmSet() {
@@ -188,10 +194,10 @@ void pwmSet() {
   int pin = jsonReadtoInt(optionJson, "pwm_pin" + pwm_number);
   analogWrite(pin, pwm_state_int);
 
-  eventGen ("pwmSet", pwm_number);
+  eventGen ("pwm", pwm_number);
 
-  jsonWriteStr(configJson, "pwmSet" + pwm_number, pwm_state);
-  sendSTATUS("pwmSet" + pwm_number, pwm_state);
+  jsonWriteStr(configJson, "pwm" + pwm_number, pwm_state);
+  sendSTATUS("pwm" + pwm_number, pwm_state);
 }
 //==================================================================================================================
 //==========================================Модуль физической кнопки================================================
@@ -214,15 +220,15 @@ void handleButton()  {
     buttons[switch_number].update();
     if (buttons[switch_number].fell()) {
 
-      eventGen ("switchSet", String(switch_number));
+      eventGen ("switch", String(switch_number));
 
-      jsonWriteStr(configJson, "switchSet" + String(switch_number), "1");
+      jsonWriteStr(configJson, "switch" + String(switch_number), "1");
     }
     if (buttons[switch_number].rose()) {
 
-      eventGen ("switchSet", String(switch_number));
+      eventGen ("switch", String(switch_number));
 
-      jsonWriteStr(configJson, "switchSet" + String(switch_number), "0");
+      jsonWriteStr(configJson, "switch" + String(switch_number), "0");
     }
   }
   switch_number++;
@@ -240,14 +246,14 @@ void inputDigit() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWriteStr(configJson, "digitSet" + number, start_state);
-  createWidget (widget_name, page_name, page_number, "widgets/widget.inputNum.json", "digitSet" + number);
+  jsonWriteStr(configJson, "digit" + number, start_state);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.inputNum.json", "digit" + number);
 }
 void digitSet() {
   String number = sCmd.next();
   String value = sCmd.next();
-  jsonWriteStr(configJson, "digitSet" + number, value);
-  sendSTATUS("digitSet" + number, value);
+  jsonWriteStr(configJson, "digit" + number, value);
+  sendSTATUS("digit" + number, value);
 }
 //=====================================================================================================================================
 //=========================================Добавление окна ввода времени===============================================================
@@ -260,14 +266,14 @@ void inputTime() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWriteStr(configJson, "timeSet" + number, start_state);
-  createWidget (widget_name, page_name, page_number, "widgets/widget.inputTime.json", "timeSet" + number);
+  jsonWriteStr(configJson, "time" + number, start_state);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.inputTime.json", "time" + number);
 }
 void timeSet() {
   String number = sCmd.next();
   String value = sCmd.next();
-  jsonWriteStr(configJson, "timeSet" + number, value);
-  sendSTATUS("timeSet" + number, value);
+  jsonWriteStr(configJson, "time" + number, value);
+  sendSTATUS("time" + number, value);
 }
 
 void handle_time_init() {
@@ -276,8 +282,8 @@ void handle_time_init() {
     String tmp = GetTime();
     jsonWriteStr(configJson, "time", tmp);
     tmp.replace(":", "-");
-    jsonWriteStr(configJson, "timenowSet", tmp);
-    eventGen ("timenowSet", "");
+    jsonWriteStr(configJson, "timenow", tmp);
+    eventGen ("timenow", "");
 
   }, nullptr, true);
 }
@@ -291,7 +297,7 @@ void text() {
   String page_name = sCmd.next();
   String page_number = sCmd.next();
 
-  createWidget (widget_name, page_name, page_number, "widgets/widget.anyData.json", "textSet" + number);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.anyData.json", "text" + number);
 }
 
 
@@ -309,8 +315,8 @@ void textSet() {
     text = text + " " + GetDataDigital() + " " + time;
   }
 
-  jsonWriteStr(configJson, "textSet" + number, text);
-  sendSTATUS("textSet" + number, text);
+  jsonWriteStr(configJson, "text" + number, text);
+  sendSTATUS("text" + number, text);
 }
 
 //=====================================================================================================================================
@@ -418,9 +424,9 @@ void servo_() {
   jsonWriteStr(optionJson, "s_min_deg" + servo_number, min_deg);
   jsonWriteStr(optionJson, "s_max_deg" + servo_number, max_deg);
 
-  jsonWriteStr(configJson, "servoSet" + servo_number, start_state);
+  jsonWriteStr(configJson, "servo" + servo_number, start_state);
 
-  createWidgetParam (widget_name, page_name, page_number, "widgets/widget.range.json", "servoSet" + servo_number, "min", min_value, "max", max_value, "k", "1");
+  createWidgetParam (widget_name, page_name, page_number, "widgets/widget.range.json", "servo" + servo_number, "min", min_value, "max", max_value, "k", "1");
 }
 
 void servoSet() {
@@ -456,10 +462,10 @@ void servoSet() {
 
   //Serial.println(servo_state_int);
 
-  eventGen ("servoSet", servo_number);
+  eventGen ("servo", servo_number);
 
-  jsonWriteStr(configJson, "servoSet" + servo_number, servo_state);
-  sendSTATUS("servoSet" + servo_number, servo_state);
+  jsonWriteStr(configJson, "servo" + servo_number, servo_state);
+  sendSTATUS("servo" + servo_number, servo_state);
 }
 //====================================================================================================================================================
 /*
@@ -471,14 +477,14 @@ void servoSet() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWriteStr(configJson, "inputTextSet" + number, start_state);
-  createWidget (widget_name, page_name, page_number, "widgets/widget.inputText.json", "inputTextSet" + number);
+  jsonWriteStr(configJson, "inputText" + number, start_state);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.inputText.json", "inputText" + number);
   }
   void inputTextSet() {
   String number = sCmd.next();
   String value = sCmd.next();
-  jsonWriteStr(configJson, "inputTextSet" + number, value);
-  sendSTATUS("inputTextSet" + number, value);
+  jsonWriteStr(configJson, "inputText" + number, value);
+  sendSTATUS("inputText" + number, value);
   }
 
   void inputTime() {
@@ -489,16 +495,16 @@ void servoSet() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWriteStr(configJson, "inputTimeSet" + number, start_state);
-  createWidget (widget_name, page_name, page_number, "widgets/widget.inputTime.json", "inputTimeSet" + number);
+  jsonWriteStr(configJson, "inputTime" + number, start_state);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.inputTime.json", "inputTime" + number);
   }
   void inputTimeSet() {
   String number = sCmd.next();
   String value = sCmd.next();
   value.replace(":", ".");
-  jsonWriteStr(configJson, "inputTimeSet" + number, value);
+  jsonWriteStr(configJson, "inputTime" + number, value);
   value.replace(".", ":");
-  sendSTATUS("inputTimeSet" + number, value);
+  sendSTATUS("inputTime" + number, value);
   }
 
 
@@ -510,14 +516,14 @@ void servoSet() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWriteStr(configJson, "inputDateSet" + number, start_state);
-  createWidget (widget_name, page_name, page_number, "widgets/widget.inputDate.json", "inputDateSet" + number);
+  jsonWriteStr(configJson, "inputDate" + number, start_state);
+  createWidget (widget_name, page_name, page_number, "widgets/widget.inputDate.json", "inputDate" + number);
   }
   void inputDateSet() {
   String number = sCmd.next();
   String value = sCmd.next();
-  jsonWriteStr(configJson, "inputDateSet" + number, value);
-  sendSTATUS("inputDateSet" + number, value);
+  jsonWriteStr(configJson, "inputDate" + number, value);
+  sendSTATUS("inputDate" + number, value);
   }
 */
 //=================================================Глобальные команды удаленного управления===========================================================
@@ -531,7 +537,7 @@ void mqttOrderSend() {
   //Serial.print(all_line);
   //Serial.print("->");
   //Serial.println(order);
-  int send_status = client.publish (all_line.c_str(), order.c_str(), false);
+  int send_status = client_mqtt.publish (all_line.c_str(), order.c_str(), false);
 }
 
 void httpOrderSend() {
@@ -587,6 +593,7 @@ void stringExecution(String str) {
 
     String tmp = selectToMarker (str, "\n");
     sCmd.readStr(tmp);
+    
     str = deleteBeforeDelimiter(str, "\n");
   }
 }

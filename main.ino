@@ -322,8 +322,22 @@ void sendCONFIG(String topik, String widgetConfig, String key, String date) {
   inner = inner + "}}";
   String t = outer + inner;
   //Serial.println(t);
-  //client.publish(MQTT::Publish(topik, t).set_qos(1));
+  //client_mqtt.publish(MQTT::Publish(topik, t).set_qos(1));
   yield();
+}
+
+uint8_t hexStringToUint8(String hex) {
+  uint8_t   tmp = strtol(hex.c_str(), NULL, 0);
+  if (tmp >= 0x00 && tmp <= 0xFF) {
+    return tmp;
+  }
+}
+
+uint16_t hexStringToUint16(String hex) {
+  uint16_t   tmp = strtol(hex.c_str(), NULL, 0);
+  if (tmp >= 0x0000 && tmp <= 0xFFFF) {
+    return tmp;
+  }
 }
 //=============================================================================================================
 #ifdef led_status

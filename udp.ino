@@ -44,7 +44,7 @@ void UDP_init() {
   handleUdp_esp32();
 
   randomSeed(micros());
-  udp_period = random(20000, 40000);
+  udp_period = random(50000, 60000);
 
   ts.add(UDP, udp_period, [&](void*) {
     if (jsonRead(configSetup, "udponoff") == "1") {

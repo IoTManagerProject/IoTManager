@@ -77,3 +77,12 @@ void createChart (String widget_name, String  page_name, String page_number, Str
 #endif
   widget = "";
 }
+
+void choose_widget_and_create(String widget_name, String page_name, String page_number, String type, String topik) {
+
+  if (type == "any-data") createWidget (widget_name, page_name, page_number, "widgets/widget.anyData.json", topik);
+  if (type == "progress-line") createWidget (widget_name, page_name, page_number, "widgets/widget.progLine.json", topik);
+  if (type == "progress-round") createWidget (widget_name, page_name, page_number, "widgets/widget.progRound.json", topik);
+  if (type == "fill-gauge") createWidget (widget_name, page_name, page_number, "widgets/widget.fillGauge.json", topik);
+
+}

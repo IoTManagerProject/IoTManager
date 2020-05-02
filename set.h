@@ -5,16 +5,9 @@ boolean mb_4_of_memory = true;
 //#define MDNS_enable
 //#define WS_enable
 //#define layout_in_ram
-#define wifi_mqtt_reconnecting 20000
-#define analog_update_int 5000
-#define temp_update_int 5000
+#define wifi_mqtt_reconnecting 30000
 
-#define tank_level_shooting_interval 500 //интервал выстрела датчика
-#define tank_level_times_to_send 20 //после скольки выстрелов делать отправку данных
-
-#define dhtT_update_int 10000
-#define dhtH_update_int 10000
-#define dht_calculation_update_int 10000
+#define tank_level_times_to_send 10 //после скольки выстрелов делать отправку данных
 
 #define statistics_update 1000 * 60 * 60 * 2
 //======================================================================
@@ -50,7 +43,7 @@ Servo myServo2;
 #include <analogWrite.h>
 #include "AsyncUDP.h"
 AsyncUDP udp;
-#include <ESP32_Servo.h> 
+#include <ESP32_Servo.h>
 Servo myServo1;
 Servo myServo2;
 
@@ -82,13 +75,14 @@ AsyncEventSource events("/events");
 #include <time.h>
 
 #include <TickerScheduler.h>
-TickerScheduler ts(30);
-enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, LEVEL, ANALOG_, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, STEPPER1, STEPPER2,  ANALOG_LOG, LEVEL_LOG, DALLAS_LOG, dhtT_LOG, dhtH_LOG, CMD, TIMER_COUNTDOWN, TIMERS, TIME, TIME_SYNC, STATISTICS, UDP, UDP_DB, TEST};
+enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, SENSORS, STEPPER1, STEPPER2,  LOG1, LOG2, LOG3, LOG4, LOG5, TIMER_COUNTDOWN, TIME, TIME_SYNC, STATISTICS, UDP, UDP_DB, TEST };
+TickerScheduler ts(TEST + 1);
+
+//LEVEL, ANALOG1, ANALOG2, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, BMP280T, BMP280P,
 
 #include <PubSubClient.h>
 WiFiClient espClient;
-
-PubSubClient client(espClient);
+PubSubClient client_mqtt(espClient);
 
 #include <StringCommand.h>
 StringCommand sCmd;
@@ -110,12 +104,23 @@ DallasTemperature sensors;
 DHTesp dht;
 
 #include <Wire.h>
+
+#include <Adafruit_BMP280.h>
+Adafruit_BMP280 bmp; // use I2C interface
+Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
+Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
+
+#include <Adafruit_BME280.h>
+Adafruit_BME280 bme; // use I2C interface
+Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
+Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
+Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
 //===============FIRMWARE VARS========================
 boolean just_load = true;
 const char* hostName = "IoT Manager";
 //JSON
-String configSetup = "{}"; 
-String configJson = "{}";  
+String configSetup = "{}";
+String configJson = "{}";
 String optionJson = "{}";
 //MQTT
 String chipID = "";
@@ -124,15 +129,21 @@ String all_widgets = "";
 String scenario;
 String order_loop;
 //SENSORS
-boolean flagLoggingAnalog = false;
-boolean flagLoggingLevel = false;
-boolean flagLoggingDallas = false;
-boolean flagLoggingdhtT = false;
-boolean flagLoggingdhtH = false;
-//NTP
-const char* ntpServer = "pool.ntp.org";
-const long  gmtOffset_sec = 3600;
-const int   daylightOffset_sec = 3600;
+String analog_value_names_list;
+int enter_to_analog_counter;
+
+String level_value_name;
+String dhtT_value_name;
+String dhtH_value_name;
+String bmp280T_value_name;
+String bmp280P_value_name;
+String bme280T_value_name;
+int sensors_count = 11;
+int sensors_reading_map [] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+//LOGGING
+String logging_value_names_list;
+int enter_to_logging_counter;
+//NTP and TIME
 String current_time;
 //SCENARIO
 int scenario_line_status [] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -146,9 +157,9 @@ boolean upgrade = false;
 boolean mqtt_connection = false;
 boolean udp_data_parse = false;
 boolean mqtt_send_settings_to_udp = false;
+boolean i2c_scanning = false;
 //UDP
 boolean udp_busy = false;
-boolean chart_data_in_solid_array;
 unsigned int udp_port = 4210;
 #ifdef ESP8266
 IPAddress udp_multicastIP (255, 255, 255, 255);
@@ -159,3 +170,5 @@ IPAddress udp_multicastIP (239, 255, 255, 255);
 String received_ip;
 String received_udp_line;
 int udp_period;
+//i2c
+String i2c_list;

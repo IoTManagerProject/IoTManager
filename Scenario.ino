@@ -17,10 +17,6 @@ void handleScenario() {
           //Serial.println(i);
           String condition = selectToMarker (tmp, "\n");                        //выделяем первую строку самого сценария  button1 = 1 (условие)
           String param_name = selectFromMarkerToMarker(condition, " " , 0);
-          param_name = add_set(param_name);                                      //из первой страки берем имя параметра button1 и вставляем в него Set и получаем buttonSet1
-          if (param_name.indexOf("timenow") != -1){
-            param_name = param_name + "Set";
-          }
           String order = jsonRead(optionJson, "scenario_status");                //читаем весь файл событий
           String param = selectToMarker (order, ",");                            //читаем первое событие из файла событий
           if (param_name == param) {                                             //если поступившее событие равно событию заданному buttonSet1 в файле начинаем его обработку
@@ -28,11 +24,11 @@ void handleScenario() {
             String sign = selectFromMarkerToMarker(condition, " " , 1);          //читаем знак  (=)
             String value = selectFromMarkerToMarker(condition, " " , 2);         //читаем значение (1)
             if (value.indexOf("digit") != -1) {
-              value = add_set(value);
+              //  value = add_set(value);
               value = jsonRead(configJson, value);
             }
             if (value.indexOf("time") != -1) {
-              value = add_set(value);
+              //  value = add_set(value);
               value = jsonRead(configJson, value);
             }
             boolean flag = false;                                                 //если одно из значений совпало то только тогда начинаем выполнять комнады

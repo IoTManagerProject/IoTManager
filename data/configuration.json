@@ -24,6 +24,10 @@
       "title": "Uptime: {{uptime}}"
     },
     {
+      "type": "h4",
+      "title": "Time: {{time}}"
+    },
+    {
       "type": "hr"
     },
     {

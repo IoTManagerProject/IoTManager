@@ -1,72 +1,51 @@
 //===============================================Логирование============================================================
+//logging temp1 1 10 fast Температура Датчики 2
 void logging() {
-
-  static boolean flag = true;
-
-  String sensor_name = sCmd.next();
+  String value_name = sCmd.next();
   String period_min = sCmd.next();
   String maxCount = sCmd.next();
-
-  String optimization = sCmd.next();
-
   String widget_name = sCmd.next();
   widget_name.replace("#", " ");
   String page_name = sCmd.next();
   String page_number = sCmd.next();
-
-  if (optimization == "fast") chart_data_in_solid_array = true;
-  if (optimization == "slow") chart_data_in_solid_array = false;
-
-  if (sensor_name == "analog") jsonWriteStr(optionJson, "analog_logging_count", maxCount);
-  if (sensor_name == "level") jsonWriteStr(optionJson, "level_logging_count", maxCount);
-  if (sensor_name == "dallas") jsonWriteStr(optionJson, "dallas_logging_count", maxCount);
-  if (sensor_name == "dhtT") jsonWriteStr(optionJson, "dhtT_logging_count", maxCount);
-  if (sensor_name == "dhtH") jsonWriteStr(optionJson, "dhtH_logging_count", maxCount);
-
-  if (sensor_name == "analog") createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", "loganalog", maxCount);
-  if (sensor_name == "level") createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", "loglevel", maxCount);
-  if (sensor_name == "dallas") createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", "logdallas", maxCount);
-  if (sensor_name == "dhtT") createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", "logdhtT", maxCount);
-  if (sensor_name == "dhtH") createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", "logdhtH", maxCount);
-
-  if (sensor_name == "analog") {
-    flagLoggingAnalog = true;
-    ts.remove(ANALOG_LOG);
-    ts.add(ANALOG_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.analog.txt",  jsonReadtoInt(optionJson, "analog_logging_count"), jsonRead(configJson, "analog"));
-    }, nullptr, true);
+  logging_value_names_list += value_name + ",";
+  enter_to_logging_counter++; //считаем количество входов в эту функцию
+  jsonWriteStr(optionJson, value_name + "_c", maxCount); //создаем в файловой системе переменную количества точек на графике с отметкой _c что значит count
+  createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", value_name + "_ch", maxCount); //создаем график в приложении с топиком _ch /prefix/3234045-1589487/value_name_ch
+  if (enter_to_logging_counter == LOG1) {
+    ts.add(LOG1, period_min.toInt() * 1000 * 60, [&](void*) {
+      String tmp_buf_1 = selectFromMarkerToMarker(logging_value_names_list, ",", 0);
+      deleteOldDate("log." + tmp_buf_1 + ".txt",  jsonReadtoInt(optionJson, tmp_buf_1 + "_c"), jsonRead(configJson, tmp_buf_1));
+      Serial.println("[i] LOGGING for sensor '" + tmp_buf_1 + "' done");
+    }, nullptr, false);
   }
-
-  if (sensor_name == "level") {
-    flagLoggingLevel = true;
-    ts.remove(LEVEL_LOG);
-    ts.add(LEVEL_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.level.txt", jsonReadtoInt(optionJson, "level_logging_count"), jsonRead(configJson, "level"));
-    }, nullptr, true);
+  if (enter_to_logging_counter == LOG2) {
+    ts.add(LOG2, period_min.toInt() * 1000 * 60, [&](void*) {
+      String tmp_buf_2 = selectFromMarkerToMarker(logging_value_names_list, ",", 1);
+      deleteOldDate("log." + tmp_buf_2 + ".txt",  jsonReadtoInt(optionJson, tmp_buf_2 + "_c"), jsonRead(configJson, tmp_buf_2));
+      Serial.println("[i] LOGGING for sensor '" + tmp_buf_2 + "' done");
+    }, nullptr, false);
   }
-
-  if (sensor_name == "dallas") {
-    flagLoggingDallas = true;
-    ts.remove(DALLAS_LOG);
-    ts.add(DALLAS_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.dallas.txt",  jsonReadtoInt(optionJson, "dallas_logging_count"), jsonRead(configJson, "dallas"));
-    }, nullptr, true);
+  if (enter_to_logging_counter == LOG3) {
+    ts.add(LOG3, period_min.toInt() * 1000 * 60, [&](void*) {
+      String tmp_buf_3 = selectFromMarkerToMarker(logging_value_names_list, ",", 2);
+      deleteOldDate("log." + tmp_buf_3 + ".txt",  jsonReadtoInt(optionJson, tmp_buf_3 + "_c"), jsonRead(configJson, tmp_buf_3));
+      Serial.println("[i] LOGGING for sensor '" + tmp_buf_3 + "' done");
+    }, nullptr, false);
   }
-
-  if (sensor_name == "dhtT") {
-    flagLoggingdhtT = true;
-    ts.remove(dhtT_LOG);
-    ts.add(dhtT_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.dhtT.txt",  jsonReadtoInt(optionJson, "dhtT_logging_count"), jsonRead(configJson, "dhtT"));
-    }, nullptr, true);
+  if (enter_to_logging_counter == LOG4) {
+    ts.add(LOG4, period_min.toInt() * 1000 * 60, [&](void*) {
+      String tmp_buf_4 = selectFromMarkerToMarker(logging_value_names_list, ",", 3);
+      deleteOldDate("log." + tmp_buf_4 + ".txt",  jsonReadtoInt(optionJson, tmp_buf_4 + "_c"), jsonRead(configJson, tmp_buf_4));
+      Serial.println("[i] LOGGING for sensor '" + tmp_buf_4 + "' done");
+    }, nullptr, false);
   }
-
-  if (sensor_name == "dhtH") {
-    flagLoggingdhtH = true;
-    ts.remove(dhtH_LOG);
-    ts.add(dhtH_LOG, period_min.toInt() * 1000 * 60, [&](void*) {
-      deleteOldDate("log.dhtH.txt",  jsonReadtoInt(optionJson, "dhtH_logging_count"), jsonRead(configJson, "dhtH"));
-    }, nullptr, true);
+  if (enter_to_logging_counter == LOG5) {
+    ts.add(LOG5, period_min.toInt() * 1000 * 60, [&](void*) {
+      String tmp_buf_5 = selectFromMarkerToMarker(logging_value_names_list, ",", 4);
+      deleteOldDate("log." + tmp_buf_5 + ".txt",  jsonReadtoInt(optionJson, tmp_buf_5 + "_c"), jsonRead(configJson, tmp_buf_5));
+      Serial.println("[i] LOGGING for sensor '" + tmp_buf_5 + "' done");
+    }, nullptr, false);
   }
 }
 
@@ -100,52 +79,51 @@ void deleteOldDate(String file, int seted_number_of_lines, String date_to_add) {
 
 //=========================================Выбор какие данные отправлять==================================================================
 void choose_log_date_and_send() {
-
-  if (flagLoggingAnalog) sendLogData("log.analog.txt", "loganalog", chart_data_in_solid_array);
-  if (flagLoggingLevel) sendLogData("log.level.txt", "loglevel", chart_data_in_solid_array);
-  if (flagLoggingDallas) sendLogData("log.dallas.txt", "logdallas", chart_data_in_solid_array);
-  if (flagLoggingdhtT) sendLogData("log.dhtT.txt", "logdhtT", chart_data_in_solid_array);
-  if (flagLoggingdhtH) sendLogData("log.dhtH.txt", "logdhtH", chart_data_in_solid_array);
+  String all_line = logging_value_names_list;
+  while (all_line.length() != 0) {
+    String tmp = selectToMarker (all_line, ",");
+    sendLogData("log." + tmp + ".txt", tmp + "_ch");
+    all_line = deleteBeforeDelimiter(all_line, ",");
+  }
+  all_line = "";
+}
+//=========================================Отправка данных===================================================================================
+void sendLogData(String file, String topic) {
+  String log_date = readFile(file, 5000);
+  if (log_date != "Failed") {
+    log_date.replace("\r\n", "\n");
+    log_date.replace("\r", "\n");
+    String buf = "{}";
+    String json_array;
+    String unix_time;
+    String value;
+    while (log_date.length() != 0) {
+      String tmp = selectToMarker (log_date, "\n");
+      log_date = deleteBeforeDelimiter(log_date, "\n");
+      unix_time = selectToMarker (tmp, " ");
+      jsonWriteInt(buf, "x", unix_time.toInt());
+      value = deleteBeforeDelimiter(tmp, " ");
+      jsonWriteFloat(buf, "y1", value.toFloat());
+      if (log_date.length() < 3) {
+        json_array += buf;
+      } else {
+        json_array += buf + ",";
+      }
+      buf = "{}";
+    }
+    unix_time = "";
+    value = "";
+    log_date = "";
+    json_array = "{\"status\":[" + json_array + "]}";
+    Serial.println(json_array);
+    sendCHART(topic, json_array);
+    json_array = "";
+    getMemoryLoad("[i] after send log date");
+  }
 }
 
-//=========================================Отправка данных===================================================================================
-void sendLogData(String file, String topic, boolean type) {
-  if (type) {
-    //----------------------------------------------
-    String log_date = readFile(file, 5000);
-    if (log_date != "Failed") {
-      log_date.replace("\r\n", "\n");
-      log_date.replace("\r", "\n");
-      String buf = "{}";
-      String json_array;
-      String unix_time;
-      String value;
-      while (log_date.length() != 0) {
-        String tmp = selectToMarker (log_date, "\n");
-        log_date = deleteBeforeDelimiter(log_date, "\n");
-        unix_time = selectToMarker (tmp, " ");
-        jsonWriteInt(buf, "x", unix_time.toInt());
-        value = deleteBeforeDelimiter(tmp, " ");
-        jsonWriteFloat(buf, "y1", value.toFloat());
-        if (log_date.length() < 3) {
-          json_array += buf;
-        } else {
-          json_array += buf + ",";
-        }
-        buf = "{}";
-      }
-      unix_time = "";
-      value = "";
-      log_date = "";
-      json_array = "{\"status\":[" + json_array + "]}";
-      Serial.println(json_array);
-      sendCHART(topic, json_array);
-      json_array = "";
-      getMemoryLoad("[i] after send log date");
-    }
-    //----------------------------------------------
-  } else {
-    //----------------------------------------------
+/*
+  //----------------------------------------------
     File configFile = SPIFFS.open("/" + file, "r");
     if (!configFile) {
       return;
@@ -160,14 +138,14 @@ void sendLogData(String file, String topic, boolean type) {
       sendCHART(topic, final_line);
     }
     getMemoryLoad("[i] after send log date");
-  }
-  //----------------------------------------------
-}
+*/
 //=========================================Очистка данных===================================================================================
 void clean_log_date() {
-  SPIFFS.remove("/log.analog.txt");
-  SPIFFS.remove("/log.level.txt");
-  SPIFFS.remove("/log.dallas.txt");
-  SPIFFS.remove("/log.dhtT.txt");
-  SPIFFS.remove("/log.dhtH.txt");
+  String all_line = logging_value_names_list;
+  while (all_line.length() != 0) {
+    String tmp = selectToMarker (all_line, ",");
+    SPIFFS.remove("/log." + tmp + ".txt");
+    all_line = deleteBeforeDelimiter(all_line, ",");
+  }
+  all_line = "";
 }

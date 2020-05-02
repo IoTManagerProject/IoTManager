@@ -1,24 +1,33 @@
 void Time_Init() {
-  server.on("/timeZone", HTTP_GET, [](AsyncWebServerRequest * request) {
+  server.on("/time", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("timezone")) {
       jsonWriteStr(configSetup, "timezone", request->getParam("timezone")->value());
+    }
+    if (request->hasArg("ntp")) {
+      jsonWriteStr(configSetup, "ntp", request->getParam("ntp")->value());
     }
     saveConfig();
     reconfigTime();
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
 
+
   ts.add(TIME_SYNC, 30000, [&](void*) {
-    if (GetTimeUnix() == "failed") {
-      Serial.println("[i] Time is not synchronized, start synchronization");
-      reconfigTime();
-    }
+    time_check();
   }, nullptr, true);
+}
+
+void time_check() {
+  if (GetTimeUnix() == "failed") {
+    Serial.println("[i] Time is not synchronized, start synchronization");
+    reconfigTime();
+  }
 }
 
 void reconfigTime() {
   if (WiFi.status() == WL_CONNECTED) {
-    configTime(0, 0, ntpServer);
+    String ntp = jsonRead(configSetup, "ntp");
+    configTime(0, 0, ntp.c_str());
     int i = 0;
     Serial.println("[i] Awaiting for time ");
 #ifdef ESP32
@@ -126,7 +135,7 @@ String GetDataDigital() {
   return out;
 }
 
-int  timeToMin(String Time) {
+int timeToMin(String Time) {
   //"00:00:00"  время в секунды
   long  min = selectToMarker(Time, ":").toInt() * 60; //общее количество секунд в полных часах
   Time = deleteBeforeDelimiter (Time, ":"); // Теперь здесь минуты секунды

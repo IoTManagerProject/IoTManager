@@ -72,6 +72,12 @@
       "class": "btn btn-block btn-success"
     },
     {
+      "type": "link",
+      "title": "Утилиты",
+      "action": "/?utilities",
+      "class": "btn btn-block btn-success"
+    },
+    {
       "type": "h3",
       "name": "my-block",
       "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",

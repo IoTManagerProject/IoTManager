@@ -6,6 +6,7 @@
     "ssid": "your_ssid",
     "password": "your_password",
     "timezone": 3,
+    "ntp": "pool.ntp.org",
     "mqttServer": "",
     "mqttPort": 0,
     "mqttPrefix": "/IoTmanager",
@@ -14,5 +15,6 @@
     "scenario": "1",
     "pushingbox_id": "",
     "web_login": "admin",
-    "web_pass": "admin"
+    "web_pass": "admin",
+    "udponoff": "1"
 }

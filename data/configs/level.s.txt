@@ -1,6 +1,6 @@
-level > digit1
+lev > digit1
 buttonSet 1 0
 end
-level < digit2
+lev < digit2
 buttonSet 1 1
 end
