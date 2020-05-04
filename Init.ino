@@ -47,7 +47,7 @@ void Device_init() {
   enter_to_logging_counter = LOG1 - 1;
 
   analog_value_names_list = "";
-  enter_to_analog_counter = 0; //ANALOG1 - 1;
+  enter_to_analog_counter = 0; 
 
   level_value_name = "";
 
@@ -58,18 +58,19 @@ void Device_init() {
   bmp280P_value_name = "";
 
   bme280T_value_name = "";
-  
-  for (int i = 0; i <= sensors_count; i++) {
+  bme280P_value_name = "";
+  bme280H_value_name = "";
+  bme280A_value_name = "";
+
+  //int array_sz = sizeof(sensors_reading_map) / sizeof(sensors_reading_map[0]);
+
+  for (int i = 0; i <= 14; i++) {
     sensors_reading_map[i] = 0;
   }
-  
+
   for (int i = LOG1; i <= LOG5; i++) {
     ts.remove(i);
   }
-
-//  for (int i = LEVEL; i <= STEPPER2; i++) {
-//    ts.remove(i);
-//  }
 
 #ifdef layout_in_ram
   all_widgets = "";

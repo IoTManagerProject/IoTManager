@@ -26,13 +26,18 @@ void CMD_init() {
   sCmd.addCommand("bmp280P",  bmp280P);
 
   sCmd.addCommand("bme280T",  bme280T);
-  //sCmd.addCommand("bme280P",  bme280P);
+  sCmd.addCommand("bme280P",  bme280P);
+  sCmd.addCommand("bme280H",  bme280H);
+  sCmd.addCommand("bme280A",  bme280A);
 
   sCmd.addCommand("stepper",  stepper);
   sCmd.addCommand("stepperSet",  stepperSet);
 
   sCmd.addCommand("servo",  servo_);
   sCmd.addCommand("servoSet",  servoSet);
+
+  sCmd.addCommand("serialBegin",  serialBegin);
+  sCmd.addCommand("serialWrite",  serialWrite);
 
   sCmd.addCommand("logging",  logging);
 
@@ -467,6 +472,19 @@ void servoSet() {
   jsonWriteStr(configJson, "servo" + servo_number, servo_state);
   sendSTATUS("servo" + servo_number, servo_state);
 }
+
+void serialBegin() {
+  String s_speed = sCmd.next();
+  //String rxPin = sCmd.next();
+  //String txPin = sCmd.next();
+  //SoftwareSerial mySerial(rxPin.toInt(), txPin.toInt());
+  mySerial.begin(s_speed.toInt());
+}
+
+void serialWrite() {
+   String text = sCmd.next();
+   mySerial.println(text);
+}
 //====================================================================================================================================================
 /*
   void inputText() {
@@ -593,7 +611,7 @@ void stringExecution(String str) {
 
     String tmp = selectToMarker (str, "\n");
     sCmd.readStr(tmp);
-    
+
     str = deleteBeforeDelimiter(str, "\n");
   }
 }

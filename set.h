@@ -1,5 +1,5 @@
 //===============FIRMWARE SETTINGS=====================================
-String firmware_version = "2.3.3";
+String firmware_version = "2.3.3g";
 boolean mb_4_of_memory = true;
 //#define OTA_enable
 //#define MDNS_enable
@@ -12,8 +12,8 @@ boolean mb_4_of_memory = true;
 #define statistics_update 1000 * 60 * 60 * 2
 //======================================================================
 
-#define TIME_COMPILING String(__TIME__)
-#define DATE_COMPILING String(__DATE__)
+//#define TIME_COMPILING String(__TIME__)
+//#define DATE_COMPILING String(__DATE__)
 
 //===============библиотеки и объекты для ESP8266========================
 #ifdef ESP8266
@@ -115,6 +115,9 @@ Adafruit_BME280 bme; // use I2C interface
 Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
 Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
 Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
+
+#include <SoftwareSerial.h>
+SoftwareSerial mySerial(14, 12);
 //===============FIRMWARE VARS========================
 boolean just_load = true;
 const char* hostName = "IoT Manager";
@@ -133,13 +136,21 @@ String analog_value_names_list;
 int enter_to_analog_counter;
 
 String level_value_name;
+
 String dhtT_value_name;
 String dhtH_value_name;
+
 String bmp280T_value_name;
 String bmp280P_value_name;
+
 String bme280T_value_name;
-int sensors_count = 11;
-int sensors_reading_map [] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+String bme280P_value_name;
+String bme280H_value_name;
+String bme280A_value_name;
+
+int sensors_reading_map [] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+//============================0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14
+
 //LOGGING
 String logging_value_names_list;
 int enter_to_logging_counter;

@@ -139,7 +139,7 @@ boolean RouterFind(String ssid) {
     Serial.println("[WIFI][i] scanning still in progress");
     return false;
   }
-  if (n == 0) {                       //Сканирование все еще выполняется
+  if (n == 0) {                       //ни одна сеть не найдена
     Serial.println("[WIFI][i] no any wifi sations, starting scanning");
     WiFi.scanNetworks (true, false);
     return false;

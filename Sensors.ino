@@ -23,6 +23,9 @@ void sensors_init() {
       if (sensors_reading_map[10] == 1) bmp280P_reading();
 
       if (sensors_reading_map[11] == 1) bme280T_reading();
+      if (sensors_reading_map[12] == 1) bme280P_reading();
+      if (sensors_reading_map[13] == 1) bme280H_reading();
+      if (sensors_reading_map[14] == 1) bme280A_reading();
     }
   }, nullptr, true);
 }
@@ -463,9 +466,71 @@ void bme280T_reading() {
   Serial.println("[i] sensor '" + bme280T_value_name + "' data: " + String(value));
 }
 
-//bme.readPressure() / 100.0F
+//bme280P pres1 0x76 Давление#bmp280 Датчики any-data 1
+void bme280P() {
+  String value_name = sCmd.next();
+  String address = sCmd.next();
+  String widget_name = sCmd.next();
+  String page_name = sCmd.next();
+  String type = sCmd.next();
+  String page_number = sCmd.next();
+  bme280P_value_name = value_name;
+  choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+  bme.begin(hexStringToUint8(address));
+  sensors_reading_map[12] = 1;
+}
 
-//#define SEALEVELPRESSURE_HPA (1013.25)
-//bme.readAltitude(SEALEVELPRESSURE_HPA)
+void bme280P_reading() {
+  float value = 0;
+  value = bme.readPressure();
+  jsonWriteStr(configJson, bme280P_value_name, String(value));
+  eventGen(bme280P_value_name, "");
+  sendSTATUS(bme280P_value_name, String(value));
+  Serial.println("[i] sensor '" + bme280P_value_name + "' data: " + String(value));
+}
 
-//bme.readHumidity()
+//bme280H hum1 0x76 Влажность#bmp280 Датчики any-data 1
+void bme280H() {
+  String value_name = sCmd.next();
+  String address = sCmd.next();
+  String widget_name = sCmd.next();
+  String page_name = sCmd.next();
+  String type = sCmd.next();
+  String page_number = sCmd.next();
+  bme280H_value_name = value_name;
+  choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+  bme.begin(hexStringToUint8(address));
+  sensors_reading_map[13] = 1;
+}
+
+void bme280H_reading() {
+  float value = 0;
+  value = bme.readHumidity();
+  jsonWriteStr(configJson, bme280H_value_name, String(value));
+  eventGen(bme280H_value_name, "");
+  sendSTATUS(bme280H_value_name, String(value));
+  Serial.println("[i] sensor '" + bme280H_value_name + "' data: " + String(value));
+}
+
+//bme280A altit1 0x76 Высота#bmp280 Датчики any-data 1
+void bme280A() {
+  String value_name = sCmd.next();
+  String address = sCmd.next();
+  String widget_name = sCmd.next();
+  String page_name = sCmd.next();
+  String type = sCmd.next();
+  String page_number = sCmd.next();
+  bme280A_value_name = value_name;
+  choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+  bme.begin(hexStringToUint8(address));
+  sensors_reading_map[14] = 1;
+}
+
+void bme280A_reading() {
+  float value = 0;
+  value = bme.readAltitude(1013.25);
+  jsonWriteStr(configJson, bme280A_value_name, String(value));
+  eventGen(bme280A_value_name, "");
+  sendSTATUS(bme280A_value_name, String(value));
+  Serial.println("[i] sensor '" + bme280A_value_name + "' data: " + String(value));
+}

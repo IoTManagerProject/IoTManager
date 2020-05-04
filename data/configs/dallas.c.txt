@@ -1,5 +1,5 @@
 dallas 2 Водонагреватель,#t°C Датчики any-data 1
-logging dallas 1 100 fast Температура Датчики 2
+logging dallas 1 100 Температура Датчики 2
 
 //2 - номер пина датчика
 //варианты отображения: any-data, progress-round, progress-line, fill-gauge
