@@ -1,5 +1,5 @@
 //===============FIRMWARE SETTINGS=====================================
-String firmware_version = "2.3.3g";
+String firmware_version = "2.3.3";
 boolean mb_4_of_memory = true;
 //#define OTA_enable
 //#define MDNS_enable
@@ -116,8 +116,8 @@ Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
 Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
 Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
 
-#include <SoftwareSerial.h>
-SoftwareSerial mySerial(14, 12);
+//#include <SoftwareSerial.h>
+//SoftwareSerial mySerial(14, 12);
 //===============FIRMWARE VARS========================
 boolean just_load = true;
 const char* hostName = "IoT Manager";

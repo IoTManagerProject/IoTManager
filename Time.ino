@@ -11,7 +11,6 @@ void Time_Init() {
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
 
-
   ts.add(TIME_SYNC, 30000, [&](void*) {
     time_check();
   }, nullptr, true);
@@ -25,11 +24,11 @@ void time_check() {
 }
 
 void reconfigTime() {
-  if (WiFi.status() == WL_CONNECTED) {
+  if (WiFi.status() == WL_CONNECTED) { 
     String ntp = jsonRead(configSetup, "ntp");
-    configTime(0, 0, ntp.c_str());
+    configTime(0, 0, ntp.c_str()); 
     int i = 0;
-    Serial.println("[i] Awaiting for time ");
+    Serial.println("[i] Awaiting for time ");   
 #ifdef ESP32
     struct tm timeinfo;
     while (!getLocalTime(&timeinfo) && i <= 4) {
@@ -39,11 +38,11 @@ void reconfigTime() {
     }
 #endif
 #ifdef ESP8266
-    // while (!time(nullptr) && i < 4) {
-    //   Serial.print(".");
-    //   i++;
-    delay(2000);
-    // }
+    //while (!time(nullptr) && i < 4) {
+    //  Serial.print(".");
+    //  i++;
+      delay(2000);
+    //}
 #endif
     if (GetTimeUnix() != "failed") {
       Serial.print("[V] Time synchronized = ");

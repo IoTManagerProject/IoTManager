@@ -87,7 +87,6 @@ void handleUdp() {
         if (received_udp_line.indexOf("mqttServer") >= 0) {
           udp_data_parse = true;
         }
-
       }
     }
   }

@@ -62,9 +62,9 @@ void Device_init() {
   bme280H_value_name = "";
   bme280A_value_name = "";
 
-  //int array_sz = sizeof(sensors_reading_map) / sizeof(sensors_reading_map[0]);
+  int array_sz = sizeof(sensors_reading_map) / sizeof(sensors_reading_map[0]);
 
-  for (int i = 0; i <= 14; i++) {
+  for (int i = 0; i <= array_sz; i++) {
     sensors_reading_map[i] = 0;
   }
 

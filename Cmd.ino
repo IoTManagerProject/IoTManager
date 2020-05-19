@@ -474,16 +474,16 @@ void servoSet() {
 }
 
 void serialBegin() {
-  String s_speed = sCmd.next();
+  //String s_speed = sCmd.next();
   //String rxPin = sCmd.next();
   //String txPin = sCmd.next();
   //SoftwareSerial mySerial(rxPin.toInt(), txPin.toInt());
-  mySerial.begin(s_speed.toInt());
+  //mySerial.begin(s_speed.toInt());
 }
 
 void serialWrite() {
-   String text = sCmd.next();
-   mySerial.println(text);
+   //String text = sCmd.next();
+   //mySerial.println(text);
 }
 //====================================================================================================================================================
 /*
