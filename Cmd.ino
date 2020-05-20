@@ -12,34 +12,53 @@ void CMD_init() {
 
   sCmd.addCommand("switch",  switch_);
 
+#ifdef analog_enable
   sCmd.addCommand("analog",  analog);
+#endif
+#ifdef level_enable
   sCmd.addCommand("level",  level);
+#endif
+#ifdef dallas_enable
   sCmd.addCommand("dallas",  dallas);
-
+#endif
+#ifdef dht_enable
   sCmd.addCommand("dhtT",  dhtT);
   sCmd.addCommand("dhtH",  dhtH);
   sCmd.addCommand("dhtPerception",  dhtP);
   sCmd.addCommand("dhtComfort",  dhtC);
   sCmd.addCommand("dhtDewpoint",  dhtD);
+#endif
 
+#ifdef bmp_enable
   sCmd.addCommand("bmp280T",  bmp280T);
   sCmd.addCommand("bmp280P",  bmp280P);
+#endif
 
+#ifdef bme_enable
   sCmd.addCommand("bme280T",  bme280T);
   sCmd.addCommand("bme280P",  bme280P);
   sCmd.addCommand("bme280H",  bme280H);
   sCmd.addCommand("bme280A",  bme280A);
+#endif
 
+#ifdef stepper_enable
   sCmd.addCommand("stepper",  stepper);
   sCmd.addCommand("stepperSet",  stepperSet);
+#endif
 
+#ifdef servo_enable
   sCmd.addCommand("servo",  servo_);
   sCmd.addCommand("servoSet",  servoSet);
+#endif
 
+#ifdef serial_enable
   sCmd.addCommand("serialBegin",  serialBegin);
   sCmd.addCommand("serialWrite",  serialWrite);
+#endif
 
+#ifdef logging_enable
   sCmd.addCommand("logging",  logging);
+#endif
 
   sCmd.addCommand("inputDigit",  inputDigit);
   sCmd.addCommand("digitSet",  digitSet);
@@ -53,10 +72,15 @@ void CMD_init() {
   sCmd.addCommand("text",  text);
   sCmd.addCommand("textSet",  textSet);
 
-
   sCmd.addCommand("mqtt",  mqttOrderSend);
   sCmd.addCommand("http",  httpOrderSend);
+
+#ifdef push_enable
   sCmd.addCommand("push",  pushControl);
+#endif
+
+  sCmd.addCommand("update",  update_firmware);
+  sCmd.addCommand("firmware",  firmware);
 
 
   handle_time_init();
@@ -323,10 +347,9 @@ void textSet() {
   jsonWriteStr(configJson, "text" + number, text);
   sendSTATUS("text" + number, text);
 }
-
 //=====================================================================================================================================
 //=========================================Модуль шагового мотора======================================================================
-
+#ifdef stepper_enable
 //stepper 1 12 13
 void stepper() {
   String stepper_number = sCmd.next();
@@ -381,7 +404,10 @@ void stepperSet() {
     }, nullptr, true);
   }
 }
-
+#endif
+//====================================================================================================================================================
+//=================================================================Сервоприводы=======================================================================
+#ifdef servo_enable
 //servo 1 13 50 Мой#сервопривод Сервоприводы 0 100 0 180 2
 void servo_() {
   String servo_number = sCmd.next();
@@ -472,7 +498,10 @@ void servoSet() {
   jsonWriteStr(configJson, "servo" + servo_number, servo_state);
   sendSTATUS("servo" + servo_number, servo_state);
 }
-
+#endif
+//====================================================================================================================================================
+//===================================================================================serial===========================================================
+#ifdef serial_enable
 void serialBegin() {
   //String s_speed = sCmd.next();
   //String rxPin = sCmd.next();
@@ -482,68 +511,11 @@ void serialBegin() {
 }
 
 void serialWrite() {
-   //String text = sCmd.next();
-   //mySerial.println(text);
+  //String text = sCmd.next();
+  //mySerial.println(text);
 }
+#endif
 //====================================================================================================================================================
-/*
-  void inputText() {
-  String number = sCmd.next();
-  String widget_name = sCmd.next();
-  widget_name.replace("#", " ");
-  String page_name = sCmd.next();
-  page_name.replace("#", " ");
-  String start_state = sCmd.next();
-  String page_number = sCmd.next();
-  jsonWriteStr(configJson, "inputText" + number, start_state);
-  createWidget (widget_name, page_name, page_number, "widgets/widget.inputText.json", "inputText" + number);
-  }
-  void inputTextSet() {
-  String number = sCmd.next();
-  String value = sCmd.next();
-  jsonWriteStr(configJson, "inputText" + number, value);
-  sendSTATUS("inputText" + number, value);
-  }
-
-  void inputTime() {
-  String number = sCmd.next();
-  String widget_name = sCmd.next();
-  widget_name.replace("#", " ");
-  String page_name = sCmd.next();
-  page_name.replace("#", " ");
-  String start_state = sCmd.next();
-  String page_number = sCmd.next();
-  jsonWriteStr(configJson, "inputTime" + number, start_state);
-  createWidget (widget_name, page_name, page_number, "widgets/widget.inputTime.json", "inputTime" + number);
-  }
-  void inputTimeSet() {
-  String number = sCmd.next();
-  String value = sCmd.next();
-  value.replace(":", ".");
-  jsonWriteStr(configJson, "inputTime" + number, value);
-  value.replace(".", ":");
-  sendSTATUS("inputTime" + number, value);
-  }
-
-
-  void inputDate() {
-  String number = sCmd.next();
-  String widget_name = sCmd.next();
-  widget_name.replace("#", " ");
-  String page_name = sCmd.next();
-  page_name.replace("#", " ");
-  String start_state = sCmd.next();
-  String page_number = sCmd.next();
-  jsonWriteStr(configJson, "inputDate" + number, start_state);
-  createWidget (widget_name, page_name, page_number, "widgets/widget.inputDate.json", "inputDate" + number);
-  }
-  void inputDateSet() {
-  String number = sCmd.next();
-  String value = sCmd.next();
-  jsonWriteStr(configJson, "inputDate" + number, value);
-  sendSTATUS("inputDate" + number, value);
-  }
-*/
 //=================================================Глобальные команды удаленного управления===========================================================
 
 void mqttOrderSend() {
@@ -567,7 +539,17 @@ void httpOrderSend() {
   getURL(url);
 }
 
+void update_firmware() {
+  upgrade = true;
+}
 
+void firmware() {
+  String widget_name = sCmd.next();
+  String page_name = sCmd.next();
+  String page_number = sCmd.next();
+  jsonWriteStr(configJson, "firm1", firmware_version);
+  choose_widget_and_create(widget_name, page_name, page_number, "any-data", "firm1");
+}
 
 //==============================================================================================================================
 //============================выполнение команд (в лупе) по очереди из строки order=============================================

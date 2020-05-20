@@ -7,6 +7,7 @@ void MQTT_init() {
       Serial.println("[VV] WiFi-ok");
       if (client_mqtt.connected()) {
         Serial.println("[VV] MQTT-ok");
+        led_blink("off");
       } else {
         MQTT_Connecting();
         if (!just_load) mqtt_lost_error++;
@@ -53,12 +54,7 @@ void MQTT_init() {
 
 }
 
-void do_mqtt_send_settings_to_udp() {
-  if (mqtt_send_settings_to_udp) {
-    mqtt_send_settings_to_udp = false;
-    send_mqtt_to_udp();
-  }
-}
+
 
 void do_mqtt_connection() {
   if (mqtt_connection) {
@@ -82,13 +78,14 @@ boolean MQTT_Connecting() {
   String mqtt_server = jsonRead(configSetup, "mqttServer");
   if ((mqtt_server != "")) {
     Serial.println("[E] Lost MQTT connection, start reconnecting");
-    //ssl//espClient.setCACert(local_root_ca1);
+    led_blink("fast");
     client_mqtt.setServer(mqtt_server.c_str(), jsonReadtoInt(configSetup, "mqttPort"));
     if (WiFi.status() == WL_CONNECTED) {
       if (!client_mqtt.connected()) {
         Serial.println("[V] Connecting to MQTT server commenced");
         if (client_mqtt.connect(chipID.c_str(), jsonRead(configSetup, "mqttUser").c_str(), jsonRead(configSetup, "mqttPass").c_str())) {
           Serial.println("[VV] MQTT connected");
+          led_blink("off");
           client_mqtt.setCallback(callback);
           client_mqtt.subscribe(jsonRead(configSetup, "mqttPrefix").c_str());  // Для приема получения HELLOW и подтверждения связи
           client_mqtt.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/+/control").c_str()); // Подписываемся на топики control
@@ -97,6 +94,7 @@ boolean MQTT_Connecting() {
           return true;
         } else {
           Serial.println("[E] try again in " + String(wifi_mqtt_reconnecting / 1000) +  " sec");
+          led_blink("fast");
           return false;
         }
       }
@@ -120,7 +118,7 @@ void callback(char* topic, byte * payload, unsigned int length) {
   Serial.println(" => " + str);
 
   if (str == "HELLO") outcoming_date();
- 
+
   //превращает название топика в команду, а значение в параметр команды
   if (topic_str.indexOf("control") > 0) {                                     //IoTmanager/800324-1458415/button1/control 1  //IoTmanager/800324-1458415/button99/control 1
     String topic = selectFromMarkerToMarker(topic_str, "/", 3);               //button1                                      //button99
@@ -136,6 +134,11 @@ void callback(char* topic, byte * payload, unsigned int length) {
     //Serial.println(str);
     order_loop += str + ",";
   }
+  if (topic_str.indexOf("update") > 0) {
+    if (str == "1") {
+      upgrade = true;
+    }
+  }
 }
 
 //данные которые отправляем при подключении или отбновлении страницы
@@ -143,7 +146,10 @@ void outcoming_date() {
 
   sendAllWigets();
   sendAllData();
+  
+#ifdef logging_enable
   choose_log_date_and_send();
+#endif
 
   Serial.println("[V] Sending all date to iot manager completed");
 }

@@ -1,3 +1,4 @@
+#ifdef push_enable
 void Push_init() {
   server.on("/pushingboxDate", HTTP_GET, [](AsyncWebServerRequest * request) {
 
@@ -58,3 +59,4 @@ void pushControl() {
   client_push.stop();
   Serial.println("- stopping the client");
 }
+#endif

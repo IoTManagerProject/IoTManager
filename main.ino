@@ -340,20 +340,23 @@ uint16_t hexStringToUint16(String hex) {
   }
 }
 //=============================================================================================================
-#ifdef led_status
-void led_blink(int pin, int fq, String blink_satus) {
 
-  pinMode(pin, OUTPUT);
-
-  if (blink_satus == "on") tone(pin, fq);
-  if (blink_satus == "off") {
-
-    noTone(pin);
-    digitalWrite(pin, HIGH);
-
+void led_blink(String satus) {
+  #ifdef blink_pin
+  pinMode(blink_pin, OUTPUT);
+  if (satus == "off") {
+    noTone(blink_pin);
+    digitalWrite(blink_pin, HIGH);
   }
+  if (satus == "on") {
+    noTone(blink_pin);
+    digitalWrite(blink_pin, LOW);
+  }
+  if (satus == "slow") tone(blink_pin, 1);
+  if (satus == "fast") tone(blink_pin, 20);
+  #endif
 }
-#endif
+
 
 void getMemoryLoad(String text) {
 #ifdef ESP8266

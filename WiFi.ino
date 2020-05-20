@@ -47,6 +47,8 @@ void WIFI_init() {
 
 void ROUTER_Connecting() {
 
+  led_blink("slow");
+  
   WiFi.mode(WIFI_STA);
 
   byte tries = 20;
@@ -92,6 +94,8 @@ void ROUTER_Connecting() {
     Serial.print(WiFi.localIP());
     Serial.println("");
     jsonWriteStr(configJson, "ip", WiFi.localIP().toString());
+
+    led_blink("off");
     
     //add_dev_in_list("dev.txt", chipID, WiFi.localIP().toString());
 
@@ -108,6 +112,7 @@ bool StartAPMode() {
   String _passwordAP = jsonRead(configSetup, "passwordAP");
   WiFi.softAP(_ssidAP.c_str(), _passwordAP.c_str());
   IPAddress myIP = WiFi.softAPIP();
+  led_blink("on");
   Serial.print("AP IP address: ");
   Serial.println(myIP);
   jsonWriteStr(configJson, "ip", myIP.toString());

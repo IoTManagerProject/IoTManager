@@ -3,36 +3,48 @@ void sensors_init() {
     static int counter;
     counter++;
 
+#ifdef level_enable
     if (sensors_reading_map[0] == 1) level_reading();
+#endif
 
     if (counter > 10) {
       counter = 0;
 
+#ifdef analog_enable
       if (sensors_reading_map[1] == 1) analog_reading1();
       if (sensors_reading_map[2] == 1) analog_reading2();
+#endif
 
+#ifdef dallas_enable
       if (sensors_reading_map[3] == 1) dallas_reading();
+#endif
 
+#ifdef dht_enable
       if (sensors_reading_map[4] == 1) dhtT_reading();
       if (sensors_reading_map[5] == 1) dhtH_reading();
       if (sensors_reading_map[6] == 1) dhtP_reading();
       if (sensors_reading_map[7] == 1) dhtC_reading();
       if (sensors_reading_map[8] == 1) dhtD_reading();
+#endif
 
+#ifdef bmp_enable
       if (sensors_reading_map[9] == 1) bmp280T_rading();
       if (sensors_reading_map[10] == 1) bmp280P_reading();
+#endif     
 
+#ifdef bme_enable
       if (sensors_reading_map[11] == 1) bme280T_reading();
       if (sensors_reading_map[12] == 1) bme280P_reading();
       if (sensors_reading_map[13] == 1) bme280H_reading();
       if (sensors_reading_map[14] == 1) bme280A_reading();
+#endif 
     }
   }, nullptr, true);
 }
 
 //=========================================================================================================================================
 //=========================================Модуль измерения уровня в баке==================================================================
-
+#ifdef level_enable
 //level L 14 12 Вода#в#баке,#% Датчики fill-gauge 125 20 1
 void level() {
   String value_name = sCmd.next();
@@ -82,9 +94,10 @@ void level_reading() {
     Serial.println("[i] sensor '" + level_value_name + "' data: " + String(level));
   }
 }
-
+#endif
 //=========================================================================================================================================
 //=========================================Модуль аналогового сенсора======================================================================
+#ifdef analog_enable
 //analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
 void analog() {
   String value_name = sCmd.next();
@@ -149,9 +162,10 @@ void analog_reading2() {
   sendSTATUS(value_name, String(analog));
   Serial.println("[i] sensor '" + value_name + "' data: " + String(analog));
 }
-
+#endif
 //=========================================================================================================================================
 //=========================================Модуль температурного сенсора ds18b20===========================================================
+#ifdef dallas_enable
 void dallas() {
   String value_name = sCmd.next();
   String pin = sCmd.next();
@@ -177,9 +191,10 @@ void dallas_reading() {
   sendSTATUS("dallas", String(temp));
   Serial.println("[i] sensor 'dallas' send date " + String(temp));
 }
-
+#endif
 //=========================================================================================================================================
 //=========================================Модуль сенсоров DHT=============================================================================
+#ifdef dht_enable
 //dhtT t 2 dht11 Температура#DHT,#t°C Датчики any-data 1
 void dhtT() {
   String value_name = sCmd.next();
@@ -375,9 +390,11 @@ void dhtD_reading() {
     Serial.println("[i] sensor 'dhtDewpoint' data: " + String(value));
   }
 }
+#endif
 //=========================================i2c bus esp8266 scl-4 sda-5 ====================================================================
 //=========================================================================================================================================
 //=========================================Модуль сенсоров bmp280==========================================================================
+#ifdef bmp_enable
 //bmp280T temp1 0x76 Температура#bmp280 Датчики any-data 1
 void bmp280T() {
   String value_name = sCmd.next();
@@ -440,9 +457,10 @@ void bmp280P_reading() {
   sendSTATUS(bmp280P_value_name, String(value));
   Serial.println("[i] sensor '" + bmp280P_value_name + "' data: " + String(value));
 }
-
+#endif
 //=========================================================================================================================================
 //=============================================Модуль сенсоров bme280======================================================================
+#ifdef bme_enable
 //bme280T temp1 0x76 Температура#bmp280 Датчики any-data 1
 void bme280T() {
   String value_name = sCmd.next();
@@ -534,3 +552,4 @@ void bme280A_reading() {
   sendSTATUS(bme280A_value_name, String(value));
   Serial.println("[i] sensor '" + bme280A_value_name + "' data: " + String(value));
 }
+#endif

@@ -32,11 +32,15 @@ void setup() {
   Time_Init();
   Serial.println("[V] Time_Init");
   //--------------------------------------------------------------
+#ifdef push_enable
   Push_init();
   Serial.println("[V] Push_init");
+#endif
   //--------------------------------------------------------------
+#ifdef UDP_enable
   UDP_init();
   Serial.println("[V] UDP_init");
+#endif
   //--------------------------------------------------------------
 
 
@@ -69,8 +73,9 @@ void loop() {
   handleCMD_loop();
   handleButton();
   handleScenario();
+#ifdef UDP_enable
   handleUdp();
-
+#endif
   ts.update();
 }
 
@@ -78,7 +83,9 @@ void not_async_actions() {
   do_mqtt_connection();
   do_upgrade_url();
   do_upgrade();
+#ifdef UDP_enable
   do_udp_data_parse();
   do_mqtt_send_settings_to_udp();
+#endif
   do_i2c_scanning();
 }

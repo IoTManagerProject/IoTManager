@@ -5,16 +5,33 @@ boolean mb_4_of_memory = true;
 //#define MDNS_enable
 //#define WS_enable
 //#define layout_in_ram
-#define wifi_mqtt_reconnecting 30000
 
+//===================================================================
+//====================udp============================================
+#define UDP_enable
+//====================sensors========================================
+#define level_enable
+#define analog_enable
+#define dallas_enable
+#define dht_enable   //подъедает оперативку сука
+#define bmp_enable
+#define bme_enable
+//====================logging=========================================
+#define logging_enable
+//=====================gears==========================================
+#define stepper_enable
+#define servo_enable
+//=====================other==========================================
+#define serial_enable
+#define push_enable
+//====================================================================
+//====================================================================
+
+#define wifi_mqtt_reconnecting 20000
+#define blink_pin 2
 #define tank_level_times_to_send 10 //после скольки выстрелов делать отправку данных
-
 #define statistics_update 1000 * 60 * 60 * 2
 //======================================================================
-
-//#define TIME_COMPILING String(__TIME__)
-//#define DATE_COMPILING String(__DATE__)
-
 //===============библиотеки и объекты для ESP8266========================
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
@@ -92,29 +109,39 @@ StringCommand sCmd;
 boolean but[NUM_BUTTONS];
 Bounce * buttons = new Bounce[NUM_BUTTONS];
 
+#ifdef level_enable
 #include "GyverFilters.h" //настраивается в GyverHacks.h - MEDIAN_FILTER_SIZE
 GMedian medianFilter;
+#endif
 
+#ifdef dallas_enable
 #include <OneWire.h>
 #include <DallasTemperature.h>
 OneWire *oneWire;
 DallasTemperature sensors;
+#endif
 
+#ifdef dht_enable 
 #include <DHTesp.h>
 DHTesp dht;
+#endif
 
 #include <Wire.h>
 
+#ifdef bmp_enable
 #include <Adafruit_BMP280.h>
 Adafruit_BMP280 bmp; // use I2C interface
 Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
 Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
+#endif
 
+#ifdef bmp_enable
 #include <Adafruit_BME280.h>
 Adafruit_BME280 bme; // use I2C interface
 Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
 Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
 Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
+#endif
 
 //#include <SoftwareSerial.h>
 //SoftwareSerial mySerial(14, 12);

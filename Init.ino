@@ -22,7 +22,9 @@ void All_init() {
       request->send(200, "text/text", "OK");
     }
     if (value == "3") {
+#ifdef logging_enable
       clean_log_date();
+#endif
       request->send(200, "text/text", "OK");
     }
     if (value == "4") {
@@ -47,7 +49,7 @@ void Device_init() {
   enter_to_logging_counter = LOG1 - 1;
 
   analog_value_names_list = "";
-  enter_to_analog_counter = 0; 
+  enter_to_analog_counter = 0;
 
   level_value_name = "";
 

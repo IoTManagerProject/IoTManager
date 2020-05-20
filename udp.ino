@@ -1,3 +1,4 @@
+#ifdef UDP_enable
 void UDP_init() {
   server.on("/udp", HTTP_GET, [](AsyncWebServerRequest * request) {
     String value;
@@ -167,3 +168,11 @@ void send_mqtt_to_udp() {
     }
   }
 }
+
+void do_mqtt_send_settings_to_udp() {
+  if (mqtt_send_settings_to_udp) {
+    mqtt_send_settings_to_udp = false;
+    send_mqtt_to_udp();
+  }
+}
+#endif
