@@ -1,22 +1,19 @@
 void Web_server_init() {
-
-  //========================================OTA============================================
+  /*********************************************************************************
+  ***************************************OTA****************************************
+  *********************************************************************************/
 #ifdef OTA_enable
-  //Send OTA events to the browser
   ArduinoOTA.onStart([]() {
     events.send("Update Start", "ota");
   });
-
   ArduinoOTA.onEnd([]() {
     events.send("Update End", "ota");
   });
-
   ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
     char p[32];
     sprintf(p, "Progress: %u%%\n", (progress / (total / 100)));
     events.send(p, "ota");
   });
-
   ArduinoOTA.onError([](ota_error_t error) {
     if (error == OTA_AUTH_ERROR) events.send("Auth Failed", "ota");
     else if (error == OTA_BEGIN_ERROR) events.send("Begin Failed", "ota");
@@ -25,17 +22,18 @@ void Web_server_init() {
     else if (error == OTA_END_ERROR) events.send("End Failed", "ota");
   });
   ArduinoOTA.setHostname(hostName);
-
   ArduinoOTA.begin();
 #endif
-  //========================================MDNS============================================
+  /*********************************************************************************
+  **************************************MDNS****************************************
+  *********************************************************************************/
 #ifdef MDNS_enable
   MDNS.addService("http", "tcp", 80);
 #endif
-
   //SPIFFS.begin();
-
-  //========================================WS============================================
+  /*********************************************************************************
+  **************************************WS******************************************
+  *********************************************************************************/
 #ifdef WS_enable
   ws.onEvent(onWsEvent);
   server.addHandler(&ws);
@@ -46,26 +44,25 @@ void Web_server_init() {
 
   server.addHandler(&events);
 #endif
-  //======================================================================================
-
+  /*********************************************************************************
+   **************************************WEB****************************************
+   *********************************************************************************/
 #ifdef ESP32
-  server.addHandler(new SPIFFSEditor(SPIFFS, jsonRead(configSetup, "web_login").c_str(), jsonRead(configSetup, "web_pass").c_str()));
+  server.addHandler(new SPIFFSEditor(SPIFFS, jsonReadStr(configSetup, "web_login").c_str(), jsonReadStr(configSetup, "web_pass").c_str()));
 #elif defined(ESP8266)
-  server.addHandler(new SPIFFSEditor(jsonRead(configSetup, "web_login").c_str(), jsonRead(configSetup, "web_pass").c_str()));
+  server.addHandler(new SPIFFSEditor(jsonReadStr(configSetup, "web_login").c_str(), jsonReadStr(configSetup, "web_pass").c_str()));
 #endif
 
-  server.on("/heap", HTTP_GET, [](AsyncWebServerRequest * request) {
-    request->send(200, "text/plain", String(ESP.getFreeHeap()));
-  });
-
+  /*  server.on("/heap", HTTP_GET, [](AsyncWebServerRequest * request) {
+      request->send(200, "text/plain", String(ESP.getFreeHeap()));
+    });*/
 
   server.serveStatic("/css/", SPIFFS, "/css/").setCacheControl("max-age=31536000");
   server.serveStatic("/js/", SPIFFS, "/js/").setCacheControl("max-age=31536000");
-  server.serveStatic("/", SPIFFS, "/favicon.ico").setCacheControl("max-age=31536000");
+  server.serveStatic("/favicon.ico", SPIFFS, "/favicon.ico").setCacheControl("max-age=31536000");
 
   server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.htm")
-  .setAuthentication(jsonRead(configSetup, "web_login").c_str(), jsonRead(configSetup, "web_pass").c_str());
-
+  .setAuthentication(jsonReadStr(configSetup, "web_login").c_str(), jsonReadStr(configSetup, "web_pass").c_str());
 
   server.onNotFound([](AsyncWebServerRequest * request) {
     Serial.printf("NOT_FOUND: ");
@@ -113,7 +110,8 @@ void Web_server_init() {
 
     request->send(404);
   });
-  
+
+
   server.onFileUpload([](AsyncWebServerRequest * request, const String & filename, size_t index, uint8_t *data, size_t len, bool final) {
     if (!index)
       Serial.printf("UploadStart: %s\n", filename.c_str());
@@ -121,7 +119,8 @@ void Web_server_init() {
     if (final)
       Serial.printf("UploadEnd: %s (%u)\n", filename.c_str(), index + len);
   });
-  
+
+
   server.onRequestBody([](AsyncWebServerRequest * request, uint8_t *data, size_t len, size_t index, size_t total) {
     if (!index)
       Serial.printf("BodyStart: %u\n", total);
@@ -131,8 +130,6 @@ void Web_server_init() {
   });
 
   server.begin();
-
-  //=============================Устанавливаем реакции на запросы к серверу============================
 
   // --------------------Выдаем данные configJson //config.live.json - динамические данные
   server.on("/config.live.json", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -148,14 +145,17 @@ void Web_server_init() {
   });
 
   // ------------------Выполнение команды из запроса
-  server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest * request) {             //http://192.168.88.45/cmd?command=rel%201%201
+  //http://192.168.88.45/cmd?command=rel%201%201
+  server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest * request) {
     String com = request->getParam("command")->value();
     Serial.println(com);
     order_loop += com + ",";
     request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
   });
 }
-//========================================WS=========================================================================================
+/*********************************************************************************************************************************
+ *********************************************************WS**********************************************************************
+ ********************************************************************************************************************************/
 #ifdef WS_enable
 void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len) {
   if (type == WS_EVT_CONNECT) {

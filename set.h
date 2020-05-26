@@ -1,44 +1,41 @@
-<<<<<<< Updated upstream
 //===============FIRMWARE SETTINGS=====================================
 =======
 /*******************************************************************
  **********************FIRMWARE SETTINGS****************************
  ******************************************************************/
->>>>>>> Stashed changes
+
 String firmware_version = "2.3.3";
 boolean mb_4_of_memory = true;
 //#define OTA_enable
 //#define MDNS_enable
 //#define WS_enable
 //#define layout_in_ram
-
-//===================================================================
-//====================udp============================================
 #define UDP_enable
-//====================sensors========================================
+/*==========================SENSORS===============================*/
 #define level_enable
 #define analog_enable
 #define dallas_enable
-#define dht_enable   //подъедает оперативку сука
+#define dht_enable                 //подъедает оперативку сука
 #define bmp_enable
 #define bme_enable
-//====================logging=========================================
+/*=========================LOGGING================================*/
 #define logging_enable
-//=====================gears==========================================
+/*==========================GEARS=================================*/
 #define stepper_enable
 #define servo_enable
-//=====================other==========================================
+/*=========================OTHER==================================*/
 #define serial_enable
 #define push_enable
-//====================================================================
-//====================================================================
-
+/*================================================================*/
 #define wifi_mqtt_reconnecting 20000
 #define blink_pin 2
 #define tank_level_times_to_send 10 //после скольки выстрелов делать отправку данных
 #define statistics_update 1000 * 60 * 60 * 2
-//======================================================================
-//===============библиотеки и объекты для ESP8266========================
+/*================================================================*/
+
+
+
+//===============библиотеки и объекты для ESP8266=======================
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
@@ -56,6 +53,8 @@ Servo myServo2;
 #endif
 
 #endif
+
+
 //===============библиотеки и объекты для ESP32===========================
 #ifdef ESP32
 #include <WiFi.h>
@@ -75,6 +74,8 @@ Servo myServo2;
 #endif
 
 #endif
+
+
 //===============общие библиотеки и объекты===============================
 #include <Arduino.h>
 #include "time.h"
@@ -100,8 +101,6 @@ AsyncEventSource events("/events");
 #include <TickerScheduler.h>
 enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, SENSORS, STEPPER1, STEPPER2,  LOG1, LOG2, LOG3, LOG4, LOG5, TIMER_COUNTDOWN, TIME, TIME_SYNC, STATISTICS, UDP, UDP_DB, TEST };
 TickerScheduler ts(TEST + 1);
-
-//LEVEL, ANALOG1, ANALOG2, DALLAS, DHTT, DHTH, DHTC, DHTP, DHTD, BMP280T, BMP280P,
 
 #include <PubSubClient.h>
 WiFiClient espClient;
@@ -141,7 +140,7 @@ Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
 Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
 #endif
 
-#ifdef bmp_enable
+#ifdef bme_enable
 #include <Adafruit_BME280.h>
 Adafruit_BME280 bme; // use I2C interface
 Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
@@ -151,6 +150,8 @@ Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
 
 //#include <SoftwareSerial.h>
 //SoftwareSerial mySerial(14, 12);
+
+
 //===============FIRMWARE VARS========================
 boolean just_load = true;
 const char* hostName = "IoT Manager";

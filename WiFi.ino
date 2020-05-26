@@ -52,8 +52,8 @@ void ROUTER_Connecting() {
   WiFi.mode(WIFI_STA);
 
   byte tries = 20;
-  String _ssid = jsonRead(configSetup, "ssid");
-  String _password = jsonRead(configSetup, "password");
+  String _ssid = jsonReadStr(configSetup, "ssid");
+  String _password = jsonReadStr(configSetup, "password");
   //WiFi.persistent(false);
 
   if (_ssid == "" && _password == "") {
@@ -108,8 +108,8 @@ bool StartAPMode() {
 
   WiFi.mode(WIFI_AP);
 
-  String _ssidAP = jsonRead(configSetup, "ssidAP");
-  String _passwordAP = jsonRead(configSetup, "passwordAP");
+  String _ssidAP = jsonReadStr(configSetup, "ssidAP");
+  String _passwordAP = jsonReadStr(configSetup, "passwordAP");
   WiFi.softAP(_ssidAP.c_str(), _passwordAP.c_str());
   IPAddress myIP = WiFi.softAPIP();
   led_blink("on");
@@ -117,10 +117,10 @@ bool StartAPMode() {
   Serial.println(myIP);
   jsonWriteStr(configJson, "ip", myIP.toString());
 
-  if (jsonReadtoInt(optionJson, "pass_status") != 1) {
+  if (jsonReadInt(optionJson, "pass_status") != 1) {
     ts.add(ROUTER_SEARCHING, 10 * 1000, [&](void*) {
       Serial.println("->try find router");
-      if (RouterFind(jsonRead(configSetup, "ssid"))) {
+      if (RouterFind(jsonReadStr(configSetup, "ssid"))) {
         ts.remove(ROUTER_SEARCHING);
         WiFi.scanDelete();
         ROUTER_Connecting();
@@ -186,7 +186,7 @@ boolean RouterFind(String ssid) {
     data["pass"] = (WiFi.encryptionType(i) == ENC_TYPE_NONE) ? "" : "*";
     int8_t dbm = WiFi.RSSI(i);
     data["dbm"] = dbm;
-    if (ssidMy == jsonRead(configSetup, "ssid")) {
+    if (ssidMy == jsonReadStr(configSetup, "ssid")) {
       jsonWriteStr(configJson, "dbm", dbm);
     }
   }

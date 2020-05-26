@@ -4,7 +4,7 @@ void Timer_countdown_init() {
   
   ts.add(TIMER_COUNTDOWN, 1000, [&](void*) {
     
-    String old_line = jsonRead(optionJson, "timers");
+    String old_line = jsonReadStr(optionJson, "timers");
     if (old_line != "") {
       //Serial.println(old_line);
       int i = 0;
@@ -35,7 +35,7 @@ void timerStart() {
   String type = sCmd.next();
   if (period_of_time.indexOf("digit") != -1) {
     //period_of_time = add_set(period_of_time);
-    period_of_time = jsonRead(configJson, period_of_time);
+    period_of_time = jsonReadStr(configJson, period_of_time);
   }
   if (type == "sec") period_of_time = period_of_time;
   if (type == "min") period_of_time = String(period_of_time.toInt() * 60);
@@ -44,7 +44,7 @@ void timerStart() {
   jsonWriteStr(configJson, "timer" + number, "1");
 }
 void addTimer(String number, String time) {
-  String tmp = jsonRead(optionJson, "timers");   //1:60,2:120,
+  String tmp = jsonReadStr(optionJson, "timers");   //1:60,2:120,
   String new_timer = number + ":" + time;
   int psn1 = tmp.indexOf(number + ":");          //0  ищем позицию таймера который надо заменить
   if (psn1 != -1) {                              //если он есть
@@ -66,7 +66,7 @@ void timerStop() {
 }
 
 void delTimer (String number) {
-  String tmp = jsonRead(optionJson, "timers");       //1:60,2:120,
+  String tmp = jsonReadStr(optionJson, "timers");       //1:60,2:120,
   int psn1 = tmp.indexOf(number + ":");              //0  ищем позицию таймера который надо удалить
   if (psn1 != -1) {                                  //если он есть
     int psn2 = tmp.indexOf(",", psn1);               //4    от этой позиции находим позицию запятой
@@ -77,7 +77,7 @@ void delTimer (String number) {
 }
 
 int readTimer(int number) {
-  String tmp = jsonRead(optionJson, "timers");       //1:60,2:120,
+  String tmp = jsonReadStr(optionJson, "timers");       //1:60,2:120,
   int psn1 = tmp.indexOf(String(number) + ":");              //0  ищем позицию таймера который надо прочитать
   String timer;
   if (psn1 != -1) {                                  //если он есть

@@ -86,7 +86,7 @@ void Device_init() {
 //-------------------------------сценарии-----------------------------------------------------
 
 void Scenario_init() {
-  if (jsonRead(configSetup, "scenario") == "1") {
+  if (jsonReadStr(configSetup, "scenario") == "1") {
     scenario = readFile("firmware.s.txt", 2048);
   }
 }
@@ -238,7 +238,7 @@ void statistics() {
 #endif
     urls += "&";
     //-----------------------------------------------------------------
-    urls += "ver: " + firmware_version; // + " " + DATE_COMPILING + " " + TIME_COMPILING;
+    urls += "ver: " + firmware_version;
     //-----------------------------------------------------------------
     String stat = getURL(urls);
     //Serial.println(stat);
