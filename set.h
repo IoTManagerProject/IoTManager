@@ -1,7 +1,7 @@
 /*******************************************************************
  **********************FIRMWARE SETTINGS****************************
  ******************************************************************/
-String firmware_version = "2.3.4";
+String firmware_version = "2.3.3";
 boolean mb_4_of_memory = true;
 //#define OTA_enable
 //#define MDNS_enable
@@ -9,12 +9,12 @@ boolean mb_4_of_memory = true;
 //#define layout_in_ram
 #define UDP_enable
 /*==========================SENSORS===============================*/
-#define level_enable
-#define analog_enable
-#define dallas_enable
-#define dht_enable                 //подъедает оперативку сука
-#define bmp_enable
-#define bme_enable
+//#define level_enable
+//#define analog_enable
+//#define dallas_enable
+//#define dht_enable                 //подъедает оперативку сука
+//#define bmp_enable
+//#define bme_enable
 /*=========================LOGGING================================*/
 #define logging_enable
 /*==========================GEARS=================================*/
