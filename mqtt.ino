@@ -120,7 +120,7 @@ void callback(char* topic, byte * payload, unsigned int length) {
   if (str == "HELLO") outcoming_date();
 
   //превращает название топика в команду, а значение в параметр команды
-  if (topic_str.indexOf("control") > 0) {                                     //IoTmanager/800324-1458415/button1/control 1  //IoTmanager/800324-1458415/button99/control 1
+  if (topic_str.indexOf("control") > 0) {                                     //IoTmanager/800324-1458415/button-sw2/control 1  //IoTmanager/800324-1458415/button99/control 1
     String topic = selectFromMarkerToMarker(topic_str, "/", 3);               //button1                                      //button99
     topic = add_set(topic);                                                   //buttonSet1                                   //buttonSet99
     String number = selectToMarkerLast(topic, "Set");                         //1                                            //99
