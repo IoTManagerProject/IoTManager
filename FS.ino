@@ -9,8 +9,8 @@ void File_system_init() {
   configSetup.replace(" ", "");
   configSetup.replace("\r\n", "");
   Serial.println(configSetup);
-  jsonWriteStr(configJson, "name", jsonRead(configSetup, "name"));
-  jsonWriteStr(configJson, "lang", jsonRead(configSetup, "lang"));
+  jsonWriteStr(configJson, "name", jsonReadStr(configSetup, "name"));
+  jsonWriteStr(configJson, "lang", jsonReadStr(configSetup, "lang"));
   
 
 #ifdef ESP32
@@ -27,7 +27,7 @@ void File_system_init() {
 
   jsonWriteStr(configSetup, "firmware_version", firmware_version);
 
-  prex = jsonRead(configSetup, "mqttPrefix") + "/" + chipID;
+  prex = jsonReadStr(configSetup, "mqttPrefix") + "/" + chipID;
   Serial.println(chipID);
   
 }

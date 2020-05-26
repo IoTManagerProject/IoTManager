@@ -72,8 +72,8 @@ void level_reading() {
   int distance_cm;
   int level;
   static int counter;
-  int trig = jsonReadtoInt(optionJson, "trig");
-  int echo = jsonReadtoInt(optionJson, "echo");
+  int trig = jsonReadInt(optionJson, "trig");
+  int echo = jsonReadInt(optionJson, "echo");
   digitalWrite(trig, LOW);
   delayMicroseconds(2);
   digitalWrite(trig, HIGH);
@@ -86,8 +86,8 @@ void level_reading() {
   if (counter > tank_level_times_to_send) {
     counter = 0;
     level = map(distance_cm,
-                jsonReadtoInt(optionJson, "e_lev"),
-                jsonReadtoInt(optionJson, "f_lev"), 0, 100);
+                jsonReadInt(optionJson, "e_lev"),
+                jsonReadInt(optionJson, "f_lev"), 0, 100);
     jsonWriteInt(configJson, level_value_name, level);
     eventGen (level_value_name, "");
     sendSTATUS(level_value_name, String(level));
@@ -134,10 +134,10 @@ void analog_reading1() {
   int analog_in = analogRead(A0);
 #endif
   int analog = map(analog_in,
-                   jsonReadtoInt(optionJson, value_name + "_st") ,
-                   jsonReadtoInt(optionJson, value_name + "_end"),
-                   jsonReadtoInt(optionJson, value_name + "_st_out"),
-                   jsonReadtoInt(optionJson, value_name + "_end_out"));
+                   jsonReadInt(optionJson, value_name + "_st") ,
+                   jsonReadInt(optionJson, value_name + "_end"),
+                   jsonReadInt(optionJson, value_name + "_st_out"),
+                   jsonReadInt(optionJson, value_name + "_end_out"));
   jsonWriteInt(configJson, value_name, analog);
   eventGen (value_name, "");
   sendSTATUS(value_name, String(analog));
@@ -153,10 +153,10 @@ void analog_reading2() {
   int analog_in = analogRead(A0);
 #endif
   int analog = map(analog_in,
-                   jsonReadtoInt(optionJson, value_name + "_st") ,
-                   jsonReadtoInt(optionJson, value_name + "_end"),
-                   jsonReadtoInt(optionJson, value_name + "_st_out"),
-                   jsonReadtoInt(optionJson, value_name + "_end_out"));
+                   jsonReadInt(optionJson, value_name + "_st") ,
+                   jsonReadInt(optionJson, value_name + "_end"),
+                   jsonReadInt(optionJson, value_name + "_st_out"),
+                   jsonReadInt(optionJson, value_name + "_end_out"));
   jsonWriteInt(configJson, value_name, analog);
   eventGen (value_name, "");
   sendSTATUS(value_name, String(analog));
@@ -285,7 +285,7 @@ void dhtP_reading() {
   if (dht.getStatus() != 0) {
     sendSTATUS("dhtPerception", String(dht.getStatusString()));
   } else {
-    value = dht.computePerception(jsonRead(configJson, dhtT_value_name).toFloat(), jsonRead(configJson, dhtH_value_name).toFloat(), false);
+    value = dht.computePerception(jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
     String final_line = perception(value);
     jsonWriteStr(configJson, "dhtPerception", final_line);
     eventGen ("dhtPerception", "");
@@ -322,7 +322,7 @@ void dhtC_reading() {
   if (dht.getStatus() != 0) {
     sendSTATUS("dhtComfort", String(dht.getStatusString()));
   } else {
-    value = dht.getComfortRatio(cf, jsonRead(configJson, dhtT_value_name).toFloat(), jsonRead(configJson, dhtH_value_name).toFloat(), false);
+    value = dht.getComfortRatio(cf, jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
     String final_line = get_comfort_status(cf);
     jsonWriteStr(configJson, "dhtComfort", final_line);
     eventGen ("dhtComfort", "");
@@ -383,7 +383,7 @@ void dhtD_reading() {
   if (dht.getStatus() != 0) {
     sendSTATUS("dhtDewpoint", String(dht.getStatusString()));
   } else {
-    value = dht.computeDewPoint(jsonRead(configJson, dhtT_value_name).toFloat(), jsonRead(configJson, dhtH_value_name).toFloat(), false);
+    value = dht.computeDewPoint(jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
     jsonWriteInt(configJson, "dhtDewpoint", value);
     eventGen ("dhtDewpoint", "");
     sendSTATUS("dhtDewpoint", String(value));

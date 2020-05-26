@@ -25,7 +25,7 @@ void time_check() {
 
 void reconfigTime() {
   if (WiFi.status() == WL_CONNECTED) { 
-    String ntp = jsonRead(configSetup, "ntp");
+    String ntp = jsonReadStr(configSetup, "ntp");
     configTime(0, 0, ntp.c_str()); 
     int i = 0;
     Serial.println("[i] Awaiting for time ");   
@@ -69,7 +69,7 @@ String GetTimeUnix() {
 // Получение текущего времени
 String GetTime() {
   time_t now = time(nullptr); // получаем время с помощью библиотеки time.h
-  int zone = 3600 * jsonRead(configSetup, "timezone").toInt();
+  int zone = 3600 * jsonReadStr(configSetup, "timezone").toInt();
   now = now + zone;
   String Time = ""; // Строка для результатов времени
   Time += ctime(&now); // Преобразуем время в строку формата Thu Jan 19 00:55:35 2017
@@ -80,7 +80,7 @@ String GetTime() {
 
 String GetTimeWOsec() {
   time_t now = time(nullptr); // получаем время с помощью библиотеки time.h
-  int zone = 3600 * jsonRead(configSetup, "timezone").toInt();
+  int zone = 3600 * jsonReadStr(configSetup, "timezone").toInt();
   now = now + zone;
   String Time = ""; // Строка для результатов времени
   Time += ctime(&now); // Преобразуем время в строку формата Thu Jan 19 00:55:35 2017
@@ -92,7 +92,7 @@ String GetTimeWOsec() {
 // Получение даты
 String GetDate() {
   time_t now = time(nullptr); // получаем время с помощью библиотеки time.h
-  int zone = 3600 * jsonRead(configSetup, "timezone").toInt();
+  int zone = 3600 * jsonReadStr(configSetup, "timezone").toInt();
   now = now + zone;
   String Data = ""; // Строка для результатов времени
   Data += ctime(&now); // Преобразуем время в строку формата Thu Jan 19 00:55:35 2017

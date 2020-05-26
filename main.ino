@@ -1,17 +1,49 @@
+//============================================================================================================
 //=============================================JSON===========================================================
-// ------------- Чтение значения json
-String jsonRead(String &json, String name) {
+// ------------- Чтение значения json ------------------------------------------------------------------------
+String jsonReadStr(String &json, String name) {
   DynamicJsonBuffer jsonBuffer;
   JsonObject& root = jsonBuffer.parseObject(json);
   return root[name].as<String>();
 }
 
-// ------------- Чтение значения json
-int jsonReadtoInt(String &json, String name) {
+// ------------- Чтение значения json ------------------------------------------------------------------------
+int jsonReadInt(String &json, String name) {
   DynamicJsonBuffer jsonBuffer;
   JsonObject& root = jsonBuffer.parseObject(json);
   return root[name];
 }
+
+// ------------- Запись значения json String -----------------------------------------------------------------
+String jsonWriteStr(String &json, String name, String volume) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject& root = jsonBuffer.parseObject(json);
+  root[name] = volume;
+  json = "";
+  root.printTo(json);
+  return json;
+}
+
+// ------------- Запись значения json int ---------------------------------------------------------------------
+String jsonWriteInt(String &json, String name, int volume) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject& root = jsonBuffer.parseObject(json);
+  root[name] = volume;
+  json = "";
+  root.printTo(json);
+  return json;
+}
+
+// ------------- Запись значения json float -------------------------------------------------------------------
+String jsonWriteFloat(String &json, String name, float volume) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject& root = jsonBuffer.parseObject(json);
+  root[name] = volume;
+  json = "";
+  root.printTo(json);
+  return json;
+}
+
 /*
   DynamicJsonBuffer jsonBuffer;
   JsonObject& root = jsonBuffer.parseObject(json);
@@ -27,60 +59,43 @@ int jsonReadtoInt(String &json, String name) {
   serializeJson(jsonBuffer,json);
   return json;
 */
-// ------------- Запись значения json String
-String jsonWriteStr(String &json, String name, String volume) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& root = jsonBuffer.parseObject(json);
-  root[name] = volume;
-  json = "";
-  root.printTo(json);
-  return json;
-}
-
-// ------------- Запись значения json int
-String jsonWriteInt(String &json, String name, int volume) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& root = jsonBuffer.parseObject(json);
-  root[name] = volume;
-  json = "";
-  root.printTo(json);
-  return json;
-}
-
-// ------------- Запись значения json float
-String jsonWriteFloat(String &json, String name, float volume) {
-  DynamicJsonBuffer jsonBuffer;
-  JsonObject& root = jsonBuffer.parseObject(json);
-  root[name] = volume;
-  json = "";
-  root.printTo(json);
-  return json;
-}
 /*
   String jsonWriteArray(String &json, String value1, String value2, String value3) {
-
   const int capacity = JSON_ARRAY_SIZE(1) + 3 * JSON_OBJECT_SIZE(3);
-
   StaticJsonBuffer<capacity> jb;
   JsonArray& arr = jb.createArray();
   JsonObject& obj1 = jb.createObject();
-
   obj1[value1] = 1;
   obj1[value2] = 2;
   obj1[value3] = 3;
-
   arr.add(obj1);
-
   arr.printTo(json);
-
   return json;
   }
 */
+
+//============================================================================================================
+//=============================================BIT AND BYTE===================================================
+uint8_t hexStringToUint8(String hex) {
+  uint8_t   tmp = strtol(hex.c_str(), NULL, 0);
+  if (tmp >= 0x00 && tmp <= 0xFF) {
+    return tmp;
+  }
+}
+
+uint16_t hexStringToUint16(String hex) {
+  uint16_t   tmp = strtol(hex.c_str(), NULL, 0);
+  if (tmp >= 0x0000 && tmp <= 0xFFFF) {
+    return tmp;
+  }
+}
+//==============================================================================================================
 //=============================================CONFIG===========================================================
 void saveConfig () {
   writeFile("config.json", configSetup);
 }
-//=============================================ТЕКСТ============================================================
+//==============================================================================================================
+//=============================================STRING===========================================================
 // --------Выделяем строку от конца строки до маркера-----------------------------------------------------------
 String selectToMarkerLast (String str, String found) {
   int p = str.lastIndexOf(found);
@@ -114,11 +129,12 @@ String deleteToMarkerLast (String str, String found) {
   int p = str.lastIndexOf(found);
   return str.substring(0, p);
 }
+// -------------------Выделяем строку от конца строки до маркера + ----------------------------------------------
 String selectToMarkerPlus (String str, String found, int plus) {
   int p = str.indexOf(found);
   return str.substring(0, p + plus);
 }
-//--------------------Выделяем строку от маркера до маркера
+//--------------------Выделяем строку от маркера до маркера -----------------------------------------------------
 String selectFromMarkerToMarker(String str, String found, int number) {
   if (str.indexOf(found) == -1) return "not found"; // если строки поиск нет сразу выход
   str += found; // добавим для корректного поиска
@@ -130,7 +146,7 @@ String selectFromMarkerToMarker(String str, String found, int number) {
   } while (str.length() != 0); // повторим пока строка не пустая
   return "not found"; // Достигли пустой строки и ничего не нашли
 }
-//--------------------Посчитать
+//--------------------Посчитать -----------------------------------------------------------------------------------
 int count(String str, String found) {
   if (str.indexOf(found) == -1) return 0; // если строки поиск нет сразу выход
   str += found; // добавим для корректного поиска
@@ -142,6 +158,7 @@ int count(String str, String found) {
   return i; // Достигли пустой строки и ничего не нашли
 }
 
+//--------------------проверка на цифры ---------------------------------------------------------------------------
 boolean isDigitStr (String str) {
   if (str.length() == 1) {
     return Digit (str);
@@ -153,7 +170,6 @@ boolean isDigitStr (String str) {
     return true;
   }
 }
-
 boolean Digit (String str) {
   if (str == "0" || str == "1" || str == "2" || str == "3" || str == "4" || str == "5" || str == "6" || str == "7" || str == "8" || str == "9") {
     return true;
@@ -161,6 +177,7 @@ boolean Digit (String str) {
     return false;
   }
 }
+//==================================================================================================================
 //============================================URL===================================================================
 // ----------------------Запрос на удаленный URL
 String getURL(String urls) {
@@ -177,11 +194,10 @@ String getURL(String urls) {
   http.end();
   return answer;
 }
-
+//===================================================================================================================
 //===========================================FILES===================================================================
-
-String safeDataToFile(String data, String Folder)
-{
+// ------------- Добавление файла -----------------------------------------------------------------------------------
+String safeDataToFile(String data, String Folder) {
   //String fileName = GetDate();
   String fileName;
   fileName.toLowerCase();
@@ -189,13 +205,11 @@ String safeDataToFile(String data, String Folder)
   fileName.replace(" ", ".");
   fileName.replace("..", ".");
   fileName = Folder + "/" + fileName + ".txt";
-
   // addFile(fileName, GetTime() + "/" + data);
-
   Serial.println(fileName);
   jsonWriteStr(configJson, "test", fileName);
 }
-// ------------- Чтение файла в строку
+// ------------- Чтение файла в строку -------------------------------------------------------------------------------
 String readFile(String fileName, size_t len ) {
   File configFile = SPIFFS.open("/" + fileName, "r");
   if (!configFile) {
@@ -210,7 +224,7 @@ String readFile(String fileName, size_t len ) {
   configFile.close();
   return temp;
 }
-
+// ------------- Размер файла ----------------------------------------------------------------------------------------
 String sizeFile(String fileName) {
   File configFile = SPIFFS.open("/" + fileName, "r");
   if (!configFile) {
@@ -220,8 +234,7 @@ String sizeFile(String fileName) {
   configFile.close();
   return String(size);
 }
-
-// ------------- Запись строки в файл
+// ------------- Запись строки в файл ---------------------------------------------------------------------------------
 String writeFile(String fileName, String strings ) {
   File configFile = SPIFFS.open("/" + fileName, "w");
   if (!configFile) {
@@ -232,8 +245,7 @@ String writeFile(String fileName, String strings ) {
   configFile.close();
   return "Write sucsses";
 }
-
-// ------------- Добовление строки в файл
+// ------------- Добовление строки в файл ------------------------------------------------------------------------------
 String addFile(String fileName, String strings ) {
   File configFile = SPIFFS.open("/" + fileName, "a");
   if (!configFile) {
@@ -243,8 +255,7 @@ String addFile(String fileName, String strings ) {
   configFile.close();
   return "Write sucsses";
 }
-
-// ------------- Чтение строки из файла
+// ------------- Чтение строки из файла ---------------------------------------------------------------------------------
 //возвращает стоку из файла в которой есть искомое слово found
 String readFileString(String fileName, String found) {
   File configFile = SPIFFS.open("/" + fileName, "r");
@@ -256,63 +267,11 @@ String readFileString(String fileName, String found) {
   }
   configFile.close();
 }
-
-// Запись данных в файл с частотой 1 секунда и более. Максимальное количество данных в суточном файле 1440 значений
-void safeDataToFile(int inter, String par, uint16_t data) {
-  yield();
-  // Формируем зоголовок (префикс) Интервал, Параметр, размер_параметра
-  uint16_t dataSize = sizeof(data);
-  String prifexFile;
-  prifexFile += inter;
-  prifexFile += "," + par;
-  prifexFile += ",";
-  prifexFile += dataSize;
-  prifexFile += ":";
-  uint16_t prifexLen = prifexFile.length(); //Размер префикса
-
-  // Сделаем имя файла
-  String fileName = GetDate();
-  fileName = deleteBeforeDelimiter(fileName, " "); // удалим день недели
-  fileName.replace(" ", ".");
-  fileName.replace("..", "."); // Заменяем пробелы точками
-  fileName = par + "/" + fileName + ".txt"; // Имя файла параметр в виде директории и дата
-  fileName.toLowerCase(); //fileName = "san aug 31 2018"; Имя файла строчными буквами
-  Serial.println(fileName);
-  File configFile = SPIFFS.open("/" + fileName, "a"); // Открываем файл на добавление
-  size_t size = configFile.size();
-  yield();
-  if (size == 0) {
-    configFile.print(prifexFile);
-  }
-  size = configFile.size();
-  // Получим время и определим позицию в файле
-  String time = GetTime();
-  //time = "00:15:00";
-  int timeM = timeToMin(time); // Здесь количество минут с начала суток
-  timeM = timeM / inter;
-  int poz = timeM * dataSize + prifexLen + 1; // позиция в которую нужно записать.
-  int endF = (size - prifexLen) * dataSize + prifexLen + 1; // позиция конца файла
-  if (poz >= endF) { // если файл имел пропуски в записи данных
-    int i = (poz - endF) / dataSize;
-    for (int j = 0; j < i; j++) { // Заполним недостающие данные
-      for (int d = 0; d < dataSize; d++) {
-        yield();
-        configFile.write(0);    // нулями
-      }
-    }
-  }
-  yield();
-  configFile.write(data >> 8); // добавим текущие
-  configFile.write(data);      // данные
-  configFile.close();
-}
-
-//=======================================УПРАВЛЕНИЕ ВИДЖЕТАМИ MQTT======================================================================
-
-
+//=========================================================================================================================
+//=======================================УПРАВЛЕНИЕ ВИДЖЕТАМИ MQTT=========================================================
 void sendCONFIG(String topik, String widgetConfig, String key, String date) {
   yield();
-  topik = jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/status";
+  topik = jsonReadStr(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/status";
   String outer = "{\"widgetConfig\":";
   String inner = "{\"";
   inner = inner + key;
@@ -325,24 +284,11 @@ void sendCONFIG(String topik, String widgetConfig, String key, String date) {
   //client_mqtt.publish(MQTT::Publish(topik, t).set_qos(1));
   yield();
 }
-
-uint8_t hexStringToUint8(String hex) {
-  uint8_t   tmp = strtol(hex.c_str(), NULL, 0);
-  if (tmp >= 0x00 && tmp <= 0xFF) {
-    return tmp;
-  }
-}
-
-uint16_t hexStringToUint16(String hex) {
-  uint16_t   tmp = strtol(hex.c_str(), NULL, 0);
-  if (tmp >= 0x0000 && tmp <= 0xFFFF) {
-    return tmp;
-  }
-}
-//=============================================================================================================
-
+//=========================================================================================================================
+//=========================================МИГАНИЕ СВЕТОДИОДОМ=============================================================
 void led_blink(String satus) {
-  #ifdef blink_pin
+#ifdef ESP8266
+#ifdef blink_pin
   pinMode(blink_pin, OUTPUT);
   if (satus == "off") {
     noTone(blink_pin);
@@ -354,10 +300,11 @@ void led_blink(String satus) {
   }
   if (satus == "slow") tone(blink_pin, 1);
   if (satus == "fast") tone(blink_pin, 20);
-  #endif
+#endif
+#endif
 }
-
-
+//=========================================================================================================================
+//=========================================ОСТАВШАЯСЯ ОПЕРАТИВНАЯ ПАМЯТЬ===================================================
 void getMemoryLoad(String text) {
 #ifdef ESP8266
   int all_memory = 52864;
@@ -378,15 +325,17 @@ void getMemoryLoad(String text) {
 //esp32 full memory = 362868 k bytes
 //esp8266 full memory = 52864 k bytes
 
+
+
 //===================================================================
 /*
   void web_print (String text) {
   if (WiFi.status() == WL_CONNECTED) {
-    jsonWriteStr(json, "test1",  jsonRead(json, "test2"));
-    jsonWriteStr(json, "test2",  jsonRead(json, "test3"));
-    jsonWriteStr(json, "test3",  jsonRead(json, "test4"));
-    jsonWriteStr(json, "test4",  jsonRead(json, "test5"));
-    jsonWriteStr(json, "test5",  jsonRead(json, "test6"));
+    jsonWriteStr(json, "test1",  jsonReadStr(json, "test2"));
+    jsonWriteStr(json, "test2",  jsonReadStr(json, "test3"));
+    jsonWriteStr(json, "test3",  jsonReadStr(json, "test4"));
+    jsonWriteStr(json, "test4",  jsonReadStr(json, "test5"));
+    jsonWriteStr(json, "test5",  jsonReadStr(json, "test6"));
 
     jsonWriteStr(json, "test6", GetTime() + " " + text);
 

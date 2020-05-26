@@ -75,21 +75,21 @@ void  handleMQTT() {
 }
 //===============================================ПОДКЛЮЧЕНИЕ========================================================
 boolean MQTT_Connecting() {
-  String mqtt_server = jsonRead(configSetup, "mqttServer");
+  String mqtt_server = jsonReadStr(configSetup, "mqttServer");
   if ((mqtt_server != "")) {
     Serial.println("[E] Lost MQTT connection, start reconnecting");
     led_blink("fast");
-    client_mqtt.setServer(mqtt_server.c_str(), jsonReadtoInt(configSetup, "mqttPort"));
+    client_mqtt.setServer(mqtt_server.c_str(), jsonReadInt(configSetup, "mqttPort"));
     if (WiFi.status() == WL_CONNECTED) {
       if (!client_mqtt.connected()) {
         Serial.println("[V] Connecting to MQTT server commenced");
-        if (client_mqtt.connect(chipID.c_str(), jsonRead(configSetup, "mqttUser").c_str(), jsonRead(configSetup, "mqttPass").c_str())) {
+        if (client_mqtt.connect(chipID.c_str(), jsonReadStr(configSetup, "mqttUser").c_str(), jsonReadStr(configSetup, "mqttPass").c_str())) {
           Serial.println("[VV] MQTT connected");
           led_blink("off");
           client_mqtt.setCallback(callback);
-          client_mqtt.subscribe(jsonRead(configSetup, "mqttPrefix").c_str());  // Для приема получения HELLOW и подтверждения связи
-          client_mqtt.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/+/control").c_str()); // Подписываемся на топики control
-          client_mqtt.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/order").c_str()); // Подписываемся на топики order
+          client_mqtt.subscribe(jsonReadStr(configSetup, "mqttPrefix").c_str());  // Для приема получения HELLOW и подтверждения связи
+          client_mqtt.subscribe((jsonReadStr(configSetup, "mqttPrefix") + "/" + chipID + "/+/control").c_str()); // Подписываемся на топики control
+          client_mqtt.subscribe((jsonReadStr(configSetup, "mqttPrefix") + "/" + chipID + "/order").c_str()); // Подписываемся на топики order
           Serial.println("[V] Callback set, subscribe done");
           return true;
         } else {
@@ -157,34 +157,34 @@ void outcoming_date() {
 
 //======================================CONFIG==================================================
 boolean sendMQTT(String end_of_topik, String data) {
-  String topik = jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/" + end_of_topik;
+  String topik = jsonReadStr(configSetup, "mqttPrefix") + "/" + chipID + "/" + end_of_topik;
   boolean send_status = client_mqtt.beginPublish(topik.c_str(), data.length(), false);
   client_mqtt.print(data);
   client_mqtt.endPublish();
   return send_status;
 }
 boolean sendCHART(String topik, String data) {
-  topik = jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
+  topik = jsonReadStr(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
   boolean send_status = client_mqtt.beginPublish(topik.c_str(), data.length(), false);
   client_mqtt.print(data);
   client_mqtt.endPublish();
   return send_status;
 }
 boolean sendCHART_test(String topik, String data) {
-  topik = jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
+  topik = jsonReadStr(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
   boolean send_status = client_mqtt.publish (topik.c_str(), data.c_str(), false);
   return send_status;
 }
 //======================================STATUS==================================================
 void sendSTATUS(String topik, String state) {
-  topik = jsonRead(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
+  topik = jsonReadStr(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
   String json_ = "{}";
   jsonWriteStr(json_, "status", state);
   int send_status =  client_mqtt.publish (topik.c_str(), json_.c_str(), false);
 }
 //======================================CONTROL==================================================
 void sendCONTROL(String id, String topik, String state) {
-  String  all_line = jsonRead(configSetup, "mqttPrefix") + "/" + id + "/" + topik + "/control";
+  String  all_line = jsonReadStr(configSetup, "mqttPrefix") + "/" + id + "/" + topik + "/control";
   int send_status = client_mqtt.publish (all_line.c_str(), state.c_str(), false);
 }
 
@@ -284,7 +284,7 @@ String stateMQTT() {
 /*void scenario_devices_topiks_subscribe() {
 
   //SCENARIO ANALOG > 5 800324-1458415 rel1 0
-  if (jsonRead(configSetup, "scenario") == "1") {
+  if (jsonReadStr(configSetup, "scenario") == "1") {
     //String all_text = readFile("firmware.s.txt", 1024) + "\r\n";
     String all_text = scenario + "\r\n";
     all_text.replace("\r\n", "\n");
@@ -293,7 +293,7 @@ String stateMQTT() {
       String line_ = selectToMarker (all_text, "\n");
       String id = selectFromMarkerToMarker(line_, " ", 4);
       if (id != "not found") {
-        client_mqtt.subscribe((jsonRead(configSetup, "mqttPrefix") + "/" + id + "/+/status").c_str(), 0);
+        client_mqtt.subscribe((jsonReadStr(configSetup, "mqttPrefix") + "/" + id + "/+/status").c_str(), 0);
         Serial.println("subscribed to device, id: " + id);
       }
       all_text = deleteBeforeDelimiter(all_text, "\n");
@@ -303,7 +303,7 @@ String stateMQTT() {
 */
 /*void scenario_devices_test_msg_send() {
 
-  if (jsonRead(configSetup, "scenario") == "1") {
+  if (jsonReadStr(configSetup, "scenario") == "1") {
 
     String all_text = scenario + "\r\n";
     all_text.replace("\r\n", "\n");
@@ -313,7 +313,7 @@ String stateMQTT() {
       String id = selectFromMarkerToMarker(line_, " ", 4);
       if (id != "not found") {
         //Serial.println();
-        Serial.println(client_mqtt.publish ((jsonRead(configSetup, "mqttPrefix") + "/" + id).c_str(), "CHECK", true));
+        Serial.println(client_mqtt.publish ((jsonReadStr(configSetup, "mqttPrefix") + "/" + id).c_str(), "CHECK", true));
 
       }
       all_text = deleteBeforeDelimiter(all_text, "\n");

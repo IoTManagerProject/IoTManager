@@ -133,7 +133,7 @@ void buttonSet() {
 
   String button_number = sCmd.next();
   String button_state = sCmd.next();
-  String button_param = jsonRead(optionJson, "button_param" + button_number);
+  String button_param = jsonReadStr(optionJson, "button_param" + button_number);
 
   if (button_param != "na" || button_param != "scenario" || button_param.indexOf("line") != -1) {
     digitalWrite(button_param.toInt(), button_state.toInt());
@@ -167,7 +167,7 @@ void buttonSet() {
 
 void buttonChange() {
   String button_number = sCmd.next();
-  String current_state = jsonRead(configJson, "button" + button_number);
+  String current_state = jsonReadStr(configJson, "button" + button_number);
   if (current_state == "1") {
     current_state = "0";
   } else if (current_state == "0") {
@@ -220,7 +220,7 @@ void pwmSet() {
   String pwm_state = sCmd.next();
   int pwm_state_int = pwm_state.toInt();
 
-  int pin = jsonReadtoInt(optionJson, "pwm_pin" + pwm_number);
+  int pin = jsonReadInt(optionJson, "pwm_pin" + pwm_number);
   analogWrite(pin, pwm_state_int);
 
   eventGen ("pwm", pwm_number);
@@ -367,18 +367,18 @@ void stepperSet() {
   String steps = sCmd.next();
   jsonWriteStr(optionJson, "steps" + stepper_number, steps);
   String stepper_speed = sCmd.next();
-  String pin_step = selectToMarker (jsonRead(optionJson, "stepper" + stepper_number), " ");
-  String pin_dir =  deleteBeforeDelimiter (jsonRead(optionJson, "stepper" + stepper_number), " ");
+  String pin_step = selectToMarker (jsonReadStr(optionJson, "stepper" + stepper_number), " ");
+  String pin_dir =  deleteBeforeDelimiter (jsonReadStr(optionJson, "stepper" + stepper_number), " ");
   Serial.println(pin_step);
   Serial.println(pin_dir);
   if (steps.toInt() > 0) digitalWrite(pin_dir.toInt(), HIGH);
   if (steps.toInt() < 0) digitalWrite(pin_dir.toInt(), LOW);
   if (stepper_number == "1") {
     ts.add(STEPPER1, stepper_speed.toInt(), [&](void*) {
-      int steps_int = abs(jsonReadtoInt(optionJson, "steps1") * 2);
+      int steps_int = abs(jsonReadInt(optionJson, "steps1") * 2);
       static int count;
       count++;
-      String pin_step = selectToMarker (jsonRead(optionJson, "stepper1"), " ");
+      String pin_step = selectToMarker (jsonReadStr(optionJson, "stepper1"), " ");
       digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
       yield();
       if (count > steps_int) {
@@ -390,10 +390,10 @@ void stepperSet() {
   }
   if (stepper_number == "2") {
     ts.add(STEPPER2, stepper_speed.toInt(), [&](void*) {
-      int steps_int = abs(jsonReadtoInt(optionJson, "steps2") * 2);
+      int steps_int = abs(jsonReadInt(optionJson, "steps2") * 2);
       static int count;
       count++;
-      String pin_step = selectToMarker (jsonRead(optionJson, "stepper2"), " ");
+      String pin_step = selectToMarker (jsonReadStr(optionJson, "stepper2"), " ");
       digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
       yield();
       if (count > steps_int) {
@@ -465,13 +465,13 @@ void servoSet() {
   String servo_state = sCmd.next();
   int servo_state_int = servo_state.toInt();
 
-  int pin = jsonReadtoInt(optionJson, "servo_pin" + servo_number);
+  int pin = jsonReadInt(optionJson, "servo_pin" + servo_number);
 
   servo_state_int = map(servo_state_int,
-                        jsonReadtoInt(optionJson, "s_min_val" + servo_number),
-                        jsonReadtoInt(optionJson, "s_max_val" + servo_number),
-                        jsonReadtoInt(optionJson, "s_min_deg" + servo_number),
-                        jsonReadtoInt(optionJson, "s_max_deg" + servo_number));
+                        jsonReadInt(optionJson, "s_min_val" + servo_number),
+                        jsonReadInt(optionJson, "s_max_val" + servo_number),
+                        jsonReadInt(optionJson, "s_min_deg" + servo_number),
+                        jsonReadInt(optionJson, "s_max_deg" + servo_number));
 
   if (servo_number == "1") {
 #ifdef ESP8266
@@ -523,7 +523,7 @@ void mqttOrderSend() {
   String id = sCmd.next();
   String order = sCmd.next();
 
-  String  all_line = jsonRead(configSetup, "mqttPrefix") + "/" + id + "/order";
+  String  all_line = jsonReadStr(configSetup, "mqttPrefix") + "/" + id + "/order";
   //Serial.print(all_line);
   //Serial.print("->");
   //Serial.println(order);
