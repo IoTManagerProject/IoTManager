@@ -41,8 +41,8 @@
     {
       "type": "link",
       "title": "Конфигурация устройства",
-      "action": "/?configuration",
-      "class": "btn btn-block btn-primary"
+      "action": "/?set.device",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "hr"
@@ -50,32 +50,32 @@
     {
       "type": "link",
       "title": "Список других устройств в сети",
-      "action": "/?dev",
-      "class": "btn btn-block btn-success"
+      "action": "/?set.udp",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Конфигурация WIFI",
-      "action": "/?setup",
-      "class": "btn btn-block btn-success"
+      "action": "/?set.wifi",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Конфигурация MQTT",
-      "action": "/?mqtt",
-      "class": "btn btn-block btn-success"
+      "action": "/?set.mqtt",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Конфигурация push",
-      "action": "/?pushingbox",
-      "class": "btn btn-block btn-success"
+      "action": "/?set.push",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Утилиты",
-      "action": "/?utilities",
-      "class": "btn btn-block btn-success"
+      "action": "/?set.utilities",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "h3",
@@ -91,7 +91,7 @@
       "title": "Обновить прошивку",
       "action": "/check",
       "response": "[[my-block]]",
-      "class": "btn btn-block btn-danger"
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "hr"
@@ -100,13 +100,13 @@
       "type": "link",
       "title": "Скачать приложение IoT Manager для android",
       "action": "https://play.google.com/store/apps/details?id=ru.esp8266.iotmanager",
-      "class": "btn btn-block btn-warning"
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Скачать приложение IoT Manager для iphone",
       "action": "https://apps.apple.com/ru/app/iot-manager/id1155934877",
-      "class": "btn btn-block btn-warning"
+      "class": "btn btn-block btn-default"
     }
   ]
 }

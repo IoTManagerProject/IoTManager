@@ -1,17 +1,4 @@
 #ifdef push_enable
-void Push_init() {
-  server.on("/pushingboxDate", HTTP_GET, [](AsyncWebServerRequest * request) {
-
-    if (request->hasArg("pushingbox_id")) {
-      jsonWriteStr(configSetup, "pushingbox_id", request->getParam("pushingbox_id")->value());
-    }
-
-    saveConfig();
-
-    request->send(200, "text/text", "ok"); // отправляем ответ о выполнении
-  });
-}
-
 void pushControl() {
 
   String title = sCmd.next();

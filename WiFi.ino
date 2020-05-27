@@ -1,54 +1,7 @@
-void WIFI_init() {
-
-  // --------------------Получаем ssid password со страницы
-  server.on("/ssid", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (request->hasArg("ssid")) {
-      jsonWriteStr(configSetup, "ssid", request->getParam("ssid")->value());
-    }
-    if (request->hasArg("password")) {
-      jsonWriteStr(configSetup, "password", request->getParam("password")->value());
-    }
-    saveConfig();                 // Функция сохранения данных во Flash
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
-  // --------------------Получаем ssidAP passwordAP со страницы
-  server.on("/ssidap", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (request->hasArg("ssidAP")) {
-      jsonWriteStr(configSetup, "ssidAP", request->getParam("ssidAP")->value());
-    }
-    if (request->hasArg("passwordAP")) {
-      jsonWriteStr(configSetup, "passwordAP", request->getParam("passwordAP")->value());
-    }
-    saveConfig();                 // Функция сохранения данных во Flash
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
-
-  // --------------------Получаем логин и пароль для web со страницы
-  server.on("/web", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (request->hasArg("web_login")) {
-      jsonWriteStr(configSetup, "web_login", request->getParam("web_login")->value());
-    }
-    if (request->hasArg("web_pass")) {
-      jsonWriteStr(configSetup, "web_pass", request->getParam("web_pass")->value());
-    }
-    saveConfig();                 // Функция сохранения данных во Flash
-    //Web_server_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
-
-  server.on("/restart", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (request->hasArg("device")) {
-      if (request->getParam("device")->value() == "ok") ESP.restart();
-    }
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
-  ROUTER_Connecting();
-}
-
 void ROUTER_Connecting() {
-
-  led_blink("slow");
   
+  led_blink("slow");
+
   WiFi.mode(WIFI_STA);
 
   byte tries = 20;
@@ -94,11 +47,9 @@ void ROUTER_Connecting() {
     Serial.print(WiFi.localIP());
     Serial.println("");
     jsonWriteStr(configJson, "ip", WiFi.localIP().toString());
-
     led_blink("off");
-    
     //add_dev_in_list("dev.txt", chipID, WiFi.localIP().toString());
-
+    MQTT_init();
   }
 }
 
@@ -117,17 +68,16 @@ bool StartAPMode() {
   Serial.println(myIP);
   jsonWriteStr(configJson, "ip", myIP.toString());
 
-  if (jsonReadInt(optionJson, "pass_status") != 1) {
+  //if (jsonReadInt(optionJson, "pass_status") != 1) {
     ts.add(ROUTER_SEARCHING, 10 * 1000, [&](void*) {
       Serial.println("->try find router");
       if (RouterFind(jsonReadStr(configSetup, "ssid"))) {
         ts.remove(ROUTER_SEARCHING);
         WiFi.scanDelete();
         ROUTER_Connecting();
-        MQTT_init();
       }
     }, nullptr, true);
-  }
+  //}
   return true;
 }
 

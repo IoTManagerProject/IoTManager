@@ -1,6 +1,5 @@
 //===============================================ИНИЦИАЛИЗАЦИЯ================================================
 void MQTT_init() {
-
   ts.add(WIFI_MQTT_CONNECTION_CHECK, wifi_mqtt_reconnecting, [&](void*) {
     up_time();
     if (WiFi.status() == WL_CONNECTED) {
@@ -19,39 +18,6 @@ void MQTT_init() {
       StartAPMode();
     }
   }, nullptr, true);
-
-
-  server.on("/mqttSave", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (request->hasArg("mqttServer")) {
-      jsonWriteStr(configSetup, "mqttServer", request->getParam("mqttServer")->value());
-    }
-    if (request->hasArg("mqttPort")) {
-      int port = (request->getParam("mqttPort")->value()).toInt();
-      jsonWriteInt(configSetup, "mqttPort", port);
-    }
-    if (request->hasArg("mqttPrefix")) {
-      jsonWriteStr(configSetup, "mqttPrefix", request->getParam("mqttPrefix")->value());
-    }
-    if (request->hasArg("mqttUser")) {
-      jsonWriteStr(configSetup, "mqttUser", request->getParam("mqttUser")->value());
-    }
-    if (request->hasArg("mqttPass")) {
-      jsonWriteStr(configSetup, "mqttPass", request->getParam("mqttPass")->value());
-    }
-    saveConfig();
-    mqtt_connection = true;
-
-    request->send(200, "text/text", "ok");
-  });
-
-  server.on("/mqttCheck", HTTP_GET, [](AsyncWebServerRequest * request) {
-    String tmp = "{}";
-    jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + stateMQTT());
-    jsonWriteStr(tmp, "class", "pop-up");
-    request->send(200, "text/text", tmp);
-  });
-
-
 }
 
 
@@ -284,7 +250,7 @@ String stateMQTT() {
 /*void scenario_devices_topiks_subscribe() {
 
   //SCENARIO ANALOG > 5 800324-1458415 rel1 0
-  if (jsonReadStr(configSetup, "scenario") == "1") {
+  if (jsonReadStr(configSetup, "scen") == "1") {
     //String all_text = readFile("firmware.s.txt", 1024) + "\r\n";
     String all_text = scenario + "\r\n";
     all_text.replace("\r\n", "\n");
@@ -303,7 +269,7 @@ String stateMQTT() {
 */
 /*void scenario_devices_test_msg_send() {
 
-  if (jsonReadStr(configSetup, "scenario") == "1") {
+  if (jsonReadStr(configSetup, "scen") == "1") {
 
     String all_text = scenario + "\r\n";
     all_text.replace("\r\n", "\n");

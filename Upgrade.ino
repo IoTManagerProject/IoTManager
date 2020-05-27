@@ -1,5 +1,4 @@
 void initUpgrade() {
-
 #ifdef ESP8266
   if (WiFi.status() == WL_CONNECTED) last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
 #endif
@@ -9,47 +8,6 @@ void initUpgrade() {
   jsonWriteStr(configSetup, "last_version", last_version);
   Serial.print("[i] Last firmware version: ");
   Serial.println(last_version);
-
-  server.on("/check", HTTP_GET, [](AsyncWebServerRequest * request) {
-    upgrade_url = true;
-    Serial.print("[i] Last firmware version: ");
-    Serial.println(last_version);
-    String tmp = "{}";
-    if (WiFi.status() == WL_CONNECTED) {
-      if (mb_4_of_memory) {
-        if (last_version != "") {
-          if (last_version != "error") {
-            if (last_version == firmware_version) {
-              jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
-              jsonWriteStr(tmp, "class", "pop-up");
-            } else {
-              jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Имеется новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
-              jsonWriteStr(tmp, "class", "pop-up");
-            }
-          } else {
-            jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Ошибка... Cервер не найден. Попробуйте позже...");
-            jsonWriteStr(tmp, "class", "pop-up");
-          }
-        } else {
-          jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Нажмите на кнопку \"обновить прошивку\" повторно...");
-          jsonWriteStr(tmp, "class", "pop-up");
-        }
-      } else {
-        jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Обновление по воздуху не поддерживается, модуль имеет меньше 4 мб памяти...");
-        jsonWriteStr(tmp, "class", "pop-up");
-      }
-    } else {
-      jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Устройство не подключен к роутеру...");
-      jsonWriteStr(tmp, "class", "pop-up");
-    }
-    request->send(200, "text/text", tmp);
-  });
-
-  server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest * request) {
-    upgrade = true;
-    String tmp = "{}";
-    request->send(200, "text/text", "ok");
-  });
 }
 
 void do_upgrade_url() {

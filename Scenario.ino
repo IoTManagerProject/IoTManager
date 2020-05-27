@@ -1,6 +1,6 @@
 void handleScenario() {
 
-  if (jsonReadStr(configSetup, "scenario") == "1") {
+  if (jsonReadStr(configSetup, "scen") == "1") {
     if ((jsonReadStr(optionJson, "scenario_status") != "")) {
       int i = 0;
       String str = scenario;                                                   //читаем переменную с сценариями (то что из файла на странице)
@@ -73,7 +73,7 @@ void handleScenario() {
 
 void eventGen (String event_name, String number) {   //событие выглядит как имя плюс set плюс номер: button+Set+1
 
-  if (jsonReadStr(configSetup, "scenario") == "1") {
+  if (jsonReadStr(configSetup, "scen") == "1") {
     String tmp = jsonReadStr(optionJson, "scenario_status") ;    //генерирование события
     //Serial.println(event_name);
     jsonWriteStr(optionJson, "scenario_status", tmp + event_name + number + ",");

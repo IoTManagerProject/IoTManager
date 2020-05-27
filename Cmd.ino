@@ -107,8 +107,8 @@ void button() {
     digitalWrite(button_param.toInt(), start_state.toInt());
   }
 
-  if  (button_param == "scenario") {
-    jsonWriteStr(configSetup, "scenario", start_state);
+  if  (button_param == "scen") {
+    jsonWriteStr(configSetup, "scen", start_state);
     Scenario_init();
     saveConfig();
   }
@@ -135,12 +135,12 @@ void buttonSet() {
   String button_state = sCmd.next();
   String button_param = jsonReadStr(optionJson, "button_param" + button_number);
 
-  if (button_param != "na" || button_param != "scenario" || button_param.indexOf("line") != -1) {
+  if (button_param != "na" || button_param != "scen" || button_param.indexOf("line") != -1) {
     digitalWrite(button_param.toInt(), button_state.toInt());
   }
 
-  if  (button_param == "scenario") {
-    jsonWriteStr(configSetup, "scenario", button_state);
+  if  (button_param == "scen") {
+    jsonWriteStr(configSetup, "scen", button_state);
     Scenario_init();
     saveConfig();
   }
