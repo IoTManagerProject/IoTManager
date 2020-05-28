@@ -31,3 +31,7 @@ People who do not know how to program can use ready-made presets (option 1), and
 Scenarios:
 
 The web interface has the ability to configure Scenarios. An event occurs on one esp, and a reaction to this event can setup to occurs on another.
+
+Logging of sensors data in this project made with out any server. All data for graf storring in esp flash. You can look any time your sensor history for 2 - 3 days or week in mobile app in graf.  And for this option needed only esp.
+
+
