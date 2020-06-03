@@ -26,7 +26,7 @@ void setup() {
   Web_server_init();
   Serial.println("[V] Web_server_init");
   //--------------------------------------------------------------
-  //web_init();
+  web_init();
   Serial.println("[V] web_init");
   //--------------------------------------------------------------
   Time_Init();

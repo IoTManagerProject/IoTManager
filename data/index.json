@@ -9,7 +9,7 @@
     {
       "type": "h5",
       "title": "{{name}}",
-      "class": "alert-warning"
+      "class": "alert-default"
     },
     {
       "type": "h4",

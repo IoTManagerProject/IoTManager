@@ -1,6 +1,5 @@
 {
   "configs": [
-    "/config.live.json",
     "/config.setup.json",
     "/lang/lang.ru.json"
   ],
@@ -10,7 +9,7 @@
     {
       "type": "h5",
       "title": "{{name}}",
-      "class": "alert-warning"
+      "class": "alert-default"
     },
     {
       "type": "h3",
@@ -35,13 +34,13 @@
     },
     {
       "type": "link",
-      "title": "Переформировать список устройств",
+      "title": "{{SetUDPUpdateList}}",
       "action": "set?updatelist",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
-      "title": "Обновить страницу",
+      "title": "{{SetUDPUpdatePage}}",
       "action": "set?updatepage",
       "class": "btn btn-block btn-default"
     },
@@ -55,18 +54,18 @@
     },
     {
       "type": "h3",
-      "title": "Имя этого устройства:"
+      "title": "{{SetUDPNameOfDev}}"
     },
     {
       "type": "input",
-      "title": "Имя устройства",
+      "title": "{{SetUDPNameOfDev}}",
       "name": "dev_name",
       "state": "{{name}}",
       "pattern": "[A-Za-z0-9]{6,12}"
     },
     {
       "type": "button",
-      "title": "Сохранить",
+      "title": "{{ButSave}}",
       "action": "name?arg=[[dev_name]]",
       "class": "btn btn-block btn-default"
     },
@@ -76,16 +75,20 @@
     {
       "type": "checkbox",
       "name": "udponoff",
-      "title": "Включить обмен данными между устройствами",
+      "title": "{{SetUDPDateExchange}}",
       "action": "/set?udponoff=[[udponoff]]",
       "state": "{{udponoff}}"
+    },
+    {
+      "type": "text",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #808080; border-radius: 3px; background-color: #E6E6FA; padding: 10px;'>{{SetUDPWarn2}}</p></font></div>"
     },
     {
       "type": "hr"
     },
     {
       "type": "link",
-      "title": "Главная",
+      "title": "{{ButMainPage}}",
       "action": "/",
       "class": "btn btn-block btn-default"
     }
