@@ -1,68 +1,85 @@
 {
   "configs": [
-    "/config.setup.json"
+    "/config.setup.json",
+    "/lang/lang.ru.json"
   ],
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
   "content": [
     {
       "type": "h5",
       "title": "{{name}}",
-      "class": "alert-warning"
+      "class": "alert-default"
+      
     },
     {
-      "type": "text",
-      "class": "alert alert-warning",
-      "title": "Обратите внимание что поле prefix может состоять только из одного слова и одного разделителя: <b>/prefix</b>, вариант вида: <b>/prefix1/prefix2</b> работать не будет. После изменения поля prefix необходимо перезагрузить устройство"
+      "type": "link",
+      "title": "{{ButMainPage}}",
+      "action": "/",
+      "class": "btn btn-block btn-default"
     },
+    {
+      "type": "hr"
+    },
+   
     {
       "type": "h4",
-      "title": "Server name:"
+      "title": "{{SetMQTTServerName}}",
+      "style": "width:60%;float:left;"
     },
     {
       "type": "input",
       "title": "",
-      "name": "1",
-      "state": "{{mqttServer}}"
+      "name": "mqttServer-arg",
+      "state": "{{mqttServer}}",
+      "style": "width:40%;float:right"
     },
     {
       "type": "h4",
-      "title": "Port:"
+      "title": "{{SetMQTTPort}}",
+      "style": "width:60%;float:left;"
     },
     {
       "type": "input",
       "title": "",
-      "name": "2",
-      "state": "{{mqttPort}}"
+      "name": "mqttPort-arg",
+      "state": "{{mqttPort}}",
+      "style": "width:40%;float:right"
     },
     {
       "type": "h4",
-      "title": "Prefix:"
+      "title": "{{SetMQTTPrefix}}",
+      "style": "width:60%;float:left;"
     },
     {
       "type": "input",
       "title": "",
-      "name": "3",
-      "state": "{{mqttPrefix}}"
+      "name": "mqttPrefix-arg",
+      "state": "{{mqttPrefix}}",
+      "style": "width:40%;float:right"
     },
     {
       "type": "h4",
-      "title": "User name:"
+      "title": "{{SetMQTTUserName}}",
+      "style": "width:60%;float:left;"
     },
     {
       "type": "input",
       "title": "",
-      "name": "4",
-      "state": "{{mqttUser}}"
+      "name": "mqttUser-arg",
+      "state": "{{mqttUser}}",
+      "style": "width:40%;float:right"
     },
     {
       "type": "h4",
-      "title": "Password:"
+      "title": "{{SetMQTTPassword}}",
+      "style": "width:60%;float:left;"
     },
     {
       "type": "input",
       "title": "",
-      "name": "5",
-      "state": "{{mqttPass}}"
+      "name": "mqttPass-arg",
+      "state": "{{mqttPass}}",
+      "style": "width:40%;float:right"
     },
     {
       "type": "h3",
@@ -70,42 +87,47 @@
       "style": "position:fixed;top:30%;left:50%;width:400px;margin-left:-200px;text-align:center;",
       "class": "hidden"
     },
+    
     {
-      "type": "text",
-      "class": "alert alert-warning",
-      "title": "Прежде чем нажимать на кнопку <b>'Отправить настройки MQTT'</b> сохрание их, если Вы их меняли. Настройки получат и перезапишут все устройства в локальной сети"
+      "type": "button",
+      "title": "{{ButSave}}",
+      "style": "width:100%;float:left;",
+      "action": "set?mqttServer=[[mqttServer-arg]]&mqttPort=[[mqttPort-arg]]&mqttPrefix=[[mqttPrefix-arg]]&mqttUser=[[mqttUser-arg]]&mqttPass=[[mqttPass-arg]]",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "button",
-      "title": "Сохранить",
-      "action": "mqttSave?mqttServer=[[1]]&mqttPort=[[2]]&mqttPrefix=[[3]]&mqttUser=[[4]]&mqttPass=[[5]]",
-      "class": "btn btn-block btn-success"
-    },
-    {
-      "type": "button",
-      "title": "Отправить настройки MQTT с этого устройства на все остальные",
-      "action": "udp?arg=2",
-      "class": "btn btn-block btn-success"
+      "style": "width:100%;float:left;",
+      "title": "{{SetMQTTSendSettings}}",
+      "action": "set?mqttsend",
+      "class": "btn btn-block btn-default"
     },
     
     {
       "type": "button",
+      "style": "width:100%;float:left;",
       "title": "Проверить соединение с MQTT",
-      "action": "mqttCheck",
+      "action": "set?mqttcheck",
       "response": "[[my-block]]",
-      "class": "btn btn-block btn-success"
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "text",
+      "style": "width:100%;float:left;",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetMQTTWarn1}}</p></font></div>"
+     
+    },
+    {
+      "type": "text",
+      "style": "width:100%;float:left;",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetMQTTWarn2}}</p></font></div>"
     },
     {
       "type": "link",
+      "style": "width:100%;float:left;",
       "title": "Перезагрузить устройство",
       "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
-      "class": "btn btn-block btn-success"
-    },
-    {
-      "type": "link",
-      "title": "Главная",
-      "action": "/",
-      "class": "btn btn-block btn-danger btn-sm"
+      "class": "btn btn-block btn-danger"
     }
   ]
 }

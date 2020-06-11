@@ -17,7 +17,7 @@ void setup() {
   ROUTER_Connecting();
   Serial.println("[V] ROUTER_Connecting");
   //--------------------------------------------------------------
-  statistics_init();
+  uptime_init();
   Serial.println("[V] statistics_init");
   //--------------------------------------------------------------
   initUpgrade();

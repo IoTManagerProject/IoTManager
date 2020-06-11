@@ -5,8 +5,8 @@ void ROUTER_Connecting() {
   WiFi.mode(WIFI_STA);
 
   byte tries = 20;
-  String _ssid = jsonReadStr(configSetup, "ssid");
-  String _password = jsonReadStr(configSetup, "password");
+  String _ssid = jsonReadStr(configSetupJson, "routerssid");
+  String _password = jsonReadStr(configSetupJson, "routerpass");
   //WiFi.persistent(false);
 
   if (_ssid == "" && _password == "") {
@@ -24,7 +24,7 @@ void ROUTER_Connecting() {
     if (WiFi.status() == WL_CONNECT_FAILED) {
       Serial.println("[E] password is not correct");
       tries = 1;
-      jsonWriteInt(optionJson, "pass_status", 1);
+      jsonWriteInt(configOptionJson, "pass_status", 1);
     }
     Serial.print(".");
     delay(1000);
@@ -46,7 +46,7 @@ void ROUTER_Connecting() {
     Serial.print("[V] IP address: http://");
     Serial.print(WiFi.localIP());
     Serial.println("");
-    jsonWriteStr(configJson, "ip", WiFi.localIP().toString());
+    jsonWriteStr(configSetupJson, "ip", WiFi.localIP().toString());
     led_blink("off");
     //add_dev_in_list("dev.txt", chipID, WiFi.localIP().toString());
     MQTT_init();
@@ -59,19 +59,19 @@ bool StartAPMode() {
 
   WiFi.mode(WIFI_AP);
 
-  String _ssidAP = jsonReadStr(configSetup, "ssidAP");
-  String _passwordAP = jsonReadStr(configSetup, "passwordAP");
+  String _ssidAP = jsonReadStr(configSetupJson, "apssid");
+  String _passwordAP = jsonReadStr(configSetupJson, "appass");
   WiFi.softAP(_ssidAP.c_str(), _passwordAP.c_str());
   IPAddress myIP = WiFi.softAPIP();
   led_blink("on");
   Serial.print("AP IP address: ");
   Serial.println(myIP);
-  jsonWriteStr(configJson, "ip", myIP.toString());
+  jsonWriteStr(configSetupJson, "ip", myIP.toString());
 
-  //if (jsonReadInt(optionJson, "pass_status") != 1) {
+  //if (jsonReadInt(configOptionJson, "pass_status") != 1) {
     ts.add(ROUTER_SEARCHING, 10 * 1000, [&](void*) {
       Serial.println("->try find router");
-      if (RouterFind(jsonReadStr(configSetup, "ssid"))) {
+      if (RouterFind(jsonReadStr(configSetupJson, "routerssid"))) {
         ts.remove(ROUTER_SEARCHING);
         WiFi.scanDelete();
         ROUTER_Connecting();
@@ -132,12 +132,12 @@ boolean RouterFind(String ssid) {
   for (uint8_t i = 0; i < n; i++) {
     JsonObject& data = networks.createNestedObject();
     String ssidMy = WiFi.SSID(i);
-    data["ssid"] = ssidMy;
+    data["routerssid"] = ssidMy;
     data["pass"] = (WiFi.encryptionType(i) == ENC_TYPE_NONE) ? "" : "*";
     int8_t dbm = WiFi.RSSI(i);
     data["dbm"] = dbm;
-    if (ssidMy == jsonReadStr(configSetup, "ssid")) {
-      jsonWriteStr(configJson, "dbm", dbm);
+    if (ssidMy == jsonReadStr(configSetupJson, "routerssid")) {
+      jsonWriteStr(configLiveJson, "dbm", dbm);
     }
   }
   String root;
@@ -149,14 +149,14 @@ boolean RouterFind(String ssid) {
   {
    "type":"wifi",
    "title":"{{LangWiFi1}}",
-   "name":"ssid",
+   "name":"routerssid",
    "state":"{{ssid}}",
    "pattern":".{1,}"
   },
   {
-   "type":"password",
+   "type":"routerpass",
    "title":"{{LangPass}}",
-   "name":"ssidPass",
+   "name":"routerpass",
    "state":"{{ssidPass}}",
    "pattern":".{8,}"
   },

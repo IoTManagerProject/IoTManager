@@ -5,7 +5,7 @@ void initUpgrade() {
 #ifdef ESP32
   if (WiFi.status() == WL_CONNECTED) last_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
 #endif
-  jsonWriteStr(configSetup, "last_version", last_version);
+  jsonWriteStr(configSetupJson, "last_version", last_version);
   Serial.print("[i] Last firmware version: ");
   Serial.println(last_version);
 }
@@ -15,11 +15,11 @@ void do_upgrade_url() {
     upgrade_url = false;
 #ifdef ESP32
     last_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
-    jsonWriteStr(configSetup, "last_version", last_version);
+    jsonWriteStr(configSetupJson, "last_version", last_version);
 #endif
 #ifdef ESP8266
     last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
-    jsonWriteStr(configSetup, "last_version", last_version);
+    jsonWriteStr(configSetupJson, "last_version", last_version);
 #endif
   }
 }
@@ -31,7 +31,7 @@ void upgrade_firmware() {
   String configSetup_for_update;
   scenario_for_update = readFile("firmware.s.txt", 4000);
   config_for_update = readFile("firmware.c.txt", 4000);
-  configSetup_for_update = configSetup;
+  configSetup_for_update = configSetupJson;
 
   Serial.println("Start upgrade SPIFFS, please wait...");
 

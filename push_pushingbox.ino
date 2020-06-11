@@ -9,7 +9,7 @@ void pushControl() {
   static String body_old;
 
   const char* logServer = "api.pushingbox.com";
-  String deviceId = jsonReadStr(configSetup, "pushingbox_id");
+  String deviceId = jsonReadStr(configSetupJson, "pushingboxid");
 
   Serial.println("- starting client");
 

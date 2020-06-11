@@ -5,7 +5,7 @@ void All_init() {
 }
 
 void Device_init() {
-  
+
   logging_value_names_list = "";
   enter_to_logging_counter = LOG1 - 1;
 
@@ -47,47 +47,27 @@ void Device_init() {
 //-------------------------------сценарии-----------------------------------------------------
 
 void Scenario_init() {
-  if (jsonReadStr(configSetup, "scen") == "1") {
+  if (jsonReadStr(configSetupJson, "scen") == "1") {
     scenario = readFile("firmware.s.txt", 2048);
   }
 }
 
-void up_time() {
-  uint32_t ss = millis() / 1000;
-  uint32_t mm = ss / 60;
-  uint32_t hh = mm / 60;
-  uint32_t dd = hh / 24;
-
-  String out = "";
-
-  if (ss != 0) {
-    out = "[i] uptime = " + String(ss) + " sec";
-    jsonWriteStr(configJson, "uptime", String(ss) + " sec");
-  }
-  if (mm != 0) {
-    out = "[i] uptime = " + String(mm) + " min";
-    jsonWriteStr(configJson, "uptime", String(mm) + " min");
-  }
-  if (hh != 0) {
-    out = "[i] uptime = " + String(hh) + " hours";
-    jsonWriteStr(configJson, "uptime", String(hh) + " hours");
-  }
-  if (dd != 0) {
-    out = "[i] uptime = " + String(dd) + " days";
-    jsonWriteStr(configJson, "uptime", String(dd) + " days");
-  }
-  Serial.println(out + ", mqtt_lost_error: " + String(mqtt_lost_error) + ", wifi_lost_error: " + String(wifi_lost_error));
-}
-
-void statistics_init() {
+void uptime_init() {
+  ts.add(UPTIME, 5000, [&](void*) {
+    handle_uptime();
+  }, nullptr, true);
   ts.add(STATISTICS, statistics_update, [&](void*) {
-
-    statistics();
-
+    handle_statistics();
   }, nullptr, true);
 }
 
-void statistics() {
+void handle_uptime() {
+  if (myUpTime.check()) {
+    jsonWriteStr(configSetupJson, "uptime", uptime_as_string());
+  }
+}
+
+void handle_statistics() {
   if (WiFi.status() == WL_CONNECTED) {
     String urls = "http://backup.privet.lv/visitors/?";
     //-----------------------------------------------------------------

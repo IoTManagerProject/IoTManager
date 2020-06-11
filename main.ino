@@ -171,7 +171,7 @@ String u64toStr(uint64_t input)
 //==============================================================================================================
 //=============================================CONFIG===========================================================
 void saveConfig () {
-  writeFile("config.json", configSetup);
+  writeFile("config.json", configSetupJson);
 }
 //==============================================================================================================
 //=============================================STRING===========================================================
@@ -286,7 +286,7 @@ String safeDataToFile(String data, String Folder) {
   fileName = Folder + "/" + fileName + ".txt";
   // addFile(fileName, GetTime() + "/" + data);
   Serial.println(fileName);
-  jsonWriteStr(configJson, "test", fileName);
+  jsonWriteStr(configLiveJson, "test", fileName);
 }
 // ------------- Чтение файла в строку -------------------------------------------------------------------------------
 String readFile(String fileName, size_t len ) {
@@ -350,7 +350,7 @@ String readFileString(String fileName, String found) {
 //=======================================УПРАВЛЕНИЕ ВИДЖЕТАМИ MQTT=========================================================
 void sendCONFIG(String topik, String widgetConfig, String key, String date) {
   yield();
-  topik = jsonReadStr(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/status";
+  topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/" + topik + "/status";
   String outer = "{\"widgetConfig\":";
   String inner = "{\"";
   inner = inner + key;

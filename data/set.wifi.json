@@ -1,6 +1,7 @@
 {
   "configs": [
-    "/config.setup.json"
+    "/config.setup.json",
+    "/lang/lang.ru.json"
   ],
   "title": "Конфигурация",
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
@@ -8,146 +9,154 @@
     {
       "type": "h5",
       "title": "{{name}}",
-      "class": "alert-warning"
+      "class": "alert-default"
     },
     {
       "type": "link",
-      "title": "Главная",
+      "title": "{{ButMainPage}}",
       "action": "/",
-      "class": "btn btn-block btn-danger"
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "hr"
     },
     {
-      "type": "h2",
-      "title": "Имя устройства"
+      "type": "h3",
+      "title": "{{SetWiFiNameOfDev}}"
     },
     {
       "type": "input",
-      "title": "Имя устройства",
-      "name": "dev_name",
+      "title": "{{SetWiFiNameOfDev}}",
+      "name": "devname-arg",
       "state": "{{name}}",
       "pattern": "[A-Za-z0-9]{6,12}"
     },
     {
       "type": "button",
-      "title": "Сохранить",
-      "action": "name?arg=[[dev_name]]",
-      "class": "btn btn-block btn-success"
+      "title": "{{ButSave}}",
+      "action": "set?devname=[[devname-arg]]",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "text",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetWiFiWarn1}}</p></font></div>"
     },
     {
       "type": "hr"
     },
     {
-      "type": "h2",
-      "title": "Подключение к Wi-Fi роутеру"
+      "type": "h3",
+      "title": "{{SetWiFiRouterConnect}}"
     },
     {
       "type": "input",
-      "title": "Сеть",
-      "name": "ssid",
-      "state": "{{ssid}}"
+      "title": "",
+      "name": "routerssid-arg",
+      "state": "{{routerssid}}"
     },
     {
       "type": "password",
-      "title": "Введите пароль",
-      "name": "ssidPass",
-      "state": "{{password}}"
+      "title": "",
+      "name": "routerpass-arg",
+      "state": "{{routerpass}}"
     },
     {
       "type": "button",
-      "title": "Сохранить",
-      "class": "btn btn-block btn-success",
-      "action": "ssid?ssid=[[ssid]]&password=[[ssidPass]]"
+      "title": "{{ButSave}}",
+      "class": "btn btn-block btn-default",
+      "action": "set?routerssid=[[routerssid-arg]]&routerpass=[[routerpass-arg]]"
+    },
+    {
+      "type": "text",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetWiFiWarn2}}</p></font></div>"
     },
     {
       "type": "hr"
     },
     {
-      "type": "h2",
-      "title": "Точка доступа"
+      "type": "h3",
+      "title": "{{SetWiFiAccessPoint}}"
     },
     {
       "type": "input",
-      "title": "Имя WI-FI сети",
-      "name": "ssidap",
-      "state": "{{ssidAP}}",
+      "title": "",
+      "name": "apssid-arg",
+      "state": "{{apssid}}",
       "pattern": ".{1,20}"
     },
     {
       "type": "password",
-      "title": "Пароль",
-      "name": "ssidApPass",
-      "state": "{{passwordAP}}",
+      "title": "",
+      "name": "appass-arg",
+      "state": "{{appass}}",
       "pattern": ".{8,20}"
     },
     {
       "type": "button",
-      "title": "Сохранить",
-      "action": "ssidap?ssidAP=[[ssidap]]&passwordAP=[[ssidApPass]]",
-      "class": "btn btn-block btn-success"
+      "title": "{{ButSave}}",
+      "action": "set?apssid=[[apssid-arg]]&appass=[[appass-arg]]",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "text",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetWiFiWarn3}}</p></font></div>"
     },
     {
       "type": "hr"
     },
     {
-      "type": "h2",
-      "title": "Логин и пароль web interface"
+      "type": "h3",
+      "title": "{{SetWiFiWeb}}"
     },
     {
       "type": "input",
       "title": "Логин",
-      "name": "web-login",
-      "state": "{{web_login}}",
+      "name": "weblogin-arg",
+      "state": "{{weblogin}}",
       "pattern": ".{1,20}"
     },
     {
       "type": "password",
       "title": "Пароль",
-      "name": "web-pass",
-      "state": "{{web_pass}}",
+      "name": "webpass-arg",
+      "state": "{{webpass}}",
       "pattern": ".{1,20}"
     },
     {
       "type": "button",
-      "title": "Сохранить",
-      "action": "web?web_login=[[web-login]]&web_pass=[[web-pass]]",
-      "class": "btn btn-block btn-success"
+      "title": "{{ButSave}}",
+      "action": "set?weblogin=[[weblogin-arg]]&webpass=[[webpass-arg]]",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "hr"
     },
     {
-      "type": "h2",
-      "title": "Временная зона"
+      "type": "h3",
+      "title": "{{SetWiFiTimeZone}}"
     },
     {
       "type": "input",
-      "title": "Временная зона",
-      "name": "1",
+      "title": "",
+      "name": "timezone-arg",
       "state": "{{timezone}}",
       "pattern": ".{1,20}"
     },
     {
       "type": "input",
-      "title": "Название ntp сервера",
-      "name": "2",
+      "title": "",
+      "name": "ntp-arg",
       "state": "{{ntp}}"
     },
     {
       "type": "button",
-      "title": "Сохранить",
-      "action": "time?timezone=[[1]]&ntp=[[2]]",
-      "class": "btn btn-block btn-success"
-    },
-    {
-      "type": "hr"
+      "title": "{{ButSave}}",
+      "action": "set?timezone=[[timezone-arg]]&ntp=[[ntp-arg]]",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "text",
-      "class": "alert alert-warning",
-      "title": "После изменения поля <b>'NTP сервер'</b> необходимо перезагрузить устройство"
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetWiFiWarn4}}</p></font></div>"
     },
     {
       "type": "hr"
@@ -155,8 +164,8 @@
     {
       "type": "link",
       "title": "Перезагрузить устройство",
-      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
-      "class": "btn btn-block btn-warning"
+      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/set?device=ok');}",
+      "class": "btn btn-block btn-danger"
     }
   ]
 }

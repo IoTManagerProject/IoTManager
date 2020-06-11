@@ -1,10 +1,10 @@
 {
     "name": "IoTmanager",
     "chipID": "",
-    "ssidAP": "WiFi2",
-    "passwordAP": "",
-    "ssid": "rise",
-    "password": "hostel3333",
+    "apssid": "IoTmanager",
+    "appass": "",
+    "routerssid": "rise",
+    "routerpass": "hostel3333",
     "timezone": 2,
     "ntp": "pool.ntp.org",
     "mqttServer": "91.204.228.124",
@@ -13,8 +13,8 @@
     "mqttUser": "test",
     "mqttPass": "test",
     "scen": "1",
-    "pushingbox_id": "v7C133E426B0C69E",
-    "web_login": "admin",
-    "web_pass": "admin",
+    "pushingboxid": "v7C133E426B0C69E",
+    "weblogin": "admin",
+    "webpass": "admin",
     "udponoff": "1"
 }

@@ -11,40 +11,40 @@ void logging() {
   String page_number = sCmd.next();
   logging_value_names_list += value_name + ",";
   enter_to_logging_counter++; //считаем количество входов в эту функцию
-  jsonWriteStr(optionJson, value_name + "_c", maxCount); //создаем в файловой системе переменную количества точек на графике с отметкой _c что значит count
+  jsonWriteStr(configOptionJson, value_name + "_c", maxCount); //создаем в файловой системе переменную количества точек на графике с отметкой _c что значит count
   createChart (widget_name, page_name, page_number, "widgets/widget.chart.json", value_name + "_ch", maxCount); //создаем график в приложении с топиком _ch /prefix/3234045-1589487/value_name_ch
   if (enter_to_logging_counter == LOG1) {
     ts.add(LOG1, period_min.toInt() * 1000 * 60, [&](void*) {
       String tmp_buf_1 = selectFromMarkerToMarker(logging_value_names_list, ",", 0);
-      deleteOldDate("log." + tmp_buf_1 + ".txt",  jsonReadInt(optionJson, tmp_buf_1 + "_c"), jsonReadStr(configJson, tmp_buf_1));
+      deleteOldDate("log." + tmp_buf_1 + ".txt",  jsonReadInt(configOptionJson, tmp_buf_1 + "_c"), jsonReadStr(configLiveJson, tmp_buf_1));
       Serial.println("[i] LOGGING for sensor '" + tmp_buf_1 + "' done");
     }, nullptr, false);
   }
   if (enter_to_logging_counter == LOG2) {
     ts.add(LOG2, period_min.toInt() * 1000 * 60, [&](void*) {
       String tmp_buf_2 = selectFromMarkerToMarker(logging_value_names_list, ",", 1);
-      deleteOldDate("log." + tmp_buf_2 + ".txt",  jsonReadInt(optionJson, tmp_buf_2 + "_c"), jsonReadStr(configJson, tmp_buf_2));
+      deleteOldDate("log." + tmp_buf_2 + ".txt",  jsonReadInt(configOptionJson, tmp_buf_2 + "_c"), jsonReadStr(configLiveJson, tmp_buf_2));
       Serial.println("[i] LOGGING for sensor '" + tmp_buf_2 + "' done");
     }, nullptr, false);
   }
   if (enter_to_logging_counter == LOG3) {
     ts.add(LOG3, period_min.toInt() * 1000 * 60, [&](void*) {
       String tmp_buf_3 = selectFromMarkerToMarker(logging_value_names_list, ",", 2);
-      deleteOldDate("log." + tmp_buf_3 + ".txt",  jsonReadInt(optionJson, tmp_buf_3 + "_c"), jsonReadStr(configJson, tmp_buf_3));
+      deleteOldDate("log." + tmp_buf_3 + ".txt",  jsonReadInt(configOptionJson, tmp_buf_3 + "_c"), jsonReadStr(configLiveJson, tmp_buf_3));
       Serial.println("[i] LOGGING for sensor '" + tmp_buf_3 + "' done");
     }, nullptr, false);
   }
   if (enter_to_logging_counter == LOG4) {
     ts.add(LOG4, period_min.toInt() * 1000 * 60, [&](void*) {
       String tmp_buf_4 = selectFromMarkerToMarker(logging_value_names_list, ",", 3);
-      deleteOldDate("log." + tmp_buf_4 + ".txt",  jsonReadInt(optionJson, tmp_buf_4 + "_c"), jsonReadStr(configJson, tmp_buf_4));
+      deleteOldDate("log." + tmp_buf_4 + ".txt",  jsonReadInt(configOptionJson, tmp_buf_4 + "_c"), jsonReadStr(configLiveJson, tmp_buf_4));
       Serial.println("[i] LOGGING for sensor '" + tmp_buf_4 + "' done");
     }, nullptr, false);
   }
   if (enter_to_logging_counter == LOG5) {
     ts.add(LOG5, period_min.toInt() * 1000 * 60, [&](void*) {
       String tmp_buf_5 = selectFromMarkerToMarker(logging_value_names_list, ",", 4);
-      deleteOldDate("log." + tmp_buf_5 + ".txt",  jsonReadInt(optionJson, tmp_buf_5 + "_c"), jsonReadStr(configJson, tmp_buf_5));
+      deleteOldDate("log." + tmp_buf_5 + ".txt",  jsonReadInt(configOptionJson, tmp_buf_5 + "_c"), jsonReadStr(configLiveJson, tmp_buf_5));
       Serial.println("[i] LOGGING for sensor '" + tmp_buf_5 + "' done");
     }, nullptr, false);
   }

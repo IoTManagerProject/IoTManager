@@ -12,6 +12,15 @@
       "class": "alert-default"
     },
     {
+      "type": "link",
+      "title": "{{ButMainPage}}",
+      "action": "/",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "hr"
+    },
+    {
       "type": "h3",
       "title": "{{SetUDPList}}"
     },
@@ -35,13 +44,13 @@
     {
       "type": "link",
       "title": "{{SetUDPUpdateList}}",
-      "action": "set?updatelist",
+      "action": "/set?updatelist",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "{{SetUDPUpdatePage}}",
-      "action": "set?updatepage",
+      "action": "/set?updatepage",
       "class": "btn btn-block btn-default"
     },
     {
@@ -49,7 +58,7 @@
     },
     {
       "type": "text",
-      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #808080; border-radius: 3px; background-color: #E6E6FA; padding: 10px;'>{{SetUDPWarn1}}</p></font></div>",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetUDPWarn1}}</p></font></div>",
       "style": "width:100%;float:left;"
     },
     {
@@ -59,14 +68,14 @@
     {
       "type": "input",
       "title": "{{SetUDPNameOfDev}}",
-      "name": "dev_name",
+      "name": "devname-arg",
       "state": "{{name}}",
       "pattern": "[A-Za-z0-9]{6,12}"
     },
     {
       "type": "button",
       "title": "{{ButSave}}",
-      "action": "name?arg=[[dev_name]]",
+      "action": "/set?devname=[[devname-arg]]",
       "class": "btn btn-block btn-default"
     },
     {
@@ -81,16 +90,7 @@
     },
     {
       "type": "text",
-      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #808080; border-radius: 3px; background-color: #E6E6FA; padding: 10px;'>{{SetUDPWarn2}}</p></font></div>"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "link",
-      "title": "{{ButMainPage}}",
-      "action": "/",
-      "class": "btn btn-block btn-default"
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetUDPWarn2}}</p></font></div>"
     }
   ]
 }
