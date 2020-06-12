@@ -1,0 +1,185 @@
+{
+  "configs": [
+    "/config.setup.json",
+    "/lang/lang.ru.json"
+  ],
+  "title": "Конфигурация",
+  "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+  "content": [
+    {
+      "type": "h5",
+      "title": "{{name}}",
+      "class": "alert-default"
+    },
+    {
+      "type": "link",
+      "title": "{{ButMainPage}}",
+      "action": "/",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "h3",
+      "title": "{{SetWiFiNameOfDev}}"
+    },
+    {
+      "type": "input",
+      "title": "{{SetWiFiNameOfDev}}",
+      "name": "devname-arg",
+      "state": "{{name}}",
+      "pattern": "[A-Za-z0-9]{6,12}"
+    },
+    {
+      "type": "button",
+      "title": "{{ButSave}}",
+      "action": "set?devname=[[devname-arg]]",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "text",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetWiFiWarn1}}</p></font></div>"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "h3",
+      "title": "{{SetWiFiRouterConnect}}"
+    },
+    {
+      "type": "input",
+      "title": "",
+      "name": "routerssid-arg",
+      "state": "{{routerssid}}"
+    },
+    {
+      "type": "password",
+      "title": "",
+      "name": "routerpass-arg",
+      "state": "{{routerpass}}"
+    },
+    {
+      "type": "button",
+      "title": "{{ButSave}}",
+      "class": "btn btn-block btn-default",
+      "action": "set?routerssid=[[routerssid-arg]]&routerpass=[[routerpass-arg]]"
+    },
+    {
+      "type": "text",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetWiFiWarn2}}</p></font></div>"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "checkbox",
+      "name": "blink",
+      "title": "Включить светодиод статуса подключения",
+      "action": "/set?blink=[[blink]]",
+      "state": "{{blink}}"
+    },
+    {
+      "type": "text",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetWiFiWarn5}}</p></font></div>"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "h3",
+      "title": "{{SetWiFiAccessPoint}}"
+    },
+    {
+      "type": "input",
+      "title": "",
+      "name": "apssid-arg",
+      "state": "{{apssid}}",
+      "pattern": ".{1,20}"
+    },
+    {
+      "type": "password",
+      "title": "",
+      "name": "appass-arg",
+      "state": "{{appass}}",
+      "pattern": ".{8,20}"
+    },
+    {
+      "type": "button",
+      "title": "{{ButSave}}",
+      "action": "set?apssid=[[apssid-arg]]&appass=[[appass-arg]]",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "text",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetWiFiWarn3}}</p></font></div>"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "h3",
+      "title": "{{SetWiFiWeb}}"
+    },
+    {
+      "type": "input",
+      "title": "Логин",
+      "name": "weblogin-arg",
+      "state": "{{weblogin}}",
+      "pattern": ".{1,20}"
+    },
+    {
+      "type": "password",
+      "title": "Пароль",
+      "name": "webpass-arg",
+      "state": "{{webpass}}",
+      "pattern": ".{1,20}"
+    },
+    {
+      "type": "button",
+      "title": "{{ButSave}}",
+      "action": "set?weblogin=[[weblogin-arg]]&webpass=[[webpass-arg]]",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "h3",
+      "title": "{{SetWiFiTimeZone}}"
+    },
+    {
+      "type": "input",
+      "title": "",
+      "name": "timezone-arg",
+      "state": "{{timezone}}",
+      "pattern": ".{1,20}"
+    },
+    {
+      "type": "input",
+      "title": "",
+      "name": "ntp-arg",
+      "state": "{{ntp}}"
+    },
+    {
+      "type": "button",
+      "title": "{{ButSave}}",
+      "action": "set?timezone=[[timezone-arg]]&ntp=[[ntp-arg]]",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "text",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetWiFiWarn4}}</p></font></div>"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "link",
+      "title": "Перезагрузить устройство",
+      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/set?device=ok');}",
+      "class": "btn btn-block btn-danger"
+    }
+  ]
+}

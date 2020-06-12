@@ -14,10 +14,10 @@ void setup() {
   All_init();
   Serial.println("[V] All_init");
   //--------------------------------------------------------------
-  WIFI_init();
-  Serial.println("[V] WIFI_init");
+  ROUTER_Connecting();
+  Serial.println("[V] ROUTER_Connecting");
   //--------------------------------------------------------------
-  statistics_init();
+  uptime_init();
   Serial.println("[V] statistics_init");
   //--------------------------------------------------------------
   initUpgrade();
@@ -26,16 +26,11 @@ void setup() {
   Web_server_init();
   Serial.println("[V] Web_server_init");
   //--------------------------------------------------------------
-  MQTT_init();
-  Serial.println("[V] MQTT_init");
+  web_init();
+  Serial.println("[V] web_init");
   //--------------------------------------------------------------
   Time_Init();
   Serial.println("[V] Time_Init");
-  //--------------------------------------------------------------
-#ifdef push_enable
-  Push_init();
-  Serial.println("[V] Push_init");
-#endif
   //--------------------------------------------------------------
 #ifdef UDP_enable
   UDP_init();

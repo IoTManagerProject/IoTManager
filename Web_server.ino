@@ -48,9 +48,9 @@ void Web_server_init() {
    **************************************WEB****************************************
    *********************************************************************************/
 #ifdef ESP32
-  server.addHandler(new SPIFFSEditor(SPIFFS, jsonReadStr(configSetup, "web_login").c_str(), jsonReadStr(configSetup, "web_pass").c_str()));
+  server.addHandler(new SPIFFSEditor(SPIFFS, jsonReadStr(configSetupJson, "web_login").c_str(), jsonReadStr(configSetupJson, "web_pass").c_str()));
 #elif defined(ESP8266)
-  server.addHandler(new SPIFFSEditor(jsonReadStr(configSetup, "web_login").c_str(), jsonReadStr(configSetup, "web_pass").c_str()));
+  server.addHandler(new SPIFFSEditor(jsonReadStr(configSetupJson, "web_login").c_str(), jsonReadStr(configSetupJson, "web_pass").c_str()));
 #endif
 
   /*  server.on("/heap", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -60,9 +60,10 @@ void Web_server_init() {
   server.serveStatic("/css/", SPIFFS, "/css/").setCacheControl("max-age=31536000");
   server.serveStatic("/js/", SPIFFS, "/js/").setCacheControl("max-age=31536000");
   server.serveStatic("/favicon.ico", SPIFFS, "/favicon.ico").setCacheControl("max-age=31536000");
+  server.serveStatic("/icon.jpeg", SPIFFS, "/icon.jpeg").setCacheControl("max-age=31536000");
 
   server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.htm")
-  .setAuthentication(jsonReadStr(configSetup, "web_login").c_str(), jsonReadStr(configSetup, "web_pass").c_str());
+  .setAuthentication(jsonReadStr(configSetupJson, "web_login").c_str(), jsonReadStr(configSetupJson, "web_pass").c_str());
 
   server.onNotFound([](AsyncWebServerRequest * request) {
     Serial.printf("NOT_FOUND: ");
@@ -133,15 +134,15 @@ void Web_server_init() {
 
   // --------------------Выдаем данные configJson //config.live.json - динамические данные
   server.on("/config.live.json", HTTP_GET, [](AsyncWebServerRequest * request) {
-    request->send(200, "application/json", configJson);
+    request->send(200, "application/json", configLiveJson);
   });
   // --------------------Выдаем данные optionJson //config.option.json - данные не являющиеся событиями
   server.on("/config.option.json", HTTP_GET, [](AsyncWebServerRequest * request) {
-    request->send(200, "application/json", optionJson);
+    request->send(200, "application/json", configOptionJson);
   });
   // -------------------Выдаем данные configSetup //config.setup.json - для хранения постоянных данных
   server.on("/config.setup.json", HTTP_GET, [](AsyncWebServerRequest * request) {
-    request->send(200, "application/json", configSetup);
+    request->send(200, "application/json", configSetupJson);
   });
 
   // ------------------Выполнение команды из запроса

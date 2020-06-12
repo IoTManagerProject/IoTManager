@@ -1,17 +1,4 @@
 #ifdef push_enable
-void Push_init() {
-  server.on("/pushingboxDate", HTTP_GET, [](AsyncWebServerRequest * request) {
-
-    if (request->hasArg("pushingbox_id")) {
-      jsonWriteStr(configSetup, "pushingbox_id", request->getParam("pushingbox_id")->value());
-    }
-
-    saveConfig();
-
-    request->send(200, "text/text", "ok"); // отправляем ответ о выполнении
-  });
-}
-
 void pushControl() {
 
   String title = sCmd.next();
@@ -22,7 +9,7 @@ void pushControl() {
   static String body_old;
 
   const char* logServer = "api.pushingbox.com";
-  String deviceId = jsonReadStr(configSetup, "pushingbox_id");
+  String deviceId = jsonReadStr(configSetupJson, "pushingboxid");
 
   Serial.println("- starting client");
 

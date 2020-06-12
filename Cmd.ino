@@ -99,16 +99,16 @@ void button() {
   String start_state = sCmd.next();
   String page_number = sCmd.next();
 
-  jsonWriteStr(optionJson, "button_param" + button_number, button_param);
-  jsonWriteStr(configJson, "button" + button_number, start_state);
+  jsonWriteStr(configOptionJson, "button_param" + button_number, button_param);
+  jsonWriteStr(configLiveJson, "button" + button_number, start_state);
 
   if (isDigitStr (button_param)) {
     pinMode(button_param.toInt(), OUTPUT);
     digitalWrite(button_param.toInt(), start_state.toInt());
   }
 
-  if  (button_param == "scenario") {
-    jsonWriteStr(configSetup, "scenario", start_state);
+  if  (button_param == "scen") {
+    jsonWriteStr(configSetupJson, "scen", start_state);
     Scenario_init();
     saveConfig();
   }
@@ -133,14 +133,14 @@ void buttonSet() {
 
   String button_number = sCmd.next();
   String button_state = sCmd.next();
-  String button_param = jsonReadStr(optionJson, "button_param" + button_number);
+  String button_param = jsonReadStr(configOptionJson, "button_param" + button_number);
 
-  if (button_param != "na" || button_param != "scenario" || button_param.indexOf("line") != -1) {
+  if (button_param != "na" || button_param != "scen" || button_param.indexOf("line") != -1) {
     digitalWrite(button_param.toInt(), button_state.toInt());
   }
 
-  if  (button_param == "scenario") {
-    jsonWriteStr(configSetup, "scenario", button_state);
+  if  (button_param == "scen") {
+    jsonWriteStr(configSetupJson, "scen", button_state);
     Scenario_init();
     saveConfig();
   }
@@ -161,20 +161,20 @@ void buttonSet() {
 
   eventGen ("button", button_number);
 
-  jsonWriteStr(configJson, "button" + button_number, button_state);
+  jsonWriteStr(configLiveJson, "button" + button_number, button_state);
   sendSTATUS("button" + button_number, button_state);
 }
 
 void buttonChange() {
   String button_number = sCmd.next();
-  String current_state = jsonReadStr(configJson, "button" + button_number);
+  String current_state = jsonReadStr(configLiveJson, "button" + button_number);
   if (current_state == "1") {
     current_state = "0";
   } else if (current_state == "0") {
     current_state = "1";
   }
   order_loop += "buttonSet " + button_number + " " + current_state + ",";
-  jsonWriteStr(configJson, "button" + button_number, current_state);
+  jsonWriteStr(configLiveJson, "button" + button_number, current_state);
   sendSTATUS("button" + button_number, current_state);
 }
 
@@ -205,11 +205,11 @@ void pwm() {
 
 
   uint8_t pwm_pin_int = pwm_pin.toInt();
-  jsonWriteStr(optionJson, "pwm_pin" + pwm_number, pwm_pin);
+  jsonWriteStr(configOptionJson, "pwm_pin" + pwm_number, pwm_pin);
   pinMode(pwm_pin_int, INPUT);
   analogWrite(pwm_pin_int, start_state.toInt());
   //analogWriteFreq(32000);
-  jsonWriteStr(configJson, "pwm" + pwm_number, start_state);
+  jsonWriteStr(configLiveJson, "pwm" + pwm_number, start_state);
 
   createWidget (widget_name, page_name, page_number, "widgets/widget.range.json", "pwm" + pwm_number);
 }
@@ -220,12 +220,12 @@ void pwmSet() {
   String pwm_state = sCmd.next();
   int pwm_state_int = pwm_state.toInt();
 
-  int pin = jsonReadInt(optionJson, "pwm_pin" + pwm_number);
+  int pin = jsonReadInt(configOptionJson, "pwm_pin" + pwm_number);
   analogWrite(pin, pwm_state_int);
 
   eventGen ("pwm", pwm_number);
 
-  jsonWriteStr(configJson, "pwm" + pwm_number, pwm_state);
+  jsonWriteStr(configLiveJson, "pwm" + pwm_number, pwm_state);
   sendSTATUS("pwm" + pwm_number, pwm_state);
 }
 //==================================================================================================================
@@ -251,13 +251,13 @@ void handleButton()  {
 
       eventGen ("switch", String(switch_number));
 
-      jsonWriteStr(configJson, "switch" + String(switch_number), "1");
+      jsonWriteStr(configLiveJson, "switch" + String(switch_number), "1");
     }
     if (buttons[switch_number].rose()) {
 
       eventGen ("switch", String(switch_number));
 
-      jsonWriteStr(configJson, "switch" + String(switch_number), "0");
+      jsonWriteStr(configLiveJson, "switch" + String(switch_number), "0");
     }
   }
   switch_number++;
@@ -275,13 +275,13 @@ void inputDigit() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWriteStr(configJson, "digit" + number, start_state);
+  jsonWriteStr(configLiveJson, "digit" + number, start_state);
   createWidget (widget_name, page_name, page_number, "widgets/widget.inputNum.json", "digit" + number);
 }
 void digitSet() {
   String number = sCmd.next();
   String value = sCmd.next();
-  jsonWriteStr(configJson, "digit" + number, value);
+  jsonWriteStr(configLiveJson, "digit" + number, value);
   sendSTATUS("digit" + number, value);
 }
 //=====================================================================================================================================
@@ -295,13 +295,13 @@ void inputTime() {
   page_name.replace("#", " ");
   String start_state = sCmd.next();
   String page_number = sCmd.next();
-  jsonWriteStr(configJson, "time" + number, start_state);
+  jsonWriteStr(configLiveJson, "time" + number, start_state);
   createWidget (widget_name, page_name, page_number, "widgets/widget.inputTime.json", "time" + number);
 }
 void timeSet() {
   String number = sCmd.next();
   String value = sCmd.next();
-  jsonWriteStr(configJson, "time" + number, value);
+  jsonWriteStr(configLiveJson, "time" + number, value);
   sendSTATUS("time" + number, value);
 }
 
@@ -309,9 +309,9 @@ void handle_time_init() {
   ts.add(TIME, 1000, [&](void*) {
 
     String tmp = GetTime();
-    jsonWriteStr(configJson, "time", tmp);
+    jsonWriteStr(configLiveJson, "time", tmp);
     tmp.replace(":", "-");
-    jsonWriteStr(configJson, "timenow", tmp);
+    jsonWriteStr(configLiveJson, "timenow", tmp);
     eventGen ("timenow", "");
 
   }, nullptr, true);
@@ -344,7 +344,7 @@ void textSet() {
     text = text + " " + GetDataDigital() + " " + time;
   }
 
-  jsonWriteStr(configJson, "text" + number, text);
+  jsonWriteStr(configLiveJson, "text" + number, text);
   sendSTATUS("text" + number, text);
 }
 //=====================================================================================================================================
@@ -356,7 +356,7 @@ void stepper() {
   String pin_step = sCmd.next();
   String pin_dir = sCmd.next();
 
-  jsonWriteStr(optionJson, "stepper" + stepper_number, pin_step + " " + pin_dir);
+  jsonWriteStr(configOptionJson, "stepper" + stepper_number, pin_step + " " + pin_dir);
   pinMode(pin_step.toInt(), OUTPUT);
   pinMode(pin_dir.toInt(), OUTPUT);
 }
@@ -365,20 +365,20 @@ void stepper() {
 void stepperSet() {
   String stepper_number = sCmd.next();
   String steps = sCmd.next();
-  jsonWriteStr(optionJson, "steps" + stepper_number, steps);
+  jsonWriteStr(configOptionJson, "steps" + stepper_number, steps);
   String stepper_speed = sCmd.next();
-  String pin_step = selectToMarker (jsonReadStr(optionJson, "stepper" + stepper_number), " ");
-  String pin_dir =  deleteBeforeDelimiter (jsonReadStr(optionJson, "stepper" + stepper_number), " ");
+  String pin_step = selectToMarker (jsonReadStr(configOptionJson, "stepper" + stepper_number), " ");
+  String pin_dir =  deleteBeforeDelimiter (jsonReadStr(configOptionJson, "stepper" + stepper_number), " ");
   Serial.println(pin_step);
   Serial.println(pin_dir);
   if (steps.toInt() > 0) digitalWrite(pin_dir.toInt(), HIGH);
   if (steps.toInt() < 0) digitalWrite(pin_dir.toInt(), LOW);
   if (stepper_number == "1") {
     ts.add(STEPPER1, stepper_speed.toInt(), [&](void*) {
-      int steps_int = abs(jsonReadInt(optionJson, "steps1") * 2);
+      int steps_int = abs(jsonReadInt(configOptionJson, "steps1") * 2);
       static int count;
       count++;
-      String pin_step = selectToMarker (jsonReadStr(optionJson, "stepper1"), " ");
+      String pin_step = selectToMarker (jsonReadStr(configOptionJson, "stepper1"), " ");
       digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
       yield();
       if (count > steps_int) {
@@ -390,10 +390,10 @@ void stepperSet() {
   }
   if (stepper_number == "2") {
     ts.add(STEPPER2, stepper_speed.toInt(), [&](void*) {
-      int steps_int = abs(jsonReadInt(optionJson, "steps2") * 2);
+      int steps_int = abs(jsonReadInt(configOptionJson, "steps2") * 2);
       static int count;
       count++;
-      String pin_step = selectToMarker (jsonReadStr(optionJson, "stepper2"), " ");
+      String pin_step = selectToMarker (jsonReadStr(configOptionJson, "stepper2"), " ");
       digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
       yield();
       if (count > steps_int) {
@@ -425,7 +425,7 @@ void servo_() {
 
   String page_number = sCmd.next();
 
-  jsonWriteStr(optionJson, "servo_pin" + servo_number, servo_pin);
+  jsonWriteStr(configOptionJson, "servo_pin" + servo_number, servo_pin);
   start_state_int = map(start_state_int, min_value.toInt(), max_value.toInt(), min_deg.toInt(), max_deg.toInt());
 
   if (servo_number == "1") {
@@ -450,12 +450,12 @@ void servo_() {
 #endif
   }
 
-  jsonWriteStr(optionJson, "s_min_val" + servo_number, min_value);
-  jsonWriteStr(optionJson, "s_max_val" + servo_number, max_value);
-  jsonWriteStr(optionJson, "s_min_deg" + servo_number, min_deg);
-  jsonWriteStr(optionJson, "s_max_deg" + servo_number, max_deg);
+  jsonWriteStr(configOptionJson, "s_min_val" + servo_number, min_value);
+  jsonWriteStr(configOptionJson, "s_max_val" + servo_number, max_value);
+  jsonWriteStr(configOptionJson, "s_min_deg" + servo_number, min_deg);
+  jsonWriteStr(configOptionJson, "s_max_deg" + servo_number, max_deg);
 
-  jsonWriteStr(configJson, "servo" + servo_number, start_state);
+  jsonWriteStr(configLiveJson, "servo" + servo_number, start_state);
 
   createWidgetParam (widget_name, page_name, page_number, "widgets/widget.range.json", "servo" + servo_number, "min", min_value, "max", max_value, "k", "1");
 }
@@ -465,13 +465,13 @@ void servoSet() {
   String servo_state = sCmd.next();
   int servo_state_int = servo_state.toInt();
 
-  int pin = jsonReadInt(optionJson, "servo_pin" + servo_number);
+  int pin = jsonReadInt(configOptionJson, "servo_pin" + servo_number);
 
   servo_state_int = map(servo_state_int,
-                        jsonReadInt(optionJson, "s_min_val" + servo_number),
-                        jsonReadInt(optionJson, "s_max_val" + servo_number),
-                        jsonReadInt(optionJson, "s_min_deg" + servo_number),
-                        jsonReadInt(optionJson, "s_max_deg" + servo_number));
+                        jsonReadInt(configOptionJson, "s_min_val" + servo_number),
+                        jsonReadInt(configOptionJson, "s_max_val" + servo_number),
+                        jsonReadInt(configOptionJson, "s_min_deg" + servo_number),
+                        jsonReadInt(configOptionJson, "s_max_deg" + servo_number));
 
   if (servo_number == "1") {
 #ifdef ESP8266
@@ -495,7 +495,7 @@ void servoSet() {
 
   eventGen ("servo", servo_number);
 
-  jsonWriteStr(configJson, "servo" + servo_number, servo_state);
+  jsonWriteStr(configLiveJson, "servo" + servo_number, servo_state);
   sendSTATUS("servo" + servo_number, servo_state);
 }
 #endif
@@ -523,7 +523,7 @@ void mqttOrderSend() {
   String id = sCmd.next();
   String order = sCmd.next();
 
-  String  all_line = jsonReadStr(configSetup, "mqttPrefix") + "/" + id + "/order";
+  String  all_line = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + id + "/order";
   //Serial.print(all_line);
   //Serial.print("->");
   //Serial.println(order);
@@ -547,7 +547,7 @@ void firmware() {
   String widget_name = sCmd.next();
   String page_name = sCmd.next();
   String page_number = sCmd.next();
-  jsonWriteStr(configJson, "firm1", firmware_version);
+  jsonWriteStr(configLiveJson, "firm1", firmware_version);
   choose_widget_and_create(widget_name, page_name, page_number, "any-data", "firm1");
 }
 

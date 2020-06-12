@@ -1,59 +1,12 @@
-void WIFI_init() {
-
-  // --------------------Получаем ssid password со страницы
-  server.on("/ssid", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (request->hasArg("ssid")) {
-      jsonWriteStr(configSetup, "ssid", request->getParam("ssid")->value());
-    }
-    if (request->hasArg("password")) {
-      jsonWriteStr(configSetup, "password", request->getParam("password")->value());
-    }
-    saveConfig();                 // Функция сохранения данных во Flash
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
-  // --------------------Получаем ssidAP passwordAP со страницы
-  server.on("/ssidap", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (request->hasArg("ssidAP")) {
-      jsonWriteStr(configSetup, "ssidAP", request->getParam("ssidAP")->value());
-    }
-    if (request->hasArg("passwordAP")) {
-      jsonWriteStr(configSetup, "passwordAP", request->getParam("passwordAP")->value());
-    }
-    saveConfig();                 // Функция сохранения данных во Flash
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
-
-  // --------------------Получаем логин и пароль для web со страницы
-  server.on("/web", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (request->hasArg("web_login")) {
-      jsonWriteStr(configSetup, "web_login", request->getParam("web_login")->value());
-    }
-    if (request->hasArg("web_pass")) {
-      jsonWriteStr(configSetup, "web_pass", request->getParam("web_pass")->value());
-    }
-    saveConfig();                 // Функция сохранения данных во Flash
-    //Web_server_init();
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
-
-  server.on("/restart", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (request->hasArg("device")) {
-      if (request->getParam("device")->value() == "ok") ESP.restart();
-    }
-    request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
-  });
-  ROUTER_Connecting();
-}
-
 void ROUTER_Connecting() {
-
-  led_blink("slow");
   
+  led_blink("slow");
+
   WiFi.mode(WIFI_STA);
 
   byte tries = 20;
-  String _ssid = jsonReadStr(configSetup, "ssid");
-  String _password = jsonReadStr(configSetup, "password");
+  String _ssid = jsonReadStr(configSetupJson, "routerssid");
+  String _password = jsonReadStr(configSetupJson, "routerpass");
   //WiFi.persistent(false);
 
   if (_ssid == "" && _password == "") {
@@ -66,12 +19,11 @@ void ROUTER_Connecting() {
   }
   // Делаем проверку подключения до тех пор пока счетчик tries
   // не станет равен нулю или не получим подключение
-  while (--tries && WiFi.status() != WL_CONNECTED)
-  {
+  while (--tries && WiFi.status() != WL_CONNECTED) {
     if (WiFi.status() == WL_CONNECT_FAILED) {
       Serial.println("[E] password is not correct");
       tries = 1;
-      jsonWriteInt(optionJson, "pass_status", 1);
+      jsonWriteInt(configOptionJson, "pass_status", 1);
     }
     Serial.print(".");
     delay(1000);
@@ -93,12 +45,10 @@ void ROUTER_Connecting() {
     Serial.print("[V] IP address: http://");
     Serial.print(WiFi.localIP());
     Serial.println("");
-    jsonWriteStr(configJson, "ip", WiFi.localIP().toString());
-
+    jsonWriteStr(configSetupJson, "ip", WiFi.localIP().toString());
     led_blink("off");
-    
     //add_dev_in_list("dev.txt", chipID, WiFi.localIP().toString());
-
+    MQTT_init();
   }
 }
 
@@ -108,26 +58,25 @@ bool StartAPMode() {
 
   WiFi.mode(WIFI_AP);
 
-  String _ssidAP = jsonReadStr(configSetup, "ssidAP");
-  String _passwordAP = jsonReadStr(configSetup, "passwordAP");
+  String _ssidAP = jsonReadStr(configSetupJson, "apssid");
+  String _passwordAP = jsonReadStr(configSetupJson, "appass");
   WiFi.softAP(_ssidAP.c_str(), _passwordAP.c_str());
   IPAddress myIP = WiFi.softAPIP();
   led_blink("on");
   Serial.print("AP IP address: ");
   Serial.println(myIP);
-  jsonWriteStr(configJson, "ip", myIP.toString());
+  jsonWriteStr(configSetupJson, "ip", myIP.toString());
 
-  if (jsonReadInt(optionJson, "pass_status") != 1) {
+  //if (jsonReadInt(configOptionJson, "pass_status") != 1) {
     ts.add(ROUTER_SEARCHING, 10 * 1000, [&](void*) {
       Serial.println("->try find router");
-      if (RouterFind(jsonReadStr(configSetup, "ssid"))) {
+      if (RouterFind(jsonReadStr(configSetupJson, "routerssid"))) {
         ts.remove(ROUTER_SEARCHING);
         WiFi.scanDelete();
         ROUTER_Connecting();
-        MQTT_init();
       }
     }, nullptr, true);
-  }
+  //}
   return true;
 }
 
@@ -182,12 +131,12 @@ boolean RouterFind(String ssid) {
   for (uint8_t i = 0; i < n; i++) {
     JsonObject& data = networks.createNestedObject();
     String ssidMy = WiFi.SSID(i);
-    data["ssid"] = ssidMy;
+    data["routerssid"] = ssidMy;
     data["pass"] = (WiFi.encryptionType(i) == ENC_TYPE_NONE) ? "" : "*";
     int8_t dbm = WiFi.RSSI(i);
     data["dbm"] = dbm;
-    if (ssidMy == jsonReadStr(configSetup, "ssid")) {
-      jsonWriteStr(configJson, "dbm", dbm);
+    if (ssidMy == jsonReadStr(configSetupJson, "routerssid")) {
+      jsonWriteStr(configLiveJson, "dbm", dbm);
     }
   }
   String root;
@@ -199,14 +148,14 @@ boolean RouterFind(String ssid) {
   {
    "type":"wifi",
    "title":"{{LangWiFi1}}",
-   "name":"ssid",
+   "name":"routerssid",
    "state":"{{ssid}}",
    "pattern":".{1,}"
   },
   {
-   "type":"password",
+   "type":"routerpass",
    "title":"{{LangPass}}",
-   "name":"ssidPass",
+   "name":"routerpass",
    "state":"{{ssidPass}}",
    "pattern":".{8,}"
   },

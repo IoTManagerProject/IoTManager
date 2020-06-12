@@ -57,10 +57,10 @@ void level() {
   String full_level = sCmd.next();
   String page_number = sCmd.next();
   level_value_name = value_name;
-  jsonWriteStr(optionJson, "e_lev", empty_level);
-  jsonWriteStr(optionJson, "f_lev", full_level);
-  jsonWriteStr(optionJson, "trig", trig);
-  jsonWriteStr(optionJson, "echo", echo);
+  jsonWriteStr(configOptionJson, "e_lev", empty_level);
+  jsonWriteStr(configOptionJson, "f_lev", full_level);
+  jsonWriteStr(configOptionJson, "trig", trig);
+  jsonWriteStr(configOptionJson, "echo", echo);
   pinMode(trig.toInt(), OUTPUT);
   pinMode(echo.toInt(), INPUT);
   choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
@@ -72,8 +72,8 @@ void level_reading() {
   int distance_cm;
   int level;
   static int counter;
-  int trig = jsonReadInt(optionJson, "trig");
-  int echo = jsonReadInt(optionJson, "echo");
+  int trig = jsonReadInt(configOptionJson, "trig");
+  int echo = jsonReadInt(configOptionJson, "echo");
   digitalWrite(trig, LOW);
   delayMicroseconds(2);
   digitalWrite(trig, HIGH);
@@ -86,9 +86,9 @@ void level_reading() {
   if (counter > tank_level_times_to_send) {
     counter = 0;
     level = map(distance_cm,
-                jsonReadInt(optionJson, "e_lev"),
-                jsonReadInt(optionJson, "f_lev"), 0, 100);
-    jsonWriteInt(configJson, level_value_name, level);
+                jsonReadInt(configOptionJson, "e_lev"),
+                jsonReadInt(configOptionJson, "f_lev"), 0, 100);
+    jsonWriteInt(configLiveJson, level_value_name, level);
     eventGen (level_value_name, "");
     sendSTATUS(level_value_name, String(level));
     Serial.println("[i] sensor '" + level_value_name + "' data: " + String(level));
@@ -112,10 +112,10 @@ void analog() {
   String page_number = sCmd.next();
   analog_value_names_list += value_name + ",";
   enter_to_analog_counter++;
-  jsonWriteStr(optionJson, value_name + "_st", analog_start);
-  jsonWriteStr(optionJson, value_name + "_end", analog_end);
-  jsonWriteStr(optionJson, value_name + "_st_out", analog_start_out);
-  jsonWriteStr(optionJson, value_name + "_end_out", analog_end_out);
+  jsonWriteStr(configOptionJson, value_name + "_st", analog_start);
+  jsonWriteStr(configOptionJson, value_name + "_end", analog_end);
+  jsonWriteStr(configOptionJson, value_name + "_st_out", analog_start_out);
+  jsonWriteStr(configOptionJson, value_name + "_end_out", analog_end_out);
   choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
   if (enter_to_analog_counter == 1) {
     sensors_reading_map[1] = 1;
@@ -134,11 +134,11 @@ void analog_reading1() {
   int analog_in = analogRead(A0);
 #endif
   int analog = map(analog_in,
-                   jsonReadInt(optionJson, value_name + "_st") ,
-                   jsonReadInt(optionJson, value_name + "_end"),
-                   jsonReadInt(optionJson, value_name + "_st_out"),
-                   jsonReadInt(optionJson, value_name + "_end_out"));
-  jsonWriteInt(configJson, value_name, analog);
+                   jsonReadInt(configOptionJson, value_name + "_st") ,
+                   jsonReadInt(configOptionJson, value_name + "_end"),
+                   jsonReadInt(configOptionJson, value_name + "_st_out"),
+                   jsonReadInt(configOptionJson, value_name + "_end_out"));
+  jsonWriteInt(configLiveJson, value_name, analog);
   eventGen (value_name, "");
   sendSTATUS(value_name, String(analog));
   Serial.println("[i] sensor '" + value_name + "' data: " + String(analog));
@@ -153,11 +153,11 @@ void analog_reading2() {
   int analog_in = analogRead(A0);
 #endif
   int analog = map(analog_in,
-                   jsonReadInt(optionJson, value_name + "_st") ,
-                   jsonReadInt(optionJson, value_name + "_end"),
-                   jsonReadInt(optionJson, value_name + "_st_out"),
-                   jsonReadInt(optionJson, value_name + "_end_out"));
-  jsonWriteInt(configJson, value_name, analog);
+                   jsonReadInt(configOptionJson, value_name + "_st") ,
+                   jsonReadInt(configOptionJson, value_name + "_end"),
+                   jsonReadInt(configOptionJson, value_name + "_st_out"),
+                   jsonReadInt(configOptionJson, value_name + "_end_out"));
+  jsonWriteInt(configLiveJson, value_name, analog);
   eventGen (value_name, "");
   sendSTATUS(value_name, String(analog));
   Serial.println("[i] sensor '" + value_name + "' data: " + String(analog));
@@ -186,7 +186,7 @@ void dallas_reading() {
   float temp = 0;
   sensors.requestTemperatures();
   temp = sensors.getTempCByIndex(0);
-  jsonWriteStr(configJson, "dallas", String(temp));
+  jsonWriteStr(configLiveJson, "dallas", String(temp));
   eventGen ("dallas", "");
   sendSTATUS("dallas", String(temp));
   Serial.println("[i] sensor 'dallas' send date " + String(temp));
@@ -226,7 +226,7 @@ void dhtT_reading() {
     value = dht.getTemperature();
     if (String(value) != "nan") {
       eventGen (dhtT_value_name, "");
-      jsonWriteStr(configJson, dhtT_value_name, String(value));
+      jsonWriteStr(configLiveJson, dhtT_value_name, String(value));
       sendSTATUS(dhtT_value_name, String(value));
       Serial.println("[i] sensor '" + dhtT_value_name + "' data: " + String(value));
     }
@@ -264,7 +264,7 @@ void dhtH_reading() {
     value = dht.getHumidity();
     if (String(value) != "nan") {
       eventGen (dhtH_value_name, "");
-      jsonWriteStr(configJson, dhtH_value_name, String(value));
+      jsonWriteStr(configLiveJson, dhtH_value_name, String(value));
       sendSTATUS(dhtH_value_name, String(value));
       Serial.println("[i] sensor '" + dhtH_value_name + "' data: " + String(value));
     }
@@ -285,9 +285,9 @@ void dhtP_reading() {
   if (dht.getStatus() != 0) {
     sendSTATUS("dhtPerception", String(dht.getStatusString()));
   } else {
-    value = dht.computePerception(jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
+    value = dht.computePerception(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
     String final_line = perception(value);
-    jsonWriteStr(configJson, "dhtPerception", final_line);
+    jsonWriteStr(configLiveJson, "dhtPerception", final_line);
     eventGen ("dhtPerception", "");
     sendSTATUS("dhtPerception", final_line);
     if (client_mqtt.connected()) {
@@ -322,9 +322,9 @@ void dhtC_reading() {
   if (dht.getStatus() != 0) {
     sendSTATUS("dhtComfort", String(dht.getStatusString()));
   } else {
-    value = dht.getComfortRatio(cf, jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
+    value = dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
     String final_line = get_comfort_status(cf);
-    jsonWriteStr(configJson, "dhtComfort", final_line);
+    jsonWriteStr(configLiveJson, "dhtComfort", final_line);
     eventGen ("dhtComfort", "");
     sendSTATUS("dhtComfort", final_line);
     Serial.println("[i] sensor 'dhtComfort' send date " + final_line);
@@ -383,8 +383,8 @@ void dhtD_reading() {
   if (dht.getStatus() != 0) {
     sendSTATUS("dhtDewpoint", String(dht.getStatusString()));
   } else {
-    value = dht.computeDewPoint(jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
-    jsonWriteInt(configJson, "dhtDewpoint", value);
+    value = dht.computeDewPoint(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
+    jsonWriteInt(configLiveJson, "dhtDewpoint", value);
     eventGen ("dhtDewpoint", "");
     sendSTATUS("dhtDewpoint", String(value));
     Serial.println("[i] sensor 'dhtDewpoint' data: " + String(value));
@@ -420,7 +420,7 @@ void bmp280T_rading() {
   sensors_event_t temp_event, pressure_event;
   bmp_temp->getEvent(&temp_event);
   value = temp_event.temperature;
-  jsonWriteStr(configJson, bmp280T_value_name, String(value));
+  jsonWriteStr(configLiveJson, bmp280T_value_name, String(value));
   eventGen(bmp280T_value_name, "");
   sendSTATUS(bmp280T_value_name, String(value));
   Serial.println("[i] sensor '" + bmp280T_value_name + "' data: " + String(value));
@@ -452,7 +452,7 @@ void bmp280P_reading() {
   bmp_pressure->getEvent(&pressure_event);
   value = pressure_event.pressure;
   value = value / 1.333224;
-  jsonWriteStr(configJson, bmp280P_value_name, String(value));
+  jsonWriteStr(configLiveJson, bmp280P_value_name, String(value));
   eventGen(bmp280P_value_name, "");
   sendSTATUS(bmp280P_value_name, String(value));
   Serial.println("[i] sensor '" + bmp280P_value_name + "' data: " + String(value));
@@ -478,7 +478,7 @@ void bme280T() {
 void bme280T_reading() {
   float value = 0;
   value = bme.readTemperature();
-  jsonWriteStr(configJson, bme280T_value_name, String(value));
+  jsonWriteStr(configLiveJson, bme280T_value_name, String(value));
   eventGen(bme280T_value_name, "");
   sendSTATUS(bme280T_value_name, String(value));
   Serial.println("[i] sensor '" + bme280T_value_name + "' data: " + String(value));
@@ -502,7 +502,7 @@ void bme280P_reading() {
   float value = 0;
   value = bme.readPressure();
   value = value / 1.333224;
-  jsonWriteStr(configJson, bme280P_value_name, String(value));
+  jsonWriteStr(configLiveJson, bme280P_value_name, String(value));
   eventGen(bme280P_value_name, "");
   sendSTATUS(bme280P_value_name, String(value));
   Serial.println("[i] sensor '" + bme280P_value_name + "' data: " + String(value));
@@ -525,7 +525,7 @@ void bme280H() {
 void bme280H_reading() {
   float value = 0;
   value = bme.readHumidity();
-  jsonWriteStr(configJson, bme280H_value_name, String(value));
+  jsonWriteStr(configLiveJson, bme280H_value_name, String(value));
   eventGen(bme280H_value_name, "");
   sendSTATUS(bme280H_value_name, String(value));
   Serial.println("[i] sensor '" + bme280H_value_name + "' data: " + String(value));
@@ -548,7 +548,7 @@ void bme280A() {
 void bme280A_reading() {
   float value = 0;
   value = bme.readAltitude(1013.25);
-  jsonWriteStr(configJson, bme280A_value_name, String(value));
+  jsonWriteStr(configLiveJson, bme280A_value_name, String(value));
   eventGen(bme280A_value_name, "");
   sendSTATUS(bme280A_value_name, String(value));
   Serial.println("[i] sensor '" + bme280A_value_name + "' data: " + String(value));

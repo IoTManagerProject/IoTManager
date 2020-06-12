@@ -1,20 +1,20 @@
 /*******************************************************************
  **********************FIRMWARE SETTINGS****************************
  ******************************************************************/
-String firmware_version = "2.3.3";
-boolean mb_4_of_memory = true;
+String firmware_version = "2.3.4";
+boolean mb_4_of_memory = false;
 //#define OTA_enable
 //#define MDNS_enable
 //#define WS_enable
 //#define layout_in_ram
 #define UDP_enable
 /*==========================SENSORS===============================*/
-//#define level_enable
-//#define analog_enable
-//#define dallas_enable
-//#define dht_enable                 //подъедает оперативку сука
-//#define bmp_enable
-//#define bme_enable
+#define level_enable
+#define analog_enable
+#define dallas_enable
+#define dht_enable                 //подъедает оперативку сука
+#define bmp_enable
+#define bme_enable
 /*=========================LOGGING================================*/
 #define logging_enable
 /*==========================GEARS=================================*/
@@ -96,8 +96,11 @@ AsyncEventSource events("/events");
 #include <time.h>
 
 #include <TickerScheduler.h>
-enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, SENSORS, STEPPER1, STEPPER2,  LOG1, LOG2, LOG3, LOG4, LOG5, TIMER_COUNTDOWN, TIME, TIME_SYNC, STATISTICS, UDP, UDP_DB, TEST };
+enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, SENSORS, STEPPER1, STEPPER2,  LOG1, LOG2, LOG3, LOG4, LOG5, TIMER_COUNTDOWN, TIME, TIME_SYNC, STATISTICS, UPTIME, UDP, UDP_DB, TEST };
 TickerScheduler ts(TEST + 1);
+
+#include <UpTime.h>
+uptime_interval myUpTime(10);
 
 #include <PubSubClient.h>
 WiFiClient espClient;
@@ -123,7 +126,7 @@ OneWire *oneWire;
 DallasTemperature sensors;
 #endif
 
-#ifdef dht_enable 
+#ifdef dht_enable
 #include <DHTesp.h>
 DHTesp dht;
 #endif
@@ -153,9 +156,9 @@ Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
 boolean just_load = true;
 const char* hostName = "IoT Manager";
 //JSON
-String configSetup = "{}";
-String configJson = "{}";
-String optionJson = "{}";
+String configSetupJson = "{}";  //все настройки
+String configLiveJson = "{}";   //все данные с датчиков (связан с mqtt)
+String configOptionJson = "{}"; //для трансфера
 //MQTT
 String chipID = "";
 String prex;
