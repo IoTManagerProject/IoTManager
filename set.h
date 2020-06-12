@@ -115,8 +115,8 @@ boolean but[NUM_BUTTONS];
 Bounce * buttons = new Bounce[NUM_BUTTONS];
 
 #ifdef level_enable
-#include "GyverFilters.h" //настраивается в GyverHacks.h - MEDIAN_FILTER_SIZE
-GMedian medianFilter;
+#include "GyverFilters.h"
+GMedian<10,int> medianFilter;
 #endif
 
 #ifdef dallas_enable
