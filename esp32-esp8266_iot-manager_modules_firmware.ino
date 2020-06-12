@@ -41,10 +41,8 @@ void setup() {
 
 
   ts.add(TEST, 10000, [&](void*) {
-
     getMemoryLoad("[i] periodic check of");
     //ws.textAll(json);
-
   }, nullptr, true);
 
 
