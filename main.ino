@@ -368,17 +368,19 @@ void sendCONFIG(String topik, String widgetConfig, String key, String date) {
 void led_blink(String satus) {
 #ifdef ESP8266
 #ifdef blink_pin
-  pinMode(blink_pin, OUTPUT);
-  if (satus == "off") {
-    noTone(blink_pin);
-    digitalWrite(blink_pin, HIGH);
+  if (jsonReadStr(configSetupJson, "blink") == "1") {
+    pinMode(blink_pin, OUTPUT);
+    if (satus == "off") {
+      noTone(blink_pin);
+      digitalWrite(blink_pin, HIGH);
+    }
+    if (satus == "on") {
+      noTone(blink_pin);
+      digitalWrite(blink_pin, LOW);
+    }
+    if (satus == "slow") tone(blink_pin, 1);
+    if (satus == "fast") tone(blink_pin, 20);
   }
-  if (satus == "on") {
-    noTone(blink_pin);
-    digitalWrite(blink_pin, LOW);
-  }
-  if (satus == "slow") tone(blink_pin, 1);
-  if (satus == "fast") tone(blink_pin, 20);
 #endif
 #endif
 }

@@ -15,12 +15,11 @@ void do_upgrade_url() {
     upgrade_url = false;
 #ifdef ESP32
     last_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
-    jsonWriteStr(configSetupJson, "last_version", last_version);
 #endif
 #ifdef ESP8266
     last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
-    jsonWriteStr(configSetupJson, "last_version", last_version);
 #endif
+    jsonWriteStr(configSetupJson, "last_version", last_version);
   }
 }
 
@@ -66,7 +65,7 @@ void upgrade_firmware() {
 #endif
 
     if (ret == HTTP_UPDATE_OK) {
-      
+
       Serial.println("BUILD upgrade done!");
       Serial.println("Restart ESP....");
       ESP.restart();

@@ -1,9 +1,8 @@
 /*******************************************************************
  **********************FIRMWARE SETTINGS****************************
  ******************************************************************/
-//dev
-String firmware_version = "2.3.3";
-boolean mb_4_of_memory = true;
+String firmware_version = "2.3.4";
+boolean mb_4_of_memory = false;
 //#define OTA_enable
 //#define MDNS_enable
 //#define WS_enable

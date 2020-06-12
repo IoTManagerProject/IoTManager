@@ -16,5 +16,6 @@
     "pushingboxid": "v7C133E426B0C69E",
     "weblogin": "admin",
     "webpass": "admin",
-    "udponoff": "1"
+    "udponoff": "1",
+    "blink":"1"
 }

@@ -19,8 +19,7 @@ void ROUTER_Connecting() {
   }
   // Делаем проверку подключения до тех пор пока счетчик tries
   // не станет равен нулю или не получим подключение
-  while (--tries && WiFi.status() != WL_CONNECTED)
-  {
+  while (--tries && WiFi.status() != WL_CONNECTED) {
     if (WiFi.status() == WL_CONNECT_FAILED) {
       Serial.println("[E] password is not correct");
       tries = 1;

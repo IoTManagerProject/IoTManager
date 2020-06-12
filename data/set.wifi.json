@@ -74,6 +74,20 @@
       "type": "hr"
     },
     {
+      "type": "checkbox",
+      "name": "blink",
+      "title": "Включить светодиод статуса подключения",
+      "action": "/set?blink=[[blink]]",
+      "state": "{{blink}}"
+    },
+    {
+      "type": "text",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetWiFiWarn5}}</p></font></div>"
+    },
+    {
+      "type": "hr"
+    },
+    {
       "type": "h3",
       "title": "{{SetWiFiAccessPoint}}"
     },

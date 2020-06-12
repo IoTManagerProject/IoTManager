@@ -51,34 +51,42 @@ void web_init() {
         writeFile("firmware.s.txt", readFile("configs/11-analog.s.txt", 2048));
       }
       if (value == "12") {
-        writeFile("firmware.c.txt", readFile("configs/12-dallas.c.txt", 2048));
-        writeFile("firmware.s.txt", readFile("configs/12-dallas.s.txt", 2048));
+        writeFile("firmware.c.txt", readFile("configs/12-bmp280.c.txt", 2048));
+        writeFile("firmware.s.txt", readFile("configs/12-bmp280.s.txt", 2048));
       }
       if (value == "13") {
-        writeFile("firmware.c.txt", readFile("configs/13-termostat.c.txt", 2048));
-        writeFile("firmware.s.txt", readFile("configs/13-termostat.s.txt", 2048));
+        writeFile("firmware.c.txt", readFile("configs/13-bme280.c.txt", 2048));
+        writeFile("firmware.s.txt", readFile("configs/13-bme280.s.txt", 2048));
       }
       if (value == "14") {
-        writeFile("firmware.c.txt", readFile("configs/14-level.c.txt", 2048));
-        writeFile("firmware.s.txt", readFile("configs/14-level.s.txt", 2048));
+        writeFile("firmware.c.txt", readFile("configs/14-dallas.c.txt", 2048));
+        writeFile("firmware.s.txt", readFile("configs/14-dallas.s.txt", 2048));
       }
       if (value == "15") {
-        writeFile("firmware.c.txt", readFile("configs/15-moution.c.txt", 2048));
-        writeFile("firmware.s.txt", readFile("configs/15-moution.s.txt", 2048));
+        writeFile("firmware.c.txt", readFile("configs/15-termostat.c.txt", 2048));
+        writeFile("firmware.s.txt", readFile("configs/15-termostat.s.txt", 2048));
       }
       if (value == "16") {
-        writeFile("firmware.c.txt", readFile("configs/16-moution.c.txt", 2048));
-        writeFile("firmware.s.txt", readFile("configs/16-moution.s.txt", 2048));
+        writeFile("firmware.c.txt", readFile("configs/16-level.c.txt", 2048));
+        writeFile("firmware.s.txt", readFile("configs/16-level.s.txt", 2048));
       }
       if (value == "17") {
-        writeFile("firmware.c.txt", readFile("configs/17-stepper.c.txt", 2048));
-        writeFile("firmware.s.txt", readFile("configs/17-stepper.s.txt", 2048));
+        writeFile("firmware.c.txt", readFile("configs/17-moution.c.txt", 2048));
+        writeFile("firmware.s.txt", readFile("configs/17-moution.s.txt", 2048));
       }
       if (value == "18") {
-        writeFile("firmware.c.txt", readFile("configs/18-servo.c.txt", 2048));
-        writeFile("firmware.s.txt", readFile("configs/18-servo.s.txt", 2048));
+        writeFile("firmware.c.txt", readFile("configs/18-moution.c.txt", 2048));
+        writeFile("firmware.s.txt", readFile("configs/18-moution.s.txt", 2048));
       }
       if (value == "19") {
+        writeFile("firmware.c.txt", readFile("configs/19-stepper.c.txt", 2048));
+        writeFile("firmware.s.txt", readFile("configs/19-stepper.s.txt", 2048));
+      }
+      if (value == "20") {
+        writeFile("firmware.c.txt", readFile("configs/20-servo.c.txt", 2048));
+        writeFile("firmware.s.txt", readFile("configs/20-servo.s.txt", 2048));
+      }
+      if (value == "21") {
         writeFile("firmware.c.txt", readFile("configs/firmware.c.txt", 2048));
         writeFile("firmware.s.txt", readFile("configs/firmware.s.txt", 2048));
       }
@@ -112,11 +120,12 @@ void web_init() {
       request->send(200, "text/text", "OK");
     }
     //--------------------------------------------------------------------------------
-    if (request->hasArg("cleanlog")) {
 #ifdef logging_enable
+    if (request->hasArg("cleanlog")) {
       clean_log_date();
-#endif
+      request->send(200, "text/text", "OK");
     }
+#endif
     //==============================udp settings=============================================
     if (request->hasArg("udponoff")) {
       value = request->getParam("udponoff")->value();
@@ -199,6 +208,19 @@ void web_init() {
       if (request->getParam("device")->value() == "ok") ESP.restart();
       request->send(200, "text/text", "OK");
     }
+    //--------------------------------------------------------------------------------
+    if (request->hasArg("blink")) {
+      value = request->getParam("blink")->value();
+      if (value == "0") {
+        jsonWriteStr(configSetupJson, "blink", value);
+        saveConfig();
+      }
+      if (value == "1") {
+        jsonWriteStr(configSetupJson, "blink", value);
+        saveConfig();
+      }
+      request->send(200, "text/text", "OK");
+    }
     //==============================mqtt settings=============================================
     if (request->hasArg("mqttServer")) {
       jsonWriteStr(configSetupJson, "mqttServer", request->getParam("mqttServer")->value());
@@ -247,9 +269,9 @@ void web_init() {
 #ifdef push_enable
     if (request->hasArg("pushingboxid")) {
       jsonWriteStr(configSetupJson, "pushingboxid", request->getParam("pushingboxid")->value());
+      saveConfig();
+      request->send(200, "text/text", "ok");
     }
-    saveConfig();
-    request->send(200, "text/text", "ok");
 #endif
     //==============================utilities settings=============================================
     if (request->hasArg("itoc")) {
@@ -263,35 +285,65 @@ void web_init() {
     Serial.print("[i] Last firmware version: ");
     Serial.println(last_version);
     String tmp = "{}";
-    if (WiFi.status() == WL_CONNECTED) {
-      if (mb_4_of_memory) {
-        if (last_version != "") {
-          if (last_version != "error") {
-            if (last_version == firmware_version) {
-              jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
-              jsonWriteStr(tmp, "class", "pop-up");
-            } else {
-              jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Имеется новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
-              jsonWriteStr(tmp, "class", "pop-up");
-            }
-          } else {
-            jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Ошибка... Cервер не найден. Попробуйте позже...");
-            jsonWriteStr(tmp, "class", "pop-up");
-          }
-        } else {
-          jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Нажмите на кнопку \"обновить прошивку\" повторно...");
+    int case_of_update;
+
+    if (WiFi.status() != WL_CONNECTED) last_version = "nowifi";
+    if (!mb_4_of_memory) last_version = "less";
+
+    if (last_version == firmware_version) case_of_update = 1;
+    if (last_version != firmware_version) case_of_update = 2;
+    if (last_version == "error") case_of_update = 3;
+    if (last_version == "") case_of_update = 4;
+    if (last_version == "less") case_of_update = 5;
+    if (last_version == "nowifi") case_of_update = 6;
+    if (last_version == "notsupported") case_of_update = 7;
+
+    switch (case_of_update) {
+      case 1: {
+          jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
           jsonWriteStr(tmp, "class", "pop-up");
         }
-      } else {
-        jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Обновление по воздуху не поддерживается, модуль имеет меньше 4 мб памяти...");
-        jsonWriteStr(tmp, "class", "pop-up");
-      }
-    } else {
-      jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Устройство не подключен к роутеру...");
-      jsonWriteStr(tmp, "class", "pop-up");
+        break;
+
+      case 2: {
+          jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Имеется новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
+          jsonWriteStr(tmp, "class", "pop-up");
+        }
+        break;
+
+      case 3: {
+          jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Ошибка... Cервер не найден. Попробуйте позже...");
+          jsonWriteStr(tmp, "class", "pop-up");
+        }
+        break;
+
+      case 4: {
+          jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Нажмите на кнопку \"обновить прошивку\" повторно...");
+          jsonWriteStr(tmp, "class", "pop-up");
+          break;
+        }
+
+      case 5: {
+          jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Обновление по воздуху не поддерживается, модуль имеет меньше 4 мб памяти...");
+          jsonWriteStr(tmp, "class", "pop-up");
+          break;
+        }
+
+      case 6: {
+          jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Устройство не подключено к роутеру...");
+          jsonWriteStr(tmp, "class", "pop-up");
+          break;
+        }
+
+      case 7: {
+          jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Обновление на новую версию возможно только через usb...");
+          jsonWriteStr(tmp, "class", "pop-up");
+          break;
+        }
     }
     request->send(200, "text/text", tmp);
   });
+
   server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest * request) {
     upgrade = true;
     String tmp = "{}";

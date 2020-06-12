@@ -19,8 +19,6 @@ void MQTT_init() {
   }, nullptr, true);
 }
 
-
-
 void do_mqtt_connection() {
   if (mqtt_connection) {
     mqtt_connection = false;
