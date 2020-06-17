@@ -1,5 +1,6 @@
 #include "Init.h"
 
+#include "Logging.h"
 #include "Scenario.h"
 #include "Timers.h"
 #include "Widgets.h"
