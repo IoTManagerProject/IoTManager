@@ -2,7 +2,7 @@
 
 #include "Global.h"
 
-inline void Push_init() {
+void Push_init() {
     server.on("/pushingboxDate", HTTP_GET, [](AsyncWebServerRequest* request) {
         if (request->hasArg("pushingbox_id")) {
             jsonWriteStr(configSetup, "pushingbox_id", request->getParam("pushingbox_id")->value());

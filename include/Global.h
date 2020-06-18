@@ -1,8 +1,190 @@
 #pragma once
 
 #include <Arduino.h>
+#include <ArduinoJson.h>
+#include <Bounce2.h>
+#include <ESPAsyncWebServer.h>
+#include <FS.h>
+#include <PubSubClient.h>
+#include <SPIFFSEditor.h>
+#include <StringCommand.h>
+#include <TickerScheduler.h>
+#include <time.h>
 
 #include "Consts.h"
+
+/* 
+* ESP8266
+*/
+#ifdef ESP8266
+#include <ESP8266HTTPClient.h>
+#include <ESP8266HTTPUpdateServer.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266httpUpdate.h>
+ESP8266HTTPUpdateServer httpUpdater;
+#include <WiFiUdp.h>
+WiFiUDP Udp;
+#include <Servo.h>
+#ifdef MDNS_enable
+#include <ESP8266mDNS.h>
+#endif
+#endif
+
+/* 
+* ESP32
+*/
+#ifdef ESP32
+#include <AsyncTCP.h>
+#include <AsyncUDP.h>
+#include <HTTPClient.h>
+#include <HTTPUpdate.h>
+#include <SPIFFS.h>
+#include <WiFi.h>
+#include <analogWrite.h>
+extern AsyncUDP udp;
+#include <ESP32Servo.h>
+#ifdef MDNS_enable
+#include <ESPmDNS.h>
+#endif
+#endif
+
+extern Servo myServo1;
+extern Servo myServo2;
+
+#ifdef OTA_enable
+#include <ArduinoOTA.h>
+#endif
+
+extern AsyncWebServer server;
+
+// Global vars
+extern boolean just_load;
+extern const char *hostName;
+
+extern String configSetup;
+extern String configJson;
+extern String optionJson;
+
+extern String chipID;
+extern String prex;
+extern String all_widgets;
+extern String scenario;
+extern String order_loop;
+
+extern String analog_value_names_list;
+extern int enter_to_analog_counter;
+
+extern String level_value_name;
+
+extern String dhtT_value_name;
+extern String dhtH_value_name;
+
+extern String bmp280T_value_name;
+extern String bmp280P_value_name;
+
+extern String bme280T_value_name;
+extern String bme280P_value_name;
+extern String bme280H_value_name;
+extern String bme280A_value_name;
+
+extern String logging_value_names_list;
+extern int enter_to_logging_counter;
+
+extern String current_time;
+
+extern int scenario_line_status[40];
+
+extern int wifi_lost_error;
+extern int mqtt_lost_error;
+
+extern String last_version;
+
+extern boolean upgrade_url;
+extern boolean upgrade;
+extern boolean mqtt_connection;
+extern boolean udp_data_parse;
+extern boolean mqtt_send_settings_to_udp;
+extern boolean i2c_scanning;
+
+#ifdef WS_enable
+extern AsyncWebSocket ws;
+#endif
+
+extern AsyncEventSource events;
+
+extern int sensors_reading_map[15];
+
+enum { ROUTER_SEARCHING,
+       WIFI_MQTT_CONNECTION_CHECK,
+       SENSORS,
+       STEPPER1,
+       STEPPER2,
+       LOG1,
+       LOG2,
+       LOG3,
+       LOG4,
+       LOG5,
+       TIMER_COUNTDOWN,
+       TIME,
+       TIME_SYNC,
+       STATISTICS,
+       UDP,
+       UDP_DB,
+       TEST };
+
+extern TickerScheduler ts;
+
+extern WiFiClient espClient;
+extern PubSubClient client_mqtt;
+extern StringCommand sCmd;
+
+#define NUM_BUTTONS 6
+extern boolean but[NUM_BUTTONS];
+extern Bounce *buttons;
+
+extern boolean udp_busy;
+extern unsigned int udp_port;
+extern IPAddress udp_multicastIP;
+extern String received_ip;
+extern String received_udp_line;
+extern int udp_period;
+
+#ifdef level_enable
+#include "GyverFilters.h"  //настраивается в GyverHacks.h - MEDIAN_FILTER_SIZE
+GMedian medianFilter;
+#endif
+
+#ifdef dallas_enable
+#include <DallasTemperature.h>
+#include <OneWire.h>
+OneWire *oneWire;
+DallasTemperature sensors;
+#endif
+
+#ifdef dht_enable
+#include <DHTesp.h>
+DHTesp dht;
+#endif
+
+#include <Wire.h>
+
+#ifdef bmp_enable
+#include <Adafruit_BMP280.h>
+Adafruit_BMP280 bmp;  // use I2C interface
+Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
+Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
+#endif
+
+#ifdef bme_enable
+#include <Adafruit_BME280.h>
+Adafruit_BME280 bme;  // use I2C interface
+Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
+Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
+Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
+#endif
+
+//#include <SoftwareSerial.h>
+//SoftwareSerial mySerial(14, 12);
 
 // Cmd
 extern void CMD_init();
@@ -61,12 +243,12 @@ extern void choose_log_date_and_send();
 // Main
 void getMemoryLoad(String text);
 
-extern String jsonReadStr(String& json, String name);
-extern int jsonReadInt(String& json, String name);
-extern String jsonWriteInt(String& json, String name, int volume);
-extern String jsonWriteStr(String& json, String name, String volume);
+extern String jsonReadStr(String &json, String name);
+extern int jsonReadInt(String &json, String name);
+extern String jsonWriteInt(String &json, String name, int volume);
+extern String jsonWriteStr(String &json, String name, String volume);
 extern void saveConfig();
-extern String jsonWriteFloat(String& json, String name, float volume);
+extern String jsonWriteFloat(String &json, String name, float volume);
 
 extern String getURL(String urls);
 
@@ -85,10 +267,9 @@ extern String selectFromMarkerToMarker(String str, String found, int number);
 
 extern void servo_();
 extern boolean isDigitStr(String str);
-extern String jsonWriteStr(String& json, String name, String volume);
+extern String jsonWriteStr(String &json, String name, String volume);
 extern void led_blink(String satus);
 extern int count(String str, String found);
-
 
 // Mqtt
 extern void MQTT_init();

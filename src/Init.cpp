@@ -66,7 +66,7 @@ void Device_init() {
 
     int array_sz = sizeof(sensors_reading_map) / sizeof(sensors_reading_map[0]);
 
-    for (int i = 0; i < array_sz; i++) {        
+    for (int i = 0; i < array_sz; i++) {
         sensors_reading_map[i] = 0;
     }
 
@@ -219,20 +219,16 @@ void statistics() {
         urls += "iot-manager_esp32";
 #endif
         urls += "&";
-        //-----------------------------------------------------------------
 #ifdef ESP8266
         urls += ESP.getResetReason();
-        //Serial.println(ESP.getResetReason());
 #endif
 #ifdef ESP32
         urls += "Power on";
 #endif
         urls += "&";
-        //-----------------------------------------------------------------
-        urls += "ver: " + firmware_version;
-        //-----------------------------------------------------------------
+        urls += "ver: ";
+        urls += String(firmware_version);
         String stat = getURL(urls);
-        //Serial.println(stat);
     }
 }
 
