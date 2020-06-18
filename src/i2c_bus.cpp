@@ -1,7 +1,4 @@
-#include "i2c_bus.h"
-
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
 void do_i2c_scanning() {
     if (i2c_scanning) {

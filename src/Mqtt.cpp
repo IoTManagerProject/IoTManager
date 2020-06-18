@@ -1,10 +1,11 @@
-#include "Mqtt.h"
+#include "Global.h"
 
-#include <Arduino.h>
-
-#include "WiFi.h"
-#include "main.h"
-#include "set.h"
+void callback(char* topic, byte* payload, unsigned int length);
+String stateMQTT();
+void sendAllData();
+void sendAllWigets();
+void sendSTATUS(String topik, String state);
+void outcoming_date();
 
 //===============================================ИНИЦИАЛИЗАЦИЯ================================================
 void MQTT_init() {
@@ -217,7 +218,7 @@ void sendAllWigets() {
     }
     configFile.seek(0, SeekSet);  //поставим курсор в начало файла
     while (configFile.position() != configFile.size()) {
-        String widget_to_send = configFile.readStringUntil("\r\n");
+        String widget_to_send = configFile.readStringUntil('\n');
         Serial.println("[V] " + widget_to_send);
         sendMQTT("config", widget_to_send);
     }

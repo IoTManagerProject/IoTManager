@@ -1,7 +1,4 @@
-#include "Widgets.h"
-
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
 void createWidget(String widget_name, String page_name, String page_number, String file, String topic) {
     String widget;

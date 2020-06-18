@@ -1,6 +1,4 @@
-#include "Sensors.h"
-
-#include "set.h"
+#include "Global.h"
 
 void sensors_init() {
     ts.add(

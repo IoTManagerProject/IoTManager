@@ -1,7 +1,4 @@
-#include "Upgrade.h"
-
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
 static const char* UPGRADE_URL PROGMEM = "http://91.204.228.124:1100/update/";
 
@@ -20,11 +17,11 @@ void initUpgrade() {
     String last_version = WiFi.status() == WL_CONNECTED ? getURL(getUpgradeUrl()) : "";
     jsonWriteStr(configSetup, "last_version", last_version);
 
-    Serial.printf("[i] Last firmware version: %s\n", last_version);
+    Serial.printf("[i] Last firmware version: %s\n", last_version.c_str());
 
     server.on("/check", HTTP_GET, [last_version](AsyncWebServerRequest* request) {
         upgrade_url = true;
-        Serial.printf("[i] Last firmware version: %s\n", last_version);
+        Serial.printf("[i] Last firmware version: %s\n", last_version.c_str());
         String tmp = "{}";
         if (WiFi.status() == WL_CONNECTED) {
             if (mb_4_of_memory) {

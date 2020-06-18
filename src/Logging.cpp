@@ -1,10 +1,6 @@
-#include "Logging.h"
+#include "Global.h"
 
-#include "Mqtt.h"
-#include "TimeUtils.h"
-#include "Widgets.h"
-#include "main.h"
-#include "set.h"
+void sendLogData(String file, String topic);
 
 #ifdef logging_enable
 //===============================================Логирование============================================================
@@ -105,7 +101,8 @@ void choose_log_date_and_send() {
     String all_line = logging_value_names_list;
     while (all_line.length() != 0) {
         String tmp = selectToMarker(all_line, ",");
-        sendLogData("log." + tmp + ".txt", tmp + "_ch");
+        sendLogData("log." + tmp + ".txt", tmp + "_ch"
+        );
         all_line = deleteBeforeDelimiter(all_line, ",");
     }
     all_line = "";

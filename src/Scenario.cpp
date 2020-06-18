@@ -1,7 +1,4 @@
-#include "Scenario.h"
-
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
 void handleScenario() {
     if (jsonReadStr(configSetup, "scenario") == "1") {

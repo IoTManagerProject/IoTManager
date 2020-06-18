@@ -1,53 +1,64 @@
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
-void WIFI_init() {
+boolean RouterFind(String ssid);
+
+void WIFI_init()
+{
     // --------------------Получаем ssid password со страницы
-    server.on("/ssid", HTTP_GET, [](AsyncWebServerRequest* request) {
-        if (request->hasArg("ssid")) {
+    server.on("/ssid", HTTP_GET, [](AsyncWebServerRequest *request) {
+        if (request->hasArg("ssid"))
+        {
             jsonWriteStr(configSetup, "ssid", request->getParam("ssid")->value());
         }
-        if (request->hasArg("password")) {
+        if (request->hasArg("password"))
+        {
             jsonWriteStr(configSetup, "password", request->getParam("password")->value());
         }
-        saveConfig();                           // Функция сохранения данных во Flash
-        request->send(200, "text/text", "OK");  // отправляем ответ о выполнении
+        saveConfig();                          // Функция сохранения данных во Flash
+        request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
     });
     // --------------------Получаем ssidAP passwordAP со страницы
-    server.on("/ssidap", HTTP_GET, [](AsyncWebServerRequest* request) {
-        if (request->hasArg("ssidAP")) {
+    server.on("/ssidap", HTTP_GET, [](AsyncWebServerRequest *request) {
+        if (request->hasArg("ssidAP"))
+        {
             jsonWriteStr(configSetup, "ssidAP", request->getParam("ssidAP")->value());
         }
-        if (request->hasArg("passwordAP")) {
+        if (request->hasArg("passwordAP"))
+        {
             jsonWriteStr(configSetup, "passwordAP", request->getParam("passwordAP")->value());
         }
-        saveConfig();                           // Функция сохранения данных во Flash
-        request->send(200, "text/text", "OK");  // отправляем ответ о выполнении
+        saveConfig();                          // Функция сохранения данных во Flash
+        request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
     });
 
     // --------------------Получаем логин и пароль для web со страницы
-    server.on("/web", HTTP_GET, [](AsyncWebServerRequest* request) {
-        if (request->hasArg("web_login")) {
+    server.on("/web", HTTP_GET, [](AsyncWebServerRequest *request) {
+        if (request->hasArg("web_login"))
+        {
             jsonWriteStr(configSetup, "web_login", request->getParam("web_login")->value());
         }
-        if (request->hasArg("web_pass")) {
+        if (request->hasArg("web_pass"))
+        {
             jsonWriteStr(configSetup, "web_pass", request->getParam("web_pass")->value());
         }
-        saveConfig();  // Функция сохранения данных во Flash
+        saveConfig(); // Функция сохранения данных во Flash
         //Web_server_init();
-        request->send(200, "text/text", "OK");  // отправляем ответ о выполнении
+        request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
     });
 
-    server.on("/restart", HTTP_GET, [](AsyncWebServerRequest* request) {
-        if (request->hasArg("device")) {
-            if (request->getParam("device")->value() == "ok") ESP.restart();
+    server.on("/restart", HTTP_GET, [](AsyncWebServerRequest *request) {
+        if (request->hasArg("device"))
+        {
+            if (request->getParam("device")->value() == "ok")
+                ESP.restart();
         }
-        request->send(200, "text/text", "OK");  // отправляем ответ о выполнении
+        request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
     });
     ROUTER_Connecting();
 }
 
-void ROUTER_Connecting() {
+void ROUTER_Connecting()
+{
     led_blink("slow");
 
     WiFi.mode(WIFI_STA);
@@ -57,17 +68,22 @@ void ROUTER_Connecting() {
     String _password = jsonReadStr(configSetup, "password");
     //WiFi.persistent(false);
 
-    if (_ssid == "" && _password == "") {
+    if (_ssid == "" && _password == "")
+    {
         WiFi.begin();
-    } else {
+    }
+    else
+    {
         WiFi.begin(_ssid.c_str(), _password.c_str());
         Serial.print("ssid: ");
         Serial.println(_ssid);
     }
     // Делаем проверку подключения до тех пор пока счетчик tries
     // не станет равен нулю или не получим подключение
-    while (--tries && WiFi.status() != WL_CONNECTED) {
-        if (WiFi.status() == WL_CONNECT_FAILED) {
+    while (--tries && WiFi.status() != WL_CONNECTED)
+    {
+        if (WiFi.status() == WL_CONNECT_FAILED)
+        {
             Serial.println("[E] password is not correct");
             tries = 1;
             jsonWriteInt(optionJson, "pass_status", 1);
@@ -77,9 +93,12 @@ void ROUTER_Connecting() {
     }
 
     Serial.println();
-    if (WiFi.status() != WL_CONNECTED) {
+    if (WiFi.status() != WL_CONNECTED)
+    {
         StartAPMode();
-    } else {
+    }
+    else
+    {
         Serial.println("[V] WiFi connected");
         Serial.print("[V] IP address: http://");
         Serial.print(WiFi.localIP());
@@ -90,7 +109,8 @@ void ROUTER_Connecting() {
     }
 }
 
-bool StartAPMode() {
+bool StartAPMode()
+{
     Serial.println("WiFi up AP");
     WiFi.disconnect();
 
@@ -105,11 +125,13 @@ bool StartAPMode() {
     Serial.println(myIP);
     jsonWriteStr(configJson, "ip", myIP.toString());
 
-    if (jsonReadInt(optionJson, "pass_status") != 1) {
+    if (jsonReadInt(optionJson, "pass_status") != 1)
+    {
         ts.add(
-            ROUTER_SEARCHING, 10 * 1000, [&](void*) {
+            ROUTER_SEARCHING, 10 * 1000, [&](void *) {
                 Serial.println("->try find router");
-                if (RouterFind(jsonReadStr(configSetup, "ssid"))) {
+                if (RouterFind(jsonReadStr(configSetup, "ssid")))
+                {
                     ts.remove(ROUTER_SEARCHING);
                     WiFi.scanDelete();
                     ROUTER_Connecting();
@@ -121,43 +143,52 @@ bool StartAPMode() {
     return true;
 }
 
-boolean RouterFind(String ssid) {
+boolean RouterFind(String ssid)
+{
+    bool res = false;
+
     int n = WiFi.scanComplete();
     Serial.println("n = " + String(n));
-    if (n == -2) {  //Сканирование не было запущено, запускаем
+    if (n == -2)
+    { //Сканирование не было запущено, запускаем
         Serial.println("[WIFI][i] scanning has not been triggered, starting scanning");
-        WiFi.scanNetworks(true, false);  //async, show_hidden
-        return false;
+        WiFi.scanNetworks(true, false); //async, show_hidde
     }
-    if (n == -1) {  //Сканирование все еще выполняется
+    else if (n == -1)
+    { //Сканирование все еще выполняется
         Serial.println("[WIFI][i] scanning still in progress");
-        return false;
     }
-    if (n == 0) {  //ни одна сеть не найдена
+    else if (n == 0)
+    { //ни одна сеть не найдена
         Serial.println("[WIFI][i] no any wifi sations, starting scanning");
         WiFi.scanNetworks(true, false);
-        return false;
     }
-    if (n > 0) {
-        for (int i = 0; i <= n; i++) {
-            if (WiFi.SSID(i) == ssid) {
+    else if (n > 0)
+    {
+        for (int i = 0; i <= n; i++)
+        {
+            if (WiFi.SSID(i) == ssid)
+            {
                 WiFi.scanDelete();
-                return true;
-            } else {
+                res = true;
+            }
+            else
+            {
                 Serial.print(i);
                 Serial.print(")");
-                //Serial.print(ssid);
-                //Serial.print("<=>");
-                if (i == n) {
+                if (i == n)
+                {
                     Serial.print(WiFi.SSID(i));
                     Serial.println("; ");
-                } else {
+                }
+                else
+                {
                     Serial.print(WiFi.SSID(i));
                     Serial.println("; ");
                 }
             }
         }
         WiFi.scanDelete();
-        return false;
     }
+    return res;
 }

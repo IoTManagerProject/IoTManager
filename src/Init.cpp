@@ -1,11 +1,4 @@
-#include "Init.h"
-
-#include "Logging.h"
-#include "Scenario.h"
-#include "Timers.h"
-#include "Widgets.h"
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
 void All_init() {
     server.on("/init", HTTP_GET, [](AsyncWebServerRequest* request) {
@@ -73,7 +66,7 @@ void Device_init() {
 
     int array_sz = sizeof(sensors_reading_map) / sizeof(sensors_reading_map[0]);
 
-    for (int i = 0; i <= array_sz; i++) {
+    for (int i = 0; i < array_sz; i++) {        
         sensors_reading_map[i] = 0;
     }
 

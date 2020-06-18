@@ -1,6 +1,4 @@
-#include "main.h"
-
-#include "set.h"
+#include "Global.h"
 
 String jsonReadStr(String& json, String name) {
     DynamicJsonBuffer jsonBuffer;
@@ -60,6 +58,9 @@ uint16_t hexStringToUint16(String hex) {
 void saveConfig() {
     writeFile("config.json", configSetup);
 }
+
+//============================================================================================================
+//=============================================STRING===================================================
 
 // --------Выделяем строку от конца строки до маркера-----------------------------------------------------------
 String selectToMarkerLast(String str, String found) {
@@ -121,24 +122,23 @@ int count(String str, String found) {
     return i;  // Достигли пустой строки и ничего не нашли
 }
 
+
 boolean isDigitStr(String str) {
-    if (str.length() == 1) {
-        return Digit(str);
-    }
-    if (str.length() > 1) {
-        for (int i = 0; i < str.length(); i++) {
-            if (!Digit(String(str.charAt(i)))) return false;
+    for (int i = 0; i < str.length(); i++) {            
+        if (!isDigit(str.charAt(i)))  {
+            return false;
         }
-        return true;
     }
+    return str.length();
 }
-boolean Digit(String str) {
-    if (str == "0" || str == "1" || str == "2" || str == "3" || str == "4" || str == "5" || str == "6" || str == "7" || str == "8" || str == "9") {
-        return true;
-    } else {
-        return false;
-    }
-}
+
+// boolean digit(String str) {
+//     if (str == "0" || str == "1" || str == "2" || str == "3" || str == "4" || str == "5" || str == "6" || str == "7" || str == "8" || str == "9") {
+//         return true;
+//     } else {
+//         return false;
+//     }
+// }
 
 String getURL(String urls) {
     String answer = "";
@@ -153,10 +153,10 @@ String getURL(String urls) {
     http.end();
     return answer;
 }
-//===================================================================================================================
+//=================================================================================================================== 
 //===========================================FILES===================================================================
 // ------------- Добавление файла -----------------------------------------------------------------------------------
-String safeDataToFile(String data, String Folder) {
+void safeDataToFile(String data, String Folder) {
     //String fileName = GetDate();
     String fileName;
     fileName.toLowerCase();
@@ -168,6 +168,7 @@ String safeDataToFile(String data, String Folder) {
     Serial.println(fileName);
     jsonWriteStr(configJson, "test", fileName);
 }
+
 // ------------- Чтение файла в строку -------------------------------------------------------------------------------
 String readFile(String fileName, size_t len) {
     File configFile = SPIFFS.open("/" + fileName, "r");

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
 inline void Push_init() {
     server.on("/pushingboxDate", HTTP_GET, [](AsyncWebServerRequest* request) {

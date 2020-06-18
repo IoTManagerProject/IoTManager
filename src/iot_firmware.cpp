@@ -1,7 +1,4 @@
-#include "Cmd.h"
-#include "FileSystem.h"
-#include "Sensors.h"
-#include "set.h"
+#include "Global.h"
 
 void setup() {
     File_system_init();

@@ -1,8 +1,4 @@
-#include "Timers.h"
-
-#include "Scenario.h"
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
 void Timer_countdown_init() {
     ts.add(
@@ -33,7 +29,7 @@ void Timer_countdown_init() {
         nullptr, true);
 }
 
-void timerStart() {
+void timerStart_() {
     String number = sCmd.next();
     String period_of_time = sCmd.next();
     String type = sCmd.next();
@@ -64,7 +60,7 @@ void addTimer(String number, String time) {
     //Serial.println("ura");
 }
 
-void timerStop() {
+void timerStop_() {
     String number = sCmd.next();
     delTimer(number);
 }

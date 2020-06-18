@@ -1,5 +1,4 @@
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
 void Web_server_init() {
 #ifdef OTA_enable

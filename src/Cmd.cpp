@@ -1,11 +1,6 @@
-#include "Cmd.h"
+#include "Global.h"
 
-#include "Scenario.h"
-#include "TimeUtils.h"
-#include "Widgets.h"
-#include "main.h"
 #include "push_pushingbox.h"
-#include "set.h"
 
 void CMD_init() {
     sCmd.addCommand("button", button);
@@ -74,8 +69,8 @@ void CMD_init() {
     sCmd.addCommand("inputTime", inputTime);
     sCmd.addCommand("timeSet", timeSet);
 
-    sCmd.addCommand("timerStart", timerStart);
-    sCmd.addCommand("timerStop", timerStop);
+    sCmd.addCommand("timerStart", timerStart_);
+    sCmd.addCommand("timerStop", timerStop_);
 
     sCmd.addCommand("text", text);
     sCmd.addCommand("textSet", textSet);

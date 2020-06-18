@@ -1,7 +1,4 @@
-#include "TimeUtils.h"
-
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
 void Time_Init() {
     server.on("/time", HTTP_GET, [](AsyncWebServerRequest* request) {

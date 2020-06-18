@@ -1,9 +1,4 @@
-
-#include <FS.h>
-#include <SPIFFS.h>
-
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
 void File_system_init() {
     Serial.begin(115200);

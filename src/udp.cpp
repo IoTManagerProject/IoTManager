@@ -1,3 +1,8 @@
+#include "Global.h"
+
+void handleUdp_esp32();
+void add_dev_in_list(String fileName, String id, String dev_name, String ip);
+
 #ifdef UDP_enable
 void UDP_init() {
   server.on("/udp", HTTP_GET, [](AsyncWebServerRequest * request) {
