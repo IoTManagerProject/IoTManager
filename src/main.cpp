@@ -25,7 +25,7 @@ boolean isDigitStr(String str) {
     return str.length();
 }
 
-String getURL(String urls) {
+String getURL(const String& urls) {
     String res = "";
     HTTPClient http;
     http.begin(urls);

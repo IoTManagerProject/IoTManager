@@ -184,6 +184,23 @@ extern Adafruit_Sensor *bme_humidity;
 //#include <SoftwareSerial.h>
 //SoftwareSerial mySerial(14, 12);
 
+// StringUtils
+extern uint8_t hexStringToUint8(String hex);
+extern uint16_t hexStringToUint16(String hex);
+extern String selectToMarkerLast(String str, String found);
+extern String selectToMarker(String str, String found);
+extern String deleteAfterDelimiter(String str, String found);
+extern String deleteBeforeDelimiter(String str, String found);
+extern String deleteBeforeDelimiterTo(String str, String found);
+extern String selectFromMarkerToMarker(String str, String found, int number);
+
+// JsonUtils
+extern String jsonReadStr(String &json, String name);
+extern int jsonReadInt(String &json, String name);
+extern String jsonWriteInt(String &json, String name, int volume);
+extern String jsonWriteStr(String &json, String name, String volume);
+extern String jsonWriteFloat(String &json, String name, float volume);
+
 // Cmd
 extern void CMD_init();
 extern void button();
@@ -240,32 +257,12 @@ extern void choose_log_date_and_send();
 
 // Main
 void getMemoryLoad(String text);
-
-extern String jsonReadStr(String &json, String name);
-extern int jsonReadInt(String &json, String name);
-extern String jsonWriteInt(String &json, String name, int volume);
-extern String jsonWriteStr(String &json, String name, String volume);
 extern void saveConfig();
-extern String jsonWriteFloat(String &json, String name, float volume);
-
-extern String getURL(String urls);
+extern String getURL(const String &urls);
 
 extern String writeFile(String fileName, String strings);
 extern String readFile(String fileName, size_t len);
 extern String addFile(String fileName, String strings);
-
-// Main Utils - явно
-extern uint8_t hexStringToUint8(String hex);
-extern uint16_t hexStringToUint16(String hex);
-
-//STRING
-extern String selectToMarkerLast(String str, String found);
-extern String selectToMarker(String str, String found);
-extern String deleteAfterDelimiter(String str, String found);
-extern String deleteBeforeDelimiter(String str, String found);
-extern String deleteBeforeDelimiterTo(String str, String found);
-
-extern String selectFromMarkerToMarker(String str, String found, int number);
 
 extern void servo_();
 extern boolean isDigitStr(String str);
