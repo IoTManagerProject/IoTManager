@@ -98,3 +98,7 @@ int udp_period;
 
 // i2c
 String i2c_list;
+
+extern OneWire *oneWire;
+extern DallasTemperature sensors;
+

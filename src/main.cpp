@@ -39,8 +39,6 @@ String jsonWriteFloat(String& json, String name, float volume) {
     return json;
 }
 
-//============================================================================================================
-//=============================================BIT AND BYTE===================================================
 uint8_t hexStringToUint8(String hex) {
     uint8_t tmp = strtol(hex.c_str(), NULL, 0);
     if (tmp >= 0x00 && tmp <= 0xFF) {

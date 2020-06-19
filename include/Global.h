@@ -114,23 +114,26 @@ extern AsyncEventSource events;
 
 extern int sensors_reading_map[15];
 
-enum { ROUTER_SEARCHING,
-       WIFI_MQTT_CONNECTION_CHECK,
-       SENSORS,
-       STEPPER1,
-       STEPPER2,
-       LOG1,
-       LOG2,
-       LOG3,
-       LOG4,
-       LOG5,
-       TIMER_COUNTDOWN,
-       TIME,
-       TIME_SYNC,
-       STATISTICS,
-       UDP,
-       UDP_DB,
-       TEST };
+enum
+{
+    ROUTER_SEARCHING,
+    WIFI_MQTT_CONNECTION_CHECK,
+    SENSORS,
+    STEPPER1,
+    STEPPER2,
+    LOG1,
+    LOG2,
+    LOG3,
+    LOG4,
+    LOG5,
+    TIMER_COUNTDOWN,
+    TIME,
+    TIME_SYNC,
+    STATISTICS,
+    UDP,
+    UDP_DB,
+    TEST
+};
 
 extern TickerScheduler ts;
 
@@ -150,34 +153,30 @@ extern String received_udp_line;
 extern int udp_period;
 
 #ifdef level_enable
-#include "GyverFilters.h"  //настраивается в GyverHacks.h - MEDIAN_FILTER_SIZE
-GMedian medianFilter;
+#include "GyverFilters.h"
+GMedian<10, int> medianFilter;
 #endif
 
-#ifdef dallas_enable
 #include <DallasTemperature.h>
 #include <OneWire.h>
-OneWire *oneWire;
-DallasTemperature sensors;
-#endif
+extern OneWire *oneWire;
+extern DallasTemperature sensors;
 
-#ifdef dht_enable
 #include <DHTesp.h>
 DHTesp dht;
-#endif
 
 #include <Wire.h>
 
 #ifdef bmp_enable
 #include <Adafruit_BMP280.h>
-Adafruit_BMP280 bmp;  // use I2C interface
+Adafruit_BMP280 bmp; // use I2C interface
 Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
 Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
 #endif
 
 #ifdef bme_enable
 #include <Adafruit_BME280.h>
-Adafruit_BME280 bme;  // use I2C interface
+Adafruit_BME280 bme; // use I2C interface
 Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
 Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
 Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
@@ -256,6 +255,10 @@ extern String writeFile(String fileName, String strings);
 extern String readFile(String fileName, size_t len);
 extern String addFile(String fileName, String strings);
 
+// Main Utils - явно
+extern uint8_t hexStringToUint8(String hex);
+extern uint16_t hexStringToUint16(String hex);
+
 //STRING
 extern String selectToMarkerLast(String str, String found);
 extern String selectToMarker(String str, String found);
@@ -293,7 +296,44 @@ extern void eventGen(String event_name, String number);
 extern String add_set(String param_name);
 
 //Sensors
+// И как раз тут хорошо просто в Sensors.h это пихать - а не в один здоровенный ФАЙЛ
 extern void sensors_init();
+
+extern void level();
+extern void level_reading();
+
+extern void analog();
+extern void analog_reading1();
+extern void analog_reading2();
+extern void dallas_reading();
+extern void dhtT_reading();
+
+extern void dallas();
+
+extern void bmp280T();
+extern void bmp280P();
+extern void bmp280T_reading();
+extern void bmp280P_reading();
+
+extern void bme280T();
+extern void bme280P();
+extern void bme280H();
+extern void bme280A();
+
+extern void bme280T_reading();
+extern void bme280P_reading();
+extern void bme280H_reading();
+extern void bme280A_reading();
+
+extern void dhtT();
+extern void dhtH();
+extern void dhtP();
+extern void dhtC();
+extern void dhtD();
+extern void dhtH_reading();
+extern void dhtP_reading();
+extern void dhtC_reading();
+extern void dhtD_reading();
 
 //Timers
 extern void Timer_countdown_init();
@@ -326,7 +366,6 @@ extern void choose_widget_and_create(String widget_name, String page_name, Strin
 extern void createChart(String widget_name, String page_name, String page_number, String file, String topic, String maxCount);
 
 // Push
-
 extern void Push_init();
 
 // UDP

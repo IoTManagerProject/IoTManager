@@ -20,12 +20,12 @@
 /* 
 * Sensor 
 */
-//#define level_enable
-//#define analog_enable
-//#define dallas_enable
-//#define dht_enable
-//#define bmp_enable
-//#define bme_enable
+#define level_enable
+#define analog_enable
+#define dallas_enable
+#define dht_enable
+#define bmp_enable
+#define bme_enable
 
 /*
 * Logging
