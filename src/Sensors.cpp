@@ -216,9 +216,9 @@ void analog_reading2() {
 //=========================================Модуль температурного сенсора ds18b20===========================================================
 #ifdef dallas_enable
 void dallas() {
-    String value_name = sCmd.next();
+    //String value_name = sCmd.next();
     String pin = sCmd.next();
-    String address = sCmd.next();
+    //String address = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
