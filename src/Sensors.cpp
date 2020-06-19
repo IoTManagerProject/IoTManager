@@ -13,7 +13,7 @@ void sensors_init() {
 
 #ifdef level_enable
             if (sensors_reading_map[0] == 1)
-                level_reading();
+                ultrasonic_reading();
 #endif
 
             if (counter > 10) {
@@ -387,13 +387,12 @@ void dhtC() {
     sensors_reading_map[7] = 1;
 }
 
-void dhtC_reading() {
-    float value;
+void dhtC_reading() {  
     ComfortState cf;
     if (dht.getStatus() != 0) {
         sendSTATUS("dhtComfort", String(dht.getStatusString()));
     } else {
-        value = dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
+        float value = dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
         String final_line = get_comfort_status(cf);
         jsonWriteStr(configLiveJson, "dhtComfort", final_line);
         eventGen("dhtComfort", "");

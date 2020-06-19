@@ -298,7 +298,7 @@ extern void sensors_init();
 
 extern void levelPr();
 extern void ultrasonicCm();
-extern void level_reading();
+extern void ultrasonic_reading();
 
 
 extern void analog();
