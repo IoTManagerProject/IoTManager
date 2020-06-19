@@ -24,7 +24,7 @@ const String getFirmwareUrl() {
 
 void initUpgrade() {
     String last_version = WiFi.status() == WL_CONNECTED ? getURL(getVersionUrl()) : "";
-    jsonWriteStr(configSetup, "last_version", last_version);
+    jsonWriteStr(configSetupJson, "last_version", last_version);
 
     Serial.printf("[i] Last firmware version: %s\n", last_version.c_str());
 
@@ -73,17 +73,17 @@ void do_upgrade_url() {
     if (upgrade_url) {
         upgrade_url = false;
         last_version = getURL(getVersionUrl());
-        jsonWriteStr(configSetup, "last_version", last_version);
+        jsonWriteStr(configSetupJson, "last_version", last_version);
     }
 }
 
 void upgrade_firmware() {
     String scenario_for_update;
     String config_for_update;
-    String configSetup_for_update;
+    String configSetupJson_for_update;
     scenario_for_update = readFile("firmware.s.txt", 4000);
     config_for_update = readFile("firmware.c.txt", 4000);
-    configSetup_for_update = configSetup;
+    configSetupJson_for_update = configSetupJson;
 
     Serial.println("Start upgrade SPIFFS, please wait...");
 
@@ -95,7 +95,7 @@ void upgrade_firmware() {
     if (ret == HTTP_UPDATE_OK) {
         writeFile("firmware.s.txt", scenario_for_update);
         writeFile("firmware.c.txt", config_for_update);
-        writeFile("config.json", configSetup_for_update);
+        writeFile("config.json", configSetupJson_for_update);
         saveConfig();
 
         Serial.println("SPIFFS upgrade done!");
@@ -157,16 +157,16 @@ void do_upgrade() {
   if (spiffsData != "") { // Если нужно прошить FS
     String scenario_for_update;
     String config_for_update;
-    String configSetup_for_update;
+    String configSetupJson_for_update;
     Serial.println(spiffsData);
     scenario_for_update = readFile("firmware.s.txt", 2048);
     config_for_update = readFile("config.all.txt", 2048);
-    configSetup_for_update = configSetup;
+    configSetupJson_for_update = configSetupJson;
     ESPhttpUpdate.rebootOnUpdate(false); // Отключим перезагрузку после обновления
     updateHTTP(spiffsData, true);
     writeFile("firmware.s.txt", scenario_for_update);
     writeFile("config.all.txt", config_for_update);
-    writeFile("config.json", configSetup_for_update);
+    writeFile("config.json", configSetupJson_for_update);
     saveConfig();
   }
 

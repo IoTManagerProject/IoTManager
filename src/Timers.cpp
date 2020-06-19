@@ -3,7 +3,7 @@
 void Timer_countdown_init() {
     ts.add(
         TIMER_COUNTDOWN, 1000, [&](void*) {
-            String old_line = jsonReadStr(optionJson, "timers");
+            String old_line = jsonReadStr(configOptionJson, "timers");
             if (old_line != "") {
                 //Serial.println(old_line);
                 int i = 0;
@@ -16,7 +16,7 @@ void Timer_countdown_init() {
                     int time = readTimer(number);
                     if (time == 0) {
                         delTimer(String(number));
-                        jsonWriteStr(configJson, "timer" + String(number), "0");
+                        jsonWriteStr(configLiveJson, "timer" + String(number), "0");
                         eventGen("timer", String(number));
                     } else {
                         time--;
@@ -34,17 +34,17 @@ void timerStart_() {
     String period_of_time = sCmd.next();
     String type = sCmd.next();
     if (period_of_time.indexOf("digit") != -1) {
-        period_of_time = jsonReadStr(configJson, period_of_time);
+        period_of_time = jsonReadStr(configLiveJson, period_of_time);
     }
     if (type == "sec") period_of_time = period_of_time;
     if (type == "min") period_of_time = String(period_of_time.toInt() * 60);
     if (type == "hours") period_of_time = String(period_of_time.toInt() * 60 * 60);
     addTimer(number, period_of_time);
-    jsonWriteStr(configJson, "timer" + number, "1");
+    jsonWriteStr(configLiveJson, "timer" + number, "1");
 }
 
 void addTimer(String number, String time) {
-    String tmp = jsonReadStr(optionJson, "timers");  //1:60,2:120,
+    String tmp = jsonReadStr(configOptionJson, "timers");  //1:60,2:120,
     String new_timer = number + ":" + time;
     int psn1 = tmp.indexOf(number + ":");          //0  ищем позицию таймера который надо заменить
     if (psn1 != -1) {                              //если он есть
@@ -56,7 +56,7 @@ void addTimer(String number, String time) {
     } else {  //если его нет
         tmp += new_timer + ",";
     }
-    jsonWriteStr(optionJson, "timers", tmp);
+    jsonWriteStr(configOptionJson, "timers", tmp);
     //Serial.println("ura");
 }
 
@@ -66,18 +66,18 @@ void timerStop_() {
 }
 
 void delTimer(String number) {
-    String tmp = jsonReadStr(optionJson, "timers");      //1:60,2:120,
+    String tmp = jsonReadStr(configOptionJson, "timers");      //1:60,2:120,
     int psn1 = tmp.indexOf(number + ":");                //0  ищем позицию таймера который надо удалить
     if (psn1 != -1) {                                    //если он есть
         int psn2 = tmp.indexOf(",", psn1);               //4    от этой позиции находим позицию запятой
         String timer = tmp.substring(psn1, psn2) + ",";  //1:60,  выделяем таймер который надо удалить
         tmp.replace(timer, "");                          //удаляем таймер
-        jsonWriteStr(optionJson, "timers", tmp);
+        jsonWriteStr(configOptionJson, "timers", tmp);
     }
 }
 
 int readTimer(int number) {
-    String tmp = jsonReadStr(optionJson, "timers");  //1:60,2:120,
+    String tmp = jsonReadStr(configOptionJson, "timers");  //1:60,2:120,
     int psn1 = tmp.indexOf(String(number) + ":");    //0  ищем позицию таймера который надо прочитать
     String timer;
     if (psn1 != -1) {                       //если он есть

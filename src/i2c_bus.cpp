@@ -7,10 +7,10 @@ void do_i2c_scanning() {
         if (tmp == "error") {
             tmp = i2c_scan();
             Serial.println(tmp);
-            jsonWriteStr(configJson, "i2c", tmp);
+            jsonWriteStr(configLiveJson, "i2c", tmp);
         } else {
             Serial.println(tmp);
-            jsonWriteStr(configJson, "i2c", tmp);
+            jsonWriteStr(configLiveJson, "i2c", tmp);
         }
     }
 }

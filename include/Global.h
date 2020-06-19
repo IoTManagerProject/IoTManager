@@ -61,9 +61,9 @@ extern AsyncWebServer server;
 extern boolean just_load;
 extern const char *hostName;
 
-extern String configSetup;
-extern String configJson;
-extern String optionJson;
+extern String configSetupJson;  //все настройки
+extern String configLiveJson;   //все данные с датчиков (связан с mqtt)
+extern String configOptionJson; //для трансфера
 
 extern String chipID;
 extern String prex;
@@ -74,7 +74,8 @@ extern String order_loop;
 extern String analog_value_names_list;
 extern int enter_to_analog_counter;
 
-extern String level_value_name;
+extern String levelPr_value_name;
+extern String ultrasonicCm_value_name;
 
 extern String dhtT_value_name;
 extern String dhtH_value_name;
@@ -228,8 +229,8 @@ extern void text();
 extern void textSet();
 extern void mqttOrderSend();
 extern void httpOrderSend();
-extern void firmware();
-extern void update_firmware();
+extern void firmwareVersion();
+extern void firmwareUpdate();
 extern void Scenario_init();
 extern void txtExecution(String file);
 extern void stringExecution(String str);
@@ -295,8 +296,10 @@ extern String add_set(String param_name);
 // И как раз тут хорошо просто в Sensors.h это пихать - а не в один здоровенный ФАЙЛ
 extern void sensors_init();
 
-extern void level();
+extern void levelPr();
+extern void ultrasonicCm();
 extern void level_reading();
+
 
 extern void analog();
 extern void analog_reading1();

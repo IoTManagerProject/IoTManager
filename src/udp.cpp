@@ -11,11 +11,11 @@ void UDP_init() {
       value = request->getParam("arg")->value();
     }
     if (value == "0") {
-      jsonWriteStr(configSetup, "udponoff", value);
+      jsonWriteStr(configSetupJson, "udponoff", value);
       request->send(200, "text/text", "ok");
     }
     if (value == "1") {
-      jsonWriteStr(configSetup, "udponoff", value);
+      jsonWriteStr(configSetupJson, "udponoff", value);
       request->send(200, "text/text", "ok");
     }
     if (value == "2") {
@@ -33,8 +33,8 @@ void UDP_init() {
   });
   server.on("/name", HTTP_GET, [](AsyncWebServerRequest * request) {
     if (request->hasArg("arg")) {
-      jsonWriteStr(configSetup, "name", request->getParam("arg")->value());
-      jsonWriteStr(configJson, "name", request->getParam("arg")->value());
+      jsonWriteStr(configSetupJson, "name", request->getParam("arg")->value());
+      jsonWriteStr(configLiveJson, "name", request->getParam("arg")->value());
       saveConfig();
     }
     request->send(200, "text/text", "OK");
@@ -53,10 +53,10 @@ void UDP_init() {
   udp_period = random(50000, 60000);
 
   ts.add(UDP, udp_period, [&](void*) {
-    if (jsonReadStr(configSetup, "udponoff") == "1") {
+    if (jsonReadStr(configSetupJson, "udponoff") == "1") {
       if (WiFi.status() == WL_CONNECTED) {
         if (!udp_busy) {
-          String line_to_send = "iotm;" + chipID + ";" + jsonReadStr(configSetup, "name");
+          String line_to_send = "iotm;" + chipID + ";" + jsonReadStr(configSetupJson, "name");
 #ifdef ESP8266
           Udp.beginPacketMulticast(udp_multicastIP, udp_port, WiFi.localIP());
           Udp.write(line_to_send.c_str());
@@ -74,7 +74,7 @@ void UDP_init() {
 
 void handleUdp() {
 #ifdef ESP8266
-  if (jsonReadStr(configSetup, "udponoff") == "1") {
+  if (jsonReadStr(configSetupJson, "udponoff") == "1") {
     if (WiFi.status() == WL_CONNECTED) {
       int packetSize = Udp.parsePacket();
       if (packetSize) {
@@ -105,7 +105,7 @@ void handleUdp_esp32() {
     udp.onPacket([](AsyncUDPPacket packet) {
       received_udp_line = (char*)packet.data();
       received_ip = packet.remoteIP().toString();
-      if (jsonReadStr(configSetup, "udponoff") == "1") {
+      if (jsonReadStr(configSetupJson, "udponoff") == "1") {
 
         if (received_udp_line.indexOf("iotm;") >= 0) {
           udp_data_parse = true;
@@ -127,11 +127,11 @@ void do_udp_data_parse() {
     Serial.print(" ");
     Serial.println(received_udp_line);
     if (received_udp_line.indexOf("mqttServer") >= 0) {
-      jsonWriteStr(configSetup, "mqttServer", jsonReadStr(received_udp_line, "mqttServer"));
-      jsonWriteInt(configSetup, "mqttPort", jsonReadInt(received_udp_line, "mqttPort"));
-      jsonWriteStr(configSetup, "mqttPrefix", jsonReadStr(received_udp_line, "mqttPrefix"));
-      jsonWriteStr(configSetup, "mqttUser", jsonReadStr(received_udp_line, "mqttUser"));
-      jsonWriteStr(configSetup, "mqttPass", jsonReadStr(received_udp_line, "mqttPass"));
+      jsonWriteStr(configSetupJson, "mqttServer", jsonReadStr(received_udp_line, "mqttServer"));
+      jsonWriteInt(configSetupJson, "mqttPort", jsonReadInt(received_udp_line, "mqttPort"));
+      jsonWriteStr(configSetupJson, "mqttPrefix", jsonReadStr(received_udp_line, "mqttPrefix"));
+      jsonWriteStr(configSetupJson, "mqttUser", jsonReadStr(received_udp_line, "mqttUser"));
+      jsonWriteStr(configSetupJson, "mqttPass", jsonReadStr(received_udp_line, "mqttPass"));
       saveConfig();
       Serial.println("[V] new mqtt setting received from udp and saved");
       mqtt_connection = true;
@@ -150,15 +150,15 @@ void add_dev_in_list(String fileName, String id, String dev_name, String ip) {
 }
 
 void send_mqtt_to_udp() {
-  if (jsonReadStr(configSetup, "udponoff") == "1") {
+  if (jsonReadStr(configSetupJson, "udponoff") == "1") {
     if (WiFi.status() == WL_CONNECTED) {
       udp_busy = true;
       String mqtt_data = "{}";
-      jsonWriteStr(mqtt_data, "mqttServer", jsonReadStr(configSetup, "mqttServer"));
-      jsonWriteInt(mqtt_data, "mqttPort", jsonReadInt(configSetup, "mqttPort"));
-      jsonWriteStr(mqtt_data, "mqttPrefix", jsonReadStr(configSetup, "mqttPrefix"));
-      jsonWriteStr(mqtt_data, "mqttUser", jsonReadStr(configSetup, "mqttUser"));
-      jsonWriteStr(mqtt_data, "mqttPass", jsonReadStr(configSetup, "mqttPass"));
+      jsonWriteStr(mqtt_data, "mqttServer", jsonReadStr(configSetupJson, "mqttServer"));
+      jsonWriteInt(mqtt_data, "mqttPort", jsonReadInt(configSetupJson, "mqttPort"));
+      jsonWriteStr(mqtt_data, "mqttPrefix", jsonReadStr(configSetupJson, "mqttPrefix"));
+      jsonWriteStr(mqtt_data, "mqttUser", jsonReadStr(configSetupJson, "mqttUser"));
+      jsonWriteStr(mqtt_data, "mqttPass", jsonReadStr(configSetupJson, "mqttPass"));
       Serial.println(mqtt_data);
 #ifdef ESP8266
       Udp.beginPacketMulticast(udp_multicastIP, udp_port, WiFi.localIP());

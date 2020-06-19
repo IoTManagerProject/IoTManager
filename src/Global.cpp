@@ -22,9 +22,9 @@ boolean just_load = true;
 const char *hostName = "IoT Manager";
 
 // Json
-String configSetup = "{}";
-String configJson = "{}";
-String optionJson = "{}";
+String configSetupJson = "{}";
+String configLiveJson = "{}";
+String configOptionJson = "{}";
 
 // Mqtt
 String chipID = "";

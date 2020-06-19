@@ -6,28 +6,28 @@ void File_system_init() {
     Serial.println("--------------started----------------");
     //--------------------------------------------------------------
     SPIFFS.begin();
-    configSetup = readFile("config.json", 4096);
-    configSetup.replace(" ", "");
-    configSetup.replace("\r\n", "");
-    Serial.println(configSetup);
-    jsonWriteStr(configJson, "name", jsonReadStr(configSetup, "name"));
-    jsonWriteStr(configJson, "lang", jsonReadStr(configSetup, "lang"));
+    configSetupJson = readFile("config.json", 4096);
+    configSetupJson.replace(" ", "");
+    configSetupJson.replace("\r\n", "");
+    Serial.println(configSetupJson);
+    jsonWriteStr(configLiveJson, "name", jsonReadStr(configSetupJson, "name"));
+    jsonWriteStr(configLiveJson, "lang", jsonReadStr(configSetupJson, "lang"));
 
 #ifdef ESP32
     uint32_t chipID_u = ESP.getEfuseMac();
     chipID = String(chipID_u);
-    jsonWriteStr(configSetup, "chipID", chipID);
+    jsonWriteStr(configSetupJson, "chipID", chipID);
 #endif
 
 #ifdef ESP8266
     chipID = String(ESP.getChipId()) + "-" + String(ESP.getFlashChipId());
-    jsonWriteStr(configSetup, "chipID", chipID);
+    jsonWriteStr(configSetupJson, "chipID", chipID);
     Serial.setDebugOutput(0);
 #endif
 
-    jsonWriteStr(configSetup, "firmware_version", firmware_version);
+    jsonWriteStr(configSetupJson, "firmware_version", firmware_version);
 
-    prex = jsonReadStr(configSetup, "mqttPrefix") + "/" + chipID;
+    prex = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID;
     Serial.println(chipID);
 }
 

@@ -7,13 +7,13 @@ void All_init() {
             value = request->getParam("arg")->value();
         }
         if (value == "0") {  //выкл сценариев
-            jsonWriteStr(configSetup, "scenario", value);
+            jsonWriteStr(configSetupJson, "scenario", value);
             saveConfig();
             Scenario_init();
             request->send(200, "text/text", "OK");
         }
         if (value == "1") {  //вкл сценариев
-            jsonWriteStr(configSetup, "scenario", value);
+            jsonWriteStr(configSetupJson, "scenario", value);
             saveConfig();
             Scenario_init();
             request->send(200, "text/text", "OK");
@@ -51,7 +51,7 @@ void Device_init() {
     analog_value_names_list = "";
     enter_to_analog_counter = 0;
 
-    level_value_name = "";
+    levelPr_value_name = "";
 
     dhtT_value_name = "";
     dhtH_value_name = "";
@@ -85,7 +85,7 @@ void Device_init() {
 }
 
 void Scenario_init() {
-    if (jsonReadStr(configSetup, "scenario") == "1") {
+    if (jsonReadStr(configSetupJson, "scenario") == "1") {
         scenario = readFile("firmware.s.txt", 2048);
     }
 }
@@ -188,19 +188,19 @@ void up_time() {
 
     if (ss != 0) {
         out = "[i] uptime = " + String(ss) + " sec";
-        jsonWriteStr(configJson, "uptime", String(ss) + " sec");
+        jsonWriteStr(configLiveJson, "uptime", String(ss) + " sec");
     }
     if (mm != 0) {
         out = "[i] uptime = " + String(mm) + " min";
-        jsonWriteStr(configJson, "uptime", String(mm) + " min");
+        jsonWriteStr(configLiveJson, "uptime", String(mm) + " min");
     }
     if (hh != 0) {
         out = "[i] uptime = " + String(hh) + " hours";
-        jsonWriteStr(configJson, "uptime", String(hh) + " hours");
+        jsonWriteStr(configLiveJson, "uptime", String(hh) + " hours");
     }
     if (dd != 0) {
         out = "[i] uptime = " + String(dd) + " days";
-        jsonWriteStr(configJson, "uptime", String(dd) + " days");
+        jsonWriteStr(configLiveJson, "uptime", String(dd) + " days");
     }
     Serial.println(out + ", mqtt_lost_error: " + String(mqtt_lost_error) + ", wifi_lost_error: " + String(wifi_lost_error));
 }

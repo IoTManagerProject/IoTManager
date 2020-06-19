@@ -3,10 +3,10 @@
 void Time_Init() {
     server.on("/time", HTTP_GET, [](AsyncWebServerRequest* request) {
         if (request->hasArg("timezone")) {
-            jsonWriteStr(configSetup, "timezone", request->getParam("timezone")->value());
+            jsonWriteStr(configSetupJson, "timezone", request->getParam("timezone")->value());
         }
         if (request->hasArg("ntp")) {
-            jsonWriteStr(configSetup, "ntp", request->getParam("ntp")->value());
+            jsonWriteStr(configSetupJson, "ntp", request->getParam("ntp")->value());
         }
         saveConfig();
         reconfigTime();
@@ -29,7 +29,7 @@ void time_check() {
 
 void reconfigTime() {
     if (WiFi.status() == WL_CONNECTED) {
-        String ntp = jsonReadStr(configSetup, "ntp");
+        String ntp = jsonReadStr(configSetupJson, "ntp");
         configTime(0, 0, ntp.c_str());
         int i = 0;
         Serial.println("[i] Awaiting for time ");
@@ -74,7 +74,7 @@ String GetTimeUnix() {
 // Получение текущего времени
 String GetTime() {
     time_t now = time(nullptr);  // получаем время с помощью библиотеки time.h
-    int zone = 3600 * jsonReadStr(configSetup, "timezone").toInt();
+    int zone = 3600 * jsonReadStr(configSetupJson, "timezone").toInt();
     now = now + zone;
     String Time = "";                     // Строка для результатов времени
     Time += ctime(&now);                  // Преобразуем время в строку формата Thu Jan 19 00:55:35 2017
@@ -85,7 +85,7 @@ String GetTime() {
 
 String GetTimeWOsec() {
     time_t now = time(nullptr);  // получаем время с помощью библиотеки time.h
-    int zone = 3600 * jsonReadStr(configSetup, "timezone").toInt();
+    int zone = 3600 * jsonReadStr(configSetupJson, "timezone").toInt();
     now = now + zone;
     String Time = "";                     // Строка для результатов времени
     Time += ctime(&now);                  // Преобразуем время в строку формата Thu Jan 19 00:55:35 2017
@@ -97,7 +97,7 @@ String GetTimeWOsec() {
 // Получение даты
 String GetDate() {
     time_t now = time(nullptr);  // получаем время с помощью библиотеки time.h
-    int zone = 3600 * jsonReadStr(configSetup, "timezone").toInt();
+    int zone = 3600 * jsonReadStr(configSetupJson, "timezone").toInt();
     now = now + zone;
     String Data = "";     // Строка для результатов времени
     Data += ctime(&now);  // Преобразуем время в строку формата Thu Jan 19 00:55:35 2017

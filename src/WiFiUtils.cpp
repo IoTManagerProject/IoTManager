@@ -8,11 +8,11 @@ void WIFI_init()
     server.on("/ssid", HTTP_GET, [](AsyncWebServerRequest *request) {
         if (request->hasArg("ssid"))
         {
-            jsonWriteStr(configSetup, "ssid", request->getParam("ssid")->value());
+            jsonWriteStr(configSetupJson, "ssid", request->getParam("ssid")->value());
         }
         if (request->hasArg("password"))
         {
-            jsonWriteStr(configSetup, "password", request->getParam("password")->value());
+            jsonWriteStr(configSetupJson, "password", request->getParam("password")->value());
         }
         saveConfig();                          // Функция сохранения данных во Flash
         request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
@@ -21,11 +21,11 @@ void WIFI_init()
     server.on("/ssidap", HTTP_GET, [](AsyncWebServerRequest *request) {
         if (request->hasArg("ssidAP"))
         {
-            jsonWriteStr(configSetup, "ssidAP", request->getParam("ssidAP")->value());
+            jsonWriteStr(configSetupJson, "ssidAP", request->getParam("ssidAP")->value());
         }
         if (request->hasArg("passwordAP"))
         {
-            jsonWriteStr(configSetup, "passwordAP", request->getParam("passwordAP")->value());
+            jsonWriteStr(configSetupJson, "passwordAP", request->getParam("passwordAP")->value());
         }
         saveConfig();                          // Функция сохранения данных во Flash
         request->send(200, "text/text", "OK"); // отправляем ответ о выполнении
@@ -35,11 +35,11 @@ void WIFI_init()
     server.on("/web", HTTP_GET, [](AsyncWebServerRequest *request) {
         if (request->hasArg("web_login"))
         {
-            jsonWriteStr(configSetup, "web_login", request->getParam("web_login")->value());
+            jsonWriteStr(configSetupJson, "web_login", request->getParam("web_login")->value());
         }
         if (request->hasArg("web_pass"))
         {
-            jsonWriteStr(configSetup, "web_pass", request->getParam("web_pass")->value());
+            jsonWriteStr(configSetupJson, "web_pass", request->getParam("web_pass")->value());
         }
         saveConfig(); // Функция сохранения данных во Flash
         //Web_server_init();
@@ -64,8 +64,8 @@ void ROUTER_Connecting()
     WiFi.mode(WIFI_STA);
 
     byte tries = 20;
-    String _ssid = jsonReadStr(configSetup, "ssid");
-    String _password = jsonReadStr(configSetup, "password");
+    String _ssid = jsonReadStr(configSetupJson, "ssid");
+    String _password = jsonReadStr(configSetupJson, "password");
     //WiFi.persistent(false);
 
     if (_ssid == "" && _password == "")
@@ -86,7 +86,7 @@ void ROUTER_Connecting()
         {
             Serial.println("[E] password is not correct");
             tries = 1;
-            jsonWriteInt(optionJson, "pass_status", 1);
+            jsonWriteInt(configOptionJson, "pass_status", 1);
         }
         Serial.print(".");
         delay(1000);
@@ -104,7 +104,7 @@ void ROUTER_Connecting()
         Serial.print(WiFi.localIP());
         Serial.println();
 
-        jsonWriteStr(configJson, "ip", WiFi.localIP().toString());
+        jsonWriteStr(configLiveJson, "ip", WiFi.localIP().toString());
         led_blink("off");
     }
 }
@@ -116,21 +116,21 @@ bool StartAPMode()
 
     WiFi.mode(WIFI_AP);
 
-    String _ssidAP = jsonReadStr(configSetup, "ssidAP");
-    String _passwordAP = jsonReadStr(configSetup, "passwordAP");
+    String _ssidAP = jsonReadStr(configSetupJson, "ssidAP");
+    String _passwordAP = jsonReadStr(configSetupJson, "passwordAP");
     WiFi.softAP(_ssidAP.c_str(), _passwordAP.c_str());
     IPAddress myIP = WiFi.softAPIP();
     led_blink("on");
     Serial.print("AP IP address: ");
     Serial.println(myIP);
-    jsonWriteStr(configJson, "ip", myIP.toString());
+    jsonWriteStr(configLiveJson, "ip", myIP.toString());
 
-    if (jsonReadInt(optionJson, "pass_status") != 1)
+    if (jsonReadInt(configOptionJson, "pass_status") != 1)
     {
         ts.add(
             ROUTER_SEARCHING, 10 * 1000, [&](void *) {
                 Serial.println("->try find router");
-                if (RouterFind(jsonReadStr(configSetup, "ssid")))
+                if (RouterFind(jsonReadStr(configSetupJson, "ssid")))
                 {
                     ts.remove(ROUTER_SEARCHING);
                     WiFi.scanDelete();
