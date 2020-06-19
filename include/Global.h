@@ -6,21 +6,22 @@
 #include <Bounce2.h>
 #include <ESPAsyncWebServer.h>
 extern AsyncWebServer server;
+#include <Adafruit_BME280.h>
+#include <Adafruit_BMP280.h>
+#include <DHTesp.h>
+#include <DallasTemperature.h>
 #include <FS.h>
+#include <OneWire.h>
 #include <PubSubClient.h>
 #include <SPIFFSEditor.h>
 #include <StringCommand.h>
 #include <TickerScheduler.h>
-#include <time.h>
-#include "Consts.h"
 #include <UpTime.h>
-#include "GyverFilters.h"
-#include <DallasTemperature.h>
-#include <OneWire.h>
-#include <DHTesp.h>
 #include <Wire.h>
-#include <Adafruit_BMP280.h>
-#include <Adafruit_BME280.h>
+#include <time.h>
+
+#include "Consts.h"
+#include "GyverFilters.h"
 //==============ESP8266 БИБЛИОТЕКИ===============
 #ifdef ESP8266
 #include <ESP8266HTTPClient.h>
@@ -39,26 +40,24 @@ WiFiUDP Udp;
 #ifdef ESP32
 #include <AsyncTCP.h>
 #include <AsyncUDP.h>
+#include <ESP32Servo.h>
 #include <HTTPClient.h>
 #include <HTTPUpdate.h>
 #include <SPIFFS.h>
 #include <WiFi.h>
 #include <analogWrite.h>
 extern AsyncUDP udp;
-#include <ESP32Servo.h>
 #ifdef MDNS_enable
 #include <ESPmDNS.h>
 #endif
 #endif
 
-extern Servo myServo1;
-extern Servo myServo2;
-
 #ifdef OTA_enable
 #include <ArduinoOTA.h>
 #endif
 
-
+extern Servo myServo1;
+extern Servo myServo2;
 
 //==============================Objects.h(без данных)==================================
 
@@ -69,7 +68,25 @@ extern AsyncWebSocket ws;
 //extern AsyncEventSource events;
 
 extern TickerScheduler ts;
-enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, SENSORS, STEPPER1, STEPPER2,  LOG1, LOG2, LOG3, LOG4, LOG5, TIMER_COUNTDOWN, TIME, TIME_SYNC, STATISTICS, UPTIME, UDP, UDP_DB, TEST };
+
+enum { ROUTER_SEARCHING,
+       WIFI_MQTT_CONNECTION_CHECK,
+       SENSORS,
+       STEPPER1,
+       STEPPER2,
+       LOG1,
+       LOG2,
+       LOG3,
+       LOG4,
+       LOG5,
+       TIMER_COUNTDOWN,
+       TIME,
+       TIME_SYNC,
+       STATISTICS,
+       UPTIME,
+       UDP,
+       UDP_DB,
+       TEST };
 
 extern WiFiClient espClient;
 
@@ -83,9 +100,9 @@ extern AsyncWebServer server;
 
 //AsyncEventSource events;
 
-#define NUM_BUTTONS
+#define NUM_BUTTONS 6
 extern boolean but[NUM_BUTTONS];
-extern Bounce * buttons;
+extern Bounce *buttons;
 
 extern GMedian<10, int> medianFilter;
 
@@ -103,7 +120,7 @@ extern Adafruit_Sensor *bme_temp;
 extern Adafruit_Sensor *bme_pressure;
 extern Adafruit_Sensor *bme_humidity;
 
-uptime_interval myUpTime;
+extern uptime_interval myUpTime;
 
 ///////////////////////////////////// Global vars ////////////////////////////////////////////////////////////////////
 
@@ -114,13 +131,12 @@ extern String received_ip;
 extern String received_udp_line;
 extern int udp_period;
 
-
 extern boolean just_load;
 extern const char *hostName;
 
-extern String configSetupJson;  //все настройки
-extern String configLiveJson;   //все данные с датчиков (связан с mqtt)
-extern String configOptionJson; //для трансфера
+extern String configSetupJson;   //все настройки
+extern String configLiveJson;    //все данные с датчиков (связан с mqtt)
+extern String configOptionJson;  //для трансфера
 
 extern String chipID;
 extern String prex;
@@ -165,7 +181,6 @@ extern boolean mqtt_send_settings_to_udp;
 extern boolean i2c_scanning;
 
 extern int sensors_reading_map[15];
-
 
 ///////////////////////////////////// Functions////////////////////////////////////////////////////////////////////
 
@@ -283,7 +298,6 @@ extern void sensors_init();
 extern void levelPr();
 extern void ultrasonicCm();
 extern void ultrasonic_reading();
-
 
 extern void analog();
 extern void analog_reading1();

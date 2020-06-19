@@ -1,4 +1,5 @@
 #include "Global.h"
+
 #include "JsonUtils.h"
 
 //==============================Objects.cpp(с данными)==================================
@@ -23,9 +24,8 @@ AsyncWebServer server(80);
 
 //AsyncEventSource events("/events");
 
-#define NUM_BUTTONS 6
 boolean but[NUM_BUTTONS];
-Bounce * buttons = new Bounce[NUM_BUTTONS];
+Bounce *buttons = new Bounce[NUM_BUTTONS];
 
 GMedian<10, int> medianFilter;
 
@@ -33,6 +33,9 @@ OneWire *oneWire;
 DallasTemperature sensors;
 
 DHTesp dht;
+
+Servo myServo1;
+Servo myServo2;
 
 Adafruit_BMP280 bmp;
 Adafruit_Sensor *bmp_temp;
@@ -106,11 +109,8 @@ boolean udp_data_parse = false;
 boolean mqtt_send_settings_to_udp = false;
 boolean i2c_scanning = false;
 
-
-
 //Buttons
 //boolean but[6];
-
 
 // Udp
 boolean udp_busy = false;
@@ -128,7 +128,3 @@ int udp_period;
 
 // i2c
 String i2c_list;
-
-
-
-
