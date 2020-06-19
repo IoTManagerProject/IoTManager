@@ -1,0 +1,11 @@
+NAME
+
+    UpTime_tick.ino - print formatted and raw uptime in seconds und 4x
+    interval
+
+DESCRIPTION
+
+    On serial port will print current uptime in seconds with 4 interval
+    checks. Each loop has random 0-5s delay. Intervals will be printed once
+    elapsed.
+

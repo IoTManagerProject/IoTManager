@@ -1,0 +1,8 @@
+button1 = 1
+mqtt 3233662-1589485 buttonSet_1_1
+mqtt 2233662-1589486 buttonSet_1_1
+end
+button1 = 0
+mqtt 3233662-1589485 buttonSet_1_0
+mqtt 2233662-1589486 buttonSet_1_0
+end

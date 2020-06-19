@@ -1,4 +1,5 @@
 #pragma once
+//Здесь хранятся все настройки прошивки
 
 #define firmware_version "2.3.3"
 

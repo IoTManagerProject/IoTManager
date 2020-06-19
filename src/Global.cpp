@@ -1,23 +1,52 @@
 #include "Global.h"
-
 #include "JsonUtils.h"
+
+//==============================Objects.cpp(с данными)==================================
+
+#ifdef WS_enable
+AsyncWebSocket ws;
+#endif
+
+//AsyncEventSource events;
 
 TickerScheduler ts(TEST + 1);
 
 WiFiClient espClient;
+
 PubSubClient client_mqtt(espClient);
+
 StringCommand sCmd;
 
-// Web
 AsyncWebServer server(80);
 
-#ifdef WS_enable
-AsyncWebSocket ws("/ws");
-#endif
+//AsyncWebSocket ws("/ws");
 
-AsyncEventSource events("/events");
+//AsyncEventSource events("/events");
 
-// Global vars
+#define NUM_BUTTONS 6
+boolean but[NUM_BUTTONS];
+Bounce * buttons = new Bounce[NUM_BUTTONS];
+
+GMedian<10, int> medianFilter;
+
+OneWire *oneWire;
+DallasTemperature sensors;
+
+DHTesp dht;
+
+Adafruit_BMP280 bmp;
+Adafruit_Sensor *bmp_temp;
+Adafruit_Sensor *bmp_pressure;
+
+Adafruit_BME280 bme;
+Adafruit_Sensor *bme_temp;
+Adafruit_Sensor *bme_pressure;
+Adafruit_Sensor *bme_humidity;
+
+uptime_interval myUpTime(10);
+
+////////////////////////////////////// Global vars ////////////////////////////////////////////////////////////////////
+
 boolean just_load = true;
 const char *hostName = "IoT Manager";
 
@@ -77,13 +106,11 @@ boolean udp_data_parse = false;
 boolean mqtt_send_settings_to_udp = false;
 boolean i2c_scanning = false;
 
-// Servo
-Servo myServo1;
-Servo myServo2;
+
 
 //Buttons
-boolean but[NUM_BUTTONS];
-Bounce *buttons = new Bounce[NUM_BUTTONS];
+//boolean but[6];
+
 
 // Udp
 boolean udp_busy = false;
@@ -102,24 +129,6 @@ int udp_period;
 // i2c
 String i2c_list;
 
-OneWire *oneWire;
-DallasTemperature sensors;
 
-DHTesp dht;
 
-#ifdef level_enable
-GMedian<10, int> medianFilter;
-#endif
 
-#ifdef bmp_enable
-Adafruit_BMP280 bmp;
-Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
-Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
-#endif
-
-#ifdef bme_enable
-Adafruit_BME280 bme;
-Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
-Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
-Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
-#endif

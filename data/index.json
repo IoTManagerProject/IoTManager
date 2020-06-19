@@ -1,7 +1,8 @@
 {
   "configs": [
     "/config.live.json",
-    "/config.setup.json"
+    "/config.setup.json",
+    "/lang/lang.ru.json"
   ],
   "title": "Главная",
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
@@ -9,104 +10,60 @@
     {
       "type": "h5",
       "title": "{{name}}",
-      "class": "alert-warning"
+      "class": "alert-default"
     },
     {
-      "type": "h4",
-      "title": "Device ID: {{chipID}}"
-    },
-    {
-      "type": "h4",
-      "title": "IP address: {{ip}}"
-    },
-    {
-      "type": "h4",
-      "title": "Uptime: {{uptime}}"
-    },
-    {
-      "type": "h4",
-      "title": "Time: {{time}}"
-    },
-    {
-      "type": "h4",
-      "title": "Build version: {{firmware_version}}"
-    },
-    {
-      "type": "h4",
-      "title": "SPIFFS version: 2.3.3"
-    },
-    {
-      "type": "hr"
-    },
+			"type": "text",
+			"class": "alert alert-light",
+			"title": "<center><img src='/icon.jpeg' alt='IoT Manager'></center>"
+		},
     {
       "type": "link",
       "title": "Конфигурация устройства",
-      "action": "/?configuration",
-      "class": "btn btn-block btn-primary"
-    },
-    {
-      "type": "hr"
+      "action": "/?set.device",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Список других устройств в сети",
-      "action": "/?dev",
-      "class": "btn btn-block btn-success"
+      "action": "/?set.udp",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Конфигурация WIFI",
-      "action": "/?setup",
-      "class": "btn btn-block btn-success"
+      "action": "/?set.wifi",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Конфигурация MQTT",
-      "action": "/?mqtt",
-      "class": "btn btn-block btn-success"
+      "action": "/?set.mqtt",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Конфигурация push",
-      "action": "/?pushingbox",
-      "class": "btn btn-block btn-success"
+      "action": "/?set.push",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Утилиты",
-      "action": "/?utilities",
-      "class": "btn btn-block btn-success"
-    },
-    {
-      "type": "h3",
-      "name": "my-block",
-      "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
-      "class": "hidden"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "button",
-      "title": "Обновить прошивку",
-      "action": "/check",
-      "response": "[[my-block]]",
-      "class": "btn btn-block btn-danger"
-    },
-    {
-      "type": "hr"
+      "action": "/?set.utilities",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Скачать приложение IoT Manager для android",
       "action": "https://play.google.com/store/apps/details?id=ru.esp8266.iotmanager",
-      "class": "btn btn-block btn-warning"
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
       "title": "Скачать приложение IoT Manager для iphone",
       "action": "https://apps.apple.com/ru/app/iot-manager/id1155934877",
-      "class": "btn btn-block btn-warning"
+      "class": "btn btn-block btn-default"
     }
   ]
 }

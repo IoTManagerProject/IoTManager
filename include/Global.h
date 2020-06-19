@@ -1,21 +1,27 @@
 #pragma once
 
+//=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <Bounce2.h>
 #include <ESPAsyncWebServer.h>
+extern AsyncWebServer server;
 #include <FS.h>
 #include <PubSubClient.h>
 #include <SPIFFSEditor.h>
 #include <StringCommand.h>
 #include <TickerScheduler.h>
 #include <time.h>
-
 #include "Consts.h"
-
-/* 
-* ESP8266
-*/
+#include <UpTime.h>
+#include "GyverFilters.h"
+#include <DallasTemperature.h>
+#include <OneWire.h>
+#include <DHTesp.h>
+#include <Wire.h>
+#include <Adafruit_BMP280.h>
+#include <Adafruit_BME280.h>
+//==============ESP8266 БИБЛИОТЕКИ===============
 #ifdef ESP8266
 #include <ESP8266HTTPClient.h>
 #include <ESP8266HTTPUpdateServer.h>
@@ -29,10 +35,7 @@ WiFiUDP Udp;
 #include <ESP8266mDNS.h>
 #endif
 #endif
-
-/* 
-* ESP32
-*/
+//==============ESP32 БИБЛИОТЕКИ===============
 #ifdef ESP32
 #include <AsyncTCP.h>
 #include <AsyncUDP.h>
@@ -55,9 +58,63 @@ extern Servo myServo2;
 #include <ArduinoOTA.h>
 #endif
 
+
+
+//==============================Objects.h(без данных)==================================
+
+#ifdef WS_enable
+extern AsyncWebSocket ws;
+#endif
+
+//extern AsyncEventSource events;
+
+extern TickerScheduler ts;
+enum {ROUTER_SEARCHING, WIFI_MQTT_CONNECTION_CHECK, SENSORS, STEPPER1, STEPPER2,  LOG1, LOG2, LOG3, LOG4, LOG5, TIMER_COUNTDOWN, TIME, TIME_SYNC, STATISTICS, UPTIME, UDP, UDP_DB, TEST };
+
+extern WiFiClient espClient;
+
+extern PubSubClient client_mqtt;
+
+extern StringCommand sCmd;
+
 extern AsyncWebServer server;
 
-// Global vars
+//AsyncWebSocket ws;
+
+//AsyncEventSource events;
+
+#define NUM_BUTTONS
+extern boolean but[NUM_BUTTONS];
+extern Bounce * buttons;
+
+extern GMedian<10, int> medianFilter;
+
+extern OneWire *oneWire;
+extern DallasTemperature sensors;
+
+extern DHTesp dht;
+
+extern Adafruit_BMP280 bmp;
+extern Adafruit_Sensor *bmp_temp;
+extern Adafruit_Sensor *bmp_pressure;
+
+extern Adafruit_BME280 bme;
+extern Adafruit_Sensor *bme_temp;
+extern Adafruit_Sensor *bme_pressure;
+extern Adafruit_Sensor *bme_humidity;
+
+uptime_interval myUpTime;
+
+///////////////////////////////////// Global vars ////////////////////////////////////////////////////////////////////
+
+extern boolean udp_busy;
+extern unsigned int udp_port;
+extern IPAddress udp_multicastIP;
+extern String received_ip;
+extern String received_udp_line;
+extern int udp_period;
+
+
 extern boolean just_load;
 extern const char *hostName;
 
@@ -107,83 +164,10 @@ extern boolean udp_data_parse;
 extern boolean mqtt_send_settings_to_udp;
 extern boolean i2c_scanning;
 
-#ifdef WS_enable
-extern AsyncWebSocket ws;
-#endif
-
-extern AsyncEventSource events;
-
 extern int sensors_reading_map[15];
 
-enum {
-    ROUTER_SEARCHING,
-    WIFI_MQTT_CONNECTION_CHECK,
-    SENSORS,
-    STEPPER1,
-    STEPPER2,
-    LOG1,
-    LOG2,
-    LOG3,
-    LOG4,
-    LOG5,
-    TIMER_COUNTDOWN,
-    TIME,
-    TIME_SYNC,
-    STATISTICS,
-    UDP,
-    UDP_DB,
-    TEST
-};
 
-extern TickerScheduler ts;
-
-extern WiFiClient espClient;
-extern PubSubClient client_mqtt;
-extern StringCommand sCmd;
-
-#define NUM_BUTTONS 6
-extern boolean but[NUM_BUTTONS];
-extern Bounce *buttons;
-
-extern boolean udp_busy;
-extern unsigned int udp_port;
-extern IPAddress udp_multicastIP;
-extern String received_ip;
-extern String received_udp_line;
-extern int udp_period;
-
-#ifdef level_enable
-#include "GyverFilters.h"
-extern GMedian<10, int> medianFilter;
-#endif
-
-#include <DallasTemperature.h>
-#include <OneWire.h>
-extern OneWire *oneWire;
-extern DallasTemperature sensors;
-
-#include <DHTesp.h>
-extern DHTesp dht;
-
-#include <Wire.h>
-
-#ifdef bmp_enable
-#include <Adafruit_BMP280.h>
-extern Adafruit_BMP280 bmp;
-extern Adafruit_Sensor *bmp_temp;
-extern Adafruit_Sensor *bmp_pressure;
-#endif
-
-#ifdef bme_enable
-#include <Adafruit_BME280.h>
-extern Adafruit_BME280 bme;
-extern Adafruit_Sensor *bme_temp;
-extern Adafruit_Sensor *bme_pressure;
-extern Adafruit_Sensor *bme_humidity;
-#endif
-
-//#include <SoftwareSerial.h>
-//SoftwareSerial mySerial(14, 12);
+///////////////////////////////////// Functions////////////////////////////////////////////////////////////////////
 
 // StringUtils
 extern uint8_t hexStringToUint8(String hex);
@@ -382,3 +366,9 @@ extern void handleScenario();
 extern void handleUdp();
 extern void do_upgrade_url();
 extern void do_upgrade();
+
+//uptime
+extern void handle_uptime();
+extern void handle_statistics();
+extern void uptime_init();
+extern void web_init();

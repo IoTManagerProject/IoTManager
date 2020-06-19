@@ -5,41 +5,7 @@ void add_dev_in_list(String fileName, String id, String dev_name, String ip);
 
 #ifdef UDP_enable
 void UDP_init() {
-  server.on("/udp", HTTP_GET, [](AsyncWebServerRequest * request) {
-    String value;
-    if (request->hasArg("arg")) {
-      value = request->getParam("arg")->value();
-    }
-    if (value == "0") {
-      jsonWriteStr(configSetupJson, "udponoff", value);
-      request->send(200, "text/text", "ok");
-    }
-    if (value == "1") {
-      jsonWriteStr(configSetupJson, "udponoff", value);
-      request->send(200, "text/text", "ok");
-    }
-    if (value == "2") {
-      mqtt_send_settings_to_udp = true;
-      request->send(200, "text/text", "ok");
-    }
-    if (value == "3") {
-      SPIFFS.remove("/dev.csv");
-      addFile("dev.csv", "device id;device name;ip address");
-      request->redirect("/?dev");
-    }
-    if (value == "4") {
-      request->redirect("/?dev");
-    }
-  });
-  server.on("/name", HTTP_GET, [](AsyncWebServerRequest * request) {
-    if (request->hasArg("arg")) {
-      jsonWriteStr(configSetupJson, "name", request->getParam("arg")->value());
-      jsonWriteStr(configLiveJson, "name", request->getParam("arg")->value());
-      saveConfig();
-    }
-    request->send(200, "text/text", "OK");
-  });
-
+  
   SPIFFS.remove("/dev.csv");
   addFile("dev.csv", "device id;device name;ip address");
 
