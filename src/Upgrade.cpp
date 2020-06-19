@@ -1,5 +1,4 @@
 #include "Global.h"
-
 void initUpgrade() {
 #ifdef ESP8266
   if (WiFi.status() == WL_CONNECTED) last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
