@@ -4,8 +4,7 @@ String perception(byte value);
 void bmp280T_reading();
 String get_comfort_status(ComfortState cf);
 
-void sensors_init()
-{
+void sensors_init() {
     ts.add(
         SENSORS, 1000, [&](void *) {
             static int counter;
@@ -16,8 +15,7 @@ void sensors_init()
                 level_reading();
 #endif
 
-            if (counter > 10)
-            {
+            if (counter > 10) {
                 counter = 0;
 
 #ifdef analog_enable
@@ -71,8 +69,7 @@ void sensors_init()
 //=========================================Модуль измерения уровня в баке==================================================================
 #ifdef level_enable
 //level L 14 12 Вода#в#баке,#% Датчики fill-gauge 125 20 1
-void level()
-{
+void level() {
     String value_name = sCmd.next();
     String trig = sCmd.next();
     String echo = sCmd.next();
@@ -93,8 +90,7 @@ void level()
     sensors_reading_map[0] = 1;
 }
 
-void level_reading()
-{
+void level_reading() {
     long duration_;
     int distance_cm;
     int level;
@@ -106,12 +102,11 @@ void level_reading()
     digitalWrite(trig, HIGH);
     delayMicroseconds(10);
     digitalWrite(trig, LOW);
-    duration_ = pulseIn(echo, HIGH, 30000); // 3000 µs = 50cm // 30000 µs = 5 m
+    duration_ = pulseIn(echo, HIGH, 30000);  // 3000 µs = 50cm // 30000 µs = 5 m
     distance_cm = duration_ / 29 / 2;
-    distance_cm = medianFilter.filtered(distance_cm); //отсечение промахов медианным фильтром
+    distance_cm = medianFilter.filtered(distance_cm);  //отсечение промахов медианным фильтром
     counter++;
-    if (counter > tank_level_times_to_send)
-    {
+    if (counter > tank_level_times_to_send) {
         counter = 0;
         level = map(distance_cm,
                     jsonReadInt(optionJson, "e_lev"),
@@ -127,8 +122,7 @@ void level_reading()
 //=========================================Модуль аналогового сенсора======================================================================
 #ifdef analog_enable
 //analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
-void analog()
-{
+void analog() {
     String value_name = sCmd.next();
     String pin = sCmd.next();
     String widget_name = sCmd.next();
@@ -146,18 +140,15 @@ void analog()
     jsonWriteStr(optionJson, value_name + "_st_out", analog_start_out);
     jsonWriteStr(optionJson, value_name + "_end_out", analog_end_out);
     choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
-    if (enter_to_analog_counter == 1)
-    {
+    if (enter_to_analog_counter == 1) {
         sensors_reading_map[1] = 1;
     }
-    if (enter_to_analog_counter == 2)
-    {
+    if (enter_to_analog_counter == 2) {
         sensors_reading_map[2] = 1;
     }
 }
 
-void analog_reading1()
-{
+void analog_reading1() {
     String value_name = selectFromMarkerToMarker(analog_value_names_list, ",", 0);
 #ifdef ESP32
     int analog_in = analogRead(34);
@@ -176,8 +167,7 @@ void analog_reading1()
     Serial.println("[i] sensor '" + value_name + "' data: " + String(analog));
 }
 
-void analog_reading2()
-{
+void analog_reading2() {
     String value_name = selectFromMarkerToMarker(analog_value_names_list, ",", 1);
 #ifdef ESP32
     int analog_in = analogRead(35);
@@ -199,8 +189,7 @@ void analog_reading2()
 //=========================================================================================================================================
 //=========================================Модуль температурного сенсора ds18b20===========================================================
 #ifdef dallas_enable
-void dallas()
-{
+void dallas() {
     String value_name = sCmd.next();
     String pin = sCmd.next();
     String address = sCmd.next();
@@ -216,8 +205,7 @@ void dallas()
     sensors_reading_map[3] = 1;
 }
 
-void dallas_reading()
-{
+void dallas_reading() {
     float temp = 0;
     sensors.requestTemperatures();
     temp = sensors.getTempCByIndex(0);
@@ -231,8 +219,7 @@ void dallas_reading()
 //=========================================Модуль сенсоров DHT=============================================================================
 #ifdef dht_enable
 //dhtT t 2 dht11 Температура#DHT,#t°C Датчики any-data 1
-void dhtT()
-{
+void dhtT() {
     String value_name = sCmd.next();
     String pin = sCmd.next();
     String sensor_type = sCmd.next();
@@ -241,33 +228,26 @@ void dhtT()
     String type = sCmd.next();
     String page_number = sCmd.next();
     dhtT_value_name = value_name;
-    if (sensor_type == "dht11")
-    {
+    if (sensor_type == "dht11") {
         dht.setup(pin.toInt(), DHTesp::DHT11);
     }
-    if (sensor_type == "dht22")
-    {
+    if (sensor_type == "dht22") {
         dht.setup(pin.toInt(), DHTesp::DHT22);
     }
     choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[4] = 1;
 }
 
-void dhtT_reading()
-{
+void dhtT_reading() {
     float value = 0;
     static int counter;
-    if (dht.getStatus() != 0 && counter < 5)
-    {
+    if (dht.getStatus() != 0 && counter < 5) {
         sendSTATUS(dhtT_value_name, String(dht.getStatusString()));
         counter++;
-    }
-    else
-    {
+    } else {
         counter = 0;
         value = dht.getTemperature();
-        if (String(value) != "nan")
-        {
+        if (String(value) != "nan") {
             eventGen(dhtT_value_name, "");
             jsonWriteStr(configJson, dhtT_value_name, String(value));
             sendSTATUS(dhtT_value_name, String(value));
@@ -277,8 +257,7 @@ void dhtT_reading()
 }
 
 //dhtH h 2 dht11 Влажность#DHT,#t°C Датчики any-data 1
-void dhtH()
-{
+void dhtH() {
     String value_name = sCmd.next();
     String pin = sCmd.next();
     String sensor_type = sCmd.next();
@@ -287,33 +266,26 @@ void dhtH()
     String type = sCmd.next();
     String page_number = sCmd.next();
     dhtH_value_name = value_name;
-    if (sensor_type == "dht11")
-    {
+    if (sensor_type == "dht11") {
         dht.setup(pin.toInt(), DHTesp::DHT11);
     }
-    if (sensor_type == "dht22")
-    {
+    if (sensor_type == "dht22") {
         dht.setup(pin.toInt(), DHTesp::DHT22);
     }
     choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[5] = 1;
 }
 
-void dhtH_reading()
-{
+void dhtH_reading() {
     float value = 0;
     static int counter;
-    if (dht.getStatus() != 0 && counter < 5)
-    {
+    if (dht.getStatus() != 0 && counter < 5) {
         sendSTATUS(dhtH_value_name, String(dht.getStatusString()));
         counter++;
-    }
-    else
-    {
+    } else {
         counter = 0;
         value = dht.getHumidity();
-        if (String(value) != "nan")
-        {
+        if (String(value) != "nan") {
             eventGen(dhtH_value_name, "");
             jsonWriteStr(configJson, dhtH_value_name, String(value));
             sendSTATUS(dhtH_value_name, String(value));
@@ -323,8 +295,7 @@ void dhtH_reading()
 }
 
 //dhtPerception Восприятие: Датчики 4
-void dhtP()
-{
+void dhtP() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
@@ -332,65 +303,57 @@ void dhtP()
     sensors_reading_map[6] = 1;
 }
 
-void dhtP_reading()
-{
+void dhtP_reading() {
     byte value;
-    if (dht.getStatus() != 0)
-    {
+    if (dht.getStatus() != 0) {
         sendSTATUS("dhtPerception", String(dht.getStatusString()));
-    }
-    else
-    {
+    } else {
         value = dht.computePerception(jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
         String final_line = perception(value);
         jsonWriteStr(configJson, "dhtPerception", final_line);
         eventGen("dhtPerception", "");
         sendSTATUS("dhtPerception", final_line);
-        if (client_mqtt.connected())
-        {
+        if (client_mqtt.connected()) {
             Serial.println("[i] sensor 'dhtPerception' data: " + final_line);
         }
     }
 }
 
-String perception(byte value)
-{
+String perception(byte value) {
     String res;
-    switch (value)
-    {
-    case 0:
-        res = F("Сухой воздух");
-        break;
-    case 1:
-        res = F("Комфортно");
-        break;
-    case 2:
-        res = F("Уютно");
-        break;
-    case 3:
-        res = F("Хорошо");
-        break;
-    case 4:
-        res = F("Неудобно");
-        break;
-    case 5:
-        res = F("Довольно неудобно");
-        break;
-    case 6:
-        res = F("Очень неудобно");
-        break;
-    case 7:
-        res = F("Сильно неудобно, полный звиздец");
-    default:
-        res = F("Unknown");
-        break;
+    switch (value) {
+        case 0:
+            res = F("Сухой воздух");
+            break;
+        case 1:
+            res = F("Комфортно");
+            break;
+        case 2:
+            res = F("Уютно");
+            break;
+        case 3:
+            res = F("Хорошо");
+            break;
+        case 4:
+            res = F("Неудобно");
+            break;
+        case 5:
+            res = F("Довольно неудобно");
+            break;
+        case 6:
+            res = F("Очень неудобно");
+            break;
+        case 7:
+            res = F("Сильно неудобно, полный звиздец");
+        default:
+            res = F("Unknown");
+            break;
     }
     return res;
 }
 
 //dhtComfort Степень#комфорта: Датчики 3
-void dhtC()
-{
+void dhtC() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
@@ -398,15 +361,12 @@ void dhtC()
     sensors_reading_map[7] = 1;
 }
 
-void dhtC_reading()
-{
+void dhtC_reading() {
+    float value;
     ComfortState cf;
-    if (dht.getStatus() != 0)
-    {
+    if (dht.getStatus() != 0) {
         sendSTATUS("dhtComfort", String(dht.getStatusString()));
-    }
-    else
-    {
+    } else {
         value = dht.getComfortRatio(cf, jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
         String final_line = get_comfort_status(cf);
         jsonWriteStr(configJson, "dhtComfort", final_line);
@@ -416,48 +376,45 @@ void dhtC_reading()
     }
 }
 
-String get_comfort_status(ComfortState cf)
-{
+String get_comfort_status(ComfortState cf) {
     String comfortStatus;
-    switch (cf)
-    {
-    case Comfort_OK:
-        comfortStatus = "Отлично";
-        break;
-    case Comfort_TooHot:
-        comfortStatus = "Очень жарко";
-        break;
-    case Comfort_TooCold:
-        comfortStatus = "Очень холодно";
-        break;
-    case Comfort_TooDry:
-        comfortStatus = "Очень сухо";
-        break;
-    case Comfort_TooHumid:
-        comfortStatus = "Очень влажно";
-        break;
-    case Comfort_HotAndHumid:
-        comfortStatus = "Жарко и влажно";
-        break;
-    case Comfort_HotAndDry:
-        comfortStatus = "Жарко и сухо";
-        break;
-    case Comfort_ColdAndHumid:
-        comfortStatus = "Холодно и влажно";
-        break;
-    case Comfort_ColdAndDry:
-        comfortStatus = "Холодно и сухо";
-        break;
-    default:
-        comfortStatus = "Неизвестно";
-        break;
+    switch (cf) {
+        case Comfort_OK:
+            comfortStatus = "Отлично";
+            break;
+        case Comfort_TooHot:
+            comfortStatus = "Очень жарко";
+            break;
+        case Comfort_TooCold:
+            comfortStatus = "Очень холодно";
+            break;
+        case Comfort_TooDry:
+            comfortStatus = "Очень сухо";
+            break;
+        case Comfort_TooHumid:
+            comfortStatus = "Очень влажно";
+            break;
+        case Comfort_HotAndHumid:
+            comfortStatus = "Жарко и влажно";
+            break;
+        case Comfort_HotAndDry:
+            comfortStatus = "Жарко и сухо";
+            break;
+        case Comfort_ColdAndHumid:
+            comfortStatus = "Холодно и влажно";
+            break;
+        case Comfort_ColdAndDry:
+            comfortStatus = "Холодно и сухо";
+            break;
+        default:
+            comfortStatus = "Неизвестно";
+            break;
     };
     return comfortStatus;
 }
 
 //dhtDewpoint Точка#росы: Датчики 5
-void dhtD()
-{
+void dhtD() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
@@ -465,15 +422,11 @@ void dhtD()
     sensors_reading_map[8] = 1;
 }
 
-void dhtD_reading()
-{
+void dhtD_reading() {
     float value;
-    if (dht.getStatus() != 0)
-    {
+    if (dht.getStatus() != 0) {
         sendSTATUS("dhtDewpoint", String(dht.getStatusString()));
-    }
-    else
-    {
+    } else {
         value = dht.computeDewPoint(jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
         jsonWriteInt(configJson, "dhtDewpoint", value);
         eventGen("dhtDewpoint", "");
@@ -487,8 +440,7 @@ void dhtD_reading()
 //=========================================Модуль сенсоров bmp280==========================================================================
 
 //bmp280T temp1 0x76 Температура#bmp280 Датчики any-data 1
-void bmp280T()
-{
+void bmp280T() {
     String value_name = sCmd.next();
     String address = sCmd.next();
     String widget_name = sCmd.next();
@@ -507,8 +459,7 @@ void bmp280T()
     sensors_reading_map[9] = 1;
 }
 
-void bmp280T_reading()
-{
+void bmp280T_reading() {
     float value = 0;
     sensors_event_t temp_event, pressure_event;
     bmp_temp->getEvent(&temp_event);
@@ -520,8 +471,7 @@ void bmp280T_reading()
 }
 
 //bmp280P press1 0x76 Давление#bmp280 Датчики any-data 2
-void bmp280P()
-{
+void bmp280P() {
     String value_name = sCmd.next();
     String address = sCmd.next();
     String widget_name = sCmd.next();
@@ -540,8 +490,7 @@ void bmp280P()
     sensors_reading_map[10] = 1;
 }
 
-void bmp280P_reading()
-{
+void bmp280P_reading() {
     float value = 0;
     sensors_event_t temp_event, pressure_event;
     bmp_pressure->getEvent(&pressure_event);
@@ -556,8 +505,7 @@ void bmp280P_reading()
 //=========================================================================================================================================
 //=============================================Модуль сенсоров bme280======================================================================
 //bme280T temp1 0x76 Температура#bmp280 Датчики any-data 1
-void bme280T()
-{
+void bme280T() {
     String value_name = sCmd.next();
     String address = sCmd.next();
     String widget_name = sCmd.next();
@@ -570,8 +518,7 @@ void bme280T()
     sensors_reading_map[11] = 1;
 }
 
-void bme280T_reading()
-{
+void bme280T_reading() {
     float value = 0;
     value = bme.readTemperature();
     jsonWriteStr(configJson, bme280T_value_name, String(value));
@@ -581,8 +528,7 @@ void bme280T_reading()
 }
 
 //bme280P pres1 0x76 Давление#bmp280 Датчики any-data 1
-void bme280P()
-{
+void bme280P() {
     String value_name = sCmd.next();
     String address = sCmd.next();
     String widget_name = sCmd.next();
@@ -595,8 +541,7 @@ void bme280P()
     sensors_reading_map[12] = 1;
 }
 
-void bme280P_reading()
-{
+void bme280P_reading() {
     float value = 0;
     value = bme.readPressure();
     value = value / 1.333224;
@@ -607,8 +552,7 @@ void bme280P_reading()
 }
 
 //bme280H hum1 0x76 Влажность#bmp280 Датчики any-data 1
-void bme280H()
-{
+void bme280H() {
     String value_name = sCmd.next();
     String address = sCmd.next();
     String widget_name = sCmd.next();
@@ -621,8 +565,7 @@ void bme280H()
     sensors_reading_map[13] = 1;
 }
 
-void bme280H_reading()
-{
+void bme280H_reading() {
     float value = 0;
     value = bme.readHumidity();
     jsonWriteStr(configJson, bme280H_value_name, String(value));
@@ -632,8 +575,7 @@ void bme280H_reading()
 }
 
 //bme280A altit1 0x76 Высота#bmp280 Датчики any-data 1
-void bme280A()
-{
+void bme280A() {
     String value_name = sCmd.next();
     String address = sCmd.next();
     String widget_name = sCmd.next();
@@ -646,8 +588,7 @@ void bme280A()
     sensors_reading_map[14] = 1;
 }
 
-void bme280A_reading()
-{
+void bme280A_reading() {
     float value = 0;
     value = bme.readAltitude(1013.25);
     jsonWriteStr(configJson, bme280A_value_name, String(value));

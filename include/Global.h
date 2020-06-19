@@ -114,8 +114,7 @@ extern AsyncEventSource events;
 
 extern int sensors_reading_map[15];
 
-enum
-{
+enum {
     ROUTER_SEARCHING,
     WIFI_MQTT_CONNECTION_CHECK,
     SENSORS,
@@ -154,7 +153,7 @@ extern int udp_period;
 
 #ifdef level_enable
 #include "GyverFilters.h"
-GMedian<10, int> medianFilter;
+extern GMedian<10, int> medianFilter;
 #endif
 
 #include <DallasTemperature.h>
@@ -163,23 +162,23 @@ extern OneWire *oneWire;
 extern DallasTemperature sensors;
 
 #include <DHTesp.h>
-DHTesp dht;
+extern DHTesp dht;
 
 #include <Wire.h>
 
 #ifdef bmp_enable
 #include <Adafruit_BMP280.h>
-Adafruit_BMP280 bmp; // use I2C interface
-Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
-Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
+extern Adafruit_BMP280 bmp;
+extern Adafruit_Sensor *bmp_temp;
+extern Adafruit_Sensor *bmp_pressure;
 #endif
 
 #ifdef bme_enable
 #include <Adafruit_BME280.h>
-Adafruit_BME280 bme; // use I2C interface
-Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
-Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
-Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
+extern Adafruit_BME280 bme;
+extern Adafruit_Sensor *bme_temp;
+extern Adafruit_Sensor *bme_pressure;
+extern Adafruit_Sensor *bme_humidity;
 #endif
 
 //#include <SoftwareSerial.h>

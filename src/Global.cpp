@@ -99,6 +99,24 @@ int udp_period;
 // i2c
 String i2c_list;
 
-extern OneWire *oneWire;
-extern DallasTemperature sensors;
+OneWire *oneWire;
+DallasTemperature sensors;
 
+DHTesp dht;
+
+#ifdef level_enable
+GMedian<10, int> medianFilter;
+#endif
+
+#ifdef bmp_enable
+Adafruit_BMP280 bmp;
+Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
+Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
+#endif
+
+#ifdef bme_enable
+Adafruit_BME280 bme;
+Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
+Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
+Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
+#endif
