@@ -1,5 +1,7 @@
 #include "Global.h"
 
+#include "JsonUtils.h"
+
 TickerScheduler ts(TEST + 1);
 
 WiFiClient espClient;

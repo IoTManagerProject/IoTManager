@@ -1,4 +1,5 @@
 #include "Global.h"
+#include "StringUtils.h"
 
 String perception(byte value);
 void bmp280T_reading();
