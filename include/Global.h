@@ -48,6 +48,8 @@ extern AsyncWebSocket ws;
 
 extern TickerScheduler ts;
 
+extern WiFiClient espClient;
+
 extern PubSubClient client_mqtt;
 
 extern StringCommand sCmd;

@@ -11,6 +11,8 @@ AsyncWebSocket ws;
 
 TickerScheduler ts(TEST + 1);
 
+//WiFiClient espClient;
+
 PubSubClient client_mqtt(espClient);
 
 StringCommand sCmd;
