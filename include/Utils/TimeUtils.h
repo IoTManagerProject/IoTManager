@@ -11,9 +11,17 @@ void reconfigTime();
 /*
 * Получение текущего времени
 */
-String GetTime();
+String getTime();
+/*
+* Получаем время в формате linux gmt
+*/
+String getTimeUnix();
 
-String GetTimeUnix();
+/*
+* Параметр время
+* Результат выполнения 
+*/
+boolean getUnixTimeStr(String&);
 
 String GetTimeWOsec();
 

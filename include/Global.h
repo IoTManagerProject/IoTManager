@@ -9,8 +9,10 @@
 #include "Consts.h"
 #include "ESP32_Spec.h"
 #include "ESP8266_Spec.h"
+#include "Errors.h"
 #include "GyverFilters.h"
 #include "UptimeInterval.h"
+#include "Utils\FileUtils.h"
 #include "Utils\JsonUtils.h"
 #include "Utils\StringUtils.h"
 #include "Utils\TimeUtils.h"
@@ -173,15 +175,9 @@ extern void getMemoryLoad(String text);
 extern void saveConfig();
 extern String getURL(const String &urls);
 
-extern String writeFile(String fileName, String strings);
-extern String readFile(String fileName, size_t len);
-extern String addFile(String fileName, String strings);
-
 extern void servo_();
-extern boolean isDigitStr(String str);
-extern String jsonWriteStr(String &json, String name, String volume);
+
 extern void led_blink(String satus);
-extern int count(String str, String found);
 
 // Mqtt
 extern void MQTT_init();
@@ -192,7 +188,6 @@ extern void sendSTATUS(String topik, String state);
 extern void sendCONTROL(String id, String topik, String state);
 extern void do_mqtt_connection();
 extern void handleMQTT();
-extern String selectFromMarkerToMarker(String str, String found, int number);
 
 // WiFiUtils
 extern void WIFI_init();

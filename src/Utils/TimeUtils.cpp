@@ -39,7 +39,7 @@ const String prettyMillis(unsigned long time_ms) {
 }
 
 void time_check() {
-    if (GetTimeUnix() == "failed") {
+    if (getTimeUnix() == "failed") {
         Serial.println("[i] Time is not synchronized, start synchronization");
         reconfigTime();
     }
@@ -66,11 +66,11 @@ void reconfigTime() {
         delay(2000);
         //}
 #endif
-        if (GetTimeUnix() != "failed") {
+        if (getTimeUnix() != "failed") {
             Serial.print("[V] Time synchronized = ");
             Serial.print(GetDataDigital());
             Serial.print(" ");
-            Serial.println(GetTime());
+            Serial.println(getTime());
         } else {
             Serial.println("[E] Time server or internet connection error, will try again in 30 sec");
         }
@@ -79,8 +79,7 @@ void reconfigTime() {
     }
 }
 
-//Получаем время в формате linux gmt
-String GetTimeUnix() {
+String getTimeUnix() {
     time_t now = time(nullptr);
     if (now < 30000) {
         return "failed";
@@ -89,7 +88,13 @@ String GetTimeUnix() {
     }
 }
 
-String GetTime() {
+boolean getUnixTimeStr(String& res) {
+    time_t now = time(nullptr);
+    res = String(now);
+    return now < 30000;
+}
+
+String getTime() {
     time_t now = time(nullptr);  // получаем время с помощью библиотеки time.h
     int zone = 3600 * jsonReadStr(configSetupJson, "timezone").toInt();
     now = now + zone;

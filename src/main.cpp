@@ -4,27 +4,6 @@ void saveConfig() {
     writeFile("config.json", configSetupJson);
 }
 
-//--------------------Посчитать -----------------------------------------------------------------------------------
-int count(String str, String found) {
-    if (str.indexOf(found) == -1) return 0;  // если строки поиск нет сразу выход
-    str += found;                            // добавим для корректного поиска
-    uint8_t i = 0;                           // Индекс перебора
-    while (str.length() != 0) {
-        str = deleteBeforeDelimiter(str, found);  // отбросим проверенный блок до разделителя
-        i++;                                      // увеличим индекс
-    }
-    return i;  // Достигли пустой строки и ничего не нашли
-}
-
-boolean isDigitStr(String str) {
-    for (size_t i = 0; i < str.length(); i++) {
-        if (!isDigit(str.charAt(i))) {
-            return false;
-        }
-    }
-    return str.length();
-}
-
 String getURL(const String& urls) {
     String res = "";
     HTTPClient http;
@@ -50,65 +29,6 @@ void safeDataToFile(String data, String Folder) {
     // addFile(fileName, GetTime() + "/" + data);
     Serial.println(fileName);
     jsonWriteStr(configLiveJson, "test", fileName);
-}
-
-// ------------- Чтение файла в строку -------------------------------------------------------------------------------
-String readFile(String fileName, size_t len) {
-    File configFile = SPIFFS.open("/" + fileName, "r");
-    if (!configFile) {
-        return "Failed";
-    }
-    size_t size = configFile.size();
-    if (size > len) {
-        configFile.close();
-        return "Large";
-    }
-    String temp = configFile.readString();
-    configFile.close();
-    return temp;
-}
-// ------------- Размер файла ----------------------------------------------------------------------------------------
-String sizeFile(String fileName) {
-    File configFile = SPIFFS.open("/" + fileName, "r");
-    if (!configFile) {
-        return "Failed";
-    }
-    size_t size = configFile.size();
-    configFile.close();
-    return String(size);
-}
-// ------------- Запись строки в файл ---------------------------------------------------------------------------------
-String writeFile(String fileName, String strings) {
-    File configFile = SPIFFS.open("/" + fileName, "w");
-    if (!configFile) {
-        return "Failed to open config file";
-    }
-    configFile.print(strings);
-    //strings.printTo(configFile);
-    configFile.close();
-    return "Write sucsses";
-}
-// ------------- Добовление строки в файл ------------------------------------------------------------------------------
-String addFile(String fileName, String strings) {
-    File configFile = SPIFFS.open("/" + fileName, "a");
-    if (!configFile) {
-        return "Failed to open config file";
-    }
-    configFile.println(strings);
-    configFile.close();
-    return "Write sucsses";
-}
-// ------------- Чтение строки из файла ---------------------------------------------------------------------------------
-//возвращает стоку из файла в которой есть искомое слово found
-
-String readFileString(const String& filename, const String& str_to_found) {
-    String res = "failed";
-    auto file = SPIFFS.open("/" + filename, "r");
-    if (file && file.find(str_to_found.c_str())) {
-        res = file.readStringUntil('\n');
-    }
-    file.close();
-    return res;
 }
 
 void sendCONFIG(String topik, String widgetConfig, String key, String date) {
