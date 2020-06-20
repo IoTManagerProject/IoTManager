@@ -1,5 +1,9 @@
 #pragma once
 
+/*
+* Libraries
+*/
+
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESP8266HTTPUpdateServer.h>
@@ -31,6 +35,32 @@
 #include <ArduinoOTA.h>
 #endif
 
+/*
+* Objects.h(без данных)
+*/
+
+#ifdef WS_enable
+extern AsyncWebSocket ws;
+//extern AsyncEventSource events;
+#endif 
+
+extern TickerScheduler ts;
+
+extern PubSubClient client_mqtt;
+
+extern StringCommand sCmd;
+
+extern AsyncWebServer server;
+
+extern DallasTemperature sensors;
+
+
+
+
+/*
+* Global vars
+*/
+
 enum { ROUTER_SEARCHING,
        WIFI_MQTT_CONNECTION_CHECK,
        SENSORS,
@@ -50,20 +80,6 @@ enum { ROUTER_SEARCHING,
        UDP_DB,
        TEST };
 
-/*
-* Global vars
-*/
-extern TickerScheduler ts;
-
-#ifdef WS_enable
-extern AsyncWebSocket ws;
-//extern AsyncEventSource events;
-#endif
-
-extern PubSubClient client_mqtt;
-extern StringCommand sCmd;
-extern AsyncWebServer server;
-extern DallasTemperature sensors;
 
 extern boolean just_load;
 
