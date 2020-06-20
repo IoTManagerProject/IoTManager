@@ -8,6 +8,7 @@
 #include <ArduinoJson.h>
 #include <ESP8266HTTPUpdateServer.h>
 #include <ESPAsyncWebServer.h>
+#include <LittleFS.h>
 #include <SPIFFSEditor.h>
 
 #include "Consts.h"
@@ -44,7 +45,7 @@
 #ifdef WS_enable
 extern AsyncWebSocket ws;
 //extern AsyncEventSource events;
-#endif 
+#endif
 
 extern TickerScheduler ts;
 
@@ -55,9 +56,6 @@ extern StringCommand sCmd;
 extern AsyncWebServer server;
 
 extern DallasTemperature sensors;
-
-
-
 
 /*
 * Global vars
@@ -82,14 +80,13 @@ enum { ROUTER_SEARCHING,
        UDP_DB,
        TEST };
 
-
 extern boolean just_load;
 
 extern String configSetupJson;   //все настройки
 extern String configLiveJson;    //все данные с датчиков (связан с mqtt)
 extern String configOptionJson;  //для трансфера
 
-extern String chipID;
+extern String chipId;
 extern String prex;
 extern String all_widgets;
 extern String scenario;
@@ -187,6 +184,7 @@ extern void clean_log_date();
 extern void choose_log_date_and_send();
 
 // Main
+extern void setChipId();
 extern void getMemoryLoad(String text);
 extern void saveConfig();
 extern String getURL(const String &urls);

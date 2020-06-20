@@ -6,7 +6,7 @@
 #include <ESP32Servo.h>
 #include <HTTPClient.h>
 #include <HTTPUpdate.h>
-#include <SPIFFS.h>
+#include <LittleFS.h>
 #include <WiFi.h>
 #include <analogWrite.h>
 

@@ -33,7 +33,7 @@ void safeDataToFile(String data, String Folder) {
 
 void sendCONFIG(String topik, String widgetConfig, String key, String date) {
     yield();
-    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/" + topik + "/status";
+    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topik + "/status";
     String outer = "{\"widgetConfig\":";
     String inner = "{\"";
     inner = inner + key;
@@ -65,16 +65,32 @@ void led_blink(String satus) {
 #endif
 }
 
+const String getChipId() {
+    String res;
+#ifdef ESP32
+    res = String(ESP.getEfuseMac());
+#endif
+#ifdef ESP8266
+    res = String(ESP.getChipId()) + "-" + String(ESP.getFlashChipId());
+#endif
+    return res;
+}
+
+void setChipId() {
+    chipId = getChipId();
+    Serial.println(chipId);
+}
+
 void getMemoryLoad(String text) {
 #ifdef ESP8266
-    int all_memory = 52864;
+    uint32_t all_memory = 52864;
 #endif
 #ifdef ESP32
-    int all_memory = 362868;
+    uint32_t all_memory = 362868;
 #endif
-    int memory_remain = ESP.getFreeHeap();
-    int memory_used = all_memory - memory_remain;
-    int memory_load = (memory_used * 100) / all_memory;
+    uint32_t memory_remain = ESP.getFreeHeap();
+    uint32_t memory_used = all_memory - memory_remain;
+    uint32_t memory_load = (memory_used * 100) / all_memory;
     if (memory_load > 65) {
         Serial.println("Memory low!");
     }

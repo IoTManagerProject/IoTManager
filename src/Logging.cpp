@@ -22,7 +22,7 @@ void logging() {
             LOG1, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_1 = selectFromMarkerToMarker(logging_value_names_list, ",", 0);
                 deleteOldDate("log." + tmp_buf_1 + ".txt", jsonReadInt(configOptionJson, tmp_buf_1 + "_c"), jsonReadStr(configLiveJson, tmp_buf_1));
-                Serial.println("[i] LOGGING for sensor '" + tmp_buf_1 + "' done");
+                Serial.println("[I]  LOGGING for sensor '" + tmp_buf_1 + "' done");
             },
             nullptr, false);
     }
@@ -31,7 +31,7 @@ void logging() {
             LOG2, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_2 = selectFromMarkerToMarker(logging_value_names_list, ",", 1);
                 deleteOldDate("log." + tmp_buf_2 + ".txt", jsonReadInt(configOptionJson, tmp_buf_2 + "_c"), jsonReadStr(configLiveJson, tmp_buf_2));
-                Serial.println("[i] LOGGING for sensor '" + tmp_buf_2 + "' done");
+                Serial.println("[I]  LOGGING for sensor '" + tmp_buf_2 + "' done");
             },
             nullptr, false);
     }
@@ -40,7 +40,7 @@ void logging() {
             LOG3, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_3 = selectFromMarkerToMarker(logging_value_names_list, ",", 2);
                 deleteOldDate("log." + tmp_buf_3 + ".txt", jsonReadInt(configOptionJson, tmp_buf_3 + "_c"), jsonReadStr(configLiveJson, tmp_buf_3));
-                Serial.println("[i] LOGGING for sensor '" + tmp_buf_3 + "' done");
+                Serial.println("[I]  LOGGING for sensor '" + tmp_buf_3 + "' done");
             },
             nullptr, false);
     }
@@ -49,7 +49,7 @@ void logging() {
             LOG4, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_4 = selectFromMarkerToMarker(logging_value_names_list, ",", 3);
                 deleteOldDate("log." + tmp_buf_4 + ".txt", jsonReadInt(configOptionJson, tmp_buf_4 + "_c"), jsonReadStr(configLiveJson, tmp_buf_4));
-                Serial.println("[i] LOGGING for sensor '" + tmp_buf_4 + "' done");
+                Serial.println("[I]  LOGGING for sensor '" + tmp_buf_4 + "' done");
             },
             nullptr, false);
     }
@@ -58,7 +58,7 @@ void logging() {
             LOG5, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_5 = selectFromMarkerToMarker(logging_value_names_list, ",", 4);
                 deleteOldDate("log." + tmp_buf_5 + ".txt", jsonReadInt(configOptionJson, tmp_buf_5 + "_c"), jsonReadStr(configLiveJson, tmp_buf_5));
-                Serial.println("[i] LOGGING for sensor '" + tmp_buf_5 + "' done");
+                Serial.println("[I]  LOGGING for sensor '" + tmp_buf_5 + "' done");
             },
             nullptr, false);
     }
@@ -71,11 +71,11 @@ void deleteOldDate(String file, int seted_number_of_lines, String date_to_add) {
     Serial.println("=====> [i] in log file " + file + " " + current_number_of_lines + " lines");
 
     if (current_number_of_lines > seted_number_of_lines + 1) {
-        SPIFFS.remove("/" + file);
+        LittleFS.remove("/" + file);
         current_number_of_lines = 0;
     }
     if (current_number_of_lines == 0) {
-        SPIFFS.remove("/" + file);
+        LittleFS.remove("/" + file);
         current_number_of_lines = 0;
     }
     if (current_number_of_lines > seted_number_of_lines) {
@@ -133,7 +133,7 @@ void sendLogData(String file, String topic) {
         Serial.println(json_array);
         sendCHART(topic, json_array);
         json_array = "";
-        getMemoryLoad("[i] after send log date");
+        getMemoryLoad("[I]  after send log date");
     }
 }
 
@@ -152,14 +152,14 @@ void sendLogData(String file, String topic) {
       //Serial.println(final_line);
       sendCHART(topic, final_line);
     }
-    getMemoryLoad("[i] after send log date");
+    getMemoryLoad("[I]  after send log date");
 */
 //=========================================Очистка данных===================================================================================
 void clean_log_date() {
     String all_line = logging_value_names_list;
     while (all_line.length() != 0) {
         String tmp = selectToMarker(all_line, ",");
-        SPIFFS.remove("/log." + tmp + ".txt");
+        LittleFS.remove("/log." + tmp + ".txt");
         all_line = deleteBeforeDelimiter(all_line, ",");
     }
     all_line = "";
