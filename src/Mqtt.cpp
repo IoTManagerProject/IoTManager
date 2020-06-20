@@ -166,13 +166,13 @@ void sendSTATUS(String topik, String state) {
   topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
   String json_ = "{}";
   jsonWriteStr(json_, "status", state);
-  int send_status =  client_mqtt.publish (topik.c_str(), json_.c_str(), false);
+  client_mqtt.publish (topik.c_str(), json_.c_str(), false);
 }
 
 //======================================CONTROL==================================================
 void sendCONTROL(String id, String topik, String state) {
   String  all_line = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + id + "/" + topik + "/control";
-  int send_status = client_mqtt.publish (all_line.c_str(), state.c_str(), false);
+  client_mqtt.publish (all_line.c_str(), state.c_str(), false);
 }
 
 //=====================================================ОТПРАВЛЯЕМ ВИДЖЕТЫ========================================================

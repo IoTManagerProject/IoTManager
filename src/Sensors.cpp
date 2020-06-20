@@ -392,7 +392,7 @@ void dhtC_reading() {
     if (dht.getStatus() != 0) {
         sendSTATUS("dhtComfort", String(dht.getStatusString()));
     } else {
-        float value = dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
+        dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
         String final_line = get_comfort_status(cf);
         jsonWriteStr(configLiveJson, "dhtComfort", final_line);
         eventGen("dhtComfort", "");
@@ -486,7 +486,7 @@ void bmp280T() {
 
 void bmp280T_reading() {
     float value = 0;
-    sensors_event_t temp_event, pressure_event;
+    sensors_event_t temp_event;
     bmp_temp->getEvent(&temp_event);
     value = temp_event.temperature;
     jsonWriteStr(configLiveJson, bmp280T_value_name, String(value));
@@ -517,7 +517,7 @@ void bmp280P() {
 
 void bmp280P_reading() {
     float value = 0;
-    sensors_event_t temp_event, pressure_event;
+    sensors_event_t pressure_event;
     bmp_pressure->getEvent(&pressure_event);
     value = pressure_event.pressure;
     value = value / 1.333224;

@@ -198,7 +198,7 @@ void pinChange() {
 //==========================================Модуль управления ШИМ===================================================
 void pwm() {
 
-  static boolean flag = true;
+  //static boolean flag = true;
   String pwm_number = sCmd.next();
   String pwm_pin = sCmd.next();
   String widget_name = sCmd.next();
@@ -469,7 +469,7 @@ void servoSet() {
   String servo_state = sCmd.next();
   int servo_state_int = servo_state.toInt();
 
-  int pin = jsonReadInt(configOptionJson, "servo_pin" + servo_number);
+  //int pin = jsonReadInt(configOptionJson, "servo_pin" + servo_number);
 
   servo_state_int = map(servo_state_int,
                         jsonReadInt(configOptionJson, "s_min_val" + servo_number),
@@ -531,7 +531,7 @@ void mqttOrderSend() {
   //Serial.print(all_line);
   //Serial.print("->");
   //Serial.println(order);
-  int send_status = client_mqtt.publish (all_line.c_str(), order.c_str(), false);
+  client_mqtt.publish (all_line.c_str(), order.c_str(), false);
 }
 
 void httpOrderSend() {
