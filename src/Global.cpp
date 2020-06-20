@@ -1,57 +1,27 @@
 #include "Global.h"
 
-#include "JsonUtils.h"
-
-//==============================Objects.cpp(с данными)==================================
+/*
+* Objects.cpp(с данными)
+*/
 
 #ifdef WS_enable
 AsyncWebSocket ws;
-#endif
-
 //AsyncEventSource events;
-
+#endif
 TickerScheduler ts(TEST + 1);
-
 WiFiClient espClient;
-
 PubSubClient client_mqtt(espClient);
-
 StringCommand sCmd;
-
 AsyncWebServer server(80);
-
 //AsyncWebSocket ws("/ws");
-
 //AsyncEventSource events("/events");
-
-boolean but[NUM_BUTTONS];
-Bounce *buttons = new Bounce[NUM_BUTTONS];
-
-GMedian<10, int> medianFilter;
-
-OneWire *oneWire;
 DallasTemperature sensors;
 
-DHTesp dht;
-
-Servo myServo1;
-Servo myServo2;
-
-Adafruit_BMP280 bmp;
-Adafruit_Sensor *bmp_temp;
-Adafruit_Sensor *bmp_pressure;
-
-Adafruit_BME280 bme;
-Adafruit_Sensor *bme_temp;
-Adafruit_Sensor *bme_pressure;
-Adafruit_Sensor *bme_humidity;
-
-uptime_interval myUpTime(10);
-
-////////////////////////////////////// Global vars ////////////////////////////////////////////////////////////////////
+/*
+* Global vars
+*/
 
 boolean just_load = true;
-const char *hostName = "IoT Manager";
 
 // Json
 String configSetupJson = "{}";
@@ -89,17 +59,10 @@ int sensors_reading_map[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 String logging_value_names_list;
 int enter_to_logging_counter;
 
-// Ntp and time
-String current_time;
-
 // Scenario
 int scenario_line_status[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
-// Errors
-int wifi_lost_error = 0;
-int mqtt_lost_error = 0;
-
-String last_version;
+String last_version = "";
 
 // Async actions
 boolean upgrade_url = false;
@@ -108,23 +71,3 @@ boolean mqtt_connection = false;
 boolean udp_data_parse = false;
 boolean mqtt_send_settings_to_udp = false;
 boolean i2c_scanning = false;
-
-//Buttons
-//boolean but[6];
-
-// Udp
-boolean udp_busy = false;
-unsigned int udp_port = 4210;
-#ifdef ESP8266
-IPAddress udp_multicastIP(255, 255, 255, 255);
-#endif
-#ifdef ESP32
-IPAddress udp_multicastIP(239, 255, 255, 255);
-AsyncUDP udp;
-#endif
-String received_ip;
-String received_udp_line;
-int udp_period;
-
-// i2c
-String i2c_list;
