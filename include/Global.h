@@ -1,73 +1,35 @@
 #pragma once
 
-//=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include <Bounce2.h>
+#include <ESP8266HTTPUpdateServer.h>
 #include <ESPAsyncWebServer.h>
-extern AsyncWebServer server;
-#include <Adafruit_BME280.h>
-#include <Adafruit_BMP280.h>
-#include <DHTesp.h>
-#include <DallasTemperature.h>
-#include <FS.h>
-#include <OneWire.h>
-#include <PubSubClient.h>
 #include <SPIFFSEditor.h>
-#include <StringCommand.h>
-#include <TickerScheduler.h>
-#include <UpTime.h>
-#include <Wire.h>
-#include <time.h>
 
 #include "Consts.h"
+#include "ESP32_Spec.h"
+#include "ESP8266_Spec.h"
 #include "GyverFilters.h"
-//==============ESP8266 БИБЛИОТЕКИ===============
-#ifdef ESP8266
-#include <ESP8266HTTPClient.h>
-#include <ESP8266HTTPUpdateServer.h>
-#include <ESP8266WiFi.h>
-#include <ESP8266httpUpdate.h>
-ESP8266HTTPUpdateServer httpUpdater;
-#include <WiFiUdp.h>
-WiFiUDP Udp;
-#include <Servo.h>
-#ifdef MDNS_enable
-#include <ESP8266mDNS.h>
-#endif
-#endif
-//==============ESP32 БИБЛИОТЕКИ===============
-#ifdef ESP32
-#include <AsyncTCP.h>
-#include <AsyncUDP.h>
-#include <ESP32Servo.h>
-#include <HTTPClient.h>
-#include <HTTPUpdate.h>
-#include <SPIFFS.h>
-#include <WiFi.h>
-#include <analogWrite.h>
-extern AsyncUDP udp;
-#ifdef MDNS_enable
-#include <ESPmDNS.h>
-#endif
-#endif
+#include "UptimeInterval.h"
+#include "Utils\JsonUtils.h"
+#include "Utils\StringUtils.h"
+#include "Utils\TimeUtils.h"
 
+//=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
+#include <Adafruit_BME280.h>
+#include <Adafruit_BMP280.h>
+#include <Bounce2.h>
+#include <DHTesp.h>
+#include <DallasTemperature.h>
+#include <OneWire.h>
+#include <PubSubClient.h>
+#include <StringCommand.h>
+#include <TickerScheduler.h>
+#include <Wire.h>
+#include <time.h>
 #ifdef OTA_enable
 #include <ArduinoOTA.h>
 #endif
-
-extern Servo myServo1;
-extern Servo myServo2;
-
-//==============================Objects.h(без данных)==================================
-
-#ifdef WS_enable
-extern AsyncWebSocket ws;
-#endif
-
-//extern AsyncEventSource events;
-
-extern TickerScheduler ts;
 
 enum { ROUTER_SEARCHING,
        WIFI_MQTT_CONNECTION_CHECK,
@@ -88,51 +50,22 @@ enum { ROUTER_SEARCHING,
        UDP_DB,
        TEST };
 
-extern WiFiClient espClient;
+/*
+* Global vars
+*/
+extern TickerScheduler ts;
+
+#ifdef WS_enable
+extern AsyncWebSocket ws;
+//extern AsyncEventSource events;
+#endif
 
 extern PubSubClient client_mqtt;
-
 extern StringCommand sCmd;
-
 extern AsyncWebServer server;
-
-//AsyncWebSocket ws;
-
-//AsyncEventSource events;
-
-#define NUM_BUTTONS 6
-extern boolean but[NUM_BUTTONS];
-extern Bounce *buttons;
-
-extern GMedian<10, int> medianFilter;
-
-extern OneWire *oneWire;
 extern DallasTemperature sensors;
 
-extern DHTesp dht;
-
-extern Adafruit_BMP280 bmp;
-extern Adafruit_Sensor *bmp_temp;
-extern Adafruit_Sensor *bmp_pressure;
-
-extern Adafruit_BME280 bme;
-extern Adafruit_Sensor *bme_temp;
-extern Adafruit_Sensor *bme_pressure;
-extern Adafruit_Sensor *bme_humidity;
-
-extern uptime_interval myUpTime;
-
-///////////////////////////////////// Global vars ////////////////////////////////////////////////////////////////////
-
-extern boolean udp_busy;
-extern unsigned int udp_port;
-extern IPAddress udp_multicastIP;
-extern String received_ip;
-extern String received_udp_line;
-extern int udp_period;
-
 extern boolean just_load;
-extern const char *hostName;
 
 extern String configSetupJson;   //все настройки
 extern String configLiveJson;    //все данные с датчиков (связан с mqtt)
@@ -164,12 +97,7 @@ extern String bme280A_value_name;
 extern String logging_value_names_list;
 extern int enter_to_logging_counter;
 
-extern String current_time;
-
 extern int scenario_line_status[40];
-
-extern int wifi_lost_error;
-extern int mqtt_lost_error;
 
 extern String last_version;
 
@@ -182,24 +110,9 @@ extern boolean i2c_scanning;
 
 extern int sensors_reading_map[15];
 
-///////////////////////////////////// Functions////////////////////////////////////////////////////////////////////
-
-// StringUtils
-extern uint8_t hexStringToUint8(String hex);
-extern uint16_t hexStringToUint16(String hex);
-extern String selectToMarkerLast(String str, String found);
-extern String selectToMarker(String str, String found);
-extern String deleteAfterDelimiter(String str, String found);
-extern String deleteBeforeDelimiter(String str, String found);
-extern String deleteBeforeDelimiterTo(String str, String found);
-extern String selectFromMarkerToMarker(String str, String found, int number);
-
-// JsonUtils
-extern String jsonReadStr(String &json, String name);
-extern int jsonReadInt(String &json, String name);
-extern String jsonWriteInt(String &json, String name, int volume);
-extern String jsonWriteStr(String &json, String name, String volume);
-extern String jsonWriteFloat(String &json, String name, float volume);
+/*
+* Global functions
+*/
 
 // Cmd
 extern void CMD_init();
@@ -256,7 +169,7 @@ extern void clean_log_date();
 extern void choose_log_date_and_send();
 
 // Main
-void getMemoryLoad(String text);
+extern void getMemoryLoad(String text);
 extern void saveConfig();
 extern String getURL(const String &urls);
 
@@ -292,7 +205,6 @@ extern void eventGen(String event_name, String number);
 extern String add_set(String param_name);
 
 //Sensors
-// И как раз тут хорошо просто в Sensors.h это пихать - а не в один здоровенный ФАЙЛ
 extern void sensors_init();
 
 extern void levelPr();
@@ -340,40 +252,27 @@ extern void timerStop_();
 extern void delTimer(String number);
 extern int readTimer(int number);
 
-//TimeUtils
-extern void Time_Init();
-extern int timeToMin(String Time);
-extern String GetDataDigital();
-extern String GetDate();
-extern String GetTimeWOsec();
-extern String GetTime();
-extern String GetTimeUnix();
-extern void reconfigTime();
-extern void saveConfig();
-extern String GetTimeUnix();
-extern void time_check();
-
 //Upgrade
 extern void initUpgrade();
 
-//widget
+// widget
 extern void createWidget(String widget_name, String page_name, String page_number, String file, String topic);
 extern void createWidgetParam(String widget_name, String page_name, String page_number, String file, String topic, String name1, String param1, String name2, String param2, String name3, String param3);
 extern void choose_widget_and_create(String widget_name, String page_name, String page_number, String type, String topik);
 extern void createChart(String widget_name, String page_name, String page_number, String file, String topic, String maxCount);
 
-// Push
-extern void Push_init();
+// PushingBox
+extern void pushControl();
 
 // UDP
 extern void UDP_init();
 extern void do_udp_data_parse();
 extern void do_mqtt_send_settings_to_udp();
+
 // WebServer
 extern void Web_server_init();
 
-//iot_firmware
-extern void not_async_actions();
+// iot_firmware
 extern void handleCMD_loop();
 extern void handleButton();
 extern void handleScenario();
@@ -381,8 +280,8 @@ extern void handleUdp();
 extern void do_upgrade_url();
 extern void do_upgrade();
 
-//uptime
-extern void handle_uptime();
-extern void handle_statistics();
+// Init
 extern void uptime_init();
+
+// Web
 extern void web_init();

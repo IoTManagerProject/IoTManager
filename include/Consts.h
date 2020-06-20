@@ -1,17 +1,18 @@
 #pragma once
-//Здесь хранятся все настройки прошивки
-
-#define firmware_version "2.3.4"
-
 /*
-* Firmware settings
+* Здесь хранятся все настройки прошивки
 */
+#define firmware_version "2.3.4"
+#define NUM_BUTTONS 6
 #define mb_4_of_memory 1
 #define wifi_mqtt_reconnecting 20000
 #define blink_pin 2
 #define tank_level_times_to_send 10  //после скольки выстрелов делать отправку данных
 #define statistics_update 1000 * 60 * 60 * 2
 
+/* 
+* Optional
+*/
 //#define OTA_enable
 //#define MDNS_enable
 //#define WS_enable
