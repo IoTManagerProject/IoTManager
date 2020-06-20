@@ -17,7 +17,7 @@ int count(String str, String found) {
 }
 
 boolean isDigitStr(String str) {
-    for (int i = 0; i < str.length(); i++) {
+    for (size_t i = 0; i < str.length(); i++) {
         if (!isDigit(str.charAt(i))) {
             return false;
         }

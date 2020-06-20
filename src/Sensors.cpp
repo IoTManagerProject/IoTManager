@@ -1,5 +1,17 @@
 #include "Global.h"
-#include "StringUtils.h"
+
+OneWire *oneWire;
+GMedian<10, int> medianFilter;
+DHTesp dht;
+
+Adafruit_BMP280 bmp;
+Adafruit_Sensor *bmp_temp;
+Adafruit_Sensor *bmp_pressure;
+
+Adafruit_BME280 bme;
+Adafruit_Sensor *bme_temp;
+Adafruit_Sensor *bme_pressure;
+Adafruit_Sensor *bme_humidity;
 
 String perception(byte value);
 void bmp280T_reading();
@@ -71,77 +83,77 @@ void sensors_init() {
 #ifdef level_enable
 //levelPr p 14 12 Вода#в#баке,#% Датчики fill-gauge 125 20 1
 void levelPr() {
-  String value_name = sCmd.next();
-  String trig = sCmd.next();
-  String echo = sCmd.next();
-  String widget_name = sCmd.next();
-  String page_name = sCmd.next();
-  String type = sCmd.next();
-  String empty_level = sCmd.next();
-  String full_level = sCmd.next();
-  String page_number = sCmd.next();
-  levelPr_value_name = value_name;
-  jsonWriteStr(configOptionJson, "e_lev", empty_level);
-  jsonWriteStr(configOptionJson, "f_lev", full_level);
-  jsonWriteStr(configOptionJson, "trig", trig);
-  jsonWriteStr(configOptionJson, "echo", echo);
-  pinMode(trig.toInt(), OUTPUT);
-  pinMode(echo.toInt(), INPUT);
-  choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
-  sensors_reading_map[0] = 1;
+    String value_name = sCmd.next();
+    String trig = sCmd.next();
+    String echo = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String empty_level = sCmd.next();
+    String full_level = sCmd.next();
+    String page_number = sCmd.next();
+    levelPr_value_name = value_name;
+    jsonWriteStr(configOptionJson, "e_lev", empty_level);
+    jsonWriteStr(configOptionJson, "f_lev", full_level);
+    jsonWriteStr(configOptionJson, "trig", trig);
+    jsonWriteStr(configOptionJson, "echo", echo);
+    pinMode(trig.toInt(), OUTPUT);
+    pinMode(echo.toInt(), INPUT);
+    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    sensors_reading_map[0] = 1;
 }
 //ultrasonicCm cm 14 12 Дистанция,#см Датчики fill-gauge 1
 void ultrasonicCm() {
-  String value_name = sCmd.next();
-  String trig = sCmd.next();
-  String echo = sCmd.next();
-  String widget_name = sCmd.next();
-  String page_name = sCmd.next();
-  String type = sCmd.next();
-  String empty_level = sCmd.next();
-  String full_level = sCmd.next();
-  String page_number = sCmd.next();
-  ultrasonicCm_value_name = value_name;
-  jsonWriteStr(configOptionJson, "trig", trig);
-  jsonWriteStr(configOptionJson, "echo", echo);
-  pinMode(trig.toInt(), OUTPUT);
-  pinMode(echo.toInt(), INPUT);
-  choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
-  sensors_reading_map[0] = 1;
+    String value_name = sCmd.next();
+    String trig = sCmd.next();
+    String echo = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String empty_level = sCmd.next();
+    String full_level = sCmd.next();
+    String page_number = sCmd.next();
+    ultrasonicCm_value_name = value_name;
+    jsonWriteStr(configOptionJson, "trig", trig);
+    jsonWriteStr(configOptionJson, "echo", echo);
+    pinMode(trig.toInt(), OUTPUT);
+    pinMode(echo.toInt(), INPUT);
+    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    sensors_reading_map[0] = 1;
 }
 
 void ultrasonic_reading() {
-  long duration_;
-  int distance_cm;
-  int level;
-  static int counter;
-  int trig = jsonReadInt(configOptionJson, "trig");
-  int echo = jsonReadInt(configOptionJson, "echo");
-  digitalWrite(trig, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trig, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trig, LOW);
-  duration_ = pulseIn(echo, HIGH, 30000); // 3000 µs = 50cm // 30000 µs = 5 m
-  distance_cm = duration_ / 29 / 2;
-  distance_cm = medianFilter.filtered(distance_cm);//отсечение промахов медианным фильтром
-  counter++;
-  if (counter > tank_level_times_to_send) {
-    counter = 0;
-    level = map(distance_cm,
-                jsonReadInt(configOptionJson, "e_lev"),
-                jsonReadInt(configOptionJson, "f_lev"), 0, 100);
-                
-    jsonWriteInt(configLiveJson, levelPr_value_name, level);
-    eventGen (levelPr_value_name, "");
-    sendSTATUS(levelPr_value_name, String(level));
-    Serial.println("[i] sensor '" + levelPr_value_name + "' data: " + String(level));
-    
-    jsonWriteInt(configLiveJson, ultrasonicCm_value_name, distance_cm);
-    eventGen (ultrasonicCm_value_name, "");
-    sendSTATUS(ultrasonicCm_value_name, String(distance_cm));
-    Serial.println("[i] sensor '" + ultrasonicCm_value_name + "' data: " + String(distance_cm));
-  }
+    long duration_;
+    int distance_cm;
+    int level;
+    static int counter;
+    int trig = jsonReadInt(configOptionJson, "trig");
+    int echo = jsonReadInt(configOptionJson, "echo");
+    digitalWrite(trig, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trig, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trig, LOW);
+    duration_ = pulseIn(echo, HIGH, 30000);  // 3000 µs = 50cm // 30000 µs = 5 m
+    distance_cm = duration_ / 29 / 2;
+    distance_cm = medianFilter.filtered(distance_cm);  //отсечение промахов медианным фильтром
+    counter++;
+    if (counter > tank_level_times_to_send) {
+        counter = 0;
+        level = map(distance_cm,
+                    jsonReadInt(configOptionJson, "e_lev"),
+                    jsonReadInt(configOptionJson, "f_lev"), 0, 100);
+
+        jsonWriteInt(configLiveJson, levelPr_value_name, level);
+        eventGen(levelPr_value_name, "");
+        sendSTATUS(levelPr_value_name, String(level));
+        Serial.println("[i] sensor '" + levelPr_value_name + "' data: " + String(level));
+
+        jsonWriteInt(configLiveJson, ultrasonicCm_value_name, distance_cm);
+        eventGen(ultrasonicCm_value_name, "");
+        sendSTATUS(ultrasonicCm_value_name, String(distance_cm));
+        Serial.println("[i] sensor '" + ultrasonicCm_value_name + "' data: " + String(distance_cm));
+    }
 }
 #endif
 //=========================================================================================================================================
@@ -387,7 +399,7 @@ void dhtC() {
     sensors_reading_map[7] = 1;
 }
 
-void dhtC_reading() {  
+void dhtC_reading() {
     ComfortState cf;
     if (dht.getStatus() != 0) {
         sendSTATUS("dhtComfort", String(dht.getStatusString()));
