@@ -60,3 +60,28 @@ uint16_t hexStringToUint16(String hex) {
         return tmp;
     }
 }
+
+size_t itemsCount(String str, const String& separator) {
+    // если строки поиск нет сразу выход
+    if (str.indexOf(separator) == -1) {
+        return 0;
+    }
+    // добавим для корректного поиска
+    str += separator;
+    size_t cnt = 0;
+    while (str.length()) {
+        // отбросим проверенный блок до разделителя
+        str = deleteBeforeDelimiter(str, separator);
+        cnt++;
+    }
+    return cnt;
+}
+
+boolean isDigitStr(const String& str) {
+    for (size_t i = 0; i < str.length(); i++) {
+        if (!isDigit(str.charAt(i))) {
+            return false;
+        }
+    }
+    return str.length();
+}
