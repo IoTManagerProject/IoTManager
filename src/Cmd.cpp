@@ -304,7 +304,7 @@ void timeSet() {
 void handle_time_init() {
     ts.add(
         TIME, 1000, [&](void *) {
-            String tmp = GetTime();
+            String tmp = getTime();
             jsonWriteStr(configLiveJson, "time", tmp);
             tmp.replace(":", "-");
             jsonWriteStr(configLiveJson, "timenow", tmp);
@@ -332,7 +332,7 @@ void textSet() {
     if (text.indexOf("-time") >= 0) {
         text.replace("-time", "");
         text.replace("#", " ");
-        String time = GetTime();
+        String time = getTime();
         time.replace(":", ".");
         text = text + " " + GetDataDigital() + " " + time;
     }

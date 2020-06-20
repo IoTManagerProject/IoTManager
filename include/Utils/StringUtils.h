@@ -17,3 +17,7 @@ String deleteBeforeDelimiter(String str, String found);
 String deleteBeforeDelimiterTo(String str, String found);
 
 String selectFromMarkerToMarker(String str, String found, int number);
+
+size_t itemsCount(String str, const String& separator);
+
+boolean isDigitStr(const String&);
