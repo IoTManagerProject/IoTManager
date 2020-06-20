@@ -274,12 +274,14 @@ void inputDigit() {
     jsonWriteStr(configLiveJson, "digit" + number, start_state);
     createWidget(widget_name, page_name, page_number, "widgets/widget.inputNum.json", "digit" + number);
 }
+
 void digitSet() {
     String number = sCmd.next();
     String value = sCmd.next();
     jsonWriteStr(configLiveJson, "digit" + number, value);
     sendSTATUS("digit" + number, value);
 }
+
 //=====================================================================================================================================
 //=========================================Добавление окна ввода времени===============================================================
 void inputTime() {
@@ -294,6 +296,7 @@ void inputTime() {
     jsonWriteStr(configLiveJson, "time" + number, start_state);
     createWidget(widget_name, page_name, page_number, "widgets/widget.inputTime.json", "time" + number);
 }
+
 void timeSet() {
     String number = sCmd.next();
     String value = sCmd.next();
@@ -334,7 +337,7 @@ void textSet() {
         text.replace("#", " ");
         String time = getTime();
         time.replace(":", ".");
-        text = text + " " + GetDataDigital() + " " + time;
+        text = text + " " + getDateDigitalFormated() + " " + time;
     }
 
     jsonWriteStr(configLiveJson, "text" + number, text);

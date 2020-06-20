@@ -7,24 +7,24 @@
 * Чтение строки из файла
 * возвращает стоку из файла в которой есть искомое слово found
 */
-String readFileString(const String& filename, const String& str_to_found);
+String readFileString(const String filename, const String to_find);
 
 /* 
 * Добовление строки в файл
 */
-String addFile(const String& fileName, const String& str);
+String addFile(const String filename, const String str);
 
 /*
 * Запись строки в файл
 */
-String writeFile(const String& fileName, const String& str);
+String writeFile(const String filename, const String str);
 
 /*
 *  Чтение файла в строку
 */
-String readFile(const String& fileName, size_t len);
+String readFile(const String filename, size_t max_size);
 
 /*
 *  Размер файла
 */
-String sizeFile(const String& fileName);
+String getFileSize(const String filename);

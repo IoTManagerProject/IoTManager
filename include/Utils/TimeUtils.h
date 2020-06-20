@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <TZ.h>
 
 void Time_Init();
 
@@ -23,11 +24,14 @@ String getTimeUnix();
 */
 boolean getUnixTimeStr(String&);
 
-String GetTimeWOsec();
+String getTimeWOsec();
 
-String GetDate();
+/*
+* Получение даты
+*/
+String getDate();
 
-String GetDataDigital();
+String getDateDigitalFormated();
 
 int timeToMin(String Time);
 

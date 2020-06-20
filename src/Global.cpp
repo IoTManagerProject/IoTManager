@@ -11,7 +11,7 @@ AsyncWebSocket ws;
 
 TickerScheduler ts(TEST + 1);
 
-//WiFiClient espClient;
+WiFiClient espClient;
 
 PubSubClient client_mqtt(espClient);
 
@@ -20,10 +20,6 @@ StringCommand sCmd;
 AsyncWebServer server(80);
 
 DallasTemperature sensors;
-
-WiFiClient espClient;
-
-
 
 /*
 * Global vars
@@ -37,11 +33,11 @@ String configLiveJson = "{}";
 String configOptionJson = "{}";
 
 // Mqtt
-String chipID = "";
-String prex;
+String chipId = "";
+String prex = "";
 String all_widgets = "";
-String scenario;
-String order_loop;
+String scenario = "";
+String order_loop = "";
 
 // Sensors
 String analog_value_names_list;

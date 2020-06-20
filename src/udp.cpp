@@ -20,7 +20,7 @@ void add_dev_in_list(String fileName, String id, String dev_name, String ip);
 
 #ifdef UDP_enable
 void UDP_init() {
-    SPIFFS.remove("/dev.csv");
+    LittleFS.remove("/dev.csv");
     addFile("dev.csv", "device id;device name;ip address");
 
 #ifdef ESP8266
@@ -37,7 +37,7 @@ void UDP_init() {
             if (jsonReadStr(configSetupJson, "udponoff") == "1") {
                 if (WiFi.status() == WL_CONNECTED) {
                     if (!udp_busy) {
-                        String line_to_send = "iotm;" + chipID + ";" + jsonReadStr(configSetupJson, "name");
+                        String line_to_send = "iotm;" + chipId + ";" + jsonReadStr(configSetupJson, "name");
 #ifdef ESP8266
                         Udp.beginPacketMulticast(udp_multicastIP, udp_port, WiFi.localIP());
                         Udp.write(line_to_send.c_str());
@@ -122,10 +122,10 @@ void do_udp_data_parse() {
     }
 }
 
-void add_dev_in_list(String fileName, String id, String dev_name, String ip) {
-    File configFile = SPIFFS.open("/" + fileName, "r");
+void add_dev_in_list(String filename, String id, String dev_name, String ip) {
+    File configFile = LittleFS.open("/" + filename, "r");
     if (!configFile.find(id.c_str())) {
-        addFile(fileName, id + ";" + dev_name + "; <a href=\"http://" + ip + "\" target=\"_blank\"\">" + ip + "</a>");
+        addFile(filename, id + ";" + dev_name + "; <a href=\"http://" + ip + "\" target=\"_blank\"\">" + ip + "</a>");
     }
 }
 

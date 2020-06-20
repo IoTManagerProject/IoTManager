@@ -3,9 +3,6 @@
 #include "Global.h"
 #include "Utils\StringUtils.h"
 
-static const char* TIME_FORMAT PROGMEM = "%2d:%2d:%2d";
-static const char* TIME_FORMAT_WITH_DAYS PROGMEM = "%dd %2d:%2d";
-
 void Time_Init() {
     ts.add(
         TIME_SYNC, 30000, [&](void*) {
@@ -14,33 +11,9 @@ void Time_Init() {
         nullptr, true);
 }
 
-const String prettyMillis(unsigned long time_ms) {
-    unsigned long tmp = time_ms;
-    unsigned long seconds;
-    unsigned long minutes;
-    unsigned long hours;
-    unsigned long days;
-    seconds = tmp % 60;
-    tmp = tmp / 60;
-
-    minutes = tmp % 60;
-    tmp = tmp / 60;
-    hours = tmp % 24;
-    days = tmp / 24;
-
-    char buf[16];
-
-    if (days) {
-        sprintf_P(buf, TIME_FORMAT, hours, minutes, seconds);
-    } else {
-        sprintf_P(buf, TIME_FORMAT_WITH_DAYS, days, hours, minutes);
-    }
-    return String(buf);
-}
-
 void time_check() {
     if (getTimeUnix() == "failed") {
-        Serial.println("[i] Time is not synchronized, start synchronization");
+        Serial.println("[I] Trying to obtain time");
         reconfigTime();
     }
 }
@@ -50,7 +23,7 @@ void reconfigTime() {
         String ntp = jsonReadStr(configSetupJson, "ntp");
         configTime(0, 0, ntp.c_str());
         int i = 0;
-        Serial.println("[i] Awaiting for time ");
+        Serial.println("[I] Start time sync");
 #ifdef ESP32
         struct tm timeinfo;
         while (!getLocalTime(&timeinfo) && i <= 4) {
@@ -67,15 +40,15 @@ void reconfigTime() {
         //}
 #endif
         if (getTimeUnix() != "failed") {
-            Serial.print("[V] Time synchronized = ");
-            Serial.print(GetDataDigital());
-            Serial.print(" ");
+            Serial.print("[V] Got time = ");
+            Serial.print(getDateDigitalFormated());
+            Serial.print(' ');
             Serial.println(getTime());
         } else {
-            Serial.println("[E] Time server or internet connection error, will try again in 30 sec");
+            Serial.println("[E] Failed to obtain time, retry in 30 sec");
         }
     } else {
-        Serial.println("[E] Get time impossible, no wifi connection");
+        Serial.println("[E] Unable to obtain time");
     }
 }
 
@@ -105,7 +78,7 @@ String getTime() {
     return Time;                          // Возврашаем полученное время
 }
 
-String GetTimeWOsec() {
+String getTimeWOsec() {
     time_t now = time(nullptr);  // получаем время с помощью библиотеки time.h
     int zone = 3600 * jsonReadStr(configSetupJson, "timezone").toInt();
     now = now + zone;
@@ -116,8 +89,7 @@ String GetTimeWOsec() {
     return Time;                          // Возврашаем полученное время
 }
 
-// Получение даты
-String GetDate() {
+String getDate() {
     time_t now = time(nullptr);  // получаем время с помощью библиотеки time.h
     int zone = 3600 * jsonReadStr(configSetupJson, "timezone").toInt();
     now = now + zone;
@@ -130,8 +102,8 @@ String GetDate() {
     return Data;                                 // Возврашаем полученную дату
 }
 
-String GetDataDigital() {
-    String date = GetDate();
+String getDateDigitalFormated() {
+    String date = getDate();
 
     date = deleteBeforeDelimiter(date, " ");
 
@@ -167,4 +139,31 @@ int timeToMin(String Time) {
     Time = deleteBeforeDelimiter(Time, ":");            // Теперь здесь минуты секунды
     min += selectToMarker(Time, ":").toInt();           // Добавим секунды из полных минут
     return min;
+}
+
+static const char* TIME_FORMAT PROGMEM = "%2d:%2d:%2d";
+static const char* TIME_FORMAT_WITH_DAYS PROGMEM = "%dd %2d:%2d";
+
+const String prettyMillis(unsigned long time_ms) {
+    unsigned long tmp = time_ms;
+    unsigned long seconds;
+    unsigned long minutes;
+    unsigned long hours;
+    unsigned long days;
+    seconds = tmp % 60;
+    tmp = tmp / 60;
+
+    minutes = tmp % 60;
+    tmp = tmp / 60;
+    hours = tmp % 24;
+    days = tmp / 24;
+
+    char buf[16];
+
+    if (days) {
+        sprintf_P(buf, TIME_FORMAT, hours, minutes, seconds);
+    } else {
+        sprintf_P(buf, TIME_FORMAT_WITH_DAYS, days, hours, minutes);
+    }
+    return String(buf);
 }

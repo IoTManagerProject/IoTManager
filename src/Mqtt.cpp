@@ -60,16 +60,16 @@ boolean MQTT_Connecting() {
         if (WiFi.status() == WL_CONNECTED) {
             if (!client_mqtt.connected()) {
                 Serial.println("[V] Connecting to MQTT server commenced");
-                if (client_mqtt.connect(chipID.c_str(), jsonReadStr(configSetupJson, "mqttUser").c_str(), jsonReadStr(configSetupJson, "mqttPass").c_str())) {
+                if (client_mqtt.connect(chipId.c_str(), jsonReadStr(configSetupJson, "mqttUser").c_str(), jsonReadStr(configSetupJson, "mqttPass").c_str())) {
                     Serial.println("[VV] MQTT connected");
                     led_blink("off");
                     client_mqtt.setCallback(callback);
                     client_mqtt.subscribe(jsonReadStr(configSetupJson, "mqttPrefix").c_str());                                  // Для приема получения HELLOW и подтверждения связи
-                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/+/control").c_str());  // Подписываемся на топики control
-                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/order").c_str());      // Подписываемся на топики order
-                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/update").c_str());
-                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/devc").c_str());
-                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/devs").c_str());
+                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/+/control").c_str());  // Подписываемся на топики control
+                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/order").c_str());      // Подписываемся на топики order
+                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/update").c_str());
+                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/devc").c_str());
+                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/devs").c_str());
                     Serial.println("[V] Callback set, subscribe done");
                     res = true;
                 } else {
@@ -142,7 +142,7 @@ void outcoming_date() {
 
 //======================================CONFIG==================================================
 boolean sendMQTT(String end_of_topik, String data) {
-    String topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/" + end_of_topik;
+    String topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + end_of_topik;
     boolean send_status = client_mqtt.beginPublish(topik.c_str(), data.length(), false);
     client_mqtt.print(data);
     client_mqtt.endPublish();
@@ -150,7 +150,7 @@ boolean sendMQTT(String end_of_topik, String data) {
 }
 
 boolean sendCHART(String topik, String data) {
-    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
+    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topik + "/" + "status";
     boolean send_status = client_mqtt.beginPublish(topik.c_str(), data.length(), false);
     client_mqtt.print(data);
     client_mqtt.endPublish();
@@ -158,14 +158,14 @@ boolean sendCHART(String topik, String data) {
 }
 
 boolean sendCHART_test(String topik, String data) {
-    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
+    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topik + "/" + "status";
     boolean send_status = client_mqtt.publish(topik.c_str(), data.c_str(), false);
     return send_status;
 }
 
 //======================================STATUS==================================================
 void sendSTATUS(String topik, String state) {
-    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/" + topik + "/" + "status";
+    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topik + "/" + "status";
     String json_ = "{}";
     jsonWriteStr(json_, "status", state);
     client_mqtt.publish(topik.c_str(), json_.c_str(), false);
@@ -198,20 +198,21 @@ void sendAllWigets() {
             Serial.println("[V] " + line);
             psn_1 = psn_2 + 1;
         } while (psn_2 + 2 < all_widgets.length());
-        getMemoryLoad("[i] after send all widgets");
+        getMemoryLoad("[I] after send all widgets");
     }
 }
 #endif
 
 #ifndef layout_in_ram
 void sendAllWigets() {
-    File configFile = SPIFFS.open("/layout.txt", "r");
-    if (!configFile) {
+    auto file = LittleFS.open("/layout.txt", "r");
+    if (!file) {
+        Serial.println("[e] on open layout.txt");
         return;
     }
-    configFile.seek(0, SeekSet);  //поставим курсор в начало файла
-    while (configFile.position() != configFile.size()) {
-        String widget_to_send = configFile.readStringUntil('\n');
+    file.seek(0, SeekSet);  //поставим курсор в начало файла
+    while (file.position() != file.size()) {
+        String widget_to_send = file.readStringUntil('\n');
         Serial.println("[V] " + widget_to_send);
         sendMQTT("config", widget_to_send);
     }
@@ -221,7 +222,7 @@ void sendAllWigets() {
 void sendAllData() {  //берет строку json и ключи превращает в топики а значения колючей в них посылает
 
     String current_config = configLiveJson;  //{"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
-    getMemoryLoad("[i] after send all date");
+    getMemoryLoad("[I] after send all date");
     current_config.replace("{", "");
     current_config.replace("}", "");  //"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
     current_config += ",";            //"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
