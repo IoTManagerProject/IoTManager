@@ -1,0 +1,39 @@
+{
+  "configs": [
+    "/config.live.json",
+    "/config.setup.json",
+    "/lang/lang.ru.json"
+  ],
+  "title": "Главная",
+  "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+  "content": [
+    {
+      "type": "h5",
+      "title": "{{name}}",
+      "class": "alert-default"
+    },
+    {
+      "type": "link",
+      "title": "{{ButMainPage}}",
+      "action": "/",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "h3",
+      "title": "Сканирование адресов шины i2c"
+    },
+    {
+      "type": "h4",
+      "title": "{{i2c}}"
+    },
+    {
+      "type": "link",
+      "title": "Сканировать",
+      "action": "/set?itoc",
+      "class": "btn btn-block btn-default"
+    }
+  ]
+}

@@ -1,47 +1,65 @@
-#include "Sensors.h"
+#include "Global.h"
+#include "StringUtils.h"
 
-#include "set.h"
+String perception(byte value);
+void bmp280T_reading();
+String get_comfort_status(ComfortState cf);
 
 void sensors_init() {
     ts.add(
-        SENSORS, 1000, [&](void*) {
+        SENSORS, 1000, [&](void *) {
             static int counter;
             counter++;
 
 #ifdef level_enable
-            if (sensors_reading_map[0] == 1) level_reading();
+            if (sensors_reading_map[0] == 1)
+                ultrasonic_reading();
 #endif
 
             if (counter > 10) {
                 counter = 0;
 
 #ifdef analog_enable
-                if (sensors_reading_map[1] == 1) analog_reading1();
-                if (sensors_reading_map[2] == 1) analog_reading2();
+                if (sensors_reading_map[1] == 1)
+                    analog_reading1();
+                if (sensors_reading_map[2] == 1)
+                    analog_reading2();
 #endif
 
 #ifdef dallas_enable
-                if (sensors_reading_map[3] == 1) dallas_reading();
+                if (sensors_reading_map[3] == 1)
+                    dallas_reading();
 #endif
 
 #ifdef dht_enable
-                if (sensors_reading_map[4] == 1) dhtT_reading();
-                if (sensors_reading_map[5] == 1) dhtH_reading();
-                if (sensors_reading_map[6] == 1) dhtP_reading();
-                if (sensors_reading_map[7] == 1) dhtC_reading();
-                if (sensors_reading_map[8] == 1) dhtD_reading();
+                if (sensors_reading_map[4] == 1)
+                    dhtT_reading();
+                if (sensors_reading_map[5] == 1)
+                    dhtH_reading();
+                if (sensors_reading_map[6] == 1)
+                    dhtP_reading();
+                if (sensors_reading_map[7] == 1)
+                    dhtC_reading();
+                if (sensors_reading_map[8] == 1)
+                    dhtD_reading();
 #endif
 
 #ifdef bmp_enable
-                if (sensors_reading_map[9] == 1) bmp280T_rading();
-                if (sensors_reading_map[10] == 1) bmp280P_reading();
+                if (sensors_reading_map[9] == 1)
+                    bmp280T_reading();
+                if (sensors_reading_map[10] == 1)
+                    bmp280P_reading();
 #endif
 
 #ifdef bme_enable
-                if (sensors_reading_map[11] == 1) bme280T_reading();
-                if (sensors_reading_map[12] == 1) bme280P_reading();
-                if (sensors_reading_map[13] == 1) bme280H_reading();
-                if (sensors_reading_map[14] == 1) bme280A_reading();
+                if (sensors_reading_map[11] == 1)
+                    bme280T_reading();
+                if (sensors_reading_map[12] == 1)
+                    bme280P_reading();
+                if (sensors_reading_map[13] == 1)
+                    bme280H_reading();
+                if (sensors_reading_map[14] == 1)
+                    bme280A_reading();
 #endif
             }
         },
@@ -51,54 +69,79 @@ void sensors_init() {
 //=========================================================================================================================================
 //=========================================Модуль измерения уровня в баке==================================================================
 #ifdef level_enable
-//level L 14 12 Вода#в#баке,#% Датчики fill-gauge 125 20 1
-void level() {
-    String value_name = sCmd.next();
-    String trig = sCmd.next();
-    String echo = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String empty_level = sCmd.next();
-    String full_level = sCmd.next();
-    String page_number = sCmd.next();
-    level_value_name = value_name;
-    jsonWriteStr(optionJson, "e_lev", empty_level);
-    jsonWriteStr(optionJson, "f_lev", full_level);
-    jsonWriteStr(optionJson, "trig", trig);
-    jsonWriteStr(optionJson, "echo", echo);
-    pinMode(trig.toInt(), OUTPUT);
-    pinMode(echo.toInt(), INPUT);
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
-    sensors_reading_map[0] = 1;
+//levelPr p 14 12 Вода#в#баке,#% Датчики fill-gauge 125 20 1
+void levelPr() {
+  String value_name = sCmd.next();
+  String trig = sCmd.next();
+  String echo = sCmd.next();
+  String widget_name = sCmd.next();
+  String page_name = sCmd.next();
+  String type = sCmd.next();
+  String empty_level = sCmd.next();
+  String full_level = sCmd.next();
+  String page_number = sCmd.next();
+  levelPr_value_name = value_name;
+  jsonWriteStr(configOptionJson, "e_lev", empty_level);
+  jsonWriteStr(configOptionJson, "f_lev", full_level);
+  jsonWriteStr(configOptionJson, "trig", trig);
+  jsonWriteStr(configOptionJson, "echo", echo);
+  pinMode(trig.toInt(), OUTPUT);
+  pinMode(echo.toInt(), INPUT);
+  choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+  sensors_reading_map[0] = 1;
+}
+//ultrasonicCm cm 14 12 Дистанция,#см Датчики fill-gauge 1
+void ultrasonicCm() {
+  String value_name = sCmd.next();
+  String trig = sCmd.next();
+  String echo = sCmd.next();
+  String widget_name = sCmd.next();
+  String page_name = sCmd.next();
+  String type = sCmd.next();
+  String empty_level = sCmd.next();
+  String full_level = sCmd.next();
+  String page_number = sCmd.next();
+  ultrasonicCm_value_name = value_name;
+  jsonWriteStr(configOptionJson, "trig", trig);
+  jsonWriteStr(configOptionJson, "echo", echo);
+  pinMode(trig.toInt(), OUTPUT);
+  pinMode(echo.toInt(), INPUT);
+  choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+  sensors_reading_map[0] = 1;
 }
 
-void level_reading() {
-    long duration_;
-    int distance_cm;
-    int level;
-    static int counter;
-    int trig = jsonReadInt(optionJson, "trig");
-    int echo = jsonReadInt(optionJson, "echo");
-    digitalWrite(trig, LOW);
-    delayMicroseconds(2);
-    digitalWrite(trig, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(trig, LOW);
-    duration_ = pulseIn(echo, HIGH, 30000);  // 3000 µs = 50cm // 30000 µs = 5 m
-    distance_cm = duration_ / 29 / 2;
-    distance_cm = medianFilter.filtered(distance_cm);  //отсечение промахов медианным фильтром
-    counter++;
-    if (counter > tank_level_times_to_send) {
-        counter = 0;
-        level = map(distance_cm,
-                    jsonReadInt(optionJson, "e_lev"),
-                    jsonReadInt(optionJson, "f_lev"), 0, 100);
-        jsonWriteInt(configJson, level_value_name, level);
-        eventGen(level_value_name, "");
-        sendSTATUS(level_value_name, String(level));
-        Serial.println("[i] sensor '" + level_value_name + "' data: " + String(level));
-    }
+void ultrasonic_reading() {
+  long duration_;
+  int distance_cm;
+  int level;
+  static int counter;
+  int trig = jsonReadInt(configOptionJson, "trig");
+  int echo = jsonReadInt(configOptionJson, "echo");
+  digitalWrite(trig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);
+  duration_ = pulseIn(echo, HIGH, 30000); // 3000 µs = 50cm // 30000 µs = 5 m
+  distance_cm = duration_ / 29 / 2;
+  distance_cm = medianFilter.filtered(distance_cm);//отсечение промахов медианным фильтром
+  counter++;
+  if (counter > tank_level_times_to_send) {
+    counter = 0;
+    level = map(distance_cm,
+                jsonReadInt(configOptionJson, "e_lev"),
+                jsonReadInt(configOptionJson, "f_lev"), 0, 100);
+                
+    jsonWriteInt(configLiveJson, levelPr_value_name, level);
+    eventGen (levelPr_value_name, "");
+    sendSTATUS(levelPr_value_name, String(level));
+    Serial.println("[i] sensor '" + levelPr_value_name + "' data: " + String(level));
+    
+    jsonWriteInt(configLiveJson, ultrasonicCm_value_name, distance_cm);
+    eventGen (ultrasonicCm_value_name, "");
+    sendSTATUS(ultrasonicCm_value_name, String(distance_cm));
+    Serial.println("[i] sensor '" + ultrasonicCm_value_name + "' data: " + String(distance_cm));
+  }
 }
 #endif
 //=========================================================================================================================================
@@ -118,10 +161,10 @@ void analog() {
     String page_number = sCmd.next();
     analog_value_names_list += value_name + ",";
     enter_to_analog_counter++;
-    jsonWriteStr(optionJson, value_name + "_st", analog_start);
-    jsonWriteStr(optionJson, value_name + "_end", analog_end);
-    jsonWriteStr(optionJson, value_name + "_st_out", analog_start_out);
-    jsonWriteStr(optionJson, value_name + "_end_out", analog_end_out);
+    jsonWriteStr(configOptionJson, value_name + "_st", analog_start);
+    jsonWriteStr(configOptionJson, value_name + "_end", analog_end);
+    jsonWriteStr(configOptionJson, value_name + "_st_out", analog_start_out);
+    jsonWriteStr(configOptionJson, value_name + "_end_out", analog_end_out);
     choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
     if (enter_to_analog_counter == 1) {
         sensors_reading_map[1] = 1;
@@ -140,11 +183,11 @@ void analog_reading1() {
     int analog_in = analogRead(A0);
 #endif
     int analog = map(analog_in,
-                     jsonReadInt(optionJson, value_name + "_st"),
-                     jsonReadInt(optionJson, value_name + "_end"),
-                     jsonReadInt(optionJson, value_name + "_st_out"),
-                     jsonReadInt(optionJson, value_name + "_end_out"));
-    jsonWriteInt(configJson, value_name, analog);
+                     jsonReadInt(configOptionJson, value_name + "_st"),
+                     jsonReadInt(configOptionJson, value_name + "_end"),
+                     jsonReadInt(configOptionJson, value_name + "_st_out"),
+                     jsonReadInt(configOptionJson, value_name + "_end_out"));
+    jsonWriteInt(configLiveJson, value_name, analog);
     eventGen(value_name, "");
     sendSTATUS(value_name, String(analog));
     Serial.println("[i] sensor '" + value_name + "' data: " + String(analog));
@@ -159,11 +202,11 @@ void analog_reading2() {
     int analog_in = analogRead(A0);
 #endif
     int analog = map(analog_in,
-                     jsonReadInt(optionJson, value_name + "_st"),
-                     jsonReadInt(optionJson, value_name + "_end"),
-                     jsonReadInt(optionJson, value_name + "_st_out"),
-                     jsonReadInt(optionJson, value_name + "_end_out"));
-    jsonWriteInt(configJson, value_name, analog);
+                     jsonReadInt(configOptionJson, value_name + "_st"),
+                     jsonReadInt(configOptionJson, value_name + "_end"),
+                     jsonReadInt(configOptionJson, value_name + "_st_out"),
+                     jsonReadInt(configOptionJson, value_name + "_end_out"));
+    jsonWriteInt(configLiveJson, value_name, analog);
     eventGen(value_name, "");
     sendSTATUS(value_name, String(analog));
     Serial.println("[i] sensor '" + value_name + "' data: " + String(analog));
@@ -173,9 +216,9 @@ void analog_reading2() {
 //=========================================Модуль температурного сенсора ds18b20===========================================================
 #ifdef dallas_enable
 void dallas() {
-    String value_name = sCmd.next();
+    //String value_name = sCmd.next();
     String pin = sCmd.next();
-    String address = sCmd.next();
+    //String address = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
@@ -192,7 +235,7 @@ void dallas_reading() {
     float temp = 0;
     sensors.requestTemperatures();
     temp = sensors.getTempCByIndex(0);
-    jsonWriteStr(configJson, "dallas", String(temp));
+    jsonWriteStr(configLiveJson, "dallas", String(temp));
     eventGen("dallas", "");
     sendSTATUS("dallas", String(temp));
     Serial.println("[i] sensor 'dallas' send date " + String(temp));
@@ -232,7 +275,7 @@ void dhtT_reading() {
         value = dht.getTemperature();
         if (String(value) != "nan") {
             eventGen(dhtT_value_name, "");
-            jsonWriteStr(configJson, dhtT_value_name, String(value));
+            jsonWriteStr(configLiveJson, dhtT_value_name, String(value));
             sendSTATUS(dhtT_value_name, String(value));
             Serial.println("[i] sensor '" + dhtT_value_name + "' data: " + String(value));
         }
@@ -270,7 +313,7 @@ void dhtH_reading() {
         value = dht.getHumidity();
         if (String(value) != "nan") {
             eventGen(dhtH_value_name, "");
-            jsonWriteStr(configJson, dhtH_value_name, String(value));
+            jsonWriteStr(configLiveJson, dhtH_value_name, String(value));
             sendSTATUS(dhtH_value_name, String(value));
             Serial.println("[i] sensor '" + dhtH_value_name + "' data: " + String(value));
         }
@@ -291,9 +334,9 @@ void dhtP_reading() {
     if (dht.getStatus() != 0) {
         sendSTATUS("dhtPerception", String(dht.getStatusString()));
     } else {
-        value = dht.computePerception(jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
+        value = dht.computePerception(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
         String final_line = perception(value);
-        jsonWriteStr(configJson, "dhtPerception", final_line);
+        jsonWriteStr(configLiveJson, "dhtPerception", final_line);
         eventGen("dhtPerception", "");
         sendSTATUS("dhtPerception", final_line);
         if (client_mqtt.connected()) {
@@ -303,14 +346,36 @@ void dhtP_reading() {
 }
 
 String perception(byte value) {
-    if (value == 0) return "Сухой воздух";
-    if (value == 1) return "Комфортно";
-    if (value == 2) return "Уютно";
-    if (value == 3) return "Хорошо";
-    if (value == 4) return "Неудобно";
-    if (value == 5) return "Довольно неудобно";
-    if (value == 6) return "Очень неудобно";
-    if (value == 7) return "Сильно неудобно, полный звиздец";
+    String res;
+    switch (value) {
+        case 0:
+            res = F("Сухой воздух");
+            break;
+        case 1:
+            res = F("Комфортно");
+            break;
+        case 2:
+            res = F("Уютно");
+            break;
+        case 3:
+            res = F("Хорошо");
+            break;
+        case 4:
+            res = F("Неудобно");
+            break;
+        case 5:
+            res = F("Довольно неудобно");
+            break;
+        case 6:
+            res = F("Очень неудобно");
+            break;
+        case 7:
+            res = F("Сильно неудобно, полный звиздец");
+        default:
+            res = F("Unknown");
+            break;
+    }
+    return res;
 }
 
 //dhtComfort Степень#комфорта: Датчики 3
@@ -322,15 +387,14 @@ void dhtC() {
     sensors_reading_map[7] = 1;
 }
 
-void dhtC_reading() {
-    float value;
+void dhtC_reading() {  
     ComfortState cf;
     if (dht.getStatus() != 0) {
         sendSTATUS("dhtComfort", String(dht.getStatusString()));
     } else {
-        value = dht.getComfortRatio(cf, jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
+        dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
         String final_line = get_comfort_status(cf);
-        jsonWriteStr(configJson, "dhtComfort", final_line);
+        jsonWriteStr(configLiveJson, "dhtComfort", final_line);
         eventGen("dhtComfort", "");
         sendSTATUS("dhtComfort", final_line);
         Serial.println("[i] sensor 'dhtComfort' send date " + final_line);
@@ -388,8 +452,8 @@ void dhtD_reading() {
     if (dht.getStatus() != 0) {
         sendSTATUS("dhtDewpoint", String(dht.getStatusString()));
     } else {
-        value = dht.computeDewPoint(jsonReadStr(configJson, dhtT_value_name).toFloat(), jsonReadStr(configJson, dhtH_value_name).toFloat(), false);
-        jsonWriteInt(configJson, "dhtDewpoint", value);
+        value = dht.computeDewPoint(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
+        jsonWriteInt(configLiveJson, "dhtDewpoint", value);
         eventGen("dhtDewpoint", "");
         sendSTATUS("dhtDewpoint", String(value));
         Serial.println("[i] sensor 'dhtDewpoint' data: " + String(value));
@@ -399,7 +463,7 @@ void dhtD_reading() {
 //=========================================i2c bus esp8266 scl-4 sda-5 ====================================================================
 //=========================================================================================================================================
 //=========================================Модуль сенсоров bmp280==========================================================================
-#ifdef bmp_enable
+
 //bmp280T temp1 0x76 Температура#bmp280 Датчики any-data 1
 void bmp280T() {
     String value_name = sCmd.next();
@@ -420,12 +484,12 @@ void bmp280T() {
     sensors_reading_map[9] = 1;
 }
 
-void bmp280T_rading() {
+void bmp280T_reading() {
     float value = 0;
-    sensors_event_t temp_event, pressure_event;
+    sensors_event_t temp_event;
     bmp_temp->getEvent(&temp_event);
     value = temp_event.temperature;
-    jsonWriteStr(configJson, bmp280T_value_name, String(value));
+    jsonWriteStr(configLiveJson, bmp280T_value_name, String(value));
     eventGen(bmp280T_value_name, "");
     sendSTATUS(bmp280T_value_name, String(value));
     Serial.println("[i] sensor '" + bmp280T_value_name + "' data: " + String(value));
@@ -453,19 +517,18 @@ void bmp280P() {
 
 void bmp280P_reading() {
     float value = 0;
-    sensors_event_t temp_event, pressure_event;
+    sensors_event_t pressure_event;
     bmp_pressure->getEvent(&pressure_event);
     value = pressure_event.pressure;
     value = value / 1.333224;
-    jsonWriteStr(configJson, bmp280P_value_name, String(value));
+    jsonWriteStr(configLiveJson, bmp280P_value_name, String(value));
     eventGen(bmp280P_value_name, "");
     sendSTATUS(bmp280P_value_name, String(value));
     Serial.println("[i] sensor '" + bmp280P_value_name + "' data: " + String(value));
 }
-#endif
+
 //=========================================================================================================================================
 //=============================================Модуль сенсоров bme280======================================================================
-#ifdef bme_enable
 //bme280T temp1 0x76 Температура#bmp280 Датчики any-data 1
 void bme280T() {
     String value_name = sCmd.next();
@@ -483,7 +546,7 @@ void bme280T() {
 void bme280T_reading() {
     float value = 0;
     value = bme.readTemperature();
-    jsonWriteStr(configJson, bme280T_value_name, String(value));
+    jsonWriteStr(configLiveJson, bme280T_value_name, String(value));
     eventGen(bme280T_value_name, "");
     sendSTATUS(bme280T_value_name, String(value));
     Serial.println("[i] sensor '" + bme280T_value_name + "' data: " + String(value));
@@ -507,7 +570,7 @@ void bme280P_reading() {
     float value = 0;
     value = bme.readPressure();
     value = value / 1.333224;
-    jsonWriteStr(configJson, bme280P_value_name, String(value));
+    jsonWriteStr(configLiveJson, bme280P_value_name, String(value));
     eventGen(bme280P_value_name, "");
     sendSTATUS(bme280P_value_name, String(value));
     Serial.println("[i] sensor '" + bme280P_value_name + "' data: " + String(value));
@@ -530,7 +593,7 @@ void bme280H() {
 void bme280H_reading() {
     float value = 0;
     value = bme.readHumidity();
-    jsonWriteStr(configJson, bme280H_value_name, String(value));
+    jsonWriteStr(configLiveJson, bme280H_value_name, String(value));
     eventGen(bme280H_value_name, "");
     sendSTATUS(bme280H_value_name, String(value));
     Serial.println("[i] sensor '" + bme280H_value_name + "' data: " + String(value));
@@ -553,9 +616,8 @@ void bme280A() {
 void bme280A_reading() {
     float value = 0;
     value = bme.readAltitude(1013.25);
-    jsonWriteStr(configJson, bme280A_value_name, String(value));
+    jsonWriteStr(configLiveJson, bme280A_value_name, String(value));
     eventGen(bme280A_value_name, "");
     sendSTATUS(bme280A_value_name, String(value));
     Serial.println("[i] sensor '" + bme280A_value_name + "' data: " + String(value));
 }
-#endif

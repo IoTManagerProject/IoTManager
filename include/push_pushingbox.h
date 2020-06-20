@@ -1,12 +1,11 @@
 #pragma once
 
-#include "main.h"
-#include "set.h"
+#include "Global.h"
 
-inline void Push_init() {
+void Push_init() {
     server.on("/pushingboxDate", HTTP_GET, [](AsyncWebServerRequest* request) {
         if (request->hasArg("pushingbox_id")) {
-            jsonWriteStr(configSetup, "pushingbox_id", request->getParam("pushingbox_id")->value());
+            jsonWriteStr(configSetupJson, "pushingbox_id", request->getParam("pushingbox_id")->value());
         }
 
         saveConfig();
@@ -24,7 +23,7 @@ inline void pushControl() {
     static String body_old;
 
     const char* logServer = "api.pushingbox.com";
-    String deviceId = jsonReadStr(configSetup, "pushingbox_id");
+    String deviceId = jsonReadStr(configSetupJson, "pushingbox_id");
 
     Serial.println("- starting client");
 

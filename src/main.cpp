@@ -1,114 +1,9 @@
-#include "main.h"
-
-#include "set.h"
-
-String jsonReadStr(String& json, String name) {
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& root = jsonBuffer.parseObject(json);
-    return root[name].as<String>();
-}
-
-int jsonReadInt(String& json, String name) {
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& root = jsonBuffer.parseObject(json);
-    return root[name];
-}
-
-String jsonWriteStr(String& json, String name, String volume) {
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& root = jsonBuffer.parseObject(json);
-    root[name] = volume;
-    json = "";
-    root.printTo(json);
-    return json;
-}
-
-String jsonWriteInt(String& json, String name, int volume) {
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& root = jsonBuffer.parseObject(json);
-    root[name] = volume;
-    json = "";
-    root.printTo(json);
-    return json;
-}
-
-String jsonWriteFloat(String& json, String name, float volume) {
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& root = jsonBuffer.parseObject(json);
-    root[name] = volume;
-    json = "";
-    root.printTo(json);
-    return json;
-}
-
-//============================================================================================================
-//=============================================BIT AND BYTE===================================================
-uint8_t hexStringToUint8(String hex) {
-    uint8_t tmp = strtol(hex.c_str(), NULL, 0);
-    if (tmp >= 0x00 && tmp <= 0xFF) {
-        return tmp;
-    }
-}
-
-uint16_t hexStringToUint16(String hex) {
-    uint16_t tmp = strtol(hex.c_str(), NULL, 0);
-    if (tmp >= 0x0000 && tmp <= 0xFFFF) {
-        return tmp;
-    }
-}
+#include "Global.h"
 
 void saveConfig() {
-    writeFile("config.json", configSetup);
+    writeFile("config.json", configSetupJson);
 }
 
-// --------Выделяем строку от конца строки до маркера-----------------------------------------------------------
-String selectToMarkerLast(String str, String found) {
-    int p = str.lastIndexOf(found);
-    return str.substring(p + found.length());
-}
-
-String selectToMarker(String str, String found) {
-    int p = str.indexOf(found);
-    return str.substring(0, p);
-}
-
-String deleteAfterDelimiter(String str, String found) {
-    int p = str.indexOf(found);
-    return str.substring(0, p);
-}
-
-String deleteBeforeDelimiter(String str, String found) {
-    int p = str.indexOf(found) + found.length();
-    return str.substring(p);
-}
-
-String deleteBeforeDelimiterTo(String str, String found) {
-    int p = str.indexOf(found);
-    return str.substring(p);
-}
-
-// -------------------Выделяем строку от конца строки до маркера ------------------------------------------------
-String deleteToMarkerLast(String str, String found) {
-    int p = str.lastIndexOf(found);
-    return str.substring(0, p);
-}
-// -------------------Выделяем строку от конца строки до маркера + ----------------------------------------------
-String selectToMarkerPlus(String str, String found, int plus) {
-    int p = str.indexOf(found);
-    return str.substring(0, p + plus);
-}
-//--------------------Выделяем строку от маркера до маркера -----------------------------------------------------
-String selectFromMarkerToMarker(String str, String found, int number) {
-    if (str.indexOf(found) == -1) return "not found";  // если строки поиск нет сразу выход
-    str += found;                                      // добавим для корректного поиска
-    uint8_t i = 0;                                     // Индекс перебора
-    do {
-        if (i == number) return selectToMarker(str, found);  // если индекс совпал с позицией законцим вернем резултат
-        str = deleteBeforeDelimiter(str, found);             // отбросим проверенный блок до разделителя
-        i++;                                                 // увеличим индекс
-    } while (str.length() != 0);                             // повторим пока строка не пустая
-    return "not found";                                      // Достигли пустой строки и ничего не нашли
-}
 //--------------------Посчитать -----------------------------------------------------------------------------------
 int count(String str, String found) {
     if (str.indexOf(found) == -1) return 0;  // если строки поиск нет сразу выход
@@ -122,41 +17,29 @@ int count(String str, String found) {
 }
 
 boolean isDigitStr(String str) {
-    if (str.length() == 1) {
-        return Digit(str);
-    }
-    if (str.length() > 1) {
-        for (int i = 0; i < str.length(); i++) {
-            if (!Digit(String(str.charAt(i)))) return false;
+    for (int i = 0; i < str.length(); i++) {
+        if (!isDigit(str.charAt(i))) {
+            return false;
         }
-        return true;
     }
-}
-boolean Digit(String str) {
-    if (str == "0" || str == "1" || str == "2" || str == "3" || str == "4" || str == "5" || str == "6" || str == "7" || str == "8" || str == "9") {
-        return true;
-    } else {
-        return false;
-    }
+    return str.length();
 }
 
-String getURL(String urls) {
-    String answer = "";
+String getURL(const String& urls) {
+    String res = "";
     HTTPClient http;
-    http.begin(urls);  //HTTP
+    http.begin(urls);
     int httpCode = http.GET();
     if (httpCode == HTTP_CODE_OK) {
-        answer = http.getString();
+        res = http.getString();
     } else {
-        answer = "error";
+        res = "error";
     }
     http.end();
-    return answer;
+    return res;
 }
-//===================================================================================================================
-//===========================================FILES===================================================================
-// ------------- Добавление файла -----------------------------------------------------------------------------------
-String safeDataToFile(String data, String Folder) {
+
+void safeDataToFile(String data, String Folder) {
     //String fileName = GetDate();
     String fileName;
     fileName.toLowerCase();
@@ -166,8 +49,9 @@ String safeDataToFile(String data, String Folder) {
     fileName = Folder + "/" + fileName + ".txt";
     // addFile(fileName, GetTime() + "/" + data);
     Serial.println(fileName);
-    jsonWriteStr(configJson, "test", fileName);
+    jsonWriteStr(configLiveJson, "test", fileName);
 }
+
 // ------------- Чтение файла в строку -------------------------------------------------------------------------------
 String readFile(String fileName, size_t len) {
     File configFile = SPIFFS.open("/" + fileName, "r");
@@ -229,7 +113,7 @@ String readFileString(const String& filename, const String& str_to_found) {
 
 void sendCONFIG(String topik, String widgetConfig, String key, String date) {
     yield();
-    topik = jsonReadStr(configSetup, "mqttPrefix") + "/" + chipID + "/" + topik + "/status";
+    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipID + "/" + topik + "/status";
     String outer = "{\"widgetConfig\":";
     String inner = "{\"";
     inner = inner + key;
@@ -260,8 +144,7 @@ void led_blink(String satus) {
 #endif
 #endif
 }
-//=========================================================================================================================
-//=========================================ОСТАВШАЯСЯ ОПЕРАТИВНАЯ ПАМЯТЬ===================================================
+
 void getMemoryLoad(String text) {
 #ifdef ESP8266
     int all_memory = 52864;
@@ -272,7 +155,9 @@ void getMemoryLoad(String text) {
     int memory_remain = ESP.getFreeHeap();
     int memory_used = all_memory - memory_remain;
     int memory_load = (memory_used * 100) / all_memory;
-    if (memory_load > 65) Serial.print("Attention!!! too match memory used!!!");
+    if (memory_load > 65) {
+        Serial.println("Memory low!");
+    }
     Serial.print(text + " memory used:");
     Serial.print(String(memory_load) + "%; ");
     Serial.print("memory remain: ");
