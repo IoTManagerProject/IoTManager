@@ -43,7 +43,7 @@
     },
     {
       "type": "h4",
-      "title": "SPIFFS version: 2.3.4"
+      "title": "LittleFS version: 2.3.4"
     },
     {
       "type": "hr"
@@ -109,7 +109,6 @@
       "action": "/set?sceninit",
       "class": "btn btn-block btn-default"
     },
-    
     {
       "type": "link",
       "title": "Инструкция к системе автоматизации",
@@ -131,7 +130,6 @@
       "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
       "class": "hidden"
     },
-   
     {
       "type": "button",
       "title": "Обновить прошивку устройства",

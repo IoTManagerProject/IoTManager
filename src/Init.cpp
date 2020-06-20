@@ -7,6 +7,24 @@ UptimeInterval myUptime(10);
 void handle_uptime();
 void handle_statistics();
 
+void File_system_init() {
+    if (!LittleFS.begin()) {
+        Serial.println("[E] LittleFS");
+        return;
+    }
+
+    configSetupJson = readFile("config.json", 4096);
+    configSetupJson.replace(" ", "");
+    configSetupJson.replace("\r\n", "");
+
+    jsonWriteStr(configSetupJson, "chipID", chipId);
+    jsonWriteStr(configSetupJson, "firmware_version", firmware_version);
+
+    prex = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId;
+
+    Serial.println(configSetupJson);
+}
+
 void All_init() {
     Device_init();
     Scenario_init();
@@ -47,7 +65,7 @@ void Device_init() {
 #ifdef layout_in_ram
     all_widgets = "";
 #else
-    SPIFFS.remove("/layout.txt");
+    LittleFS.remove("/layout.txt");
 #endif
 
     txtExecution("firmware.c.txt");

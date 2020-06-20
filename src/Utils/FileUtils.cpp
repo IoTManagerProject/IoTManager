@@ -1,42 +1,47 @@
 #include "Utils/FileUtils.h"
 
-String readFileString(const String& filename, const String& str_to_found) {
-    String res = "failed";
-    auto file = SPIFFS.open("/" + filename, "r");
-    if (file && file.find(str_to_found.c_str())) {
+#include <LittleFS.h>
+
+String readFileString(const String filename, const String to_find) {
+    String res = "Failed";
+    auto file = LittleFS.open("/" + filename, "r");
+    if (!file) {
+        return "Failed";
+    }
+    if (file.find(to_find.c_str())) {
         res = file.readStringUntil('\n');
     }
     file.close();
     return res;
 }
 
-String addFile(const String& fileName, const String& str) {
-    auto file = SPIFFS.open("/" + fileName, "a");
+String addFile(const String filename, const String str) {
+    auto file = LittleFS.open("/" + filename, "a");
     if (!file) {
-        return "Failed to open file";
+        return "Failed";
     }
     file.println(str);
     file.close();
     return "Write sucсess";
 }
 
-String writeFile(const String& fileName, const String& str) {
-    auto file = SPIFFS.open("/" + fileName, "w");
+String writeFile(const String filename, const String str) {
+    auto file = LittleFS.open("/" + filename, "w");
     if (!file) {
-        return "Failed to open file";
+        return "Failed";
     }
     file.print(str);
     file.close();
     return "Write sucсess";
 }
 
-String readFile(const String& fileName, size_t len) {
-    File file = SPIFFS.open("/" + fileName, "r");
+String readFile(const String filename, size_t max_size) {
+    auto file = LittleFS.open("/" + filename, "r");
     if (!file) {
         return "Failed";
     }
     size_t size = file.size();
-    if (size > len) {
+    if (size > max_size) {
         file.close();
         return "Large";
     }
@@ -45,8 +50,8 @@ String readFile(const String& fileName, size_t len) {
     return temp;
 }
 
-String sizeFile(const String& fileName) {
-    auto file = SPIFFS.open("/" + fileName, "r");
+String getFileSize(const String filename) {
+    auto file = LittleFS.open("/" + filename, "r");
     if (!file) {
         return "Failed";
     }
