@@ -19,17 +19,17 @@ void CMD_init() {
 
     sCmd.addCommand("switch", switch_);
 
-#ifdef analog_enable
+#ifdef ANALOG_ENABLED
     sCmd.addCommand("analog", analog);
 #endif
-#ifdef level_enable
+#ifdef LEVEL_ENABLED
     sCmd.addCommand("levelPr", levelPr);
     sCmd.addCommand("ultrasonicCm", ultrasonicCm);
 #endif
-#ifdef dallas_enable
+#ifdef DALLAS_ENABLED
     sCmd.addCommand("dallas", dallas);
 #endif
-#ifdef dht_enable
+#ifdef DHT_ENABLED
     sCmd.addCommand("dhtT", dhtT);
     sCmd.addCommand("dhtH", dhtH);
     sCmd.addCommand("dhtPerception", dhtP);
@@ -37,34 +37,34 @@ void CMD_init() {
     sCmd.addCommand("dhtDewpoint", dhtD);
 #endif
 
-#ifdef bmp_enable
+#ifdef BMP_ENABLED
     sCmd.addCommand("bmp280T", bmp280T);
     sCmd.addCommand("bmp280P", bmp280P);
 #endif
 
-#ifdef bme_enable
+#ifdef BME_ENABLED
     sCmd.addCommand("bme280T", bme280T);
     sCmd.addCommand("bme280P", bme280P);
     sCmd.addCommand("bme280H", bme280H);
     sCmd.addCommand("bme280A", bme280A);
 #endif
 
-#ifdef stepper_enable
+#ifdef STEPPER_ENABLED
     sCmd.addCommand("stepper", stepper);
     sCmd.addCommand("stepperSet", stepperSet);
 #endif
 
-#ifdef servo_enable
+#ifdef SERVO_ENABLED
     sCmd.addCommand("servo", servo_);
     sCmd.addCommand("servoSet", servoSet);
 #endif
 
-#ifdef serial_enable
+#ifdef SERIAL_ENABLED
     sCmd.addCommand("serialBegin", serialBegin);
     sCmd.addCommand("serialWrite", serialWrite);
 #endif
 
-#ifdef logging_enable
+#ifdef LOGGING_ENABLED
     sCmd.addCommand("logging", logging);
 #endif
 
@@ -83,7 +83,7 @@ void CMD_init() {
     sCmd.addCommand("mqtt", mqttOrderSend);
     sCmd.addCommand("http", httpOrderSend);
 
-#ifdef push_enable
+#ifdef PUSH_ENABLED
     sCmd.addCommand("push", pushControl);
 #endif
 
@@ -345,7 +345,7 @@ void textSet() {
 }
 //=====================================================================================================================================
 //=========================================Модуль шагового мотора======================================================================
-#ifdef stepper_enable
+#ifdef STEPPER_ENABLED
 //stepper 1 12 13
 void stepper() {
     String stepper_number = sCmd.next();
@@ -407,7 +407,7 @@ void stepperSet() {
 #endif
 //====================================================================================================================================================
 //=================================================================Сервоприводы=======================================================================
-#ifdef servo_enable
+#ifdef SERVO_ENABLED
 //servo 1 13 50 Мой#сервопривод Сервоприводы 0 100 0 180 2
 void servo_() {
     String servo_number = sCmd.next();
@@ -501,7 +501,7 @@ void servoSet() {
 #endif
 //====================================================================================================================================================
 //===================================================================================serial===========================================================
-#ifdef serial_enable
+#ifdef SERIAL_ENABLED
 void serialBegin() {
     //String s_speed = sCmd.next();
     //String rxPin = sCmd.next();
@@ -545,7 +545,7 @@ void firmwareVersion() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
-    jsonWriteStr(configLiveJson, "firmver", firmware_version);
+    jsonWriteStr(configLiveJson, "firmver", FIRMWARE_VERSION);
     choose_widget_and_create(widget_name, page_name, page_number, "any-data", "firmver");
 }
 

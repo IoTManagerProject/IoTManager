@@ -23,7 +23,7 @@ void sensors_init() {
             static int counter;
             counter++;
 
-#ifdef level_enable
+#ifdef LEVEL_ENABLED
             if (sensors_reading_map[0] == 1)
                 ultrasonic_reading();
 #endif
@@ -31,19 +31,19 @@ void sensors_init() {
             if (counter > 10) {
                 counter = 0;
 
-#ifdef analog_enable
+#ifdef ANALOG_ENABLED
                 if (sensors_reading_map[1] == 1)
                     analog_reading1();
                 if (sensors_reading_map[2] == 1)
                     analog_reading2();
 #endif
 
-#ifdef dallas_enable
+#ifdef DALLAS_ENABLED
                 if (sensors_reading_map[3] == 1)
                     dallas_reading();
 #endif
 
-#ifdef dht_enable
+#ifdef DHT_ENABLED
                 if (sensors_reading_map[4] == 1)
                     dhtT_reading();
                 if (sensors_reading_map[5] == 1)
@@ -56,14 +56,14 @@ void sensors_init() {
                     dhtD_reading();
 #endif
 
-#ifdef bmp_enable
+#ifdef BMP_ENABLED
                 if (sensors_reading_map[9] == 1)
                     bmp280T_reading();
                 if (sensors_reading_map[10] == 1)
                     bmp280P_reading();
 #endif
 
-#ifdef bme_enable
+#ifdef BME_ENABLED
                 if (sensors_reading_map[11] == 1)
                     bme280T_reading();
                 if (sensors_reading_map[12] == 1)
@@ -80,7 +80,7 @@ void sensors_init() {
 
 //=========================================================================================================================================
 //=========================================Модуль измерения уровня в баке==================================================================
-#ifdef level_enable
+#ifdef LEVEL_ENABLED
 //levelPr p 14 12 Вода#в#баке,#% Датчики fill-gauge 125 20 1
 void levelPr() {
     String value_name = sCmd.next();
@@ -138,7 +138,7 @@ void ultrasonic_reading() {
     distance_cm = duration_ / 29 / 2;
     distance_cm = medianFilter.filtered(distance_cm);  //отсечение промахов медианным фильтром
     counter++;
-    if (counter > tank_level_times_to_send) {
+    if (counter > TANK_LEVEL_SAMPLES) {
         counter = 0;
         level = map(distance_cm,
                     jsonReadInt(configOptionJson, "e_lev"),
@@ -158,7 +158,7 @@ void ultrasonic_reading() {
 #endif
 //=========================================================================================================================================
 //=========================================Модуль аналогового сенсора======================================================================
-#ifdef analog_enable
+#ifdef ANALOG_ENABLED
 //analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
 void analog() {
     String value_name = sCmd.next();
@@ -226,7 +226,7 @@ void analog_reading2() {
 #endif
 //=========================================================================================================================================
 //=========================================Модуль температурного сенсора ds18b20===========================================================
-#ifdef dallas_enable
+#ifdef DALLAS_ENABLED
 void dallas() {
     //String value_name = sCmd.next();
     String pin = sCmd.next();
@@ -255,7 +255,7 @@ void dallas_reading() {
 #endif
 //=========================================================================================================================================
 //=========================================Модуль сенсоров DHT=============================================================================
-#ifdef dht_enable
+#ifdef DHT_ENABLED
 //dhtT t 2 dht11 Температура#DHT,#t°C Датчики any-data 1
 void dhtT() {
     String value_name = sCmd.next();

@@ -7,18 +7,15 @@ UptimeInterval myUptime(10);
 void handle_uptime();
 void handle_statistics();
 
-void File_system_init() {
-    if (!LittleFS.begin()) {
-        Serial.println("[E] LittleFS");
-        return;
+void loadConfig() {
+    if (fileSystemInit()) {
+        configSetupJson = readFile("config.json", 4096);
+        configSetupJson.replace(" ", "");
+        configSetupJson.replace("\r\n", "");
     }
 
-    configSetupJson = readFile("config.json", 4096);
-    configSetupJson.replace(" ", "");
-    configSetupJson.replace("\r\n", "");
-
     jsonWriteStr(configSetupJson, "chipID", chipId);
-    jsonWriteStr(configSetupJson, "firmware_version", firmware_version);
+    jsonWriteStr(configSetupJson, "firmware_version", FIRMWARE_VERSION);
 
     prex = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId;
 
@@ -62,10 +59,10 @@ void Device_init() {
         ts.remove(i);
     }
 
-#ifdef layout_in_ram
+#ifdef LAYOUT_IN_RAM
     all_widgets = "";
 #else
-    LittleFS.remove("/layout.txt");
+    removeFile("/layout.txt");
 #endif
 
     txtExecution("firmware.c.txt");
@@ -85,11 +82,14 @@ void uptime_init() {
             handle_uptime();
         },
         nullptr, true);
-    ts.add(
-        STATISTICS, statistics_update, [&](void*) {
-            handle_statistics();
-        },
-        nullptr, true);
+
+    if (TELEMETRY_UPDATE_INTERVAL) {
+        ts.add(
+            STATISTICS, TELEMETRY_UPDATE_INTERVAL, [&](void*) {
+                handle_statistics();
+            },
+            nullptr, true);
+    }
 }
 
 void handle_uptime() {
@@ -123,7 +123,7 @@ void handle_statistics() {
         urls += "&";
         //-----------------------------------------------------------------
         urls += "ver: ";
-        urls += String(firmware_version);
+        urls += String(FIRMWARE_VERSION);
         //-----------------------------------------------------------------
         String stat = getURL(urls);
         //Serial.println(stat);

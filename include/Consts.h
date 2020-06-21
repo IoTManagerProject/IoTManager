@@ -1,47 +1,44 @@
 #pragma once
 /*
-* Здесь хранятся все настройки прошивки
+* Main consts
 */
-#define firmware_version "2.3.4"
+#define FIRMWARE_VERSION "2.3.4"
 #define NUM_BUTTONS 6
-#define mb_4_of_memory 1
-#define wifi_mqtt_reconnecting 20000
-#define blink_pin 2
-#define tank_level_times_to_send 10  //после скольки выстрелов делать отправку данных
-#define statistics_update 1000 * 60 * 60 * 2
+#define LED_PIN 2
+#define FLASH_4MB true
+#define MQTT_RECONNECT_INTERVAL 20000
+// 1000 * 60 * 60 * 2
+#define TELEMETRY_UPDATE_INTERVAL 0
 
 /* 
 * Optional
 */
-//#define OTA_enable
-//#define MDNS_enable
-//#define WS_enable
-//#define layout_in_ram
-#define UDP_enable
+//#define OTA_UPDATES_ENABLED
+//#define MDNS_ENABLED
+//#define WEBSOCKET_ENABLED
+//#define LAYOUT_IN_RAM
+#define UDP_ENABLED
 
 /* 
 * Sensor 
 */
-#define level_enable
-#define analog_enable
-#define dallas_enable
-#define dht_enable
-#define bmp_enable
-#define bme_enable
-
-/*
-* Logging
-*/
-#define logging_enable
+#define TANK_LEVEL_SAMPLES 10
+#define LEVEL_ENABLED
+#define ANALOG_ENABLED
+#define DALLAS_ENABLED
+#define DHT_ENABLED
+#define BMP_ENABLED
+#define BME_ENABLED
 
 /* 
 * Gears 
 */
-#define stepper_enable
-#define servo_enable
+#define STEPPER_ENABLED
+#define SERVO_ENABLED
 
 /* 
 * Other
 */
-#define serial_enable
-#define push_enable
+#define LOGGING_ENABLED
+#define SERIAL_ENABLED
+#define PUSH_ENABLED
