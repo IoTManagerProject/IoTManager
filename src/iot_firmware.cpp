@@ -10,7 +10,7 @@ void setup() {
 
     setChipId();
 
-    File_system_init();
+    fileSystemInit();
     Serial.println("[V] LittleFS");
 
     CMD_init();
@@ -40,14 +40,14 @@ void setup() {
     Time_Init();
     Serial.println("[V] Time_Init");
 
-#ifdef UDP_enable
+#ifdef UDP_ENABLED
     UDP_init();
     Serial.println("[V] UDP_init");
 #endif
 
     ts.add(
         TEST, 10000, [&](void*) {
-            getMemoryLoad("[I] sysinfo ");
+            printMemoryStatus("[I] sysinfo ");
         },
         nullptr, true);
 
@@ -55,7 +55,7 @@ void setup() {
 }
 
 void loop() {
-#ifdef OTA_enable
+#ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.handle();
 #endif
 
@@ -69,7 +69,7 @@ void loop() {
     handleCMD_loop();
     handleButton();
     handleScenario();
-#ifdef UDP_enable
+#ifdef UDP_ENABLED
     handleUdp();
 #endif
     ts.update();
@@ -79,7 +79,7 @@ void not_async_actions() {
     do_mqtt_connection();
     do_upgrade_url();
     do_upgrade();
-#ifdef UDP_enable
+#ifdef UDP_ENABLED
     do_udp_data_parse();
     do_mqtt_send_settings_to_udp();
 #endif

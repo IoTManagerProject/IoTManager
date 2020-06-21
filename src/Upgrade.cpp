@@ -68,10 +68,10 @@ void upgrade_firmware() {
             Serial.println("Restart...");
             ESP.restart();
         } else {
-            Serial.println("[e] on build");
+            Serial.println("[E] on build");
         }
     } else {
-        Serial.println("[e] on upgrade");
+        Serial.println("[E] on upgrade");
     }
 }
 

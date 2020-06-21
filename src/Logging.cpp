@@ -1,8 +1,11 @@
 #include "Global.h"
 
+//
+#include <LITTLEFS.h>
+
 void sendLogData(String file, String topic);
 
-#ifdef logging_enable
+#ifdef LOGGING_ENABLED
 //===============================================Логирование============================================================
 //logging temp1 1 10 Температура Датчики 2
 void logging() {
@@ -22,7 +25,7 @@ void logging() {
             LOG1, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_1 = selectFromMarkerToMarker(logging_value_names_list, ",", 0);
                 deleteOldDate("log." + tmp_buf_1 + ".txt", jsonReadInt(configOptionJson, tmp_buf_1 + "_c"), jsonReadStr(configLiveJson, tmp_buf_1));
-                Serial.println("[I]  LOGGING for sensor '" + tmp_buf_1 + "' done");
+                Serial.println("[I] LOGGING for sensor '" + tmp_buf_1 + "' done");
             },
             nullptr, false);
     }
@@ -31,7 +34,7 @@ void logging() {
             LOG2, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_2 = selectFromMarkerToMarker(logging_value_names_list, ",", 1);
                 deleteOldDate("log." + tmp_buf_2 + ".txt", jsonReadInt(configOptionJson, tmp_buf_2 + "_c"), jsonReadStr(configLiveJson, tmp_buf_2));
-                Serial.println("[I]  LOGGING for sensor '" + tmp_buf_2 + "' done");
+                Serial.println("[I] LOGGING for sensor '" + tmp_buf_2 + "' done");
             },
             nullptr, false);
     }
@@ -40,7 +43,7 @@ void logging() {
             LOG3, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_3 = selectFromMarkerToMarker(logging_value_names_list, ",", 2);
                 deleteOldDate("log." + tmp_buf_3 + ".txt", jsonReadInt(configOptionJson, tmp_buf_3 + "_c"), jsonReadStr(configLiveJson, tmp_buf_3));
-                Serial.println("[I]  LOGGING for sensor '" + tmp_buf_3 + "' done");
+                Serial.println("[I] LOGGING for sensor '" + tmp_buf_3 + "' done");
             },
             nullptr, false);
     }
@@ -49,7 +52,7 @@ void logging() {
             LOG4, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_4 = selectFromMarkerToMarker(logging_value_names_list, ",", 3);
                 deleteOldDate("log." + tmp_buf_4 + ".txt", jsonReadInt(configOptionJson, tmp_buf_4 + "_c"), jsonReadStr(configLiveJson, tmp_buf_4));
-                Serial.println("[I]  LOGGING for sensor '" + tmp_buf_4 + "' done");
+                Serial.println("[I] LOGGING for sensor '" + tmp_buf_4 + "' done");
             },
             nullptr, false);
     }
@@ -58,35 +61,33 @@ void logging() {
             LOG5, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_5 = selectFromMarkerToMarker(logging_value_names_list, ",", 4);
                 deleteOldDate("log." + tmp_buf_5 + ".txt", jsonReadInt(configOptionJson, tmp_buf_5 + "_c"), jsonReadStr(configLiveJson, tmp_buf_5));
-                Serial.println("[I]  LOGGING for sensor '" + tmp_buf_5 + "' done");
+                Serial.println("[I] LOGGING for sensor '" + tmp_buf_5 + "' done");
             },
             nullptr, false);
     }
 }
 
 //=========================================Удаление стрых данных и запись новых==================================================================
-void deleteOldDate(String file, int seted_number_of_lines, String date_to_add) {
-    String log_date = readFile(file, 5000);
-    int current_number_of_lines = itemsCount(log_date, "\r\n");
-    Serial.println("=====> [i] in log file " + file + " " + current_number_of_lines + " lines");
+void deleteOldDate(const String filename, int max_lines_cnt, String date_to_add) {
+    String log_date = readFile(filename, 5120);
+    size_t lines_cnt = itemsCount(log_date, "\r\n");
 
-    if (current_number_of_lines > seted_number_of_lines + 1) {
-        LittleFS.remove("/" + file);
-        current_number_of_lines = 0;
+    Serial.printf("[I] log %s of %d lines\n", filename.c_str(), lines_cnt);
+
+    if ((lines_cnt > max_lines_cnt + 1) || !lines_cnt) {
+        removeFile("/" + filename);
+        lines_cnt = 0;
     }
-    if (current_number_of_lines == 0) {
-        LittleFS.remove("/" + file);
-        current_number_of_lines = 0;
-    }
-    if (current_number_of_lines > seted_number_of_lines) {
+
+    if (lines_cnt > max_lines_cnt) {
         log_date = deleteBeforeDelimiter(log_date, "\r\n");
         if (getTimeUnix() != "failed") {
             log_date += getTimeUnix() + " " + date_to_add + "\r\n";
-            writeFile(file, log_date);
+            writeFile(filename, log_date);
         }
     } else {
         if (getTimeUnix() != "failed") {
-            addFile(file, getTimeUnix() + " " + date_to_add);
+            addFile(filename, getTimeUnix() + " " + date_to_add);
         }
     }
     log_date = "";
@@ -133,7 +134,7 @@ void sendLogData(String file, String topic) {
         Serial.println(json_array);
         sendCHART(topic, json_array);
         json_array = "";
-        getMemoryLoad("[I]  after send log date");
+        printMemoryStatus("[I] send log date");
     }
 }
 
@@ -154,12 +155,13 @@ void sendLogData(String file, String topic) {
     }
     getMemoryLoad("[I]  after send log date");
 */
+
 //=========================================Очистка данных===================================================================================
 void clean_log_date() {
     String all_line = logging_value_names_list;
     while (all_line.length() != 0) {
         String tmp = selectToMarker(all_line, ",");
-        LittleFS.remove("/log." + tmp + ".txt");
+        removeFile("/log." + tmp + ".txt");
         all_line = deleteBeforeDelimiter(all_line, ",");
     }
     all_line = "";

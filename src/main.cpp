@@ -50,17 +50,17 @@ void sendCONFIG(String topik, String widgetConfig, String key, String date) {
 void led_blink(String satus) {
 #ifdef ESP8266
 #ifdef blink_pin
-    pinMode(blink_pin, OUTPUT);
+    pinMode(LED_PIN, OUTPUT);
     if (satus == "off") {
-        noTone(blink_pin);
-        digitalWrite(blink_pin, HIGH);
+        noTone(LED_PIN);
+        digitalWrite(LED_PIN, HIGH);
     }
     if (satus == "on") {
-        noTone(blink_pin);
-        digitalWrite(blink_pin, LOW);
+        noTone(LED_PIN);
+        digitalWrite(LED_PIN, LOW);
     }
-    if (satus == "slow") tone(blink_pin, 1);
-    if (satus == "fast") tone(blink_pin, 20);
+    if (satus == "slow") tone(LED_PIN, 1);
+    if (satus == "fast") tone(LED_PIN, 20);
 #endif
 #endif
 }
@@ -68,7 +68,10 @@ void led_blink(String satus) {
 const String getChipId() {
     String res;
 #ifdef ESP32
-    res = String(ESP.getEfuseMac());
+    char buf[32] = {0};
+    uint32_t mac = ESP.getEfuseMac();
+    sprintf(buf, "%0X", mac);
+    res = String(buf);
 #endif
 #ifdef ESP8266
     res = String(ESP.getChipId()) + "-" + String(ESP.getFlashChipId());
@@ -81,7 +84,7 @@ void setChipId() {
     Serial.println(chipId);
 }
 
-void getMemoryLoad(String text) {
+void printMemoryStatus(String text) {
 #ifdef ESP8266
     uint32_t all_memory = 52864;
 #endif

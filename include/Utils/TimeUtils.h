@@ -1,7 +1,9 @@
 #pragma once
 
 #include <Arduino.h>
+#ifdef ESP8266
 #include <TZ.h>
+#endif
 
 void Time_Init();
 

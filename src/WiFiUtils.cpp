@@ -63,8 +63,7 @@ bool StartAPMode() {
     WiFi.softAP(_ssidAP.c_str(), _passwordAP.c_str());
     IPAddress myIP = WiFi.softAPIP();
     led_blink("on");
-    Serial.print("[I] AP IP: ");
-    Serial.println(myIP);
+    Serial.printf("[I] AP IP: %s\n", myIP.toString().c_str());
     jsonWriteStr(configSetupJson, "ip", myIP.toString());
 
     //if (jsonReadInt(configOptionJson, "pass_status") != 1) {
@@ -89,7 +88,7 @@ boolean RouterFind(String ssid) {
     Serial.printf("[I][WIFI] scan result = %d\n", n);
     if (n == -2) {
         // не было запущено, запускаем
-        Serial.println("[I][WIFI] scanning has not been triggered, start scanning");
+        Serial.println("[I][WIFI] start scanning");
         // async, show_hidden
         WiFi.scanNetworks(true, false);
     } else if (n == -1) {
