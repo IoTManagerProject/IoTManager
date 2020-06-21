@@ -1,5 +1,8 @@
 #include "Global.h"
 
+boolean but[NUM_BUTTONS];
+Bounce *buttons = new Bounce[NUM_BUTTONS];
+
 Servo myServo1;
 Servo myServo2;
 

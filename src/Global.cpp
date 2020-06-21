@@ -21,8 +21,7 @@ AsyncWebServer server(80);
 
 DallasTemperature sensors;
 
-boolean but[NUM_BUTTONS];
-Bounce *buttons = new Bounce[NUM_BUTTONS];
+
 
 /*
 * Global vars
