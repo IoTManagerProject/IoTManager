@@ -124,7 +124,7 @@ void web_init() {
             request->send(200, "text/text", "OK");
         }
         //--------------------------------------------------------------------------------
-#ifdef logging_enable
+#ifdef LOGGING_ENABLED
         if (request->hasArg("cleanlog")) {
             clean_log_date();
             request->send(200, "text/text", "OK");
@@ -147,7 +147,7 @@ void web_init() {
         }
         //--------------------------------------------------------------------------------
         if (request->hasArg("updatelist")) {
-            LittleFS.remove("/dev.csv");
+            removeFile("/dev.csv");
             addFile("dev.csv", "device id;device name;ip address");
             request->redirect("/?set.udp");
         }
@@ -270,7 +270,7 @@ void web_init() {
             request->send(200, "text/text", tmp);
         }
         //==============================push settings=============================================
-#ifdef push_enable
+#ifdef PUSH_ENABLED
         if (request->hasArg("pushingboxid")) {
             jsonWriteStr(configSetupJson, "pushingboxid", request->getParam("pushingboxid")->value());
             saveConfig();
@@ -292,10 +292,10 @@ void web_init() {
         int case_of_update;
 
         if (WiFi.status() != WL_CONNECTED) last_version = "nowifi";
-        if (!mb_4_of_memory) last_version = "less";
+        if (!FLASH_4MB) last_version = "less";
 
-        if (last_version == firmware_version) case_of_update = 1;
-        if (last_version != firmware_version) case_of_update = 2;
+        if (last_version == FIRMWARE_VERSION) case_of_update = 1;
+        if (last_version != FIRMWARE_VERSION) case_of_update = 2;
         if (last_version == "error") case_of_update = 3;
         if (last_version == "") case_of_update = 4;
         if (last_version == "less") case_of_update = 5;

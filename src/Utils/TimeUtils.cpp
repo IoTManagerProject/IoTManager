@@ -22,9 +22,9 @@ void reconfigTime() {
     if (WiFi.status() == WL_CONNECTED) {
         String ntp = jsonReadStr(configSetupJson, "ntp");
         configTime(0, 0, ntp.c_str());
-        int i = 0;
-        Serial.println("[I] Start time sync");
+        Serial.println("[I] Time sync");
 #ifdef ESP32
+        uint8_t i = 0;
         struct tm timeinfo;
         while (!getLocalTime(&timeinfo) && i <= 4) {
             Serial.print(".");
@@ -33,6 +33,7 @@ void reconfigTime() {
         }
 #endif
 #ifdef ESP8266
+        //uint8_t i = 0;
         //while (!time(nullptr) && i < 4) {
         //  Serial.print(".");
         //  i++;

@@ -1,6 +1,29 @@
 #include "Utils/FileUtils.h"
 
-#include <LittleFS.h>
+
+bool fileSystemInit() {
+    if (!LittleFS.begin()) {
+        Serial.println("[E] LittleFS");
+        return false;
+    }
+    return true;
+}
+
+void removeFile(const String filename) {
+    if (!LittleFS.remove(filename)) {
+        Serial.printf("[E] on remove %s", filename.c_str());
+    }
+}
+
+File seekFile(const String filename, size_t position) {
+    auto file = LittleFS.open(filename, "r");
+    if (!file) {
+        Serial.printf("[E] on open %s", filename.c_str());
+    }
+    // поставим курсор в начало файла
+    file.seek(position, SeekSet);
+    return file;
+}
 
 String readFileString(const String filename, const String to_find) {
     String res = "Failed";

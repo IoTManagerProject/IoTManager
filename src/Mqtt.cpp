@@ -1,5 +1,8 @@
 #include "Global.h"
 
+//
+#include <LittleFS.h>
+
 // Errors
 int wifi_lost_error = 0;
 int mqtt_lost_error = 0;
@@ -14,7 +17,7 @@ void outcoming_date();
 //===============================================ИНИЦИАЛИЗАЦИЯ================================================
 void MQTT_init() {
     ts.add(
-        WIFI_MQTT_CONNECTION_CHECK, wifi_mqtt_reconnecting, [&](void*) {
+        WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL, [&](void*) {
             if (WiFi.status() == WL_CONNECTED) {
                 Serial.println("[VV] WiFi-ok");
                 if (client_mqtt.connected()) {
@@ -73,7 +76,7 @@ boolean MQTT_Connecting() {
                     Serial.println("[V] Callback set, subscribe done");
                     res = true;
                 } else {
-                    Serial.println("[E] try again in " + String(wifi_mqtt_reconnecting / 1000) + " sec");
+                    Serial.println("[E] try again in " + String(MQTT_RECONNECT_INTERVAL / 1000) + " sec");
                     led_blink("fast");
                 }
             }
@@ -133,7 +136,7 @@ void outcoming_date() {
     sendAllWigets();
     sendAllData();
 
-#ifdef logging_enable
+#ifdef LOGGING_ENABLED
     choose_log_date_and_send();
 #endif
 
@@ -179,7 +182,7 @@ void sendCONTROL(String id, String topik, String state) {
 
 //=====================================================ОТПРАВЛЯЕМ ВИДЖЕТЫ========================================================
 
-#ifdef layout_in_ram
+#ifdef LAYOUT_IN_RAM
 void sendAllWigets() {
     if (all_widgets != "") {
         int counter = 0;
@@ -203,26 +206,26 @@ void sendAllWigets() {
 }
 #endif
 
-#ifndef layout_in_ram
+#ifndef LAYOUT_IN_RAM
 void sendAllWigets() {
-    auto file = LittleFS.open("/layout.txt", "r");
+    auto file = seekFile("/layout.txt");
     if (!file) {
-        Serial.println("[e] on open layout.txt");
         return;
     }
-    file.seek(0, SeekSet);  //поставим курсор в начало файла
     while (file.position() != file.size()) {
-        String widget_to_send = file.readStringUntil('\n');
-        Serial.println("[V] " + widget_to_send);
-        sendMQTT("config", widget_to_send);
+        String payload = file.readStringUntil('\n');
+        Serial.println("[V] " + payload);
+        sendMQTT("config", payload);
     }
+    file.close();
 }
 #endif
+
 //=====================================================ОТПРАВЛЯЕМ ДАННЫЕ В ВИДЖЕТЫ ПРИ ОБНОВЛЕНИИ СТРАНИЦЫ========================================================
 void sendAllData() {  //берет строку json и ключи превращает в топики а значения колючей в них посылает
 
     String current_config = configLiveJson;  //{"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
-    getMemoryLoad("[I] after send all date");
+    printMemoryStatus("[I] after send all date");
     current_config.replace("{", "");
     current_config.replace("}", "");  //"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
     current_config += ",";            //"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",

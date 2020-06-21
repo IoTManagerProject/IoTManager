@@ -1,10 +1,12 @@
 #include "Global.h"
 
+#include "Utils/FileUtils.h"
+
 void Web_server_init() {
     /*********************************************************************************
   ***************************************OTA****************************************
   *********************************************************************************/
-#ifdef OTA_enable
+#ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.onStart([]() {
         events.send("Update Start", "ota");
     });
@@ -34,7 +36,7 @@ void Web_server_init() {
     /*********************************************************************************
   **************************************MDNS****************************************
   *********************************************************************************/
-#ifdef MDNS_enable
+#ifdef MDNS_ENABLED
     MDNS.addService("http", "tcp", 80);
 #endif
     //LittleFS.begin();
@@ -55,6 +57,7 @@ void Web_server_init() {
    **************************************WEB****************************************
    *********************************************************************************/
 #ifdef ESP32
+
     server.addHandler(new SPIFFSEditor(LittleFS, jsonReadStr(configSetupJson, "weblogin").c_str(), jsonReadStr(configSetupJson, "webpass").c_str()));
 #elif defined(ESP8266)
     server.addHandler(new SPIFFSEditor(jsonReadStr(configSetupJson, "weblogin").c_str(), jsonReadStr(configSetupJson, "webpass").c_str()));

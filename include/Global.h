@@ -3,17 +3,13 @@
 /*
 * Libraries
 */
-
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include <ESP8266HTTPUpdateServer.h>
-#include <ESPAsyncWebServer.h>
-#include <LittleFS.h>
-#include <SPIFFSEditor.h>
 
+#include "ESP32.h"
+#include "ESP8266.h"
+//
 #include "Consts.h"
-#include "ESP32_Spec.h"
-#include "ESP8266_Spec.h"
 #include "Errors.h"
 #include "GyverFilters.h"
 #include "UptimeInterval.h"
@@ -34,7 +30,7 @@
 #include <TickerScheduler.h>
 #include <Wire.h>
 #include <time.h>
-#ifdef OTA_enable
+#ifdef OTA_UPDATES_ENABLED
 #include <ArduinoOTA.h>
 #endif
 
@@ -42,7 +38,7 @@
 * Objects.h(без данных)
 */
 
-#ifdef WS_enable
+#ifdef WEBSOCKET_ENABLED
 extern AsyncWebSocket ws;
 //extern AsyncEventSource events;
 #endif
@@ -164,9 +160,6 @@ extern void Scenario_init();
 extern void txtExecution(String file);
 extern void stringExecution(String str);
 
-// FileSystem
-extern void File_system_init();
-
 // i2c_bu
 extern void do_i2c_scanning();
 extern String i2c_scan();
@@ -187,7 +180,7 @@ extern void choose_log_date_and_send();
 
 // Main
 extern void setChipId();
-extern void getMemoryLoad(String text);
+extern void printMemoryStatus(String text);
 extern void saveConfig();
 extern String getURL(const String &urls);
 
