@@ -8,11 +8,10 @@ void handle_uptime();
 void handle_statistics();
 
 void loadConfig() {
-    if (fileSystemInit()) {
-        configSetupJson = readFile("config.json", 4096);
-        configSetupJson.replace(" ", "");
-        configSetupJson.replace("\r\n", "");
-    }
+
+    configSetupJson = readFile("config.json", 4096);
+    configSetupJson.replace(" ", "");
+    configSetupJson.replace("\r\n", "");
 
     jsonWriteStr(configSetupJson, "chipID", chipId);
     jsonWriteStr(configSetupJson, "firmware_version", FIRMWARE_VERSION);

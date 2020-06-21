@@ -6,12 +6,12 @@ void setup() {
     Serial.begin(115200);
     Serial.println();
     Serial.println("--------------started----------------");
-    //Serial.setDebugOutput(true);
 
     setChipId();
 
     fileSystemInit();
-    Serial.println("[V] LittleFS");
+
+    loadConfig();
 
     CMD_init();
     Serial.println("[V] Commands");

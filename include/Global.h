@@ -16,6 +16,7 @@
 #include "Utils\FileUtils.h"
 #include "Utils\JsonUtils.h"
 #include "Utils\StringUtils.h"
+#include "Utils\SysUtils.h"
 #include "Utils\TimeUtils.h"
 
 //=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
@@ -165,6 +166,7 @@ extern void do_i2c_scanning();
 extern String i2c_scan();
 
 // Init
+extern void loadConfig();
 extern void All_init();
 extern void statistics_init();
 extern void Scenario_init();
@@ -174,7 +176,7 @@ extern void up_time();
 
 // Logging
 extern void logging();
-extern void deleteOldDate(String file, int seted_number_of_lines, String date_to_add);
+extern void deleteOldDate(String filename, size_t max_lines, String date_to_add);
 extern void clean_log_date();
 extern void choose_log_date_and_send();
 

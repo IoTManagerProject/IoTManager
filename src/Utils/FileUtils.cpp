@@ -1,24 +1,33 @@
 #include "Utils/FileUtils.h"
 
+static const char* MODULE = "FS";
+
+void printError(const String str) {
+    Serial.printf("[E] [%s] %s\n", MODULE, str.c_str());
+}
+
+const String filepath(const String& filename) {
+    return filename.startsWith("/") ? filename : "/" + filename;
+}
 
 bool fileSystemInit() {
     if (!LittleFS.begin()) {
-        Serial.println("[E] LittleFS");
+        printError("init");
         return false;
     }
     return true;
 }
 
 void removeFile(const String filename) {
-    if (!LittleFS.remove(filename)) {
-        Serial.printf("[E] on remove %s", filename.c_str());
+    if (!LittleFS.remove(filepath(filename))) {
+        printError("remove " + filename);
     }
 }
 
 File seekFile(const String filename, size_t position) {
-    auto file = LittleFS.open(filename, "r");
+    auto file = LittleFS.open(filepath(filename), "r");
     if (!file) {
-        Serial.printf("[E] on open %s", filename.c_str());
+        printError("open " + filename);
     }
     // поставим курсор в начало файла
     file.seek(position, SeekSet);
@@ -27,7 +36,7 @@ File seekFile(const String filename, size_t position) {
 
 String readFileString(const String filename, const String to_find) {
     String res = "Failed";
-    auto file = LittleFS.open("/" + filename, "r");
+    auto file = LittleFS.open(filepath(filename), "r");
     if (!file) {
         return "Failed";
     }
@@ -39,27 +48,27 @@ String readFileString(const String filename, const String to_find) {
 }
 
 String addFile(const String filename, const String str) {
-    auto file = LittleFS.open("/" + filename, "a");
+    auto file = LittleFS.open(filepath(filename), "a");
     if (!file) {
         return "Failed";
     }
     file.println(str);
     file.close();
-    return "Write sucсess";
+    return "Sucсess";
 }
 
 String writeFile(const String filename, const String str) {
-    auto file = LittleFS.open("/" + filename, "w");
+    auto file = LittleFS.open(filepath(filename), "w");
     if (!file) {
         return "Failed";
     }
     file.print(str);
     file.close();
-    return "Write sucсess";
+    return "Sucсess";
 }
 
 String readFile(const String filename, size_t max_size) {
-    auto file = LittleFS.open("/" + filename, "r");
+    auto file = LittleFS.open(filepath(filename), "r");
     if (!file) {
         return "Failed";
     }
@@ -74,7 +83,7 @@ String readFile(const String filename, size_t max_size) {
 }
 
 String getFileSize(const String filename) {
-    auto file = LittleFS.open("/" + filename, "r");
+    auto file = LittleFS.open(filepath(filename), "r");
     if (!file) {
         return "Failed";
     }
