@@ -67,12 +67,14 @@ void logging() {
     }
 }
 
-//=========================================Удаление стрых данных и запись новых==================================================================
-void deleteOldDate(const String filename, int max_lines_cnt, String date_to_add) {
+/*
+* Удаление стрых данных и запись новых
+*/
+void deleteOldDate(const String filename, size_t max_lines_cnt, String date_to_add) {
     String log_date = readFile(filename, 5120);
     size_t lines_cnt = itemsCount(log_date, "\r\n");
 
-    Serial.printf("[I] log %s of %d lines\n", filename.c_str(), lines_cnt);
+    Serial.printf("[I] log %s (%d lines)\n", filename.c_str(), lines_cnt);
 
     if ((lines_cnt > max_lines_cnt + 1) || !lines_cnt) {
         removeFile("/" + filename);

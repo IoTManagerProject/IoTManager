@@ -21,3 +21,5 @@ String selectFromMarkerToMarker(String str, String found, int number);
 size_t itemsCount(String str, const String& separator);
 
 boolean isDigitStr(const String&);
+
+String prettyBytes(size_t size);
