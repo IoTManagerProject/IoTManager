@@ -1,4 +1,4 @@
-ultrasonicPr p 14 12 Уровень#в#баке,#% Датчики fill-gauge 125 25 1
+levelPr p 14 12 Уровень#в#баке,#% Датчики fill-gauge 125 25 1
 ultrasonicCm cm 14 12 Дистанция,#см Датчики any-data 2
 inputDigit digit1 При#скольки#выключить? Датчики 95 3
 inputDigit digit2 При#скольки#включить? Датчики 10 4
