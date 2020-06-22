@@ -1,20 +1,15 @@
 #include "Global.h"
 
-/*
-* Objects.cpp(с данными)
-*/
-
 #ifdef WS_enable
 AsyncWebSocket ws;
 //AsyncEventSource events;
 #endif
 
-
 TickerScheduler ts(TEST + 1);
 
 WiFiClient espClient;
 
-PubSubClient client_mqtt(espClient);
+PubSubClient mqtt(espClient);
 
 StringCommand sCmd;
 
@@ -74,7 +69,7 @@ String last_version = "";
 // Async actions
 boolean upgrade_url = false;
 boolean upgrade = false;
-boolean mqtt_connection = false;
+boolean mqttParamsChanged = false;
 boolean udp_data_parse = false;
 boolean mqtt_send_settings_to_udp = false;
 boolean i2c_scanning = false;

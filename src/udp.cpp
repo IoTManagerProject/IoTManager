@@ -114,7 +114,7 @@ void do_udp_data_parse() {
             jsonWriteStr(configSetupJson, "mqttPass", jsonReadStr(received_udp_line, "mqttPass"));
             saveConfig();
             Serial.println("[V] new mqtt setting received from udp and saved");
-            mqtt_connection = true;
+            mqttParamsChanged = true;
         }
         if (received_udp_line.indexOf("iotm;") >= 0) {
             add_dev_in_list("dev.csv", selectFromMarkerToMarker(received_udp_line, ";", 1), selectFromMarkerToMarker(received_udp_line, ";", 2), received_ip);

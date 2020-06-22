@@ -1,103 +1,93 @@
 #include "Global.h"
 
-String stateMQTT();
+static const char* MODULE = "Web";
+
+static const uint8_t MIN_PRESET = 1;
+static const uint8_t MAX_PRESET = 21;
+
+String getMqttStateStr();
+
+const Item_t getPresetItem(uint8_t preset);
+
+bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
+    if (request->hasArg("preset")) {
+        preset = request->getParam("preset")->value().toInt();
+        return preset >= MIN_PRESET && preset <= MAX_PRESET;
+    }
+    return false;
+}
+
+static const char* item_names[NUM_ITEMS] = {"relay", "pwm",
+                                            "dht11", "dht22", "analog",
+                                            "bmp280", "bme280", "dallas",
+                                            "termostat", "ultrasonic",
+                                            "motion", "stepper",
+                                            "servo", "firmware"};
+
+const char* getItemName(Item_t item) {
+    return item_names[item];
+}
+
+static const char* config_file_fmt = "configs/%d-%s.%s.txt";
+
+const String getPresetFile(uint8_t preset, ConfigType_t type) {
+    Item_t item = getPresetItem(preset);
+    char buf[64];
+    sprintf(buf, config_file_fmt, preset, getItemName(item), type == CT_MACRO ? "c" : "s");
+    return String(buf);
+}
+
+const Item_t getPresetItem(uint8_t preset) {
+    Item_t res = NUM_ITEMS;
+    if (preset >= 1 && preset <= 7) {
+        res = RELAY;
+    } else if (preset == 8) {
+        res = PWM;
+    } else if (preset == 9) {
+        res = DHT11;
+    } else if (preset == 10) {
+        res = DHT22;
+    } else if (preset == 11) {
+        res = ANALOG;
+    } else if (preset == 12) {
+        res = BMP280;
+    } else if (preset == 13) {
+        res = BME280;
+    } else if (preset == 14) {
+        res = DALLAS;
+    } else if (preset == 15) {
+        res = TERMOSTAT;
+    } else if (preset == 16) {
+        res = ULTRASONIC;
+    } else if (preset >= 17 || preset <= 18) {
+        res = MOTION;
+    } else if (preset == 19) {
+        res = STEPPER;
+    } else if (preset == 20) {
+        res = SERVO;
+    } else if (preset == 21) {
+        res = FIRMWARE;
+    }
+    return res;
+}
 
 void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
-        String value;
-        //============================device settings=====================================
-        if (request->hasArg("preset")) {
-            //--------------------------------------------------------------------------------
-            String value;
-            value = request->getParam("preset")->value();
-            if (value == "1") {
-                writeFile("firmware.c.txt", readFile("configs/1-relay.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/1-relay.s.txt", 2048));
-            }
-            if (value == "2") {
-                writeFile("firmware.c.txt", readFile("configs/2-relay.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/2-relay.s.txt", 2048));
-            }
-            if (value == "3") {
-                writeFile("firmware.c.txt", readFile("configs/3-relay.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/3-relay.s.txt", 2048));
-            }
-            if (value == "4") {
-                writeFile("firmware.c.txt", readFile("configs/4-relay.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/4-relay.s.txt", 2048));
-            }
-            if (value == "5") {
-                writeFile("firmware.c.txt", readFile("configs/5-relay.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/5-relay.s.txt", 2048));
-            }
-            if (value == "6") {
-                writeFile("firmware.c.txt", readFile("configs/6-relay.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/6-relay.s.txt", 2048));
-            }
-            if (value == "7") {
-                writeFile("firmware.c.txt", readFile("configs/7-relay.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/7-relay.s.txt", 2048));
-            }
-            if (value == "8") {
-                writeFile("firmware.c.txt", readFile("configs/8-pwm.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/8-pwm.s.txt", 2048));
-            }
-            if (value == "9") {
-                writeFile("firmware.c.txt", readFile("configs/9-dht11.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/9-dht11.s.txt", 2048));
-            }
-            if (value == "10") {
-                writeFile("firmware.c.txt", readFile("configs/10-dht22.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/10-dht22.s.txt", 2048));
-            }
-            if (value == "11") {
-                writeFile("firmware.c.txt", readFile("configs/11-analog.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/11-analog.s.txt", 2048));
-            }
-            if (value == "12") {
-                writeFile("firmware.c.txt", readFile("configs/12-bmp280.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/12-bmp280.s.txt", 2048));
-            }
-            if (value == "13") {
-                writeFile("firmware.c.txt", readFile("configs/13-bme280.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/13-bme280.s.txt", 2048));
-            }
-            if (value == "14") {
-                writeFile("firmware.c.txt", readFile("configs/14-dallas.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/14-dallas.s.txt", 2048));
-            }
-            if (value == "15") {
-                writeFile("firmware.c.txt", readFile("configs/15-termostat.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/15-termostat.s.txt", 2048));
-            }
-            if (value == "16") {
-                writeFile("firmware.c.txt", readFile("configs/16-ultrasonic.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/16-ultrasonic.s.txt", 2048));
-            }
-            if (value == "17") {
-                writeFile("firmware.c.txt", readFile("configs/17-moution.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/17-moution.s.txt", 2048));
-            }
-            if (value == "18") {
-                writeFile("firmware.c.txt", readFile("configs/18-moution.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/18-moution.s.txt", 2048));
-            }
-            if (value == "19") {
-                writeFile("firmware.c.txt", readFile("configs/19-stepper.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/19-stepper.s.txt", 2048));
-            }
-            if (value == "20") {
-                writeFile("firmware.c.txt", readFile("configs/20-servo.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/20-servo.s.txt", 2048));
-            }
-            if (value == "21") {
-                writeFile("firmware.c.txt", readFile("configs/firmware.c.txt", 2048));
-                writeFile("firmware.s.txt", readFile("configs/firmware.s.txt", 2048));
-            }
+        uint8_t preset;
+        if (parseRequestForPreset(request, preset)) {
+            String srcMacro = preset == 21 ? "configs/firmware.c.txt" : getPresetFile(preset, CT_MACRO);
+            String srcScenario = preset == 21 ? "configs/firmware.s.txt" : getPresetFile(preset, CT_SCENARIO);
+            pm.info("activate " + srcMacro);
+            pm.info("activate " + srcScenario);
+            copyFile(srcMacro, "firmware.c.txt");
+            copyFile(srcScenario, "firmware.s.txt");
+
             Device_init();
             Scenario_init();
+
             request->redirect("/?set.device");
         }
+
         //--------------------------------------------------------------------------------
         if (request->hasArg("devinit")) {
             Device_init();
@@ -105,7 +95,7 @@ void web_init() {
         }
         //--------------------------------------------------------------------------------
         if (request->hasArg("scen")) {
-            value = request->getParam("scen")->value();
+            String value = request->getParam("scen")->value();
             if (value == "0") {
                 jsonWriteStr(configSetupJson, "scen", value);
                 saveConfig();
@@ -132,7 +122,7 @@ void web_init() {
 #endif
         //==============================udp settings=============================================
         if (request->hasArg("udponoff")) {
-            value = request->getParam("udponoff")->value();
+            String value = request->getParam("udponoff")->value();
             if (value == "0") {
                 jsonWriteStr(configSetupJson, "udponoff", value);
                 saveConfig();
@@ -214,7 +204,7 @@ void web_init() {
         }
         //--------------------------------------------------------------------------------
         if (request->hasArg("blink")) {
-            value = request->getParam("blink")->value();
+            String value = request->getParam("blink")->value();
             if (value == "0") {
                 jsonWriteStr(configSetupJson, "blink", value);
                 saveConfig();
@@ -229,32 +219,32 @@ void web_init() {
         if (request->hasArg("mqttServer")) {
             jsonWriteStr(configSetupJson, "mqttServer", request->getParam("mqttServer")->value());
             saveConfig();
-            mqtt_connection = true;
+            mqttParamsChanged = true;
             request->send(200, "text/text", "ok");
         }
         if (request->hasArg("mqttPort")) {
             int port = (request->getParam("mqttPort")->value()).toInt();
             jsonWriteInt(configSetupJson, "mqttPort", port);
             saveConfig();
-            mqtt_connection = true;
+            mqttParamsChanged = true;
             request->send(200, "text/text", "ok");
         }
         if (request->hasArg("mqttPrefix")) {
             jsonWriteStr(configSetupJson, "mqttPrefix", request->getParam("mqttPrefix")->value());
             saveConfig();
-            mqtt_connection = true;
+            mqttParamsChanged = true;
             request->send(200, "text/text", "ok");
         }
         if (request->hasArg("mqttUser")) {
             jsonWriteStr(configSetupJson, "mqttUser", request->getParam("mqttUser")->value());
             saveConfig();
-            mqtt_connection = true;
+            mqttParamsChanged = true;
             request->send(200, "text/text", "ok");
         }
         if (request->hasArg("mqttPass")) {
             jsonWriteStr(configSetupJson, "mqttPass", request->getParam("mqttPass")->value());
             saveConfig();
-            mqtt_connection = true;
+            mqttParamsChanged = true;
             request->send(200, "text/text", "ok");
         }
         //--------------------------------------------------------------------------------
@@ -263,12 +253,16 @@ void web_init() {
             request->send(200, "text/text", "ok");
         }
         //--------------------------------------------------------------------------------
+
         if (request->hasArg("mqttcheck")) {
-            String tmp = "{}";
-            jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + stateMQTT());
-            jsonWriteStr(tmp, "class", "pop-up");
-            request->send(200, "text/text", tmp);
+            String buf = "{}";
+            String payload = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + getMqttStateStr();
+            jsonWriteStr(buf, "title", payload);
+            jsonWriteStr(buf, "class", "pop-up");
+
+            request->send(200, "text/text", buf);
         }
+
         //==============================push settings=============================================
 #ifdef PUSH_ENABLED
         if (request->hasArg("pushingboxid")) {

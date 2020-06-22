@@ -44,7 +44,7 @@ void startSTAMode() {
     } while (keepConnecting && tries--);
 
     if (WiFi.status() == WL_CONNECTED) {
-        MQTT_init();
+        initMQTT();
         setLedStatus(LED_OFF);
     } else {
         startAPMode();
@@ -105,4 +105,8 @@ boolean scanWiFi(String ssid) {
         }
     }
     return res;
+}
+
+boolean isNetworkActive() {
+    return WiFi.status() == WL_CONNECTED;
 }

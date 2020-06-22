@@ -35,16 +35,23 @@ String selectToMarkerPlus(String str, String found, int plus) {
     return str.substring(0, p + plus);
 }
 
-String selectFromMarkerToMarker(String str, String found, int number) {
-    if (str.indexOf(found) == -1) return "not found";  // если строки поиск нет сразу выход
-    str += found;                                      // добавим для корректного поиска
-    uint8_t i = 0;                                     // Индекс перебора
+String selectFromMarkerToMarker(String str, String tofind, int number) {
+    if (str.indexOf(tofind) == -1) {
+        return "not found";
+    }
+    str += tofind;  // добавим для корректного поиска
+    uint8_t i = 0;  // Индекс перебора
     do {
-        if (i == number) return selectToMarker(str, found);  // если индекс совпал с позицией законцим вернем резултат
-        str = deleteBeforeDelimiter(str, found);             // отбросим проверенный блок до разделителя
-        i++;                                                 // увеличим индекс
-    } while (str.length() != 0);                             // повторим пока строка не пустая
-    return "not found";                                      // Достигли пустой строки и ничего не нашли
+        if (i == number) {
+            // если индекс совпал с позицией
+            return selectToMarker(str, tofind);
+        }
+        // отбросим проверенный блок до разделителя
+        str = deleteBeforeDelimiter(str, tofind);
+        i++;
+    } while (str.length() != 0);
+
+    return "not found";
 }
 
 uint8_t hexStringToUint8(String hex) {
