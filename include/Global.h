@@ -15,6 +15,7 @@
 #include "GyverFilters.h"
 #include "UptimeInterval.h"
 #include "Clock.h"
+
 #include "Utils\FileUtils.h"
 #include "Utils\JsonUtils.h"
 #include "Utils\StringUtils.h"
@@ -59,6 +60,9 @@ extern StringCommand sCmd;
 extern AsyncWebServer server;
 
 extern DallasTemperature sensors;
+
+extern boolean but[NUM_BUTTONS];
+extern Bounce *buttons;
 
 /*
 * Global vars

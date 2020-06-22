@@ -4,14 +4,14 @@ OneWire *oneWire;
 GMedian<10, int> medianFilter;
 DHTesp dht;
 
-Adafruit_BMP280 bmp;
-Adafruit_Sensor *bmp_temp;
-Adafruit_Sensor *bmp_pressure;
+Adafruit_BMP280 bmp; 
+Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
+Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
 
-Adafruit_BME280 bme;
-Adafruit_Sensor *bme_temp;
-Adafruit_Sensor *bme_pressure;
-Adafruit_Sensor *bme_humidity;
+Adafruit_BME280 bme; 
+Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
+Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
+Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
 
 String perception(byte value);
 void bmp280T_reading();
@@ -228,9 +228,9 @@ void analog_reading2() {
 //=========================================Модуль температурного сенсора ds18b20===========================================================
 #ifdef DALLAS_ENABLED
 void dallas() {
-    //String value_name = sCmd.next();
+    String value_name = sCmd.next();
     String pin = sCmd.next();
-    //String address = sCmd.next();
+    String address = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();

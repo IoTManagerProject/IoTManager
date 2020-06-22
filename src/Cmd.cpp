@@ -1,10 +1,10 @@
 #include "Global.h"
 
+boolean but[NUM_BUTTONS];
+Bounce *buttons = new Bounce[NUM_BUTTONS];
+
 Servo myServo1;
 Servo myServo2;
-
-boolean but[NUM_BUTTONS];
-Bounce *buttons;
 
 void CMD_init() {
     sCmd.addCommand("button", button);
@@ -257,7 +257,7 @@ void handleButton() {
         }
     }
     switch_number++;
-    if (switch_number == 6) switch_number = 0;
+    if (switch_number == NUM_BUTTONS) switch_number = 0;
 }
 
 //=====================================================================================================================================
