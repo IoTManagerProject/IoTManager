@@ -2,19 +2,7 @@
 
 #include <Arduino.h>
 
-enum ErrorType_t {
-    ET_NONE,
-    ET_FUNCTION,
-    ET_MODULE,
-    ET_SYSTEM
-};
-
-enum ErrorLevel_t {
-    EL_NONE,
-    EL_INFO,
-    EL_WARNING,
-    EL_ERROR
-};
+#include "CommonTypes.h"
 
 String getErrorLevelStr(ErrorLevel_t level);
 

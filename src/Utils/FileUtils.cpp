@@ -1,10 +1,7 @@
 #include "Utils/FileUtils.h"
+#include "Utils/PrintMessage.h"
 
 static const char* MODULE = "FS";
-
-void printError(const String str) {
-    Serial.printf("[E] [%s] %s\n", MODULE, str.c_str());
-}
 
 const String filepath(const String& filename) {
     return filename.startsWith("/") ? filename : "/" + filename;
@@ -12,7 +9,7 @@ const String filepath(const String& filename) {
 
 bool fileSystemInit() {
     if (!LittleFS.begin()) {
-        printError("init");
+        pm.error("init");
         return false;
     }
     return true;
@@ -20,14 +17,14 @@ bool fileSystemInit() {
 
 void removeFile(const String filename) {
     if (!LittleFS.remove(filepath(filename))) {
-        printError("remove " + filename);
+        pm.error("remove " + filename);
     }
 }
 
 File seekFile(const String filename, size_t position) {
     auto file = LittleFS.open(filepath(filename), "r");
     if (!file) {
-        printError("open " + filename);
+        pm.error("open " + filename);
     }
     // поставим курсор в начало файла
     file.seek(position, SeekSet);

@@ -1,14 +1,10 @@
 #include "Global.h"
 
-unsigned long UptimeInterval::_uptime_seconds;
-
-UptimeInterval myUptime(10);
-
 void handle_uptime();
 void handle_statistics();
+void telemetry_init();
 
 void loadConfig() {
-
     configSetupJson = readFile("config.json", 4096);
     configSetupJson.replace(" ", "");
     configSetupJson.replace("\r\n", "");
@@ -81,7 +77,9 @@ void uptime_init() {
             handle_uptime();
         },
         nullptr, true);
+}
 
+void telemetry_init() {
     if (TELEMETRY_UPDATE_INTERVAL) {
         ts.add(
             STATISTICS, TELEMETRY_UPDATE_INTERVAL, [&](void*) {
@@ -92,9 +90,7 @@ void uptime_init() {
 }
 
 void handle_uptime() {
-    if (myUptime.check()) {
-        jsonWriteStr(configSetupJson, "uptime", prettyMillis());
-    }
+    jsonWriteStr(configSetupJson, "uptime", prettyMillis());
 }
 
 void handle_statistics() {

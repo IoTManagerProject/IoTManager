@@ -22,7 +22,7 @@ void MQTT_init() {
                 Serial.println("[VV] WiFi-ok");
                 if (client_mqtt.connected()) {
                     Serial.println("[VV] MQTT-ok");
-                    led_blink("off");
+                    setLedStatus(LED_OFF);
                 } else {
                     MQTT_Connecting();
                     if (!just_load) mqtt_lost_error++;
@@ -31,7 +31,7 @@ void MQTT_init() {
                 Serial.println("[E] Lost WiFi connection");
                 wifi_lost_error++;
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
-                StartAPMode();
+                startAPMode();
             }
         },
         nullptr, true);
@@ -58,14 +58,14 @@ boolean MQTT_Connecting() {
     String mqtt_server = jsonReadStr(configSetupJson, "mqttServer");
     if ((mqtt_server != "")) {
         Serial.println("[E] Lost MQTT connection, start reconnecting");
-        led_blink("fast");
+        setLedStatus(LED_FAST);
         client_mqtt.setServer(mqtt_server.c_str(), jsonReadInt(configSetupJson, "mqttPort"));
         if (WiFi.status() == WL_CONNECTED) {
             if (!client_mqtt.connected()) {
                 Serial.println("[V] Connecting to MQTT server commenced");
                 if (client_mqtt.connect(chipId.c_str(), jsonReadStr(configSetupJson, "mqttUser").c_str(), jsonReadStr(configSetupJson, "mqttPass").c_str())) {
                     Serial.println("[VV] MQTT connected");
-                    led_blink("off");
+                    setLedStatus(LED_OFF);
                     client_mqtt.setCallback(callback);
                     client_mqtt.subscribe(jsonReadStr(configSetupJson, "mqttPrefix").c_str());                                  // Для приема получения HELLOW и подтверждения связи
                     client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/+/control").c_str());  // Подписываемся на топики control
@@ -77,7 +77,7 @@ boolean MQTT_Connecting() {
                     res = true;
                 } else {
                     Serial.println("[E] try again in " + String(MQTT_RECONNECT_INTERVAL / 1000) + " sec");
-                    led_blink("fast");
+                    setLedStatus(LED_FAST);
                 }
             }
         }

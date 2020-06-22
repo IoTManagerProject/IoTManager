@@ -4,7 +4,7 @@
 
 class UptimeInterval {
    public:
-    UptimeInterval(unsigned long interval, boolean postpone = true) : _interval{interval} {
+    UptimeInterval(unsigned long interval, boolean postpone = true) : _next{0}, _interval{interval} {
         reset(postpone);
     }
 
@@ -28,5 +28,5 @@ class UptimeInterval {
     static unsigned long _uptime_seconds;
 
    private:
-    unsigned long _interval, _next;
+    unsigned long _next, _interval;
 };

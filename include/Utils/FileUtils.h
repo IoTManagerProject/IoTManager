@@ -11,6 +11,7 @@
 #ifdef ESP8266
 #include <LittleFS.h>
 #endif
+
 /*
 * Инициализация ФС
 */
