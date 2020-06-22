@@ -54,7 +54,7 @@ void UDP_init() {
         nullptr, false);
 }
 
-void handleUdp() {
+void loopUdp() {
 #ifdef ESP8266
     if (jsonReadStr(configSetupJson, "udponoff") == "1") {
         if (WiFi.status() == WL_CONNECTED) {

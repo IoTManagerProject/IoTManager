@@ -25,6 +25,7 @@
 #include "Utils\WiFiUtils.h"
 
 //=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
+#include <SoftwareSerial.h>
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>
 #include <Bounce2.h>
@@ -62,7 +63,7 @@ extern AsyncWebServer server;
 extern DallasTemperature sensors;
 
 extern boolean but[NUM_BUTTONS];
-extern Bounce *buttons;
+extern Bounce* buttons;
 
 /*
 * Global vars
@@ -205,11 +206,10 @@ extern boolean connectMQTT();
 
 extern boolean publishData(const String& topic, const String& data);
 extern boolean publishChart(const String& topic, const String& data);
+extern boolean publishStatus(const String& topic, const String& state);
 extern boolean publishControl(String id, String topic, String state);
 
-extern boolean sendSTATUS(String topic, String state);
-
-extern void do_mqtt_connection();
+extern void reconnectMQTT();
 
 //Scenario
 extern void eventGen(String event_name, String number);
@@ -284,10 +284,10 @@ extern void do_mqtt_send_settings_to_udp();
 extern void Web_server_init();
 
 // iot_firmware
-extern void handleCMD_loop();
-extern void handleButton();
-extern void handleScenario();
-extern void handleUdp();
+extern void loopCmd();
+extern void loopButton();
+extern void loopScenario();
+extern void loopUdp();
 extern void do_upgrade_url();
 extern void do_upgrade();
 

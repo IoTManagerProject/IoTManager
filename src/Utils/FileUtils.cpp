@@ -55,25 +55,26 @@ String addFile(const String filename, const String str) {
 }
 
 bool copyFile(const String src, const String dst, bool overwrite) {
-    String source = filepath(src);
-    String destination = filepath(dst);
-    if (!LittleFS.exists(source)) {
-        pm.error("source not exist: " + source);
+    String srcPath = filepath(src);
+    String dstPath = filepath(dst);
+    if (!LittleFS.exists(srcPath)) {
+        pm.error("not exist: " + srcPath);
         return false;
     }
-    if (LittleFS.exists(destination)) {
+    if (LittleFS.exists(dstPath)) {
         if (!overwrite) {
-            pm.error("destination already exist: " + destination);
+            pm.error("already exist: " + dstPath);
             return false;
         }
-        LittleFS.remove(destination);
+        LittleFS.remove(dstPath);
     }
-    auto srcFile = LittleFS.open(source, "r");
-    auto dstFile = LittleFS.open(destination, "w");
+    auto srcFile = LittleFS.open(srcPath, "r");
+    auto dstFile = LittleFS.open(dstPath, "w");
 
-    static uint8_t buf[512];
-    while (srcFile.read(buf, 512)) {
-        dstFile.write(buf, 512);
+    uint8_t buf[512];
+    while (srcFile.available()) {
+        size_t len = srcFile.read(buf, 512);
+        dstFile.write(buf, len);
     }
     srcFile.close();
     dstFile.close();

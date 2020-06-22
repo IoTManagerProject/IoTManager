@@ -86,17 +86,17 @@ void loop() {
     not_async_actions();
 
     loopMQTT();
-    handleCMD_loop();
-    handleButton();
-    handleScenario();
+    loopCmd();
+    loopButton();
+    loopScenario();
 #ifdef UDP_ENABLED
-    handleUdp();
+    loopUdp();
 #endif
     ts.update();
 }
 
 void not_async_actions() {
-    do_mqtt_connection();
+    reconnectMQTT();
     do_upgrade_url();
     do_upgrade();
 
@@ -123,15 +123,13 @@ String getURL(const String& urls) {
 }
 
 void safeDataToFile(String data, String Folder) {
-    //String fileName = GetDate();
     String fileName;
     fileName.toLowerCase();
     fileName = deleteBeforeDelimiter(fileName, " ");
     fileName.replace(" ", ".");
     fileName.replace("..", ".");
     fileName = Folder + "/" + fileName + ".txt";
-    // addFile(fileName, GetTime() + "/" + data);
-    Serial.println(fileName);
+
     jsonWriteStr(configLiveJson, "test", fileName);
 }
 

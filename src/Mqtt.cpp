@@ -11,12 +11,13 @@ int mqtt_lost_error = 0;
 
 // Session params
 String mqttPrefix;
+String mqttRootDevice;
 
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length);
 const String getMqttStateStr();
 void sendAllData();
 void sendAllWigets();
-boolean sendSTATUS(String topic, String state);
+boolean publicStatus(String topic, String state);
 void outcoming_date();
 
 void initMQTT() {
@@ -43,7 +44,7 @@ void initMQTT() {
         nullptr, true);
 }
 
-void do_mqtt_connection() {
+void reconnectMQTT() {
     if (mqttParamsChanged) {
         mqtt.disconnect();
         connectMQTT();
@@ -63,12 +64,12 @@ void subscribe() {
     // Для приема получения HELLOW и подтверждения связи
     // Подписываемся на топики control
     // Подписываемся на топики order
-    mqtt.subscribe(jsonReadStr(configSetupJson, "mqttPrefix").c_str());
-    mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/+/control").c_str());
-    mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/order").c_str());
-    mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/update").c_str());
-    mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/devc").c_str());
-    mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/devs").c_str());
+    mqtt.subscribe(mqttPrefix.c_str());
+    mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
+    mqtt.subscribe((mqttRootDevice + "/order").c_str());
+    mqtt.subscribe((mqttRootDevice + "/update").c_str());
+    mqtt.subscribe((mqttRootDevice + "/devc").c_str());
+    mqtt.subscribe((mqttRootDevice + "/devs").c_str());
 }
 
 boolean connectMQTT() {
@@ -77,16 +78,22 @@ boolean connectMQTT() {
     }
 
     String addr = jsonReadStr(configSetupJson, "mqttServer");
-    int port = jsonReadInt(configSetupJson, "mqttPort");
-    String user = jsonReadStr(configSetupJson, "mqttUser");
-    String pass = jsonReadStr(configSetupJson, "mqttPass");
-    mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
-
     if (!addr) {
         pm.error("no broker address");
         return false;
     }
+
+    int port = jsonReadInt(configSetupJson, "mqttPort");
+    String user = jsonReadStr(configSetupJson, "mqttUser");
+    String pass = jsonReadStr(configSetupJson, "mqttPass");
+
+    //Session params
+    mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
+    mqttRootDevice = mqttPrefix + "/" + chipId;
+
     pm.info("broker " + addr + ":" + String(port, DEC));
+    pm.info("root " + mqttRootDevice);
+
     setLedStatus(LED_FAST);
     mqtt.setServer(addr.c_str(), port);
     bool res = false;
@@ -164,7 +171,7 @@ boolean publish(const String& topic, const String& data) {
 }
 
 boolean publishData(const String& topic, const String& data) {
-    String path = mqttPrefix + "/" + chipId + "/" + topic;
+    String path = mqttRootDevice + "/" + topic;
     if (!publish(path, data)) {
         pm.error("on publish data");
         return false;
@@ -173,7 +180,7 @@ boolean publishData(const String& topic, const String& data) {
 }
 
 boolean publishChart(const String& topic, const String& data) {
-    String path = mqttPrefix + "/" + chipId + "/" + topic + "/status";
+    String path = mqttRootDevice + "/" + topic + "/status";
     if (!publish(path, data)) {
         pm.error("on publish chart");
         return false;
@@ -187,15 +194,15 @@ boolean publishControl(String id, String topic, String state) {
 }
 
 boolean sendCHART_test(String topic, String data) {
-    topic = mqttPrefix + "/" + chipId + "/" + topic + "/" + "status";
+    topic = mqttRootDevice + "/" + topic + "/status";
     return mqtt.publish(topic.c_str(), data.c_str(), false);
 }
 
-boolean sendSTATUS(String topic, String state) {
-    topic = mqttPrefix + "/" + chipId + "/" + topic + "/" + "status";
-    String json_ = "{}";
-    jsonWriteStr(json_, "status", state);
-    return mqtt.publish(topic.c_str(), json_.c_str(), false);
+boolean publishStatus(const String& topic, const String& data) {
+    String path = mqttRootDevice + "/" + topic + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", data);
+    return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
 //=====================================================ОТПРАВЛЯЕМ ВИДЖЕТЫ========================================================
@@ -239,23 +246,29 @@ void sendAllWigets() {
 #endif
 
 //=====================================================ОТПРАВЛЯЕМ ДАННЫЕ В ВИДЖЕТЫ ПРИ ОБНОВЛЕНИИ СТРАНИЦЫ========================================================
-void sendAllData() {  //берет строку json и ключи превращает в топики а значения колючей в них посылает
 
-    String current_config = configLiveJson;  //{"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
+void sendAllData() {
+    // берет строку json и ключи превращает в топики а значения колючей в них посылает
+    // {"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
+    // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
+    // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
+    String current_config = configLiveJson;
     printMemoryStatus("[I] after send all date");
     current_config.replace("{", "");
-    current_config.replace("}", "");  //"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
-    current_config += ",";            //"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
+    current_config.replace("}", "");
+    current_config += ",";
 
-    while (current_config.length() != 0) {
+    while (current_config.length()) {
         String tmp = selectToMarker(current_config, ",");
+
         String topic = selectToMarker(tmp, ":");
         topic.replace("\"", "");
+
         String state = selectToMarkerLast(tmp, ":");
         state.replace("\"", "");
+
         if (topic != "name" && topic != "lang" && topic != "ip" && topic.indexOf("_in") < 0) {
-            sendSTATUS(topic, state);
-            //Serial.println("-->" + topic + " " + state);
+            publishStatus(topic, state);
         }
         current_config = deleteBeforeDelimiter(current_config, ",");
     }
