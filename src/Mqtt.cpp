@@ -92,6 +92,8 @@ boolean connectMQTT() {
     mqttRootDevice = mqttPrefix + "/" + chipId;
 
     pm.info("broker " + addr + ":" + String(port, DEC));
+    pm.info("root " + mqttRootDevice);
+
     setLedStatus(LED_FAST);
     mqtt.setServer(addr.c_str(), port);
     bool res = false;
@@ -200,7 +202,7 @@ boolean publishStatus(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     String json = "{}";
     jsonWriteStr(json, "status", data);
-    return mqtt.publish(topic.c_str(), json.c_str(), false);
+    return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
 //=====================================================ОТПРАВЛЯЕМ ВИДЖЕТЫ========================================================

@@ -626,10 +626,12 @@ void bme280A() {
 }
 
 void bme280A_reading() {
-    float value = 0;
-    value = bme.readAltitude(1013.25);
-    jsonWriteStr(configLiveJson, bme280A_value_name, String(value));
+    float value = bme.readAltitude(1013.25);
+    jsonWriteStr(configLiveJson, bme280A_value_name, String(value, 2));
+
     eventGen(bme280A_value_name, "");
+
     publishStatus(bme280A_value_name, String(value));
+
     Serial.println("[I] sensor '" + bme280A_value_name + "' data: " + String(value));
 }
