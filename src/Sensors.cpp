@@ -4,11 +4,11 @@ OneWire *oneWire;
 GMedian<10, int> medianFilter;
 DHTesp dht;
 
-Adafruit_BMP280 bmp; 
+Adafruit_BMP280 bmp;
 Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
 Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
 
-Adafruit_BME280 bme; 
+Adafruit_BME280 bme;
 Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
 Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
 Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
@@ -146,12 +146,12 @@ void ultrasonic_reading() {
 
         jsonWriteInt(configLiveJson, levelPr_value_name, level);
         eventGen(levelPr_value_name, "");
-        sendSTATUS(levelPr_value_name, String(level));
+        publishStatus(levelPr_value_name, String(level));
         Serial.println("[I] sensor '" + levelPr_value_name + "' data: " + String(level));
 
         jsonWriteInt(configLiveJson, ultrasonicCm_value_name, distance_cm);
         eventGen(ultrasonicCm_value_name, "");
-        sendSTATUS(ultrasonicCm_value_name, String(distance_cm));
+        publishStatus(ultrasonicCm_value_name, String(distance_cm));
         Serial.println("[I] sensor '" + ultrasonicCm_value_name + "' data: " + String(distance_cm));
     }
 }
@@ -201,7 +201,7 @@ void analog_reading1() {
                      jsonReadInt(configOptionJson, value_name + "_end_out"));
     jsonWriteInt(configLiveJson, value_name, analog);
     eventGen(value_name, "");
-    sendSTATUS(value_name, String(analog));
+    publishStatus(value_name, String(analog));
     Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
 }
 
@@ -220,7 +220,7 @@ void analog_reading2() {
                      jsonReadInt(configOptionJson, value_name + "_end_out"));
     jsonWriteInt(configLiveJson, value_name, analog);
     eventGen(value_name, "");
-    sendSTATUS(value_name, String(analog));
+    publishStatus(value_name, String(analog));
     Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
 }
 #endif
@@ -249,7 +249,7 @@ void dallas_reading() {
     temp = sensors.getTempCByIndex(0);
     jsonWriteStr(configLiveJson, "dallas", String(temp));
     eventGen("dallas", "");
-    sendSTATUS("dallas", String(temp));
+    publishStatus("dallas", String(temp));
     Serial.println("[I] sensor 'dallas' send date " + String(temp));
 }
 #endif
@@ -280,7 +280,7 @@ void dhtT_reading() {
     float value = 0;
     static int counter;
     if (dht.getStatus() != 0 && counter < 5) {
-        sendSTATUS(dhtT_value_name, String(dht.getStatusString()));
+        publishStatus(dhtT_value_name, String(dht.getStatusString()));
         counter++;
     } else {
         counter = 0;
@@ -288,7 +288,7 @@ void dhtT_reading() {
         if (String(value) != "nan") {
             eventGen(dhtT_value_name, "");
             jsonWriteStr(configLiveJson, dhtT_value_name, String(value));
-            sendSTATUS(dhtT_value_name, String(value));
+            publishStatus(dhtT_value_name, String(value));
             Serial.println("[I] sensor '" + dhtT_value_name + "' data: " + String(value));
         }
     }
@@ -318,7 +318,7 @@ void dhtH_reading() {
     float value = 0;
     static int counter;
     if (dht.getStatus() != 0 && counter < 5) {
-        sendSTATUS(dhtH_value_name, String(dht.getStatusString()));
+        publishStatus(dhtH_value_name, String(dht.getStatusString()));
         counter++;
     } else {
         counter = 0;
@@ -326,7 +326,7 @@ void dhtH_reading() {
         if (String(value) != "nan") {
             eventGen(dhtH_value_name, "");
             jsonWriteStr(configLiveJson, dhtH_value_name, String(value));
-            sendSTATUS(dhtH_value_name, String(value));
+            publishStatus(dhtH_value_name, String(value));
             Serial.println("[I] sensor '" + dhtH_value_name + "' data: " + String(value));
         }
     }
@@ -344,13 +344,13 @@ void dhtP() {
 void dhtP_reading() {
     byte value;
     if (dht.getStatus() != 0) {
-        sendSTATUS("dhtPerception", String(dht.getStatusString()));
+        publishStatus("dhtPerception", String(dht.getStatusString()));
     } else {
         value = dht.computePerception(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
         String final_line = perception(value);
         jsonWriteStr(configLiveJson, "dhtPerception", final_line);
         eventGen("dhtPerception", "");
-        sendSTATUS("dhtPerception", final_line);
+        publishStatus("dhtPerception", final_line);
         if (mqtt.connected()) {
             Serial.println("[I] sensor 'dhtPerception' data: " + final_line);
         }
@@ -402,13 +402,13 @@ void dhtC() {
 void dhtC_reading() {
     ComfortState cf;
     if (dht.getStatus() != 0) {
-        sendSTATUS("dhtComfort", String(dht.getStatusString()));
+        publishStatus("dhtComfort", String(dht.getStatusString()));
     } else {
         dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
         String final_line = get_comfort_status(cf);
         jsonWriteStr(configLiveJson, "dhtComfort", final_line);
         eventGen("dhtComfort", "");
-        sendSTATUS("dhtComfort", final_line);
+        publishStatus("dhtComfort", final_line);
         Serial.println("[I] sensor 'dhtComfort' send date " + final_line);
     }
 }
@@ -462,12 +462,12 @@ void dhtD() {
 void dhtD_reading() {
     float value;
     if (dht.getStatus() != 0) {
-        sendSTATUS("dhtDewpoint", String(dht.getStatusString()));
+        publishStatus("dhtDewpoint", String(dht.getStatusString()));
     } else {
         value = dht.computeDewPoint(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
         jsonWriteInt(configLiveJson, "dhtDewpoint", value);
         eventGen("dhtDewpoint", "");
-        sendSTATUS("dhtDewpoint", String(value));
+        publishStatus("dhtDewpoint", String(value));
         Serial.println("[I] sensor 'dhtDewpoint' data: " + String(value));
     }
 }
@@ -503,7 +503,7 @@ void bmp280T_reading() {
     value = temp_event.temperature;
     jsonWriteStr(configLiveJson, bmp280T_value_name, String(value));
     eventGen(bmp280T_value_name, "");
-    sendSTATUS(bmp280T_value_name, String(value));
+    publishStatus(bmp280T_value_name, String(value));
     Serial.println("[I] sensor '" + bmp280T_value_name + "' data: " + String(value));
 }
 
@@ -535,7 +535,7 @@ void bmp280P_reading() {
     value = value / 1.333224;
     jsonWriteStr(configLiveJson, bmp280P_value_name, String(value));
     eventGen(bmp280P_value_name, "");
-    sendSTATUS(bmp280P_value_name, String(value));
+    publishStatus(bmp280P_value_name, String(value));
     Serial.println("[I] sensor '" + bmp280P_value_name + "' data: " + String(value));
 }
 
@@ -560,7 +560,7 @@ void bme280T_reading() {
     value = bme.readTemperature();
     jsonWriteStr(configLiveJson, bme280T_value_name, String(value));
     eventGen(bme280T_value_name, "");
-    sendSTATUS(bme280T_value_name, String(value));
+    publishStatus(bme280T_value_name, String(value));
     Serial.println("[I] sensor '" + bme280T_value_name + "' data: " + String(value));
 }
 
@@ -584,7 +584,7 @@ void bme280P_reading() {
     value = value / 1.333224;
     jsonWriteStr(configLiveJson, bme280P_value_name, String(value));
     eventGen(bme280P_value_name, "");
-    sendSTATUS(bme280P_value_name, String(value));
+    publishStatus(bme280P_value_name, String(value));
     Serial.println("[I] sensor '" + bme280P_value_name + "' data: " + String(value));
 }
 
@@ -607,7 +607,7 @@ void bme280H_reading() {
     value = bme.readHumidity();
     jsonWriteStr(configLiveJson, bme280H_value_name, String(value));
     eventGen(bme280H_value_name, "");
-    sendSTATUS(bme280H_value_name, String(value));
+    publishStatus(bme280H_value_name, String(value));
     Serial.println("[I] sensor '" + bme280H_value_name + "' data: " + String(value));
 }
 
@@ -630,6 +630,6 @@ void bme280A_reading() {
     value = bme.readAltitude(1013.25);
     jsonWriteStr(configLiveJson, bme280A_value_name, String(value));
     eventGen(bme280A_value_name, "");
-    sendSTATUS(bme280A_value_name, String(value));
+    publishStatus(bme280A_value_name, String(value));
     Serial.println("[I] sensor '" + bme280A_value_name + "' data: " + String(value));
 }

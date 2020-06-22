@@ -5,6 +5,7 @@ Bounce *buttons = new Bounce[NUM_BUTTONS];
 
 Servo myServo1;
 Servo myServo2;
+SoftwareSerial *mySerial = nullptr;
 
 void CMD_init() {
     sCmd.addCommand("button", button);
@@ -165,12 +166,14 @@ void buttonSet() {
     eventGen("button", button_number);
 
     jsonWriteStr(configLiveJson, "button" + button_number, button_state);
-    sendSTATUS("button" + button_number, button_state);
+
+    publishStatus("button" + button_number, button_state);
 }
 
 void buttonChange() {
     String button_number = sCmd.next();
     String current_state = jsonReadStr(configLiveJson, "button" + button_number);
+
     if (current_state == "1") {
         current_state = "0";
     } else if (current_state == "0") {
@@ -178,7 +181,7 @@ void buttonChange() {
     }
     order_loop += "buttonSet " + button_number + " " + current_state + ",";
     jsonWriteStr(configLiveJson, "button" + button_number, current_state);
-    sendSTATUS("button" + button_number, current_state);
+    publishStatus("button" + button_number, current_state);
 }
 
 void pinSet() {
@@ -226,7 +229,8 @@ void pwmSet() {
     eventGen("pwm", pwm_number);
 
     jsonWriteStr(configLiveJson, "pwm" + pwm_number, pwm_state);
-    sendSTATUS("pwm" + pwm_number, pwm_state);
+
+    publishStatus("pwm" + pwm_number, pwm_state);
 }
 //==================================================================================================================
 //==========================================Модуль физической кнопки================================================
@@ -240,7 +244,7 @@ void switch_() {
     but[switch_number.toInt()] = true;
 }
 
-void handleButton() {
+void loopButton() {
     static uint8_t switch_number = 1;
 
     if (but[switch_number]) {
@@ -257,7 +261,9 @@ void handleButton() {
         }
     }
     switch_number++;
-    if (switch_number == NUM_BUTTONS) switch_number = 0;
+    if (switch_number == NUM_BUTTONS) {
+        switch_number = 0;
+    }
 }
 
 //=====================================================================================================================================
@@ -279,7 +285,7 @@ void digitSet() {
     String number = sCmd.next();
     String value = sCmd.next();
     jsonWriteStr(configLiveJson, "digit" + number, value);
-    sendSTATUS("digit" + number, value);
+    publishStatus("digit" + number, value);
 }
 
 //=====================================================================================================================================
@@ -301,7 +307,7 @@ void timeSet() {
     String number = sCmd.next();
     String value = sCmd.next();
     jsonWriteStr(configLiveJson, "time" + number, value);
-    sendSTATUS("time" + number, value);
+    publishStatus("time" + number, value);
 }
 
 void handle_time_init() {
@@ -341,7 +347,7 @@ void textSet() {
     }
 
     jsonWriteStr(configLiveJson, "text" + number, text);
-    sendSTATUS("text" + number, text);
+    publishStatus("text" + number, text);
 }
 //=====================================================================================================================================
 //=========================================Модуль шагового мотора======================================================================
@@ -496,23 +502,29 @@ void servoSet() {
     eventGen("servo", servo_number);
 
     jsonWriteStr(configLiveJson, "servo" + servo_number, servo_state);
-    sendSTATUS("servo" + servo_number, servo_state);
+
+    publishStatus("servo" + servo_number, servo_state);
 }
 #endif
-//====================================================================================================================================================
-//===================================================================================serial===========================================================
+
 #ifdef SERIAL_ENABLED
 void serialBegin() {
-    //String s_speed = sCmd.next();
-    //String rxPin = sCmd.next();
-    //String txPin = sCmd.next();
-    //SoftwareSerial mySerial(rxPin.toInt(), txPin.toInt());
-    //mySerial.begin(s_speed.toInt());
+    String s_speed = sCmd.next();
+    String rxPin = sCmd.next();
+    String txPin = sCmd.next();
+
+    if (mySerial) {
+        delete mySerial;
+    }
+    mySerial = new SoftwareSerial(rxPin.toInt(), txPin.toInt());
+    mySerial->begin(s_speed.toInt());
 }
 
 void serialWrite() {
-    //String text = sCmd.next();
-    //mySerial.println(text);
+    String payload = sCmd.next();
+    if (mySerial) {
+        mySerial->println(payload);
+    }
 }
 #endif
 //====================================================================================================================================================
@@ -549,15 +561,14 @@ void firmwareVersion() {
     choose_widget_and_create(widget_name, page_name, page_number, "any-data", "firmver");
 }
 
-
 //==============================================================================================================================
 //============================выполнение команд (в лупе) по очереди из строки order=============================================
-void handleCMD_loop() {
+void loopCmd() {
     if (order_loop != "") {
-        String tmp = selectToMarker(order_loop, ",");  //выделяем из страки order первую команду rel 5 1,
-        sCmd.readStr(tmp);                             //выполняем первую команду
+        String tmp = selectToMarker(order_loop, ",");  //выделяем первую команду rel 5 1,
+        sCmd.readStr(tmp);                             //выполняем
         Serial.println("[ORDER] => " + order_loop);
-        order_loop = deleteBeforeDelimiter(order_loop, ",");  //осекаем выполненную команду
+        order_loop = deleteBeforeDelimiter(order_loop, ",");  //осекаем
     }
 }
 

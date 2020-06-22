@@ -1,6 +1,6 @@
 #include "Global.h"
 
-void handleScenario() {
+void loopScenario() {
     if (jsonReadStr(configSetupJson, "scen") == "1") {
         if ((jsonReadStr(configOptionJson, "scenario_status") != "")) {
             int i = 0;
@@ -15,7 +15,6 @@ void handleScenario() {
                 i++;
 
                 if (scenario_line_status[i] == 1) {
-                    //Serial.println(i);
                     String condition = selectToMarker(tmp, "\n");  //выделяем первую строку самого сценария  button1 = 1 (условие)
                     String param_name = selectFromMarkerToMarker(condition, " ", 0);
                     String order = jsonReadStr(configOptionJson, "scenario_status");  //читаем весь файл событий
@@ -72,24 +71,23 @@ void handleScenario() {
     }
 }
 
-void eventGen(String event_name, String number) {  //событие выглядит как имя плюс set плюс номер: button+Set+1
-
+//событие выглядит как имя плюс set плюс номер: button+Set+1
+void eventGen(String event_name, String number) {
     if (jsonReadStr(configSetupJson, "scen") == "1") {
         String tmp = jsonReadStr(configOptionJson, "scenario_status");  //генерирование события
-        //Serial.println(event_name);
         jsonWriteStr(configOptionJson, "scenario_status", tmp + event_name + number + ",");
     }
 }
 
-String add_set(String param_name) {
-    String num1 = param_name.substring(param_name.length() - 1);
-    String num2 = param_name.substring(param_name.length() - 2, param_name.length() - 1);
+String add_set(String str) {
+    String num1 = str.substring(str.length() - 1);
+    String num2 = str.substring(str.length() - 2, str.length() - 1);
     if (isDigitStr(num1) && isDigitStr(num2)) {
-        param_name = param_name.substring(0, param_name.length() - 2) + "Set" + num2 + num1;
+        str = str.substring(0, str.length() - 2) + "Set" + num2 + num1;
     } else {
         if (isDigitStr(num1)) {
-            param_name = param_name.substring(0, param_name.length() - 1) + "Set" + num1;
+            str = str.substring(0, str.length() - 1) + "Set" + num1;
         }
     }
-    return param_name;
+    return str;
 }

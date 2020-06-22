@@ -1,5 +1,7 @@
 #include "Global.h"
 
+#include "Utils/PresetUtils.h"
+
 static const char* MODULE = "Web";
 
 static const uint8_t MIN_PRESET = 1;
@@ -17,68 +19,13 @@ bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     return false;
 }
 
-static const char* item_names[NUM_ITEMS] = {"relay", "pwm",
-                                            "dht11", "dht22", "analog",
-                                            "bmp280", "bme280", "dallas",
-                                            "termostat", "ultrasonic",
-                                            "motion", "stepper",
-                                            "servo", "firmware"};
-
-const char* getItemName(Item_t item) {
-    return item_names[item];
-}
-
-static const char* config_file_fmt = "configs/%d-%s.%s.txt";
-
-const String getPresetFile(uint8_t preset, ConfigType_t type) {
-    Item_t item = getPresetItem(preset);
-    char buf[64];
-    sprintf(buf, config_file_fmt, preset, getItemName(item), type == CT_MACRO ? "c" : "s");
-    return String(buf);
-}
-
-const Item_t getPresetItem(uint8_t preset) {
-    Item_t res = NUM_ITEMS;
-    if (preset >= 1 && preset <= 7) {
-        res = RELAY;
-    } else if (preset == 8) {
-        res = PWM;
-    } else if (preset == 9) {
-        res = DHT11;
-    } else if (preset == 10) {
-        res = DHT22;
-    } else if (preset == 11) {
-        res = ANALOG;
-    } else if (preset == 12) {
-        res = BMP280;
-    } else if (preset == 13) {
-        res = BME280;
-    } else if (preset == 14) {
-        res = DALLAS;
-    } else if (preset == 15) {
-        res = TERMOSTAT;
-    } else if (preset == 16) {
-        res = ULTRASONIC;
-    } else if (preset >= 17 || preset <= 18) {
-        res = MOTION;
-    } else if (preset == 19) {
-        res = STEPPER;
-    } else if (preset == 20) {
-        res = SERVO;
-    } else if (preset == 21) {
-        res = FIRMWARE;
-    }
-    return res;
-}
-
 void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         uint8_t preset;
         if (parseRequestForPreset(request, preset)) {
             String srcMacro = preset == 21 ? "configs/firmware.c.txt" : getPresetFile(preset, CT_MACRO);
             String srcScenario = preset == 21 ? "configs/firmware.s.txt" : getPresetFile(preset, CT_SCENARIO);
-            pm.info("activate " + srcMacro);
-            pm.info("activate " + srcScenario);
+            pm.info("activate " + getItemName(getPresetItem(preset)));
             copyFile(srcMacro, "firmware.c.txt");
             copyFile(srcScenario, "firmware.s.txt");
 
