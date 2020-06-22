@@ -61,7 +61,7 @@ uint16_t hexStringToUint16(String hex) {
     }
 }
 
-size_t itemsCount(String str, const String& separator) {
+size_t itemsCount(String str, const String &separator) {
     // если строки поиск нет сразу выход
     if (str.indexOf(separator) == -1) {
         return 0;
@@ -77,7 +77,7 @@ size_t itemsCount(String str, const String& separator) {
     return cnt;
 }
 
-boolean isDigitStr(const String& str) {
+boolean isDigitStr(const String &str) {
     for (size_t i = 0; i < str.length(); i++) {
         if (!isDigit(str.charAt(i))) {
             return false;
@@ -95,4 +95,28 @@ String prettyBytes(size_t size) {
         return String(size / 1024.0 / 1024.0) + "MB";
     else
         return String(size / 1024.0 / 1024.0 / 1024.0) + "GB";
+}
+
+static const char *str_info = "I";
+static const char *str_warn = "W";
+static const char *str_error = "E";
+static const char *str_unknown = "?";
+
+String getErrorLevelStr(ErrorLevel_t level) {
+    const char *ptr;
+    switch (level) {
+        case EL_INFO:
+            ptr = str_info;
+            break;
+        case EL_WARNING:
+            ptr = str_warn;
+            break;
+        case EL_ERROR:
+            ptr = str_error;
+            break;
+        default:
+            ptr = str_unknown;
+            break;
+    }
+    return String(ptr);
 }

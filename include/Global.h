@@ -10,14 +10,18 @@
 #include "ESP8266.h"
 //
 #include "Consts.h"
+#include "CommonTypes.h"
 #include "Errors.h"
 #include "GyverFilters.h"
 #include "UptimeInterval.h"
+#include "Clock.h"
 #include "Utils\FileUtils.h"
 #include "Utils\JsonUtils.h"
 #include "Utils\StringUtils.h"
 #include "Utils\SysUtils.h"
 #include "Utils\TimeUtils.h"
+#include "Utils\PrintMessage.h"
+#include "Utils\WiFiUtils.h"
 
 //=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
 #include <Adafruit_BME280.h>
@@ -60,7 +64,7 @@ extern DallasTemperature sensors;
 * Global vars
 */
 
-enum { ROUTER_SEARCHING,
+enum { WIFI_SCAN,
        WIFI_MQTT_CONNECTION_CHECK,
        SENSORS,
        STEPPER1,
@@ -188,7 +192,7 @@ extern String getURL(const String &urls);
 
 extern void servo_();
 
-extern void led_blink(String satus);
+extern void setLedStatus(LedStatus_t);
 
 // Mqtt
 extern void MQTT_init();
@@ -199,12 +203,6 @@ extern void sendSTATUS(String topik, String state);
 extern void sendCONTROL(String id, String topik, String state);
 extern void do_mqtt_connection();
 extern void handleMQTT();
-
-// WiFiUtils
-extern void WIFI_init();
-extern void All_init();
-extern bool StartAPMode();
-extern void ROUTER_Connecting();
 
 //Scenario
 extern void eventGen(String event_name, String number);
@@ -259,7 +257,7 @@ extern void delTimer(String number);
 extern int readTimer(int number);
 
 //Upgrade
-extern void initUpgrade();
+extern void init_updater();
 
 // widget
 extern void createWidget(String widget_name, String page_name, String page_number, String file, String topic);
@@ -291,3 +289,5 @@ extern void uptime_init();
 
 // Web
 extern void web_init();
+
+extern void telemetry_init();
