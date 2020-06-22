@@ -54,6 +54,32 @@ String addFile(const String filename, const String str) {
     return "Sucсess";
 }
 
+bool copyFile(const String src, const String dst, bool overwrite) {
+    String source = filepath(src);
+    String destination = filepath(dst);
+    if (!LittleFS.exists(source)) {
+        pm.error("source not exist: " + source);
+        return false;
+    }
+    if (LittleFS.exists(destination)) {
+        if (!overwrite) {
+            pm.error("destination already exist: " + destination);
+            return false;
+        }
+        LittleFS.remove(destination);
+    }
+    auto srcFile = LittleFS.open(source, "r");
+    auto dstFile = LittleFS.open(destination, "w");
+
+    static uint8_t buf[512];
+    while (srcFile.read(buf, 512)) {
+        dstFile.write(buf, 512);
+    }
+    srcFile.close();
+    dstFile.close();
+    return true;
+}
+
 String writeFile(const String filename, const String str) {
     auto file = LittleFS.open(filepath(filename), "w");
     if (!file) {

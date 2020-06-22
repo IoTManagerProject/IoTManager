@@ -36,7 +36,9 @@ void setup() {
     pm.info("Uptime");
     uptime_init();
 
-    pm.info("Telemery: " + !TELEMETRY_UPDATE_INTERVAL ? "Disabled" : "Enabled");
+    if (!TELEMETRY_UPDATE_INTERVAL) {
+        pm.info("Telemetry: Disabled");
+    }
     telemetry_init();
 
     pm.info("Updater");
@@ -83,7 +85,7 @@ void loop() {
 
     not_async_actions();
 
-    handleMQTT();
+    loopMQTT();
     handleCMD_loop();
     handleButton();
     handleScenario();
@@ -133,9 +135,9 @@ void safeDataToFile(String data, String Folder) {
     jsonWriteStr(configLiveJson, "test", fileName);
 }
 
-void sendCONFIG(String topik, String widgetConfig, String key, String date) {
+void sendConfig(String topic, String widgetConfig, String key, String date) {
     yield();
-    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topik + "/status";
+    topic = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topic + "/status";
     String outer = "{\"widgetConfig\":";
     String inner = "{\"";
     inner = inner + key;
@@ -144,8 +146,6 @@ void sendCONFIG(String topik, String widgetConfig, String key, String date) {
     inner = inner + "\"";
     inner = inner + "}}";
     String t = outer + inner;
-    //Serial.println(t);
-    //client_mqtt.publish(MQTT::Publish(topik, t).set_qos(1));
     yield();
 }
 
@@ -156,7 +156,6 @@ void setChipId() {
 
 #ifdef ESP8266
 #ifdef LED_PIN
-
 void setLedStatus(LedStatus_t status) {
     pinMode(LED_PIN, OUTPUT);
     switch (status) {

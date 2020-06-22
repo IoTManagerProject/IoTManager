@@ -2,9 +2,11 @@
 
 #include "Global.h"
 
-boolean scanWiFi(String ssid);
+boolean isNetworkActive();
 
 void startSTAMode();
 
 bool startAPMode();
+
+boolean scanWiFi(String ssid);
 

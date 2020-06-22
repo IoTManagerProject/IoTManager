@@ -351,7 +351,7 @@ void dhtP_reading() {
         jsonWriteStr(configLiveJson, "dhtPerception", final_line);
         eventGen("dhtPerception", "");
         sendSTATUS("dhtPerception", final_line);
-        if (client_mqtt.connected()) {
+        if (mqtt.connected()) {
             Serial.println("[I] sensor 'dhtPerception' data: " + final_line);
         }
     }

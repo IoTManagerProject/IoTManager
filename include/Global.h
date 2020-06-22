@@ -52,7 +52,7 @@ extern TickerScheduler ts;
 
 extern WiFiClient espClient;
 
-extern PubSubClient client_mqtt;
+extern PubSubClient mqtt;
 
 extern StringCommand sCmd;
 
@@ -121,7 +121,7 @@ extern String last_version;
 
 extern boolean upgrade_url;
 extern boolean upgrade;
-extern boolean mqtt_connection;
+extern boolean mqttParamsChanged;
 extern boolean udp_data_parse;
 extern boolean mqtt_send_settings_to_udp;
 extern boolean i2c_scanning;
@@ -188,21 +188,24 @@ extern void choose_log_date_and_send();
 extern void setChipId();
 extern void printMemoryStatus(String text);
 extern void saveConfig();
-extern String getURL(const String &urls);
+extern String getURL(const String& urls);
 
 extern void servo_();
 
 extern void setLedStatus(LedStatus_t);
 
 // Mqtt
-extern void MQTT_init();
-extern boolean MQTT_Connecting();
-extern boolean sendMQTT(String end_of_topik, String data);
-extern boolean sendCHART(String topik, String data);
-extern void sendSTATUS(String topik, String state);
-extern void sendCONTROL(String id, String topik, String state);
+extern void initMQTT();
+extern void loopMQTT();
+extern boolean connectMQTT();
+
+extern boolean publishData(const String& topic, const String& data);
+extern boolean publishChart(const String& topic, const String& data);
+extern boolean publishControl(String id, String topic, String state);
+
+extern boolean sendSTATUS(String topic, String state);
+
 extern void do_mqtt_connection();
-extern void handleMQTT();
 
 //Scenario
 extern void eventGen(String event_name, String number);

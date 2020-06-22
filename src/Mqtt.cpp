@@ -3,34 +3,40 @@
 //
 #include <LittleFS.h>
 
+static const char* MODULE = "Mqtt";
+
 // Errors
 int wifi_lost_error = 0;
 int mqtt_lost_error = 0;
 
-void callback(char* topic, uint8_t* payload, size_t length);
-String stateMQTT();
+// Session params
+String mqttPrefix;
+
+void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length);
+const String getMqttStateStr();
 void sendAllData();
 void sendAllWigets();
-void sendSTATUS(String topik, String state);
+boolean sendSTATUS(String topic, String state);
 void outcoming_date();
 
-//===============================================ИНИЦИАЛИЗАЦИЯ================================================
-void MQTT_init() {
+void initMQTT() {
+    mqtt.setCallback(handleSubscribedUpdates);
+
     ts.add(
-        WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL, [&](void*) {
-            if (WiFi.status() == WL_CONNECTED) {
-                Serial.println("[VV] WiFi-ok");
-                if (client_mqtt.connected()) {
-                    Serial.println("[VV] MQTT-ok");
+        WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL,
+        [&](void*) {
+            if (isNetworkActive()) {
+                if (mqtt.connected()) {
+                    pm.info("OK");
                     setLedStatus(LED_OFF);
                 } else {
-                    MQTT_Connecting();
+                    connectMQTT();
                     if (!just_load) mqtt_lost_error++;
                 }
             } else {
-                Serial.println("[E] Lost WiFi connection");
-                wifi_lost_error++;
+                pm.error("WiFi connection lost");
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
+                wifi_lost_error++;
                 startAPMode();
             }
         },
@@ -38,150 +44,161 @@ void MQTT_init() {
 }
 
 void do_mqtt_connection() {
-    if (mqtt_connection) {
-        mqtt_connection = false;
-        client_mqtt.disconnect();
-        MQTT_Connecting();
+    if (mqttParamsChanged) {
+        mqtt.disconnect();
+        connectMQTT();
+        mqttParamsChanged = false;
     }
 }
 
-//================================================ОБНОВЛЕНИЕ====================================================
-void handleMQTT() {
-    if (WiFi.status() == WL_CONNECTED) {
-        if (client_mqtt.connected()) {
-            client_mqtt.loop();
-        }
+void loopMQTT() {
+    if (!isNetworkActive() || !mqtt.connected()) {
+        return;
     }
+    mqtt.loop();
 }
-boolean MQTT_Connecting() {
+
+void subscribe() {
+    pm.info("Subscribe");
+    // Для приема получения HELLOW и подтверждения связи
+    // Подписываемся на топики control
+    // Подписываемся на топики order
+    mqtt.subscribe(jsonReadStr(configSetupJson, "mqttPrefix").c_str());
+    mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/+/control").c_str());
+    mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/order").c_str());
+    mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/update").c_str());
+    mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/devc").c_str());
+    mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/devs").c_str());
+}
+
+boolean connectMQTT() {
+    if (!isNetworkActive()) {
+        return false;
+    }
+
+    String addr = jsonReadStr(configSetupJson, "mqttServer");
+    int port = jsonReadInt(configSetupJson, "mqttPort");
+    String user = jsonReadStr(configSetupJson, "mqttUser");
+    String pass = jsonReadStr(configSetupJson, "mqttPass");
+    mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
+
+    if (!addr) {
+        pm.error("no broker address");
+        return false;
+    }
+    pm.info("broker " + addr + ":" + String(port, DEC));
+    setLedStatus(LED_FAST);
+    mqtt.setServer(addr.c_str(), port);
     bool res = false;
-    String mqtt_server = jsonReadStr(configSetupJson, "mqttServer");
-    if ((mqtt_server != "")) {
-        Serial.println("[E] Lost MQTT connection, start reconnecting");
-        setLedStatus(LED_FAST);
-        client_mqtt.setServer(mqtt_server.c_str(), jsonReadInt(configSetupJson, "mqttPort"));
-        if (WiFi.status() == WL_CONNECTED) {
-            if (!client_mqtt.connected()) {
-                Serial.println("[V] Connecting to MQTT server commenced");
-                if (client_mqtt.connect(chipId.c_str(), jsonReadStr(configSetupJson, "mqttUser").c_str(), jsonReadStr(configSetupJson, "mqttPass").c_str())) {
-                    Serial.println("[VV] MQTT connected");
-                    setLedStatus(LED_OFF);
-                    client_mqtt.setCallback(callback);
-                    client_mqtt.subscribe(jsonReadStr(configSetupJson, "mqttPrefix").c_str());                                  // Для приема получения HELLOW и подтверждения связи
-                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/+/control").c_str());  // Подписываемся на топики control
-                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/order").c_str());      // Подписываемся на топики order
-                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/update").c_str());
-                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/devc").c_str());
-                    client_mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/devs").c_str());
-                    Serial.println("[V] Callback set, subscribe done");
-                    res = true;
-                } else {
-                    Serial.println("[E] try again in " + String(MQTT_RECONNECT_INTERVAL / 1000) + " sec");
-                    setLedStatus(LED_FAST);
-                }
-            }
+    if (!mqtt.connected()) {
+        if (mqtt.connect(chipId.c_str(), user.c_str(), pass.c_str())) {
+            pm.info("connected");
+            setLedStatus(LED_OFF);
+            subscribe();
+            res = true;
+        } else {
+            pm.error("could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
+            setLedStatus(LED_FAST);
         }
-    } else {
-        Serial.println("[E] No date for MQTT connection");
     }
     return res;
 }
 
-//=====================================================ВХОДЯЩИЕ ДАННЫЕ========================================================
-void callback(char* topic, uint8_t* payload, size_t length) {
-    Serial.print("[MQTT] ");
-    Serial.print(topic);
-    String topic_str = String(topic);
+void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
+    String topicStr = String(topic);
+    pm.info(topicStr);
 
-    String str;
+    String payloadStr;
+    payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
-        str += (char)payload[i];
+        payloadStr += (char)payload[i];
     }
-    Serial.println(" => " + str);
+    pm.info(payloadStr);
 
-    if (str == "HELLO") outcoming_date();
+    if (payloadStr == "HELLO") {
+        //данные которые отправляем при подключении или отбновлении страницы
+        pm.info("Send web page updates");
+        sendAllWigets();
+        sendAllData();
+#ifdef LOGGING_ENABLED
+        choose_log_date_and_send();
+#endif
+    } else if (topicStr.indexOf("control")) {
+        // название топика -  команда,
+        // значение - параметр
+        //IoTmanager/800324-1458415/button99/control 1
+        String topic = selectFromMarkerToMarker(topicStr, "/", 3);
+        topic = add_set(topic);
+        String number = selectToMarkerLast(topic, "Set");
+        topic.replace(number, "");
 
-    //превращает название топика в команду, а значение в параметр команды
-    if (topic_str.indexOf("control") > 0) {                          //IoTmanager/800324-1458415/button-sw2/control 1  //IoTmanager/800324-1458415/button99/control 1
-        String topic = selectFromMarkerToMarker(topic_str, "/", 3);  //button1                                      //button99
-        topic = add_set(topic);                                      //buttonSet1                                   //buttonSet99
-        String number = selectToMarkerLast(topic, "Set");            //1                                            //99
-        topic.replace(number, "");                                   //buttonSet                                    //buttonSet
-        String final_line = topic + " " + number + " " + str;        //buttonSet 1 1                                //buttonSet 99 1
-        order_loop += final_line + ",";
-    }
-
-    if (topic_str.indexOf("order") > 0) {
-        str.replace("_", " ");
-        //Serial.println(str);
-        order_loop += str + ",";
-    }
-    if (topic_str.indexOf("update") > 0) {
-        if (str == "1") {
+        order_loop += topic;
+        order_loop += " ";
+        order_loop += number;
+        order_loop += " ";
+        order_loop += payloadStr;
+        order_loop += ",";
+    } else if (topicStr.indexOf("order")) {
+        payloadStr.replace("_", " ");
+        order_loop += payloadStr;
+        order_loop += ",";
+    } else if (topicStr.indexOf("update")) {
+        if (payloadStr == "1") {
             upgrade = true;
         }
-    }
-    if (topic_str.indexOf("devc") > 0) {
-        writeFile("firmware.c.txt", str);
+    } else if (topicStr.indexOf("devc")) {
+        writeFile("firmware.c.txt", payloadStr);
         Device_init();
-    }
-    if (topic_str.indexOf("devs") > 0) {
-        writeFile("firmware.s.txt", str);
+    } else if (topicStr.indexOf("devs")) {
+        writeFile("firmware.s.txt", payloadStr);
         Scenario_init();
     }
 }
 
-//данные которые отправляем при подключении или отбновлении страницы
-void outcoming_date() {
-    sendAllWigets();
-    sendAllData();
-
-#ifdef LOGGING_ENABLED
-    choose_log_date_and_send();
-#endif
-
-    Serial.println("[V] Sending all date to iot manager completed");
+boolean publish(const String& topic, const String& data) {
+    if (mqtt.beginPublish(topic.c_str(), data.length(), false)) {
+        mqtt.print(data);
+        return mqtt.endPublish();
+    }
+    return false;
 }
 
-//======================================CONFIG==================================================
-boolean sendMQTT(String end_of_topik, String data) {
-    String topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + end_of_topik;
-    boolean send_status = client_mqtt.beginPublish(topik.c_str(), data.length(), false);
-    client_mqtt.print(data);
-    client_mqtt.endPublish();
-    return send_status;
+boolean publishData(const String& topic, const String& data) {
+    String path = mqttPrefix + "/" + chipId + "/" + topic;
+    if (!publish(path, data)) {
+        pm.error("on publish data");
+        return false;
+    }
+    return true;
 }
 
-boolean sendCHART(String topik, String data) {
-    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topik + "/" + "status";
-    boolean send_status = client_mqtt.beginPublish(topik.c_str(), data.length(), false);
-    client_mqtt.print(data);
-    client_mqtt.endPublish();
-    return send_status;
+boolean publishChart(const String& topic, const String& data) {
+    String path = mqttPrefix + "/" + chipId + "/" + topic + "/status";
+    if (!publish(path, data)) {
+        pm.error("on publish chart");
+        return false;
+    }
+    return true;
 }
 
-boolean sendCHART_test(String topik, String data) {
-    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topik + "/" + "status";
-    boolean send_status = client_mqtt.publish(topik.c_str(), data.c_str(), false);
-    return send_status;
+boolean publishControl(String id, String topic, String state) {
+    String path = mqttPrefix + "/" + id + "/" + topic + "/control";
+    return mqtt.publish(path.c_str(), state.c_str(), false);
 }
 
-//======================================STATUS==================================================
-void sendSTATUS(String topik, String state) {
-    topik = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topik + "/" + "status";
+boolean sendCHART_test(String topic, String data) {
+    topic = mqttPrefix + "/" + chipId + "/" + topic + "/" + "status";
+    return mqtt.publish(topic.c_str(), data.c_str(), false);
+}
+
+boolean sendSTATUS(String topic, String state) {
+    topic = mqttPrefix + "/" + chipId + "/" + topic + "/" + "status";
     String json_ = "{}";
     jsonWriteStr(json_, "status", state);
-    client_mqtt.publish(topik.c_str(), json_.c_str(), false);
-}
-
-//======================================CONTROL==================================================
-void sendCONTROL(String id, String topik, String state) {
-    String all_line = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + id + "/" + topik + "/control";
-    client_mqtt.publish(all_line.c_str(), state.c_str(), false);
+    return mqtt.publish(topic.c_str(), json_.c_str(), false);
 }
 
 //=====================================================ОТПРАВЛЯЕМ ВИДЖЕТЫ========================================================
-
 #ifdef LAYOUT_IN_RAM
 void sendAllWigets() {
     if (all_widgets != "") {
@@ -214,8 +231,8 @@ void sendAllWigets() {
     }
     while (file.position() != file.size()) {
         String payload = file.readStringUntil('\n');
-        Serial.println("[V] " + payload);
-        sendMQTT("config", payload);
+        pm.info("publish: " + payload);
+        publishData("config", payload);
     }
     file.close();
 }
@@ -244,41 +261,40 @@ void sendAllData() {  //берет строку json и ключи превра�
     }
 }
 
-String stateMQTT() {
-    int state = client_mqtt.state();
-    switch (state) {
+const String getMqttStateStr() {
+    switch (mqtt.state()) {
         case -4:
-            return "the server didn't respond within the keepalive time";
+            return F("no respond");
             break;
         case -3:
-            return "the network connection was broken";
+            return F("connection was broken");
             break;
         case -2:
-            return "the network connection failed";
+            return F("connection failed");
             break;
         case -1:
-            return "the client is disconnected cleanly";
+            return F("client disconnected ");
             break;
         case 0:
-            return "the client is connected";
+            return F("client connected");
             break;
         case 1:
-            return "the server doesn't support the requested version of MQTT";
+            return F("doesn't support the requested version");
             break;
         case 2:
-            return "the server rejected the client identifier";
+            return F("rejected the client identifier");
             break;
         case 3:
-            return "the server was unable to accept the connection";
+            return F("unable to accept the connection");
             break;
         case 4:
-            return "the username/password were rejected";
+            return F("wrong username/password");
             break;
         case 5:
-            return "the client was not authorized to connect";
+            return F("not authorized to connect");
             break;
         default:
-            return "unspecified";
+            return F("unspecified");
             break;
     }
 }
