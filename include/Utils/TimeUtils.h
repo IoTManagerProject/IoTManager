@@ -7,10 +7,6 @@
 
 void Time_Init();
 
-void time_check();
-
-void reconfigTime();
-
 /*
 * Получение текущего времени
 */
@@ -22,7 +18,7 @@ String getTimeUnix();
 
 /*
 * Параметр время
-* Результат выполнения 
+* @result результат
 */
 boolean getUnixTimeStr(String&);
 
@@ -38,3 +34,9 @@ String getDateDigitalFormated();
 int timeToMin(String Time);
 
 const String prettyMillis(unsigned long time_ms = millis());
+
+int timeZoneInSeconds(const byte timeZone);
+
+bool hasTimeSynced();
+
+int getBiasInSeconds();

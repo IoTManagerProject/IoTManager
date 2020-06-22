@@ -3,54 +3,33 @@
 #include "Global.h"
 #include "Utils\StringUtils.h"
 
-void Time_Init() {
-    ts.add(
-        TIME_SYNC, 30000, [&](void*) {
-            time_check();
-        },
-        nullptr, true);
+#define ONE_MINUTE_s 60
+#define ONE_HOUR_s 60 * ONE_MINUTE_s
+
+int getBiasInSeconds() {
+    return 3600 * jsonReadStr(configSetupJson, "timezone").toInt();
 }
 
-void time_check() {
-    if (getTimeUnix() == "failed") {
-        Serial.println("[I] Trying to obtain time");
-        reconfigTime();
-    }
+int getBiasInMinutes() {
+    return getBiasInSeconds() / 60;
 }
 
-void reconfigTime() {
-    if (WiFi.status() == WL_CONNECTED) {
-        String ntp = jsonReadStr(configSetupJson, "ntp");
-        configTime(0, 0, ntp.c_str());
-        Serial.println("[I] Time sync");
-#ifdef ESP32
-        uint8_t i = 0;
-        struct tm timeinfo;
-        while (!getLocalTime(&timeinfo) && i <= 4) {
-            Serial.print(".");
-            i++;
-            delay(1000);
-        }
-#endif
-#ifdef ESP8266
-        //uint8_t i = 0;
-        //while (!time(nullptr) && i < 4) {
-        //  Serial.print(".");
-        //  i++;
-        delay(2000);
-        //}
-#endif
-        if (getTimeUnix() != "failed") {
-            Serial.print("[V] Got time = ");
-            Serial.print(getDateDigitalFormated());
-            Serial.print(' ');
-            Serial.println(getTime());
-        } else {
-            Serial.println("[E] Failed to obtain time, retry in 30 sec");
-        }
-    } else {
-        Serial.println("[E] Unable to obtain time");
-    }
+const timezone getTimeZone() {
+    return timezone{getBiasInMinutes(), 0};
+}
+
+time_t getSystemTime() {
+    timeval tv{0, 0};
+    timezone tz = getTimeZone();
+    time_t epoch = 0;
+    if (gettimeofday(&tv, &tz) != -1)
+        epoch = tv.tv_sec;
+    return epoch;
+}
+
+bool hasTimeSynced() {
+    time_t now = time(nullptr);
+    return now > millis();
 }
 
 String getTimeUnix() {
@@ -69,7 +48,7 @@ boolean getUnixTimeStr(String& res) {
 }
 
 String getTime() {
-    time_t now = time(nullptr);  // получаем время с помощью библиотеки time.h
+    time_t now = time(nullptr);
     int zone = 3600 * jsonReadStr(configSetupJson, "timezone").toInt();
     now = now + zone;
     String Time = "";                     // Строка для результатов времени
@@ -80,7 +59,7 @@ String getTime() {
 }
 
 String getTimeWOsec() {
-    time_t now = time(nullptr);  // получаем время с помощью библиотеки time.h
+    time_t now = time(nullptr);
     int zone = 3600 * jsonReadStr(configSetupJson, "timezone").toInt();
     now = now + zone;
     String Time = "";                     // Строка для результатов времени
@@ -91,7 +70,7 @@ String getTimeWOsec() {
 }
 
 String getDate() {
-    time_t now = time(nullptr);  // получаем время с помощью библиотеки time.h
+    time_t now = time(nullptr);
     int zone = 3600 * jsonReadStr(configSetupJson, "timezone").toInt();
     now = now + zone;
     String Data = "";     // Строка для результатов времени
@@ -142,11 +121,11 @@ int timeToMin(String Time) {
     return min;
 }
 
-static const char* TIME_FORMAT PROGMEM = "%2d:%2d:%2d";
-static const char* TIME_FORMAT_WITH_DAYS PROGMEM = "%dd %2d:%2d";
+static const char* TIME_FORMAT PROGMEM = "%02d:%02d:%02d";
+static const char* TIME_FORMAT_WITH_DAYS PROGMEM = "%dd %02d:%02d";
 
 const String prettyMillis(unsigned long time_ms) {
-    unsigned long tmp = time_ms;
+    unsigned long tmp = time_ms / 1000;
     unsigned long seconds;
     unsigned long minutes;
     unsigned long hours;
@@ -156,15 +135,137 @@ const String prettyMillis(unsigned long time_ms) {
 
     minutes = tmp % 60;
     tmp = tmp / 60;
+
     hours = tmp % 24;
     days = tmp / 24;
 
-    char buf[16];
+    char buf[32];
 
     if (days) {
-        sprintf_P(buf, TIME_FORMAT, hours, minutes, seconds);
+        sprintf_P(buf, TIME_FORMAT_WITH_DAYS, days, hours, minutes, seconds);
     } else {
-        sprintf_P(buf, TIME_FORMAT_WITH_DAYS, days, hours, minutes);
+        sprintf_P(buf, TIME_FORMAT, hours, minutes, seconds);
     }
     return String(buf);
+}
+
+int timeZoneInSeconds(const byte timeZone) {
+    int res = 0;
+    switch (constrain(timeZone, 1, 38)) {
+        case 1:
+            res = -12 * ONE_HOUR_s;
+            break;
+        case 2:
+            res = -11 * ONE_HOUR_s;
+            break;
+        case 3:
+            res = -10 * ONE_HOUR_s;
+            break;
+        case 4:
+            res = -9 * ONE_HOUR_s - 30 * ONE_MINUTE_s;
+            break;
+        case 5:
+            res = -9 * ONE_HOUR_s;
+            break;
+        case 6:
+            res = -8 * ONE_HOUR_s;
+            break;
+        case 7:
+            res = -7 * ONE_HOUR_s;
+            break;
+        case 8:
+            res = -6 * ONE_HOUR_s;
+            break;
+        case 9:
+            res = -5 * ONE_HOUR_s;
+            break;
+        case 10:
+            res = -4 * ONE_HOUR_s;
+            break;
+        case 11:
+            res = -3 * ONE_HOUR_s - 30 * ONE_MINUTE_s;
+            break;
+        case 12:
+            res = -3 * ONE_HOUR_s;
+            break;
+        case 13:
+            res = -2 * ONE_HOUR_s;
+            break;
+        case 14:
+            res = -1 * ONE_HOUR_s;
+            break;
+        case 15:
+            res = 0;
+            break;
+        case 16:
+            res = 1 * ONE_HOUR_s;
+            break;
+        case 17:
+            res = 2 * ONE_HOUR_s;
+            break;
+        case 18:
+            res = 3 * ONE_HOUR_s;
+            break;
+        case 19:
+            res = 3 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
+            break;
+        case 20:
+            res = 4 * ONE_HOUR_s;
+            break;
+        case 21:
+            res = 4 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
+            break;
+        case 22:
+            res = 5 * ONE_HOUR_s;
+            break;
+        case 23:
+            res = 5 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
+            break;
+        case 24:
+            res = 5 * ONE_HOUR_s + 45 * ONE_MINUTE_s;
+            break;
+        case 25:
+            res = 6 * ONE_HOUR_s;
+            break;
+        case 26:
+            res = 6 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
+            break;
+        case 27:
+            res = 7 * ONE_HOUR_s;
+            break;
+        case 28:
+            res = 8 * ONE_HOUR_s;
+            break;
+        case 29:
+            res = 8 * ONE_HOUR_s + 45 * ONE_MINUTE_s;
+            break;
+        case 30:
+            res = 9 * ONE_HOUR_s;
+            break;
+        case 31:
+            res = 9 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
+            break;
+        case 32:
+            res = 10 * ONE_HOUR_s;
+            break;
+        case 33:
+            res = 10 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
+            break;
+        case 34:
+            res = 11 * ONE_HOUR_s;
+            break;
+        case 35:
+            res = 12 * ONE_HOUR_s;
+            break;
+        case 36:
+            res = 12 * ONE_HOUR_s + 45 * ONE_MINUTE_s;
+            break;
+        case 37:
+            res = 13 * ONE_HOUR_s;
+            break;
+        case 38:
+            res = 14 * ONE_HOUR_s;
+            break;
+    }
+    return res;
 }
