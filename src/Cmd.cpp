@@ -1,5 +1,8 @@
 #include "Global.h"
 
+#include "Module/Terminal.h"
+Terminal *term = nullptr;
+
 boolean but[NUM_BUTTONS];
 Bounce *buttons = new Bounce[NUM_BUTTONS];
 
@@ -516,14 +519,24 @@ void serialBegin() {
     if (mySerial) {
         delete mySerial;
     }
+
+    if (term) {
+        delete term;
+    }
+
     mySerial = new SoftwareSerial(rxPin.toInt(), txPin.toInt());
     mySerial->begin(s_speed.toInt());
+
+    term = new Terminal(mySerial);
+    term->setOnReadLine([](const char *str) {
+        order_loop += String(str) + ",";
+    });
 }
 
 void serialWrite() {
     String payload = sCmd.next();
-    if (mySerial) {
-        mySerial->println(payload);
+    if (term) {
+        term->println(payload.c_str());
     }
 }
 #endif

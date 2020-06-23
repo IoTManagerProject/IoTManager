@@ -6,9 +6,6 @@ bool Telnet::onInit() {
     _term->enableControlCodes();
     _term->enableEcho(false);
     _term->setStream(&_client);
-
-    // _shell = new CommandShell(Cli::get());
-    _shell->setTerm(_term);
     return true;
 }
 
@@ -35,6 +32,11 @@ void Telnet::sendData(const String& data) {
     if (hasClient()) {
         _client.write(data.c_str());
     }
+}
+
+void Telnet::setCommandShell(CommandShell* shell) {
+    _shell = shell;
+    _shell->setTerm(_term);
 }
 
 void Telnet::setEventHandler(TelnetEventHandler h) { _eventHandler = h; }
