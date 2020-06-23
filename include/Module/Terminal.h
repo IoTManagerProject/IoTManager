@@ -114,7 +114,7 @@ enum State { ST_INACTIVE,
 class Terminal : public Print {
    public:
     Terminal(Stream *stream = nullptr);
-    ~Terminal();
+
     void setStream(Stream *stream);
     void setEOL(EOLType_t code);
     void enableControlCodes(bool enabled = true);

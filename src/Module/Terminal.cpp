@@ -16,8 +16,6 @@ void Terminal::setStream(Stream *stream) {
     _stream = stream;
 }
 
-Terminal::~Terminal() {}
-
 void Terminal::setOnReadLine(TerminalInputEventHandler h) { inputHandler_ = h; }
 
 void Terminal::setOnEvent(TerminalEventHandler h) { eventHandler_ = h; }

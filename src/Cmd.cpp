@@ -523,10 +523,6 @@ void serialBegin() {
         delete mySerial;
     }
 
-    if (term) {
-        delete term;
-    }
-
     mySerial = new SoftwareSerial(rxPin.toInt(), txPin.toInt());
     mySerial->begin(s_speed.toInt());
 
