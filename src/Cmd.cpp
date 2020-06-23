@@ -167,7 +167,7 @@ void buttonSet() {
 
     jsonWriteStr(configLiveJson, "button" + button_number, button_state);
 
-    publishStatus("button" + button_number, button_state);
+    MqttClient::publishStatus("button" + button_number, button_state);
 }
 
 void buttonChange() {
@@ -181,7 +181,7 @@ void buttonChange() {
     }
     order_loop += "buttonSet " + button_number + " " + current_state + ",";
     jsonWriteStr(configLiveJson, "button" + button_number, current_state);
-    publishStatus("button" + button_number, current_state);
+    MqttClient::publishStatus("button" + button_number, current_state);
 }
 
 void pinSet() {
@@ -230,7 +230,7 @@ void pwmSet() {
 
     jsonWriteStr(configLiveJson, "pwm" + pwm_number, pwm_state);
 
-    publishStatus("pwm" + pwm_number, pwm_state);
+    MqttClient::publishStatus("pwm" + pwm_number, pwm_state);
 }
 //==================================================================================================================
 //==========================================Модуль физической кнопки================================================
@@ -285,7 +285,7 @@ void digitSet() {
     String number = sCmd.next();
     String value = sCmd.next();
     jsonWriteStr(configLiveJson, "digit" + number, value);
-    publishStatus("digit" + number, value);
+    MqttClient::publishStatus("digit" + number, value);
 }
 
 //=====================================================================================================================================
@@ -307,7 +307,7 @@ void timeSet() {
     String number = sCmd.next();
     String value = sCmd.next();
     jsonWriteStr(configLiveJson, "time" + number, value);
-    publishStatus("time" + number, value);
+    MqttClient::publishStatus("time" + number, value);
 }
 
 void handle_time_init() {
@@ -347,7 +347,7 @@ void textSet() {
     }
 
     jsonWriteStr(configLiveJson, "text" + number, text);
-    publishStatus("text" + number, text);
+    MqttClient::publishStatus("text" + number, text);
 }
 //=====================================================================================================================================
 //=========================================Модуль шагового мотора======================================================================
@@ -503,7 +503,7 @@ void servoSet() {
 
     jsonWriteStr(configLiveJson, "servo" + servo_number, servo_state);
 
-    publishStatus("servo" + servo_number, servo_state);
+    MqttClient::publishStatus("servo" + servo_number, servo_state);
 }
 #endif
 

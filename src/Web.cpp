@@ -1,15 +1,12 @@
 #include "Global.h"
 
+#include "CaptiveRequestHandler.h"
 #include "Utils/PresetUtils.h"
 
 static const char* MODULE = "Web";
 
 static const uint8_t MIN_PRESET = 1;
 static const uint8_t MAX_PRESET = 21;
-
-String getMqttStateStr();
-
-const Item_t getPresetItem(uint8_t preset);
 
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
@@ -20,6 +17,8 @@ bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
 }
 
 void web_init() {
+    // server.addHandler(new CaptiveRequestHandler(jsonReadStr(configSetupJson, "name").c_str())).setFilter(ON_AP_FILTER);
+
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         uint8_t preset;
         if (parseRequestForPreset(request, preset)) {
@@ -203,7 +202,7 @@ void web_init() {
 
         if (request->hasArg("mqttcheck")) {
             String buf = "{}";
-            String payload = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + getMqttStateStr();
+            String payload = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
             jsonWriteStr(buf, "title", payload);
             jsonWriteStr(buf, "class", "pop-up");
 
