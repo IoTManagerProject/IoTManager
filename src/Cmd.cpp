@@ -250,6 +250,12 @@ void switch_() {
     but[switch_number.toInt()] = true;
 }
 
+void loopSerial() {
+    if (term) {
+        term->loop();
+    }
+}
+
 void loopButton() {
     static uint8_t switch_number = 1;
 
@@ -523,10 +529,6 @@ void serialBegin() {
         delete mySerial;
     }
 
-    if (term) {
-        delete term;
-    }
-
     mySerial = new SoftwareSerial(rxPin.toInt(), txPin.toInt());
     mySerial->begin(s_speed.toInt());
 
@@ -538,6 +540,7 @@ void serialBegin() {
     term->setOnReadLine([](const char *str) {
         String line = String(str);
         pm.info("serial read: " + line);
+        line.replace("#", " ");
         order_loop += line + ",";
     });
 }
