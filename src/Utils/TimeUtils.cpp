@@ -269,3 +269,29 @@ int timeZoneInSeconds(const byte timeZone) {
     }
     return res;
 }
+
+unsigned long millis_since(unsigned long sinse) {
+    return millis_passed(sinse, millis());
+}
+
+unsigned long millis_passed(unsigned long start, unsigned long finish) {
+    unsigned long result = 0;
+    if (start <= finish) {
+        unsigned long passed = finish - start;
+        if (passed <= __LONG_MAX__) {
+            result = static_cast<long>(passed);
+        } else {
+            result = static_cast<long>((__LONG_MAX__ - finish) + start + 1u);
+        }
+    } else {
+        unsigned long passed = start - finish;
+        if (passed <= __LONG_MAX__) {
+            result = static_cast<long>(passed);
+            result = -1 * result;
+        } else {
+            result = static_cast<long>((__LONG_MAX__ - start) + finish + 1u);
+            result = -1 * result;
+        }
+    }
+    return result;
+}

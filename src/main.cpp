@@ -85,7 +85,8 @@ void loop() {
 
     not_async_actions();
 
-    loopMQTT();
+    MqttClient::loop();
+
     loopCmd();
     loopButton();
     loopScenario();
@@ -96,7 +97,10 @@ void loop() {
 }
 
 void not_async_actions() {
-    reconnectMQTT();
+    if (mqttParamsChanged) {
+        MqttClient::reconnect();
+        mqttParamsChanged = false;
+    }
     do_upgrade_url();
     do_upgrade();
 

@@ -134,7 +134,8 @@ void sendLogData(String file, String topic) {
         log_date = "";
         json_array = "{\"status\":[" + json_array + "]}";
         Serial.println(json_array);
-        publishChart(topic, json_array);
+        
+        MqttClient::publishChart(topic, json_array);
         json_array = "";
         printMemoryStatus("[I] send log date");
     }

@@ -40,3 +40,13 @@ int timeZoneInSeconds(const byte timeZone);
 bool hasTimeSynced();
 
 int getBiasInSeconds();
+
+/*
+* Время (мс) прошедщее с @simce
+*/
+unsigned long millis_since(unsigned long sinse);
+
+/*
+* Интерввал времени (мс) между @start и @fimish 
+*/
+unsigned long millis_passed(unsigned long start, unsigned long finish);

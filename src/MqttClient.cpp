@@ -1,9 +1,10 @@
+#include "MqttClient.h"
 #include "Global.h"
-
-//
 #include <LittleFS.h>
 
 static const char* MODULE = "Mqtt";
+
+namespace MqttClient {
 
 // Errors
 int wifi_lost_error = 0;
@@ -13,14 +14,7 @@ int mqtt_lost_error = 0;
 String mqttPrefix;
 String mqttRootDevice;
 
-void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length);
-const String getMqttStateStr();
-void sendAllData();
-void sendAllWigets();
-boolean publicStatus(String topic, String state);
-void outcoming_date();
-
-void initMQTT() {
+void init() {
     mqtt.setCallback(handleSubscribedUpdates);
 
     ts.add(
@@ -31,7 +25,7 @@ void initMQTT() {
                     pm.info("OK");
                     setLedStatus(LED_OFF);
                 } else {
-                    connectMQTT();
+                    connect();
                     if (!just_load) mqtt_lost_error++;
                 }
             } else {
@@ -44,15 +38,17 @@ void initMQTT() {
         nullptr, true);
 }
 
-void reconnectMQTT() {
-    if (mqttParamsChanged) {
-        mqtt.disconnect();
-        connectMQTT();
-        mqttParamsChanged = false;
-    }
+void disconnect() {
+    pm.info("disconnect");
+    mqtt.disconnect();
 }
 
-void loopMQTT() {
+void reconnect() {
+    disconnect();
+    connect();
+}
+
+void loop() {
     if (!isNetworkActive() || !mqtt.connected()) {
         return;
     }
@@ -60,10 +56,7 @@ void loopMQTT() {
 }
 
 void subscribe() {
-    pm.info("Subscribe");
-    // Для приема получения HELLOW и подтверждения связи
-    // Подписываемся на топики control
-    // Подписываемся на топики order
+    pm.info("subscribe");
     mqtt.subscribe(mqttPrefix.c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/order").c_str());
@@ -72,10 +65,11 @@ void subscribe() {
     mqtt.subscribe((mqttRootDevice + "/devs").c_str());
 }
 
-boolean connectMQTT() {
+boolean connect() {
     if (!isNetworkActive()) {
         return false;
     }
+    pm.info("connect");
 
     String addr = jsonReadStr(configSetupJson, "mqttServer");
     if (!addr) {
@@ -125,8 +119,8 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     if (payloadStr == "HELLO") {
         //данные которые отправляем при подключении или отбновлении страницы
         pm.info("Send web page updates");
-        sendAllWigets();
-        sendAllData();
+        publishWidgets();
+        publishState();
 #ifdef LOGGING_ENABLED
         choose_log_date_and_send();
 #endif
@@ -193,9 +187,9 @@ boolean publishControl(String id, String topic, String state) {
     return mqtt.publish(path.c_str(), state.c_str(), false);
 }
 
-boolean sendCHART_test(String topic, String data) {
-    topic = mqttRootDevice + "/" + topic + "/status";
-    return mqtt.publish(topic.c_str(), data.c_str(), false);
+boolean publishChart_test(const String& topic, const String& data) {
+    String path = mqttRootDevice + "/" + topic + "/status";
+    return mqtt.publish(path.c_str(), data.c_str(), false);
 }
 
 boolean publishStatus(const String& topic, const String& data) {
@@ -205,9 +199,8 @@ boolean publishStatus(const String& topic, const String& data) {
     return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
-//=====================================================ОТПРАВЛЯЕМ ВИДЖЕТЫ========================================================
 #ifdef LAYOUT_IN_RAM
-void sendAllWigets() {
+void publishWidgets() {
     if (all_widgets != "") {
         int counter = 0;
         String line;
@@ -231,7 +224,7 @@ void sendAllWigets() {
 #endif
 
 #ifndef LAYOUT_IN_RAM
-void sendAllWigets() {
+void publishWidgets() {
     auto file = seekFile("/layout.txt");
     if (!file) {
         return;
@@ -245,9 +238,7 @@ void sendAllWigets() {
 }
 #endif
 
-//=====================================================ОТПРАВЛЯЕМ ДАННЫЕ В ВИДЖЕТЫ ПРИ ОБНОВЛЕНИИ СТРАНИЦЫ========================================================
-
-void sendAllData() {
+void publishState() {
     // берет строку json и ключи превращает в топики а значения колючей в них посылает
     // {"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
@@ -274,7 +265,7 @@ void sendAllData() {
     }
 }
 
-const String getMqttStateStr() {
+const String getStateStr() {
     switch (mqtt.state()) {
         case -4:
             return F("no respond");
@@ -311,3 +302,5 @@ const String getMqttStateStr() {
             break;
     }
 }
+
+}  // namespace MqttClient

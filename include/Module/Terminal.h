@@ -152,12 +152,12 @@ class Terminal : public Print {
     uint8_t curY = 0xff;
     uint8_t curX = 0xff;
 
-    unsigned long lastReceived = 0;
+    unsigned long _lastReceived = 0;
     State state = ST_INACTIVE;
     Stream *_stream;
     EditLine _line;
-    char cc_buf[32] = {0};
-    size_t cc_pos = 0;
+    char _cc_buf[32] = {0};
+    size_t _cc_pos = 0;
     bool _color = false;
     bool _controlCodes = false;
     bool _echo = false;
