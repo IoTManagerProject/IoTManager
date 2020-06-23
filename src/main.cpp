@@ -93,6 +93,9 @@ void loop() {
 #ifdef UDP_ENABLED
     loopUdp();
 #endif
+
+    loopSerial();
+
     ts.update();
 }
 

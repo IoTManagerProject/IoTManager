@@ -250,6 +250,12 @@ void switch_() {
     but[switch_number.toInt()] = true;
 }
 
+void loopSerial() {
+    if (term) {
+        term->loop();
+    }
+}
+
 void loopButton() {
     static uint8_t switch_number = 1;
 

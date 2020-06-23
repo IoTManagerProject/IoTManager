@@ -255,6 +255,7 @@ extern void do_mqtt_send_settings_to_udp();
 extern void Web_server_init();
 
 // iot_firmware
+extern void loopSerial();
 extern void loopCmd();
 extern void loopButton();
 extern void loopScenario();
