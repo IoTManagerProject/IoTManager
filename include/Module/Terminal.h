@@ -153,7 +153,7 @@ class Terminal : public Print {
     uint8_t curX = 0xff;
 
     unsigned long _lastReceived = 0;
-    State state = ST_INACTIVE;
+    State state;
     Stream *_stream;
     EditLine _line;
     char _cc_buf[32] = {0};

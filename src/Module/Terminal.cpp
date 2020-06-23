@@ -10,7 +10,7 @@ Terminal::Terminal(Stream *stream) : _stream{stream},
                                      _color(false),
                                      _controlCodes(false),
                                      _echo(false),
-                                     _eol(CRLF){};
+                                     _eol(CRLF) { state = ST_NORMAL; };
 
 void Terminal::setStream(Stream *stream) {
     _stream = stream;
