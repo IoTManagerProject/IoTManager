@@ -528,8 +528,14 @@ void serialBegin() {
     mySerial->begin(s_speed.toInt());
 
     term = new Terminal(mySerial);
+    term->setEOL(LF);
+    term->enableColors(false);
+    term->enableControlCodes(false);
+    term->enableEcho(false);
     term->setOnReadLine([](const char *str) {
-        order_loop += String(str) + ",";
+        String line = String(str);
+        pm.info("serial read: " + line);
+        order_loop += line + ",";
     });
 }
 
