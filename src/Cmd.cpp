@@ -1,6 +1,9 @@
 #include "Global.h"
 
 #include "Module/Terminal.h"
+
+static const char *MODULE = "Cmd";
+
 Terminal *term = nullptr;
 
 boolean but[NUM_BUTTONS];
