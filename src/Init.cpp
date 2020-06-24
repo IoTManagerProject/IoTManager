@@ -60,14 +60,14 @@ void Device_init() {
     removeFile("/layout.txt");
 #endif
 
-    txtExecution("firmware.c.txt");
+    txtExecution("100с.txt");
     //outcoming_date();
 }
 //-------------------------------сценарии-----------------------------------------------------
 
 void Scenario_init() {
     if (jsonReadStr(configSetupJson, "scen") == "1") {
-        scenario = readFile("firmware.s.txt", 2048);
+        scenario = readFile("100s.txt", 2048);
     }
 }
 

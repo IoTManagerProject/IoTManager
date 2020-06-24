@@ -148,10 +148,10 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
             upgrade = true;
         }
     } else if (topicStr.indexOf("devc")) {
-        writeFile("firmware.c.txt", payloadStr);
+        writeFile("100с.txt", payloadStr);
         Device_init();
     } else if (topicStr.indexOf("devs")) {
-        writeFile("firmware.s.txt", payloadStr);
+        writeFile("100s.txt", payloadStr);
         Scenario_init();
     }
 }

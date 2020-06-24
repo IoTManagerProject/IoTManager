@@ -22,11 +22,11 @@ void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         uint8_t preset;
         if (parseRequestForPreset(request, preset)) {
-            String srcMacro = preset == 21 ? "configs/firmware.c.txt" : getPresetFile(preset, CT_MACRO);
-            String srcScenario = preset == 21 ? "configs/firmware.s.txt" : getPresetFile(preset, CT_SCENARIO);
+            String srcMacro = preset == 21 ? "configs/100с.txt" : getPresetFile(preset, CT_MACRO);
+            String srcScenario = preset == 21 ? "configs/100s.txt" : getPresetFile(preset, CT_SCENARIO);
             pm.info("activate " + getItemName(getPresetItem(preset)));
-            copyFile(srcMacro, "firmware.c.txt");
-            copyFile(srcScenario, "firmware.s.txt");
+            copyFile(srcMacro, "100с.txt");
+            copyFile(srcScenario, "100s.txt");
 
             Device_init();
             Scenario_init();
