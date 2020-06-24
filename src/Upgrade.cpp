@@ -28,8 +28,8 @@ void upgrade_firmware() {
     String scenario_for_update;
     String config_for_update;
     String configSetup_for_update;
-    scenario_for_update = readFile("firmware.s.txt", 4000);
-    config_for_update = readFile("firmware.c.txt", 4000);
+    scenario_for_update = readFile("100s.txt", 4000);
+    config_for_update = readFile("100с.txt", 4000);
     configSetup_for_update = configSetupJson;
 
     Serial.println("Start upgrade SPIFFS, please wait...");
@@ -46,8 +46,8 @@ void upgrade_firmware() {
 #endif
 
     if (ret == HTTP_UPDATE_OK) {
-        writeFile("firmware.s.txt", scenario_for_update);
-        writeFile("firmware.c.txt", config_for_update);
+        writeFile("100s.txt", scenario_for_update);
+        writeFile("100с.txt", config_for_update);
         writeFile("config.json", configSetup_for_update);
         saveConfig();
 

@@ -16,6 +16,7 @@
 #include "UptimeInterval.h"
 #include "Clock.h"
 
+#include "MqttClient.h"
 #include "Utils\FileUtils.h"
 #include "Utils\JsonUtils.h"
 #include "Utils\StringUtils.h"
@@ -63,30 +64,12 @@ extern AsyncWebServer server;
 extern DallasTemperature sensors;
 
 extern boolean but[NUM_BUTTONS];
+
 extern Bounce* buttons;
 
 /*
 * Global vars
 */
-
-enum { WIFI_SCAN,
-       WIFI_MQTT_CONNECTION_CHECK,
-       SENSORS,
-       STEPPER1,
-       STEPPER2,
-       LOG1,
-       LOG2,
-       LOG3,
-       LOG4,
-       LOG5,
-       TIMER_COUNTDOWN,
-       TIME,
-       TIME_SYNC,
-       STATISTICS,
-       UPTIME,
-       UDP,
-       UDP_DB,
-       TEST };
 
 extern boolean just_load;
 
@@ -199,18 +182,6 @@ extern void servo_();
 
 extern void setLedStatus(LedStatus_t);
 
-// Mqtt
-extern void initMQTT();
-extern void loopMQTT();
-extern boolean connectMQTT();
-
-extern boolean publishData(const String& topic, const String& data);
-extern boolean publishChart(const String& topic, const String& data);
-extern boolean publishStatus(const String& topic, const String& state);
-extern boolean publishControl(String id, String topic, String state);
-
-extern void reconnectMQTT();
-
 //Scenario
 extern void eventGen(String event_name, String number);
 extern String add_set(String param_name);
@@ -284,6 +255,7 @@ extern void do_mqtt_send_settings_to_udp();
 extern void Web_server_init();
 
 // iot_firmware
+extern void loopSerial();
 extern void loopCmd();
 extern void loopButton();
 extern void loopScenario();

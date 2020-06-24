@@ -85,18 +85,25 @@ void loop() {
 
     not_async_actions();
 
-    loopMQTT();
+    MqttClient::loop();
+
     loopCmd();
     loopButton();
     loopScenario();
 #ifdef UDP_ENABLED
     loopUdp();
 #endif
+
+    loopSerial();
+
     ts.update();
 }
 
 void not_async_actions() {
-    reconnectMQTT();
+    if (mqttParamsChanged) {
+        MqttClient::reconnect();
+        mqttParamsChanged = false;
+    }
     do_upgrade_url();
     do_upgrade();
 
