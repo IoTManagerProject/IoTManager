@@ -540,7 +540,7 @@ void serialBegin() {
     term->setOnReadLine([](const char *str) {
         String line = String(str);
         pm.info("serial read: " + line);
-        line.replace("#", " ");
+        //line.replace("#", " ");
         order_loop += line + ",";
     });
 }
