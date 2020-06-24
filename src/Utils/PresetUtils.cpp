@@ -7,12 +7,11 @@ static const char* item_names[NUM_ITEMS] = {"relay", "pwm",
                                             "motion", "stepper",
                                             "servo", "firmware"};
 
-static const char* config_file_fmt = "configs/%d-%s.%s.txt";
+static const char* config_file_fmt = "/conf/%03d%s.txt";
 
 const String getPresetFile(uint8_t preset, ConfigType_t type) {
-    Item_t item = getPresetItem(preset);
     char buf[64];
-    sprintf(buf, config_file_fmt, preset, getItemName(item).c_str(), type == CT_MACRO ? "c" : "s");
+    sprintf(buf, config_file_fmt, preset, type == CT_MACRO ? "c" : "s");
     return String(buf);
 }
 

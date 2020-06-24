@@ -1,90 +1,85 @@
 #include "Global.h"
 
-//======================================================================================================================
-//===============================================Создание виджетов=======================================================
-void createWidget (String widget_name, String  page_name, String page_number, String file, String topic) {
+const String getWidgetFile(const String& name);
 
-  String widget;
-  widget = readFile(file, 1024);
-
-  if (widget == "Failed") return;
-  if (widget == "Large") return;
-
-  widget_name.replace("#", " ");
-  page_name.replace("#", " ");
-
-  jsonWriteStr(widget, "page", page_name);
-  jsonWriteStr(widget, "order", page_number);
-  jsonWriteStr(widget, "descr", widget_name);
-  jsonWriteStr(widget, "topic", prex + "/" + topic);
-
-#ifdef LAYOUT_IN_RAM
-  all_widgets += widget + "\r\n";
-#else
-  addFile("layout.txt", widget);
-#endif
-  widget = "";
+bool loadWidget(const String filename, String& buf) {
+    buf = readFile(filename, 1024);
+    return !(buf == "Failed" || buf == "Large");
 }
 
-void createWidgetParam (String widget_name, String  page_name, String page_number, String file, String topic, String name1, String param1, String name2, String param2, String name3, String param3) {
+void createWidget(String widget, String page, String pageNumber, String filename, String topic) {
+    String buf;
+    if (!loadWidget(filename, buf)) {
+        return;
+    }
 
-  String widget;
-  widget = readFile(file, 1024);
+    widget.replace("#", " ");
+    page.replace("#", " ");
 
-  if (widget == "Failed") return;
-  if (widget == "Large") return;
-
-  widget_name.replace("#", " ");
-  page_name.replace("#", " ");
-
-  jsonWriteStr(widget, "page", page_name);
-  jsonWriteStr(widget, "order", page_number);
-  jsonWriteStr(widget, "descr", widget_name);
-  jsonWriteStr(widget, "topic", prex + "/" + topic);
-
-  if (name1 != "") jsonWriteStr(widget, name1, param1);
-  if (name2 != "") jsonWriteStr(widget, name2, param2);
-  if (name3 != "") jsonWriteStr(widget, name3, param3);
+    jsonWriteStr(buf, "page", page);
+    jsonWriteStr(buf, "order", pageNumber);
+    jsonWriteStr(buf, "descr", widget);
+    jsonWriteStr(buf, "topic", prex + "/" + topic);
 
 #ifdef LAYOUT_IN_RAM
-  all_widgets += widget + "\r\n";
+    all_widgets += widget + "\r\n";
 #else
-  addFile("layout.txt", widget);
+    addFile("layout.txt", buf);
 #endif
-  widget = "";
 }
 
-void createChart (String widget_name, String  page_name, String page_number, String file, String topic, String maxCount) {
+void createWidgetParam(String widget, String page, String pageNumber, String filename, String topic, String name1, String param1, String name2, String param2, String name3, String param3) {
+    String buf;
+    if (!loadWidget(filename, buf)) {
+        return;
+    }
 
-  String widget;
-  widget = readFile(file, 1024);
+    widget.replace("#", " ");
+    page.replace("#", " ");
 
-  if (widget == "Failed") return;
-  if (widget == "Large") return;
+    jsonWriteStr(buf, "page", page);
+    jsonWriteStr(buf, "order", pageNumber);
+    jsonWriteStr(buf, "descr", widget);
+    jsonWriteStr(buf, "topic", prex + "/" + topic);
 
-  widget_name.replace("#", " ");
-  page_name.replace("#", " ");
-
-  jsonWriteStr(widget, "page", page_name);
-  jsonWriteStr(widget, "order", page_number);
-  //jsonWriteStr(widget, "descr", widget_name);
-  jsonWriteStr(widget, "series", widget_name);
-  jsonWriteStr(widget, "maxCount", maxCount);
-  jsonWriteStr(widget, "topic", prex + "/" + topic);
+    if (name1) jsonWriteStr(buf, name1, param1);
+    if (name2) jsonWriteStr(buf, name2, param2);
+    if (name3) jsonWriteStr(buf, name3, param3);
 
 #ifdef LAYOUT_IN_RAM
-  all_widgets += widget + "\r\n";
+    all_widgets += widget + "\r\n";
 #else
-  addFile("layout.txt", widget);
+    addFile("layout.txt", buf);
 #endif
-  widget = "";
 }
 
-void choose_widget_and_create(String widget_name, String page_name, String page_number, String type, String topik) {
+void createChart(String widget, String page, String pageNumber, String filename, String topic, String maxCount) {
+    String buf;
+    if (!loadWidget(filename, buf)) {
+        return;
+    }
 
-  if (type == "any-data") createWidget (widget_name, page_name, page_number, "widgets/widget.anyData.json", topik);
-  if (type == "progress-line") createWidget (widget_name, page_name, page_number, "widgets/widget.progLine.json", topik);
-  if (type == "progress-round") createWidget (widget_name, page_name, page_number, "widgets/widget.progRound.json", topik);
-  if (type == "fill-gauge") createWidget (widget_name, page_name, page_number, "widgets/widget.fillGauge.json", topik);
+    widget.replace("#", " ");
+    page.replace("#", " ");
 
+    jsonWriteStr(buf, "page", page);
+    jsonWriteStr(buf, "order", pageNumber);
+    //jsonWriteStr(widget, "descr", widget_name);
+    jsonWriteStr(buf, "series", widget);
+    jsonWriteStr(buf, "maxCount", maxCount);
+    jsonWriteStr(buf, "topic", prex + "/" + topic);
+
+#ifdef LAYOUT_IN_RAM
+    all_widgets += widget + "\r\n";
+#else
+    addFile("layout.txt", buf);
+#endif
+}
+
+void createWidgetByType(String widget, String page, String pageNumber, String type, String topic) {
+    createWidget(widget, page, pageNumber, getWidgetFile(type), topic);
+}
+
+const String getWidgetFile(const String& name) {
+    return "widgets/" + name + ".json";
 }

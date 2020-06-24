@@ -541,7 +541,7 @@ void serialBegin() {
         String line = String(str);
         pm.info("serial read: " + line);
         //line.replace("#", " ");
-        order_loop += line + ",";
+        addCommandLoop(line);
     });
 }
 
@@ -560,9 +560,6 @@ void mqttOrderSend() {
     String order = sCmd.next();
 
     String all_line = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + id + "/order";
-    //Serial.print(all_line);
-    //Serial.print("->");
-    //Serial.println(order);
     mqtt.publish(all_line.c_str(), order.c_str(), false);
 }
 
@@ -583,13 +580,18 @@ void firmwareVersion() {
     String page_name = sCmd.next();
     String page_number = sCmd.next();
     jsonWriteStr(configLiveJson, "firmver", FIRMWARE_VERSION);
-    choose_widget_and_create(widget_name, page_name, page_number, "any-data", "firmver");
+    createWidgetByType(widget_name, page_name, page_number, "any-data", "firmver");
 }
 
-//==============================================================================================================================
-//============================выполнение команд (в лупе) по очереди из строки order=============================================
+void addCommandLoop(const String &cmdStr) {
+    order_loop += cmdStr;
+    if (!cmdStr.endsWith(",")) {
+        order_loop += ",";
+    }
+}
+
 void loopCmd() {
-    if (order_loop != "") {
+    if (order_loop.length()) {
         String tmp = selectToMarker(order_loop, ",");  //выделяем первую команду rel 5 1,
         sCmd.readStr(tmp);                             //выполняем
         Serial.println("[ORDER] => " + order_loop);
@@ -597,8 +599,6 @@ void loopCmd() {
     }
 }
 
-//=======================================================================================================================================
-//=======================================================================================================================================
 void txtExecution(String file) {
     String command_all = readFile(file, 2048) + "\r\n";
 
