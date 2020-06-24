@@ -43,8 +43,9 @@ void startSTAMode() {
         }
     } while (keepConnecting && tries--);
 
-    if (WiFi.status() == WL_CONNECTED) {
-        initMQTT();
+    if (isNetworkActive()) {
+        MqttClient::init();
+
         setLedStatus(LED_OFF);
     } else {
         startAPMode();

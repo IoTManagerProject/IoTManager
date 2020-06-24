@@ -1,5 +1,24 @@
 #pragma once
 
+enum TimerTask_t { WIFI_SCAN,
+                   WIFI_MQTT_CONNECTION_CHECK,
+                   SENSORS,
+                   STEPPER1,
+                   STEPPER2,
+                   LOG1,
+                   LOG2,
+                   LOG3,
+                   LOG4,
+                   LOG5,
+                   TIMER_COUNTDOWN,
+                   TIME,
+                   TIME_SYNC,
+                   STATISTICS,
+                   UPTIME,
+                   UDP,
+                   UDP_DB,
+                   TEST };
+
 enum ErrorType_t {
     ET_NONE,
     ET_FUNCTION,

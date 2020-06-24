@@ -24,6 +24,7 @@ class Telnet : public Module {
     void sendData(const String&);
     bool hasClient();
     bool isShellActive();
+    void setCommandShell(CommandShell*);
 
    protected:
     bool onInit() override;
