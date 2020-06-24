@@ -1,0 +1,11 @@
+{
+  "widget": "progress-round",
+  "descrColor": "",
+  "max": "100",
+  "stroke": "20",
+  "color": "#45ccce",
+  "background": "#777",
+  "before": "",
+  "semicircle": "1",
+  "after": ""
+}

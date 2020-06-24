@@ -1,5 +1,7 @@
 #include "Global.h"
 
+#include "HttpServer.h"
+
 void not_async_actions();
 
 static const char* MODULE = "Main";
@@ -44,8 +46,8 @@ void setup() {
     pm.info("Updater");
     init_updater();
 
-    pm.info("WebServer");
-    Web_server_init();
+    pm.info("HttpServer");
+    HttpServer::init();
 
     pm.info("WebAdmin");
     web_init();

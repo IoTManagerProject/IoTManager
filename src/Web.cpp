@@ -11,7 +11,7 @@ static const uint8_t MAX_PRESET = 21;
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
         preset = request->getParam("preset")->value().toInt();
-        return preset >= MIN_PRESET && preset <= MAX_PRESET;
+        return (preset >= MIN_PRESET && preset <= MAX_PRESET) || preset == 100;
     }
     return false;
 }
@@ -22,9 +22,9 @@ void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         uint8_t preset;
         if (parseRequestForPreset(request, preset)) {
+            pm.info("activate # " + String(preset, DEC) + "(" + getItemName(getPresetItem(preset)) + ")");
             String srcMacro = preset == 21 ? "configs/100с.txt" : getPresetFile(preset, CT_MACRO);
             String srcScenario = preset == 21 ? "configs/100s.txt" : getPresetFile(preset, CT_SCENARIO);
-            pm.info("activate " + getItemName(getPresetItem(preset)));
             copyFile(srcMacro, "100с.txt");
             copyFile(srcScenario, "100s.txt");
 
@@ -226,13 +226,17 @@ void web_init() {
     //==============================upgrade settings=============================================
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         upgrade_url = true;
-        Serial.print("[I] Last firmware version: ");
-        Serial.println(last_version);
+        pm.info("firmware version: " + last_version);
         String tmp = "{}";
         int case_of_update;
 
-        if (WiFi.status() != WL_CONNECTED) last_version = "nowifi";
-        if (!FLASH_4MB) last_version = "less";
+        if (WiFi.status() != WL_CONNECTED) {
+            last_version = "nowifi";
+        }
+
+        if (!FLASH_4MB) {
+            last_version = "less";
+        }
 
         if (last_version == FIRMWARE_VERSION) case_of_update = 1;
         if (last_version != FIRMWARE_VERSION) case_of_update = 2;
