@@ -219,37 +219,44 @@ void web_init() {
 #endif
         //==============================utilities settings=============================================
         if (request->hasArg("itoc")) {
-            i2c_scanning = true;
+            busScanFlag = true;
+            busToScan = BS_I2C;
+            request->redirect("/?set.utilities");
+        }
+
+        if (request->hasArg("onewire")) {
+            busScanFlag = true;
+            busToScan = BS_ONE_WIRE;
             request->redirect("/?set.utilities");
         }
 
         if (request->hasArg("fscheck")) {
-            fscheck_flag = true;
+            fsCheckFlag = true;
             request->redirect("/?set.utilities");
         }
     });
     //==============================upgrade settings=============================================
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         upgrade_url = true;
-        pm.info("firmware version: " + last_version);
+        pm.info("firmware version: " + lastVersion);
         String tmp = "{}";
         int case_of_update;
 
         if (WiFi.status() != WL_CONNECTED) {
-            last_version = "nowifi";
+            lastVersion = "nowifi";
         }
 
         if (!FLASH_4MB) {
-            last_version = "less";
+            lastVersion = "less";
         }
 
-        if (last_version == FIRMWARE_VERSION) case_of_update = 1;
-        if (last_version != FIRMWARE_VERSION) case_of_update = 2;
-        if (last_version == "error") case_of_update = 3;
-        if (last_version == "") case_of_update = 4;
-        if (last_version == "less") case_of_update = 5;
-        if (last_version == "nowifi") case_of_update = 6;
-        if (last_version == "notsupported") case_of_update = 7;
+        if (lastVersion == FIRMWARE_VERSION) case_of_update = 1;
+        if (lastVersion != FIRMWARE_VERSION) case_of_update = 2;
+        if (lastVersion == "error") case_of_update = 3;
+        if (lastVersion == "") case_of_update = 4;
+        if (lastVersion == "less") case_of_update = 5;
+        if (lastVersion == "nowifi") case_of_update = 6;
+        if (lastVersion == "notsupported") case_of_update = 7;
 
         switch (case_of_update) {
             case 1: {

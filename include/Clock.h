@@ -3,7 +3,7 @@
 #include "Utils/TimeUtils.h"
 #include "Utils/PrintMessage.h"
 
-#include "time.h"
+#include "TZ.h"
 
 class Clock {
     const char* MODULE = "Clock";
@@ -19,23 +19,12 @@ class Clock {
         return _hasSynced;
     }
 
-    void
-
-    setNtpPool(String ntp) {
+    void setNtpPool(String ntp) {
         _ntp = ntp;
     }
 
     void setTimezone(int timezone) {
         _timezone = timezone;
-    }
-
-    time_t getSystemTime() {
-        timeval tv{0, 0};
-        timezone tz = getTimeZone(getBiasInMinutes());
-        time_t epoch = 0;
-        if (gettimeofday(&tv, &tz) != -1)
-            epoch = tv.tv_sec;
-        return epoch;
     }
 
     void startSync() {
@@ -73,10 +62,20 @@ class Clock {
     //         delay(1000);
     //     }
     // #endif
-   private:
+
     bool hasTimeSynced() {
-        unsigned long now = time(nullptr);
-        return now > millis();
+        int uptime = millis() / 1000;
+        return getSystemTime() > uptime;
+    }
+
+    time_t getSystemTime() {
+        timeval tv{0, 0};
+        timezone tz = getTimeZone(getBiasInMinutes());
+        time_t epoch = 0;
+        if (gettimeofday(&tv, &tz) != -1) {
+            epoch = tv.tv_sec;
+        }
+        return epoch + getBiasInSeconds();
     }
 
     int getBiasInSeconds() {

@@ -11,9 +11,11 @@
 //
 #include "Consts.h"
 #include "CommonTypes.h"
+#include "Bus/BusScanner.h"
 #include "Errors.h"
 #include "GyverFilters.h"
 #include "UptimeInterval.h"
+#include "Upgrade.h"
 #include "Clock.h"
 
 #include "MqttClient.h"
@@ -100,15 +102,24 @@ extern int enter_to_logging_counter;
 
 extern int scenario_line_status[40];
 
-extern String last_version;
+extern String lastVersion;
 
 extern boolean upgrade_url;
 extern boolean upgrade;
 extern boolean mqttParamsChanged;
 extern boolean udp_data_parse;
 extern boolean mqtt_send_settings_to_udp;
-extern boolean i2c_scanning;
-extern boolean fscheck_flag;
+
+/*
+* Запрос на скарнирование шины
+*/
+extern boolean busScanFlag;
+/*
+* Запрос на сканирование шины, указание какую
+*/
+extern BusScanner_t busToScan;
+
+extern boolean fsCheckFlag;
 
 extern int sensors_reading_map[15];
 
@@ -225,11 +236,9 @@ extern void timerStop_();
 extern void delTimer(String number);
 extern int readTimer(int number);
 
-//Upgrade
-extern void init_updater();
+extern void initUpdater();
 
 // widget
-
 extern void createWidgetByType(String widget_name, String page_name, String page_number, String file, String topic);
 extern void createWidgetParam(String widget_name, String page_name, String page_number, String file, String topic, String name1, String param1, String name2, String param2, String name3, String param3);
 extern void createWidget(String widget_name, String page_name, String page_number, String type, String topik);
@@ -250,8 +259,8 @@ extern void loopCmd();
 extern void loopButton();
 extern void loopScenario();
 extern void loopUdp();
-extern void do_upgrade_url();
-extern void do_upgrade();
+
+extern void flashUpgrade();
 
 // Init
 extern void uptime_init();
