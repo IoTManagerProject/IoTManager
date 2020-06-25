@@ -29,7 +29,7 @@ void init() {
                     if (!just_load) mqtt_lost_error++;
                 }
             } else {
-                pm.error("WiFi connection lost");
+                pm.error("connection lost");
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
                 wifi_lost_error++;
                 startAPMode();
@@ -86,7 +86,7 @@ boolean connect() {
     mqttRootDevice = mqttPrefix + "/" + chipId;
 
     pm.info("broker " + addr + ":" + String(port, DEC));
-    pm.info("root " + mqttRootDevice);
+    pm.info("topic " + mqttRootDevice);
 
     setLedStatus(LED_FAST);
     mqtt.setServer(addr.c_str(), port);
@@ -115,10 +115,8 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         payloadStr += (char)payload[i];
     }
     pm.info(payloadStr);
-
-    if (payloadStr == "HELLO") {
-        //данные которые отправляем при подключении или отбновлении страницы
-        pm.info("Send web page updates");
+    if (payloadStr.startsWith("HELLO")) {
+        pm.info("Full update");
         publishWidgets();
         publishState();
 #ifdef LOGGING_ENABLED
@@ -148,11 +146,11 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
             upgrade = true;
         }
     } else if (topicStr.indexOf("devc")) {
-        writeFile("100с.txt", payloadStr);
+        writeFile(String(DEVICE_CONFIG_FILE), payloadStr);
         Device_init();
     } else if (topicStr.indexOf("devs")) {
-        writeFile("100s.txt", payloadStr);
-        Scenario_init();
+        writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
+        loadScenario();
     }
 }
 
@@ -225,13 +223,14 @@ void publishWidgets() {
 
 #ifndef LAYOUT_IN_RAM
 void publishWidgets() {
-    auto file = seekFile("/layout.txt");
+    auto file = seekFile("layout.txt");
     if (!file) {
+        pm.error("on seek layout.txt");
         return;
     }
-    while (file.position() != file.size()) {
+    while (file.available()) {
         String payload = file.readStringUntil('\n');
-        pm.info("publish: " + payload);
+        pm.info("widgets: " + payload);
         publishData("config", payload);
     }
     file.close();
@@ -243,14 +242,13 @@ void publishState() {
     // {"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
-    String current_config = configLiveJson;
-    printMemoryStatus("[I] after send all date");
-    current_config.replace("{", "");
-    current_config.replace("}", "");
-    current_config += ",";
+    String str = configLiveJson;
+    str.replace("{", "");
+    str.replace("}", "");
+    str += ",";
 
-    while (current_config.length()) {
-        String tmp = selectToMarker(current_config, ",");
+    while (str.length()) {
+        String tmp = selectToMarker(str, ",");
 
         String topic = selectToMarker(tmp, ":");
         topic.replace("\"", "");
@@ -261,7 +259,7 @@ void publishState() {
         if (topic != "name" && topic != "lang" && topic != "ip" && topic.indexOf("_in") < 0) {
             publishStatus(topic, state);
         }
-        current_config = deleteBeforeDelimiter(current_config, ",");
+        str = deleteBeforeDelimiter(str, ",");
     }
 }
 

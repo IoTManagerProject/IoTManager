@@ -120,13 +120,13 @@ void button() {
 
     if (button_param == "scen") {
         jsonWriteStr(configSetupJson, "scen", start_state);
-        Scenario_init();
+        loadScenario();
         saveConfig();
     }
 
     if (button_param.indexOf("line") != -1) {
         String str = button_param;
-        while (str.length() != 0) {
+        while (str.length()) {
             if (str == "") return;
             String tmp = selectToMarker(str, ",");            //line1,
             String number = deleteBeforeDelimiter(tmp, "e");  //1,
@@ -137,7 +137,7 @@ void button() {
             str = deleteBeforeDelimiter(str, ",");
         }
     }
-    createWidget(widget_name, page_name, page_number, "widgets/widget.toggle.json", "button" + button_number);
+    createWidget(widget_name, page_name, page_number, "toggle", "button" + button_number);
 }
 
 void buttonSet() {
@@ -151,7 +151,7 @@ void buttonSet() {
 
     if (button_param == "scen") {
         jsonWriteStr(configSetupJson, "scen", button_state);
-        Scenario_init();
+        loadScenario();
         saveConfig();
     }
 
@@ -187,6 +187,7 @@ void buttonChange() {
     }
     order_loop += "buttonSet " + button_number + " " + current_state + ",";
     jsonWriteStr(configLiveJson, "button" + button_number, current_state);
+
     MqttClient::publishStatus("button" + button_number, current_state);
 }
 
@@ -221,7 +222,7 @@ void pwm() {
     //analogWriteFreq(32000);
     jsonWriteStr(configLiveJson, "pwm" + pwm_number, start_state);
 
-    createWidget(widget_name, page_name, page_number, "widgets/widget.range.json", "pwm" + pwm_number);
+    createWidget(widget_name, page_name, page_number, "range", "pwm" + pwm_number);
 }
 
 void pwmSet() {
@@ -290,7 +291,7 @@ void inputDigit() {
     String start_state = sCmd.next();
     String page_number = sCmd.next();
     jsonWriteStr(configLiveJson, "digit" + number, start_state);
-    createWidget(widget_name, page_name, page_number, "widgets/widget.inputNum.json", "digit" + number);
+    createWidget(widget_name, page_name, page_number, "inputNum", "digit" + number);
 }
 
 void digitSet() {
@@ -312,7 +313,7 @@ void inputTime() {
     String start_state = sCmd.next();
     String page_number = sCmd.next();
     jsonWriteStr(configLiveJson, "time" + number, start_state);
-    createWidget(widget_name, page_name, page_number, "widgets/widget.inputTime.json", "time" + number);
+    createWidget(widget_name, page_name, page_number, "inputTime", "time" + number);
 }
 
 void timeSet() {
@@ -342,7 +343,7 @@ void text() {
     String page_name = sCmd.next();
     String page_number = sCmd.next();
 
-    createWidget(widget_name, page_name, page_number, "widgets/widget.anyData.json", "text" + number);
+    createWidget(widget_name, page_name, page_number, "anydata", "text" + number);
 }
 
 void textSet() {
@@ -475,7 +476,7 @@ void servo_() {
 
     jsonWriteStr(configLiveJson, "servo" + servo_number, start_state);
 
-    createWidgetParam(widget_name, page_name, page_number, "widgets/widget.range.json", "servo" + servo_number, "min", min_value, "max", max_value, "k", "1");
+    createWidgetParam(widget_name, page_name, page_number, "range", "servo" + servo_number, "min", min_value, "max", max_value, "k", "1");
 }
 
 void servoSet() {
@@ -580,7 +581,7 @@ void firmwareVersion() {
     String page_name = sCmd.next();
     String page_number = sCmd.next();
     jsonWriteStr(configLiveJson, "firmver", FIRMWARE_VERSION);
-    createWidgetByType(widget_name, page_name, page_number, "any-data", "firmver");
+    createWidgetByType(widget_name, page_name, page_number, "anydata", "firmver");
 }
 
 void addCommandLoop(const String &cmdStr) {
@@ -599,30 +600,28 @@ void loopCmd() {
     }
 }
 
-void txtExecution(String file) {
-    String command_all = readFile(file, 2048) + "\r\n";
+void fileExecute(const String &filename) {
+    String cmdStr = readFile(filename, 2048);
+    cmdStr += "\r\n";
+    cmdStr.replace("\r\n", "\n");
+    cmdStr.replace("\r", "\n");
 
-    command_all.replace("\r\n", "\n");
-    command_all.replace("\r", "\n");
-
-    while (command_all.length() != 0) {
-        String tmp = selectToMarker(command_all, "\n");
-        sCmd.readStr(tmp);
-        command_all = deleteBeforeDelimiter(command_all, "\n");
+    while (cmdStr.length() != 0) {
+        String buf = selectToMarker(cmdStr, "\n");
+        sCmd.readStr(buf);
+        cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
     }
-    command_all = "";
 }
 
-void stringExecution(String str) {
-    str = str + "\r\n";
+void stringExecute(String &cmdStr) {
+    cmdStr = cmdStr + "\r\n";
 
-    str.replace("\r\n", "\n");
-    str.replace("\r", "\n");
+    cmdStr.replace("\r\n", "\n");
+    cmdStr.replace("\r", "\n");
 
-    while (str.length() != 0) {
-        String tmp = selectToMarker(str, "\n");
-        sCmd.readStr(tmp);
-
-        str = deleteBeforeDelimiter(str, "\n");
+    while (cmdStr.length()) {
+        String buf = selectToMarker(cmdStr, "\n");
+        sCmd.readStr(buf);
+        cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
     }
 }

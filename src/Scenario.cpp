@@ -53,7 +53,7 @@ void loopScenario() {
 
                         if (flag) {
                             tmp = deleteBeforeDelimiter(tmp, "\n");  //удаляем строку самого сценария оставляя только команды
-                            stringExecution(tmp);                    //выполняем все команды
+                            stringExecute(tmp);                    //выполняем все команды
 
                             Serial.println("[SCENARIO] '" + condition + "'");
                             //Serial.println("            " + tmp);

@@ -1,18 +1,24 @@
 #include "Global.h"
 
+static const char* MODULE = "Widget";
+
 const String getWidgetFile(const String& name);
 
-bool loadWidget(const String filename, String& buf) {
-    buf = readFile(filename, 1024);
-    return !(buf == "Failed" || buf == "Large");
+bool loadWidget(const String& filename, String& buf) {
+    buf = readFile(filename, 2048);
+    bool res = !(buf == "Failed" || buf == "Large");
+    if (!res) {
+        pm.error("on load" + filename);
+    }
+    return res;
 }
 
 void createWidget(String widget, String page, String pageNumber, String filename, String topic) {
-    String buf;
+    String buf = "{}";
     if (!loadWidget(filename, buf)) {
+        pm.error("failed " + widget);
         return;
     }
-
     widget.replace("#", " ");
     page.replace("#", " ");
 
@@ -29,7 +35,7 @@ void createWidget(String widget, String page, String pageNumber, String filename
 }
 
 void createWidgetParam(String widget, String page, String pageNumber, String filename, String topic, String name1, String param1, String name2, String param2, String name3, String param3) {
-    String buf;
+    String buf = "";
     if (!loadWidget(filename, buf)) {
         return;
     }
@@ -54,7 +60,7 @@ void createWidgetParam(String widget, String page, String pageNumber, String fil
 }
 
 void createChart(String widget, String page, String pageNumber, String filename, String topic, String maxCount) {
-    String buf;
+    String buf = "";
     if (!loadWidget(filename, buf)) {
         return;
     }
@@ -77,9 +83,11 @@ void createChart(String widget, String page, String pageNumber, String filename,
 }
 
 void createWidgetByType(String widget, String page, String pageNumber, String type, String topic) {
+    pm.info("create" + type);
     createWidget(widget, page, pageNumber, getWidgetFile(type), topic);
 }
 
 const String getWidgetFile(const String& name) {
-    return "widgets/" + name + ".json";
+    pm.info("get " + name);
+    return "/widgets/" + name + ".json";
 }

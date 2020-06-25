@@ -5,6 +5,8 @@
 
 void sendLogData(String file, String topic);
 
+static const char* MODULE = "Log";
+
 #ifdef LOGGING_ENABLED
 //===============================================Логирование============================================================
 //logging temp1 1 10 Температура Датчики 2
@@ -17,15 +19,18 @@ void logging() {
     String page_name = sCmd.next();
     String page_number = sCmd.next();
     logging_value_names_list += value_name + ",";
-    enter_to_logging_counter++;                                                                                   //считаем количество входов в эту функцию
-    jsonWriteStr(configOptionJson, value_name + "_c", maxCount);                                                  //создаем в файловой системе переменную количества точек на графике с отметкой _c что значит count
-    createChart(widget_name, page_name, page_number, "widgets/widget.chart.json", value_name + "_ch", maxCount);  //создаем график в приложении с топиком _ch /prefix/3234045-1589487/value_name_ch
+    enter_to_logging_counter++;                                   //считаем количество входов в эту функцию
+    jsonWriteStr(configOptionJson, value_name + "_c", maxCount);  //создаем в файловой системе переменную количества точек на графике с отметкой _c что значит count
+
+    //создаем график в приложении с топиком _ch /prefix/3234045-1589487/value_name_ch
+    createChart(widget_name, page_name, page_number, "chart", value_name + "_ch", maxCount);
+
     if (enter_to_logging_counter == LOG1) {
         ts.add(
             LOG1, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_1 = selectFromMarkerToMarker(logging_value_names_list, ",", 0);
                 deleteOldDate("log." + tmp_buf_1 + ".txt", jsonReadInt(configOptionJson, tmp_buf_1 + "_c"), jsonReadStr(configLiveJson, tmp_buf_1));
-                Serial.println("[I] LOGGING for sensor '" + tmp_buf_1 + "' done");
+                pm.info("logging for " + tmp_buf_1 + " done");
             },
             nullptr, false);
     }
@@ -34,7 +39,7 @@ void logging() {
             LOG2, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_2 = selectFromMarkerToMarker(logging_value_names_list, ",", 1);
                 deleteOldDate("log." + tmp_buf_2 + ".txt", jsonReadInt(configOptionJson, tmp_buf_2 + "_c"), jsonReadStr(configLiveJson, tmp_buf_2));
-                Serial.println("[I] LOGGING for sensor '" + tmp_buf_2 + "' done");
+                pm.info("logging for " + tmp_buf_2 + " done");
             },
             nullptr, false);
     }
@@ -43,7 +48,7 @@ void logging() {
             LOG3, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_3 = selectFromMarkerToMarker(logging_value_names_list, ",", 2);
                 deleteOldDate("log." + tmp_buf_3 + ".txt", jsonReadInt(configOptionJson, tmp_buf_3 + "_c"), jsonReadStr(configLiveJson, tmp_buf_3));
-                Serial.println("[I] LOGGING for sensor '" + tmp_buf_3 + "' done");
+                pm.info("logging for " + tmp_buf_3 + " done");
             },
             nullptr, false);
     }
@@ -52,7 +57,7 @@ void logging() {
             LOG4, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_4 = selectFromMarkerToMarker(logging_value_names_list, ",", 3);
                 deleteOldDate("log." + tmp_buf_4 + ".txt", jsonReadInt(configOptionJson, tmp_buf_4 + "_c"), jsonReadStr(configLiveJson, tmp_buf_4));
-                Serial.println("[I] LOGGING for sensor '" + tmp_buf_4 + "' done");
+                pm.info("logging for " + tmp_buf_4 + " done");
             },
             nullptr, false);
     }
@@ -61,7 +66,7 @@ void logging() {
             LOG5, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_5 = selectFromMarkerToMarker(logging_value_names_list, ",", 4);
                 deleteOldDate("log." + tmp_buf_5 + ".txt", jsonReadInt(configOptionJson, tmp_buf_5 + "_c"), jsonReadStr(configLiveJson, tmp_buf_5));
-                Serial.println("[I] LOGGING for sensor '" + tmp_buf_5 + "' done");
+                pm.info("logging for " + tmp_buf_5 + " done");
             },
             nullptr, false);
     }
@@ -74,10 +79,10 @@ void deleteOldDate(const String filename, size_t max_lines_cnt, String date_to_a
     String log_date = readFile(filename, 5120);
     size_t lines_cnt = itemsCount(log_date, "\r\n");
 
-    Serial.printf("[I] log %s (%d lines)\n", filename.c_str(), lines_cnt);
+    pm.info("log " + filename + " (" + String(lines_cnt, DEC) + ")");
 
     if ((lines_cnt > max_lines_cnt + 1) || !lines_cnt) {
-        removeFile("/" + filename);
+        removeFile(filename);
         lines_cnt = 0;
     }
 
@@ -92,7 +97,6 @@ void deleteOldDate(const String filename, size_t max_lines_cnt, String date_to_a
             addFile(filename, getTimeUnix() + " " + date_to_add);
         }
     }
-    log_date = "";
 }
 
 //=========================================Выбор какие данные отправлять==================================================================
@@ -103,19 +107,18 @@ void choose_log_date_and_send() {
         sendLogData("log." + tmp + ".txt", tmp + "_ch");
         all_line = deleteBeforeDelimiter(all_line, ",");
     }
-    all_line = "";
 }
 //=========================================Отправка данных===================================================================================
 void sendLogData(String file, String topic) {
-    String log_date = readFile(file, 5000);
-    if (log_date != "Failed") {
+    String log_date = readFile(file, 5120);
+    if (log_date != "failed") {
         log_date.replace("\r\n", "\n");
         log_date.replace("\r", "\n");
         String buf = "{}";
         String json_array;
         String unix_time;
         String value;
-        while (log_date.length() != 0) {
+        while (log_date.length()) {
             String tmp = selectToMarker(log_date, "\n");
             log_date = deleteBeforeDelimiter(log_date, "\n");
             unix_time = selectToMarker(tmp, " ");
@@ -133,40 +136,18 @@ void sendLogData(String file, String topic) {
         value = "";
         log_date = "";
         json_array = "{\"status\":[" + json_array + "]}";
-        Serial.println(json_array);
-        
+        pm.info(json_array);
+
         MqttClient::publishChart(topic, json_array);
-        json_array = "";
-        printMemoryStatus("[I] send log date");
     }
 }
 
-/*
-  //----------------------------------------------
-    File configFile = SPIFFS.open("/" + file, "r");
-    if (!configFile) {
-      return;
-    }
-    configFile.seek(0, SeekSet); //поставим курсор в начало файла
-    while (configFile.position() != configFile.size()) {
-      String tmp = configFile.readStringUntil('\r\n');
-      String unix_time = selectToMarker (tmp, " ");
-      String value = deleteBeforeDelimiter(tmp, " ");
-      String final_line = "{\"status\":{\"x\":" + unix_time + ",\"y1\":" + value + "}}";
-      //Serial.println(final_line);
-      sendCHART(topic, final_line);
-    }
-    getMemoryLoad("[I]  after send log date");
-*/
-
-//=========================================Очистка данных===================================================================================
 void clean_log_date() {
     String all_line = logging_value_names_list;
-    while (all_line.length() != 0) {
+    while (all_line.length()) {
         String tmp = selectToMarker(all_line, ",");
-        removeFile("/log." + tmp + ".txt");
+        removeFile("log." + tmp + ".txt");
         all_line = deleteBeforeDelimiter(all_line, ",");
     }
-    all_line = "";
 }
 #endif

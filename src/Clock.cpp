@@ -6,7 +6,7 @@ static const char* MODULE = "Clock";
 
 void startTimeSync() {
     if (!hasTimeSynced()) {
-        pm.info("Start syncing");
+        pm.info("Start sync");
         reconfigTime();
     }
 }
@@ -42,7 +42,7 @@ void reconfigTime() {
     while (!hasTimeSynced() && i < 4) {
         Serial.print(".");
         i++;
-        delay(300);
+        delay(30);
     }
 #endif
 

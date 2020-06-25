@@ -28,7 +28,7 @@ time_t getSystemTime() {
 }
 
 bool hasTimeSynced() {
-    time_t now = time(nullptr);
+    unsigned long now = time(nullptr);
     return now > millis();
 }
 

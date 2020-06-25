@@ -1,5 +1,5 @@
-dhtT t 2 dht22 Температура#DHT,#t°C Датчики any-data 1
-dhtH h 2 dht22 Влажность#DHT,#t°C Датчики any-data 2
+dhtT t 2 dht22 Температура#DHT,#t°C Датчики anydata 1
+dhtH h 2 dht22 Влажность#DHT,#t°C Датчики anydata 2
 dhtComfort Степень#комфорта: Датчики 3
 dhtPerception Восприятие: Датчики 4
 dhtDewpoint Точка#росы: Датчики 5
