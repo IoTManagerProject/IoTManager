@@ -1,6 +1,10 @@
 #include "Utils/SysUtils.h"
 
-#include "Utils/StringUtils.h"
+#include "Global.h"
+
+const String getUniqueId(const char* name) {
+    return String(name) + getMacAddress();
+}
 
 const String getChipId() {
     String res;
@@ -61,6 +65,19 @@ String getHeapStats() {
     return buf;
 }
 #endif
+
+const String getMacAddress() {
+    uint8_t mac[6];
+    char buf[13] = {0};
+#if defined(ESP8266)
+    WiFi.macAddress(mac);
+    sprintf(buf, MACSTR, MAC2STR(mac));
+#else
+    esp_read_mac(mac, ESP_MAC_WIFI_STA);
+    sprintf(buf, MACSTR, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+#endif
+    return String(buf);
+}
 
 //===================================================================
 /*

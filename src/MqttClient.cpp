@@ -9,6 +9,7 @@ namespace MqttClient {
 // Errors
 int wifi_lost_error = 0;
 int mqtt_lost_error = 0;
+bool connected = false;
 
 // Session params
 String mqttPrefix;
@@ -22,14 +23,20 @@ void init() {
         [&](void*) {
             if (isNetworkActive()) {
                 if (mqtt.connected()) {
-                    pm.info("OK");
-                    setLedStatus(LED_OFF);
+                    if (!connected) {
+                        pm.info("OK");
+                        setLedStatus(LED_OFF);
+                        connected = true;
+                    }
                 } else {
                     connect();
                     if (!just_load) mqtt_lost_error++;
                 }
             } else {
-                pm.error("connection lost");
+                if (connected) {
+                    pm.error("connection lost");
+                    connected = false;
+                }
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
                 wifi_lost_error++;
                 startAPMode();
@@ -66,9 +73,6 @@ void subscribe() {
 }
 
 boolean connect() {
-    if (!isNetworkActive()) {
-        return false;
-    }
     pm.info("connect");
 
     String addr = jsonReadStr(configSetupJson, "mqttServer");
