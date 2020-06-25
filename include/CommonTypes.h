@@ -41,7 +41,7 @@ enum LedStatus_t {
 };
 
 enum ConfigType_t {
-    CT_MACRO,
+    CT_CONFIG,
     CT_SCENARIO
 };
 

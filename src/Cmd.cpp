@@ -13,6 +13,8 @@ Servo myServo1;
 Servo myServo2;
 SoftwareSerial *mySerial = nullptr;
 
+void getData();
+
 void CMD_init() {
     sCmd.addCommand("button", button);
     sCmd.addCommand("buttonSet", buttonSet);
@@ -97,47 +99,50 @@ void CMD_init() {
     sCmd.addCommand("firmwareUpdate", firmwareUpdate);
     sCmd.addCommand("firmwareVersion", firmwareVersion);
 
+    sCmd.addCommand("getData", getData);
+
     handle_time_init();
 }
 
 //==========================================================================================================
 //==========================================Модуль кнопок===================================================
 void button() {
-    String button_number = sCmd.next();
-    String button_param = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String start_state = sCmd.next();
-    String page_number = sCmd.next();
+    pm.info("create 'button'");
+    String number = sCmd.next();
+    String param = sCmd.next();
+    String widget = sCmd.next();
+    String page = sCmd.next();
+    String state = sCmd.next();
+    String pageNumber = sCmd.next();
 
-    jsonWriteStr(configOptionJson, "button_param" + button_number, button_param);
-    jsonWriteStr(configLiveJson, "button" + button_number, start_state);
+    jsonWriteStr(configOptionJson, "button_param" + number, param);
+    jsonWriteStr(configLiveJson, "button" + number, state);
 
-    if (isDigitStr(button_param)) {
-        pinMode(button_param.toInt(), OUTPUT);
-        digitalWrite(button_param.toInt(), start_state.toInt());
+    if (isDigitStr(param)) {
+        pinMode(param.toInt(), OUTPUT);
+        digitalWrite(param.toInt(), state.toInt());
     }
 
-    if (button_param == "scen") {
-        jsonWriteStr(configSetupJson, "scen", start_state);
-        Scenario_init();
+    if (param == "scen") {
+        jsonWriteStr(configSetupJson, "scen", state);
+        loadScenario();
         saveConfig();
     }
 
-    if (button_param.indexOf("line") != -1) {
-        String str = button_param;
-        while (str.length() != 0) {
+    if (param.indexOf("line") != -1) {
+        String str = param;
+        while (str.length()) {
             if (str == "") return;
             String tmp = selectToMarker(str, ",");            //line1,
             String number = deleteBeforeDelimiter(tmp, "e");  //1,
             number.replace(",", "");
             Serial.println(number);
             int number_int = number.toInt();
-            scenario_line_status[number_int] = start_state.toInt();
+            scenario_line_status[number_int] = state.toInt();
             str = deleteBeforeDelimiter(str, ",");
         }
     }
-    createWidget(widget_name, page_name, page_number, "widgets/widget.toggle.json", "button" + button_number);
+    createWidget(widget, page, pageNumber, "toggle", "button" + number);
 }
 
 void buttonSet() {
@@ -151,7 +156,7 @@ void buttonSet() {
 
     if (button_param == "scen") {
         jsonWriteStr(configSetupJson, "scen", button_state);
-        Scenario_init();
+        loadScenario();
         saveConfig();
     }
 
@@ -187,6 +192,7 @@ void buttonChange() {
     }
     order_loop += "buttonSet " + button_number + " " + current_state + ",";
     jsonWriteStr(configLiveJson, "button" + button_number, current_state);
+
     MqttClient::publishStatus("button" + button_number, current_state);
 }
 
@@ -221,7 +227,7 @@ void pwm() {
     //analogWriteFreq(32000);
     jsonWriteStr(configLiveJson, "pwm" + pwm_number, start_state);
 
-    createWidget(widget_name, page_name, page_number, "widgets/widget.range.json", "pwm" + pwm_number);
+    createWidget(widget_name, page_name, page_number, "range", "pwm" + pwm_number);
 }
 
 void pwmSet() {
@@ -290,7 +296,7 @@ void inputDigit() {
     String start_state = sCmd.next();
     String page_number = sCmd.next();
     jsonWriteStr(configLiveJson, "digit" + number, start_state);
-    createWidget(widget_name, page_name, page_number, "widgets/widget.inputNum.json", "digit" + number);
+    createWidget(widget_name, page_name, page_number, "inputNum", "digit" + number);
 }
 
 void digitSet() {
@@ -312,7 +318,7 @@ void inputTime() {
     String start_state = sCmd.next();
     String page_number = sCmd.next();
     jsonWriteStr(configLiveJson, "time" + number, start_state);
-    createWidget(widget_name, page_name, page_number, "widgets/widget.inputTime.json", "time" + number);
+    createWidget(widget_name, page_name, page_number, "inputTime", "time" + number);
 }
 
 void timeSet() {
@@ -342,7 +348,7 @@ void text() {
     String page_name = sCmd.next();
     String page_number = sCmd.next();
 
-    createWidget(widget_name, page_name, page_number, "widgets/widget.anyData.json", "text" + number);
+    createWidget(widget_name, page_name, page_number, "anydata", "text" + number);
 }
 
 void textSet() {
@@ -475,7 +481,7 @@ void servo_() {
 
     jsonWriteStr(configLiveJson, "servo" + servo_number, start_state);
 
-    createWidgetParam(widget_name, page_name, page_number, "widgets/widget.range.json", "servo" + servo_number, "min", min_value, "max", max_value, "k", "1");
+    createWidgetParam(widget_name, page_name, page_number, "range", "servo" + servo_number, "min", min_value, "max", max_value, "k", "1");
 }
 
 void servoSet() {
@@ -545,6 +551,14 @@ void serialBegin() {
     });
 }
 
+void getData() {
+    String param = sCmd.next();
+    String res = param.length() ? jsonReadStr(configLiveJson, param) : configLiveJson;
+    if (term) {
+        term->println(res.c_str());
+    }
+}
+
 void serialWrite() {
     String payload = sCmd.next();
     if (term) {
@@ -576,11 +590,13 @@ void firmwareUpdate() {
 }
 
 void firmwareVersion() {
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String page_number = sCmd.next();
+    String widget = sCmd.next();
+    String page = sCmd.next();
+    String pageNumber = sCmd.next();
+
     jsonWriteStr(configLiveJson, "firmver", FIRMWARE_VERSION);
-    createWidgetByType(widget_name, page_name, page_number, "any-data", "firmver");
+
+    createWidget(widget, page, pageNumber, "anydata", "firmver");
 }
 
 void addCommandLoop(const String &cmdStr) {
@@ -594,35 +610,33 @@ void loopCmd() {
     if (order_loop.length()) {
         String tmp = selectToMarker(order_loop, ",");  //выделяем первую команду rel 5 1,
         sCmd.readStr(tmp);                             //выполняем
-        Serial.println("[ORDER] => " + order_loop);
+        pm.info("do: " + order_loop);
         order_loop = deleteBeforeDelimiter(order_loop, ",");  //осекаем
     }
 }
 
-void txtExecution(String file) {
-    String command_all = readFile(file, 2048) + "\r\n";
+void fileExecute(const String &filename) {
+    String cmdStr = readFile(filename, 2048);
+    cmdStr += "\r\n";
+    cmdStr.replace("\r\n", "\n");
+    cmdStr.replace("\r", "\n");
 
-    command_all.replace("\r\n", "\n");
-    command_all.replace("\r", "\n");
-
-    while (command_all.length() != 0) {
-        String tmp = selectToMarker(command_all, "\n");
-        sCmd.readStr(tmp);
-        command_all = deleteBeforeDelimiter(command_all, "\n");
+    while (cmdStr.length() != 0) {
+        String buf = selectToMarker(cmdStr, "\n");
+        sCmd.readStr(buf);
+        cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
     }
-    command_all = "";
 }
 
-void stringExecution(String str) {
-    str = str + "\r\n";
+void stringExecute(String &cmdStr) {
+    cmdStr = cmdStr + "\r\n";
 
-    str.replace("\r\n", "\n");
-    str.replace("\r", "\n");
+    cmdStr.replace("\r\n", "\n");
+    cmdStr.replace("\r", "\n");
 
-    while (str.length() != 0) {
-        String tmp = selectToMarker(str, "\n");
-        sCmd.readStr(tmp);
-
-        str = deleteBeforeDelimiter(str, "\n");
+    while (cmdStr.length()) {
+        String buf = selectToMarker(cmdStr, "\n");
+        sCmd.readStr(buf);
+        cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
     }
 }
