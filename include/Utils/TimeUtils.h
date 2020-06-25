@@ -1,16 +1,14 @@
 #pragma once
-
-#include <Arduino.h>
 #ifdef ESP8266
-#include <TZ.h>
+#include <time.h>
 #endif
-
-void Time_Init();
+#include <Arduino.h>
 
 /*
 * Получение текущего времени
 */
 String getTime();
+
 /*
 * Получаем время в формате linux gmt
 */
@@ -36,11 +34,15 @@ int timeToMin(String Time);
 const String prettyMillis(unsigned long time_ms = millis());
 
 /*
-* Время (мс) прошедщее с @simce
+* Время (мс) прошедщее с @since
 */
 unsigned long millis_since(unsigned long sinse);
 
 /*
-* Интерввал времени (мс) между @start и @fimish 
+* Интерввал времени (мс) между @start и @finish 
 */
 unsigned long millis_passed(unsigned long start, unsigned long finish);
+
+int getOffsetInSeconds(int timezone);
+
+int getOffsetInMinutes(int timezone);

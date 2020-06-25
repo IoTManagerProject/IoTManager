@@ -9,8 +9,7 @@ class Clock {
     const char* MODULE = "Clock";
 
    public:
-    Clock() : _timezone{0}, _ntp{}, _hasSynced{false}, _configured{false} {
-    }
+    Clock() : _timezone{0}, _hasSynced{false}, _configured{false} {}
 
     bool hasSync() {
         if (!_hasSynced) {
@@ -42,7 +41,7 @@ class Clock {
     }
 
     void setupSntp() {
-        int tzs = getBiasInSeconds();
+        int tzs = getOffsetInSeconds(_timezone);
         int tzh = tzs / 3600;
         tzs -= tzh * 3600;
         int tzm = tzs / 60;
@@ -61,36 +60,23 @@ class Clock {
     //         i++;
     //         delay(1000);
     //     }
-    // #endif
+    // #endifr
 
     bool hasTimeSynced() {
-        int uptime = millis() / 1000;
-        return getSystemTime() > uptime;
+        return getSystemTime() > 30000;
     }
 
     time_t getSystemTime() {
         timeval tv{0, 0};
-        timezone tz = getTimeZone(getBiasInMinutes());
-        time_t epoch = 0;
+        timezone tz = timezone{getOffsetInMinutes(_timezone), 0};
         if (gettimeofday(&tv, &tz) != -1) {
-            epoch = tv.tv_sec;
+            _epoch = tv.tv_sec;
         }
-        return epoch + getBiasInSeconds();
-    }
-
-    int getBiasInSeconds() {
-        return getBiasInMinutes() * 60;
-    }
-
-    int getBiasInMinutes() {
-        return _timezone * 60;
-    }
-
-    const timezone getTimeZone(int minutes) {
-        return timezone{minutes, 0};
+        return _epoch;
     }
 
    private:
+    time_t _epoch;
     int _timezone;
     String _ntp;
     bool _hasSynced;

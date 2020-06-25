@@ -2,6 +2,7 @@
 
 #include "HttpServer.h"
 #include "Bus/BusScanner.h"
+#include "Utils/Timings.h"
 
 void not_async_actions();
 
@@ -84,22 +85,27 @@ void saveConfig() {
     writeFile(String("config.json"), configSetupJson);
 }
 
+Timings metric;
+
 void loop() {
 #ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.handle();
 #endif
-
 #ifdef WS_enable
     ws.cleanupClients();
 #endif
-
+    metric.add(MT_ONE);
     not_async_actions();
 
+    metric.add(MT_TWO);
     MqttClient::loop();
 
     loopCmd();
+
     loopButton();
+
     loopScenario();
+
 #ifdef UDP_ENABLED
     loopUdp();
 #endif
@@ -107,6 +113,12 @@ void loop() {
     loopSerial();
 
     ts.update();
+
+    if (metric._counter > 100000) {
+        metric.print();
+    } else {
+        metric.count();
+    }
 }
 
 void not_async_actions() {
