@@ -3,14 +3,13 @@
 #include "Utils/TimeUtils.h"
 #include "Utils/PrintMessage.h"
 
-#include "time.h"
+#include "TZ.h"
 
 class Clock {
     const char* MODULE = "Clock";
 
    public:
-    Clock() : _timezone{0}, _ntp{}, _hasSynced{false}, _configured{false} {
-    }
+    Clock() : _timezone{0}, _hasSynced{false}, _configured{false} {}
 
     bool hasSync() {
         if (!_hasSynced) {
@@ -19,23 +18,12 @@ class Clock {
         return _hasSynced;
     }
 
-    void
-
-    setNtpPool(String ntp) {
+    void setNtpPool(String ntp) {
         _ntp = ntp;
     }
 
     void setTimezone(int timezone) {
         _timezone = timezone;
-    }
-
-    time_t getSystemTime() {
-        timeval tv{0, 0};
-        timezone tz = getTimeZone(getBiasInMinutes());
-        time_t epoch = 0;
-        if (gettimeofday(&tv, &tz) != -1)
-            epoch = tv.tv_sec;
-        return epoch;
     }
 
     void startSync() {
@@ -53,7 +41,7 @@ class Clock {
     }
 
     void setupSntp() {
-        int tzs = getBiasInSeconds();
+        int tzs = getOffsetInSeconds(_timezone);
         int tzh = tzs / 3600;
         tzs -= tzh * 3600;
         int tzm = tzs / 60;
@@ -72,26 +60,23 @@ class Clock {
     //         i++;
     //         delay(1000);
     //     }
-    // #endif
-   private:
+    // #endifr
+
     bool hasTimeSynced() {
-        unsigned long now = time(nullptr);
-        return now > millis();
+        return getSystemTime() > 30000;
     }
 
-    int getBiasInSeconds() {
-        return getBiasInMinutes() * 60;
-    }
-
-    int getBiasInMinutes() {
-        return _timezone * 60;
-    }
-
-    const timezone getTimeZone(int minutes) {
-        return timezone{minutes, 0};
+    time_t getSystemTime() {
+        timeval tv{0, 0};
+        timezone tz = timezone{getOffsetInMinutes(_timezone), 0};
+        if (gettimeofday(&tv, &tz) != -1) {
+            _epoch = tv.tv_sec;
+        }
+        return _epoch;
     }
 
    private:
+    time_t _epoch;
     int _timezone;
     String _ntp;
     bool _hasSynced;

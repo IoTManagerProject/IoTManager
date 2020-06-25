@@ -1,7 +1,8 @@
 #include "Global.h"
 
 #include "HttpServer.h"
-#include "Utils/i2c_bus.h"
+#include "Bus/BusScanner.h"
+#include "Utils/Timings.h"
 
 void not_async_actions();
 
@@ -48,7 +49,7 @@ void setup() {
     telemetry_init();
 
     pm.info("Updater");
-    init_updater();
+    initUpdater();
 
     pm.info("HttpServer");
     HttpServer::init();
@@ -84,22 +85,27 @@ void saveConfig() {
     writeFile(String("config.json"), configSetupJson);
 }
 
+Timings metric;
+
 void loop() {
 #ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.handle();
 #endif
-
 #ifdef WS_enable
     ws.cleanupClients();
 #endif
-
+    metric.add(MT_ONE);
     not_async_actions();
 
+    metric.add(MT_TWO);
     MqttClient::loop();
 
     loopCmd();
+
     loopButton();
+
     loopScenario();
+
 #ifdef UDP_ENABLED
     loopUdp();
 #endif
@@ -107,6 +113,12 @@ void loop() {
     loopSerial();
 
     ts.update();
+
+    if (metric._counter > 100000) {
+        metric.print();
+    } else {
+        metric.count();
+    }
 }
 
 void not_async_actions() {
@@ -114,24 +126,27 @@ void not_async_actions() {
         MqttClient::reconnect();
         mqttParamsChanged = false;
     }
-    do_upgrade_url();
-    do_upgrade();
+    getLastVersion();
+    flashUpgrade();
 
 #ifdef UDP_ENABLED
     do_udp_data_parse();
     do_mqtt_send_settings_to_udp();
 #endif
 
-    if (i2c_scanning) {
-        do_i2c_scanning();
-        i2c_scanning = false;
+    if (busScanFlag) {
+        String res = "";
+        BusScanner* scanner = BusScannerFactory::get(res, busToScan);
+        scanner->scan();
+        jsonWriteStr(configLiveJson, BusScannerFactory::label(busToScan), res);
+        busScanFlag = false;
     }
 
-    if (fscheck_flag) {
+    if (fsCheckFlag) {
         String buf;
         do_fscheck(buf);
         jsonWriteStr(configLiveJson, "fscheck", buf);
-        fscheck_flag = false;
+        fsCheckFlag = false;
     }
 }
 

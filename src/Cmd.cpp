@@ -606,15 +606,6 @@ void addCommandLoop(const String &cmdStr) {
     }
 }
 
-void loopCmd() {
-    if (order_loop.length()) {
-        String tmp = selectToMarker(order_loop, ",");  //выделяем первую команду rel 5 1,
-        sCmd.readStr(tmp);                             //выполняем
-        pm.info("do: " + order_loop);
-        order_loop = deleteBeforeDelimiter(order_loop, ",");  //осекаем
-    }
-}
-
 void fileExecute(const String &filename) {
     String cmdStr = readFile(filename, 2048);
     cmdStr += "\r\n";
@@ -638,5 +629,14 @@ void stringExecute(String &cmdStr) {
         String buf = selectToMarker(cmdStr, "\n");
         sCmd.readStr(buf);
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
+    }
+}
+
+void loopCmd() {
+    if (order_loop.length()) {
+        String tmp = selectToMarker(order_loop, ",");  //выделяем первую команду rel 5 1,
+        sCmd.readStr(tmp);                             //выполняем
+        pm.info("do: " + order_loop);
+        order_loop = deleteBeforeDelimiter(order_loop, ",");  //осекаем
     }
 }
