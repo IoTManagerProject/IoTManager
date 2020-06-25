@@ -118,7 +118,8 @@ const String readFile(const String& filename, size_t max_size) {
 }
 
 const String getFileSize(const String filename) {
-    auto file = LittleFS.open(filepath(filename), "r");
+    String filepath(filename);
+    auto file = LittleFS.open(filepath, "r");
     if (!file) {
         return "failed";
     }
