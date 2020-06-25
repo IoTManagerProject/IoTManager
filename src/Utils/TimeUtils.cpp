@@ -4,6 +4,7 @@
 #include "Utils\StringUtils.h"
 
 #define ONE_MINUTE_s 60
+#define ONE_HOUR_m 60
 #define ONE_HOUR_s 60 * ONE_MINUTE_s
 
 time_t t;
@@ -13,22 +14,20 @@ String getTimeUnix() {
     t = time(NULL);
     tm = localtime(&t);
     Serial.printf("%04d/%02d/%02d(%s) %02d:%02d:%02d\n",
-                  tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
-                  wd[tm->tm_wday],
+                  tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, wd[tm->tm_wday],
                   tm->tm_hour, tm->tm_min, tm->tm_sec);
     delay(1000);
     time_t now = time(nullptr);
     if (now < 30000) {
         return "failed";
-    } else {
-        return String(now);
     }
+    return String(now);
 }
 
 boolean getUnixTimeStr(String& res) {
     time_t now = time(nullptr);
     res = String(now);
-    return now < 30000;
+    return now > 30000;
 }
 
 String getTime() {
@@ -157,4 +156,12 @@ unsigned long millis_passed(unsigned long start, unsigned long finish) {
         }
     }
     return result;
+}
+
+int getOffsetInSeconds(int timezone) {
+    return getOffsetInMinutes(timezone) * ONE_MINUTE_s;
+}
+
+int getOffsetInMinutes(int timezone) {
+    return timezone * ONE_HOUR_m;
 }
