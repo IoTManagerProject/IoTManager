@@ -103,12 +103,13 @@ void CMD_init() {
 //==========================================================================================================
 //==========================================Модуль кнопок===================================================
 void button() {
+    pm.info("create button");
     String button_number = sCmd.next();
     String button_param = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
+    String widget = sCmd.next();
+    String page = sCmd.next();
     String start_state = sCmd.next();
-    String page_number = sCmd.next();
+    String pageNumber = sCmd.next();
 
     jsonWriteStr(configOptionJson, "button_param" + button_number, button_param);
     jsonWriteStr(configLiveJson, "button" + button_number, start_state);
@@ -137,7 +138,7 @@ void button() {
             str = deleteBeforeDelimiter(str, ",");
         }
     }
-    createWidget(widget_name, page_name, page_number, "toggle", "button" + button_number);
+    createWidget(widget, page, pageNumber, "toggle", "button" + button_number);
 }
 
 void buttonSet() {

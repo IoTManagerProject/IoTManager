@@ -5,7 +5,7 @@ static const char* MODULE = "Widget";
 const String getWidgetFile(const String& name);
 
 bool loadWidget(const String& filename, String& buf) {
-    buf = readFile(filename, 2048);
+    buf = readFile(getWidgetFile(filename), 2048);
     bool res = !(buf == "Failed" || buf == "Large");
     if (!res) {
         pm.error("on load" + filename);
