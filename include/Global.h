@@ -21,7 +21,6 @@
 #include "Utils\JsonUtils.h"
 #include "Utils\StringUtils.h"
 #include "Utils\SysUtils.h"
-#include "Utils\TimeUtils.h"
 #include "Utils\PrintMessage.h"
 #include "Utils\WiFiUtils.h"
 
@@ -44,6 +43,8 @@
 extern AsyncWebSocket ws;
 //extern AsyncEventSource events;
 #endif
+
+extern Clock* rtc;
 
 extern TickerScheduler ts;
 
@@ -107,6 +108,7 @@ extern boolean mqttParamsChanged;
 extern boolean udp_data_parse;
 extern boolean mqtt_send_settings_to_udp;
 extern boolean i2c_scanning;
+extern boolean fscheck_flag;
 
 extern int sensors_reading_map[15];
 
@@ -143,19 +145,15 @@ extern void mqttOrderSend();
 extern void httpOrderSend();
 extern void firmwareVersion();
 extern void firmwareUpdate();
-extern void Scenario_init();
-extern void txtExecution(String file);
-extern void stringExecution(String str);
+extern void loadScenario();
 
-// i2c_bu
-extern void do_i2c_scanning();
-extern String i2c_scan();
-
+extern void fileExecute(const String& filename);
+extern void stringExecute(String& cmdStr);
 // Init
 extern void loadConfig();
 extern void All_init();
 extern void statistics_init();
-extern void Scenario_init();
+extern void loadScenario();
 extern void Device_init();
 extern void prsets_init();
 extern void up_time();
@@ -168,7 +166,6 @@ extern void choose_log_date_and_send();
 
 // Main
 extern void setChipId();
-extern void printMemoryStatus(String text);
 extern void saveConfig();
 extern String getURL(const String& urls);
 
@@ -232,9 +229,10 @@ extern int readTimer(int number);
 extern void init_updater();
 
 // widget
-extern void createWidget(String widget_name, String page_name, String page_number, String file, String topic);
+
+extern void createWidgetByType(String widget_name, String page_name, String page_number, String file, String topic);
 extern void createWidgetParam(String widget_name, String page_name, String page_number, String file, String topic, String name1, String param1, String name2, String param2, String name3, String param3);
-extern void createWidgetByType(String widget_name, String page_name, String page_number, String type, String topik);
+extern void createWidget(String widget_name, String page_name, String page_number, String type, String topik);
 extern void createChart(String widget_name, String page_name, String page_number, String file, String topic, String maxCount);
 
 // PushingBox
@@ -244,9 +242,6 @@ extern void pushControl();
 extern void UDP_init();
 extern void do_udp_data_parse();
 extern void do_mqtt_send_settings_to_udp();
-
-// WebServer
-extern void Web_server_init();
 
 // iot_firmware
 extern void addCommandLoop(const String& cmdStr);

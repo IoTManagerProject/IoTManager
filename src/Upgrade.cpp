@@ -1,4 +1,5 @@
 #include "Global.h"
+
 void init_updater() {
 #ifdef ESP8266
     if (WiFi.status() == WL_CONNECTED) last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
@@ -28,8 +29,9 @@ void upgrade_firmware() {
     String scenario_for_update;
     String config_for_update;
     String configSetup_for_update;
-    scenario_for_update = readFile("100s.txt", 4000);
-    config_for_update = readFile("100с.txt", 4000);
+
+    scenario_for_update = readFile(String(DEVICE_SCENARIO_FILE), 4000);
+    config_for_update = readFile(String(DEVICE_CONFIG_FILE), 4000);
     configSetup_for_update = configSetupJson;
 
     Serial.println("Start upgrade SPIFFS, please wait...");
@@ -46,8 +48,8 @@ void upgrade_firmware() {
 #endif
 
     if (ret == HTTP_UPDATE_OK) {
-        writeFile("100s.txt", scenario_for_update);
-        writeFile("100с.txt", config_for_update);
+        writeFile(String(DEVICE_SCENARIO_FILE), scenario_for_update);
+        writeFile(String(DEVICE_CONFIG_FILE), config_for_update);
         writeFile("config.json", configSetup_for_update);
         saveConfig();
 

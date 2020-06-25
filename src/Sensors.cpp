@@ -81,7 +81,7 @@ void sensors_init() {
 //=========================================================================================================================================
 //=========================================Модуль измерения уровня в баке==================================================================
 #ifdef LEVEL_ENABLED
-//levelPr p 14 12 Вода#в#баке,#% Датчики fill-gauge 125 20 1
+//levelPr p 14 12 Вода#в#баке,#% Датчики fillgauge 125 20 1
 void levelPr() {
     String value_name = sCmd.next();
     String trig = sCmd.next();
@@ -102,7 +102,7 @@ void levelPr() {
     createWidgetByType(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[0] = 1;
 }
-//ultrasonicCm cm 14 12 Дистанция,#см Датчики fill-gauge 1
+//ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
 void ultrasonicCm() {
     String value_name = sCmd.next();
     String trig = sCmd.next();
@@ -399,7 +399,7 @@ void dhtC() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
-    createWidgetByType(widget_name, page_name, page_number, "any-data", "dhtComfort");
+    createWidgetByType(widget_name, page_name, page_number, "anydata", "dhtComfort");
     sensors_reading_map[7] = 1;
 }
 
@@ -459,7 +459,7 @@ void dhtD() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
-    createWidgetByType(widget_name, page_name, page_number, "any-data", "dhtDewpoint");
+    createWidgetByType(widget_name, page_name, page_number, "anydata", "dhtDewpoint");
     sensors_reading_map[8] = 1;
 }
 
