@@ -1,7 +1,7 @@
 #include "Global.h"
 
 #include "HttpServer.h"
-#include "Utils/i2c_bus.h"
+#include "Bus/BusScanner.h"
 
 void not_async_actions();
 
@@ -48,7 +48,7 @@ void setup() {
     telemetry_init();
 
     pm.info("Updater");
-    init_updater();
+    initUpdater();
 
     pm.info("HttpServer");
     HttpServer::init();
@@ -114,24 +114,27 @@ void not_async_actions() {
         MqttClient::reconnect();
         mqttParamsChanged = false;
     }
-    do_upgrade_url();
-    do_upgrade();
+    getLastVersion();
+    flashUpgrade();
 
 #ifdef UDP_ENABLED
     do_udp_data_parse();
     do_mqtt_send_settings_to_udp();
 #endif
 
-    if (i2c_scanning) {
-        do_i2c_scanning();
-        i2c_scanning = false;
+    if (busScanFlag) {
+        String res = "";
+        BusScanner* scanner = BusScannerFactory::get(res, busToScan);
+        scanner->scan();
+        jsonWriteStr(configLiveJson, BusScannerFactory::label(busToScan), res);
+        busScanFlag = false;
     }
 
-    if (fscheck_flag) {
+    if (fsCheckFlag) {
         String buf;
         do_fscheck(buf);
         jsonWriteStr(configLiveJson, "fscheck", buf);
-        fscheck_flag = false;
+        fsCheckFlag = false;
     }
 }
 
