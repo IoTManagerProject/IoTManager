@@ -64,13 +64,16 @@ int enter_to_logging_counter;
 // Scenario
 int scenario_line_status[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
-String last_version = "";
+String lastVersion = "";
 
 // Async actions
 boolean upgrade_url = false;
 boolean upgrade = false;
+
 boolean mqttParamsChanged = false;
 boolean udp_data_parse = false;
 boolean mqtt_send_settings_to_udp = false;
-boolean i2c_scanning = false;
-boolean fscheck_flag = false;
+
+BusScanner_t busToScan;
+boolean busScanFlag = false;
+boolean fsCheckFlag = false;
