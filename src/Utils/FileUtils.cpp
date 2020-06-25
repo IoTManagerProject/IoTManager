@@ -15,27 +15,34 @@ bool fileSystemInit() {
     return true;
 }
 
-void removeFile(const String filename) {
-    if (!LittleFS.remove(filepath(filename))) {
-        pm.error("remove " + filename);
+void removeFile(const String& filename) {
+    String path = filepath(filename);
+    if (LittleFS.exists(path)) {
+        if (!LittleFS.remove(path)) {
+            pm.error("remove " + path);
+        }
+    } else {
+        pm.info("not exist" + path);
     }
 }
 
-File seekFile(const String filename, size_t position) {
-    auto file = LittleFS.open(filepath(filename), "r");
+File seekFile(const String& filename, size_t position) {
+    String path = filepath(filename);
+    auto file = LittleFS.open(path, "r");
     if (!file) {
-        pm.error("open " + filename);
+        pm.error("open " + path);
     }
     // поставим курсор в начало файла
     file.seek(position, SeekSet);
     return file;
 }
 
-String readFileString(const String filename, const String to_find) {
-    String res = "Failed";
-    auto file = LittleFS.open(filepath(filename), "r");
+const String readFileString(const String& filename, const String& to_find) {
+    String path = filepath(filename);
+    String res = "failed";
+    auto file = LittleFS.open(path, "r");
     if (!file) {
-        return "Failed";
+        return "failed";
     }
     if (file.find(to_find.c_str())) {
         res = file.readStringUntil('\n');
@@ -44,19 +51,21 @@ String readFileString(const String filename, const String to_find) {
     return res;
 }
 
-String addFile(const String filename, const String str) {
-    auto file = LittleFS.open(filepath(filename), "a");
+const String addFile(const String& filename, const String& str) {
+    String path = filepath(filename);
+    auto file = LittleFS.open(path, "a");
     if (!file) {
-        return "Failed";
+        return "failed";
     }
     file.println(str);
     file.close();
-    return "Sucсess";
+    return "sucсess";
 }
 
-bool copyFile(const String src, const String dst, bool overwrite) {
+bool copyFile(const String& src, const String& dst, bool overwrite) {
     String srcPath = filepath(src);
     String dstPath = filepath(dst);
+    pm.info("copy " + srcPath + " to " + dstPath);
     if (!LittleFS.exists(srcPath)) {
         pm.error("not exist: " + srcPath);
         return false;
@@ -81,35 +90,37 @@ bool copyFile(const String src, const String dst, bool overwrite) {
     return true;
 }
 
-String writeFile(const String filename, const String str) {
-    auto file = LittleFS.open(filepath(filename), "w");
+const String writeFile(const String& filename, const String& str) {
+    String path = filepath(filename);
+    auto file = LittleFS.open(path, "w");
     if (!file) {
-        return "Failed";
+        return "failed";
     }
     file.print(str);
     file.close();
-    return "Sucсess";
+    return "sucсess";
 }
 
-String readFile(const String filename, size_t max_size) {
-    auto file = LittleFS.open(filepath(filename), "r");
+const String readFile(const String& filename, size_t max_size) {
+    String path = filepath(filename);
+    auto file = LittleFS.open(path, "r");
     if (!file) {
-        return "Failed";
+        return "failed";
     }
     size_t size = file.size();
     if (size > max_size) {
         file.close();
-        return "Large";
+        return "large";
     }
     String temp = file.readString();
     file.close();
     return temp;
 }
 
-String getFileSize(const String filename) {
+const String getFileSize(const String filename) {
     auto file = LittleFS.open(filepath(filename), "r");
     if (!file) {
-        return "Failed";
+        return "failed";
     }
     size_t size = file.size();
     file.close();

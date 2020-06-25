@@ -1,10 +1,14 @@
 #include "Global.h"
 
 #include "HttpServer.h"
+#include "Utils/i2c_bus.h"
 
 void not_async_actions();
 
 static const char* MODULE = "Main";
+
+void do_fscheck(String& results) {
+}
 
 void setup() {
     WiFi.setAutoConnect(false);
@@ -73,7 +77,7 @@ void setup() {
 }
 
 void saveConfig() {
-    writeFile("config.json", configSetupJson);
+    writeFile(String("config.json"), configSetupJson);
 }
 
 void loop() {
@@ -114,7 +118,17 @@ void not_async_actions() {
     do_mqtt_send_settings_to_udp();
 #endif
 
-    do_i2c_scanning();
+    if (i2c_scanning) {
+        do_i2c_scanning();
+        i2c_scanning = false;
+    }
+
+    if (fscheck_flag) {
+        String buf;
+        do_fscheck(buf);
+        jsonWriteStr(configLiveJson, "fscheck", buf);
+        fscheck_flag = false;
+    }
 }
 
 String getURL(const String& urls) {

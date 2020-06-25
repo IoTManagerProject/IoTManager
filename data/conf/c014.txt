@@ -1,0 +1,5 @@
+dallas temp1 2 123456 Водонагреватель,#t°C Датчики anydata 1
+logging dallas 1 100 Температура Датчики 2
+
+//2 - номер пина датчика
+//варианты отображения: anydata, progress-round, progress-line, fillgauge

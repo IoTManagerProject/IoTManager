@@ -11,7 +11,7 @@ static const uint8_t MAX_PRESET = 21;
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
         preset = request->getParam("preset")->value().toInt();
-        return (preset >= MIN_PRESET && preset <= MAX_PRESET) || preset == 100;
+        return true;
     }
     return false;
 }
@@ -22,15 +22,13 @@ void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         uint8_t preset;
         if (parseRequestForPreset(request, preset)) {
-            pm.info("activate # " + String(preset, DEC) + "(" + getItemName(getPresetItem(preset)) + ")");
-            String srcMacro = preset == 21 ? "configs/100с.txt" : getPresetFile(preset, CT_MACRO);
-            String srcScenario = preset == 21 ? "configs/100s.txt" : getPresetFile(preset, CT_SCENARIO);
-            copyFile(srcMacro, "100с.txt");
-            copyFile(srcScenario, "100s.txt");
-
+            pm.info("activate #" + String(preset, DEC));
+            String configFile = DEVICE_CONFIG_FILE;
+            String scenarioFile = DEVICE_SCENARIO_FILE;
+            copyFile(getConfigFile(preset, CT_CONFIG), configFile);
+            copyFile(getConfigFile(preset, CT_SCENARIO), scenarioFile);
             Device_init();
-            Scenario_init();
-
+            loadScenario();
             request->redirect("/?set.device");
         }
 
@@ -45,18 +43,18 @@ void web_init() {
             if (value == "0") {
                 jsonWriteStr(configSetupJson, "scen", value);
                 saveConfig();
-                Scenario_init();
+                loadScenario();
             }
             if (value == "1") {
                 jsonWriteStr(configSetupJson, "scen", value);
                 saveConfig();
-                Scenario_init();
+                loadScenario();
             }
             request->send(200, "text/text", "OK");
         }
         //--------------------------------------------------------------------------------
         if (request->hasArg("sceninit")) {
-            Scenario_init();
+            loadScenario();
             request->send(200, "text/text", "OK");
         }
         //--------------------------------------------------------------------------------
@@ -72,12 +70,12 @@ void web_init() {
             if (value == "0") {
                 jsonWriteStr(configSetupJson, "udponoff", value);
                 saveConfig();
-                Scenario_init();
+                loadScenario();
             }
             if (value == "1") {
                 jsonWriteStr(configSetupJson, "udponoff", value);
                 saveConfig();
-                Scenario_init();
+                loadScenario();
             }
             request->send(200, "text/text", "OK");
         }
@@ -220,6 +218,11 @@ void web_init() {
         //==============================utilities settings=============================================
         if (request->hasArg("itoc")) {
             i2c_scanning = true;
+            request->redirect("/?set.utilities");
+        }
+
+        if (request->hasArg("fscheck")) {
+            fscheck_flag = true;
             request->redirect("/?set.utilities");
         }
     });

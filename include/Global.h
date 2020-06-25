@@ -107,6 +107,7 @@ extern boolean mqttParamsChanged;
 extern boolean udp_data_parse;
 extern boolean mqtt_send_settings_to_udp;
 extern boolean i2c_scanning;
+extern boolean fscheck_flag;
 
 extern int sensors_reading_map[15];
 
@@ -143,19 +144,15 @@ extern void mqttOrderSend();
 extern void httpOrderSend();
 extern void firmwareVersion();
 extern void firmwareUpdate();
-extern void Scenario_init();
-extern void txtExecution(String file);
-extern void stringExecution(String str);
+extern void loadScenario();
 
-// i2c_bu
-extern void do_i2c_scanning();
-extern String i2c_scan();
-
+extern void fileExecute(const String& filename);
+extern void stringExecute(String& cmdStr);
 // Init
 extern void loadConfig();
 extern void All_init();
 extern void statistics_init();
-extern void Scenario_init();
+extern void loadScenario();
 extern void Device_init();
 extern void prsets_init();
 extern void up_time();
@@ -244,9 +241,6 @@ extern void pushControl();
 extern void UDP_init();
 extern void do_udp_data_parse();
 extern void do_mqtt_send_settings_to_udp();
-
-// WebServer
-extern void Web_server_init();
 
 // iot_firmware
 extern void addCommandLoop(const String& cmdStr);
