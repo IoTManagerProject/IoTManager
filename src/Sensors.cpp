@@ -13,9 +13,10 @@ Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
 Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
 Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
 
-String perception(byte value);
+const String perceptionStr(byte value);
+const String comfortStr(ComfortState value);
+
 void bmp280T_reading();
-String get_comfort_status(ComfortState cf);
 
 void sensors_init() {
     ts.add(
@@ -240,9 +241,11 @@ void dallas() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     oneWire = new OneWire((uint8_t)pin.toInt());
+
     sensors.setOneWire(oneWire);
     sensors.begin();
     sensors.setResolution(12);
+
     createWidgetByType(widget_name, page_name, page_number, type, "dallas");
     sensors_reading_map[3] = 1;
 }
@@ -351,7 +354,7 @@ void dhtP_reading() {
         MqttClient::publishStatus("dhtPerception", String(dht.getStatusString()));
     } else {
         value = dht.computePerception(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
-        String final_line = perception(value);
+        String final_line = perceptionStr(value);
         jsonWriteStr(configLiveJson, "dhtPerception", final_line);
         eventGen("dhtPerception", "");
         MqttClient::publishStatus("dhtPerception", final_line);
@@ -361,7 +364,30 @@ void dhtP_reading() {
     }
 }
 
-String perception(byte value) {
+//dhtComfort Степень#комфорта: Датчики 3
+void dhtC() {
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String page_number = sCmd.next();
+    createWidgetByType(widget_name, page_name, page_number, "anydata", "dhtComfort");
+    sensors_reading_map[7] = 1;
+}
+
+void dhtC_reading() {
+    ComfortState cf;
+    if (dht.getStatus() != 0) {
+        MqttClient::publishStatus("dhtComfort", String(dht.getStatusString()));
+    } else {
+        dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
+        String final_line = comfortStr(cf);
+        jsonWriteStr(configLiveJson, "dhtComfort", final_line);
+        eventGen("dhtComfort", "");
+        MqttClient::publishStatus("dhtComfort", final_line);
+        Serial.println("[I] sensor 'dhtComfort' send date " + final_line);
+    }
+}
+
+const String perceptionStr(byte value) {
     String res;
     switch (value) {
         case 0:
@@ -386,7 +412,7 @@ String perception(byte value) {
             res = F("Очень неудобно");
             break;
         case 7:
-            res = F("Сильно неудобно, полный звиздец");
+            res = F("Невыносимо");
         default:
             res = F("Unknown");
             break;
@@ -394,64 +420,41 @@ String perception(byte value) {
     return res;
 }
 
-//dhtComfort Степень#комфорта: Датчики 3
-void dhtC() {
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String page_number = sCmd.next();
-    createWidgetByType(widget_name, page_name, page_number, "anydata", "dhtComfort");
-    sensors_reading_map[7] = 1;
-}
-
-void dhtC_reading() {
-    ComfortState cf;
-    if (dht.getStatus() != 0) {
-        MqttClient::publishStatus("dhtComfort", String(dht.getStatusString()));
-    } else {
-        dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
-        String final_line = get_comfort_status(cf);
-        jsonWriteStr(configLiveJson, "dhtComfort", final_line);
-        eventGen("dhtComfort", "");
-        MqttClient::publishStatus("dhtComfort", final_line);
-        Serial.println("[I] sensor 'dhtComfort' send date " + final_line);
-    }
-}
-
-String get_comfort_status(ComfortState cf) {
-    String comfortStatus;
-    switch (cf) {
+const String comfortStr(ComfortState value) {
+    String res;
+    switch (value) {
         case Comfort_OK:
-            comfortStatus = "Отлично";
+            res = F("Отлично");
             break;
         case Comfort_TooHot:
-            comfortStatus = "Очень жарко";
+            res = F("Очень жарко");
             break;
         case Comfort_TooCold:
-            comfortStatus = "Очень холодно";
+            res = F("Очень холодно");
             break;
         case Comfort_TooDry:
-            comfortStatus = "Очень сухо";
+            res = F("Очень сухо");
             break;
         case Comfort_TooHumid:
-            comfortStatus = "Очень влажно";
+            res = F("Очень влажно");
             break;
         case Comfort_HotAndHumid:
-            comfortStatus = "Жарко и влажно";
+            res = F("Жарко и влажно");
             break;
         case Comfort_HotAndDry:
-            comfortStatus = "Жарко и сухо";
+            res = F("Жарко и сухо");
             break;
         case Comfort_ColdAndHumid:
-            comfortStatus = "Холодно и влажно";
+            res = F("Холодно и влажно");
             break;
         case Comfort_ColdAndDry:
-            comfortStatus = "Холодно и сухо";
+            res = F("Холодно и сухо");
             break;
         default:
-            comfortStatus = "Неизвестно";
+            res = F("Неизвестно");
             break;
     };
-    return comfortStatus;
+    return res;
 }
 
 //dhtDewpoint Точка#росы: Датчики 5
