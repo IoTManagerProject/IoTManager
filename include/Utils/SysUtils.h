@@ -4,6 +4,6 @@
 
 const String getChipId();
 
-void printMemoryStatus(String text = "");
+const String printMemoryStatus();
 
-String getHeapStats();
+const String getHeapStats();

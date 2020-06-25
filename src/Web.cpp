@@ -11,7 +11,7 @@ static const uint8_t MAX_PRESET = 21;
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
         preset = request->getParam("preset")->value().toInt();
-        return preset >= MIN_PRESET && preset <= MAX_PRESET;
+        return true;
     }
     return false;
 }
@@ -22,15 +22,13 @@ void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         uint8_t preset;
         if (parseRequestForPreset(request, preset)) {
-            String srcMacro = preset == 21 ? "configs/100с.txt" : getPresetFile(preset, CT_MACRO);
-            String srcScenario = preset == 21 ? "configs/100s.txt" : getPresetFile(preset, CT_SCENARIO);
-            pm.info("activate " + getItemName(getPresetItem(preset)));
-            copyFile(srcMacro, "100с.txt");
-            copyFile(srcScenario, "100s.txt");
-
+            pm.info("activate #" + String(preset, DEC));
+            String configFile = DEVICE_CONFIG_FILE;
+            String scenarioFile = DEVICE_SCENARIO_FILE;
+            copyFile(getConfigFile(preset, CT_CONFIG), configFile);
+            copyFile(getConfigFile(preset, CT_SCENARIO), scenarioFile);
             Device_init();
-            Scenario_init();
-
+            loadScenario();
             request->redirect("/?set.device");
         }
 
@@ -45,18 +43,18 @@ void web_init() {
             if (value == "0") {
                 jsonWriteStr(configSetupJson, "scen", value);
                 saveConfig();
-                Scenario_init();
+                loadScenario();
             }
             if (value == "1") {
                 jsonWriteStr(configSetupJson, "scen", value);
                 saveConfig();
-                Scenario_init();
+                loadScenario();
             }
             request->send(200, "text/text", "OK");
         }
         //--------------------------------------------------------------------------------
         if (request->hasArg("sceninit")) {
-            Scenario_init();
+            loadScenario();
             request->send(200, "text/text", "OK");
         }
         //--------------------------------------------------------------------------------
@@ -72,12 +70,12 @@ void web_init() {
             if (value == "0") {
                 jsonWriteStr(configSetupJson, "udponoff", value);
                 saveConfig();
-                Scenario_init();
+                loadScenario();
             }
             if (value == "1") {
                 jsonWriteStr(configSetupJson, "udponoff", value);
                 saveConfig();
-                Scenario_init();
+                loadScenario();
             }
             request->send(200, "text/text", "OK");
         }
@@ -132,15 +130,17 @@ void web_init() {
         }
         //--------------------------------------------------------------------------------
         if (request->hasArg("timezone")) {
-            jsonWriteStr(configSetupJson, "timezone", request->getParam("timezone")->value());
+            String timezoneStr = request->getParam("timezone")->value();
+            jsonWriteStr(configSetupJson, "timezone", timezoneStr);
             saveConfig();
-            reconfigTime();
+            rtc->setTimezone(timezoneStr.toInt());
             request->send(200, "text/text", "OK");
         }
         if (request->hasArg("ntp")) {
-            jsonWriteStr(configSetupJson, "ntp", request->getParam("ntp")->value());
+            String ntpStr = request->getParam("ntp")->value();
+            jsonWriteStr(configSetupJson, "ntp", ntpStr);
             saveConfig();
-            reconfigTime();
+            rtc->setNtpPool(ntpStr);
             request->send(200, "text/text", "OK");
         }
         //--------------------------------------------------------------------------------
@@ -222,17 +222,26 @@ void web_init() {
             i2c_scanning = true;
             request->redirect("/?set.utilities");
         }
+
+        if (request->hasArg("fscheck")) {
+            fscheck_flag = true;
+            request->redirect("/?set.utilities");
+        }
     });
     //==============================upgrade settings=============================================
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         upgrade_url = true;
-        Serial.print("[I] Last firmware version: ");
-        Serial.println(last_version);
+        pm.info("firmware version: " + last_version);
         String tmp = "{}";
         int case_of_update;
 
-        if (WiFi.status() != WL_CONNECTED) last_version = "nowifi";
-        if (!FLASH_4MB) last_version = "less";
+        if (WiFi.status() != WL_CONNECTED) {
+            last_version = "nowifi";
+        }
+
+        if (!FLASH_4MB) {
+            last_version = "less";
+        }
 
         if (last_version == FIRMWARE_VERSION) case_of_update = 1;
         if (last_version != FIRMWARE_VERSION) case_of_update = 2;

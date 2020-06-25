@@ -1,8 +1,14 @@
 #include "Global.h"
 
+#include "HttpServer.h"
+#include "Utils/i2c_bus.h"
+
 void not_async_actions();
 
 static const char* MODULE = "Main";
+
+void do_fscheck(String& results) {
+}
 
 void setup() {
     WiFi.setAutoConnect(false);
@@ -44,16 +50,20 @@ void setup() {
     pm.info("Updater");
     init_updater();
 
-    pm.info("WebServer");
-    Web_server_init();
+    pm.info("HttpServer");
+    HttpServer::init();
 
     pm.info("WebAdmin");
     web_init();
 
-    pm.info("TimeSync");
+    pm.info("Clock");
+    rtc = new Clock();
+    rtc->setNtpPool(jsonReadStr(configSetupJson, "ntp"));
+    rtc->setTimezone(jsonReadStr(configSetupJson, "timezone").toInt());
+
     ts.add(
         TIME_SYNC, 30000, [&](void*) {
-            startTimeSync();
+            rtc->hasSync();
         },
         nullptr, true);
 
@@ -63,7 +73,7 @@ void setup() {
 #endif
     ts.add(
         TEST, 10000, [&](void*) {
-            printMemoryStatus();
+            pm.info(printMemoryStatus());
         },
         nullptr, true);
 
@@ -71,7 +81,7 @@ void setup() {
 }
 
 void saveConfig() {
-    writeFile("config.json", configSetupJson);
+    writeFile(String("config.json"), configSetupJson);
 }
 
 void loop() {
@@ -112,7 +122,17 @@ void not_async_actions() {
     do_mqtt_send_settings_to_udp();
 #endif
 
-    do_i2c_scanning();
+    if (i2c_scanning) {
+        do_i2c_scanning();
+        i2c_scanning = false;
+    }
+
+    if (fscheck_flag) {
+        String buf;
+        do_fscheck(buf);
+        jsonWriteStr(configLiveJson, "fscheck", buf);
+        fscheck_flag = false;
+    }
 }
 
 String getURL(const String& urls) {

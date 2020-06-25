@@ -1,4 +1,4 @@
-dallas 2 Водонагреватель,#t°C Термостат any-data 1
+dallas 2 Водонагреватель,#t°C Термостат anydata 1
 logging dallas 5 100 Температура Термостат 2
 inputDigit digit1 При#скольки#выключить? Термостат 40 3
 inputDigit digit2 При#скольки#включить? Термостат 20 4
