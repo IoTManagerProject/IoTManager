@@ -21,7 +21,6 @@
 #include "Utils\JsonUtils.h"
 #include "Utils\StringUtils.h"
 #include "Utils\SysUtils.h"
-#include "Utils\TimeUtils.h"
 #include "Utils\PrintMessage.h"
 #include "Utils\WiFiUtils.h"
 
@@ -44,6 +43,8 @@
 extern AsyncWebSocket ws;
 //extern AsyncEventSource events;
 #endif
+
+extern Clock* rtc;
 
 extern TickerScheduler ts;
 
@@ -165,7 +166,6 @@ extern void choose_log_date_and_send();
 
 // Main
 extern void setChipId();
-extern void printMemoryStatus(String text);
 extern void saveConfig();
 extern String getURL(const String& urls);
 
@@ -229,9 +229,10 @@ extern int readTimer(int number);
 extern void init_updater();
 
 // widget
-extern void createWidget(String widget_name, String page_name, String page_number, String file, String topic);
+
+extern void createWidgetByType(String widget_name, String page_name, String page_number, String file, String topic);
 extern void createWidgetParam(String widget_name, String page_name, String page_number, String file, String topic, String name1, String param1, String name2, String param2, String name3, String param3);
-extern void createWidgetByType(String widget_name, String page_name, String page_number, String type, String topik);
+extern void createWidget(String widget_name, String page_name, String page_number, String type, String topik);
 extern void createChart(String widget_name, String page_name, String page_number, String file, String topic, String maxCount);
 
 // PushingBox

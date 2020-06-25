@@ -14,11 +14,11 @@ class PrintMessage {
         _module = module;
     }
 
-    void error(const String str) {
+    void error(const String& str) {
         print(EL_ERROR, str);
     }
 
-    void info(const String str) {
+    void info(const String& str) {
         print(EL_INFO, str);
     }
 

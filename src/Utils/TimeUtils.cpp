@@ -6,33 +6,17 @@
 #define ONE_MINUTE_s 60
 #define ONE_HOUR_s 60 * ONE_MINUTE_s
 
-int getBiasInSeconds() {
-    return 3600 * jsonReadStr(configSetupJson, "timezone").toInt();
-}
-
-int getBiasInMinutes() {
-    return getBiasInSeconds() / 60;
-}
-
-const timezone getTimeZone() {
-    return timezone{getBiasInMinutes(), 0};
-}
-
-time_t getSystemTime() {
-    timeval tv{0, 0};
-    timezone tz = getTimeZone();
-    time_t epoch = 0;
-    if (gettimeofday(&tv, &tz) != -1)
-        epoch = tv.tv_sec;
-    return epoch;
-}
-
-bool hasTimeSynced() {
-    unsigned long now = time(nullptr);
-    return now > millis();
-}
-
+time_t t;
+struct tm* tm;
+static const char* wd[7] = {"Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"};
 String getTimeUnix() {
+    t = time(NULL);
+    tm = localtime(&t);
+    Serial.printf("%04d/%02d/%02d(%s) %02d:%02d:%02d\n",
+                  tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
+                  wd[tm->tm_wday],
+                  tm->tm_hour, tm->tm_min, tm->tm_sec);
+    delay(1000);
     time_t now = time(nullptr);
     if (now < 30000) {
         return "failed";
@@ -147,127 +131,6 @@ const String prettyMillis(unsigned long time_ms) {
         sprintf_P(buf, TIME_FORMAT, hours, minutes, seconds);
     }
     return String(buf);
-}
-
-int timeZoneInSeconds(const byte timeZone) {
-    int res = 0;
-    switch (constrain(timeZone, 1, 38)) {
-        case 1:
-            res = -12 * ONE_HOUR_s;
-            break;
-        case 2:
-            res = -11 * ONE_HOUR_s;
-            break;
-        case 3:
-            res = -10 * ONE_HOUR_s;
-            break;
-        case 4:
-            res = -9 * ONE_HOUR_s - 30 * ONE_MINUTE_s;
-            break;
-        case 5:
-            res = -9 * ONE_HOUR_s;
-            break;
-        case 6:
-            res = -8 * ONE_HOUR_s;
-            break;
-        case 7:
-            res = -7 * ONE_HOUR_s;
-            break;
-        case 8:
-            res = -6 * ONE_HOUR_s;
-            break;
-        case 9:
-            res = -5 * ONE_HOUR_s;
-            break;
-        case 10:
-            res = -4 * ONE_HOUR_s;
-            break;
-        case 11:
-            res = -3 * ONE_HOUR_s - 30 * ONE_MINUTE_s;
-            break;
-        case 12:
-            res = -3 * ONE_HOUR_s;
-            break;
-        case 13:
-            res = -2 * ONE_HOUR_s;
-            break;
-        case 14:
-            res = -1 * ONE_HOUR_s;
-            break;
-        case 15:
-            res = 0;
-            break;
-        case 16:
-            res = 1 * ONE_HOUR_s;
-            break;
-        case 17:
-            res = 2 * ONE_HOUR_s;
-            break;
-        case 18:
-            res = 3 * ONE_HOUR_s;
-            break;
-        case 19:
-            res = 3 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
-            break;
-        case 20:
-            res = 4 * ONE_HOUR_s;
-            break;
-        case 21:
-            res = 4 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
-            break;
-        case 22:
-            res = 5 * ONE_HOUR_s;
-            break;
-        case 23:
-            res = 5 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
-            break;
-        case 24:
-            res = 5 * ONE_HOUR_s + 45 * ONE_MINUTE_s;
-            break;
-        case 25:
-            res = 6 * ONE_HOUR_s;
-            break;
-        case 26:
-            res = 6 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
-            break;
-        case 27:
-            res = 7 * ONE_HOUR_s;
-            break;
-        case 28:
-            res = 8 * ONE_HOUR_s;
-            break;
-        case 29:
-            res = 8 * ONE_HOUR_s + 45 * ONE_MINUTE_s;
-            break;
-        case 30:
-            res = 9 * ONE_HOUR_s;
-            break;
-        case 31:
-            res = 9 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
-            break;
-        case 32:
-            res = 10 * ONE_HOUR_s;
-            break;
-        case 33:
-            res = 10 * ONE_HOUR_s + 30 * ONE_MINUTE_s;
-            break;
-        case 34:
-            res = 11 * ONE_HOUR_s;
-            break;
-        case 35:
-            res = 12 * ONE_HOUR_s;
-            break;
-        case 36:
-            res = 12 * ONE_HOUR_s + 45 * ONE_MINUTE_s;
-            break;
-        case 37:
-            res = 13 * ONE_HOUR_s;
-            break;
-        case 38:
-            res = 14 * ONE_HOUR_s;
-            break;
-    }
-    return res;
 }
 
 unsigned long millis_since(unsigned long sinse) {

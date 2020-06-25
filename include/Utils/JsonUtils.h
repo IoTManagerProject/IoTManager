@@ -11,3 +11,5 @@ String jsonWriteStr(String& json, String name, String volume);
 String jsonWriteInt(String& json, String name, int volume);
 
 String jsonWriteFloat(String& json, String name, float volume);
+
+boolean jsonReadBool(String& json, String name);
