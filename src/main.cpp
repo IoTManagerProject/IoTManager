@@ -56,10 +56,14 @@ void setup() {
     pm.info("WebAdmin");
     web_init();
 
-    pm.info("TimeSync");
+    pm.info("Clock");
+    rtc = new Clock();
+    rtc->setNtpPool(jsonReadStr(configSetupJson, "ntp"));
+    rtc->setTimezone(jsonReadStr(configSetupJson, "timezone").toInt());
+
     ts.add(
         TIME_SYNC, 30000, [&](void*) {
-            startTimeSync();
+            rtc->hasSync();
         },
         nullptr, true);
 
@@ -69,7 +73,7 @@ void setup() {
 #endif
     ts.add(
         TEST, 10000, [&](void*) {
-            printMemoryStatus();
+            pm.info(printMemoryStatus());
         },
         nullptr, true);
 

@@ -5,6 +5,8 @@ AsyncWebSocket ws;
 //AsyncEventSource events;
 #endif
 
+Clock* rtc;
+
 TickerScheduler ts(TEST + 1);
 
 WiFiClient espClient;

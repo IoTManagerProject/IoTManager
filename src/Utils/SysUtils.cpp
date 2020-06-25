@@ -23,25 +23,24 @@ static uint32_t total_memory = 52864;
 static uint32_t total_memory = 362868;
 #endif
 
-void printMemoryStatus(String text) {
+const String printMemoryStatus() {
     uint32_t free = ESP.getFreeHeap();
     uint32_t used = total_memory - free;
     uint32_t memory_load = (used * 100) / total_memory;
-    if (text) {
-        Serial.print(text);
-    }
-    Serial.printf(" used: %d%% free: %s\n", memory_load, prettyBytes(free).c_str());
+    char buf[64];
+    sprintf(buf, "used: %d%% free: %s", memory_load, getHeapStats().c_str());
+    return String(buf);
 }
 
 #ifdef ESP8266
-String getHeapStats() {
+const String getHeapStats() {
     uint32_t free;
     uint16_t max;
     uint8_t frag;
     ESP.getHeapStats(&free, &max, &frag);
     String buf;
     buf += prettyBytes(free);
-    buf += " ";
+    buf += " frag: ";
     buf += frag;
     buf += '%';
     return buf;

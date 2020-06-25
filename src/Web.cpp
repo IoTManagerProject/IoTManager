@@ -130,15 +130,17 @@ void web_init() {
         }
         //--------------------------------------------------------------------------------
         if (request->hasArg("timezone")) {
-            jsonWriteStr(configSetupJson, "timezone", request->getParam("timezone")->value());
+            String timezoneStr = request->getParam("timezone")->value();
+            jsonWriteStr(configSetupJson, "timezone", timezoneStr);
             saveConfig();
-            reconfigTime();
+            rtc->setTimezone(timezoneStr.toInt());
             request->send(200, "text/text", "OK");
         }
         if (request->hasArg("ntp")) {
-            jsonWriteStr(configSetupJson, "ntp", request->getParam("ntp")->value());
+            String ntpStr = request->getParam("ntp")->value();
+            jsonWriteStr(configSetupJson, "ntp", ntpStr);
             saveConfig();
-            reconfigTime();
+            rtc->setNtpPool(ntpStr);
             request->send(200, "text/text", "OK");
         }
         //--------------------------------------------------------------------------------
