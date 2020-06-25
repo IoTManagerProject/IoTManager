@@ -1,28 +1,40 @@
+#include "Upgrade.h"
+
 #include "Global.h"
 
-void init_updater() {
-#ifdef ESP8266
-    if (WiFi.status() == WL_CONNECTED) last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
-#endif
-#ifdef ESP32
-    if (WiFi.status() == WL_CONNECTED) last_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
-#endif
-    jsonWriteStr(configSetupJson, "last_version", last_version);
-    Serial.print("[I] Last firmware version: ");
-    Serial.println(last_version);
+static const char* MODULE = "Upgr";
+
+static const char* filesystem_image_url PROGMEM = "http://91.204.228.124:1100/update/%s/fs.bin";
+static const char* available_url PROGMEM = "http://91.204.228.124:1100/update/%s/version.txt";
+
+const String getAvailableUrl(const char* mcu) {
+    char buf[128];
+    sprintf_P(buf, available_url, mcu);
+    return buf;
 }
 
-void do_upgrade_url() {
+void getLastVersion() {
     if (upgrade_url) {
         upgrade_url = false;
+        String url;
 #ifdef ESP32
-        last_version = getURL("http://91.204.228.124:1100/update/esp32/version.txt");
+        url = getAvailableUrl("esp32");
 #endif
 #ifdef ESP8266
-        last_version = getURL("http://91.204.228.124:1100/update/esp8266/version.txt");
+        url = getAvailableUrl("esp8266");
 #endif
-        jsonWriteStr(configSetupJson, "last_version", last_version);
+        lastVersion = getURL(url);
+        jsonWriteStr(configSetupJson, "last_version", lastVersion);
     }
+}
+
+void initUpdater() {
+    if (isNetworkActive()) {
+        getLastVersion();
+        if (lastVersion.length()) {
+            pm.info("available: " + lastVersion);
+        }
+    };
 }
 
 void upgrade_firmware() {
@@ -77,7 +89,7 @@ void upgrade_firmware() {
     }
 }
 
-void do_upgrade() {
+void flashUpgrade() {
     if (upgrade) {
         upgrade = false;
         upgrade_firmware();

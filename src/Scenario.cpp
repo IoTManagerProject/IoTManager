@@ -1,21 +1,27 @@
 #include "Global.h"
 
+static const char* MODULE = "Scen";
+
 void loopScenario() {
-    if (jsonReadStr(configSetupJson, "scen") == "1") {
+    bool enabled = jsonReadBool(configSetupJson, "scen");
+    if (enabled) {
         if ((jsonReadStr(configOptionJson, "scenario_status") != "")) {
-            int i = 0;
-            String str = scenario;  //читаем переменную с сценариями (то что из файла на странице)
+            String str = scenario;
             str += "\n";
             str.replace("\r\n", "\n");
             str.replace("\r", "\n");
-            while (str.length() != 0) {
-                //-----------------------------------------------------------------------------------------------------------------------
-                String tmp = selectToMarker(str, "end");  //выделяем первый сценарий из файла вместе с командами
-                if (tmp == "") return;
+
+            size_t i = 0;
+            while (str.length()) {
+                String block = selectToMarker(str, "end");
+                if (!block.length()) {
+                    return;
+                }
                 i++;
 
                 if (scenario_line_status[i] == 1) {
-                    String condition = selectToMarker(tmp, "\n");  //выделяем первую строку самого сценария  button1 = 1 (условие)
+                    //выделяем первую строку самого сценария  button1 = 1 (условие)
+                    String condition = selectToMarker(block, "\n");
                     String param_name = selectFromMarkerToMarker(condition, " ", 0);
                     String order = jsonReadStr(configOptionJson, "scenario_status");  //читаем весь файл событий
                     String param = selectToMarker(order, ",");                        //читаем первое событие из файла событий
@@ -52,11 +58,10 @@ void loopScenario() {
                         }
 
                         if (flag) {
-                            tmp = deleteBeforeDelimiter(tmp, "\n");  //удаляем строку самого сценария оставляя только команды
-                            stringExecute(tmp);                    //выполняем все команды
+                            block = deleteBeforeDelimiter(block, "\n");  //удаляем строку самого сценария оставляя только команды
+                            stringExecute(block);                        //выполняем все команды
 
-                            Serial.println("[SCENARIO] '" + condition + "'");
-                            //Serial.println("            " + tmp);
+                            pm.info(condition + "'");
                         }
                     }
                 }
