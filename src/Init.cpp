@@ -19,7 +19,7 @@ void loadConfig() {
 
 void All_init() {
     Device_init();
-    Scenario_init();
+    loadScenario();
     Timer_countdown_init();
 }
 
@@ -57,17 +57,17 @@ void Device_init() {
 #ifdef LAYOUT_IN_RAM
     all_widgets = "";
 #else
-    removeFile("/layout.txt");
+    removeFile(String("layout.txt"));
 #endif
 
-    txtExecution("firmware.c.txt");
+    fileExecute(String(DEVICE_CONFIG_FILE));
     //outcoming_date();
 }
 //-------------------------------сценарии-----------------------------------------------------
 
-void Scenario_init() {
+void loadScenario() {
     if (jsonReadStr(configSetupJson, "scen") == "1") {
-        scenario = readFile("firmware.s.txt", 2048);
+        scenario = readFile(String(DEVICE_SCENARIO_FILE), 2048);
     }
 }
 
@@ -107,20 +107,15 @@ void handle_statistics() {
         urls += "iot-manager_esp32";
 #endif
         urls += "&";
-        //-----------------------------------------------------------------
 #ifdef ESP8266
         urls += ESP.getResetReason();
-        //Serial.println(ESP.getResetReason());
 #endif
 #ifdef ESP32
         urls += "Power on";
 #endif
         urls += "&";
-        //-----------------------------------------------------------------
         urls += "ver: ";
         urls += String(FIRMWARE_VERSION);
-        //-----------------------------------------------------------------
         String stat = getURL(urls);
-        //Serial.println(stat);
     }
 }

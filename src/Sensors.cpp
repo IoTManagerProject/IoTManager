@@ -81,7 +81,7 @@ void sensors_init() {
 //=========================================================================================================================================
 //=========================================Модуль измерения уровня в баке==================================================================
 #ifdef LEVEL_ENABLED
-//levelPr p 14 12 Вода#в#баке,#% Датчики fill-gauge 125 20 1
+//levelPr p 14 12 Вода#в#баке,#% Датчики fillgauge 125 20 1
 void levelPr() {
     String value_name = sCmd.next();
     String trig = sCmd.next();
@@ -99,10 +99,10 @@ void levelPr() {
     jsonWriteStr(configOptionJson, "echo", echo);
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[0] = 1;
 }
-//ultrasonicCm cm 14 12 Дистанция,#см Датчики fill-gauge 1
+//ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
 void ultrasonicCm() {
     String value_name = sCmd.next();
     String trig = sCmd.next();
@@ -118,7 +118,7 @@ void ultrasonicCm() {
     jsonWriteStr(configOptionJson, "echo", echo);
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[0] = 1;
 }
 
@@ -146,12 +146,16 @@ void ultrasonic_reading() {
 
         jsonWriteInt(configLiveJson, levelPr_value_name, level);
         eventGen(levelPr_value_name, "");
-        publishStatus(levelPr_value_name, String(level));
+
+        MqttClient::publishStatus(levelPr_value_name, String(level));
+
         Serial.println("[I] sensor '" + levelPr_value_name + "' data: " + String(level));
 
         jsonWriteInt(configLiveJson, ultrasonicCm_value_name, distance_cm);
         eventGen(ultrasonicCm_value_name, "");
-        publishStatus(ultrasonicCm_value_name, String(distance_cm));
+
+        MqttClient::publishStatus(ultrasonicCm_value_name, String(distance_cm));
+
         Serial.println("[I] sensor '" + ultrasonicCm_value_name + "' data: " + String(distance_cm));
     }
 }
@@ -177,7 +181,7 @@ void analog() {
     jsonWriteStr(configOptionJson, value_name + "_end", analog_end);
     jsonWriteStr(configOptionJson, value_name + "_st_out", analog_start_out);
     jsonWriteStr(configOptionJson, value_name + "_end_out", analog_end_out);
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     if (enter_to_analog_counter == 1) {
         sensors_reading_map[1] = 1;
     }
@@ -201,7 +205,7 @@ void analog_reading1() {
                      jsonReadInt(configOptionJson, value_name + "_end_out"));
     jsonWriteInt(configLiveJson, value_name, analog);
     eventGen(value_name, "");
-    publishStatus(value_name, String(analog));
+    MqttClient::publishStatus(value_name, String(analog));
     Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
 }
 
@@ -220,7 +224,7 @@ void analog_reading2() {
                      jsonReadInt(configOptionJson, value_name + "_end_out"));
     jsonWriteInt(configLiveJson, value_name, analog);
     eventGen(value_name, "");
-    publishStatus(value_name, String(analog));
+    MqttClient::publishStatus(value_name, String(analog));
     Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
 }
 #endif
@@ -239,7 +243,7 @@ void dallas() {
     sensors.setOneWire(oneWire);
     sensors.begin();
     sensors.setResolution(12);
-    choose_widget_and_create(widget_name, page_name, page_number, type, "dallas");
+    createWidgetByType(widget_name, page_name, page_number, type, "dallas");
     sensors_reading_map[3] = 1;
 }
 
@@ -249,7 +253,7 @@ void dallas_reading() {
     temp = sensors.getTempCByIndex(0);
     jsonWriteStr(configLiveJson, "dallas", String(temp));
     eventGen("dallas", "");
-    publishStatus("dallas", String(temp));
+    MqttClient::publishStatus("dallas", String(temp));
     Serial.println("[I] sensor 'dallas' send date " + String(temp));
 }
 #endif
@@ -272,7 +276,7 @@ void dhtT() {
     if (sensor_type == "dht22") {
         dht.setup(pin.toInt(), DHTesp::DHT22);
     }
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[4] = 1;
 }
 
@@ -280,7 +284,7 @@ void dhtT_reading() {
     float value = 0;
     static int counter;
     if (dht.getStatus() != 0 && counter < 5) {
-        publishStatus(dhtT_value_name, String(dht.getStatusString()));
+        MqttClient::publishStatus(dhtT_value_name, String(dht.getStatusString()));
         counter++;
     } else {
         counter = 0;
@@ -288,7 +292,7 @@ void dhtT_reading() {
         if (String(value) != "nan") {
             eventGen(dhtT_value_name, "");
             jsonWriteStr(configLiveJson, dhtT_value_name, String(value));
-            publishStatus(dhtT_value_name, String(value));
+            MqttClient::publishStatus(dhtT_value_name, String(value));
             Serial.println("[I] sensor '" + dhtT_value_name + "' data: " + String(value));
         }
     }
@@ -310,7 +314,7 @@ void dhtH() {
     if (sensor_type == "dht22") {
         dht.setup(pin.toInt(), DHTesp::DHT22);
     }
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[5] = 1;
 }
 
@@ -318,7 +322,7 @@ void dhtH_reading() {
     float value = 0;
     static int counter;
     if (dht.getStatus() != 0 && counter < 5) {
-        publishStatus(dhtH_value_name, String(dht.getStatusString()));
+        MqttClient::publishStatus(dhtH_value_name, String(dht.getStatusString()));
         counter++;
     } else {
         counter = 0;
@@ -326,7 +330,7 @@ void dhtH_reading() {
         if (String(value) != "nan") {
             eventGen(dhtH_value_name, "");
             jsonWriteStr(configLiveJson, dhtH_value_name, String(value));
-            publishStatus(dhtH_value_name, String(value));
+            MqttClient::publishStatus(dhtH_value_name, String(value));
             Serial.println("[I] sensor '" + dhtH_value_name + "' data: " + String(value));
         }
     }
@@ -337,20 +341,20 @@ void dhtP() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
-    choose_widget_and_create(widget_name, page_name, page_number, "any-data", "dhtPerception");
+    createWidgetByType(widget_name, page_name, page_number, "any-data", "dhtPerception");
     sensors_reading_map[6] = 1;
 }
 
 void dhtP_reading() {
     byte value;
     if (dht.getStatus() != 0) {
-        publishStatus("dhtPerception", String(dht.getStatusString()));
+        MqttClient::publishStatus("dhtPerception", String(dht.getStatusString()));
     } else {
         value = dht.computePerception(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
         String final_line = perception(value);
         jsonWriteStr(configLiveJson, "dhtPerception", final_line);
         eventGen("dhtPerception", "");
-        publishStatus("dhtPerception", final_line);
+        MqttClient::publishStatus("dhtPerception", final_line);
         if (mqtt.connected()) {
             Serial.println("[I] sensor 'dhtPerception' data: " + final_line);
         }
@@ -395,20 +399,20 @@ void dhtC() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
-    choose_widget_and_create(widget_name, page_name, page_number, "any-data", "dhtComfort");
+    createWidgetByType(widget_name, page_name, page_number, "anydata", "dhtComfort");
     sensors_reading_map[7] = 1;
 }
 
 void dhtC_reading() {
     ComfortState cf;
     if (dht.getStatus() != 0) {
-        publishStatus("dhtComfort", String(dht.getStatusString()));
+        MqttClient::publishStatus("dhtComfort", String(dht.getStatusString()));
     } else {
         dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
         String final_line = get_comfort_status(cf);
         jsonWriteStr(configLiveJson, "dhtComfort", final_line);
         eventGen("dhtComfort", "");
-        publishStatus("dhtComfort", final_line);
+        MqttClient::publishStatus("dhtComfort", final_line);
         Serial.println("[I] sensor 'dhtComfort' send date " + final_line);
     }
 }
@@ -455,19 +459,19 @@ void dhtD() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
-    choose_widget_and_create(widget_name, page_name, page_number, "any-data", "dhtDewpoint");
+    createWidgetByType(widget_name, page_name, page_number, "anydata", "dhtDewpoint");
     sensors_reading_map[8] = 1;
 }
 
 void dhtD_reading() {
     float value;
     if (dht.getStatus() != 0) {
-        publishStatus("dhtDewpoint", String(dht.getStatusString()));
+        MqttClient::publishStatus("dhtDewpoint", String(dht.getStatusString()));
     } else {
         value = dht.computeDewPoint(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
         jsonWriteInt(configLiveJson, "dhtDewpoint", value);
         eventGen("dhtDewpoint", "");
-        publishStatus("dhtDewpoint", String(value));
+        MqttClient::publishStatus("dhtDewpoint", String(value));
         Serial.println("[I] sensor 'dhtDewpoint' data: " + String(value));
     }
 }
@@ -485,7 +489,7 @@ void bmp280T() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bmp280T_value_name = value_name;
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     bmp.begin(hexStringToUint8(address));
     bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
                     Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
@@ -503,7 +507,7 @@ void bmp280T_reading() {
     value = temp_event.temperature;
     jsonWriteStr(configLiveJson, bmp280T_value_name, String(value));
     eventGen(bmp280T_value_name, "");
-    publishStatus(bmp280T_value_name, String(value));
+    MqttClient::publishStatus(bmp280T_value_name, String(value));
     Serial.println("[I] sensor '" + bmp280T_value_name + "' data: " + String(value));
 }
 
@@ -516,7 +520,7 @@ void bmp280P() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bmp280P_value_name = value_name;
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     bmp.begin(hexStringToUint8(address));
     bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
                     Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
@@ -535,7 +539,7 @@ void bmp280P_reading() {
     value = value / 1.333224;
     jsonWriteStr(configLiveJson, bmp280P_value_name, String(value));
     eventGen(bmp280P_value_name, "");
-    publishStatus(bmp280P_value_name, String(value));
+    MqttClient::publishStatus(bmp280P_value_name, String(value));
     Serial.println("[I] sensor '" + bmp280P_value_name + "' data: " + String(value));
 }
 
@@ -550,7 +554,7 @@ void bme280T() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bme280T_value_name = value_name;
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     bme.begin(hexStringToUint8(address));
     sensors_reading_map[11] = 1;
 }
@@ -560,7 +564,7 @@ void bme280T_reading() {
     value = bme.readTemperature();
     jsonWriteStr(configLiveJson, bme280T_value_name, String(value));
     eventGen(bme280T_value_name, "");
-    publishStatus(bme280T_value_name, String(value));
+    MqttClient::publishStatus(bme280T_value_name, String(value));
     Serial.println("[I] sensor '" + bme280T_value_name + "' data: " + String(value));
 }
 
@@ -573,7 +577,7 @@ void bme280P() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bme280P_value_name = value_name;
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     bme.begin(hexStringToUint8(address));
     sensors_reading_map[12] = 1;
 }
@@ -584,7 +588,7 @@ void bme280P_reading() {
     value = value / 1.333224;
     jsonWriteStr(configLiveJson, bme280P_value_name, String(value));
     eventGen(bme280P_value_name, "");
-    publishStatus(bme280P_value_name, String(value));
+    MqttClient::publishStatus(bme280P_value_name, String(value));
     Serial.println("[I] sensor '" + bme280P_value_name + "' data: " + String(value));
 }
 
@@ -597,7 +601,7 @@ void bme280H() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bme280H_value_name = value_name;
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     bme.begin(hexStringToUint8(address));
     sensors_reading_map[13] = 1;
 }
@@ -607,7 +611,7 @@ void bme280H_reading() {
     value = bme.readHumidity();
     jsonWriteStr(configLiveJson, bme280H_value_name, String(value));
     eventGen(bme280H_value_name, "");
-    publishStatus(bme280H_value_name, String(value));
+    MqttClient::publishStatus(bme280H_value_name, String(value));
     Serial.println("[I] sensor '" + bme280H_value_name + "' data: " + String(value));
 }
 
@@ -620,7 +624,7 @@ void bme280A() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bme280A_value_name = value_name;
-    choose_widget_and_create(widget_name, page_name, page_number, type, value_name);
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     bme.begin(hexStringToUint8(address));
     sensors_reading_map[14] = 1;
 }
@@ -631,7 +635,7 @@ void bme280A_reading() {
 
     eventGen(bme280A_value_name, "");
 
-    publishStatus(bme280A_value_name, String(value));
+    MqttClient::publishStatus(bme280A_value_name, String(value));
 
     Serial.println("[I] sensor '" + bme280A_value_name + "' data: " + String(value));
 }

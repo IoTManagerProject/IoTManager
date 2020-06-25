@@ -35,8 +35,12 @@ int timeToMin(String Time);
 
 const String prettyMillis(unsigned long time_ms = millis());
 
-int timeZoneInSeconds(const byte timeZone);
+/*
+* Время (мс) прошедщее с @simce
+*/
+unsigned long millis_since(unsigned long sinse);
 
-bool hasTimeSynced();
-
-int getBiasInSeconds();
+/*
+* Интерввал времени (мс) между @start и @fimish 
+*/
+unsigned long millis_passed(unsigned long start, unsigned long finish);

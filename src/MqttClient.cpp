@@ -1,9 +1,10 @@
+#include "MqttClient.h"
 #include "Global.h"
-
-//
 #include <LittleFS.h>
 
 static const char* MODULE = "Mqtt";
+
+namespace MqttClient {
 
 // Errors
 int wifi_lost_error = 0;
@@ -13,14 +14,7 @@ int mqtt_lost_error = 0;
 String mqttPrefix;
 String mqttRootDevice;
 
-void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length);
-const String getMqttStateStr();
-void sendAllData();
-void sendAllWigets();
-boolean publicStatus(String topic, String state);
-void outcoming_date();
-
-void initMQTT() {
+void init() {
     mqtt.setCallback(handleSubscribedUpdates);
 
     ts.add(
@@ -31,11 +25,11 @@ void initMQTT() {
                     pm.info("OK");
                     setLedStatus(LED_OFF);
                 } else {
-                    connectMQTT();
+                    connect();
                     if (!just_load) mqtt_lost_error++;
                 }
             } else {
-                pm.error("WiFi connection lost");
+                pm.error("connection lost");
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
                 wifi_lost_error++;
                 startAPMode();
@@ -44,15 +38,17 @@ void initMQTT() {
         nullptr, true);
 }
 
-void reconnectMQTT() {
-    if (mqttParamsChanged) {
-        mqtt.disconnect();
-        connectMQTT();
-        mqttParamsChanged = false;
-    }
+void disconnect() {
+    pm.info("disconnect");
+    mqtt.disconnect();
 }
 
-void loopMQTT() {
+void reconnect() {
+    disconnect();
+    connect();
+}
+
+void loop() {
     if (!isNetworkActive() || !mqtt.connected()) {
         return;
     }
@@ -60,10 +56,7 @@ void loopMQTT() {
 }
 
 void subscribe() {
-    pm.info("Subscribe");
-    // Для приема получения HELLOW и подтверждения связи
-    // Подписываемся на топики control
-    // Подписываемся на топики order
+    pm.info("subscribe");
     mqtt.subscribe(mqttPrefix.c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/order").c_str());
@@ -72,10 +65,11 @@ void subscribe() {
     mqtt.subscribe((mqttRootDevice + "/devs").c_str());
 }
 
-boolean connectMQTT() {
+boolean connect() {
     if (!isNetworkActive()) {
         return false;
     }
+    pm.info("connect");
 
     String addr = jsonReadStr(configSetupJson, "mqttServer");
     if (!addr) {
@@ -92,7 +86,7 @@ boolean connectMQTT() {
     mqttRootDevice = mqttPrefix + "/" + chipId;
 
     pm.info("broker " + addr + ":" + String(port, DEC));
-    pm.info("root " + mqttRootDevice);
+    pm.info("topic " + mqttRootDevice);
 
     setLedStatus(LED_FAST);
     mqtt.setServer(addr.c_str(), port);
@@ -121,12 +115,10 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         payloadStr += (char)payload[i];
     }
     pm.info(payloadStr);
-
-    if (payloadStr == "HELLO") {
-        //данные которые отправляем при подключении или отбновлении страницы
-        pm.info("Send web page updates");
-        sendAllWigets();
-        sendAllData();
+    if (payloadStr.startsWith("HELLO")) {
+        pm.info("Full update");
+        publishWidgets();
+        publishState();
 #ifdef LOGGING_ENABLED
         choose_log_date_and_send();
 #endif
@@ -154,11 +146,11 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
             upgrade = true;
         }
     } else if (topicStr.indexOf("devc")) {
-        writeFile("firmware.c.txt", payloadStr);
+        writeFile(String(DEVICE_CONFIG_FILE), payloadStr);
         Device_init();
     } else if (topicStr.indexOf("devs")) {
-        writeFile("firmware.s.txt", payloadStr);
-        Scenario_init();
+        writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
+        loadScenario();
     }
 }
 
@@ -193,9 +185,9 @@ boolean publishControl(String id, String topic, String state) {
     return mqtt.publish(path.c_str(), state.c_str(), false);
 }
 
-boolean sendCHART_test(String topic, String data) {
-    topic = mqttRootDevice + "/" + topic + "/status";
-    return mqtt.publish(topic.c_str(), data.c_str(), false);
+boolean publishChart_test(const String& topic, const String& data) {
+    String path = mqttRootDevice + "/" + topic + "/status";
+    return mqtt.publish(path.c_str(), data.c_str(), false);
 }
 
 boolean publishStatus(const String& topic, const String& data) {
@@ -205,9 +197,8 @@ boolean publishStatus(const String& topic, const String& data) {
     return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
-//=====================================================ОТПРАВЛЯЕМ ВИДЖЕТЫ========================================================
 #ifdef LAYOUT_IN_RAM
-void sendAllWigets() {
+void publishWidgets() {
     if (all_widgets != "") {
         int counter = 0;
         String line;
@@ -231,35 +222,33 @@ void sendAllWigets() {
 #endif
 
 #ifndef LAYOUT_IN_RAM
-void sendAllWigets() {
-    auto file = seekFile("/layout.txt");
+void publishWidgets() {
+    auto file = seekFile("layout.txt");
     if (!file) {
+        pm.error("on seek layout.txt");
         return;
     }
-    while (file.position() != file.size()) {
+    while (file.available()) {
         String payload = file.readStringUntil('\n');
-        pm.info("publish: " + payload);
+        pm.info("widgets: " + payload);
         publishData("config", payload);
     }
     file.close();
 }
 #endif
 
-//=====================================================ОТПРАВЛЯЕМ ДАННЫЕ В ВИДЖЕТЫ ПРИ ОБНОВЛЕНИИ СТРАНИЦЫ========================================================
-
-void sendAllData() {
+void publishState() {
     // берет строку json и ключи превращает в топики а значения колючей в них посылает
     // {"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
-    String current_config = configLiveJson;
-    printMemoryStatus("[I] after send all date");
-    current_config.replace("{", "");
-    current_config.replace("}", "");
-    current_config += ",";
+    String str = configLiveJson;
+    str.replace("{", "");
+    str.replace("}", "");
+    str += ",";
 
-    while (current_config.length()) {
-        String tmp = selectToMarker(current_config, ",");
+    while (str.length()) {
+        String tmp = selectToMarker(str, ",");
 
         String topic = selectToMarker(tmp, ":");
         topic.replace("\"", "");
@@ -270,11 +259,11 @@ void sendAllData() {
         if (topic != "name" && topic != "lang" && topic != "ip" && topic.indexOf("_in") < 0) {
             publishStatus(topic, state);
         }
-        current_config = deleteBeforeDelimiter(current_config, ",");
+        str = deleteBeforeDelimiter(str, ",");
     }
 }
 
-const String getMqttStateStr() {
+const String getStateStr() {
     switch (mqtt.state()) {
         case -4:
             return F("no respond");
@@ -311,3 +300,5 @@ const String getMqttStateStr() {
             break;
     }
 }
+
+}  // namespace MqttClient

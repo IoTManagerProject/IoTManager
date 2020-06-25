@@ -34,6 +34,20 @@
       "title": "Сканировать",
       "action": "/set?itoc",
       "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "h3",
+      "title": "Проверка ФС"
+    },
+    {
+      "type": "h4",
+      "title": "{{fscheck}}"
+    },
+    {
+      "type": "link",
+      "title": "Запустить",
+      "action": "/set?fscheck",
+      "class": "btn btn-block btn-default"
     }
   ]
 }

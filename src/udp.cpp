@@ -20,7 +20,7 @@ void add_dev_in_list(String fileName, String id, String dev_name, String ip);
 
 #ifdef UDP_ENABLED
 void UDP_init() {
-    removeFile("/dev.csv");
+    removeFile("dev.csv");
     addFile("dev.csv", "device id;device name;ip address");
 
 #ifdef ESP8266

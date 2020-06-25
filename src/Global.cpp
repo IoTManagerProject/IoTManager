@@ -5,6 +5,8 @@ AsyncWebSocket ws;
 //AsyncEventSource events;
 #endif
 
+Clock* rtc;
+
 TickerScheduler ts(TEST + 1);
 
 WiFiClient espClient;
@@ -16,8 +18,6 @@ StringCommand sCmd;
 AsyncWebServer server(80);
 
 DallasTemperature sensors;
-
-
 
 /*
 * Global vars
@@ -73,3 +73,4 @@ boolean mqttParamsChanged = false;
 boolean udp_data_parse = false;
 boolean mqtt_send_settings_to_udp = false;
 boolean i2c_scanning = false;
+boolean fscheck_flag = false;
