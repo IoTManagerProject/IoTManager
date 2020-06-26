@@ -90,7 +90,7 @@ void telemetry_init() {
 }
 
 void handle_uptime() {
-    jsonWriteStr(configSetupJson, "uptime", prettyMillis());
+    jsonWriteStr(configSetupJson, "getUptime", timeNow->getUptime());
 }
 
 void handle_statistics() {
