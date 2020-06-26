@@ -71,6 +71,7 @@ void CMD_init() {
 #ifdef SERIAL_ENABLED
     sCmd.addCommand("serialBegin", serialBegin);
     sCmd.addCommand("serialWrite", serialWrite);
+    sCmd.addCommand("getData", getData);
 #endif
 
 #ifdef LOGGING_ENABLED
@@ -99,7 +100,7 @@ void CMD_init() {
     sCmd.addCommand("firmwareUpdate", firmwareUpdate);
     sCmd.addCommand("firmwareVersion", firmwareVersion);
 
-    sCmd.addCommand("getData", getData);
+   
 
     handle_time_init();
 }
