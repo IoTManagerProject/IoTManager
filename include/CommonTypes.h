@@ -1,5 +1,18 @@
 #pragma once
 
+struct Time_t {
+    uint8_t second;
+    uint8_t minute;
+    uint8_t hour;
+    uint8_t day_of_week;  // sunday is day 1
+    uint8_t day_of_month;
+    uint8_t month;
+    uint16_t day_of_year;
+    uint16_t year;
+    unsigned long days;
+    unsigned long valid;
+};
+
 enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,
                    SENSORS,

@@ -24,7 +24,7 @@ class PrintMessage {
 
    private:
     void print(const ErrorLevel_t level, const String& str) {
-        Serial.printf("%s [%s] [%s] %s\n", prettyMillis().c_str(), getErrorLevelStr(level).c_str(), _module, str.c_str());
+        Serial.printf("%s [%s] [%s] %s\n", prettyMillis(millis()).c_str(), getErrorLevelStr(level).c_str(), _module, str.c_str());
     }
 
    private:
