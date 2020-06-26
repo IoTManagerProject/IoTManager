@@ -9,8 +9,18 @@
 class Clock {
     const char* MODULE = "Clock";
 
+   private:
+    Time_t _time_local;
+    Time_t _time_utc;
+    unsigned long _uptime;
+    unsigned long _unixtime;
+    int _timezone;
+    String _ntp;
+    bool _hasSynced;
+    bool _configured;
+
    public:
-    Clock() : _timezone{0}, _hasSynced{false}, _configured{false} {}
+    Clock() : _uptime{0}, _timezone{0}, _ntp{""}, _hasSynced{false}, _configured{false} {};
 
     void loop() {
         unsigned long passed = millis_since(_uptime);
@@ -21,16 +31,18 @@ class Clock {
 
         // world time
         time_t now = getSystemTime();
-        time_t estimated = _epoch + (passed / ONE_SECOND_ms);
+        time_t estimated = _unixtime + (passed / ONE_SECOND_ms);
         double drift = difftime(now, estimated);
         if (drift > 1) {
             // Обработать ситуации c дрифтом времени на значительные величины
         }
         // TODO сохранять время на флеше
 
-        _epoch = now;
+        _unixtime = now;
 
-        breakEpochToTime(_epoch, _time);
+        breakEpochToTime(_unixtime, _time_utc);
+
+        breakEpochToTime(_unixtime + getOffsetInSeconds(_timezone), _time_local);
     }
 
     bool hasSync() {
@@ -80,7 +92,7 @@ class Clock {
     }
 
     bool hasTimeSynced() const {
-        return _epoch > MIN_DATETIME;
+        return _unixtime > MIN_DATETIME;
     }
 
     time_t getSystemTime() const {
@@ -94,7 +106,7 @@ class Clock {
     }
 
     const String getTimeUnix() {
-        return String(_epoch);
+        return String(_unixtime);
     }
 
     /*
@@ -102,7 +114,7 @@ class Clock {
     */
     const String getDateDigitalFormated() {
         char buf[16];
-        sprintf(buf, "%02d.%02d.%02d", _time.day_of_month, _time.month, _time.year);
+        sprintf(buf, "%02d.%02d.%02d", _time_local.day_of_month, _time_local.month, _time_local.year);
         return String(buf);
     }
 
@@ -111,7 +123,7 @@ class Clock {
     */
     const String getTime() {
         char buf[16];
-        sprintf(buf, "%02d:%02d:%02d", _time.hour, _time.minute, _time.second);
+        sprintf(buf, "%02d:%02d:%02d", _time_local.hour, _time_local.minute, _time_local.second);
         return String(buf);
     }
 
@@ -120,23 +132,14 @@ class Clock {
     */
     const String getTimeWOsec() {
         char buf[16];
-        sprintf(buf, "%02d:%02d", _time.hour, _time.minute);
+        sprintf(buf, "%02d:%02d", _time_local.hour, _time_local.minute);
         return String(buf);
     }
 
     /*
-    * Время с момента запуска "чч:мм" далее "дд чч:мм"
+    * Время с момента запуска "чч:мм:cc" далее "дд чч:мм"
     */
     const String getUptime() {
         return prettyMillis(_uptime);
     }
-
-   private:
-    Time_t _time;
-    unsigned long _uptime;
-    unsigned long _epoch;
-    int _timezone;
-    String _ntp;
-    bool _hasSynced;
-    bool _configured;
 };
