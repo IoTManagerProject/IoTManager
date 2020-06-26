@@ -8,7 +8,41 @@ void not_async_actions();
 
 static const char* MODULE = "Main";
 
+Timings metric;
+boolean initialized = false;
+
 void do_fscheck(String& results) {
+    // TODO Проверка наличие важных файлов, возможно версии ФС
+}
+
+void clock_init() {
+    timeNow = new Clock();
+    timeNow->setNtpPool(jsonReadStr(configSetupJson, "ntp"));
+    timeNow->setTimezone(jsonReadStr(configSetupJson, "timezone").toInt());
+
+    ts.add(
+        TIME_SYNC, 30000, [&](void*) {
+            timeNow->hasSync();
+        },
+        nullptr, true);
+}
+void do_scan_bus() {
+    if (busScanFlag) {
+        String res = "";
+        BusScanner* scanner = BusScannerFactory::get(res, busToScan);
+        scanner->scan();
+        jsonWriteStr(configLiveJson, BusScannerFactory::label(busToScan), res);
+        busScanFlag = false;
+    }
+}
+
+void do_check_fs() {
+    if (fsCheckFlag) {
+        String buf;
+        do_fscheck(buf);
+        jsonWriteStr(configLiveJson, "fscheck", buf);
+        fsCheckFlag = false;
+    }
 }
 
 void setup() {
@@ -58,19 +92,11 @@ void setup() {
     web_init();
 
     pm.info("Clock");
-    rtc = new Clock();
-    rtc->setNtpPool(jsonReadStr(configSetupJson, "ntp"));
-    rtc->setTimezone(jsonReadStr(configSetupJson, "timezone").toInt());
-
-    ts.add(
-        TIME_SYNC, 30000, [&](void*) {
-            rtc->hasSync();
-        },
-        nullptr, true);
+    clock_init();
 
 #ifdef UDP_ENABLED
+    pm.info("Broadcast UDP");
     UDP_init();
-    pm.info("Broadcast");
 #endif
     ts.add(
         TEST, 10000, [&](void*) {
@@ -79,25 +105,26 @@ void setup() {
         nullptr, true);
 
     just_load = false;
-}
 
-void saveConfig() {
-    writeFile(String("config.json"), configSetupJson);
+    initialized = true;
 }
-
-Timings metric;
 
 void loop() {
+    if (!initialized) {
+        return;
+    }
+    timeNow->loop();
+
 #ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.handle();
 #endif
 #ifdef WS_enable
     ws.cleanupClients();
 #endif
-    metric.add(MT_ONE);
+    // metric.add(MT_ONE);
     not_async_actions();
 
-    metric.add(MT_TWO);
+    // metric.add(MT_TWO);
     MqttClient::loop();
 
     loopCmd();
@@ -126,7 +153,9 @@ void not_async_actions() {
         MqttClient::reconnect();
         mqttParamsChanged = false;
     }
+
     getLastVersion();
+
     flashUpgrade();
 
 #ifdef UDP_ENABLED
@@ -134,20 +163,9 @@ void not_async_actions() {
     do_mqtt_send_settings_to_udp();
 #endif
 
-    if (busScanFlag) {
-        String res = "";
-        BusScanner* scanner = BusScannerFactory::get(res, busToScan);
-        scanner->scan();
-        jsonWriteStr(configLiveJson, BusScannerFactory::label(busToScan), res);
-        busScanFlag = false;
-    }
+    do_scan_bus();
 
-    if (fsCheckFlag) {
-        String buf;
-        do_fscheck(buf);
-        jsonWriteStr(configLiveJson, "fscheck", buf);
-        fsCheckFlag = false;
-    }
+    do_check_fs();
 }
 
 String getURL(const String& urls) {
@@ -192,6 +210,10 @@ void sendConfig(String topic, String widgetConfig, String key, String date) {
 void setChipId() {
     chipId = getChipId();
     Serial.println(chipId);
+}
+
+void saveConfig() {
+    writeFile(String("config.json"), configSetupJson);
 }
 
 #ifdef ESP8266

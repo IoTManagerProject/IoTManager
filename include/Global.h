@@ -14,7 +14,6 @@
 #include "Bus/BusScanner.h"
 #include "Errors.h"
 #include "GyverFilters.h"
-#include "UptimeInterval.h"
 #include "Upgrade.h"
 #include "Clock.h"
 
@@ -46,7 +45,7 @@ extern AsyncWebSocket ws;
 //extern AsyncEventSource events;
 #endif
 
-extern Clock* rtc;
+extern Clock* timeNow;
 
 extern TickerScheduler ts;
 
