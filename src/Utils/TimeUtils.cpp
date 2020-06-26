@@ -164,13 +164,8 @@ int getOffsetInMinutes(int timezone) {
 void breakEpochToTime(unsigned long epoch, Time_t& tm) {
     // break the given time_input into time components
     // this is a more compact version of the C library localtime function
-    uint8_t year;
-    uint8_t month;
-    uint8_t month_length;
-    uint32_t time;
-    unsigned long days;
 
-    time = epoch;
+    unsigned long time = epoch;
     tm.second = time % 60;
     time /= 60;  // now it is minutes
     tm.minute = time % 60;
@@ -180,8 +175,9 @@ void breakEpochToTime(unsigned long epoch, Time_t& tm) {
     tm.days = time;
     tm.day_of_week = ((time + 4) % 7) + 1;  // Sunday is day 1
 
-    year = 0;
-    days = 0;
+    uint8_t year = 0;
+    unsigned long days = 0;
+
     while ((unsigned)(days += (LEAP_YEAR(year) ? 366 : 365)) <= time) {
         year++;
     }
@@ -191,6 +187,8 @@ void breakEpochToTime(unsigned long epoch, Time_t& tm) {
     time -= days;  // now it is days in this year, starting at 0
     tm.day_of_year = time;
 
+    uint8_t month;
+    uint8_t month_length;
     for (month = 0; month < 12; month++) {
         if (1 == month) {  // february
             if (LEAP_YEAR(year)) {
