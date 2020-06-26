@@ -1,6 +1,6 @@
 button2 = 1
-serialWrite ard-on
+serialWrite ard-11-1
 end
 button2 = 0
-serialWrite ard-off
+serialWrite ard-11-0
 end
