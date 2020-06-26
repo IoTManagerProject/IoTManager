@@ -75,7 +75,7 @@ void logging() {
 /*
 * Удаление стрых данных и запись новых
 */
-void deleteOldDate(const String filename, size_t max_lines_cnt, String date_to_add) {
+void deleteOldDate(const String filename, size_t max_lines_cnt, String payload) {
     String log_date = readFile(filename, 5120);
     size_t lines_cnt = itemsCount(log_date, "\r\n");
 
@@ -88,13 +88,13 @@ void deleteOldDate(const String filename, size_t max_lines_cnt, String date_to_a
 
     if (lines_cnt > max_lines_cnt) {
         log_date = deleteBeforeDelimiter(log_date, "\r\n");
-        if (getTimeUnix() != "failed") {
-            log_date += getTimeUnix() + " " + date_to_add + "\r\n";
+        if (timeNow->hasTimeSynced()) {
+            log_date += timeNow->getTimeUnix() + " " + payload + "\r\n";
             writeFile(filename, log_date);
         }
     } else {
-        if (getTimeUnix() != "failed") {
-            addFile(filename, getTimeUnix() + " " + date_to_add);
+        if (timeNow->hasTimeSynced()) {
+            addFile(filename, timeNow->getTimeUnix() + " " + payload);
         }
     }
 }

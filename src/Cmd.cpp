@@ -100,8 +100,6 @@ void CMD_init() {
     sCmd.addCommand("firmwareUpdate", firmwareUpdate);
     sCmd.addCommand("firmwareVersion", firmwareVersion);
 
-   
-
     handle_time_init();
 }
 
@@ -332,7 +330,7 @@ void timeSet() {
 void handle_time_init() {
     ts.add(
         TIME, 1000, [&](void *) {
-            String tmp = getTime();
+            String tmp = timeNow->getTime();
             jsonWriteStr(configLiveJson, "time", tmp);
             tmp.replace(":", "-");
             jsonWriteStr(configLiveJson, "timenow", tmp);
@@ -360,9 +358,9 @@ void textSet() {
     if (text.indexOf("-time") >= 0) {
         text.replace("-time", "");
         text.replace("#", " ");
-        String time = getTime();
+        String time = timeNow->getTime();
         time.replace(":", ".");
-        text = text + " " + getDateDigitalFormated() + " " + time;
+        text = text + " " + timeNow->getDateDigitalFormated() + " " + time;
     }
 
     jsonWriteStr(configLiveJson, "text" + number, text);
