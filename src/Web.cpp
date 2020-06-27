@@ -224,7 +224,9 @@ void web_init() {
             request->redirect("/?set.utilities");
         }
 
-        if (request->hasArg(ONE_WIRE_TAG)) {
+        if (request->hasArg("oneWirePin")) {
+            jsonWriteStr(configSetupJson, "oneWirePin", request->getParam("oneWirePin")->value());
+            saveConfig();
             busScanFlag = true;
             busToScan = BS_ONE_WIRE;
             request->redirect("/?set.utilities");
