@@ -1,6 +1,5 @@
-#include "Global.h"
-
 #include "CaptiveRequestHandler.h"
+#include "Global.h"
 #include "Utils/PresetUtils.h"
 
 static const char* MODULE = "Web";
@@ -224,12 +223,15 @@ void web_init() {
             request->redirect("/?set.utilities");
         }
 
-        if (request->hasArg("oneWirePin")) {
-            jsonWriteStr(configSetupJson, "oneWirePin", request->getParam("oneWirePin")->value());
-            saveConfig();
+        if (request->hasArg(ONE_WIRE_TAG)) {
             busScanFlag = true;
             busToScan = BS_ONE_WIRE;
             request->redirect("/?set.utilities");
+        }
+
+        if (request->hasArg("oneWirePin")) {
+            jsonWriteStr(configSetupJson, "oneWirePin", request->getParam("oneWirePin")->value());
+            saveConfig();
         }
     });
     //==============================upgrade settings=============================================
