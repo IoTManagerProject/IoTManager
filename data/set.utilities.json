@@ -40,13 +40,20 @@
       "title": "Сканирование шины OneWire"
     },
     {
+      "type": "input",
+      "title": "Номер пина шины OneWire:",
+      "name": "oneWirePin-arg",
+      "state": "{{oneWirePin}}",
+      "pattern": "[A-Za-z0-9]{6,12}"
+    },
+    {
       "type": "h4",
       "title": "{{oneWire}}"
     },
     {
       "type": "link",
       "title": "Сканировать",
-      "action": "/set?oneWire",
+      "action": "/set?oneWirePin=[[oneWirePin-arg]]",
       "class": "btn btn-block btn-default"
     }
   ]
