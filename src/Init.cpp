@@ -17,7 +17,7 @@ void loadConfig() {
     Serial.println(configSetupJson);
 }
 
-void All_init() {
+void all_init() {
     Device_init();
     loadScenario();
     Timer_countdown_init();
@@ -90,11 +90,11 @@ void telemetry_init() {
 }
 
 void handle_uptime() {
-    jsonWriteStr(configSetupJson, "uptime", prettyMillis());
+    jsonWriteStr(configSetupJson, "uptime", timeNow->getUptime());
 }
 
 void handle_statistics() {
-    if (WiFi.status() == WL_CONNECTED) {
+    if (isNetworkActive()) {
         String urls = "http://backup.privet.lv/visitors/?";
         //-----------------------------------------------------------------
         urls += WiFi.macAddress().c_str();
@@ -114,7 +114,6 @@ void handle_statistics() {
         urls += "Power on";
 #endif
         urls += "&";
-        urls += "ver: ";
         urls += String(FIRMWARE_VERSION);
         String stat = getURL(urls);
     }

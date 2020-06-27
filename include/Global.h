@@ -14,7 +14,6 @@
 #include "Bus/BusScanner.h"
 #include "Errors.h"
 #include "GyverFilters.h"
-#include "UptimeInterval.h"
 #include "Upgrade.h"
 #include "Clock.h"
 
@@ -46,7 +45,7 @@ extern AsyncWebSocket ws;
 //extern AsyncEventSource events;
 #endif
 
-extern Clock* rtc;
+extern Clock* timeNow;
 
 extern TickerScheduler ts;
 
@@ -128,7 +127,7 @@ extern int sensors_reading_map[15];
 */
 
 // Cmd
-extern void CMD_init();
+extern void cmd_init();
 extern void button();
 extern void buttonSet();
 extern void buttonChange();
@@ -162,12 +161,11 @@ extern void fileExecute(const String& filename);
 extern void stringExecute(String& cmdStr);
 // Init
 extern void loadConfig();
-extern void All_init();
+extern void all_init();
 extern void statistics_init();
 extern void loadScenario();
 extern void Device_init();
 extern void prsets_init();
-extern void up_time();
 
 // Logging
 extern void logging();
@@ -179,8 +177,10 @@ extern void choose_log_date_and_send();
 extern void setChipId();
 extern void saveConfig();
 extern String getURL(const String& urls);
-
+extern void do_check_fs();
+extern void do_scan_bus();
 extern void servo_();
+extern void clock_init();
 
 extern void setLedStatus(LedStatus_t);
 
@@ -252,7 +252,6 @@ extern void UDP_init();
 extern void do_udp_data_parse();
 extern void do_mqtt_send_settings_to_udp();
 
-// iot_firmware
 extern void addCommandLoop(const String& cmdStr);
 extern void loopSerial();
 extern void loopCmd();
@@ -267,5 +266,4 @@ extern void uptime_init();
 
 // Web
 extern void web_init();
-
 extern void telemetry_init();

@@ -15,7 +15,7 @@ SoftwareSerial *mySerial = nullptr;
 
 void getData();
 
-void CMD_init() {
+void cmd_init() {
     sCmd.addCommand("button", button);
     sCmd.addCommand("buttonSet", buttonSet);
     sCmd.addCommand("buttonChange", buttonChange);
@@ -99,8 +99,6 @@ void CMD_init() {
 
     sCmd.addCommand("firmwareUpdate", firmwareUpdate);
     sCmd.addCommand("firmwareVersion", firmwareVersion);
-
-   
 
     handle_time_init();
 }
@@ -332,10 +330,8 @@ void timeSet() {
 void handle_time_init() {
     ts.add(
         TIME, 1000, [&](void *) {
-            String tmp = getTime();
-            jsonWriteStr(configLiveJson, "time", tmp);
-            tmp.replace(":", "-");
-            jsonWriteStr(configLiveJson, "timenow", tmp);
+            jsonWriteStr(configLiveJson, "time", timeNow->getTime());
+            jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
             eventGen("timenow", "");
         },
         nullptr, true);
@@ -360,9 +356,9 @@ void textSet() {
     if (text.indexOf("-time") >= 0) {
         text.replace("-time", "");
         text.replace("#", " ");
-        String time = getTime();
+        String time = timeNow->getTime();
         time.replace(":", ".");
-        text = text + " " + getDateDigitalFormated() + " " + time;
+        text = text + " " + timeNow->getDateDigitalFormated() + " " + time;
     }
 
     jsonWriteStr(configLiveJson, "text" + number, text);

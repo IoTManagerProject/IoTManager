@@ -5,7 +5,7 @@ AsyncWebSocket ws;
 //AsyncEventSource events;
 #endif
 
-Clock* rtc;
+Clock* timeNow;
 
 TickerScheduler ts(TEST + 1);
 

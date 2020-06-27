@@ -260,7 +260,7 @@ void publishState() {
         String state = selectToMarkerLast(tmp, ":");
         state.replace("\"", "");
 
-        if (topic != "name" && topic != "lang" && topic != "ip" && topic.indexOf("_in") < 0) {
+        if ((topic != "time") && (topic != "name") && (topic != "lang") && (topic != "ip") && (topic.indexOf("_in") < 0)) {
             publishStatus(topic, state);
         }
         str = deleteBeforeDelimiter(str, ",");
