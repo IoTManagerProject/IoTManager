@@ -76,7 +76,7 @@ class Clock {
         }
         _hasSynced = hasTimeSynced();
         if (_hasSynced) {
-            pm.info("synced " + getDateDigitalFormated() + " " + getTime());
+            pm.info("synced " + getDateDotFormated() + " " + getTime());
         } else {
             pm.error("failed to obtain");
         }
@@ -112,9 +112,18 @@ class Clock {
     /*
     * Локальное время "дд.ММ.гг"
     */
-    const String getDateDigitalFormated() {
+    const String getDateDotFormated() {
         char buf[32];
         sprintf(buf, "%02d.%02d.%02d", _time_local.day_of_month, _time_local.month, _time_local.year);
+        return String(buf);
+    }
+
+    /*
+    * Локальное дата время "дд.ММ.гг чч.мм.cc"
+    */
+    const String getDateTimeDotFormated() {
+        char buf[32];
+        sprintf(buf, "%02d.%02d.%02d %02d:%02d:%02d", _time_local.day_of_month, _time_local.month, _time_local.year, _time_local.hour, _time_local.minute, _time_local.second);
         return String(buf);
     }
 

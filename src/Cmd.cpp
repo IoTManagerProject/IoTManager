@@ -174,25 +174,23 @@ void buttonSet() {
     }
 
     eventGen("button", button_number);
-
     jsonWriteStr(configLiveJson, "button" + button_number, button_state);
-
     MqttClient::publishStatus("button" + button_number, button_state);
 }
 
 void buttonChange() {
     String button_number = sCmd.next();
-    String current_state = jsonReadStr(configLiveJson, "button" + button_number);
-
-    if (current_state == "1") {
-        current_state = "0";
-    } else if (current_state == "0") {
-        current_state = "1";
+    if (!isDigitStr(button_number)) {
+        pm.error("wrong button " + button_number);
+        return;
     }
-    order_loop += "buttonSet " + button_number + " " + current_state + ",";
-    jsonWriteStr(configLiveJson, "button" + button_number, current_state);
+    String name = "button" + button_number;
+    bool current_state = !jsonReadBool(configLiveJson, name);
+    String stateStr = current_state ? "1" : "0";
 
-    MqttClient::publishStatus("button" + button_number, current_state);
+    jsonWriteStr(configLiveJson, name, stateStr);
+    addCommandLoop("buttonSet " + button_number + " " + stateStr);
+    MqttClient::publishStatus(name, stateStr);
 }
 
 void pinSet() {
@@ -223,9 +221,8 @@ void pwm() {
     jsonWriteStr(configOptionJson, "pwm_pin" + pwm_number, pwm_pin);
     pinMode(pwm_pin_int, INPUT);
     analogWrite(pwm_pin_int, start_state.toInt());
-    //analogWriteFreq(32000);
+        
     jsonWriteStr(configLiveJson, "pwm" + pwm_number, start_state);
-
     createWidget(widget_name, page_name, page_number, "range", "pwm" + pwm_number);
 }
 
@@ -246,13 +243,13 @@ void pwmSet() {
 //==================================================================================================================
 //==========================================Модуль физической кнопки================================================
 void switch_() {
-    String switch_number = sCmd.next();
-    String switch_pin = sCmd.next();
-    String switch_delay = sCmd.next();
+    int number = String(sCmd.next()).toInt();
+    int pin = String(sCmd.next()).toInt();
+    int delay = String(sCmd.next()).toInt();
 
-    buttons[switch_number.toInt()].attach(switch_pin.toInt());
-    buttons[switch_number.toInt()].interval(switch_delay.toInt());
-    but[switch_number.toInt()] = true;
+    buttons[number].attach(pin);
+    buttons[number].interval(delay);
+    but[number] = true;
 }
 
 void loopSerial() {
@@ -294,6 +291,7 @@ void inputDigit() {
     page_name.replace("#", " ");
     String start_state = sCmd.next();
     String page_number = sCmd.next();
+
     jsonWriteStr(configLiveJson, "digit" + number, start_state);
     createWidget(widget_name, page_name, page_number, "inputNum", "digit" + number);
 }
@@ -301,6 +299,7 @@ void inputDigit() {
 void digitSet() {
     String number = sCmd.next();
     String value = sCmd.next();
+
     jsonWriteStr(configLiveJson, "digit" + number, value);
     MqttClient::publishStatus("digit" + number, value);
 }
@@ -316,6 +315,7 @@ void inputTime() {
     page_name.replace("#", " ");
     String start_state = sCmd.next();
     String page_number = sCmd.next();
+
     jsonWriteStr(configLiveJson, "time" + number, start_state);
     createWidget(widget_name, page_name, page_number, "inputTime", "time" + number);
 }
@@ -323,6 +323,7 @@ void inputTime() {
 void timeSet() {
     String number = sCmd.next();
     String value = sCmd.next();
+
     jsonWriteStr(configLiveJson, "time" + number, value);
     MqttClient::publishStatus("time" + number, value);
 }
@@ -356,9 +357,7 @@ void textSet() {
     if (text.indexOf("-time") >= 0) {
         text.replace("-time", "");
         text.replace("#", " ");
-        String time = timeNow->getTime();
-        time.replace(":", ".");
-        text = text + " " + timeNow->getDateDigitalFormated() + " " + time;
+        text = text + " " + timeNow->getDateTimeDotFormated();
     }
 
     jsonWriteStr(configLiveJson, "text" + number, text);
@@ -477,7 +476,6 @@ void servo_() {
     jsonWriteStr(configOptionJson, "s_max_deg" + servo_number, max_deg);
 
     jsonWriteStr(configLiveJson, "servo" + servo_number, start_state);
-
     createWidgetParam(widget_name, page_name, page_number, "range", "servo" + servo_number, "min", min_value, "max", max_value, "k", "1");
 }
 
@@ -511,13 +509,8 @@ void servoSet() {
         myServo2.write(servo_state_int);
 #endif
     }
-
-    //Serial.println(servo_state_int);
-
     eventGen("servo", servo_number);
-
     jsonWriteStr(configLiveJson, "servo" + servo_number, servo_state);
-
     MqttClient::publishStatus("servo" + servo_number, servo_state);
 }
 #endif
@@ -542,8 +535,6 @@ void serialBegin() {
     term->enableEcho(false);
     term->setOnReadLine([](const char *str) {
         String line = String(str);
-        pm.info("serial read: " + line);
-        //line.replace("#", " ");
         addCommandLoop(line);
     });
 }
@@ -592,7 +583,6 @@ void firmwareVersion() {
     String pageNumber = sCmd.next();
 
     jsonWriteStr(configLiveJson, "firmver", FIRMWARE_VERSION);
-
     createWidget(widget, page, pageNumber, "anydata", "firmver");
 }
 
@@ -605,20 +595,11 @@ void addCommandLoop(const String &cmdStr) {
 
 void fileExecute(const String &filename) {
     String cmdStr = readFile(filename, 2048);
-    cmdStr += "\r\n";
-    cmdStr.replace("\r\n", "\n");
-    cmdStr.replace("\r", "\n");
-
-    while (cmdStr.length() != 0) {
-        String buf = selectToMarker(cmdStr, "\n");
-        sCmd.readStr(buf);
-        cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
-    }
+    stringExecute(cmdStr);
 }
 
 void stringExecute(String &cmdStr) {
     cmdStr = cmdStr + "\r\n";
-
     cmdStr.replace("\r\n", "\n");
     cmdStr.replace("\r", "\n");
 
