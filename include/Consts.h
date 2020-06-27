@@ -2,7 +2,7 @@
 /*
 * Main consts
 */
-#define FIRMWARE_VERSION "2.3.4"
+#define FIRMWARE_VERSION "2.3.5"
 #define NUM_BUTTONS 6
 #define LED_PIN 2
 #define FLASH_4MB true
