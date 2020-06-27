@@ -57,3 +57,6 @@ enum ConfigType_t {
     CT_CONFIG,
     CT_SCENARIO
 };
+
+#define I2C_TAG "i2c"
+#define ONE_WIRE_TAG "oneWire"
