@@ -5,7 +5,7 @@
 
 #include <OneWire.h>
 
-const char* MODULE = "1Wire";
+const char* MODULE = "OneWire";
 
 bool OneWireScanner::syncScan() {
     // Connect your 1-wire device to pin 3
@@ -21,7 +21,6 @@ bool OneWireScanner::syncScan() {
     }
     if (OneWire::crc8(addr, 7) != addr[7]) {
         pm.error("CRC!");
-        addResult("не найдено");
         return false;
     }
     ds.reset_search();

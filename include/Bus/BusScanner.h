@@ -11,29 +11,37 @@ enum BusScanner_t {
 
 class BusScanner {
    public:
-    BusScanner(String& result, size_t tries) : _tries{tries}, _result{&result} {}
+    BusScanner(String& result, size_t tries) : _found{0}, _tries{tries}, _result{&result} {}
 
-    void addResult(const String message) {
-        _result->concat(message);
+    void addResult(const String str) {
+        _result->concat(str);
     }
-    
+
     void addResult(uint8_t addr, boolean last = true) {
-        _result->concat("0x");
+        _found++;
+
+        String str = "0x";
         if (addr < 16) {
-            _result->concat("0");
+            str += "0";
         }
-        _result->concat(String(addr, HEX));
-        _result->concat(!last ? ", " : "");
+        str += String(addr, HEX);
+        str += !last ? ", " : "";
+        addResult(str);
     };
 
     void scan() {
         if (!syncScan() && _tries--) {
             syncScan();
         }
+        if (!_found) {
+            addResult("не найдено");
+        }
     }
+
     virtual boolean syncScan();
 
    private:
+    size_t _found;
     size_t _tries;
     BusScanner_t _type;
     String* _result;
