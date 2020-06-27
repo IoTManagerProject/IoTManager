@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+#include "CommonTypes.h"
+
 enum BusScanner_t {
     BS_I2C,
     BS_ONE_WIRE
@@ -52,9 +54,9 @@ class BusScannerFactory {
     static const char* label(BusScanner_t type) {
         switch (type) {
             case BS_I2C:
-                return "i2c";
+                return I2C_TAG;
             case BS_ONE_WIRE:
-                return "onewire";
+                return ONE_WIRE_TAG;
             default:
                 return "";
         }

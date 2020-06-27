@@ -218,20 +218,15 @@ void web_init() {
         }
 #endif
         //==============================utilities settings=============================================
-        if (request->hasArg("itoc")) {
+        if (request->hasArg(I2C_TAG)) {
             busScanFlag = true;
             busToScan = BS_I2C;
             request->redirect("/?set.utilities");
         }
 
-        if (request->hasArg("onewire")) {
+        if (request->hasArg(ONE_WIRE_TAG)) {
             busScanFlag = true;
             busToScan = BS_ONE_WIRE;
-            request->redirect("/?set.utilities");
-        }
-
-        if (request->hasArg("fscheck")) {
-            fsCheckFlag = true;
             request->redirect("/?set.utilities");
         }
     });
