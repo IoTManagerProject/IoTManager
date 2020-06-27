@@ -1,6 +1,5 @@
-#include "Global.h"
-
 #include "CaptiveRequestHandler.h"
+#include "Global.h"
 #include "Utils/PresetUtils.h"
 
 static const char* MODULE = "Web";
@@ -199,7 +198,6 @@ void web_init() {
             request->send(200, "text/text", "ok");
         }
         //--------------------------------------------------------------------------------
-
         if (request->hasArg("mqttcheck")) {
             String buf = "{}";
             String payload = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
@@ -208,7 +206,6 @@ void web_init() {
 
             request->send(200, "text/text", buf);
         }
-
         //==============================push settings=============================================
 #ifdef PUSH_ENABLED
         if (request->hasArg("pushingboxid")) {
@@ -224,12 +221,16 @@ void web_init() {
             request->redirect("/?set.utilities");
         }
 
-        if (request->hasArg("oneWirePin")) {
-            jsonWriteStr(configSetupJson, "oneWirePin", request->getParam("oneWirePin")->value());
-            saveConfig();
+        if (request->hasArg(ONE_WIRE_TAG)) {
             busScanFlag = true;
             busToScan = BS_ONE_WIRE;
             request->redirect("/?set.utilities");
+        }
+
+        if (request->hasArg("oneWirePin")) {
+            //jsonWriteStr(configSetupJson, "oneWirePin", request->getParam("oneWirePin")->value());
+            saveConfig();
+            request->send(200, "text/text", "OK");
         }
     });
     //==============================upgrade settings=============================================

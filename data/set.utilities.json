@@ -41,10 +41,15 @@
     },
     {
       "type": "input",
-      "title": "Номер пина шины OneWire:",
+      "title": "Номер пина шины OneWire",
       "name": "oneWirePin-arg",
-      "state": "{{oneWirePin}}",
-      "pattern": "[A-Za-z0-9]{6,12}"
+      "state": "{{oneWirePin}}"
+    },
+    {
+      "type": "button",
+      "title": "Сохранить",
+      "action": "/set?oneWirePin=[[oneWirePin-arg]]",
+      "class": "btn btn-block btn-default"
     },
     {
       "type": "h4",
@@ -53,7 +58,7 @@
     {
       "type": "link",
       "title": "Сканировать",
-      "action": "/set?oneWirePin=[[oneWirePin-arg]]",
+      "action": "/set?oneWire",
       "class": "btn btn-block btn-default"
     }
   ]
