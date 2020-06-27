@@ -26,7 +26,7 @@
 #include "Utils\WiFiUtils.h"
 
 //=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
-#include <SoftwareSerial.h>
+
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>
 #include <Bounce2.h>

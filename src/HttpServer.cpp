@@ -15,8 +15,8 @@ void init() {
     String login = jsonReadStr(configSetupJson, "weblogin");
     String pass = jsonReadStr(configSetupJson, "webpass");
 #ifdef ESP32
-    server.addHandler(new SPIFFSEditor(LittleFS, login, pass);
-#elif defined(ESP8266)
+    server.addHandler(new SPIFFSEditor(LittleFS, login, pass));
+#else
     server.addHandler(new SPIFFSEditor(login, pass));
 #endif
 
@@ -51,7 +51,7 @@ void init() {
     server.on("/config.option.json", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send(200, "application/json", configOptionJson);
     });
-    
+
     // для хранения постоянных данных
     server.on("/config.setup.json", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send(200, "application/json", configSetupJson);
@@ -65,7 +65,7 @@ void init() {
     });
 
     server.begin();
-    
+
     initOta();
     initMDNS();
     initWS();

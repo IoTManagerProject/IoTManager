@@ -3,8 +3,9 @@
 #include "Utils/TimeUtils.h"
 #include "Utils/PrintMessage.h"
 
-#include "TZ.h"
+#ifdef ESP8266
 #include "sntp.h"
+#endif
 
 class Clock {
     const char* MODULE = "Clock";
@@ -83,12 +84,16 @@ class Clock {
     }
 
     void setupSntp() {
+#ifdef ESP2866
         sntp_setservername(0, _ntp.c_str());
         sntp_setservername(1, "ru.pool.ntp.org");
         sntp_setservername(2, "pool.ntp.org");
         sntp_stop();
         sntp_set_timezone(0);  // UTC time
         sntp_init();
+#else
+        configTime(0, 0, _ntp.c_str(), "ru.pool.ntp.org", "pool.ntp.org");
+#endif
     }
 
     bool hasTimeSynced() const {

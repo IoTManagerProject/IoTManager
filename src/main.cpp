@@ -150,7 +150,6 @@ void saveConfig() {
 }
 
 #ifdef ESP8266
-#ifdef LED_PIN
 void setLedStatus(LedStatus_t status) {
     pinMode(LED_PIN, OUTPUT);
     switch (status) {
@@ -172,7 +171,24 @@ void setLedStatus(LedStatus_t status) {
             break;
     }
 }
-#endif
+#else
+void setLedStatus(LedStatus_t status) {
+    pinMode(LED_PIN, OUTPUT);
+    switch (status) {
+        case LED_OFF:
+            digitalWrite(LED_PIN, HIGH);
+            break;
+        case LED_ON:
+            digitalWrite(LED_PIN, LOW);
+            break;
+        case LED_SLOW:
+            break;
+        case LED_FAST:
+            break;
+        default:
+            break;
+    }
+}
 #endif
 
 void clock_init() {

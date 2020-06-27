@@ -11,7 +11,11 @@ Bounce *buttons = new Bounce[NUM_BUTTONS];
 
 Servo myServo1;
 Servo myServo2;
+#ifdef ESP8266
 SoftwareSerial *mySerial = nullptr;
+#else
+HardwareSerial *mySerial = nullptr;
+#endif
 
 void getData();
 
@@ -221,7 +225,7 @@ void pwm() {
     jsonWriteStr(configOptionJson, "pwm_pin" + pwm_number, pwm_pin);
     pinMode(pwm_pin_int, INPUT);
     analogWrite(pwm_pin_int, start_state.toInt());
-        
+
     jsonWriteStr(configLiveJson, "pwm" + pwm_number, start_state);
     createWidget(widget_name, page_name, page_number, "range", "pwm" + pwm_number);
 }
@@ -525,8 +529,13 @@ void serialBegin() {
         delete mySerial;
     }
 
+#ifdef ESP8266
     mySerial = new SoftwareSerial(rxPin.toInt(), txPin.toInt());
     mySerial->begin(s_speed.toInt());
+#else
+    mySerial = new HardwareSerial(2);
+    mySerial->begin(rxPin.toInt(), txPin.toInt());
+#endif
 
     term = new Terminal(mySerial);
     term->setEOL(LF);

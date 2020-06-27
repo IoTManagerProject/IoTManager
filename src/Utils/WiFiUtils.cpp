@@ -21,7 +21,7 @@ void startSTAMode() {
     bool keepConnecting = true;
     uint8_t tries = 20;
     do {
-        sint8_t connRes = WiFi.waitForConnectResult(1000);
+        byte connRes = WiFi.waitForConnectResult();
         switch (connRes) {
             case WL_NO_SSID_AVAIL: {
                 pm.error("No ssid available");

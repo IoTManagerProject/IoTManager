@@ -4,7 +4,7 @@ struct Time_t {
     uint8_t second;
     uint8_t minute;
     uint8_t hour;
-    uint8_t day_of_week;  // sunday is day 1
+    uint8_t day_of_week;
     uint8_t day_of_month;
     uint8_t month;
     uint16_t day_of_year;
@@ -56,22 +56,4 @@ enum LedStatus_t {
 enum ConfigType_t {
     CT_CONFIG,
     CT_SCENARIO
-};
-
-enum Item_t {
-    RELAY,
-    PWM,
-    DHT11,
-    DHT22,
-    ANALOG,
-    BMP280,
-    BME280,
-    DALLAS,
-    TERMOSTAT,
-    ULTRASONIC,
-    MOTION,
-    STEPPER,
-    SERVO,
-    FIRMWARE,
-    NUM_ITEMS
 };
