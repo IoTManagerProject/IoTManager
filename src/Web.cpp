@@ -133,14 +133,14 @@ void web_init() {
             String timezoneStr = request->getParam("timezone")->value();
             jsonWriteStr(configSetupJson, "timezone", timezoneStr);
             saveConfig();
-            rtc->setTimezone(timezoneStr.toInt());
+            timeNow->setTimezone(timezoneStr.toInt());
             request->send(200, "text/text", "OK");
         }
         if (request->hasArg("ntp")) {
             String ntpStr = request->getParam("ntp")->value();
             jsonWriteStr(configSetupJson, "ntp", ntpStr);
             saveConfig();
-            rtc->setNtpPool(ntpStr);
+            timeNow->setNtpPool(ntpStr);
             request->send(200, "text/text", "OK");
         }
         //--------------------------------------------------------------------------------
