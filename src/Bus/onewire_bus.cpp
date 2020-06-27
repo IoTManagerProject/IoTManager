@@ -5,7 +5,7 @@
 
 #include <OneWire.h>
 
-const char* MODULE = "1Wire";
+const char* MODULE = "OneWire";
 
 bool OneWireScanner::syncScan() {
     // Connect your 1-wire device to pin 3
