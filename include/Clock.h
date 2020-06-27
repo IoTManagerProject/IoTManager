@@ -113,7 +113,7 @@ class Clock {
     * Локальное время "дд.ММ.гг"
     */
     const String getDateDigitalFormated() {
-        char buf[16];
+        char buf[32];
         sprintf(buf, "%02d.%02d.%02d", _time_local.day_of_month, _time_local.month, _time_local.year);
         return String(buf);
     }
@@ -122,8 +122,14 @@ class Clock {
     * Локальное время "чч:мм:cc"
     */
     const String getTime() {
-        char buf[16];
+        char buf[32];
         sprintf(buf, "%02d:%02d:%02d", _time_local.hour, _time_local.minute, _time_local.second);
+        return String(buf);
+    }
+
+    const String getTimeJson() {
+        char buf[32];
+        sprintf(buf, "%02d-%02d-%02d", _time_local.hour, _time_local.minute, _time_local.second);
         return String(buf);
     }
 
@@ -131,7 +137,7 @@ class Clock {
     * Локальное время "чч:мм"
     */
     const String getTimeWOsec() {
-        char buf[16];
+        char buf[32];
         sprintf(buf, "%02d:%02d", _time_local.hour, _time_local.minute);
         return String(buf);
     }

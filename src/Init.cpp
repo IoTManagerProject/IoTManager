@@ -17,7 +17,7 @@ void loadConfig() {
     Serial.println(configSetupJson);
 }
 
-void All_init() {
+void all_init() {
     Device_init();
     loadScenario();
     Timer_countdown_init();

@@ -20,28 +20,28 @@ int jsonReadInt(String& json, String name) {
     return root[name];
 }
 
-String jsonWriteStr(String& json, String name, String volume) {
+String jsonWriteStr(String& json, String name, String value) {
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(json);
-    root[name] = volume;
+    root[name] = value;
     json = "";
     root.printTo(json);
     return json;
 }
 
-String jsonWriteInt(String& json, String name, int volume) {
+String jsonWriteInt(String& json, String name, int value) {
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(json);
-    root[name] = volume;
+    root[name] = value;
     json = "";
     root.printTo(json);
     return json;
 }
 
-String jsonWriteFloat(String& json, String name, float volume) {
+String jsonWriteFloat(String& json, String name, float value) {
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(json);
-    root[name] = volume;
+    root[name] = value;
     json = "";
     root.printTo(json);
     return json;
