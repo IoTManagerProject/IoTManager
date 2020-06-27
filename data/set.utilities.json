@@ -42,7 +42,7 @@
     {
       "type": "input",
       "title": "Номер пина шины OneWire:",
-      "name": "oneWire-arg",
+      "name": "oneWirePin-arg",
       "state": "{{oneWirePin}}",
       "pattern": "[A-Za-z0-9]{6,12}"
     },
@@ -53,7 +53,7 @@
     {
       "type": "link",
       "title": "Сканировать",
-      "action": "/set?oneWire=[[oneWire-arg]]",
+      "action": "/set?oneWirePin=[[oneWirePin-arg]]",
       "class": "btn btn-block btn-default"
     }
   ]
