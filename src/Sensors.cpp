@@ -1,6 +1,8 @@
 #include "Global.h"
 
-OneWire *oneWire;
+#include "Bus/OneWireBus.h"
+OneWireBus oneWireBus;
+
 GMedian<10, int> medianFilter;
 DHTesp dht;
 
@@ -234,15 +236,14 @@ void analog_reading2() {
 #ifdef DALLAS_ENABLED
 void dallas() {
     String value_name = sCmd.next();
-    String pin = sCmd.next();
+    uint8_t pin = (uint8_t)String(sCmd.next()).toInt();
     String address = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    oneWire = new OneWire((uint8_t)pin.toInt());
 
-    sensors.setOneWire(oneWire);
+    sensors.setOneWire(oneWireBus.get(pin));
     sensors.begin();
     sensors.setResolution(12);
 

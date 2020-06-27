@@ -13,6 +13,10 @@ class BusScanner {
    public:
     BusScanner(String& result, size_t tries) : _tries{tries}, _result{&result} {}
 
+    void addResult(const String message) {
+        _result->concat(message);
+    }
+    
     void addResult(uint8_t addr, boolean last = true) {
         _result->concat("0x");
         if (addr < 16) {

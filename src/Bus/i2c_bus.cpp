@@ -17,5 +17,8 @@ boolean I2CScanner::syncScan() {
             cnt++;
         }
     }
+    if (!cnt) { 
+        addResult("не найдено");
+    }
     return cnt;
 }
