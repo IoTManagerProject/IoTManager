@@ -127,3 +127,18 @@ const String getFileSize(const String filename) {
     file.close();
     return String(size);
 }
+
+const String getFSSizeInfo() {
+    String res;
+#ifdef ESP8266
+    FSInfo info;
+    if (LittleFS.info(info)) {
+        res = prettyBytes(info.usedBytes) + " of " + prettyBytes(info.totalBytes);
+    } else {
+        res = "error";
+    }
+#else
+    res = prettyBytes(LittleFS.usedBytes()) + " of " + prettyBytes(LittleFS.totalBytes());
+#endif
+    return res;
+}

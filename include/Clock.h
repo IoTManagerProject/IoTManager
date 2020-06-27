@@ -3,8 +3,9 @@
 #include "Utils/TimeUtils.h"
 #include "Utils/PrintMessage.h"
 
-#include "TZ.h"
+#ifdef ESP8266
 #include "sntp.h"
+#endif
 
 class Clock {
     const char* MODULE = "Clock";
@@ -76,19 +77,23 @@ class Clock {
         }
         _hasSynced = hasTimeSynced();
         if (_hasSynced) {
-            pm.info("synced " + getDateDigitalFormated() + " " + getTime());
+            pm.info("synced " + getDateDotFormated() + " " + getTime());
         } else {
             pm.error("failed to obtain");
         }
     }
 
     void setupSntp() {
+#ifdef ESP2866
         sntp_setservername(0, _ntp.c_str());
         sntp_setservername(1, "ru.pool.ntp.org");
         sntp_setservername(2, "pool.ntp.org");
         sntp_stop();
         sntp_set_timezone(0);  // UTC time
         sntp_init();
+#else
+        configTime(0, 0, _ntp.c_str(), "ru.pool.ntp.org", "pool.ntp.org");
+#endif
     }
 
     bool hasTimeSynced() const {
@@ -112,9 +117,18 @@ class Clock {
     /*
     * Локальное время "дд.ММ.гг"
     */
-    const String getDateDigitalFormated() {
+    const String getDateDotFormated() {
         char buf[32];
         sprintf(buf, "%02d.%02d.%02d", _time_local.day_of_month, _time_local.month, _time_local.year);
+        return String(buf);
+    }
+
+    /*
+    * Локальное дата время "дд.ММ.гг чч.мм.cc"
+    */
+    const String getDateTimeDotFormated() {
+        char buf[32];
+        sprintf(buf, "%02d.%02d.%02d %02d:%02d:%02d", _time_local.day_of_month, _time_local.month, _time_local.year, _time_local.hour, _time_local.minute, _time_local.second);
         return String(buf);
     }
 

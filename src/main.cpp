@@ -123,7 +123,7 @@ void not_async_actions() {
 
     do_scan_bus();
 
-    do_check_fs();
+    do_fscheck();
 }
 
 String getURL(const String& urls) {
@@ -140,31 +140,6 @@ String getURL(const String& urls) {
     return res;
 }
 
-void safeDataToFile(String data, String Folder) {
-    String fileName;
-    fileName.toLowerCase();
-    fileName = deleteBeforeDelimiter(fileName, " ");
-    fileName.replace(" ", ".");
-    fileName.replace("..", ".");
-    fileName = Folder + "/" + fileName + ".txt";
-
-    jsonWriteStr(configLiveJson, "test", fileName);
-}
-
-void sendConfig(String topic, String widgetConfig, String key, String date) {
-    yield();
-    topic = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topic + "/status";
-    String outer = "{\"widgetConfig\":";
-    String inner = "{\"";
-    inner = inner + key;
-    inner = inner + "\":\"";
-    inner = inner + date;
-    inner = inner + "\"";
-    inner = inner + "}}";
-    String t = outer + inner;
-    yield();
-}
-
 void setChipId() {
     chipId = getChipId();
     Serial.println(chipId);
@@ -175,7 +150,6 @@ void saveConfig() {
 }
 
 #ifdef ESP8266
-#ifdef LED_PIN
 void setLedStatus(LedStatus_t status) {
     pinMode(LED_PIN, OUTPUT);
     switch (status) {
@@ -197,12 +171,25 @@ void setLedStatus(LedStatus_t status) {
             break;
     }
 }
-#endif
-#endif
-
-void do_fscheck(String& results) {
-    // TODO Проверка наличие важных файлов, возможно версии ФС
+#else
+void setLedStatus(LedStatus_t status) {
+    pinMode(LED_PIN, OUTPUT);
+    switch (status) {
+        case LED_OFF:
+            digitalWrite(LED_PIN, HIGH);
+            break;
+        case LED_ON:
+            digitalWrite(LED_PIN, LOW);
+            break;
+        case LED_SLOW:
+            break;
+        case LED_FAST:
+            break;
+        default:
+            break;
+    }
 }
+#endif
 
 void clock_init() {
     timeNow = new Clock();
@@ -225,11 +212,12 @@ void do_scan_bus() {
     }
 }
 
-void do_check_fs() {
-    if (fsCheckFlag) {
-        String buf;
-        do_fscheck(buf);
-        jsonWriteStr(configLiveJson, "fscheck", buf);
-        fsCheckFlag = false;
+void do_fscheck() {
+    if (!fsCheckFlag) {
+        return;
     }
+    String buf;
+    buf += getFSSizeInfo();
+    jsonWriteStr(configLiveJson, "fscheck", buf);
+    fsCheckFlag = false;
 }

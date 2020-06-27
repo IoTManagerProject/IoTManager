@@ -10,6 +10,7 @@
 #include <SPIFFSEditor.h>
 #include <Servo.h>
 #include <WiFiUdp.h>
+#include <SoftwareSerial.h>
 #ifdef MDNS_ENABLED
 #include <ESP8266mDNS.h>
 #endif

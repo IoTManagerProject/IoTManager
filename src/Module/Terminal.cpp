@@ -45,8 +45,8 @@ void Terminal::quit() {}
 void Terminal::loop() {
     if (_stream == nullptr || !_stream->available()) return;
 
-    sint8_t moveX = 0;
-    sint8_t moveY = 0;
+    byte moveX = 0;
+    byte moveY = 0;
 
     char c = _stream->read();
 

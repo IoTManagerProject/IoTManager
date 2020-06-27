@@ -26,7 +26,7 @@
 #include "Utils\WiFiUtils.h"
 
 //=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
-#include <SoftwareSerial.h>
+
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>
 #include <Bounce2.h>
@@ -177,7 +177,7 @@ extern void choose_log_date_and_send();
 extern void setChipId();
 extern void saveConfig();
 extern String getURL(const String& urls);
-extern void do_check_fs();
+extern void do_fscheck();
 extern void do_scan_bus();
 extern void servo_();
 extern void clock_init();
