@@ -54,3 +54,5 @@ const String readFile(const String& filename, size_t max_size);
 const String getFileSize(const String& filename);
 
 bool copyFile(const String& src, const String& dst, bool overwrite = true);
+
+const String getFSSizeInfo();

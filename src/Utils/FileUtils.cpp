@@ -127,3 +127,14 @@ const String getFileSize(const String filename) {
     file.close();
     return String(size);
 }
+
+const String getFSSizeInfo() {
+    String res;
+    FSInfo info;
+    if (LittleFS.info(info)) {
+        res = prettyBytes(info.usedBytes) + " of " + prettyBytes(info.totalBytes);
+    } else {
+        res = "error";
+    }
+    return res;
+}
