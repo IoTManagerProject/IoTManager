@@ -11,40 +11,6 @@ static const char* MODULE = "Main";
 Timings metric;
 boolean initialized = false;
 
-void do_fscheck(String& results) {
-    // TODO Проверка наличие важных файлов, возможно версии ФС
-}
-
-void clock_init() {
-    timeNow = new Clock();
-    timeNow->setNtpPool(jsonReadStr(configSetupJson, "ntp"));
-    timeNow->setTimezone(jsonReadStr(configSetupJson, "timezone").toInt());
-
-    ts.add(
-        TIME_SYNC, 30000, [&](void*) {
-            timeNow->hasSync();
-        },
-        nullptr, true);
-}
-void do_scan_bus() {
-    if (busScanFlag) {
-        String res = "";
-        BusScanner* scanner = BusScannerFactory::get(res, busToScan);
-        scanner->scan();
-        jsonWriteStr(configLiveJson, BusScannerFactory::label(busToScan), res);
-        busScanFlag = false;
-    }
-}
-
-void do_check_fs() {
-    if (fsCheckFlag) {
-        String buf;
-        do_fscheck(buf);
-        jsonWriteStr(configLiveJson, "fscheck", buf);
-        fsCheckFlag = false;
-    }
-}
-
 void setup() {
     WiFi.setAutoConnect(false);
     WiFi.persistent(false);
@@ -62,14 +28,17 @@ void setup() {
     pm.info("Config");
     loadConfig();
 
+    pm.info("Clock");
+    clock_init();
+
     pm.info("Commands");
-    CMD_init();
+    cmd_init();
 
     pm.info("Sensors");
     sensors_init();
 
     pm.info("Init");
-    All_init();
+    all_init();
 
     pm.info("Network");
     startSTAMode();
@@ -91,15 +60,12 @@ void setup() {
     pm.info("WebAdmin");
     web_init();
 
-    pm.info("Clock");
-    clock_init();
-
 #ifdef UDP_ENABLED
     pm.info("Broadcast UDP");
     UDP_init();
 #endif
     ts.add(
-        TEST, 10000, [&](void*) {
+        TEST, 1000 * 60, [&](void*) {
             pm.info(printMemoryStatus());
         },
         nullptr, true);
@@ -121,10 +87,8 @@ void loop() {
 #ifdef WS_enable
     ws.cleanupClients();
 #endif
-    // metric.add(MT_ONE);
     not_async_actions();
 
-    // metric.add(MT_TWO);
     MqttClient::loop();
 
     loopCmd();
@@ -140,12 +104,6 @@ void loop() {
     loopSerial();
 
     ts.update();
-
-    if (metric._counter > 100000) {
-        metric.print();
-    } else {
-        metric.count();
-    }
 }
 
 void not_async_actions() {
@@ -241,3 +199,37 @@ void setLedStatus(LedStatus_t status) {
 }
 #endif
 #endif
+
+void do_fscheck(String& results) {
+    // TODO Проверка наличие важных файлов, возможно версии ФС
+}
+
+void clock_init() {
+    timeNow = new Clock();
+    timeNow->setNtpPool(jsonReadStr(configSetupJson, "ntp"));
+    timeNow->setTimezone(jsonReadStr(configSetupJson, "timezone").toInt());
+
+    ts.add(
+        TIME_SYNC, 30000, [&](void*) {
+            timeNow->hasSync();
+        },
+        nullptr, true);
+}
+void do_scan_bus() {
+    if (busScanFlag) {
+        String res = "";
+        BusScanner* scanner = BusScannerFactory::get(res, busToScan);
+        scanner->scan();
+        jsonWriteStr(configLiveJson, BusScannerFactory::label(busToScan), res);
+        busScanFlag = false;
+    }
+}
+
+void do_check_fs() {
+    if (fsCheckFlag) {
+        String buf;
+        do_fscheck(buf);
+        jsonWriteStr(configLiveJson, "fscheck", buf);
+        fsCheckFlag = false;
+    }
+}
