@@ -14,6 +14,15 @@ void web_init() {
     // dnsServer.start(53, "*", WiFi.softAPIP());
     // server.addHandler(new CaptiveRequestHandler(jsonReadStr(configSetupJson, "name").c_str())).setFilter(ON_AP_FILTER);
 
+    server.on("/restart", HTTP_GET, [](AsyncWebServerRequest* request) {
+        if (request->hasArg("device")) {
+            if (request->getParam("device")->value() == "ok") {
+                ESP.restart();
+            }
+            request->send(200);
+        };
+    });
+
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         uint8_t preset;
         if (parseRequestForPreset(request, preset)) {
@@ -125,13 +134,6 @@ void web_init() {
             request->send(200);
         }
         //--------------------------------------------------------------------------------
-        if (request->hasArg("device")) {
-            if (request->getParam("device")->value() == "ok") {
-                ESP.restart();
-            }
-            request->send(200);
-        }
-        //--------------------------------------------------------------------------------
         if (request->hasArg("blink")) {
             bool value = request->getParam("blink")->value().toInt();
             jsonWriteBool(configSetupJson, "blink", value);
@@ -175,6 +177,7 @@ void web_init() {
             mqtt_send_settings_to_udp = true;
             request->send(200);
         }
+
         //--------------------------------------------------------------------------------
         if (request->hasArg("mqttcheck")) {
             String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
@@ -185,6 +188,7 @@ void web_init() {
 
             request->send(200, "text/html", payload);
         }
+
         //==============================push settings=============================================
 #ifdef PUSH_ENABLED
         if (request->hasArg("pushingboxid")) {
@@ -193,28 +197,28 @@ void web_init() {
             request->send(200);
         }
 #endif
+
         //==============================utilities settings=============================================
         if (request->hasArg(TAG_I2C)) {
             busScanFlag = true;
             busToScan = BS_I2C;
             request->redirect("/?set.utilities");
-        }
-
-        if (request->hasArg(TAG_ONE_WIRE)) {
+        } else if (request->hasArg(TAG_ONE_WIRE)) {
             busScanFlag = true;
             busToScan = BS_ONE_WIRE;
             if (request->hasParam(TAG_ONE_WIRE_PIN)) {
                 setConfigParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value());
             }
             request->redirect("/?set.utilities");
-        }
-
-        if (request->hasArg(TAG_ONE_WIRE_PIN)) {
+        } else if (request->hasArg(TAG_ONE_WIRE_PIN)) {
             setConfigParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value());
             request->send(200);
         }
     });
-    //==============================upgrade settings=============================================
+
+    /* 
+    * Check
+    */
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         checkUpdatesFlag = true;
         pm.info("firmware version: " + lastVersion);
@@ -247,6 +251,9 @@ void web_init() {
         request->send(200, "text/html", tmp);
     });
 
+    /* 
+    * Upgrade
+    */
     server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest* request) {
         updateFlag = true;
         request->send(200, "text/html");

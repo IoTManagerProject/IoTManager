@@ -248,7 +248,7 @@ extern void createChart(String widget_name, String page_name, String page_number
 extern void pushControl();
 
 // UDP
-extern void UDP_init();
+extern void udp_init();
 extern void do_udp_data_parse();
 extern void do_mqtt_send_settings_to_udp();
 

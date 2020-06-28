@@ -140,7 +140,7 @@ String getURL(const String& urls) {
 
 void setChipId() {
     chipId = getChipId();
-    Serial.println(chipId);
+    pm.info("id: " + chipId);
 }
 
 void saveConfig() {

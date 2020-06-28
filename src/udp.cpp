@@ -16,6 +16,7 @@ int udp_period;
 boolean udp_busy = false;
 unsigned int udp_port = 4210;
 
+//TODO Помомему тут ошибка в define'ах
 void handleUdp_esp32();
 
 void add_dev_in_list(String fileName, String id, String dev_name, String ip);

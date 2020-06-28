@@ -22,7 +22,6 @@ void loopScenario() {
             return;
         }
         i++;
-
         if (scenario_line_status[i] == 1) {
             //выделяем первую строку самого сценария  button1 = 1 (условие)
             String condition = selectToMarker(block, "\n");
@@ -30,9 +29,8 @@ void loopScenario() {
             String order = jsonReadStr(configOptionJson, "scenario_status");  //читаем весь файл событий
             String param = selectToMarker(order, ",");                        //читаем первое событие из файла событий
             if (param_name == param) {                                        //если поступившее событие равно событию заданному buttonSet1 в файле начинаем его обработку
-
-                String sign = selectFromMarkerToMarker(condition, " ", 1);   //читаем знак  (=)
-                String value = selectFromMarkerToMarker(condition, " ", 2);  //читаем значение (1)
+                String sign = selectFromMarkerToMarker(condition, " ", 1);    //читаем знак  (=)
+                String value = selectFromMarkerToMarker(condition, " ", 2);   //читаем значение (1)
                 if (value.indexOf("digit") != -1) {
                     //  value = add_set(value);
                     value = jsonReadStr(configLiveJson, value);
@@ -41,31 +39,29 @@ void loopScenario() {
                     //  value = add_set(value);
                     value = jsonReadStr(configLiveJson, value);
                 }
-                boolean flag = false;  //если одно из значений совпало то только тогда начинаем выполнять комнады
+                // если условие выполнилось, тогда начинаем выполнять комнады
+                boolean flag = false;
+                String param = jsonReadStr(configLiveJson, param_name);
                 if (sign == "=") {
-                    if (jsonReadStr(configLiveJson, param_name) == value) flag = true;
-                }
-                if (sign == "!=") {
-                    if (jsonReadStr(configLiveJson, param_name) != value) flag = true;
-                }
-                if (sign == "<") {
-                    if (jsonReadStr(configLiveJson, param_name).toInt() < value.toInt()) flag = true;
-                }
-                if (sign == ">") {
-                    if (jsonReadStr(configLiveJson, param_name).toInt() > value.toInt()) flag = true;
-                }
-                if (sign == ">=") {
-                    if (jsonReadStr(configLiveJson, param_name).toInt() >= value.toInt()) flag = true;
-                }
-                if (sign == "<=") {
-                    if (jsonReadStr(configLiveJson, param_name).toInt() <= value.toInt()) flag = true;
+                    flag = param == value;
+                } else if (sign == "!=") {
+                    flag = param != value;
+                } else if (sign == "<") {
+                    flag = param.toInt() < value.toInt();
+                } else if (sign == ">") {
+                    flag = param.toInt() > value.toInt();
+                } else if (sign == ">=") {
+                    flag = param.toInt() >= value.toInt();
+                } else if (sign == "<=") {
+                    flag = param.toInt() <= value.toInt();
                 }
 
                 if (flag) {
-                    block = deleteBeforeDelimiter(block, "\n");  //удаляем строку самого сценария оставляя только команды
-                    stringExecute(block);                        //выполняем все команды
-
-                    pm.info(condition + "'");
+                    // удаляем строку самого сценария оставляя только команды
+                    block = deleteBeforeDelimiter(block, "\n");
+                    pm.info("do: " + block);
+                    // выполняем все команды
+                    stringExecute(block);
                 }
             }
         }
