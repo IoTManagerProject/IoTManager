@@ -106,41 +106,39 @@ void cmd_init() {
 
 void button() {
     pm.info(String("create 'button'"));
-    String number = sCmd.next();
-    String param = sCmd.next();
-    String widget = sCmd.next();
+    String name = sCmd.next();
+    String pin = sCmd.next();
+    String description = sCmd.next();
     String page = sCmd.next();
     String state = sCmd.next();
-    String pageNumber = sCmd.next();
+    String page_number = sCmd.next();
 
-    jsonWriteStr(configOptionJson, "button_param" + number, param);
-    jsonWriteStr(configLiveJson, "button" + number, state);
+    jsonWriteStr(configOptionJson, "button_param" + name, pin);
+    jsonWriteStr(configLiveJson, "button" + name, state);
 
-    if (isDigitStr(param)) {
-        pinMode(param.toInt(), OUTPUT);
-        digitalWrite(param.toInt(), state.toInt());
-    }
-
-    if (param == "scen") {
+    if (isDigitStr(pin)) {
+        myButtons.create(name, pin.toInt(), state.toInt());
+    } else if (pin == "scen") {
         jsonWriteStr(configSetupJson, "scen", state);
         loadScenario();
         saveConfig();
-    }
-
-    if (param.indexOf("line") != -1) {
-        String str = param;
+    } else if (pin.indexOf("line") != -1) {
+        String str = pin;
         while (str.length()) {
-            if (str == "") return;
-            String tmp = selectToMarker(str, ",");            //line1,
-            String number = deleteBeforeDelimiter(tmp, "e");  //1,
+            if (str == "") {
+                return;
+            }
+            //line1,
+            String tmp = selectToMarker(str, ",");
+            //1,
+            String number = deleteBeforeDelimiter(tmp, "e");
             number.replace(",", "");
-            Serial.println(number);
             int number_int = number.toInt();
             scenario_line_status[number_int] = state.toInt();
             str = deleteBeforeDelimiter(str, ",");
         }
     }
-    createWidget(widget, page, pageNumber, "toggle", "button" + number);
+    createWidget(description, page, page_number, "toggle", "button" + name);
 }
 
 void buttonSet() {
@@ -241,26 +239,26 @@ void pwmSet() {
 }
 
 void switch_() {
-    int number = String(sCmd.next()).toInt();
+    String name = sCmd.next();
     int pin = String(sCmd.next()).toInt();
     int delay = String(sCmd.next()).toInt();
 
-    myButtons.create(number, pin, delay);
+    myButtons.create(name, pin, delay);
 }
 
-void loopSerial() {
+void loop_serial() {
     if (term) {
         term->loop();
     }
 }
 
-void loopButton() {
+void loop_button() {
     for (size_t i = 0; i < myButtons.count(); i++) {
         Button_t *btn = myButtons.at(i);
         btn->obj->update();
         if (btn->obj->fell() || btn->obj->rose()) {
-            eventGen("switch", String(btn->num));
-            jsonWriteInt(configLiveJson, "switch" + String(btn->num), btn->obj->read());
+            eventGen("switch", String(i, DEC));
+            jsonWriteInt(configLiveJson, "switch" + String(i, DEC), btn->obj->read());
         }
     }
 }
@@ -447,7 +445,7 @@ void servo_() {
 
     jsonWriteInt(configLiveJson, "servo" + number, value);
 
-    createWidgetParam(widget, page, pageNumber, "range", "servo" + number, "min", String(min_value), "max", String(max_value), "k", "1");
+    createWidget(widget, page, pageNumber, "range", "servo" + number, "min", String(min_value), "max", String(max_value), "k", "1");
 }
 
 void servoSet() {

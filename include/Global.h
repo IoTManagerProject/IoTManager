@@ -236,10 +236,8 @@ extern int readTimer(int number);
 
 extern void initUpdater();
 
-// widget
-extern void createWidgetByType(String widget_name, String page_name, String page_number, String file, String topic);
-extern void createWidgetParam(String widget_name, String page_name, String page_number, String file, String topic, String name1, String param1, String name2, String param2, String name3, String param3);
-extern void createWidget(String widget_name, String page_name, String page_number, String type, String topik);
+// Widget
+extern void createWidget(String widget_name, String page_name, String page_number, String file, String topic, String name1 = "", String param1 = "", String name2 = "", String param2 = "", String name3 = "", String param3 = "");
 extern void createChart(String widget_name, String page_name, String page_number, String file, String topic, String maxCount);
 
 // PushingBox
@@ -251,9 +249,9 @@ extern void do_udp_data_parse();
 extern void do_mqtt_send_settings_to_udp();
 
 extern void addCommandLoop(const String& cmdStr);
-extern void loopSerial();
+extern void loop_serial();
 extern void loopCmd();
-extern void loopButton();
+extern void loop_button();
 extern void loopScenario();
 extern void loopUdp();
 

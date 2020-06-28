@@ -7,13 +7,15 @@ void Timer_countdown_init() {
         TIMER_COUNTDOWN, 1000, [&](void*) {
             String old_line = jsonReadStr(configOptionJson, "timers");
             if (old_line != "") {
-                //Serial.println(old_line);
                 int i = 0;
                 do {
+                    Serial.println(old_line);
                     String timer = selectFromMarkerToMarker(old_line, ",", i);
                     Serial.print("timer no " + String(i) + ": ");
                     Serial.println(timer);
-                    if (timer == "not found" || timer == "") return;
+                    if (timer == "not found" || timer == "") {
+                        return;
+                    }
                     int number = selectToMarker(timer, ":").toInt();
                     int time = readTimer(number);
                     if (time == 0) {

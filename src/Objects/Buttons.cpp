@@ -4,37 +4,21 @@ Buttons myButtons;
 
 Buttons::Buttons(){};
 
-Button_t *Buttons::at(size_t index) {
-    return &_items.at(index);
+Button_t *Buttons::at(size_t num) {
+    return &_items.at(num);
 }
 
-Bounce *Buttons::create(uint8_t num, uint8_t pin, int delay) {
-    // Ищем среди ранее созданных
-    for (size_t i = 0; i < _items.size(); i++) {
-        auto item = _items.at(i);
-        if (item.num == num) {
-            if (item.pin != pin) {
-                item.obj->attach(pin);
-                item.pin = pin;
-            };
-            item.delay = delay;
-            return item.obj;
-        }
-    }
-    // Добавляем новый
-    Button_t newItem{num, pin, delay};
-    newItem.obj = new Bounce();
-    newItem.obj->attach(pin);
-    _items.push_back(newItem);
-    return newItem.obj;
+Button_t *Buttons::create(String name, uint8_t pin, uint8_t state) {
+    Button_t item{name, pin, state};
+    _items.push_back(item);
+    return &_items.at(_items.size() - 1);
 }
 
-Bounce *Buttons::get(uint8_t num) {
-    // Ищем среди ранее созданных
+Button_t *Buttons::get(const String name) {
     for (size_t i = 0; i < _items.size(); i++) {
         auto item = _items.at(i);
-        if (item.num == num) {
-            return item.obj;
+        if (item.name == name) {
+            return &_items.at(i);
         }
     }
     return nullptr;

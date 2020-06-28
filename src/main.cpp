@@ -1,7 +1,8 @@
 #include "Global.h"
 
 #include "HttpServer.h"
-#include "Bus/BusScannerFactory.h"
+#include "Bus/I2CScanner.h"
+#include "Bus/DallasScanner.h"
 #include "Utils/Timings.h"
 
 void not_async_actions();
@@ -93,7 +94,7 @@ void loop() {
 
     loopCmd();
 
-    loopButton();
+    loop_button();
 
     loopScenario();
 
@@ -101,7 +102,7 @@ void loop() {
     loopUdp();
 #endif
 
-    loopSerial();
+    loop_serial();
 
     ts.update();
 }
@@ -209,11 +210,22 @@ void clock_init() {
 
 void do_scan_bus() {
     if (busScanFlag) {
-        String res = "";
-        BusScanner* scanner = BusScannerFactory::get(configSetupJson, busToScan, res);
-        scanner->scan();
-        jsonWriteStr(configLiveJson, scanner->tag(), res);
-        free(scanner);
+        BusScanner* bus;
+        switch (busToScan) {
+            case BS_I2C:
+                bus = new I2CScanner();
+                break;
+            case BS_ONE_WIRE:
+                bus = new DallasScanner();
+                break;
+            default:
+                pm.error("uknown bus: " + String(busToScan, DEC));
+                busScanFlag = false;
+                return;
+        }
+        if (bus) {
+            bus->scan(configLiveJson);
+        }
         busScanFlag = false;
     }
 }

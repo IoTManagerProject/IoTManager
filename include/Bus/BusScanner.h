@@ -2,16 +2,13 @@
 
 #include <Arduino.h>
 
+#include "Utils/JsonUtils.h"
+
 class BusScanner {
    public:
-    BusScanner(const char* tag, String& out, size_t tries) : _found{0},
-                                                             _tries{tries},
-                                                             _out{&out} {
-        _tag = new char(strlen(tag) + 1);
-        strcpy(_tag, tag);
-    }
+    BusScanner(const char* tag, size_t tries) : _tag{tag}, _found{0}, _tries{tries}, _res{} {}
 
-    void scan() {
+    void scan(String& out) {
         init();
         bool res;
         do {
@@ -19,12 +16,10 @@ class BusScanner {
         } while (!res && --_tries);
 
         if (!_found) {
-            addResult("не найдено");
+            _res = "не найдено";
         }
-    }
 
-    const char* tag() {
-        return _tag;
+        jsonWriteStr(out, _tag, _res);
     }
 
    protected:
@@ -33,8 +28,18 @@ class BusScanner {
     virtual boolean syncScan() = 0;
 
    protected:
-    void addResult(const String& str) {
-        _out->concat(str);
+    void addResult(const String str) {
+        _res += str;
+    }
+
+    void addResult(uint8_t addr[8]) {
+        _found++;
+        String str = "";
+        for (size_t i = 0; i < 8; i++) {
+            str += String(addr[i], HEX);
+            str += i < 7 ? " " : ", ";
+        }
+        addResult(str);
     }
 
     void addResult(uint8_t addr, boolean last = true) {
@@ -49,8 +54,8 @@ class BusScanner {
     };
 
    private:
-    char* _tag;
+    String _tag;
     size_t _found;
     size_t _tries;
-    String* _out;
+    String _res;
 };

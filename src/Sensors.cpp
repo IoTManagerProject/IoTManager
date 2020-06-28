@@ -105,7 +105,7 @@ void levelPr() {
     jsonWriteStr(configOptionJson, "echo", echo);
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[0] = 1;
 }
 //ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
@@ -124,7 +124,7 @@ void ultrasonicCm() {
     jsonWriteStr(configOptionJson, "echo", echo);
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[0] = 1;
 }
 
@@ -187,7 +187,9 @@ void analog() {
     jsonWriteStr(configOptionJson, value_name + "_end", analog_end);
     jsonWriteStr(configOptionJson, value_name + "_st_out", analog_start_out);
     jsonWriteStr(configOptionJson, value_name + "_end_out", analog_end_out);
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+
+    createWidget(widget_name, page_name, page_number, type, value_name);
+
     if (enter_to_analog_counter == 1) {
         sensors_reading_map[1] = 1;
     }
@@ -197,22 +199,25 @@ void analog() {
 }
 
 void analog_reading1() {
-    String value_name = selectFromMarkerToMarker(analog_value_names_list, ",", 0);
+    String name = selectFromMarkerToMarker(analog_value_names_list, ",", 0);
 #ifdef ESP32
     int analog_in = analogRead(34);
 #endif
 #ifdef ESP8266
-    int analog_in = analogRead(A0);
+    int raw = analogRead(A0);
 #endif
-    int analog = map(analog_in,
-                     jsonReadInt(configOptionJson, value_name + "_st"),
-                     jsonReadInt(configOptionJson, value_name + "_end"),
-                     jsonReadInt(configOptionJson, value_name + "_st_out"),
-                     jsonReadInt(configOptionJson, value_name + "_end_out"));
-    jsonWriteInt(configLiveJson, value_name, analog);
-    eventGen(value_name, "");
-    MqttClient::publishStatus(value_name, String(analog));
-    Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
+
+    int mapped = map(raw,
+                     jsonReadInt(configOptionJson, name + "_st"),
+                     jsonReadInt(configOptionJson, name + "_end"),
+                     jsonReadInt(configOptionJson, name + "_st_out"),
+                     jsonReadInt(configOptionJson, name + "_end_out"));
+
+    pm.info("sensor: '" + name + "' value: " + String(mapped, DEC));
+
+    jsonWriteInt(configLiveJson, name, mapped);
+    eventGen(name, "");
+    MqttClient::publishStatus(name, String(mapped));
 }
 
 void analog_reading2() {
@@ -263,19 +268,19 @@ void dallas() {
 
     String value = sCmd.next();
 
-    uint8_t address = String(sCmd.next()).toInt();
+    // uint8_t *address = String(sCmd.next()).toInt();
 
-    dallasSensors.create(address, value);
+    // dallasSensors.create(address, value);
 
     String widget = sCmd.next();
     String page = sCmd.next();
     String type = sCmd.next();
     String pageNumber = sCmd.next();
 
-    jsonWriteStr(configOptionJson, value + "_ds", String(address));
+    // jsonWriteStr(configOptionJson, value + "_ds", String(address, DEC));
 
     dallas_value_name += value + ";";
-    createWidgetByType(widget, page, pageNumber, type, value);
+    createWidget(widget, page, pageNumber, type, value);
     sensors_reading_map[3] = 1;
 }
 
@@ -318,7 +323,7 @@ void dhtT() {
     if (sensor_type == "dht22") {
         dht.setup(pin.toInt(), DHTesp::DHT22);
     }
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[4] = 1;
 }
 
@@ -356,7 +361,7 @@ void dhtH() {
     if (sensor_type == "dht22") {
         dht.setup(pin.toInt(), DHTesp::DHT22);
     }
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[5] = 1;
 }
 
@@ -383,7 +388,7 @@ void dhtP() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
-    createWidgetByType(widget_name, page_name, page_number, "any-data", "dhtPerception");
+    createWidget(widget_name, page_name, page_number, "any-data", "dhtPerception");
     sensors_reading_map[6] = 1;
 }
 
@@ -408,7 +413,7 @@ void dhtC() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
-    createWidgetByType(widget_name, page_name, page_number, "anydata", "dhtComfort");
+    createWidget(widget_name, page_name, page_number, "anydata", "dhtComfort");
     sensors_reading_map[7] = 1;
 }
 
@@ -501,7 +506,7 @@ void dhtD() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String page_number = sCmd.next();
-    createWidgetByType(widget_name, page_name, page_number, "anydata", "dhtDewpoint");
+    createWidget(widget_name, page_name, page_number, "anydata", "dhtDewpoint");
     sensors_reading_map[8] = 1;
 }
 
@@ -531,7 +536,7 @@ void bmp280T() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bmp280T_value_name = value_name;
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, page_number, type, value_name);
     bmp.begin(hexStringToUint8(address));
     bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
                     Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
@@ -562,7 +567,7 @@ void bmp280P() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bmp280P_value_name = value_name;
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, page_number, type, value_name);
     bmp.begin(hexStringToUint8(address));
     bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
                     Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
@@ -596,7 +601,7 @@ void bme280T() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bme280T_value_name = value_name;
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, page_number, type, value_name);
     bme.begin(hexStringToUint8(address));
     sensors_reading_map[11] = 1;
 }
@@ -619,7 +624,7 @@ void bme280P() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bme280P_value_name = value_name;
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, page_number, type, value_name);
     bme.begin(hexStringToUint8(address));
     sensors_reading_map[12] = 1;
 }
@@ -643,7 +648,7 @@ void bme280H() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bme280H_value_name = value_name;
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, page_number, type, value_name);
     bme.begin(hexStringToUint8(address));
     sensors_reading_map[13] = 1;
 }
@@ -666,7 +671,7 @@ void bme280A() {
     String type = sCmd.next();
     String page_number = sCmd.next();
     bme280A_value_name = value_name;
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, page_number, type, value_name);
     bme.begin(hexStringToUint8(address));
     sensors_reading_map[14] = 1;
 }
