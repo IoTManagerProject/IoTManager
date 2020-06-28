@@ -44,7 +44,7 @@ class BusScanner {
             str += "0";
         }
         str += String(addr, HEX);
-        str += !last ? ", " : "";
+        str += !last ? ", " : ", ";
         addResult(str);
     };
 

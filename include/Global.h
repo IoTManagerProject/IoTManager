@@ -80,6 +80,9 @@ extern String order_loop;
 extern String analog_value_names_list;
 extern int enter_to_analog_counter;
 
+extern String dallas_value_name;
+extern int enter_to_dallas_counter;
+
 extern String levelPr_value_name;
 extern String ultrasonicCm_value_name;
 
