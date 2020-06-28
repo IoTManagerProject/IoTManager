@@ -142,3 +142,9 @@ const String getFSSizeInfo() {
 #endif
     return res;
 }
+
+const String getConfigFile(uint8_t preset, ConfigType_t type) {
+    char buf[64];
+    sprintf(buf, "/conf/%s%03d.txt", (type == CT_CONFIG) ? "c" : "s", preset);
+    return String(buf);
+}

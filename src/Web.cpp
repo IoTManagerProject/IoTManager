@@ -1,6 +1,4 @@
-#include "CaptiveRequestHandler.h"
 #include "Global.h"
-#include "Utils/PresetUtils.h"
 
 static const char* MODULE = "Web";
 
@@ -215,22 +213,24 @@ void web_init() {
         }
 #endif
         //==============================utilities settings=============================================
-        if (request->hasArg(I2C_TAG)) {
+        if (request->hasArg(TAG_I2C)) {
             busScanFlag = true;
             busToScan = BS_I2C;
             request->redirect("/?set.utilities");
         }
 
-        if (request->hasArg(ONE_WIRE_TAG)) {
+        if (request->hasArg(TAG_ONE_WIRE)) {
             busScanFlag = true;
             busToScan = BS_ONE_WIRE;
+            if (request->hasParam(TAG_ONE_WIRE_PIN)) {
+                setConfigParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value());
+            }
             request->redirect("/?set.utilities");
         }
 
-        if (request->hasArg("oneWirePin")) {
-            jsonWriteStr(configSetupJson, "oneWirePin", request->getParam("oneWirePin")->value());
-            saveConfig();
-            request->send(200, "text/text", "OK");
+        if (request->hasArg(TAG_ONE_WIRE_PIN)) {
+            setConfigParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value());
+            request->send(200);
         }
     });
     //==============================upgrade settings=============================================

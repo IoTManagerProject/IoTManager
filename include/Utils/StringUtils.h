@@ -2,8 +2,6 @@
 
 #include <Arduino.h>
 
-#include "CommonTypes.h"
-
 uint8_t hexStringToUint8(String hex);
 
 uint16_t hexStringToUint16(String hex);

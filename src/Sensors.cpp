@@ -1,7 +1,6 @@
 #include "Global.h"
 
 #include "Bus/OneWireBus.h"
-OneWireBus oneWireBus;
 
 GMedian<10, int> medianFilter;
 DHTesp dht;

@@ -1,5 +1,7 @@
 #include "Utils\StringUtils.h"
 
+#include "Consts.h"
+
 String selectToMarkerLast(String str, String found) {
     int p = str.lastIndexOf(found);
     return str.substring(p + found.length());

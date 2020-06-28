@@ -10,8 +10,6 @@
 #include "ESP8266.h"
 //
 #include "Consts.h"
-#include "CommonTypes.h"
-#include "Bus/BusScanner.h"
 #include "Errors.h"
 #include "GyverFilters.h"
 #include "Upgrade.h"
@@ -176,6 +174,8 @@ extern void choose_log_date_and_send();
 // Main
 extern void setChipId();
 extern void saveConfig();
+extern void setConfigParam(const char* param, const String& value);
+
 extern String getURL(const String& urls);
 extern void do_fscheck();
 extern void do_scan_bus();

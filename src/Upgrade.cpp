@@ -1,6 +1,7 @@
 #include "Upgrade.h"
 
 #include "Global.h"
+#include "ESP8266.h"
 
 static const char* MODULE = "Upgr";
 
@@ -42,21 +43,20 @@ void upgrade_firmware() {
     String config_for_update;
     String configSetup_for_update;
 
-    scenario_for_update = readFile(String(DEVICE_SCENARIO_FILE), 4000);
-    config_for_update = readFile(String(DEVICE_CONFIG_FILE), 4000);
+    scenario_for_update = readFile(String(DEVICE_SCENARIO_FILE), 4096);
+    config_for_update = readFile(String(DEVICE_CONFIG_FILE), 4096);
     configSetup_for_update = configSetupJson;
 
     Serial.println("Start upgrade SPIFFS, please wait...");
 
     WiFiClient client_for_upgrade;
 
-#ifdef ESP32
-    httpUpdate.rebootOnUpdate(false);
-    t_httpUpdate_return ret = httpUpdate.updateSpiffs(client_for_upgrade, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.spiffs.bin");
-#endif
 #ifdef ESP8266
     ESPhttpUpdate.rebootOnUpdate(false);
     t_httpUpdate_return ret = ESPhttpUpdate.updateSpiffs(client_for_upgrade, "http://91.204.228.124:1100/update/esp8266/esp32-esp8266_iot-manager_modules_firmware.spiffs.bin");
+#else
+    httpUpdate.rebootOnUpdate(false);
+    t_httpUpdate_return ret = httpUpdate.updateSpiffs(client_for_upgrade, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.spiffs.bin");
 #endif
 
     if (ret == HTTP_UPDATE_OK) {
@@ -68,13 +68,12 @@ void upgrade_firmware() {
         Serial.println("Upgrade done!");
         Serial.println("Start upgrade BUILD, please wait...");
 
-#ifdef ESP32
-        //httpUpdate.rebootOnUpdate(true);
-        t_httpUpdate_return ret = httpUpdate.update(client_for_upgrade, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
-#endif
 #ifdef ESP8266
         //ESPhttpUpdate.rebootOnUpdate(true);
         t_httpUpdate_return ret = ESPhttpUpdate.update(client_for_upgrade, "http://91.204.228.124:1100/update/esp8266/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
+#else
+        //httpUpdate.rebootOnUpdate(true);
+        t_httpUpdate_return ret = httpUpdate.update(client_for_upgrade, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
 #endif
 
         if (ret == HTTP_UPDATE_OK) {

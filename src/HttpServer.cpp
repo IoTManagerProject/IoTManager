@@ -59,9 +59,9 @@ void init() {
 
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
         String cmdStr = request->getParam("command")->value();
-        pm.info("command: " + cmdStr);
+        pm.info("do: " + cmdStr);
         addCommandLoop(cmdStr);
-        request->send(200, "text/text", "OK");
+        request->send(200, "text/html", "OK");
     });
 
     server.begin();
@@ -190,7 +190,7 @@ void initWS() {
     ws.onEvent(onWsEvent);
     server.addHandler(&ws);
     events.onConnect([](AsyncEventSourceClient *client) {
-        //!!!client->send("hello!", NULL, millis(), 1000);
+        client->send("", NULL, millis(), 1000);
     });
     server.addHandler(&events);
 #endif

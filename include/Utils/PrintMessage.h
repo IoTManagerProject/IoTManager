@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Arduino.h"
-#include "CommonTypes.h"
 #include "Utils\StringUtils.h"
 #include "Utils\TimeUtils.h"
 #include "Errors.h"

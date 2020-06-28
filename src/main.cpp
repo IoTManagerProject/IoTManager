@@ -1,7 +1,7 @@
 #include "Global.h"
 
 #include "HttpServer.h"
-#include "Bus/BusScanner.h"
+#include "Bus/BusScannerFactory.h"
 #include "Utils/Timings.h"
 
 void not_async_actions();
@@ -149,6 +149,12 @@ void saveConfig() {
     writeFile(String("config.json"), configSetupJson);
 }
 
+void setConfigParam(const char* param, const String& value) {
+    pm.info("set " + String(param) + ": " + value);
+    jsonWriteStr(configSetupJson, param, value);
+    saveConfig();
+}
+
 #ifdef ESP8266
 void setLedStatus(LedStatus_t status) {
     pinMode(LED_PIN, OUTPUT);
@@ -205,9 +211,9 @@ void clock_init() {
 void do_scan_bus() {
     if (busScanFlag) {
         String res = "";
-        BusScanner* scanner = BusScannerFactory::get(res, busToScan);
+        BusScanner* scanner = BusScannerFactory::get(configSetupJson, busToScan, res);
         scanner->scan();
-        jsonWriteStr(configLiveJson, BusScannerFactory::label(busToScan), res);
+        jsonWriteStr(configLiveJson, scanner->tag(), res);
         busScanFlag = false;
     }
 }

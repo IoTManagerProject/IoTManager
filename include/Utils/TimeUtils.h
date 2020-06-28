@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-#include "CommonTypes.h"
+#include "Consts.h"
 
 #define ONE_MINUTE_s 60
 #define ONE_HOUR_m 60

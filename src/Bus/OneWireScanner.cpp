@@ -1,21 +1,19 @@
-#include "Bus/BusScanner.h"
+#include "Bus/OneWireScanner.h"
 
-#include "Utils/PresetUtils.h"
 #include "Utils/PrintMessage.h"
-
-#include <OneWire.h>
 
 const char* MODULE = "OneWire";
 
-bool OneWireScanner::syncScan() {
-    // Connect your 1-wire device to pin 3
-    OneWire ds(3);
-    uint8_t addr[8];
+OneWireScanner::OneWireScanner(String& out, uint8_t pin) : BusScanner(TAG_ONE_WIRE, out, 1) {
+    _bus = oneWireBus.get(pin);
+}
 
-    pm.info("scanning 1-Wire...");
-    while (ds.search(addr)) {
+bool OneWireScanner::syncScan() {
+    uint8_t addr[8];
+    pm.info("scanning...");
+    while (_bus->search(addr)) {
         for (uint8_t i = 0; i < 8; i++) {
-            pm.info("found device: " + i);
+            pm.info("found: " + i);
             addResult(addr[i], i < 7);
         }
     }
@@ -23,6 +21,6 @@ bool OneWireScanner::syncScan() {
         pm.error("CRC!");
         return false;
     }
-    ds.reset_search();
+    _bus->reset_search();
     return true;
 }

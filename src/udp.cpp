@@ -2,7 +2,6 @@
 
 #ifdef ESP8266
 IPAddress udp_multicastIP(255, 255, 255, 255);
-ESP8266HTTPUpdateServer httpUpdater;
 WiFiUDP Udp;
 #endif
 #ifdef ESP32
