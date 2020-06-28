@@ -253,6 +253,11 @@ void dallas() {
 
 void dallas_reading() {
     float temp = 0;
+    //byte num = sensors.getDS18Count();
+    //for (byte i = 0; i < num; i++) {
+    // temp = sensors.getTempCByIndex(i);
+    //}
+
     sensors.requestTemperatures();
     temp = sensors.getTempCByIndex(0);
     jsonWriteStr(configLiveJson, "dallas", String(temp));
