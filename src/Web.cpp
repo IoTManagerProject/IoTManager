@@ -228,7 +228,7 @@ void web_init() {
         }
 
         if (request->hasArg("oneWirePin")) {
-            //jsonWriteStr(configSetupJson, "oneWirePin", request->getParam("oneWirePin")->value());
+            jsonWriteStr(configSetupJson, "oneWirePin", request->getParam("oneWirePin")->value());
             saveConfig();
             request->send(200, "text/text", "OK");
         }
