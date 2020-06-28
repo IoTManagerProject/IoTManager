@@ -212,7 +212,7 @@ void do_scan_bus() {
         String res = "";
         BusScanner* scanner = BusScannerFactory::get(configSetupJson, busToScan, res);
         scanner->scan();
-        jsonWriteStr(configLiveJson, scanner->tag(), res);
+        jsonWriteStr(configLiveJson, String(scanner->tag()), res);
         busScanFlag = false;
     }
 }
