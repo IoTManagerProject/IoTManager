@@ -5,7 +5,7 @@ static const char* MODULE = "Widget";
 const String getWidgetFile(const String& name);
 
 bool loadWidget(const String& filename, String& buf) {
-    buf = readFile(filename, 2048);
+    buf = readFile(getWidgetFile(filename), 2048);
     bool res = !(buf == "failed" || buf == "large");
     if (!res) {
         pm.error("on load " + filename);
@@ -84,12 +84,6 @@ void createChart(String widget, String page, String pageNumber, String filename,
 #else
     addFile("layout.txt", buf);
 #endif
-}
-
-void createWidgetFromFile(String widget, String page, String pageNumber, String widget_type, String topic) {
-    String filename = getWidgetFile(widget_type);
-    pm.info("get '" + filename + "'");
-    createWidget(widget, page, pageNumber, filename, topic);
 }
 
 const String getWidgetFile(const String& widget_type) {
