@@ -1,5 +1,10 @@
-#include "Bus/OneWireBus.h"
 #include "Global.h"
+
+#include "Utils/PrintMessage.h"
+#include "Bus/OneWireBus.h"
+#include "Objects/DallasSensors.h"
+
+const static char *MODULE = "Sensor";
 
 GMedian<10, int> medianFilter;
 DHTesp dht;
@@ -231,33 +236,60 @@ void analog_reading2() {
 #endif
 //=========================================================================================================================================
 //=========================================Модуль температурного сенсора ds18b20===========================================================
+
 #ifdef DALLAS_ENABLED
-//dallas temp1 2 0x14 Температура Датчики anydata 1
-//dallas temp2 2 0x14 Температура Датчики anydata 2
-void dallas() {
-    String value_name = sCmd.next();
+
+void onewire() {
     uint8_t pin = (uint8_t)String(sCmd.next()).toInt();
-    String address = sCmd.next();
-    jsonWriteStr(configOptionJson, value_name + "_ds", address);
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
+    oneWireBus.set(pin);
+    if (!oneWireBus.exists()) {
+        pm.error("on create OneWire");
+    }
+}
+
+//dallas temp1 0x14 Температура Датчики anydata 1
+//dallas temp2 0x15 Температура Датчики anydata 2
+void dallas() {
+    if (!oneWireBus.exists()) {
+        pm.error("needs OneWire");
+        return;
+    }
+
+    if (dallasSensors.count() == 0) {
+        dallasTemperature = new DallasTemperature(oneWireBus.get());
+        dallasTemperature->begin();
+        dallasTemperature->setResolution(12);
+    }
+
+    String value = sCmd.next();
+
+    uint8_t address = String(sCmd.next()).toInt();
+
+    dallasSensors.create(address, value);
+
+    String widget = sCmd.next();
+    String page = sCmd.next();
     String type = sCmd.next();
-    String page_number = sCmd.next();
-    sensors.setOneWire(oneWireBus.get(pin));
-    sensors.begin();
-    sensors.setResolution(12);
-    dallas_value_name += value_name + ";";
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+    String pageNumber = sCmd.next();
+
+    jsonWriteStr(configOptionJson, value + "_ds", String(address));
+
+    dallas_value_name += value + ";";
+    createWidgetByType(widget, page, pageNumber, type, value);
     sensors_reading_map[3] = 1;
 }
 
 void dallas_reading() {
+    if (!dallasTemperature) {
+        return;
+    }
+
     float temp = 0;
-    byte num = sensors.getDS18Count();
+    byte num = dallasTemperature->getDS18Count();
     String dallas_value_name_tmp_buf = dallas_value_name;
-    sensors.requestTemperatures();
-    for (byte i = 0; i < num; i++) {     
-        temp = sensors.getTempCByIndex(i);
+    dallasTemperature->requestTemperatures();
+    for (byte i = 0; i < num; i++) {
+        temp = dallasTemperature->getTempCByIndex(i);
         String buf = selectToMarker(dallas_value_name_tmp_buf, ";");
         dallas_value_name_tmp_buf = deleteBeforeDelimiter(dallas_value_name_tmp_buf, ";");
         jsonWriteStr(configLiveJson, buf, String(temp));

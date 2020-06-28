@@ -1,21 +1,20 @@
 #pragma once
 
 #include <Arduino.h>
-#include <OneWire.h>
 
-struct OneWireBus_t {
-    OneWire *bus;
-    uint8_t pin;
-};
+#include <OneWire.h>
 
 class OneWireBus {
    public:
     OneWireBus();
-    OneWire *get(uint8_t pin);
-    size_t count();
+    ~OneWireBus();
+    bool exists();
+    void set(uint8_t _pin);
+    OneWire* get();
 
    private:
-    std::vector<OneWireBus_t> _items;
+    uint8_t _pin;
+    OneWire* _bus;
 };
 
 extern OneWireBus oneWireBus;

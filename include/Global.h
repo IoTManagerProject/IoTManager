@@ -55,7 +55,7 @@ extern StringCommand sCmd;
 
 extern AsyncWebServer server;
 
-extern DallasTemperature sensors;
+extern DallasTemperature* sensors;
 
 /*
 * Global vars
@@ -197,10 +197,9 @@ extern void ultrasonic_reading();
 extern void analog();
 extern void analog_reading1();
 extern void analog_reading2();
+extern void dallas();
 extern void dallas_reading();
 extern void dhtT_reading();
-
-extern void dallas();
 
 extern void bmp280T();
 extern void bmp280P();

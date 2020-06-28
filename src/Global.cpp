@@ -17,7 +17,7 @@ StringCommand sCmd;
 
 AsyncWebServer server(80);
 
-DallasTemperature sensors;
+DallasTemperature* sensors;
 
 /*
 * Global vars

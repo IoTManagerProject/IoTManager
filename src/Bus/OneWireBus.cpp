@@ -2,24 +2,23 @@
 
 OneWireBus oneWireBus;
 
-OneWireBus::OneWireBus(){};
+OneWireBus::OneWireBus() : _pin{0}, _bus{nullptr} {};
 
-OneWire *OneWireBus::get(uint8_t pin) {
-    // Ищем среди ранее созданных
-    for (size_t i = 0; i < _items.size(); i++) {
-        auto item = _items.at(i);
-        if (item.pin == pin) {
-            return item.bus;
-        }
-    }
-    // Добавляем новый
-    OneWireBus_t newItem;
-    newItem.bus = new OneWire(pin);
-    newItem.pin = pin;
-    _items.push_back(newItem);
-    return newItem.bus;
+OneWireBus::~OneWireBus() {
+    delete _bus;
 }
 
-size_t OneWireBus::count() {
-    return _items.size();
+OneWire* OneWireBus::get() {
+    return _bus;
+}
+
+bool OneWireBus::exists() {
+    return _bus != nullptr;
+}
+
+void OneWireBus::set(uint8_t pin) {
+    if (_bus) {
+        delete _bus;
+    }
+    _bus = new OneWire(pin);
 }
