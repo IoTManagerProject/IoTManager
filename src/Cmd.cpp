@@ -583,7 +583,7 @@ void httpOrderSend() {
 }
 
 void firmwareUpdate() {
-    upgrade = true;
+    updateFlag = true;
 }
 
 void firmwareVersion() {

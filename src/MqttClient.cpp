@@ -147,7 +147,7 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         order_loop += ",";
     } else if (topicStr.indexOf("update")) {
         if (payloadStr == "1") {
-            upgrade = true;
+            updateFlag = true;
         }
     } else if (topicStr.indexOf("devc")) {
         writeFile(String(DEVICE_CONFIG_FILE), payloadStr);

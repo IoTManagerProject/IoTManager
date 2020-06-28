@@ -58,7 +58,7 @@
     {
       "type": "link",
       "title": "Сканировать",
-      "action": "/set?oneWire",
+      "action": "/set?oneWire=[[oneWirePin-arg]]",
       "class": "btn btn-block btn-default"
     }
   ]

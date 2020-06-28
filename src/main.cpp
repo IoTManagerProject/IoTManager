@@ -114,7 +114,7 @@ void not_async_actions() {
 
     getLastVersion();
 
-    flashUpgrade();
+    do_update();
 
 #ifdef UDP_ENABLED
     do_udp_data_parse();

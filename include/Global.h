@@ -101,8 +101,8 @@ extern int scenario_line_status[40];
 
 extern String lastVersion;
 
-extern boolean upgrade_url;
-extern boolean upgrade;
+extern boolean checkUpdatesFlag;
+extern boolean updateFlag;
 extern boolean mqttParamsChanged;
 extern boolean udp_data_parse;
 extern boolean mqtt_send_settings_to_udp;
@@ -259,7 +259,7 @@ extern void loopButton();
 extern void loopScenario();
 extern void loopUdp();
 
-extern void flashUpgrade();
+extern void do_update();
 
 // Init
 extern void uptime_init();

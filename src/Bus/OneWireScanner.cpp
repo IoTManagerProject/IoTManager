@@ -13,7 +13,7 @@ bool OneWireScanner::syncScan() {
     pm.info("scanning...");
     while (_bus->search(addr)) {
         for (uint8_t i = 0; i < 8; i++) {
-            pm.info("found: " + i);
+            pm.info("found: " + String(i, DEC));
             addResult(addr[i], i < 7);
         }
     }

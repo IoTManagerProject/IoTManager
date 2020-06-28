@@ -67,8 +67,8 @@ int scenario_line_status[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 String lastVersion = "";
 
 // Async actions
-boolean upgrade_url = false;
-boolean upgrade = false;
+boolean checkUpdatesFlag = false;
+boolean updateFlag = false;
 
 boolean mqttParamsChanged = false;
 boolean udp_data_parse = false;

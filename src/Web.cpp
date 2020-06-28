@@ -235,73 +235,39 @@ void web_init() {
     });
     //==============================upgrade settings=============================================
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
-        upgrade_url = true;
+        checkUpdatesFlag = true;
         pm.info("firmware version: " + lastVersion);
-        String tmp = "{}";
-        int case_of_update;
-
-        if (WiFi.status() != WL_CONNECTED) {
-            lastVersion = "nowifi";
-        }
 
         if (!FLASH_4MB) {
             lastVersion = "less";
+        } else if (isNetworkActive()) {
+            lastVersion = "nowifi";
         }
 
-        if (lastVersion == FIRMWARE_VERSION) case_of_update = 1;
-        if (lastVersion != FIRMWARE_VERSION) case_of_update = 2;
-        if (lastVersion == "error") case_of_update = 3;
-        if (lastVersion == "") case_of_update = 4;
-        if (lastVersion == "less") case_of_update = 5;
-        if (lastVersion == "nowifi") case_of_update = 6;
-        if (lastVersion == "notsupported") case_of_update = 7;
-
-        switch (case_of_update) {
-            case 1: {
-                jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Последняя версия прошивки уже установлена.");
-                jsonWriteStr(tmp, "class", "pop-up");
-            } break;
-
-            case 2: {
-                jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Имеется новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
-                jsonWriteStr(tmp, "class", "pop-up");
-            } break;
-
-            case 3: {
-                jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Ошибка... Cервер не найден. Попробуйте позже...");
-                jsonWriteStr(tmp, "class", "pop-up");
-            } break;
-
-            case 4: {
-                jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Нажмите на кнопку \"обновить прошивку\" повторно...");
-                jsonWriteStr(tmp, "class", "pop-up");
-                break;
-            }
-
-            case 5: {
-                jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Обновление по воздуху не поддерживается, модуль имеет меньше 4 мб памяти...");
-                jsonWriteStr(tmp, "class", "pop-up");
-                break;
-            }
-
-            case 6: {
-                jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Устройство не подключено к роутеру...");
-                jsonWriteStr(tmp, "class", "pop-up");
-                break;
-            }
-
-            case 7: {
-                jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>Обновление на новую версию возможно только через usb...");
-                jsonWriteStr(tmp, "class", "pop-up");
-                break;
-            }
+        String msg = "";
+        if (lastVersion == FIRMWARE_VERSION) {
+            msg = F("Актуальная версия прошивки уже установлена.");
+        } else if (lastVersion != FIRMWARE_VERSION) {
+            msg = F("Новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
+        } else if (lastVersion == "error") {
+            msg = F("Cервер не найден. Попробуйте повторить позже...");
+        } else if (lastVersion == "") {
+            msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
+        } else if (lastVersion == "less") {
+            msg = F("Обновление \"по воздуху\" не поддерживается!");
+        } else if (lastVersion == "nowifi") {
+            msg = F("Устройство не подключено к роутеру!");
+        } else if (lastVersion == "notsupported") {
+            msg = F("Обновление возможно только через usb!");
         }
-        request->send(200, "text/text", tmp);
+        String tmp = "{}";
+        jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + msg);
+        jsonWriteStr(tmp, "class", "pop-up");
+        request->send(200, "text/html", tmp);
     });
 
     server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest* request) {
-        upgrade = true;
-        String tmp = "{}";
-        request->send(200, "text/text", "ok");
+        updateFlag = true;
+        request->send(200, "text/html");
     });
 }
