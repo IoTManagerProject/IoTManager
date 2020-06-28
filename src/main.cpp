@@ -1,7 +1,7 @@
 #include "Global.h"
 
 #include "HttpServer.h"
-#include "Bus/BusScanner.h"
+#include "Bus/BusScannerFactory.h"
 #include "Utils/Timings.h"
 
 void not_async_actions();
@@ -62,7 +62,7 @@ void setup() {
 
 #ifdef UDP_ENABLED
     pm.info("Broadcast UDP");
-    UDP_init();
+    udp_init();
 #endif
     ts.add(
         TEST, 1000 * 60, [&](void*) {
@@ -114,7 +114,7 @@ void not_async_actions() {
 
     getLastVersion();
 
-    flashUpgrade();
+    do_update();
 
 #ifdef UDP_ENABLED
     do_udp_data_parse();
@@ -122,8 +122,6 @@ void not_async_actions() {
 #endif
 
     do_scan_bus();
-
-    do_fscheck();
 }
 
 String getURL(const String& urls) {
@@ -142,11 +140,17 @@ String getURL(const String& urls) {
 
 void setChipId() {
     chipId = getChipId();
-    Serial.println(chipId);
+    pm.info("id: " + chipId);
 }
 
 void saveConfig() {
     writeFile(String("config.json"), configSetupJson);
+}
+
+void setConfigParam(const char* param, const String& value) {
+    pm.info("set " + String(param) + ": " + value);
+    jsonWriteStr(configSetupJson, param, value);
+    saveConfig();
 }
 
 #ifdef ESP8266
@@ -202,22 +206,13 @@ void clock_init() {
         },
         nullptr, true);
 }
+
 void do_scan_bus() {
     if (busScanFlag) {
         String res = "";
-        BusScanner* scanner = BusScannerFactory::get(res, busToScan);
+        BusScanner* scanner = BusScannerFactory::get(configSetupJson, busToScan, res);
         scanner->scan();
-        jsonWriteStr(configLiveJson, BusScannerFactory::label(busToScan), res);
+        jsonWriteStr(configLiveJson, scanner->tag(), res);
         busScanFlag = false;
     }
-}
-
-void do_fscheck() {
-    if (!fsCheckFlag) {
-        return;
-    }
-    String buf;
-    buf += getFSSizeInfo();
-    jsonWriteStr(configLiveJson, "fscheck", buf);
-    fsCheckFlag = false;
 }

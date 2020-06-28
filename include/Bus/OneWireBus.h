@@ -10,26 +10,12 @@ struct OneWireBus_t {
 
 class OneWireBus {
    public:
-    OneWireBus(){};
-
-    OneWire *get(uint8_t pin) {
-        for (size_t i = 0; i < _items.size(); i++) {
-            auto item = _items.at(i);
-            if (item.pin == pin) {
-                return item.bus;
-            }
-        }
-        OneWireBus_t newItem;
-        newItem.bus = new OneWire(pin);
-        newItem.pin = pin;
-        _items.push_back(newItem);
-        return newItem.bus;
-    }
-
-    size_t count() {
-        return _items.size();
-    }
+    OneWireBus();
+    OneWire *get(uint8_t pin);
+    size_t count();
 
    private:
     std::vector<OneWireBus_t> _items;
 };
+
+extern OneWireBus oneWireBus;
