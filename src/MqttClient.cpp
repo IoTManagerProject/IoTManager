@@ -279,7 +279,7 @@ const String getStateStr() {
             return F("connection failed");
             break;
         case -1:
-            return F("client disconnected ");
+            return F("client disconnected");
             break;
         case 0:
             return F("client connected");

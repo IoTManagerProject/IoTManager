@@ -29,6 +29,10 @@ String jsonWriteStr(String& json, String name, String value) {
     return json;
 }
 
+String jsonWriteBool(String& json, String name, boolean value) {
+    return jsonWriteStr(json, name, value ? "1" : "0");
+}
+
 String jsonWriteInt(String& json, String name, int value) {
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(json);
