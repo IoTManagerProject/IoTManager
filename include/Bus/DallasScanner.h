@@ -4,7 +4,7 @@
 
 class DallasScanner : public BusScanner {
    public:
-    DallasScanner(String& out);
+    DallasScanner();
 
    protected:
     virtual boolean syncScan() override;

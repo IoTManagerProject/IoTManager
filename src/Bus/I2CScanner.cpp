@@ -5,7 +5,8 @@
 
 static const char* MODULE = "I2C";
 
-I2CScanner::I2CScanner(String& out) : BusScanner(TAG_I2C, out, 2){};
+I2CScanner::I2CScanner() : BusScanner(TAG_I2C, 2){};
+
 
 void I2CScanner::init() {
     Wire.begin();

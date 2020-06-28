@@ -12,8 +12,15 @@ int mqtt_lost_error = 0;
 bool connected = false;
 
 // Session params
-String mqttPrefix;
-String mqttRootDevice;
+struct Params {
+    String uuid;
+    String prefix;
+    String deviceRoot;
+    String addr;
+    int port;
+    String user;
+    String pass;
+} params;
 
 void init() {
     mqtt.setCallback(handleSubscribedUpdates);
@@ -24,7 +31,6 @@ void init() {
             if (isNetworkActive()) {
                 if (mqtt.connected()) {
                     if (!connected) {
-                        pm.info(String("OK"));
                         setLedStatus(LED_OFF);
                         connected = true;
                     }
@@ -56,50 +62,56 @@ void reconnect() {
 }
 
 void loop() {
-    if (!isNetworkActive() || !mqtt.connected()) {
-        return;
+    if (isNetworkActive() && mqtt.connected()) {
+        mqtt.loop();
     }
-    mqtt.loop();
 }
 
-void subscribe() {
-    pm.info(String("subscribe"));
-    mqtt.subscribe(mqttPrefix.c_str());
-    mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
-    mqtt.subscribe((mqttRootDevice + "/order").c_str());
-    mqtt.subscribe((mqttRootDevice + "/update").c_str());
-    mqtt.subscribe((mqttRootDevice + "/devc").c_str());
-    mqtt.subscribe((mqttRootDevice + "/devs").c_str());
+void subscribe(struct Params& p) {
+    pm.info("subscribe");
+    mqtt.subscribe(p.prefix.c_str());
+    mqtt.subscribe((p.deviceRoot + "/+/control").c_str());
+    mqtt.subscribe((p.deviceRoot + "/order").c_str());
+    mqtt.subscribe((p.deviceRoot + "/update").c_str());
+    mqtt.subscribe((p.deviceRoot + "/devc").c_str());
+    mqtt.subscribe((p.deviceRoot + "/devs").c_str());
+}
+
+bool readParams(struct Params& p) {
+    p.uuid = getChipId();
+    p.addr = jsonReadStr(configSetupJson, "mqttServer");
+    if (!p.addr.length()) {
+        pm.error("no address");
+        return false;
+    }
+    p.port = jsonReadInt(configSetupJson, "mqttPort");
+    p.user = jsonReadStr(configSetupJson, "mqttUser");
+    p.pass = jsonReadStr(configSetupJson, "mqttPass");
+
+    p.prefix = jsonReadStr(configSetupJson, "mqttPrefix");
+    p.deviceRoot = p.prefix + "/" + p.uuid;
+
+    pm.info("broker " + params.addr + ":" + String(params.port, DEC));
+    pm.info("root " + params.deviceRoot);
+
+    return true;
 }
 
 boolean connect() {
-    pm.info(String("connect"));
+    pm.info("connect");
 
-    String addr = jsonReadStr(configSetupJson, "mqttServer");
-    if (!addr) {
-        pm.error(String("no broker address"));
+    if (!readParams(params)) {
         return false;
     }
-
-    int port = jsonReadInt(configSetupJson, "mqttPort");
-    String user = jsonReadStr(configSetupJson, "mqttUser");
-    String pass = jsonReadStr(configSetupJson, "mqttPass");
-
-    //Session params
-    mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
-    mqttRootDevice = mqttPrefix + "/" + chipId;
-
-    pm.info("broker " + addr + ":" + String(port, DEC));
-    pm.info("topic " + mqttRootDevice);
-
     setLedStatus(LED_FAST);
-    mqtt.setServer(addr.c_str(), port);
+
     bool res = false;
+    mqtt.setServer(params.addr.c_str(), params.port);
     if (!mqtt.connected()) {
-        if (mqtt.connect(chipId.c_str(), user.c_str(), pass.c_str())) {
+        if (mqtt.connect(params.uuid.c_str(), params.user.c_str(), params.pass.c_str())) {
             pm.info(String("connected"));
             setLedStatus(LED_OFF);
-            subscribe();
+            subscribe(params);
             res = true;
         } else {
             pm.error("could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
@@ -110,31 +122,30 @@ boolean connect() {
 }
 
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
-    String topicStr = String(topic);
-    pm.info(topicStr);
-
-    String payloadStr;
+    pm.info("got updates: " + String(topic));
+    String payloadStr = "";
     payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
         payloadStr += (char)payload[i];
     }
-    pm.info(payloadStr);
-    if (payloadStr.startsWith("HELLO")) {
-        pm.info(String("Full update"));
+    if (payloadStr.equalsIgnoreCase("hello")) {
+        pm.info(String("hello"));
         publishWidgets();
         publishState();
 #ifdef LOGGING_ENABLED
         choose_log_date_and_send();
 #endif
-    } else if (topicStr.indexOf("control")) {
-        // название топика -  команда,
-        // значение - параметр
-        //IoTmanager/800324-1458415/button99/control 1
-        String topic = selectFromMarkerToMarker(topicStr, "/", 3);
-        topic = add_set(topic);
-        String number = selectToMarkerLast(topic, "Set");
-        topic.replace(number, "");
-        addCommandLoop(topic + " " + number + " " + payloadStr);
+    }
+    String topicStr{topic};
+    if (topicStr.endsWith("control")) {
+        // название - команда, значение - параметр
+        // devicePrefix/800324-1458415/button99/control 1
+
+        String cmdStr = selectFromMarkerToMarker(topicStr, "/", 3);
+        cmdStr = add_set(cmdStr);
+        String number = selectToMarkerLast(cmdStr, "Set");
+        cmdStr.replace(number, "");
+        addCommandLoop(cmdStr + " " + number + " " + payloadStr);
     } else if (topicStr.indexOf("order")) {
         payloadStr.replace("_", " ");
         addCommandLoop(payloadStr);
@@ -156,46 +167,34 @@ boolean publish(const String& topic, const String& data) {
         mqtt.print(data);
         return mqtt.endPublish();
     }
+    pm.error(String("on publish"));
     return false;
 }
 
 boolean publishData(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic;
-    if (!publish(path, data)) {
-        pm.error(String("on publish data"));
-        return false;
-    }
-    return true;
+    String path = params.deviceRoot + "/" + topic;
+    return publish(path, data);
 }
 
 boolean publishChart(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic + "/status";
-    if (!publish(path, data)) {
-        pm.error(String("on publish chart"));
-        return false;
-    }
-    return true;
+    String path = params.deviceRoot + "/" + topic + "/status";
+    return publish(path, data);
 }
 
-boolean publishControl(String id, String topic, String state) {
-    String path = mqttPrefix + "/" + id + "/" + topic + "/control";
-    return mqtt.publish(path.c_str(), state.c_str(), false);
-}
-
-boolean publishChart_test(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic + "/status";
-    return mqtt.publish(path.c_str(), data.c_str(), false);
+boolean publishControl(const String& id, const String& topic, const String& state) {
+    String path = params.prefix + "/" + id + "/" + topic + "/control";
+    return publish(path.c_str(), state.c_str());
 }
 
 boolean publishStatus(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic + "/status";
+    String path = params.deviceRoot + "/" + topic + "/status";
     String json = "{}";
     jsonWriteStr(json, "status", data);
-    return mqtt.publish(path.c_str(), json.c_str(), false);
+    return publish(path.c_str(), json.c_str());
 }
 
-#ifdef LAYOUT_IN_RAM
 void publishWidgets() {
+#ifdef LAYOUT_IN_RAM
     if (all_widgets != "") {
         int counter = 0;
         String line;
@@ -215,11 +214,7 @@ void publishWidgets() {
         } while (psn_2 + 2 < all_widgets.length());
         getMemoryLoad("[I] after send all widgets");
     }
-}
-#endif
-
-#ifndef LAYOUT_IN_RAM
-void publishWidgets() {
+#else
     auto file = seekFile("layout.txt");
     if (!file) {
         pm.error(String("on seek layout.txt"));
@@ -231,8 +226,12 @@ void publishWidgets() {
         publishData("config", payload);
     }
     file.close();
-}
 #endif
+}
+
+bool isExludedTopic(const String& topic) {
+    return (topic == "time") || (topic == "name") || (topic == "lang") || (topic == "ip") || (topic.indexOf("_in") < 0);
+}
 
 void publishState() {
     // берет строку json и ключи превращает в топики а значения колючей в них посылает
@@ -253,7 +252,7 @@ void publishState() {
         String state = selectToMarkerLast(tmp, ":");
         state.replace("\"", "");
 
-        if ((topic != "time") && (topic != "name") && (topic != "lang") && (topic != "ip") && (topic.indexOf("_in") < 0)) {
+        if (!isExludedTopic(topic)) {
             publishStatus(topic, state);
         }
         str = deleteBeforeDelimiter(str, ",");
@@ -297,5 +296,4 @@ const String getStateStr() {
             break;
     }
 }
-
 }  // namespace MqttClient

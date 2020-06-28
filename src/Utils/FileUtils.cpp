@@ -103,6 +103,7 @@ const String writeFile(const String& filename, const String& str) {
 
 const String readFile(const String& filename, size_t max_size) {
     String path = filepath(filename);
+    pm.info("read " + filename);
     auto file = LittleFS.open(path, "r");
     if (!file) {
         return "failed";

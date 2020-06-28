@@ -5,7 +5,7 @@
 
 const char* MODULE = "DallasScanner";
 
-DallasScanner::DallasScanner(String& out) : BusScanner(TAG_ONE_WIRE, out, 1) {}
+DallasScanner::DallasScanner() : BusScanner(TAG_ONE_WIRE, 1) {}
 
 bool DallasScanner::syncScan() {
     if (!dallasTemperature) {
@@ -21,7 +21,7 @@ bool DallasScanner::syncScan() {
     }
     // выводим полученные адреса
     for (size_t i = 0; i < countSensors; i++) {
-        addResult(*sensorsUnique[i], i < countSensors - 1);
+        addResult(sensorsUnique[i]);
     }
     return countSensors > 0;
 }

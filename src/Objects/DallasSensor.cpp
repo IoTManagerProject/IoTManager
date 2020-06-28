@@ -6,7 +6,7 @@ DallasTemperature *dallasTemperature;
 
 DallasSensors::DallasSensors(){};
 
-DallasSensor_t *DallasSensors::create(uint8_t address, String name) {
+DallasSensor_t *DallasSensors::create(uint8_t *address, String name) {
     for (size_t i = 0; i < _items.size(); i++) {
         auto item = _items.at(i);
         if (item.address == address) {
@@ -30,7 +30,7 @@ DallasSensor_t *DallasSensors::get(String name) {
     return nullptr;
 }
 
-DallasSensor_t *DallasSensors::get(uint8_t address) {
+DallasSensor_t *DallasSensors::get(uint8_t *address) {
     for (size_t i = 0; i < _items.size(); i++) {
         auto item = _items.at(i);
         if (item.address == address) {

@@ -1,25 +1,44 @@
 #pragma once
 
 #include <Arduino.h>
-#include <Bounce2.h>
 
+#include <functional>
+
+#include <Bounce2.h>
 struct Button_t {
-    uint8_t num;
+    String name;
     uint8_t pin;
-    int delay;
+    uint8_t state;
     Bounce* obj;
-    Button_t(uint8_t num, uint8_t pin, int delay) : num{num}, pin{pin}, delay{delay}, obj{nullptr} {};
+
+    Button_t(String name, uint8_t pin, bool state) : name{name}, pin{pin}, state{state} {
+        obj = new Bounce();
+        obj->attach(pin, OUTPUT);
+        digitalWrite(pin, state);
+    };
+
+    bool update() {
+        bool res = obj->update();
+        state = obj->read();
+        return res;
+    }
 };
+
+typedef std::function<void(Button_t*,uint8_t)> OnButtonChangeState;
 
 class Buttons {
    public:
     Buttons();
+    Button_t* create(String name, uint8_t pin, uint8_t state);
     Button_t* at(size_t index);
-    Bounce* get(uint8_t num);
-    Bounce* create(uint8_t num, uint8_t pin, int delay);
+    Button_t* get(const String name);
+    Bounce* obj(size_t index);
     size_t count();
+    void loop();
+    void setOnChangeState(OnButtonChangeState);
 
    private:
+    OnButtonChangeState onChangeState;
     std::vector<Button_t> _items;
 };
 

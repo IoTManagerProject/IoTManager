@@ -28,7 +28,7 @@ void init() {
     server.serveStatic("/", LittleFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
 
     server.onNotFound([](AsyncWebServerRequest *request) {
-        pm.error("not found:\n" + getRequestInfo(request));
+        pm.error("not found: " + getRequestInfo(request));
         request->send(404);
     });
 

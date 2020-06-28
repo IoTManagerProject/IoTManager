@@ -4,7 +4,7 @@
 
 class I2CScanner : public BusScanner {
    public:
-    I2CScanner(String& out);
+    I2CScanner();
 
    protected:
     virtual void init() override;

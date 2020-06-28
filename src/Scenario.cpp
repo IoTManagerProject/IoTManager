@@ -74,7 +74,6 @@ void loopScenario() {
 }
 
 // событие: имя + Set + номер
-// button+Set+1
 void eventGen(String event_name, String number) {
     if (!jsonReadBool(configSetupJson, "scen")) {
         return;
