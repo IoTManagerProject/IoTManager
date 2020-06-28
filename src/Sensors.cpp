@@ -1,6 +1,5 @@
-#include "Global.h"
-
 #include "Bus/OneWireBus.h"
+#include "Global.h"
 
 GMedian<10, int> medianFilter;
 DHTesp dht;
@@ -256,15 +255,15 @@ void dallas_reading() {
     float temp = 0;
     byte num = sensors.getDS18Count();
     String dallas_value_name_tmp_buf = dallas_value_name;
-    for (byte i = 0; i < num; i++) {
-     temp = sensors.getTempCByIndex(i);
-    //sensors.requestTemperatures();
-    String buf = selectToMarker(dallas_value_name_tmp_buf, ";");
-    dallas_value_name_tmp_buf = deleteBeforeDelimiter(dallas_value_name_tmp_buf, ";");
-    jsonWriteStr(configLiveJson, buf, String(temp));
-    eventGen(buf, "");
-    MqttClient::publishStatus(buf, String(temp));
-    Serial.println("[I] sensor '" + buf + "' send date " + String(temp));
+    sensors.requestTemperatures();
+    for (byte i = 0; i < num; i++) {     
+        temp = sensors.getTempCByIndex(i);
+        String buf = selectToMarker(dallas_value_name_tmp_buf, ";");
+        dallas_value_name_tmp_buf = deleteBeforeDelimiter(dallas_value_name_tmp_buf, ";");
+        jsonWriteStr(configLiveJson, buf, String(temp));
+        eventGen(buf, "");
+        MqttClient::publishStatus(buf, String(temp));
+        Serial.println("[I] sensor '" + buf + "' send date " + String(temp));
     }
 }
 #endif
