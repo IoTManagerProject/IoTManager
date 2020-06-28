@@ -62,7 +62,7 @@ void setup() {
 
 #ifdef UDP_ENABLED
     pm.info("Broadcast UDP");
-    UDP_init();
+    udp_init();
 #endif
     ts.add(
         TEST, 1000 * 60, [&](void*) {
@@ -122,8 +122,6 @@ void not_async_actions() {
 #endif
 
     do_scan_bus();
-
-    do_fscheck();
 }
 
 String getURL(const String& urls) {
@@ -208,6 +206,7 @@ void clock_init() {
         },
         nullptr, true);
 }
+
 void do_scan_bus() {
     if (busScanFlag) {
         String res = "";
@@ -216,14 +215,4 @@ void do_scan_bus() {
         jsonWriteStr(configLiveJson, scanner->tag(), res);
         busScanFlag = false;
     }
-}
-
-void do_fscheck() {
-    if (!fsCheckFlag) {
-        return;
-    }
-    String buf;
-    buf += getFSSizeInfo();
-    jsonWriteStr(configLiveJson, "fscheck", buf);
-    fsCheckFlag = false;
 }

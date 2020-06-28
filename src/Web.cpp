@@ -11,6 +11,7 @@ bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
 }
 
 void web_init() {
+    // dnsServer.start(53, "*", WiFi.softAPIP());
     // server.addHandler(new CaptiveRequestHandler(jsonReadStr(configSetupJson, "name").c_str())).setFilter(ON_AP_FILTER);
 
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
