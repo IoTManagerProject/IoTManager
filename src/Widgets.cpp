@@ -5,10 +5,10 @@ static const char* MODULE = "Widget";
 const String getWidgetFile(const String& name);
 
 bool loadWidget(const String& filename, String& buf) {
-    buf = readFile(getWidgetFile(filename), 2048);
-    bool res = !(buf == "Failed" || buf == "Large");
+    buf = readFile(filename, 2048);
+    bool res = !(buf == "failed" || buf == "large");
     if (!res) {
-        pm.error("on load" + filename);
+        pm.error("on load " + filename);
     }
     return res;
 }
@@ -18,6 +18,8 @@ void createWidget(String widget, String page, String pageNumber, String filename
     if (!loadWidget(filename, buf)) {
         return;
     }
+    pm.info(buf);
+
     widget.replace("#", " ");
     page.replace("#", " ");
 
@@ -84,10 +86,12 @@ void createChart(String widget, String page, String pageNumber, String filename,
 #endif
 }
 
-void createWidgetByType(String widget, String page, String pageNumber, String type, String topic) {
-    createWidget(widget, page, pageNumber, getWidgetFile(type), topic);
+void createWidgetFromFile(String widget, String page, String pageNumber, String widget_type, String topic) {
+    String filename = getWidgetFile(widget_type);
+    pm.info("get '" + filename + "'");
+    createWidget(widget, page, pageNumber, filename, topic);
 }
 
-const String getWidgetFile(const String& name) {
-    return "/widgets/" + name + ".json";
+const String getWidgetFile(const String& widget_type) {
+    return "widgets/" + widget_type + ".json";
 }
