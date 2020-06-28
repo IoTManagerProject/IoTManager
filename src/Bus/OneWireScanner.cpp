@@ -18,7 +18,7 @@ bool OneWireScanner::syncScan() {
         }
     }
     if (OneWire::crc8(addr, 7) != addr[7]) {
-        pm.error("CRC!");
+        pm.error(String("CRC!"));
         return false;
     }
     _bus->reset_search();
