@@ -4,7 +4,7 @@ static const char* MODULE = "WiFi";
 
 void startSTAMode() {
     setLedStatus(LED_SLOW);
-    pm.info("STA Mode");
+    pm.info(String("STA Mode"));
 
     String ssid = jsonReadStr(configSetupJson, "routerssid");
     String passwd = jsonReadStr(configSetupJson, "routerpass");
@@ -59,7 +59,7 @@ void startSTAMode() {
 
 bool startAPMode() {
     setLedStatus(LED_ON);
-    pm.info("AP Mode");
+    pm.info(String("AP Mode"));
 
     String ssid = jsonReadStr(configSetupJson, "apssid");
     String passwd = jsonReadStr(configSetupJson, "appass");
@@ -92,15 +92,15 @@ boolean scanWiFi(String ssid) {
     pm.info("scan result: " + String(n, DEC));
     if (n == -2) {
         // не было запущено, запускаем
-        pm.info("start scanning");
+        pm.info(String("start scanning"));
         // async, show_hidden
         WiFi.scanNetworks(true, false);
     } else if (n == -1) {
         // все еще выполняется
-        pm.info("scanning in progress");
+        pm.info(String("scanning in progress"));
     } else if (n == 0) {
         // не найдена ни одна сеть
-        pm.info("no networks found");
+        pm.info(String("no networks found"));
         WiFi.scanNetworks(true, false);
     } else if (n > 0) {
         for (int8_t i = 0; i < n; i++) {

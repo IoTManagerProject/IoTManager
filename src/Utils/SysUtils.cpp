@@ -26,11 +26,11 @@ static uint32_t total_memory = 52864;
 static uint32_t total_memory = ESP.getHeapSize();
 #endif
 
-const String printMemoryStatus() {
+const String getMemoryStatus() {
     uint32_t free = ESP.getFreeHeap();
     uint32_t used = total_memory - free;
     uint32_t memory_load = (used * 100) / total_memory;
-    char buf[64];
+    char buf[128];
     sprintf(buf, "used: %d%% free: %s", memory_load, getHeapStats().c_str());
     return String(buf);
 }
@@ -58,7 +58,7 @@ const String getHeapStats() {
 
 const String getMacAddress() {
     uint8_t mac[6];
-    char buf[13] = {0};
+    char buf[16] = {0};
 #if defined(ESP8266)
     WiFi.macAddress(mac);
     sprintf(buf, MACSTR, MAC2STR(mac));

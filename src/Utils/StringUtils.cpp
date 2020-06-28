@@ -95,7 +95,7 @@ boolean isDigitStr(const String &str) {
     return str.length();
 }
 
-String prettyBytes(size_t size) {
+const String prettyBytes(size_t size) {
     if (size < 1024)
         return String(size) + "b";
     else if (size < (1024 * 1024))

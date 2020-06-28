@@ -1,14 +1,12 @@
 #include "Global.h"
 
 #include "Module/Terminal.h"
-#include "Servo/Servos.h"
+#include "Objects/Servos.h"
+#include "Objects/Buttons.h"
 
 static const char *MODULE = "Cmd";
 
 Terminal *term = nullptr;
-
-boolean but[NUM_BUTTONS];
-Bounce *buttons = new Bounce[NUM_BUTTONS];
 
 #ifdef ESP8266
 SoftwareSerial *mySerial = nullptr;
@@ -106,10 +104,8 @@ void cmd_init() {
     handle_time_init();
 }
 
-//==========================================================================================================
-//==========================================Модуль кнопок===================================================
 void button() {
-    pm.info("create 'button'");
+    pm.info(String("create 'button'"));
     String number = sCmd.next();
     String param = sCmd.next();
     String widget = sCmd.next();
@@ -243,16 +239,13 @@ void pwmSet() {
 
     MqttClient::publishStatus("pwm" + pwm_number, pwm_state);
 }
-//==================================================================================================================
-//==========================================Модуль физической кнопки================================================
+
 void switch_() {
     int number = String(sCmd.next()).toInt();
     int pin = String(sCmd.next()).toInt();
     int delay = String(sCmd.next()).toInt();
 
-    buttons[number].attach(pin);
-    buttons[number].interval(delay);
-    but[number] = true;
+    myButtons.create(number, pin, delay);
 }
 
 void loopSerial() {
@@ -262,24 +255,13 @@ void loopSerial() {
 }
 
 void loopButton() {
-    static uint8_t switch_number = 1;
-
-    if (but[switch_number]) {
-        buttons[switch_number].update();
-        if (buttons[switch_number].fell()) {
-            eventGen("switch", String(switch_number));
-
-            jsonWriteStr(configLiveJson, "switch" + String(switch_number), "1");
+    for (size_t i = 0; i < myButtons.count(); i++) {
+        Button_t *btn = myButtons.at(i);
+        btn->obj->update();
+        if (btn->obj->fell() || btn->obj->rose()) {
+            eventGen("switch", String(btn->num));
+            jsonWriteInt(configLiveJson, "switch" + String(btn->num), btn->obj->read());
         }
-        if (buttons[switch_number].rose()) {
-            eventGen("switch", String(switch_number));
-
-            jsonWriteStr(configLiveJson, "switch" + String(switch_number), "0");
-        }
-    }
-    switch_number++;
-    if (switch_number == NUM_BUTTONS) {
-        switch_number = 0;
     }
 }
 

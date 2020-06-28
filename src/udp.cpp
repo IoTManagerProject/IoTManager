@@ -19,12 +19,16 @@ unsigned int udp_port = 4210;
 //TODO Помомему тут ошибка в define'ах
 void handleUdp_esp32();
 
+bool isUdpEnabled() {
+    return jsonReadBool(configSetupJson, "udponoff") && isNetworkActive();
+}
+
 void add_dev_in_list(String fileName, String id, String dev_name, String ip);
 
 #ifdef UDP_ENABLED
 void udp_init() {
-    removeFile("dev.csv");
-    addFile("dev.csv", "device id;device name;ip address");
+    removeFile(String("dev.csv"));
+    addFile(String("dev.csv"), String("device id;device name;ip address"));
 
 #ifdef ESP8266
     udp.begin(udp_port);
@@ -37,8 +41,8 @@ void udp_init() {
 
     ts.add(
         UDP, udp_period, [&](void*) {
-            if (jsonReadBool(configSetupJson, "udponoff") && isNetworkActive() && !udp_busy) {
-                pm.info("send info");
+            if (isUdpEnabled() && !udp_busy) {
+                pm.info(String("sending info"));
                 String payload = "iotm;";
                 payload += chipId;
                 payload += ";";
@@ -56,10 +60,6 @@ void udp_init() {
         nullptr, false);
 }
 
-bool isUdpEnabled() {
-    return jsonReadBool(configSetupJson, "udponoff") && isNetworkActive();
-}
-
 void loopUdp() {
 #ifdef ESP8266
     if (!isUdpEnabled()) {
@@ -74,7 +74,7 @@ void loopUdp() {
     char udp_packet[255];
     remote_ip = udp.remoteIP().toString();
 
-    pm.info(prettyBytes(packetSize) + " from " + remote_ip + ":" + udp.remotePort());
+    pm.info(prettyBytes(packetSize) + " from " + remote_ip + ":" + String(udp.remotePort(), DEC));
 
     int len = udp.read(udp_packet, 255);
     if (len) {
@@ -112,7 +112,7 @@ void do_udp_data_parse() {
         return;
     }
     if (received.indexOf("mqttServer") >= 0) {
-        pm.info("received setting");
+        pm.info(String("received settings"));
         jsonWriteStr(configSetupJson, "mqttServer", jsonReadStr(received, "mqttServer"));
         jsonWriteInt(configSetupJson, "mqttPort", jsonReadInt(received, "mqttPort"));
         jsonWriteStr(configSetupJson, "mqttPrefix", jsonReadStr(received, "mqttPrefix"));
@@ -153,7 +153,7 @@ void send_mqtt_to_udp() {
 #ifdef ESP32
     udp.broadcast(mqtt_data.c_str());
 #endif
-    pm.info("sent info");
+    pm.info(String("sent info"));
     udp_busy = false;
 }
 

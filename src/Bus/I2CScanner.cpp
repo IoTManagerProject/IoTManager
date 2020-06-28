@@ -12,12 +12,12 @@ void I2CScanner::init() {
 }
 
 boolean I2CScanner::syncScan() {
-    pm.info("scanning...");
+    pm.info(String("scanning..."));
     size_t cnt = 0;
     for (uint8_t i = 8; i < 120; i++) {
         Wire.beginTransmission(i);
         if (Wire.endTransmission() == 0) {
-            pm.info("found: " + i);
+            pm.info("found: " + String(i, DEC));
             addResult(i, i < 119);
             cnt++;
         }

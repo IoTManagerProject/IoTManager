@@ -34,172 +34,118 @@ void web_init() {
             Device_init();
             loadScenario();
             request->redirect("/?set.device");
-        }
-
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("devinit")) {
+        } else if (request->hasArg("devinit")) {
             Device_init();
             request->send(200);
-        }
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("scen")) {
+        } else if (request->hasArg("scen")) {
             bool value = request->getParam("scen")->value().toInt();
             jsonWriteBool(configSetupJson, "scen", value);
             saveConfig();
             loadScenario();
             request->send(200);
-        }
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("sceninit")) {
+        } else if (request->hasArg("sceninit")) {
             loadScenario();
             request->send(200);
-        }
-        //--------------------------------------------------------------------------------
-#ifdef LOGGING_ENABLED
-        if (request->hasArg("cleanlog")) {
+        } else if (request->hasArg("cleanlog")) {
             clean_log_date();
             request->send(200);
-        }
-#endif
-        //==============================udp settings=============================================
-        if (request->hasArg("udponoff")) {
+        } else if (request->hasArg("udponoff")) {
             bool value = request->getParam("udponoff")->value().toInt();
             jsonWriteBool(configSetupJson, "udponoff", value);
             saveConfig();
             loadScenario();
             request->send(200);
-        }
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("updatelist")) {
+        } else if (request->hasArg("updatelist")) {
             removeFile("/dev.csv");
             addFile("dev.csv", "device id;device name;ip address");
             request->redirect("/?set.udp");
-        }
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("updatepage")) {
+        } else if (request->hasArg("updatepage")) {
             request->redirect("/?set.udp");
-        }
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("devname")) {
+        } else if (request->hasArg("devname")) {
             jsonWriteStr(configSetupJson, "name", request->getParam("devname")->value());
             saveConfig();
             request->send(200);
-        }
-        //==============================wifi settings=============================================
-        if (request->hasArg("routerssid")) {
+        } else if (request->hasArg("routerssid")) {
             jsonWriteStr(configSetupJson, "routerssid", request->getParam("routerssid")->value());
             saveConfig();
             request->send(200);
-        }
-        if (request->hasArg("routerpass")) {
+        } else if (request->hasArg("routerpass")) {
             jsonWriteStr(configSetupJson, "routerpass", request->getParam("routerpass")->value());
             saveConfig();
             request->send(200);
-        }
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("apssid")) {
+        } else if (request->hasArg("apssid")) {
             jsonWriteStr(configSetupJson, "apssid", request->getParam("apssid")->value());
             saveConfig();
-            request->send(200, "text/text", "OK");
-        }
-        if (request->hasArg("appass")) {
+            request->send(200);
+        } else if (request->hasArg("appass")) {
             jsonWriteStr(configSetupJson, "appass", request->getParam("appass")->value());
             saveConfig();
             request->send(200);
-        }
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("weblogin")) {
+        } else if (request->hasArg("weblogin")) {
             jsonWriteStr(configSetupJson, "weblogin", request->getParam("weblogin")->value());
             saveConfig();
             request->send(200);
-        }
-        if (request->hasArg("webpass")) {
+        } else if (request->hasArg("webpass")) {
             jsonWriteStr(configSetupJson, "webpass", request->getParam("webpass")->value());
             saveConfig();
             request->send(200);
-        }
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("timezone")) {
+        } else if (request->hasArg("timezone")) {
             String timezoneStr = request->getParam("timezone")->value();
             jsonWriteStr(configSetupJson, "timezone", timezoneStr);
             saveConfig();
             timeNow->setTimezone(timezoneStr.toInt());
             request->send(200);
-        }
-        if (request->hasArg("ntp")) {
+        } else if (request->hasArg("ntp")) {
             String ntpStr = request->getParam("ntp")->value();
             jsonWriteStr(configSetupJson, "ntp", ntpStr);
             saveConfig();
             timeNow->setNtpPool(ntpStr);
             request->send(200);
-        }
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("blink")) {
+        } else if (request->hasArg("blink")) {
             bool value = request->getParam("blink")->value().toInt();
             jsonWriteBool(configSetupJson, "blink", value);
             saveConfig();
             request->send(200);
-        }
-        //==============================mqtt settings=============================================
-        if (request->hasArg("mqttServer")) {
+        } else if (request->hasArg("mqttServer")) {
             jsonWriteStr(configSetupJson, "mqttServer", request->getParam("mqttServer")->value());
             saveConfig();
             mqttParamsChanged = true;
             request->send(200);
-        }
-        if (request->hasArg("mqttPort")) {
+        } else if (request->hasArg("mqttPort")) {
             int port = (request->getParam("mqttPort")->value()).toInt();
             jsonWriteInt(configSetupJson, "mqttPort", port);
             saveConfig();
             mqttParamsChanged = true;
             request->send(200);
-        }
-        if (request->hasArg("mqttPrefix")) {
+        } else if (request->hasArg("mqttPrefix")) {
             jsonWriteStr(configSetupJson, "mqttPrefix", request->getParam("mqttPrefix")->value());
             saveConfig();
             mqttParamsChanged = true;
             request->send(200);
-        }
-        if (request->hasArg("mqttUser")) {
+        } else if (request->hasArg("mqttUser")) {
             jsonWriteStr(configSetupJson, "mqttUser", request->getParam("mqttUser")->value());
             saveConfig();
             mqttParamsChanged = true;
             request->send(200);
-        }
-        if (request->hasArg("mqttPass")) {
+        } else if (request->hasArg("mqttPass")) {
             jsonWriteStr(configSetupJson, "mqttPass", request->getParam("mqttPass")->value());
             saveConfig();
             mqttParamsChanged = true;
             request->send(200);
-        }
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("mqttsend")) {
+        } else if (request->hasArg("mqttsend")) {
             mqtt_send_settings_to_udp = true;
             request->send(200);
-        }
-
-        //--------------------------------------------------------------------------------
-        if (request->hasArg("mqttcheck")) {
+        } else if (request->hasArg("mqttcheck")) {
             String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
-
             String payload = "{}";
             jsonWriteStr(payload, "title", buf);
             jsonWriteStr(payload, "class", "pop-up");
-
             request->send(200, "text/html", payload);
-        }
-
-        //==============================push settings=============================================
-#ifdef PUSH_ENABLED
-        if (request->hasArg("pushingboxid")) {
+        } else if (request->hasArg("pushingboxid")) {
             jsonWriteStr(configSetupJson, "pushingboxid", request->getParam("pushingboxid")->value());
             saveConfig();
             request->send(200);
-        }
-#endif
-
-        //==============================utilities settings=============================================
-        if (request->hasArg(TAG_I2C)) {
+        } else if (request->hasArg(TAG_I2C)) {
             busScanFlag = true;
             busToScan = BS_I2C;
             request->redirect("/?set.utilities");
@@ -213,6 +159,8 @@ void web_init() {
         } else if (request->hasArg(TAG_ONE_WIRE_PIN)) {
             setConfigParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value());
             request->send(200);
+        } else {
+            request->send(404);
         }
     });
 

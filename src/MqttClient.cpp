@@ -24,7 +24,7 @@ void init() {
             if (isNetworkActive()) {
                 if (mqtt.connected()) {
                     if (!connected) {
-                        pm.info("OK");
+                        pm.info(String("OK"));
                         setLedStatus(LED_OFF);
                         connected = true;
                     }
@@ -34,7 +34,7 @@ void init() {
                 }
             } else {
                 if (connected) {
-                    pm.error("connection lost");
+                    pm.error(String("connection lost"));
                     connected = false;
                 }
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
@@ -46,7 +46,7 @@ void init() {
 }
 
 void disconnect() {
-    pm.info("disconnect");
+    pm.info(String("disconnect"));
     mqtt.disconnect();
 }
 
@@ -63,7 +63,7 @@ void loop() {
 }
 
 void subscribe() {
-    pm.info("subscribe");
+    pm.info(String("subscribe"));
     mqtt.subscribe(mqttPrefix.c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/order").c_str());
@@ -73,11 +73,11 @@ void subscribe() {
 }
 
 boolean connect() {
-    pm.info("connect");
+    pm.info(String("connect"));
 
     String addr = jsonReadStr(configSetupJson, "mqttServer");
     if (!addr) {
-        pm.error("no broker address");
+        pm.error(String("no broker address"));
         return false;
     }
 
@@ -97,7 +97,7 @@ boolean connect() {
     bool res = false;
     if (!mqtt.connected()) {
         if (mqtt.connect(chipId.c_str(), user.c_str(), pass.c_str())) {
-            pm.info("connected");
+            pm.info(String("connected"));
             setLedStatus(LED_OFF);
             subscribe();
             res = true;
@@ -120,7 +120,7 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     }
     pm.info(payloadStr);
     if (payloadStr.startsWith("HELLO")) {
-        pm.info("Full update");
+        pm.info(String("Full update"));
         publishWidgets();
         publishState();
 #ifdef LOGGING_ENABLED
@@ -134,17 +134,10 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         topic = add_set(topic);
         String number = selectToMarkerLast(topic, "Set");
         topic.replace(number, "");
-
-        order_loop += topic;
-        order_loop += " ";
-        order_loop += number;
-        order_loop += " ";
-        order_loop += payloadStr;
-        order_loop += ",";
+        addCommandLoop(topic + " " + number + " " + payloadStr);
     } else if (topicStr.indexOf("order")) {
         payloadStr.replace("_", " ");
-        order_loop += payloadStr;
-        order_loop += ",";
+        addCommandLoop(payloadStr);
     } else if (topicStr.indexOf("update")) {
         if (payloadStr == "1") {
             updateFlag = true;
@@ -169,7 +162,7 @@ boolean publish(const String& topic, const String& data) {
 boolean publishData(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic;
     if (!publish(path, data)) {
-        pm.error("on publish data");
+        pm.error(String("on publish data"));
         return false;
     }
     return true;
@@ -178,7 +171,7 @@ boolean publishData(const String& topic, const String& data) {
 boolean publishChart(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     if (!publish(path, data)) {
-        pm.error("on publish chart");
+        pm.error(String("on publish chart"));
         return false;
     }
     return true;
@@ -229,7 +222,7 @@ void publishWidgets() {
 void publishWidgets() {
     auto file = seekFile("layout.txt");
     if (!file) {
-        pm.error("on seek layout.txt");
+        pm.error(String("on seek layout.txt"));
         return;
     }
     while (file.available()) {

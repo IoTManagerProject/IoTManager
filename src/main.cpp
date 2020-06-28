@@ -22,51 +22,51 @@ void setup() {
 
     setChipId();
 
-    pm.info("FS");
+    pm.info(String("FS"));
     fileSystemInit();
 
-    pm.info("Config");
+    pm.info(String("Config"));
     loadConfig();
 
-    pm.info("Clock");
+    pm.info(String("Clock"));
     clock_init();
 
-    pm.info("Commands");
+    pm.info(String("Commands"));
     cmd_init();
 
-    pm.info("Sensors");
+    pm.info(String("Sensors"));
     sensors_init();
 
-    pm.info("Init");
+    pm.info(String("Init"));
     all_init();
 
-    pm.info("Network");
+    pm.info(String("Network"));
     startSTAMode();
 
-    pm.info("Uptime");
+    pm.info(String("Uptime"));
     uptime_init();
 
     if (!TELEMETRY_UPDATE_INTERVAL) {
-        pm.info("Telemetry: Disabled");
+        pm.info(String("Telemetry: Disabled"));
     }
     telemetry_init();
 
-    pm.info("Updater");
+    pm.info(String("Updater"));
     initUpdater();
 
-    pm.info("HttpServer");
+    pm.info(String("HttpServer"));
     HttpServer::init();
 
-    pm.info("WebAdmin");
+    pm.info(String("WebAdmin"));
     web_init();
 
 #ifdef UDP_ENABLED
-    pm.info("Broadcast UDP");
+    pm.info(String("Broadcast UDP"));
     udp_init();
 #endif
     ts.add(
         TEST, 1000 * 60, [&](void*) {
-            pm.info(printMemoryStatus());
+            pm.info(getMemoryStatus());
         },
         nullptr, true);
 
@@ -212,7 +212,8 @@ void do_scan_bus() {
         String res = "";
         BusScanner* scanner = BusScannerFactory::get(configSetupJson, busToScan, res);
         scanner->scan();
-        jsonWriteStr(configLiveJson, String(scanner->tag()), res);
+        jsonWriteStr(configLiveJson, scanner->tag(), res);
+        free(scanner);
         busScanFlag = false;
     }
 }

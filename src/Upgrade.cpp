@@ -43,7 +43,7 @@ void upgrade_firmware() {
     configBackup = readFile(String(DEVICE_CONFIG_FILE), 4096);
     setupBackup = configSetupJson;
 
-    pm.info("update data");
+    pm.info(String("update data"));
     WiFiClient wifiClient;
 #ifdef ESP8266
     ESPhttpUpdate.rebootOnUpdate(false);
@@ -59,9 +59,9 @@ void upgrade_firmware() {
 
         saveConfig();
 
-        pm.info("done!");
+        pm.info(String("done!"));
     } else {
-        pm.error("on data");
+        pm.error(String("on data"));
         return;
     }
 
@@ -72,10 +72,10 @@ void upgrade_firmware() {
     ret = httpUpdate.update(client_for_upgrade, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
 #endif
     if (ret == HTTP_UPDATE_OK) {
-        pm.info("done! restart...");
+        pm.info(String("done! restart..."));
         ESP.restart();
     } else {
-        pm.error("on firmware");
+        pm.error(String("on firmware"));
     }
 }
 

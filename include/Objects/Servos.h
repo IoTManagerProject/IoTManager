@@ -15,7 +15,6 @@ class Servos {
     Servos();
     Servo* get(uint8_t num);
     Servo* create(uint8_t num, uint8_t pin);
-
     size_t count();
 
    private:

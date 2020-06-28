@@ -57,10 +57,6 @@ extern AsyncWebServer server;
 
 extern DallasTemperature sensors;
 
-extern boolean but[NUM_BUTTONS];
-
-extern Bounce* buttons;
-
 /*
 * Global vars
 */
