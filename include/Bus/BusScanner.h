@@ -16,7 +16,7 @@ class BusScanner {
         bool res;
         do {
             res = syncScan();
-        } while (!res && _tries);
+        } while (!res && --_tries);
 
         if (!_found) {
             addResult("не найдено");
