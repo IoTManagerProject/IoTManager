@@ -13,7 +13,14 @@ const String getAvailableUrl(const char* mcu) {
     return buf;
 }
 
-void getLastVersion() {
+void do_update() {
+    if (updateFlag) {
+        updateFlag = false;
+        upgrade_firmware();
+    }
+}
+
+void do_check_update() {
     if (checkUpdatesFlag) {
         String url;
 #ifdef ESP8266
@@ -29,8 +36,8 @@ void getLastVersion() {
 
 void initUpdater() {
     if (isNetworkActive()) {
-        getLastVersion();
-        if (lastVersion.length()) {
+        do_check_update();
+        if (!lastVersion.isEmpty()) {
             pm.info("available: " + lastVersion);
         }
     };
@@ -43,7 +50,7 @@ void upgrade_firmware() {
     configBackup = readFile(String(DEVICE_CONFIG_FILE), 4096);
     setupBackup = configSetupJson;
 
-    pm.info(String("update data"));
+    pm.info("file system");
     WiFiClient wifiClient;
 #ifdef ESP8266
     ESPhttpUpdate.rebootOnUpdate(false);
@@ -61,27 +68,20 @@ void upgrade_firmware() {
 
         pm.info(String("done!"));
     } else {
-        pm.error(String("on data"));
+        pm.error(String("file system"));
         return;
     }
 
-    Serial.println("update firmware");
+    pm.info("firmware");
 #ifdef ESP8266
     ret = ESPhttpUpdate.update(wifiClient, "http://91.204.228.124:1100/update/esp8266/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
 #else
     ret = httpUpdate.update(client_for_upgrade, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
 #endif
     if (ret == HTTP_UPDATE_OK) {
-        pm.info(String("done! restart..."));
+        pm.info("done! restart...");
         ESP.restart();
     } else {
-        pm.error(String("on firmware"));
-    }
-}
-
-void do_update() {
-    if (updateFlag) {
-        updateFlag = false;
-        upgrade_firmware();
+        pm.error("on firmware");
     }
 }

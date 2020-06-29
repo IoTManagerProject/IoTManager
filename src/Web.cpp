@@ -168,30 +168,27 @@ void web_init() {
     * Check
     */
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
-        checkUpdatesFlag = true;
-        pm.info("firmware version: " + lastVersion);
-
-        if (!FLASH_4MB) {
-            lastVersion = "less";
-        } else if (isNetworkActive()) {
-            lastVersion = "nowifi";
-        }
-
         String msg = "";
-        if (lastVersion == FIRMWARE_VERSION) {
-            msg = F("Актуальная версия прошивки уже установлена.");
-        } else if (lastVersion != FIRMWARE_VERSION) {
-            msg = F("Новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
+        // Errors
+        if (!FLASH_4MB) {
+            msg = F("Обновление \"по воздуху\" не поддерживается!");
+        } else if (!isNetworkActive()) {
+            msg = F("Устройство не подключено к роутеру!");
         } else if (lastVersion == "error") {
             msg = F("Cервер не найден. Попробуйте повторить позже...");
-        } else if (lastVersion == "") {
-            msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
-        } else if (lastVersion == "less") {
-            msg = F("Обновление \"по воздуху\" не поддерживается!");
-        } else if (lastVersion == "nowifi") {
-            msg = F("Устройство не подключено к роутеру!");
         } else if (lastVersion == "notsupported") {
             msg = F("Обновление возможно только через usb!");
+        } else if (lastVersion.isEmpty()) {
+            checkUpdatesFlag = true;
+            msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
+        } else {
+            pm.info("version: " + lastVersion);
+            // TODO Версия должна быть выше
+            if (lastVersion == FIRMWARE_VERSION) {
+                msg = F("Актуальная версия прошивки уже установлена.");
+            } else if (lastVersion != FIRMWARE_VERSION) {
+                msg = F("Доступно обновление<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет установка, по ее заверщению страница автоматически перезагрузится...')\">Установить</a>");
+            }
         }
         String tmp = "{}";
         jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + msg);
