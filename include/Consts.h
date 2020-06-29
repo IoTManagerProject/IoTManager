@@ -81,7 +81,7 @@ enum TimerTask_t { WIFI_SCAN,
                    UPTIME,
                    UDP,
                    UDP_DB,
-                   TEST };
+                   SYS_STAT };
 
 enum ErrorType_t {
     ET_NONE,

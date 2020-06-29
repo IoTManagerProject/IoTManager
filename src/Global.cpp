@@ -7,7 +7,7 @@ AsyncWebSocket ws;
 
 Clock* timeNow;
 
-TickerScheduler ts(TEST + 1);
+TickerScheduler ts(SYS_STAT + 1);
 
 WiFiClient espClient;
 

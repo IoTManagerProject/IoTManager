@@ -3,13 +3,25 @@
 #include "HttpServer.h"
 #include "Bus/I2CScanner.h"
 #include "Bus/DallasScanner.h"
-#include "Utils/Timings.h"
+#include "TickerScheduler/Metric.h"
 
 void not_async_actions();
 
 static const char* MODULE = "Main";
 
-Timings metric;
+enum LoopItems {
+    LI_CLOCK,
+    LI_NOT_ASYNC,
+    LI_MQTT_CLIENT,
+    LI_CMD,
+    LI_BUTTON,
+    LI_SCENARIO,
+    LI_UDP,
+    LI_SERIAL,
+    LI_TICKETS
+};
+
+Metric m;
 boolean initialized = false;
 
 void setup() {
@@ -62,17 +74,25 @@ void setup() {
     web_init();
 
 #ifdef UDP_ENABLED
-    pm.info(String("Broadcast UDP"));
+    pm.info(String("Broadcast"));
     udp_init();
 #endif
+
     ts.add(
-        TEST, 1000 * 60, [&](void*) {
+        SYS_STAT, 1000 * 60, [&](void*) {
             pm.info(getMemoryStatus());
+            pm.info("Loop: ");
+            m.print(Serial);
+
+            pm.info("Tickets: ");
+            ts.printMetric(Serial);
+
+            m.reset();
+            ts.resetMetric();
         },
-        nullptr, true);
+        nullptr, false);
 
     just_load = false;
-
     initialized = true;
 }
 
@@ -80,7 +100,9 @@ void loop() {
     if (!initialized) {
         return;
     }
+    m.loop();
     timeNow->loop();
+    m.add(LI_CLOCK);
 
 #ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.handle();
@@ -89,22 +111,30 @@ void loop() {
     ws.cleanupClients();
 #endif
     not_async_actions();
+    m.add(LI_NOT_ASYNC);
 
     MqttClient::loop();
+    m.add(LI_MQTT_CLIENT);
 
     loopCmd();
+    m.add(LI_CMD);
 
     loop_button();
+    m.add(LI_BUTTON);
 
-    loopScenario();
+    loop_scenario();
+    m.add(LI_SCENARIO);
 
 #ifdef UDP_ENABLED
     loopUdp();
 #endif
+    m.add(LI_UDP);
 
     loop_serial();
+    m.add(LI_SERIAL);
 
     ts.update();
+    m.add(LI_TICKETS);
 }
 
 void not_async_actions() {
@@ -113,7 +143,7 @@ void not_async_actions() {
         mqttParamsChanged = false;
     }
 
-    getLastVersion();
+    do_check_update();
 
     do_update();
 

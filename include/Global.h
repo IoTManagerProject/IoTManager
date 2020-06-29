@@ -251,7 +251,7 @@ extern void addCommandLoop(const String& cmdStr);
 extern void loop_serial();
 extern void loopCmd();
 extern void loop_button();
-extern void loopScenario();
+extern void loop_scenario();
 extern void loopUdp();
 
 extern void do_update();
