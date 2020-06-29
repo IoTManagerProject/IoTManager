@@ -30,8 +30,10 @@ const String getMemoryStatus() {
     uint32_t free = ESP.getFreeHeap();
     uint32_t used = total_memory - free;
     uint32_t memory_load = (used * 100) / total_memory;
-    char buf[128];
-    sprintf(buf, "used: %d%% free: %s", memory_load, getHeapStats().c_str());
+    String buf;
+    buf += memory_load;
+    buf += "% ";
+    buf += getHeapStats();
     return String(buf);
 }
 
@@ -43,7 +45,7 @@ const String getHeapStats() {
     ESP.getHeapStats(&free, &max, &frag);
     String buf;
     buf += prettyBytes(free);
-    buf += " frag: ";
+    buf += " ";
     buf += frag;
     buf += '%';
     return buf;

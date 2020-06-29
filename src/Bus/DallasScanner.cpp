@@ -9,7 +9,7 @@ DallasScanner::DallasScanner() : BusScanner(TAG_ONE_WIRE, 1) {}
 
 bool DallasScanner::syncScan() {
     if (!dallasTemperature) {
-        pm.error(String("DallasTemperature is null"));
+        pm.error(String("OneWire inactive"));
         return false;
     }
     size_t countSensors = dallasTemperature->getDeviceCount();
