@@ -122,12 +122,14 @@ boolean connect() {
 }
 
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
-    pm.info("got updates: " + String(topic));
+    String topicStr = String(topic);
+    pm.info("got updates: " + topicStr);
     String payloadStr = "";
     payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
         payloadStr += (char)payload[i];
     }
+
     if (payloadStr.equalsIgnoreCase("hello")) {
         pm.info(String("hello"));
         publishWidgets();
@@ -135,17 +137,15 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
 #ifdef LOGGING_ENABLED
         choose_log_date_and_send();
 #endif
-    }
-    String topicStr{topic};
-    if (topicStr.endsWith("control")) {
-        // название - команда, значение - параметр
-        // devicePrefix/800324-1458415/button99/control 1
-
-        String cmdStr = selectFromMarkerToMarker(topicStr, "/", 3);
-        cmdStr = add_set(cmdStr);
-        String number = selectToMarkerLast(cmdStr, "Set");
-        cmdStr.replace(number, "");
-        addCommandLoop(cmdStr + " " + number + " " + payloadStr);
+    } else if (topicStr.indexOf("control")) {
+        // название топика -  команда,
+        // значение - параметр
+        //IoTmanager/800324-1458415/button99/control 1
+        String topic = selectFromMarkerToMarker(topicStr, "/", 3);
+        topic = add_set(topic);
+        String number = selectToMarkerLast(topic, "Set");
+        topic.replace(number, "");
+        addCommandLoop(topic + " " + number + " " + payloadStr);
     } else if (topicStr.indexOf("order")) {
         payloadStr.replace("_", " ");
         addCommandLoop(payloadStr);
@@ -193,8 +193,8 @@ boolean publishStatus(const String& topic, const String& data) {
     return publish(path.c_str(), json.c_str());
 }
 
-void publishWidgets() {
 #ifdef LAYOUT_IN_RAM
+void publishWidgets() {
     if (all_widgets != "") {
         int counter = 0;
         String line;
@@ -214,7 +214,11 @@ void publishWidgets() {
         } while (psn_2 + 2 < all_widgets.length());
         getMemoryLoad("[I] after send all widgets");
     }
-#else
+}
+#endif
+
+#ifndef LAYOUT_IN_RAM
+void publishWidgets() {
     auto file = seekFile("layout.txt");
     if (!file) {
         pm.error(String("on seek layout.txt"));
@@ -226,38 +230,8 @@ void publishWidgets() {
         publishData("config", payload);
     }
     file.close();
+}
 #endif
-}
-
-bool isExludedTopic(const String& topic) {
-    return (topic == "time") || (topic == "name") || (topic == "lang") || (topic == "ip") || (topic.indexOf("_in") < 0);
-}
-
-void publishState() {
-    // берет строку json и ключи превращает в топики а значения колючей в них посылает
-    // {"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
-    // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
-    // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
-    String str = configLiveJson;
-    str.replace("{", "");
-    str.replace("}", "");
-    str += ",";
-
-    while (str.length()) {
-        String tmp = selectToMarker(str, ",");
-
-        String topic = selectToMarker(tmp, ":");
-        topic.replace("\"", "");
-
-        String state = selectToMarkerLast(tmp, ":");
-        state.replace("\"", "");
-
-        if (!isExludedTopic(topic)) {
-            publishStatus(topic, state);
-        }
-        str = deleteBeforeDelimiter(str, ",");
-    }
-}
 
 const String getStateStr() {
     switch (mqtt.state()) {

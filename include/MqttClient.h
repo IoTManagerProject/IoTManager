@@ -14,7 +14,7 @@ void subscribe(struct Params& p);
 boolean publish(const String& topic, const String& data);
 boolean publishData(const String& topic, const String& data);
 boolean publishChart(const String& topic, const String& data);
-boolean publishControl(const String& id, const String& topic, const String& state);
+boolean publishControl(String id, String topic, String state);
 boolean publishStatus(const String& topic, const String& data);
 
 void publishWidgets();
