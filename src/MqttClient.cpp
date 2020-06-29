@@ -233,6 +233,32 @@ void publishWidgets() {
 }
 #endif
 
+void publishState() {
+    // берет строку json и ключи превращает в топики а значения колючей в них посылает
+    // {"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
+    // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
+    // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
+    String str = configLiveJson;
+    str.replace("{", "");
+    str.replace("}", "");
+    str += ",";
+
+    while (str.length()) {
+        String tmp = selectToMarker(str, ",");
+
+        String topic = selectToMarker(tmp, ":");
+        topic.replace("\"", "");
+
+        String state = selectToMarkerLast(tmp, ":");
+        state.replace("\"", "");
+
+        if ((topic != "time") && (topic != "name") && (topic != "lang") && (topic != "ip") && (topic.indexOf("_in") < 0)) {
+            publishStatus(topic, state);
+        }
+        str = deleteBeforeDelimiter(str, ",");
+    }
+}
+
 const String getStateStr() {
     switch (mqtt.state()) {
         case -4:
