@@ -21,7 +21,7 @@ class Clock {
     bool _configured;
 
    public:
-    Clock() : _uptime{0}, _timezone{0}, _ntp{""}, _hasSynced{false}, _configured{false} {};
+    Clock() : _uptime{millis()}, _timezone{0}, _ntp{""}, _hasSynced{false}, _configured{false} {};
 
     void loop() {
         unsigned long passed = millis_since(_uptime);
