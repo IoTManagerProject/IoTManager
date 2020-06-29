@@ -22,9 +22,10 @@
 #include "Utils\SysUtils.h"
 #include "Utils\PrintMessage.h"
 #include "Utils\WiFiUtils.h"
+#include "TickerScheduler/TickerScheduler.h"
 
 //=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
-
+#include <ArduinoOTA.h>
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>
 #include <Bounce2.h>
@@ -33,10 +34,8 @@
 #include <OneWire.h>
 #include <PubSubClient.h>
 #include <StringCommand.h>
-#include <TickerScheduler.h>
 #include <Wire.h>
 #include <time.h>
-#include <ArduinoOTA.h>
 
 #ifdef WEBSOCKET_ENABLED
 extern AsyncWebSocket ws;
