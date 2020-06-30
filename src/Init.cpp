@@ -2,17 +2,20 @@
 
 #include "WebClient.h"
 #include "Sensors.h"
+#include "MqttClient.h"
 
 void handle_uptime();
 void handle_statistics();
 void telemetry_init();
 
+static const char* MODULE = "Init";
+
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
 
-    configSetup.load(configSetupJson);
+    config.load(configSetupJson);
     String tmp = "{}";
-    configSetup.save(tmp);
+    config.save(tmp);
     Serial.print(tmp);
 
     configSetupJson.replace(" ", "");
@@ -26,52 +29,39 @@ void loadConfig() {
     Serial.println(configSetupJson);
 }
 
-void all_init() {
+void init_mod() {
+    pm.info("Mqtt");
+    MqttClient::setConfig(config.mqtt());
+
+    pm.info(String("Commands"));
+    cmd_init();
+
     Device_init();
 
+    pm.info(String("Scenario"));
     Scenario::init();
 
+    pm.info(String("Sensors"));
+    Sensors::init();
+
     Timer_countdown_init();
+
+    pm.info(String("Uptime"));
+    uptime_init();
 }
 
 void Device_init() {
-    logging_value_names_list = "";
-    enter_to_logging_counter = LOG1 - 1;
-
-    analog_value_names_list = "";
-    enter_to_analog_counter = 0;
-
-    dallas_value_name = "";
-    enter_to_dallas_counter = 0;
-
-    levelPr_value_name = "";
-    ultrasonicCm_value_name = "";
-
-    dhtT_value_name = "";
-    dhtH_value_name = "";
-
-    bmp280T_value_name = "";
-    bmp280P_value_name = "";
-
-    bme280T_value_name = "";
-    bme280P_value_name = "";
-    bme280H_value_name = "";
-    bme280A_value_name = "";
-
     for (int i = LOG1; i <= LOG5; i++) {
         ts.remove(i);
     }
-
 #ifdef LAYOUT_IN_RAM
     all_widgets = "";
 #else
     removeFile(String("layout.txt"));
 #endif
 
-    fileExecute(String(DEVICE_CONFIG_FILE));
-    //outcoming_date();
+    fileExecute(DEVICE_CONFIG_FILE);
 }
-//-------------------------------сценарии-----------------------------------------------------
 
 void uptime_init() {
     ts.add(

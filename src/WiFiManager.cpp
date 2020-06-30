@@ -1,20 +1,29 @@
-#include "Utils/WiFiUtils.h"
+#include "WiFiManager.h"
+
+#include "Global.h"
+
+#include "MqttClient.h"
 
 static const char* MODULE = "WiFi";
 
+// Errors
+int wifi_error = 0;
+int mqtt_error = 0;
+bool _connected = false;
+
 void startSTAMode() {
     setLedStatus(LED_SLOW);
-    pm.info(String("STA Mode"));
 
     String ssid = jsonReadStr(configSetupJson, "routerssid");
     String passwd = jsonReadStr(configSetupJson, "routerpass");
+    pm.info("STA Mode: " + ssid);
 
     WiFi.mode(WIFI_STA);
-    if (ssid == "" && passwd == "") {
+    if (ssid.isEmpty() && passwd.isEmpty()) {
         WiFi.begin();
     } else {
         if (WiFi.begin(ssid.c_str(), passwd.c_str()) == WL_CONNECT_FAILED) {
-            pm.error("failed on start");
+            pm.error("on begin");
         }
     }
 
@@ -49,7 +58,34 @@ void startSTAMode() {
     } while (keepConnecting && tries--);
 
     if (isNetworkActive()) {
-        MqttClient::init();
+        ts.add(
+            WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL,
+            [&](void*) {
+                if (isNetworkActive()) {
+                    if (MqttClient::isConnected()) {
+                        if (!_connected) {
+                            setLedStatus(LED_OFF);
+                            _connected = true;
+                        }
+                    } else {
+                        setLedStatus(LED_FAST);
+                        if (MqttClient::connect()) {
+                            setLedStatus(LED_OFF);
+                        }
+                        if (!just_load) mqtt_error++;
+                    }
+                } else {
+                    if (_connected) {
+                        pm.error("connection lost");
+                        _connected = false;
+                    }
+                    ts.remove(WIFI_MQTT_CONNECTION_CHECK);
+                    wifi_error++;
+                    startAPMode();
+                }
+            },
+            nullptr, true);
+
         setLedStatus(LED_OFF);
     } else {
         pm.error("failed: " + String(connRes, DEC));
@@ -59,10 +95,9 @@ void startSTAMode() {
 
 bool startAPMode() {
     setLedStatus(LED_ON);
-    pm.info(String("AP Mode"));
-
     String ssid = jsonReadStr(configSetupJson, "apssid");
     String passwd = jsonReadStr(configSetupJson, "appass");
+    pm.info("AP Mode: " + ssid);
 
     WiFi.mode(WIFI_AP);
 

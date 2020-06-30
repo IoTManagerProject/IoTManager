@@ -1,16 +1,17 @@
 #pragma once
 
 #include <Arduino.h>
-#include <PubSubClient.h>
+
+#include "Config/MqttConfig.h"
 
 namespace MqttClient {
 
-void init();
-boolean connect();
+void setConfig(MqttConfig*);
+bool isConnected();
+bool connect();
 void reconnect();
 void loop();
-
-void subscribe(struct Params& p);
+void subscribe();
 
 boolean publish(const String& topic, const String& data);
 boolean publishData(const String& topic, const String& data);

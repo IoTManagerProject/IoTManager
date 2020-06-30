@@ -4,6 +4,6 @@
 
 namespace WebClient {
 
-String get(const String& url);
+const String get(const String& url);
 
 }  // namespace WebClient

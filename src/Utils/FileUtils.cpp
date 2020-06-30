@@ -15,7 +15,7 @@ bool fileSystemInit() {
     return true;
 }
 
-void removeFile(const String& filename) {
+void removeFile(const String filename) {
     String path = filepath(filename);
     if (LittleFS.exists(path)) {
         if (!LittleFS.remove(path)) {
@@ -26,7 +26,7 @@ void removeFile(const String& filename) {
     }
 }
 
-File seekFile(const String& filename, size_t position) {
+File seekFile(const String filename, size_t position) {
     String path = filepath(filename);
     auto file = LittleFS.open(path, "r");
     if (!file) {
@@ -37,7 +37,7 @@ File seekFile(const String& filename, size_t position) {
     return file;
 }
 
-const String readFileString(const String& filename, const String& to_find) {
+const String readFileString(const String filename, const String to_find) {
     String path = filepath(filename);
     String res = "failed";
     auto file = LittleFS.open(path, "r");
@@ -51,7 +51,7 @@ const String readFileString(const String& filename, const String& to_find) {
     return res;
 }
 
-const String addFile(const String& filename, const String& str) {
+const String addFile(const String filename, const String str) {
     String path = filepath(filename);
     auto file = LittleFS.open(path, "a");
     if (!file) {
@@ -62,7 +62,7 @@ const String addFile(const String& filename, const String& str) {
     return "sucсess";
 }
 
-bool copyFile(const String& src, const String& dst, bool overwrite) {
+bool copyFile(const String src, const String dst, bool overwrite) {
     String srcPath = filepath(src);
     String dstPath = filepath(dst);
     pm.info("copy " + srcPath + " to " + dstPath);
@@ -90,7 +90,7 @@ bool copyFile(const String& src, const String& dst, bool overwrite) {
     return true;
 }
 
-const String writeFile(const String& filename, const String& str) {
+const String writeFile(const String filename, const String str) {
     String path = filepath(filename);
     auto file = LittleFS.open(path, "w");
     if (!file) {
@@ -101,7 +101,7 @@ const String writeFile(const String& filename, const String& str) {
     return "sucсess";
 }
 
-const String readFile(const String& filename, size_t max_size) {
+const String readFile(const String filename, size_t max_size) {
     String path = filepath(filename);
     pm.info("read " + filename);
     auto file = LittleFS.open(path, "r");

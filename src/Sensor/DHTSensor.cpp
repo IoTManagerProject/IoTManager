@@ -1,8 +1,8 @@
 #include "Sensor\DHTSensor.h"
 
 DHTesp dht;
-String dhtT_value_name;
-String dhtH_value_name;
+String dhtT_value_name = "";
+String dhtH_value_name = "";
 
 const String comfortStr(ComfortState value) {
     String res;

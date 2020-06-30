@@ -1,13 +1,10 @@
 #pragma once
 
-#include <Arduino.h>
-#include <ArduinoJson.h>
+#include "ConfigItem.h"
 
-#include "Consts.h"
-
-struct ConfigSetup {
+class NetworkConfig : public ConfigItem {
    public:
-    ConfigSetup(){};
+    NetworkConfig();
 
     const char* getName() const;
     const char* getIPAddr() const;
@@ -18,17 +15,10 @@ struct ConfigSetup {
     void setSSID(uint8_t mode, const String& str);
     void setPasswd(uint8_t mode, const String& str);
 
-    void enableBroadcast(boolean enabled);
-    boolean isBroadcastEnabled();
-
-    void enableScenario(boolean enabled);
-    boolean isScenarioEnabled();
-
-    void load(const String&);
-    const String save(String& str);
+    void load(const JsonObject& root) override;
+    void save(JsonObject& root) override;
 
    private:
-    void setChanged(boolean = true);
     bool updateField(char*, const String&, size_t);
 
    private:
@@ -38,15 +28,4 @@ struct ConfigSetup {
     char _ap_passwd[33];
     char _sta_ssid[33];
     char _sta_passwd[33];
-
-    int _timezone;
-    char _ntp[33];
-
-    bool _broadcastEnabled;
-    bool _scenarioEnabled;
-
-   private:
-    bool _changed;
 };
-
-extern ConfigSetup configSetup;

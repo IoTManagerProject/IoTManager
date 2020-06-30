@@ -3,8 +3,8 @@
 DallasSensors dallasSensors;
 
 DallasTemperature *dallasTemperature;
-String dallas_value_name;
-int enter_to_dallas_counter;
+String dallas_value_name = "";
+int enter_to_dallas_counter = 0;
 
 DallasSensors::DallasSensors(){};
 

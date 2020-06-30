@@ -1,6 +1,7 @@
 #include "Cmd.h"
 
 #include "Module/Terminal.h"
+#include "MqttClient.h"
 #include "WebClient.h"
 #include "Sensors.h"
 #include "Objects/Buttons.h"
@@ -792,7 +793,7 @@ void cmd_http() {
 }
 
 void cmd_firmwareUpdate() {
-    updateFlag = true;
+    perform_upgrade = true;
 }
 
 void cmd_firmwareVersion() {
@@ -811,7 +812,7 @@ void addCommandLoop(const String &cmdStr) {
     }
 }
 
-void fileExecute(const String &filename) {
+void fileExecute(const String filename) {
     String cmdStr = readFile(filename, 2048);
     stringExecute(cmdStr);
 }

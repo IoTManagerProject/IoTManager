@@ -11,13 +11,13 @@
 //
 #include "Consts.h"
 #include "Errors.h"
+#include "Config.h"
 #include "Upgrade.h"
 #include "Clock.h"
-#include "MqttClient.h"
 #include "Scenario.h"
 #include "Sensors.h"
+#include "WiFiManager.h"
 
-#include "Objects/ConfigSetup.h"
 #include "Objects/EventQueue.h"
 
 #include "Utils/FileUtils.h"
@@ -25,7 +25,6 @@
 #include "Utils/StringUtils.h"
 #include "Utils/SysUtils.h"
 #include "Utils/PrintMessage.h"
-#include "Utils/WiFiUtils.h"
 #include "TickerScheduler/TickerScheduler.h"
 
 #include <ArduinoOTA.h>
@@ -41,7 +40,6 @@ extern AsyncWebSocket ws;
 extern Clock* timeNow;
 extern TickerScheduler ts;
 extern WiFiClient espClient;
-extern PubSubClient mqtt;
 extern StringCommand sCmd;
 extern AsyncWebServer server;
 
@@ -66,11 +64,11 @@ extern int enter_to_logging_counter;
 
 extern String lastVersion;
 
-extern boolean checkUpdatesFlag;
-extern boolean updateFlag;
-extern boolean mqttParamsChanged;
+extern boolean perform_updates_check;
+extern boolean perform_upgrade;
+extern boolean mqttParamsChangedFlag;
 extern boolean udp_data_parse;
-extern boolean mqtt_send_settings_to_udp;
+extern boolean broadcast_mqtt_settings;
 
 extern void enableScenario(boolean enable);
 extern void fireEvent(String name);
@@ -82,25 +80,24 @@ extern const String writeLiveData(const String& obj, const String& value);
 /*
 * Запрос на скарнирование шины
 */
-extern boolean busScanFlag;
+extern boolean perform_bus_scanning;
 /*
 * Запрос на сканирование шины, указание какую
 */
-extern BusScanner_t busToScan;
+extern BusScanner_t bus_to_scan;
 
 /*
 * Global functions
 */
+extern void fileExecute(const String filename);
 
-extern void fileExecute(const String& filename);
 extern void stringExecute(String& cmdStr);
 // Init
 extern void loadConfig();
-extern void all_init();
 extern void statistics_init();
 extern void Device_init();
-extern void prsets_init();
 extern void cmd_init();
+extern void init_mod();
 // Logging
 extern void logging();
 extern void deleteOldDate(String filename, size_t max_lines, String date_to_add);
@@ -140,17 +137,11 @@ extern void createChart(String widget_name, String page_name, String page_number
 // PushingBox
 extern void pushControl();
 
-// UDP
-extern void udp_init();
-extern void do_udp_data_parse();
-extern void do_mqtt_send_settings_to_udp();
-
 extern void addCommandLoop(const String& cmdStr);
 extern void loop_serial();
 extern void loopCmd();
 extern void loop_button();
 extern void loop_scenario();
-extern void loopUdp();
 
 extern void do_update();
 

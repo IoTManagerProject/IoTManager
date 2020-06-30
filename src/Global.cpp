@@ -7,8 +7,7 @@ AsyncWebSocket ws;
 
 Clock* timeNow;
 TickerScheduler ts(SYS_STAT + 1);
-WiFiClient espClient;
-PubSubClient mqtt(espClient);
+
 StringCommand sCmd;
 AsyncWebServer server(80);
 
@@ -33,31 +32,31 @@ String lastVersion = "";
 boolean just_load = true;
 
 // Async actions
-boolean checkUpdatesFlag = false;
-boolean updateFlag = false;
+boolean perform_updates_check = false;
+boolean perform_upgrade = false;
 
-boolean mqttParamsChanged = false;
+boolean mqttParamsChangedFlag = false;
 boolean udp_data_parse = false;
-boolean mqtt_send_settings_to_udp = false;
+boolean broadcast_mqtt_settings = false;
 
-BusScanner_t busToScan;
-boolean busScanFlag = false;
+BusScanner_t bus_to_scan;
+boolean perform_bus_scanning = false;
 
 void saveConfig() {
-    configSetup.save(configSetupJson);
+    config.save(configSetupJson);
     writeFile(String("config.json"), configSetupJson);
 }
 
 void enableScenario(boolean enable) {
-    configSetup.enableScenario(enable);
-    if (configSetup.isScenarioEnabled()) {
+    config.general()->enableScenario(enable);
+    if (enable) {
         Scenario::load();
     }
     saveConfig();
 }
 
 void fireEvent(String name) {
-    if (configSetup.isScenarioEnabled()) {
+    if (config.general()->isScenarioEnabled()) {
         events.push(name);
     }
 }

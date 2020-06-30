@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 
+#include "Config/ClockConfig.h"
 #include "Utils/TimeUtils.h"
 #include "Utils/PrintMessage.h"
 
@@ -17,13 +18,16 @@ class Clock {
     Time_t _time_utc;
     unsigned long _uptime;
     unsigned long _unixtime;
-    int _timezone;
-    String _ntp;
     bool _hasSynced;
     bool _configured;
+    ClockConfig* _cfg;
 
    public:
-    Clock() : _uptime{millis()}, _timezone{0}, _ntp{""}, _hasSynced{false}, _configured{false} {};
+    Clock() : _uptime{millis()}, _hasSynced{false}, _configured{false} {};
+
+    void setConfig(ClockConfig* cfg) {
+        _cfg = cfg;
+    }
 
     void loop() {
         unsigned long passed = millis_since(_uptime);
@@ -45,7 +49,7 @@ class Clock {
 
         breakEpochToTime(_unixtime, _time_utc);
 
-        breakEpochToTime(_unixtime + getOffsetInSeconds(_timezone), _time_local);
+        breakEpochToTime(_unixtime + getOffsetInSeconds(_cfg->getTimezone()), _time_local);
     }
 
     bool hasSync() {
@@ -55,23 +59,9 @@ class Clock {
         return _hasSynced;
     }
 
-    void setNtpPool(String ntp) {
-        if (!_ntp.equals(ntp)) {
-            _ntp = ntp;
-            _configured = false;
-        }
-    }
-
-    void setTimezone(int timezone) {
-        if (_timezone != timezone) {
-            _timezone = timezone;
-            _configured = false;
-        }
-    }
-
     void startSync() {
         if (!_configured) {
-            pm.info("sync to: " + _ntp + " timezone: " + String(_timezone));
+            pm.info("sync to: " + _cfg->getNtp() + " timezone: " + String(_cfg->getTimezone()));
             setupSntp();
             _configured = true;
             // лучше не ждать, проверим в следующий раз
@@ -86,16 +76,7 @@ class Clock {
     }
 
     void setupSntp() {
-#ifdef ESP2866
-        sntp_setservername(0, _ntp.c_str());
-        sntp_setservername(1, "ru.pool.ntp.org");
-        sntp_setservername(2, "pool.ntp.org");
-        sntp_stop();
-        sntp_set_timezone(0);  // UTC time
-        sntp_init();
-#else
-        configTime(0, 0, _ntp.c_str(), "ru.pool.ntp.org", "pool.ntp.org");
-#endif
+        configTime(0, 0, _cfg->getNtp().c_str(), "ru.pool.ntp.org", "pool.ntp.org");
     }
 
     bool hasTimeSynced() const {

@@ -13,19 +13,19 @@ bool loadWidget(const String& filename, String& buf) {
     return res;
 }
 
-void createWidget(String widget, String page, String pageNumber, String filename, String topic,
+void createWidget(String description, String page, String pageNumber, String filename, String topic,
                   String name1, String param1, String name2, String param2, String name3, String param3) {
     String buf = "";
     if (!loadWidget(filename, buf)) {
         return;
     }
 
-    widget.replace("#", " ");
+    description.replace("#", " ");
     page.replace("#", " ");
 
     jsonWriteStr(buf, "page", page);
     jsonWriteStr(buf, "order", pageNumber);
-    jsonWriteStr(buf, "descr", widget);
+    jsonWriteStr(buf, "descr", description);
     jsonWriteStr(buf, "topic", prex + "/" + topic);
 
     if (name1.length()) jsonWriteStr(buf, name1, param1);

@@ -1,5 +1,7 @@
 #include "Global.h"
 
+#include "MqttClient.h"
+
 //
 #include <LITTLEFS.h>
 
@@ -8,6 +10,11 @@ void sendLogData(String file, String topic);
 static const char* MODULE = "Log";
 
 #ifdef LOGGING_ENABLED
+void init_logging() {
+    logging_value_names_list = "";
+    enter_to_logging_counter = LOG1 - 1;
+}
+
 //===============================================Логирование============================================================
 //logging temp1 1 10 Температура Датчики 2
 void logging() {

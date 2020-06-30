@@ -1,5 +1,6 @@
 #include "Sensors.h"
 
+#include "MqttClient.h"
 #include "Utils/PrintMessage.h"
 
 const static char *MODULE = "Sensor";
@@ -207,8 +208,9 @@ void dhtP_reading() {
         String final_line = perceptionStr(value);
         jsonWriteStr(configLiveJson, "dhtPerception", final_line);
         fireEvent("dhtPerception", "");
-        MqttClient::publishStatus("dhtPerception", final_line);
-        if (mqtt.connected()) {
+
+        if (MqttClient::isConnected()) {
+            MqttClient::publishStatus("dhtPerception", final_line);
             Serial.println("[I] sensor 'dhtPerception' data: " + final_line);
         }
     }

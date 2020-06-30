@@ -1,14 +1,18 @@
 #include "Global.h"
 
+#include "Broadcast.h"
+#include "MqttClient.h"
 #include "HttpServer.h"
 #include "Bus/I2CScanner.h"
 #include "Bus/DallasScanner.h"
 #include "TickerScheduler/Metric.h"
 #include "Sensors.h"
 
-void not_async_actions();
-
 static const char* MODULE = "Main";
+
+void acync_actions();
+void config_backup();
+void config_restore();
 
 enum LoopItems {
     LI_CLOCK,
@@ -45,28 +49,23 @@ void setup() {
     pm.info(String("Clock"));
     clock_init();
 
-    pm.info(String("Commands"));
-    cmd_init();
-
-    pm.info(String("Sensors"));
-    Sensors::init();
-
     pm.info(String("Init"));
-    all_init();
+    init_mod();
 
     pm.info(String("Network"));
     startSTAMode();
 
-    pm.info(String("Uptime"));
-    uptime_init();
+    if (isNetworkActive()) {
+        lastVersion = Updater::check();
+        if (!lastVersion.isEmpty()) {
+            pm.info("update: " + lastVersion);
+        }
+    };
 
     if (!TELEMETRY_UPDATE_INTERVAL) {
-        pm.info(String("Telemetry: Disabled"));
+        pm.info("Telemetry: disabled");
     }
     telemetry_init();
-
-    pm.info(String("Updater"));
-    update_init();
 
     pm.info(String("HttpServer"));
     HttpServer::init();
@@ -74,10 +73,8 @@ void setup() {
     pm.info(String("WebAdmin"));
     web_init();
 
-#ifdef UDP_ENABLED
-    pm.info(String("Broadcast"));
-    udp_init();
-#endif
+    pm.info("Broadcast");
+    Broadcast::init();
 
     ts.add(
         SYS_STAT, 1000 * 60, [&](void*) {
@@ -111,7 +108,7 @@ void loop() {
 #ifdef WS_enable
     ws.cleanupClients();
 #endif
-    not_async_actions();
+    acync_actions();
     m.add(LI_NOT_ASYNC);
 
     MqttClient::loop();
@@ -123,15 +120,15 @@ void loop() {
     loop_button();
     m.add(LI_BUTTON);
 
-    if (configSetup.isScenarioEnabled()) {
+    if (config.general()->isScenarioEnabled()) {
         Scenario::process(&events);
         m.add(LI_SCENARIO);
     }
 
-#ifdef UDP_ENABLED
-    loopUdp();
-#endif
-    m.add(LI_UDP);
+    if (config.general()->isBroadcastEnabled()) {
+        Broadcast::loop();
+        m.add(LI_UDP);
+    }
 
     loop_serial();
     m.add(LI_SERIAL);
@@ -140,22 +137,55 @@ void loop() {
     m.add(LI_TICKETS);
 }
 
-void not_async_actions() {
-    if (mqttParamsChanged) {
+void acync_actions() {
+    if (mqttParamsChangedFlag) {
         MqttClient::reconnect();
-        mqttParamsChanged = false;
+        mqttParamsChangedFlag = false;
     }
 
-    do_check_update();
+    if (perform_updates_check) {
+        lastVersion = Updater::check();
+        jsonWriteStr(configSetupJson, "last_version", lastVersion);
+        perform_updates_check = false;
+    }
 
-    do_update();
+    if (perform_upgrade) {
+        config_backup();
+        bool res = Updater::upgrade_fs_image();
+        if (res) {
+            config_restore();
+            res = Updater::upgrade_firmware();
+            if (res) {
+                pm.info("done! restart...");
+            }
+        }
+        perform_upgrade = false;
+    }
 
-#ifdef UDP_ENABLED
-    do_udp_data_parse();
-    do_mqtt_send_settings_to_udp();
-#endif
+    if (broadcast_mqtt_settings) {
+        Broadcast::send_mqtt_settings();
+        broadcast_mqtt_settings = false;
+    }
 
-    do_scan_bus();
+    if (perform_bus_scanning) {
+        BusScanner* bus;
+        switch (bus_to_scan) {
+            case BS_I2C:
+                bus = new I2CScanner();
+                break;
+            case BS_ONE_WIRE:
+                bus = new DallasScanner();
+                break;
+            default:
+                pm.error("uknown bus: " + String(bus_to_scan, DEC));
+                perform_bus_scanning = false;
+                return;
+        }
+        if (bus) {
+            bus->scan(configLiveJson);
+        }
+        perform_bus_scanning = false;
+    }
 }
 
 void setChipId() {
@@ -213,8 +243,7 @@ void setLedStatus(LedStatus_t status) {
 
 void clock_init() {
     timeNow = new Clock();
-    timeNow->setNtpPool(jsonReadStr(configSetupJson, "ntp"));
-    timeNow->setTimezone(jsonReadStr(configSetupJson, "timezone").toInt());
+    timeNow->setConfig(config.clock());
 
     ts.add(
         TIME_SYNC, 30000, [&](void*) {
@@ -231,24 +260,16 @@ void clock_init() {
         nullptr, true);
 }
 
-void do_scan_bus() {
-    if (busScanFlag) {
-        BusScanner* bus;
-        switch (busToScan) {
-            case BS_I2C:
-                bus = new I2CScanner();
-                break;
-            case BS_ONE_WIRE:
-                bus = new DallasScanner();
-                break;
-            default:
-                pm.error("uknown bus: " + String(busToScan, DEC));
-                busScanFlag = false;
-                return;
-        }
-        if (bus) {
-            bus->scan(configLiveJson);
-        }
-        busScanFlag = false;
-    }
+String scenarioBackup, configBackup, setupBackup;
+void config_backup() {
+    scenarioBackup = readFile(String(DEVICE_SCENARIO_FILE), 4096);
+    configBackup = readFile(String(DEVICE_CONFIG_FILE), 4096);
+    setupBackup = configSetupJson;
+}
+
+void config_restore() {
+    writeFile(String(DEVICE_SCENARIO_FILE), scenarioBackup);
+    writeFile(String(DEVICE_CONFIG_FILE), configBackup);
+    writeFile("config.json", setupBackup);
+    saveConfig();
 }

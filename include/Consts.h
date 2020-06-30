@@ -79,7 +79,7 @@ enum TimerTask_t { WIFI_SCAN,
                    TIME_SYNC,
                    STATISTICS,
                    UPTIME,
-                   UDP,
+                   BROADCASTING,
                    UDP_DB,
                    SYS_STAT };
 

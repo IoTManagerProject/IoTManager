@@ -1,58 +1,37 @@
 #include "MqttClient.h"
+
+#include <PubSubClient.h>
+#include <WiFiClient.h>
+
 #include "Global.h"
-#include <LittleFS.h>
 
 static const char* MODULE = "Mqtt";
 
 namespace MqttClient {
 
-// Errors
-int wifi_error = 0;
-int mqtt_error = 0;
-bool connected = false;
+WiFiClient espClient;
+PubSubClient mqtt(espClient);
 
-// Session params
-struct Params {
-    String uuid;
-    String prefix;
-    String deviceRoot;
-    String addr;
-    int port;
-    String user;
-    String pass;
-} params;
+String _deviceRoot;
+String _addr;
+int _port;
+String _user;
+String _pass;
+String _uuid;
+String _prefix;
 
-void init() {
-    mqtt.setCallback(handleSubscribedUpdates);
-
-    ts.add(
-        WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL,
-        [&](void*) {
-            if (isNetworkActive()) {
-                if (mqtt.connected()) {
-                    if (!connected) {
-                        setLedStatus(LED_OFF);
-                        connected = true;
-                    }
-                } else {
-                    connect();
-                    if (!just_load) mqtt_error++;
-                }
-            } else {
-                if (connected) {
-                    pm.error(String("connection lost"));
-                    connected = false;
-                }
-                ts.remove(WIFI_MQTT_CONNECTION_CHECK);
-                wifi_error++;
-                startAPMode();
-            }
-        },
-        nullptr, true);
+void setConfig(MqttConfig* config) {
+    _addr = config->getServer();
+    _port = config->getPort();
+    _user = config->getUser();
+    _pass = config->getPass();
+    _uuid = getChipId();
+    _prefix = config->getPrefix();
+    _deviceRoot = _prefix + "/" + _uuid;
 }
 
 void disconnect() {
-    pm.info(String("disconnect"));
+    pm.info("disconnected");
     mqtt.disconnect();
 }
 
@@ -67,55 +46,34 @@ void loop() {
     }
 }
 
-void subscribe(struct Params& p) {
-    pm.info("subscribe");
-    mqtt.subscribe(p.prefix.c_str());
-    mqtt.subscribe((p.deviceRoot + "/+/control").c_str());
-    mqtt.subscribe((p.deviceRoot + "/order").c_str());
-    mqtt.subscribe((p.deviceRoot + "/update").c_str());
-    mqtt.subscribe((p.deviceRoot + "/devc").c_str());
-    mqtt.subscribe((p.deviceRoot + "/devs").c_str());
+bool isConnected() {
+    return mqtt.connected();
 }
 
-bool loadParams(struct Params& p) {
-    p.uuid = getChipId();
-    p.addr = jsonReadStr(configSetupJson, "mqttServer");
-    if (!p.addr.length()) {
-        pm.error("no address");
-        return false;
-    }
-    p.port = jsonReadInt(configSetupJson, "mqttPort");
-    p.user = jsonReadStr(configSetupJson, "mqttUser");
-    p.pass = jsonReadStr(configSetupJson, "mqttPass");
+void subscribe() {
+    String path = _deviceRoot;
+    pm.info("subscribe: " + path);
 
-    p.prefix = jsonReadStr(configSetupJson, "mqttPrefix");
-    p.deviceRoot = p.prefix + "/" + p.uuid;
+    mqtt.subscribe(path.c_str());
+    mqtt.subscribe((path + "/+/control").c_str());
+    mqtt.subscribe((path + "/order").c_str());
+    mqtt.subscribe((path + "/update").c_str());
+    mqtt.subscribe((path + "/devc").c_str());
+    mqtt.subscribe((path + "/devs").c_str());
 
-    pm.info("broker " + params.addr + ":" + String(params.port, DEC));
-    pm.info("root " + params.deviceRoot);
-
-    return true;
+    mqtt.setCallback(handleSubscribedUpdates);
 }
 
 boolean connect() {
-    if (!loadParams(params)) {
-        return false;
-    }
-
-    setLedStatus(LED_FAST);
-
     bool res = false;
-    mqtt.setServer(params.addr.c_str(), params.port);
-    if (!mqtt.connected()) {
-        if (mqtt.connect(params.uuid.c_str(), params.user.c_str(), params.pass.c_str())) {
-            pm.info(String("connected"));
-            setLedStatus(LED_OFF);
-            subscribe(params);
-            res = true;
-        } else {
-            pm.error("could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
-            setLedStatus(LED_FAST);
-        }
+    pm.info("connecting to " + _addr + ":" + String(_port, DEC));
+    mqtt.setServer(_addr.c_str(), _port);
+    res = mqtt.connect(_uuid.c_str(), _user.c_str(), _pass.c_str());
+    if (res) {
+        subscribe();
+    } else {
+        pm.error("could't connect: " + getStateStr());
+        //  + ", retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
     }
     return res;
 }
@@ -164,13 +122,13 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         addCommandLoop(payloadStr);
     } else if (topicStr.indexOf("update")) {
         if (payloadStr == "1") {
-            updateFlag = true;
+            perform_upgrade = true;
         }
     } else if (topicStr.indexOf("devc")) {
-        writeFile(String(DEVICE_CONFIG_FILE), payloadStr);
+        writeFile(DEVICE_CONFIG_FILE, payloadStr);
         Device_init();
     } else if (topicStr.indexOf("devs")) {
-        writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
+        writeFile(DEVICE_SCENARIO_FILE, payloadStr);
         Scenario::load();
     }
 }
@@ -180,34 +138,34 @@ boolean publish(const String& topic, const String& data) {
         mqtt.print(data);
         return mqtt.endPublish();
     }
-    pm.error(String("on publish"));
+    pm.error("on publish topic: " + topic + ", data: " + data);
     return false;
 }
 
 boolean publishData(const String& topic, const String& data) {
-    String path = params.deviceRoot + "/" + topic;
+    String path = _deviceRoot + "/" + topic;
     return publish(path, data);
 }
 
 boolean publishChart(const String& topic, const String& data) {
-    String path = params.deviceRoot + "/" + topic + "/status";
+    String path = _deviceRoot + "/" + topic + "/status";
     return publish(path, data);
 }
 
 boolean publishControl(const String& id, const String& topic, const String& state) {
-    String path = params.prefix + "/" + id + "/" + topic + "/control";
+    String path = _prefix + "/" + id + "/" + topic + "/control";
     return publish(path.c_str(), state.c_str());
 }
 
 boolean publishStatus(const String& topic, const String& data) {
-    String path = params.deviceRoot + "/" + topic + "/status";
+    String path = _deviceRoot + "/" + topic + "/status";
     String json = "{}";
     jsonWriteStr(json, "status", data);
     return publish(path.c_str(), json.c_str());
 }
 
 boolean publishOrder(const String& topic, const String& order) {
-    String path = params.prefix + "/" + topic + "/order";
+    String path = _prefix + "/" + topic + "/order";
     return publish(path.c_str(), order.c_str());
 }
 
