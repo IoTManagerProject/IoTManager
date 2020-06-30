@@ -181,10 +181,11 @@ void buttonChange() {
         pm.error("wrong button " + name);
         return;
     }
-
     Button_t *btn = myButtons.get(name);
 
     String stateStr = btn->toggle() ? "1" : "0";
+
+    jsonWriteStr(configLiveJson, "button" + name, stateStr);
 
     MqttClient::publishStatus("button" + name, stateStr);
 }
