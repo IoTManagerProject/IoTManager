@@ -20,7 +20,7 @@ unsigned int udp_port = 4210;
 void handleUdp_esp32();
 
 bool isUdpEnabled() {
-    return jsonReadBool(configSetupJson, "udponoff") && isNetworkActive();
+    return configSetup.isBroadcastEnabled() && isNetworkActive();
 }
 
 void add_dev_in_list(String fileName, String id, String dev_name, String ip);

@@ -32,7 +32,6 @@ String configOptionJson = "{}";
 String chipId = "";
 String prex = "";
 String all_widgets = "";
-String scenario = "";
 String order_loop = "";
 
 // Sensors
@@ -62,9 +61,6 @@ int sensors_reading_map[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 String logging_value_names_list;
 int enter_to_logging_counter;
 
-// Scenario
-int scenario_line_status[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-
 String lastVersion = "";
 
 // Async actions
@@ -78,3 +74,27 @@ boolean mqtt_send_settings_to_udp = false;
 BusScanner_t busToScan;
 boolean busScanFlag = false;
 boolean fsCheckFlag = false;
+
+void saveConfig() {
+    configSetup.save(configSetupJson);
+    writeFile(String("config.json"), configSetupJson);
+}
+
+void enableScenario(boolean enable) {
+    configSetup.enableScenario(enable);
+    if (configSetup.isScenarioEnabled()) {
+        Scenario::load();
+    }
+    saveConfig();
+}
+
+void fireEvent(String name) {
+    if (configSetup.isScenarioEnabled()) {
+        events.push(name);
+    }
+}
+
+// событие: имя + Set + номер
+void fireEvent(String name, String param) {
+    fireEvent(name + param);
+}

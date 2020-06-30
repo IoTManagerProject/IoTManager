@@ -15,7 +15,11 @@
 #include "Upgrade.h"
 #include "Clock.h"
 
+#include "Scenario.h"
 #include "MqttClient.h"
+#include "Objects/ConfigSetup.h"
+#include "Objects/EventQueue.h"
+
 #include "Utils\FileUtils.h"
 #include "Utils\JsonUtils.h"
 #include "Utils\StringUtils.h"
@@ -43,17 +47,11 @@ extern AsyncWebSocket ws;
 #endif
 
 extern Clock* timeNow;
-
 extern TickerScheduler ts;
-
 extern WiFiClient espClient;
-
 extern PubSubClient mqtt;
-
 extern StringCommand sCmd;
-
 extern AsyncWebServer server;
-
 extern DallasTemperature* sensors;
 
 /*
@@ -69,7 +67,13 @@ extern String configOptionJson;  //для трансфера
 extern String chipId;
 extern String prex;
 extern String all_widgets;
-extern String scenario;
+
+extern void enableScenario(boolean enable);
+extern void fireEvent(String name);
+extern void fireEvent(String name, String param);
+
+extern const String readLiveData(const String& obj);
+
 extern String order_loop;
 
 extern String analog_value_names_list;
@@ -94,8 +98,6 @@ extern String bme280A_value_name;
 
 extern String logging_value_names_list;
 extern int enter_to_logging_counter;
-
-extern int scenario_line_status[40];
 
 extern String lastVersion;
 
@@ -147,11 +149,10 @@ extern void button();
 extern void timeSet();
 extern void text();
 extern void textSet();
-extern void mqttOrderSend();
-extern void httpOrderSend();
+extern void mqttCommand();
+extern void httpCommand();
 extern void firmwareVersion();
 extern void firmwareUpdate();
-extern void loadScenario();
 
 extern void fileExecute(const String& filename);
 extern void stringExecute(String& cmdStr);
@@ -159,7 +160,6 @@ extern void stringExecute(String& cmdStr);
 extern void loadConfig();
 extern void all_init();
 extern void statistics_init();
-extern void loadScenario();
 extern void Device_init();
 extern void prsets_init();
 
@@ -174,7 +174,6 @@ extern void setChipId();
 extern void saveConfig();
 extern void setConfigParam(const char* param, const String& value);
 
-extern String getURL(const String& urls);
 extern void do_fscheck();
 extern void do_scan_bus();
 extern void servo_();
@@ -183,7 +182,7 @@ extern void clock_init();
 extern void setLedStatus(LedStatus_t);
 
 //Scenario
-extern void eventGen(String event_name, String number);
+extern void fireEvent(String event_name, String number);
 extern String add_set(String param_name);
 
 //Sensors
@@ -233,7 +232,7 @@ extern void timerStop_();
 extern void delTimer(String number);
 extern int readTimer(int number);
 
-extern void initUpdater();
+extern void update_init();
 
 // Widget
 extern void createWidget(String widget_name, String page_name, String page_number, String file, String topic, String name1 = "", String param1 = "", String name2 = "", String param2 = "", String name3 = "", String param3 = "");

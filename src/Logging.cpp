@@ -19,8 +19,10 @@ void logging() {
     String page_name = sCmd.next();
     String page_number = sCmd.next();
     logging_value_names_list += value_name + ",";
-    enter_to_logging_counter++;                                   //считаем количество входов в эту функцию
-    jsonWriteStr(configOptionJson, value_name + "_c", maxCount);  //создаем в файловой системе переменную количества точек на графике с отметкой _c что значит count
+    //считаем количество входов в эту функцию
+    enter_to_logging_counter++;
+    //создаем в файловой системе переменную количества точек на графике с отметкой _c что значит count
+    jsonWriteStr(configOptionJson, value_name + "_c", maxCount);
 
     //создаем график в приложении с топиком _ch /prefix/3234045-1589487/value_name_ch
     createChart(widget_name, page_name, page_number, "chart", value_name + "_ch", maxCount);

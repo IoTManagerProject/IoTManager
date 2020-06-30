@@ -32,7 +32,7 @@ void web_init() {
             copyFile(getConfigFile(preset, CT_CONFIG), configFile);
             copyFile(getConfigFile(preset, CT_SCENARIO), scenarioFile);
             Device_init();
-            loadScenario();
+            Scenario::load();
             request->redirect("/?set.device");
         } else if (request->hasArg("devinit")) {
             Device_init();
@@ -41,10 +41,10 @@ void web_init() {
             bool value = request->getParam("scen")->value().toInt();
             jsonWriteBool(configSetupJson, "scen", value);
             saveConfig();
-            loadScenario();
+            Scenario::load();
             request->send(200);
         } else if (request->hasArg("sceninit")) {
-            loadScenario();
+            Scenario::load();
             request->send(200);
         } else if (request->hasArg("cleanlog")) {
             clean_log_date();
@@ -53,7 +53,7 @@ void web_init() {
             bool value = request->getParam("udponoff")->value().toInt();
             jsonWriteBool(configSetupJson, "udponoff", value);
             saveConfig();
-            loadScenario();
+            Scenario::load();
             request->send(200);
         } else if (request->hasArg("updatelist")) {
             removeFile("/dev.csv");

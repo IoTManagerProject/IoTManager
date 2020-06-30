@@ -65,7 +65,7 @@ void setup() {
     telemetry_init();
 
     pm.info(String("Updater"));
-    initUpdater();
+    update_init();
 
     pm.info(String("HttpServer"));
     HttpServer::init();
@@ -122,8 +122,10 @@ void loop() {
     loop_button();
     m.add(LI_BUTTON);
 
-    loop_scenario();
-    m.add(LI_SCENARIO);
+    if (configSetup.isScenarioEnabled()) {
+        Scenario::process(&events);
+        m.add(LI_SCENARIO);
+    }
 
 #ifdef UDP_ENABLED
     loopUdp();
@@ -155,27 +157,11 @@ void not_async_actions() {
     do_scan_bus();
 }
 
-String getURL(const String& urls) {
-    String res = "";
-    HTTPClient http;
-    http.begin(urls);
-    int httpCode = http.GET();
-    if (httpCode == HTTP_CODE_OK) {
-        res = http.getString();
-    } else {
-        res = "error";
-    }
-    http.end();
-    return res;
-}
+
 
 void setChipId() {
     chipId = getChipId();
     pm.info("id: " + chipId);
-}
-
-void saveConfig() {
-    writeFile(String("config.json"), configSetupJson);
 }
 
 void setConfigParam(const char* param, const String& value) {

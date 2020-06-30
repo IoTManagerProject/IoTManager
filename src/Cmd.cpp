@@ -3,6 +3,7 @@
 #include "Module/Terminal.h"
 #include "Objects/Servos.h"
 #include "Objects/Buttons.h"
+#include "WebClient.h"
 
 static const char *MODULE = "Cmd";
 
@@ -18,7 +19,7 @@ void getData();
 
 void cmd_init() {
     myButtons.setOnChangeState([](Button_t *btn, uint8_t num) {
-        eventGen("switch", String(num, DEC));
+        fireEvent("switch", String(num, DEC));
         jsonWriteInt(configLiveJson, "switch" + String(num, DEC), btn->state);
     });
 
@@ -96,8 +97,8 @@ void cmd_init() {
     sCmd.addCommand("text", text);
     sCmd.addCommand("textSet", textSet);
 
-    sCmd.addCommand("mqtt", mqttOrderSend);
-    sCmd.addCommand("http", httpOrderSend);
+    sCmd.addCommand("mqtt", mqttCommand);
+    sCmd.addCommand("http", httpCommand);
 
 #ifdef PUSH_ENABLED
     sCmd.addCommand("push", pushControl);
@@ -111,23 +112,21 @@ void cmd_init() {
 
 void button() {
     String name = sCmd.next();
-    String pin = sCmd.next();
+    String assign = sCmd.next();
     String description = sCmd.next();
     String page = sCmd.next();
-    String state = sCmd.next();
+    String param = sCmd.next();
     String order = sCmd.next();
 
-    jsonWriteStr(configOptionJson, "button_param" + name, pin);
-    jsonWriteStr(configLiveJson, "button" + name, state);
+    jsonWriteStr(configLiveJson, "button" + name, param);
 
-    if (isDigitStr(pin)) {
-        myButtons.create(name, pin.toInt(), state.toInt());
-    } else if (pin == "scen") {
-        jsonWriteStr(configSetupJson, "scen", state);
-        loadScenario();
-        saveConfig();
-    } else if (pin.indexOf("line") != -1) {
-        String str = pin;
+    if (isDigitStr(assign)) {
+        myButtons.addButton(name, assign, param);
+    }
+    if (assign == "scen") {
+        enableScenario(param);
+    } else if (assign.indexOf("line") != -1) {
+        String str = assign;
         while (str.length()) {
             if (str == "") {
                 return;
@@ -138,61 +137,56 @@ void button() {
             String number = deleteBeforeDelimiter(tmp, "e");
             number.replace(",", "");
             int number_int = number.toInt();
-            scenario_line_status[number_int] = state.toInt();
+            Scenario::enable(number_int, param);
             str = deleteBeforeDelimiter(str, ",");
         }
     }
+
     createWidget(description, page, order, "toggle", "button" + name);
 }
 
 void buttonSet() {
-    String button_number = sCmd.next();
-    String button_state = sCmd.next();
-    String button_param = jsonReadStr(configOptionJson, "button_param" + button_number);
+    String name = sCmd.next();
+    String param = sCmd.next();
 
-    if (button_param != "na" || button_param != "scen" || button_param.indexOf("line") != -1) {
-        digitalWrite(button_param.toInt(), button_state.toInt());
-    }
+    Button_t *btn = myButtons.get(name);
 
-    if (button_param == "scen") {
-        jsonWriteStr(configSetupJson, "scen", button_state);
-        loadScenario();
-        saveConfig();
-    }
-
-    if (button_param.indexOf("line") != -1) {
-        String str = button_param;
+    if (isDigitStr(btn->assign)) {
+        btn->set(param.toInt());
+    } else if (btn->assign == "scen") {
+        enableScenario(param.toInt());
+    } else if (btn->assign.startsWith("line")) {
+        String str = btn->assign;
         while (str.length() != 0) {
-            if (str == "") return;
             String tmp = selectToMarker(str, ",");            //line1,
             String number = deleteBeforeDelimiter(tmp, "e");  //1,
             number.replace(",", "");
             Serial.println(number);
-            int number_int = number.toInt();
-            scenario_line_status[number_int] = button_state.toInt();
+            Scenario::enable(number.toInt(), param.toInt());
             str = deleteBeforeDelimiter(str, ",");
         }
     }
 
-    eventGen("button", button_number);
-    jsonWriteStr(configLiveJson, "button" + button_number, button_state);
+    fireEvent("button", name);
 
-    MqttClient::publishStatus("button" + button_number, button_state);
+    jsonWriteStr(configLiveJson, "button" + name, param);
+
+    MqttClient::publishStatus("button" + name, param);
 }
 
 void buttonChange() {
-    String button_number = sCmd.next();
-    if (!isDigitStr(button_number)) {
-        pm.error("wrong button " + button_number);
+    String name = sCmd.next();
+
+    if (!isDigitStr(name)) {
+        pm.error("wrong button " + name);
         return;
     }
-    String name = "button" + button_number;
-    bool current_state = !jsonReadBool(configLiveJson, name);
-    String stateStr = current_state ? "1" : "0";
 
-    jsonWriteStr(configLiveJson, name, stateStr);
-    addCommandLoop("buttonSet " + button_number + " " + stateStr);
-    MqttClient::publishStatus(name, stateStr);
+    Button_t *btn = myButtons.get(name);
+
+    String stateStr = btn->toggle() ? "1" : "0";
+
+    MqttClient::publishStatus("button" + name, stateStr);
 }
 
 void pinSet() {
@@ -236,7 +230,7 @@ void pwmSet() {
     int pin = jsonReadInt(configOptionJson, "pwm_pin" + pwm_number);
     analogWrite(pin, pwm_state_int);
 
-    eventGen("pwm", pwm_number);
+    fireEvent("pwm", pwm_number);
 
     jsonWriteStr(configLiveJson, "pwm" + pwm_number, pwm_state);
 
@@ -245,10 +239,10 @@ void pwmSet() {
 
 void switch_() {
     String name = sCmd.next();
-    int pin = String(sCmd.next()).toInt();
-    int delay = String(sCmd.next()).toInt();
+    String assign = sCmd.next();
+    String debounse = sCmd.next();
 
-    myButtons.create(name, pin, delay);
+    myButtons.addSwitch(name, assign, debounse);
 }
 
 void loop_serial() {
@@ -314,7 +308,7 @@ void handle_time_init() {
         TIME, 1000, [&](void *) {
             jsonWriteStr(configLiveJson, "time", timeNow->getTime());
             jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
-            eventGen("timenow", "");
+            fireEvent("timenow", "");
         },
         nullptr, true);
 }
@@ -461,7 +455,7 @@ void servoSet() {
         servo->write(value);
     }
 
-    eventGen("servo", number);
+    fireEvent("servo", number);
     jsonWriteInt(configLiveJson, "servo" + number, value);
     MqttClient::publishStatus("servo" + number, String(value, DEC));
 }
@@ -514,20 +508,20 @@ void serialWrite() {
 //====================================================================================================================================================
 //=================================================Глобальные команды удаленного управления===========================================================
 
-void mqttOrderSend() {
-    String id = sCmd.next();
-    String order = sCmd.next();
+void mqttCommand() {
+    String topic = sCmd.next();
+    String data = sCmd.next();
 
-    String all_line = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + id + "/order";
-    mqtt.publish(all_line.c_str(), order.c_str(), false);
+    MqttClient::publishOrder(topic, data);
 }
 
-void httpOrderSend() {
-    String ip = sCmd.next();
-    String order = sCmd.next();
-    order.replace("_", "%20");
-    String url = "http://" + ip + "/cmd?command=" + order;
-    getURL(url);
+void httpCommand() {
+    String host = sCmd.next();
+    String param = sCmd.next();
+    param.replace("_", "%20");
+
+    String url = "http://" + host + "/cmd?command=" + param;
+    WebClient::get(url);
 }
 
 void firmwareUpdate() {

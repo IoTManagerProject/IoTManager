@@ -1,15 +1,29 @@
 #include "Upgrade.h"
 
 #include "Global.h"
+
 #include "ESP8266.h"
+
+#include "WebClient.h"
+
+static const char* UPDATE_SERVER_URL PROGMEM = "http://91.204.228.124:1100/update/%s/%s";
+
+#ifdef ESP8266
+static const char* TAG_MCU = "esp8266";
+#else
+static const char* TAG_MCU = "esp32";
+#endif
+static const char* TAG_METADATA = "version.txt";
+static const char* TAG_FIRMWARE_BIN = "firmware.bin";
+static const char* TAG_FS_IMAGE = "fs.bin";
 
 static const char* MODULE = "Update";
 
-static const char* check_update_url PROGMEM = "http://91.204.228.124:1100/update/%s/version.txt";
+void upgrade_firmware();
 
-const String getAvailableUrl(const char* mcu) {
+const String buildUpdateUrl(const char* mcu, const char* file) {
     char buf[128];
-    sprintf_P(buf, check_update_url, mcu);
+    sprintf_P(buf, UPDATE_SERVER_URL, mcu, file);
     return buf;
 }
 
@@ -24,17 +38,17 @@ void do_check_update() {
     if (checkUpdatesFlag) {
         String url;
 #ifdef ESP8266
-        url = getAvailableUrl("esp8266");
+        url = buildUpdateUrl(TAG_MCU, TAG_METADATA);
 #else
-        url = getAvailableUrl("esp32");
+        url = buildUpdateUrl(TAG_MCU, TAG_METADATA);
 #endif
-        lastVersion = getURL(url);
+        lastVersion = WebClient::get(url);
         jsonWriteStr(configSetupJson, "last_version", lastVersion);
         checkUpdatesFlag = false;
     }
 }
 
-void initUpdater() {
+void update_init() {
     if (isNetworkActive()) {
         do_check_update();
         if (!lastVersion.isEmpty()) {
@@ -43,45 +57,64 @@ void initUpdater() {
     };
 }
 
-void upgrade_firmware() {
-    String scanerioBackup, configBackup, setupBackup;
-
-    scanerioBackup = readFile(String(DEVICE_SCENARIO_FILE), 4096);
+String scenarioBackup, configBackup, setupBackup;
+void do_config_backup() {
+    scenarioBackup = readFile(String(DEVICE_SCENARIO_FILE), 4096);
     configBackup = readFile(String(DEVICE_CONFIG_FILE), 4096);
     setupBackup = configSetupJson;
+}
 
-    pm.info("file system");
+void do_config_restore() {
+    writeFile(String(DEVICE_SCENARIO_FILE), scenarioBackup);
+    writeFile(String(DEVICE_CONFIG_FILE), configBackup);
+    writeFile("config.json", setupBackup);
+    saveConfig();
+}
+
+const String getRetStr(HTTPUpdateResult ret) {
+    switch (ret) {
+        case HTTP_UPDATE_OK:
+            return F("ok");
+            break;
+        case HTTP_UPDATE_NO_UPDATES:
+            return F("no updates");
+            break;
+        case HTTP_UPDATE_FAILED:
+            return F("update failed");
+            break;
+        default:
+            return F("unknown");
+    }
+}
+
+void upgrade_firmware() {
+    pm.info(TAG_FS_IMAGE);
     WiFiClient wifiClient;
 #ifdef ESP8266
     ESPhttpUpdate.rebootOnUpdate(false);
-    t_httpUpdate_return ret = ESPhttpUpdate.updateSpiffs(wifiClient, "http://91.204.228.124:1100/update/esp8266/esp32-esp8266_iot-manager_modules_firmware.spiffs.bin");
+    HTTPUpdateResult ret = ESPhttpUpdate.updateSpiffs(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FS_IMAGE));
 #else
     httpUpdate.rebootOnUpdate(false);
-    t_httpUpdate_return ret = httpUpdate.updateSpiffs(client_for_upgrade, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.spiffs.bin");
+    HTTPUpdateResult ret = httpUpdate.updateSpiffs(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FS_IMAGE);
 #endif
     if (ret == HTTP_UPDATE_OK) {
-        writeFile(String(DEVICE_SCENARIO_FILE), scanerioBackup);
-        writeFile(String(DEVICE_CONFIG_FILE), configBackup);
-        writeFile("config.json", setupBackup);
-
-        saveConfig();
-
         pm.info(String("done!"));
+        do_config_restore();
     } else {
-        pm.error(String("file system"));
+        pm.error("ret: " + getRetStr(ret));
         return;
     }
 
-    pm.info("firmware");
+    pm.info(TAG_FIRMWARE_BIN);
 #ifdef ESP8266
-    ret = ESPhttpUpdate.update(wifiClient, "http://91.204.228.124:1100/update/esp8266/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
+    ret = ESPhttpUpdate.update(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FIRMWARE_BIN));
 #else
-    ret = httpUpdate.update(client_for_upgrade, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
+    ret = httpUpdate.update(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FIRMWARE_BIN));
 #endif
     if (ret == HTTP_UPDATE_OK) {
         pm.info("done! restart...");
         ESP.restart();
     } else {
-        pm.error("on firmware");
+        pm.error("ret: " + getRetStr(ret));
     }
 }

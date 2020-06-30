@@ -7,8 +7,8 @@ static const char* MODULE = "Mqtt";
 namespace MqttClient {
 
 // Errors
-int wifi_lost_error = 0;
-int mqtt_lost_error = 0;
+int wifi_error = 0;
+int mqtt_error = 0;
 bool connected = false;
 
 // Session params
@@ -36,7 +36,7 @@ void init() {
                     }
                 } else {
                     connect();
-                    if (!just_load) mqtt_lost_error++;
+                    if (!just_load) mqtt_error++;
                 }
             } else {
                 if (connected) {
@@ -44,7 +44,7 @@ void init() {
                     connected = false;
                 }
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
-                wifi_lost_error++;
+                wifi_error++;
                 startAPMode();
             }
         },
@@ -77,7 +77,7 @@ void subscribe(struct Params& p) {
     mqtt.subscribe((p.deviceRoot + "/devs").c_str());
 }
 
-bool readParams(struct Params& p) {
+bool loadParams(struct Params& p) {
     p.uuid = getChipId();
     p.addr = jsonReadStr(configSetupJson, "mqttServer");
     if (!p.addr.length()) {
@@ -98,11 +98,10 @@ bool readParams(struct Params& p) {
 }
 
 boolean connect() {
-    pm.info("connect");
-
-    if (!readParams(params)) {
+    if (!loadParams(params)) {
         return false;
     }
+
     setLedStatus(LED_FAST);
 
     bool res = false;
@@ -121,9 +120,23 @@ boolean connect() {
     return res;
 }
 
+const String parseControl(const String& str) {
+    String res;
+    String num1 = str.substring(str.length() - 1);
+    String num2 = str.substring(str.length() - 2, str.length() - 1);
+    if (isDigitStr(num1) && isDigitStr(num2)) {
+        res = str.substring(0, str.length() - 2) + "Set" + num2 + num1;
+    } else {
+        if (isDigitStr(num1)) {
+            res = str.substring(0, str.length() - 1) + "Set" + num1;
+        }
+    }
+    return res;
+}
+
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     String topicStr = String(topic);
-    pm.info("got updates: " + topicStr);
+    pm.info("incoming: " + topicStr);
     String payloadStr = "";
     payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
@@ -142,7 +155,7 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         // значение - параметр
         //IoTmanager/800324-1458415/button99/control 1
         String topic = selectFromMarkerToMarker(topicStr, "/", 3);
-        topic = add_set(topic);
+        topic = parseControl(topic);
         String number = selectToMarkerLast(topic, "Set");
         topic.replace(number, "");
         addCommandLoop(topic + " " + number + " " + payloadStr);
@@ -158,7 +171,7 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         Device_init();
     } else if (topicStr.indexOf("devs")) {
         writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
-        loadScenario();
+        Scenario::load();
     }
 }
 
@@ -191,6 +204,11 @@ boolean publishStatus(const String& topic, const String& data) {
     String json = "{}";
     jsonWriteStr(json, "status", data);
     return publish(path.c_str(), json.c_str());
+}
+
+boolean publishOrder(const String& topic, const String& order) {
+    String path = params.prefix + "/" + topic + "/order";
+    return publish(path.c_str(), order.c_str());
 }
 
 #ifdef LAYOUT_IN_RAM

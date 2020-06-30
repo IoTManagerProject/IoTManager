@@ -1,11 +1,19 @@
 #include "Global.h"
 
+#include "WebClient.h"
+
 void handle_uptime();
 void handle_statistics();
 void telemetry_init();
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
+
+    configSetup.load(configSetupJson);
+    String tmp = "{}";
+    configSetup.save(tmp);
+    Serial.print(tmp);
+
     configSetupJson.replace(" ", "");
     configSetupJson.replace("\r\n", "");
 
@@ -19,7 +27,9 @@ void loadConfig() {
 
 void all_init() {
     Device_init();
-    loadScenario();
+
+    Scenario::init();
+
     Timer_countdown_init();
 }
 
@@ -68,12 +78,6 @@ void Device_init() {
 }
 //-------------------------------сценарии-----------------------------------------------------
 
-void loadScenario() {
-    if (jsonReadStr(configSetupJson, "scen") == "1") {
-        scenario = readFile(String(DEVICE_SCENARIO_FILE), 2048);
-    }
-}
-
 void uptime_init() {
     ts.add(
         UPTIME, 5000, [&](void*) {
@@ -98,26 +102,24 @@ void handle_uptime() {
 
 void handle_statistics() {
     if (isNetworkActive()) {
-        String urls = "http://backup.privet.lv/visitors/?";
-        //-----------------------------------------------------------------
-        urls += WiFi.macAddress().c_str();
-        urls += "&";
-        //-----------------------------------------------------------------
+        String url = "http://backup.privet.lv/visitors/?";
+        url += getChipId();
+        url += "&";
 #ifdef ESP8266
-        urls += "iot-manager_esp8266";
+        url += "iot-manager_esp8266";
 #endif
 #ifdef ESP32
-        urls += "iot-manager_esp32";
+        url += "iot-manager_esp32";
 #endif
-        urls += "&";
+        url += "&";
 #ifdef ESP8266
-        urls += ESP.getResetReason();
+        url += ESP.getResetReason();
 #endif
 #ifdef ESP32
-        urls += "Power on";
+        url += "Power on";
 #endif
-        urls += "&";
-        urls += String(FIRMWARE_VERSION);
-        String stat = getURL(urls);
+        url += "&";
+        url += String(FIRMWARE_VERSION);
+        String stat = WebClient::get(url);
     }
 }
