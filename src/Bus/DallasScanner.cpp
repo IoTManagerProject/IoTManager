@@ -1,7 +1,7 @@
 #include "Bus/DallasScanner.h"
 
+#include "Sensor/DallasSensor.h"
 #include "Utils/PrintMessage.h"
-#include "Objects/DallasSensors.h"
 
 const char* MODULE = "DallasScanner";
 

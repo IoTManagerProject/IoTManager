@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+
 #include "Utils/TimeUtils.h"
 #include "Utils/PrintMessage.h"
 

@@ -1,8 +1,10 @@
-#include "Objects/DallasSensors.h"
+#include "Sensor/DallasSensor.h"
 
 DallasSensors dallasSensors;
 
 DallasTemperature *dallasTemperature;
+String dallas_value_name;
+int enter_to_dallas_counter;
 
 DallasSensors::DallasSensors(){};
 

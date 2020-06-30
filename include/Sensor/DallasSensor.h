@@ -27,5 +27,6 @@ class DallasSensors {
 };
 
 extern DallasSensors dallasSensors;
-
 extern DallasTemperature* dallasTemperature;
+extern String dallas_value_name;
+extern int enter_to_dallas_counter;

@@ -11,34 +11,26 @@
 //
 #include "Consts.h"
 #include "Errors.h"
-#include "GyverFilters.h"
 #include "Upgrade.h"
 #include "Clock.h"
-
-#include "Scenario.h"
 #include "MqttClient.h"
+#include "Scenario.h"
+#include "Sensors.h"
+
 #include "Objects/ConfigSetup.h"
 #include "Objects/EventQueue.h"
 
-#include "Utils\FileUtils.h"
-#include "Utils\JsonUtils.h"
-#include "Utils\StringUtils.h"
-#include "Utils\SysUtils.h"
-#include "Utils\PrintMessage.h"
-#include "Utils\WiFiUtils.h"
+#include "Utils/FileUtils.h"
+#include "Utils/JsonUtils.h"
+#include "Utils/StringUtils.h"
+#include "Utils/SysUtils.h"
+#include "Utils/PrintMessage.h"
+#include "Utils/WiFiUtils.h"
 #include "TickerScheduler/TickerScheduler.h"
 
-//=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
 #include <ArduinoOTA.h>
-#include <Adafruit_BME280.h>
-#include <Adafruit_BMP280.h>
-#include <Bounce2.h>
-#include <DHTesp.h>
-#include <DallasTemperature.h>
-#include <OneWire.h>
-#include <PubSubClient.h>
 #include <StringCommand.h>
-#include <Wire.h>
+
 #include <time.h>
 
 #ifdef WEBSOCKET_ENABLED
@@ -52,49 +44,22 @@ extern WiFiClient espClient;
 extern PubSubClient mqtt;
 extern StringCommand sCmd;
 extern AsyncWebServer server;
-extern DallasTemperature* sensors;
 
 /*
 * Global vars
 */
-
 extern boolean just_load;
-
-extern String configSetupJson;   //все настройки
-extern String configLiveJson;    //все данные с датчиков (связан с mqtt)
-extern String configOptionJson;  //для трансфера
+// все настройки
+extern String configSetupJson;
+// все данные с датчиков (связан с mqtt)
+extern String configLiveJson;
+// для трансфера
+extern String configOptionJson;
 
 extern String chipId;
 extern String prex;
 extern String all_widgets;
-
-extern void enableScenario(boolean enable);
-extern void fireEvent(String name);
-extern void fireEvent(String name, String param);
-
-extern const String readLiveData(const String& obj);
-
 extern String order_loop;
-
-extern String analog_value_names_list;
-extern int enter_to_analog_counter;
-
-extern String dallas_value_name;
-extern int enter_to_dallas_counter;
-
-extern String levelPr_value_name;
-extern String ultrasonicCm_value_name;
-
-extern String dhtT_value_name;
-extern String dhtH_value_name;
-
-extern String bmp280T_value_name;
-extern String bmp280P_value_name;
-
-extern String bme280T_value_name;
-extern String bme280P_value_name;
-extern String bme280H_value_name;
-extern String bme280A_value_name;
 
 extern String logging_value_names_list;
 extern int enter_to_logging_counter;
@@ -107,6 +72,13 @@ extern boolean mqttParamsChanged;
 extern boolean udp_data_parse;
 extern boolean mqtt_send_settings_to_udp;
 
+extern void enableScenario(boolean enable);
+extern void fireEvent(String name);
+extern void fireEvent(String name, String param);
+
+extern const String readLiveData(const String& obj);
+extern const String writeLiveData(const String& obj, const String& value);
+
 /*
 * Запрос на скарнирование шины
 */
@@ -116,43 +88,9 @@ extern boolean busScanFlag;
 */
 extern BusScanner_t busToScan;
 
-extern boolean fsCheckFlag;
-
-extern int sensors_reading_map[15];
-
 /*
 * Global functions
 */
-
-// Cmd
-extern void cmd_init();
-extern void button();
-extern void buttonSet();
-extern void buttonChange();
-extern void pinSet();
-extern void pinChange();
-extern void handle_time_init();
-extern void pwm();
-extern void switch_();
-extern void pwmSet();
-extern void stepper();
-extern void stepperSet();
-extern void servo_();
-extern void servoSet();
-extern void serialBegin();
-extern void serialWrite();
-extern void logging();
-extern void inputDigit();
-extern void digitSet();
-extern void inputTime();
-extern void button();
-extern void timeSet();
-extern void text();
-extern void textSet();
-extern void mqttCommand();
-extern void httpCommand();
-extern void firmwareVersion();
-extern void firmwareUpdate();
 
 extern void fileExecute(const String& filename);
 extern void stringExecute(String& cmdStr);
@@ -162,7 +100,7 @@ extern void all_init();
 extern void statistics_init();
 extern void Device_init();
 extern void prsets_init();
-
+extern void cmd_init();
 // Logging
 extern void logging();
 extern void deleteOldDate(String filename, size_t max_lines, String date_to_add);
@@ -176,7 +114,7 @@ extern void setConfigParam(const char* param, const String& value);
 
 extern void do_fscheck();
 extern void do_scan_bus();
-extern void servo_();
+extern void cmd_servo();
 extern void clock_init();
 
 extern void setLedStatus(LedStatus_t);
@@ -184,45 +122,6 @@ extern void setLedStatus(LedStatus_t);
 //Scenario
 extern void fireEvent(String event_name, String number);
 extern String add_set(String param_name);
-
-//Sensors
-extern void sensors_init();
-
-extern void levelPr();
-extern void ultrasonicCm();
-extern void ultrasonic_reading();
-
-extern void analog();
-extern void analog_reading1();
-extern void analog_reading2();
-extern void dallas();
-extern void dallas_reading();
-extern void dhtT_reading();
-
-extern void bmp280T();
-extern void bmp280P();
-extern void bmp280T_reading();
-extern void bmp280P_reading();
-
-extern void bme280T();
-extern void bme280P();
-extern void bme280H();
-extern void bme280A();
-
-extern void bme280T_reading();
-extern void bme280P_reading();
-extern void bme280H_reading();
-extern void bme280A_reading();
-
-extern void dhtT();
-extern void dhtH();
-extern void dhtP();
-extern void dhtC();
-extern void dhtD();
-extern void dhtH_reading();
-extern void dhtP_reading();
-extern void dhtC_reading();
-extern void dhtD_reading();
 
 //Timers
 extern void Timer_countdown_init();

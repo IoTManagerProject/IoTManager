@@ -2,6 +2,7 @@
 
 #include "Bus/BusScanner.h"
 
+#include <Wire.h>
 class I2CScanner : public BusScanner {
    public:
     I2CScanner();

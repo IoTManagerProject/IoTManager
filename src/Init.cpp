@@ -1,6 +1,7 @@
 #include "Global.h"
 
 #include "WebClient.h"
+#include "Sensors.h"
 
 void handle_uptime();
 void handle_statistics();
@@ -56,12 +57,6 @@ void Device_init() {
     bme280P_value_name = "";
     bme280H_value_name = "";
     bme280A_value_name = "";
-
-    int array_sz = sizeof(sensors_reading_map) / sizeof(sensors_reading_map[0]);
-
-    for (int i = 0; i < array_sz; i++) {
-        sensors_reading_map[i] = 0;
-    }
 
     for (int i = LOG1; i <= LOG5; i++) {
         ts.remove(i);

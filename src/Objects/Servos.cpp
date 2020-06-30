@@ -16,6 +16,11 @@ Servo *Servos::create(uint8_t num, uint8_t pin) {
             return item.obj;
         }
     }
+#ifdef ESP32
+    myServo1.attach(servo_pin.toInt(), 500, 2400);
+    myServo1.write(start_state_int);
+#endif
+
     // Добавляем новый
     Servo_t newItem{num, pin};
     newItem.obj = new Servo();

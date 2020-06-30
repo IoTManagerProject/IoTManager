@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <PubSubClient.h>
 
 namespace MqttClient {
 

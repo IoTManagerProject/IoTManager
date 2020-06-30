@@ -1,55 +1,39 @@
-#include "Global.h"
+#include "Sensors.h"
 
 #include "Utils/PrintMessage.h"
-#include "Bus/OneWireBus.h"
-#include "Objects/DallasSensors.h"
 
 const static char *MODULE = "Sensor";
 
-GMedian<10, int> medianFilter;
-DHTesp dht;
+namespace Sensors {
 
-Adafruit_BMP280 bmp;
-Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
-Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
+boolean sensors_reading_map[NUM_SENSORS] = {false};
 
-Adafruit_BME280 bme;
-Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
-Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
-Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
+void enable(size_t num, boolean enable) {
+    sensors_reading_map[num] = enable;
+}
 
-const String perceptionStr(byte value);
-const String comfortStr(ComfortState value);
+void init() {
+    for (size_t i = 0; i < NUM_SENSORS; i++) {
+        Sensors::enable(i, false);
+    }
 
-void bmp280T_reading();
-
-void sensors_init() {
     ts.add(
         SENSORS, 1000, [&](void *) {
             static int counter;
             counter++;
 
-#ifdef LEVEL_ENABLED
             if (sensors_reading_map[0] == 1)
                 ultrasonic_reading();
-#endif
 
             if (counter > 10) {
                 counter = 0;
 
-#ifdef ANALOG_ENABLED
                 if (sensors_reading_map[1] == 1)
                     analog_reading1();
                 if (sensors_reading_map[2] == 1)
                     analog_reading2();
-#endif
-
-#ifdef DALLAS_ENABLED
                 if (sensors_reading_map[3] == 1)
                     dallas_reading();
-#endif
-
-#ifdef DHT_ENABLED
                 if (sensors_reading_map[4] == 1)
                     dhtT_reading();
                 if (sensors_reading_map[5] == 1)
@@ -60,16 +44,10 @@ void sensors_init() {
                     dhtC_reading();
                 if (sensors_reading_map[8] == 1)
                     dhtD_reading();
-#endif
-
-#ifdef BMP_ENABLED
                 if (sensors_reading_map[9] == 1)
                     bmp280T_reading();
                 if (sensors_reading_map[10] == 1)
                     bmp280P_reading();
-#endif
-
-#ifdef BME_ENABLED
                 if (sensors_reading_map[11] == 1)
                     bme280T_reading();
                 if (sensors_reading_map[12] == 1)
@@ -78,54 +56,9 @@ void sensors_init() {
                     bme280H_reading();
                 if (sensors_reading_map[14] == 1)
                     bme280A_reading();
-#endif
             }
         },
         nullptr, true);
-}
-
-//=========================================================================================================================================
-//=========================================Модуль измерения уровня в баке==================================================================
-#ifdef LEVEL_ENABLED
-//levelPr p 14 12 Вода#в#баке,#% Датчики fillgauge 125 20 1
-void levelPr() {
-    String value_name = sCmd.next();
-    String trig = sCmd.next();
-    String echo = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String empty_level = sCmd.next();
-    String full_level = sCmd.next();
-    String page_number = sCmd.next();
-    levelPr_value_name = value_name;
-    jsonWriteStr(configOptionJson, "e_lev", empty_level);
-    jsonWriteStr(configOptionJson, "f_lev", full_level);
-    jsonWriteStr(configOptionJson, "trig", trig);
-    jsonWriteStr(configOptionJson, "echo", echo);
-    pinMode(trig.toInt(), OUTPUT);
-    pinMode(echo.toInt(), INPUT);
-    createWidget(widget_name, page_name, page_number, type, value_name);
-    sensors_reading_map[0] = 1;
-}
-//ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
-void ultrasonicCm() {
-    String value_name = sCmd.next();
-    String trig = sCmd.next();
-    String echo = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String empty_level = sCmd.next();
-    String full_level = sCmd.next();
-    String page_number = sCmd.next();
-    ultrasonicCm_value_name = value_name;
-    jsonWriteStr(configOptionJson, "trig", trig);
-    jsonWriteStr(configOptionJson, "echo", echo);
-    pinMode(trig.toInt(), OUTPUT);
-    pinMode(echo.toInt(), INPUT);
-    createWidget(widget_name, page_name, page_number, type, value_name);
-    sensors_reading_map[0] = 1;
 }
 
 void ultrasonic_reading() {
@@ -165,38 +98,6 @@ void ultrasonic_reading() {
         Serial.println("[I] sensor '" + ultrasonicCm_value_name + "' data: " + String(distance_cm));
     }
 }
-#endif
-//=========================================================================================================================================
-//=========================================Модуль аналогового сенсора======================================================================
-#ifdef ANALOG_ENABLED
-//analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
-void analog() {
-    String value_name = sCmd.next();
-    String pin = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String analog_start = sCmd.next();
-    String analog_end = sCmd.next();
-    String analog_start_out = sCmd.next();
-    String analog_end_out = sCmd.next();
-    String page_number = sCmd.next();
-    analog_value_names_list += value_name + ",";
-    enter_to_analog_counter++;
-    jsonWriteStr(configOptionJson, value_name + "_st", analog_start);
-    jsonWriteStr(configOptionJson, value_name + "_end", analog_end);
-    jsonWriteStr(configOptionJson, value_name + "_st_out", analog_start_out);
-    jsonWriteStr(configOptionJson, value_name + "_end_out", analog_end_out);
-
-    createWidget(widget_name, page_name, page_number, type, value_name);
-
-    if (enter_to_analog_counter == 1) {
-        sensors_reading_map[1] = 1;
-    }
-    if (enter_to_analog_counter == 2) {
-        sensors_reading_map[2] = 1;
-    }
-}
 
 void analog_reading1() {
     String name = selectFromMarkerToMarker(analog_value_names_list, ",", 0);
@@ -216,7 +117,9 @@ void analog_reading1() {
     pm.info("sensor: '" + name + "' value: " + String(mapped, DEC));
 
     jsonWriteInt(configLiveJson, name, mapped);
-    fireEvent(name, "");
+
+    fireEvent(name);
+
     MqttClient::publishStatus(name, String(mapped));
 }
 
@@ -238,51 +141,6 @@ void analog_reading2() {
     MqttClient::publishStatus(value_name, String(analog));
     Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
 }
-#endif
-//=========================================================================================================================================
-//=========================================Модуль температурного сенсора ds18b20===========================================================
-
-#ifdef DALLAS_ENABLED
-
-void onewire() {
-    uint8_t pin = (uint8_t)String(sCmd.next()).toInt();
-    oneWireBus.set(pin);
-    if (!oneWireBus.exists()) {
-        pm.error("on create OneWire");
-    }
-}
-
-//dallas temp1 0x14 Температура Датчики anydata 1
-//dallas temp2 0x15 Температура Датчики anydata 2
-void dallas() {
-    if (!oneWireBus.exists()) {
-        pm.error("needs OneWire");
-        return;
-    }
-
-    if (dallasSensors.count() == 0) {
-        dallasTemperature = new DallasTemperature(oneWireBus.get());
-        dallasTemperature->begin();
-        dallasTemperature->setResolution(12);
-    }
-
-    String value = sCmd.next();
-
-    // uint8_t *address = String(sCmd.next()).toInt();
-
-    // dallasSensors.create(address, value);
-
-    String widget = sCmd.next();
-    String page = sCmd.next();
-    String type = sCmd.next();
-    String pageNumber = sCmd.next();
-
-    // jsonWriteStr(configOptionJson, value + "_ds", String(address, DEC));
-
-    dallas_value_name += value + ";";
-    createWidget(widget, page, pageNumber, type, value);
-    sensors_reading_map[3] = 1;
-}
 
 void dallas_reading() {
     if (!dallasTemperature) {
@@ -303,29 +161,6 @@ void dallas_reading() {
         Serial.println("[I] sensor '" + buf + "' send date " + String(temp));
     }
 }
-#endif
-//=========================================================================================================================================
-//=========================================Модуль сенсоров DHT=============================================================================
-#ifdef DHT_ENABLED
-//dhtT t 2 dht11 Температура#DHT,#t°C Датчики any-data 1
-void dhtT() {
-    String value_name = sCmd.next();
-    String pin = sCmd.next();
-    String sensor_type = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String page_number = sCmd.next();
-    dhtT_value_name = value_name;
-    if (sensor_type == "dht11") {
-        dht.setup(pin.toInt(), DHTesp::DHT11);
-    }
-    if (sensor_type == "dht22") {
-        dht.setup(pin.toInt(), DHTesp::DHT22);
-    }
-    createWidget(widget_name, page_name, page_number, type, value_name);
-    sensors_reading_map[4] = 1;
-}
 
 void dhtT_reading() {
     float value = 0;
@@ -343,26 +178,6 @@ void dhtT_reading() {
             Serial.println("[I] sensor '" + dhtT_value_name + "' data: " + String(value));
         }
     }
-}
-
-//dhtH h 2 dht11 Влажность#DHT,#t°C Датчики any-data 1
-void dhtH() {
-    String value_name = sCmd.next();
-    String pin = sCmd.next();
-    String sensor_type = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String page_number = sCmd.next();
-    dhtH_value_name = value_name;
-    if (sensor_type == "dht11") {
-        dht.setup(pin.toInt(), DHTesp::DHT11);
-    }
-    if (sensor_type == "dht22") {
-        dht.setup(pin.toInt(), DHTesp::DHT22);
-    }
-    createWidget(widget_name, page_name, page_number, type, value_name);
-    sensors_reading_map[5] = 1;
 }
 
 void dhtH_reading() {
@@ -383,15 +198,6 @@ void dhtH_reading() {
     }
 }
 
-//dhtPerception Восприятие: Датчики 4
-void dhtP() {
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String page_number = sCmd.next();
-    createWidget(widget_name, page_name, page_number, "any-data", "dhtPerception");
-    sensors_reading_map[6] = 1;
-}
-
 void dhtP_reading() {
     byte value;
     if (dht.getStatus() != 0) {
@@ -408,15 +214,6 @@ void dhtP_reading() {
     }
 }
 
-//dhtComfort Степень#комфорта: Датчики 3
-void dhtC() {
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String page_number = sCmd.next();
-    createWidget(widget_name, page_name, page_number, "anydata", "dhtComfort");
-    sensors_reading_map[7] = 1;
-}
-
 void dhtC_reading() {
     ComfortState cf;
     if (dht.getStatus() != 0) {
@@ -431,85 +228,6 @@ void dhtC_reading() {
     }
 }
 
-const String perceptionStr(byte value) {
-    String res;
-    switch (value) {
-        case 0:
-            res = F("Сухой воздух");
-            break;
-        case 1:
-            res = F("Комфортно");
-            break;
-        case 2:
-            res = F("Уютно");
-            break;
-        case 3:
-            res = F("Хорошо");
-            break;
-        case 4:
-            res = F("Неудобно");
-            break;
-        case 5:
-            res = F("Довольно неудобно");
-            break;
-        case 6:
-            res = F("Очень неудобно");
-            break;
-        case 7:
-            res = F("Невыносимо");
-        default:
-            res = F("Unknown");
-            break;
-    }
-    return res;
-}
-
-const String comfortStr(ComfortState value) {
-    String res;
-    switch (value) {
-        case Comfort_OK:
-            res = F("Отлично");
-            break;
-        case Comfort_TooHot:
-            res = F("Очень жарко");
-            break;
-        case Comfort_TooCold:
-            res = F("Очень холодно");
-            break;
-        case Comfort_TooDry:
-            res = F("Очень сухо");
-            break;
-        case Comfort_TooHumid:
-            res = F("Очень влажно");
-            break;
-        case Comfort_HotAndHumid:
-            res = F("Жарко и влажно");
-            break;
-        case Comfort_HotAndDry:
-            res = F("Жарко и сухо");
-            break;
-        case Comfort_ColdAndHumid:
-            res = F("Холодно и влажно");
-            break;
-        case Comfort_ColdAndDry:
-            res = F("Холодно и сухо");
-            break;
-        default:
-            res = F("Неизвестно");
-            break;
-    };
-    return res;
-}
-
-//dhtDewpoint Точка#росы: Датчики 5
-void dhtD() {
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String page_number = sCmd.next();
-    createWidget(widget_name, page_name, page_number, "anydata", "dhtDewpoint");
-    sensors_reading_map[8] = 1;
-}
-
 void dhtD_reading() {
     float value;
     if (dht.getStatus() != 0) {
@@ -522,30 +240,6 @@ void dhtD_reading() {
         Serial.println("[I] sensor 'dhtDewpoint' data: " + String(value));
     }
 }
-#endif
-//=========================================i2c bus esp8266 scl-4 sda-5 ====================================================================
-//=========================================================================================================================================
-//=========================================Модуль сенсоров bmp280==========================================================================
-
-//bmp280T temp1 0x76 Температура#bmp280 Датчики any-data 1
-void bmp280T() {
-    String value_name = sCmd.next();
-    String address = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String page_number = sCmd.next();
-    bmp280T_value_name = value_name;
-    createWidget(widget_name, page_name, page_number, type, value_name);
-    bmp.begin(hexStringToUint8(address));
-    bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
-                    Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
-                    Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
-                    Adafruit_BMP280::FILTER_X16,      /* Filtering. */
-                    Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
-    //bmp_temp->printSensorDetails();
-    sensors_reading_map[9] = 1;
-}
 
 void bmp280T_reading() {
     float value = 0;
@@ -556,26 +250,6 @@ void bmp280T_reading() {
     fireEvent(bmp280T_value_name, "");
     MqttClient::publishStatus(bmp280T_value_name, String(value));
     Serial.println("[I] sensor '" + bmp280T_value_name + "' data: " + String(value));
-}
-
-//bmp280P press1 0x76 Давление#bmp280 Датчики any-data 2
-void bmp280P() {
-    String value_name = sCmd.next();
-    String address = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String page_number = sCmd.next();
-    bmp280P_value_name = value_name;
-    createWidget(widget_name, page_name, page_number, type, value_name);
-    bmp.begin(hexStringToUint8(address));
-    bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
-                    Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
-                    Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
-                    Adafruit_BMP280::FILTER_X16,      /* Filtering. */
-                    Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
-    //bmp_temp->printSensorDetails();
-    sensors_reading_map[10] = 1;
 }
 
 void bmp280P_reading() {
@@ -590,22 +264,6 @@ void bmp280P_reading() {
     Serial.println("[I] sensor '" + bmp280P_value_name + "' data: " + String(value));
 }
 
-//=========================================================================================================================================
-//=============================================Модуль сенсоров bme280======================================================================
-//bme280T temp1 0x76 Температура#bmp280 Датчики any-data 1
-void bme280T() {
-    String value_name = sCmd.next();
-    String address = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String page_number = sCmd.next();
-    bme280T_value_name = value_name;
-    createWidget(widget_name, page_name, page_number, type, value_name);
-    bme.begin(hexStringToUint8(address));
-    sensors_reading_map[11] = 1;
-}
-
 void bme280T_reading() {
     float value = 0;
     value = bme.readTemperature();
@@ -613,20 +271,6 @@ void bme280T_reading() {
     fireEvent(bme280T_value_name, "");
     MqttClient::publishStatus(bme280T_value_name, String(value));
     Serial.println("[I] sensor '" + bme280T_value_name + "' data: " + String(value));
-}
-
-//bme280P pres1 0x76 Давление#bmp280 Датчики any-data 1
-void bme280P() {
-    String value_name = sCmd.next();
-    String address = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String page_number = sCmd.next();
-    bme280P_value_name = value_name;
-    createWidget(widget_name, page_name, page_number, type, value_name);
-    bme.begin(hexStringToUint8(address));
-    sensors_reading_map[12] = 1;
 }
 
 void bme280P_reading() {
@@ -639,20 +283,6 @@ void bme280P_reading() {
     Serial.println("[I] sensor '" + bme280P_value_name + "' data: " + String(value));
 }
 
-//bme280H hum1 0x76 Влажность#bmp280 Датчики any-data 1
-void bme280H() {
-    String value_name = sCmd.next();
-    String address = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String page_number = sCmd.next();
-    bme280H_value_name = value_name;
-    createWidget(widget_name, page_name, page_number, type, value_name);
-    bme.begin(hexStringToUint8(address));
-    sensors_reading_map[13] = 1;
-}
-
 void bme280H_reading() {
     float value = 0;
     value = bme.readHumidity();
@@ -660,20 +290,6 @@ void bme280H_reading() {
     fireEvent(bme280H_value_name, "");
     MqttClient::publishStatus(bme280H_value_name, String(value));
     Serial.println("[I] sensor '" + bme280H_value_name + "' data: " + String(value));
-}
-
-//bme280A altit1 0x76 Высота#bmp280 Датчики any-data 1
-void bme280A() {
-    String value_name = sCmd.next();
-    String address = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String page_number = sCmd.next();
-    bme280A_value_name = value_name;
-    createWidget(widget_name, page_name, page_number, type, value_name);
-    bme.begin(hexStringToUint8(address));
-    sensors_reading_map[14] = 1;
 }
 
 void bme280A_reading() {
@@ -686,3 +302,5 @@ void bme280A_reading() {
 
     Serial.println("[I] sensor '" + bme280A_value_name + "' data: " + String(value));
 }
+
+}  // namespace Sensors

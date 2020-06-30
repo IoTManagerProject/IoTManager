@@ -1,10 +1,6 @@
 #include "Scenario.h"
 
-#include "Consts.h"
-#include "Utils/FileUtils.h"
-
-#include "Utils/StringUtils.h"
-#include "Objects/LiveData.h"
+#include "Global.h"
 
 static const char* MODULE = "Scen";
 

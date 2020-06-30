@@ -1,9 +1,11 @@
-#include "Global.h"
+#include "Cmd.h"
 
 #include "Module/Terminal.h"
-#include "Objects/Servos.h"
-#include "Objects/Buttons.h"
 #include "WebClient.h"
+#include "Sensors.h"
+#include "Objects/Buttons.h"
+#include "Objects/Servos.h"
+#include "Bus/OneWireBus.h"
 
 static const char *MODULE = "Cmd";
 
@@ -15,102 +17,82 @@ SoftwareSerial *mySerial = nullptr;
 HardwareSerial *mySerial = nullptr;
 #endif
 
-void getData();
-
 void cmd_init() {
     myButtons.setOnChangeState([](Button_t *btn, uint8_t num) {
         fireEvent("switch", String(num, DEC));
         jsonWriteInt(configLiveJson, "switch" + String(num, DEC), btn->state);
     });
 
-    sCmd.addCommand("button", button);
-    sCmd.addCommand("buttonSet", buttonSet);
-    sCmd.addCommand("buttonChange", buttonChange);
+    sCmd.addCommand("button", cmd_button);
+    sCmd.addCommand("buttonSet", cmd_buttonSet);
+    sCmd.addCommand("buttonChange", cmd_buttonChange);
+    sCmd.addCommand("switch", cmd_switch);
 
-    sCmd.addCommand("pinSet", pinSet);
-    sCmd.addCommand("pinChange", pinChange);
+    sCmd.addCommand("pinSet", cmd_pinSet);
+    sCmd.addCommand("pinChange", cmd_pinChange);
 
-    sCmd.addCommand("pwm", pwm);
-    sCmd.addCommand("pwmSet", pwmSet);
-
-    sCmd.addCommand("switch", switch_);
+    sCmd.addCommand("pwm", cmd_pwm);
+    sCmd.addCommand("pwmSet", cmd_pwmSet);
 
 #ifdef ANALOG_ENABLED
-    sCmd.addCommand("analog", analog);
+    sCmd.addCommand("analog", cmd_analog);
 #endif
 #ifdef LEVEL_ENABLED
-    sCmd.addCommand("levelPr", levelPr);
-    sCmd.addCommand("ultrasonicCm", ultrasonicCm);
+    sCmd.addCommand("levelPr", cmd_levelPr);
+    sCmd.addCommand("ultrasonicCm", cmd_ultrasonicCm);
 #endif
 #ifdef DALLAS_ENABLED
-    sCmd.addCommand("dallas", dallas);
-#endif
-#ifdef DHT_ENABLED
-    sCmd.addCommand("dhtT", dhtT);
-    sCmd.addCommand("dhtH", dhtH);
-    sCmd.addCommand("dhtPerception", dhtP);
-    sCmd.addCommand("dhtComfort", dhtC);
-    sCmd.addCommand("dhtDewpoint", dhtD);
+    sCmd.addCommand("dallas", cmd_dallas);
 #endif
 
-#ifdef BMP_ENABLED
-    sCmd.addCommand("bmp280T", bmp280T);
-    sCmd.addCommand("bmp280P", bmp280P);
-#endif
+    sCmd.addCommand("dhtT", cmd_dhtT);
+    sCmd.addCommand("dhtH", cmd_dhtH);
+    sCmd.addCommand("dhtPerception", cmd_dhtPerception);
+    sCmd.addCommand("dhtComfort", cmd_dhtComfort);
+    sCmd.addCommand("dhtDewpoint", cmd_dhtDewpoint);
 
-#ifdef BME_ENABLED
-    sCmd.addCommand("bme280T", bme280T);
-    sCmd.addCommand("bme280P", bme280P);
-    sCmd.addCommand("bme280H", bme280H);
-    sCmd.addCommand("bme280A", bme280A);
-#endif
+    sCmd.addCommand("bmp280T", cmd_bmp280T);
+    sCmd.addCommand("bmp280P", cmd_bmp280P);
 
-#ifdef STEPPER_ENABLED
-    sCmd.addCommand("stepper", stepper);
-    sCmd.addCommand("stepperSet", stepperSet);
-#endif
+    sCmd.addCommand("bme280T", cmd_bme280T);
+    sCmd.addCommand("bme280P", cmd_bme280P);
+    sCmd.addCommand("bme280H", cmd_bme280H);
+    sCmd.addCommand("bme280A", cmd_bme280A);
 
-#ifdef SERVO_ENABLED
-    sCmd.addCommand("servo", servo_);
-    sCmd.addCommand("servoSet", servoSet);
-#endif
+    sCmd.addCommand("stepper", cmd_stepper);
+    sCmd.addCommand("stepperSet", cmd_stepperSet);
 
-#ifdef SERIAL_ENABLED
-    sCmd.addCommand("serialBegin", serialBegin);
-    sCmd.addCommand("serialWrite", serialWrite);
-    sCmd.addCommand("getData", getData);
-#endif
+    sCmd.addCommand("servo", cmd_servo);
+    sCmd.addCommand("servoSet", cmd_servoSet);
 
-#ifdef LOGGING_ENABLED
+    sCmd.addCommand("serialBegin", cmd_serialBegin);
+    sCmd.addCommand("serialWrite", cmd_serialWrite);
+    sCmd.addCommand("getData", cmd_getData);
+
     sCmd.addCommand("logging", logging);
-#endif
 
-    sCmd.addCommand("inputDigit", inputDigit);
-    sCmd.addCommand("digitSet", digitSet);
+    sCmd.addCommand("inputDigit", cmd_inputDigit);
+    sCmd.addCommand("digitSet", cmd_digitSet);
 
-    sCmd.addCommand("inputTime", inputTime);
-    sCmd.addCommand("timeSet", timeSet);
+    sCmd.addCommand("inputTime", cmd_inputTime);
+    sCmd.addCommand("timeSet", cmd_timeSet);
 
     sCmd.addCommand("timerStart", timerStart_);
     sCmd.addCommand("timerStop", timerStop_);
 
-    sCmd.addCommand("text", text);
-    sCmd.addCommand("textSet", textSet);
+    sCmd.addCommand("text", cmd_text);
+    sCmd.addCommand("textSet", cmd_textSet);
 
-    sCmd.addCommand("mqtt", mqttCommand);
-    sCmd.addCommand("http", httpCommand);
+    sCmd.addCommand("mqtt", cmd_mqtt);
+    sCmd.addCommand("http", cmd_http);
 
-#ifdef PUSH_ENABLED
     sCmd.addCommand("push", pushControl);
-#endif
 
-    sCmd.addCommand("firmwareUpdate", firmwareUpdate);
-    sCmd.addCommand("firmwareVersion", firmwareVersion);
-
-    handle_time_init();
+    sCmd.addCommand("firmwareUpdate", cmd_firmwareUpdate);
+    sCmd.addCommand("firmwareVersion", cmd_firmwareVersion);
 }
 
-void button() {
+void cmd_button() {
     String name = sCmd.next();
     String assign = sCmd.next();
     String description = sCmd.next();
@@ -125,7 +107,7 @@ void button() {
     }
     if (assign == "scen") {
         enableScenario(param);
-    } else if (assign.indexOf("line") != -1) {
+    } else if (assign.startsWith("line")) {
         String str = assign;
         while (str.length()) {
             if (str == "") {
@@ -145,7 +127,7 @@ void button() {
     createWidget(description, page, order, "toggle", "button" + name);
 }
 
-void buttonSet() {
+void cmd_buttonSet() {
     String name = sCmd.next();
     String param = sCmd.next();
 
@@ -174,7 +156,7 @@ void buttonSet() {
     MqttClient::publishStatus("button" + name, param);
 }
 
-void buttonChange() {
+void cmd_buttonChange() {
     String name = sCmd.next();
 
     if (!isDigitStr(name)) {
@@ -190,21 +172,21 @@ void buttonChange() {
     MqttClient::publishStatus("button" + name, stateStr);
 }
 
-void pinSet() {
+void cmd_pinSet() {
     String pin_number = sCmd.next();
     String pin_state = sCmd.next();
     pinMode(pin_number.toInt(), OUTPUT);
     digitalWrite(pin_number.toInt(), pin_state.toInt());
 }
 
-void pinChange() {
+void cmd_pinChange() {
     String pin_number = sCmd.next();
     pinMode(pin_number.toInt(), OUTPUT);
     digitalWrite(pin_number.toInt(), !digitalRead(pin_number.toInt()));
 }
 //==================================================================================================================
 //==========================================Модуль управления ШИМ===================================================
-void pwm() {
+void cmd_pwm() {
     //static boolean flag = true;
     String pwm_number = sCmd.next();
     String pwm_pin = sCmd.next();
@@ -223,7 +205,7 @@ void pwm() {
     createWidget(widget_name, page_name, page_number, "range", "pwm" + pwm_number);
 }
 
-void pwmSet() {
+void cmd_pwmSet() {
     String pwm_number = sCmd.next();
     String pwm_state = sCmd.next();
     int pwm_state_int = pwm_state.toInt();
@@ -238,12 +220,12 @@ void pwmSet() {
     MqttClient::publishStatus("pwm" + pwm_number, pwm_state);
 }
 
-void switch_() {
+void cmd_switch() {
     String name = sCmd.next();
     String assign = sCmd.next();
-    String debounse = sCmd.next();
+    String debounce = sCmd.next();
 
-    myButtons.addSwitch(name, assign, debounse);
+    myButtons.addSwitch(name, assign, debounce);
 }
 
 void loop_serial() {
@@ -258,7 +240,7 @@ void loop_button() {
 
 //=====================================================================================================================================
 //=========================================Добавление окна ввода цифры=================================================================
-void inputDigit() {
+void cmd_inputDigit() {
     String value_name = sCmd.next();
     String number = value_name.substring(5);
     String widget_name = sCmd.next();
@@ -272,7 +254,7 @@ void inputDigit() {
     createWidget(widget_name, page_name, page_number, "inputNum", "digit" + number);
 }
 
-void digitSet() {
+void cmd_digitSet() {
     String number = sCmd.next();
     String value = sCmd.next();
 
@@ -282,7 +264,7 @@ void digitSet() {
 
 //=====================================================================================================================================
 //=========================================Добавление окна ввода времени===============================================================
-void inputTime() {
+void cmd_inputTime() {
     String value_name = sCmd.next();
     String number = value_name.substring(4);
     String widget_name = sCmd.next();
@@ -296,7 +278,7 @@ void inputTime() {
     createWidget(widget_name, page_name, page_number, "inputTime", "time" + number);
 }
 
-void timeSet() {
+void cmd_timeSet() {
     String number = sCmd.next();
     String value = sCmd.next();
 
@@ -304,19 +286,7 @@ void timeSet() {
     MqttClient::publishStatus("time" + number, value);
 }
 
-void handle_time_init() {
-    ts.add(
-        TIME, 1000, [&](void *) {
-            jsonWriteStr(configLiveJson, "time", timeNow->getTime());
-            jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
-            fireEvent("timenow", "");
-        },
-        nullptr, true);
-}
-
-//=====================================================================================================================================
-//=========================================Добавление текстового виджета============================================================
-void text() {
+void cmd_text() {
     String number = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
@@ -325,7 +295,7 @@ void text() {
     createWidget(widget_name, page_name, page_number, "anydata", "text" + number);
 }
 
-void textSet() {
+void cmd_textSet() {
     String number = sCmd.next();
     String text = sCmd.next();
     text.replace("_", " ");
@@ -341,9 +311,9 @@ void textSet() {
 }
 //=====================================================================================================================================
 //=========================================Модуль шагового мотора======================================================================
-#ifdef STEPPER_ENABLED
+
 //stepper 1 12 13
-void stepper() {
+void cmd_stepper() {
     String stepper_number = sCmd.next();
     String pin_step = sCmd.next();
     String pin_dir = sCmd.next();
@@ -354,7 +324,7 @@ void stepper() {
 }
 
 //stepperSet 1 100 5
-void stepperSet() {
+void cmd_stepperSet() {
     String stepper_number = sCmd.next();
     String steps = sCmd.next();
     jsonWriteStr(configOptionJson, "steps" + stepper_number, steps);
@@ -400,12 +370,9 @@ void stepperSet() {
             nullptr, true);
     }
 }
-#endif
-//====================================================================================================================================================
-//=================================================================Сервоприводы=======================================================================
-#ifdef SERVO_ENABLED
+
 //servo 1 13 50 Мой#сервопривод Сервоприводы 0 100 0 180 2
-void servo_() {
+void cmd_servo() {
     String number = sCmd.next();
     uint8_t pin = String(sCmd.next()).toInt();
     int value = String(sCmd.next()).toInt();
@@ -426,10 +393,6 @@ void servo_() {
 
     Servo *servo = myServo.create(number.toInt(), pin);
     servo->write(value);
-#ifdef ESP32
-    myServo1.attach(servo_pin.toInt(), 500, 2400);
-    myServo1.write(start_state_int);
-#endif
 
     jsonWriteInt(configOptionJson, "s_min_val" + number, min_value);
     jsonWriteInt(configOptionJson, "s_max_val" + number, max_value);
@@ -441,7 +404,7 @@ void servo_() {
     createWidget(widget, page, pageNumber, "range", "servo" + number, "min", String(min_value), "max", String(max_value), "k", "1");
 }
 
-void servoSet() {
+void cmd_servoSet() {
     String number = sCmd.next();
     int value = String(sCmd.next()).toInt();
 
@@ -460,10 +423,8 @@ void servoSet() {
     jsonWriteInt(configLiveJson, "servo" + number, value);
     MqttClient::publishStatus("servo" + number, String(value, DEC));
 }
-#endif
 
-#ifdef SERIAL_ENABLED
-void serialBegin() {
+void cmd_serialBegin() {
     String s_speed = sCmd.next();
     String rxPin = sCmd.next();
     String txPin = sCmd.next();
@@ -491,7 +452,7 @@ void serialBegin() {
     });
 }
 
-void getData() {
+void cmd_getData() {
     String param = sCmd.next();
     String res = param.length() ? jsonReadStr(configLiveJson, param) : configLiveJson;
     if (term) {
@@ -499,24 +460,329 @@ void getData() {
     }
 }
 
-void serialWrite() {
+void cmd_serialWrite() {
     String payload = sCmd.next();
     if (term) {
         term->println(payload.c_str());
     }
 }
-#endif
-//====================================================================================================================================================
-//=================================================Глобальные команды удаленного управления===========================================================
 
-void mqttCommand() {
+void cmd_mqtt() {
     String topic = sCmd.next();
     String data = sCmd.next();
 
     MqttClient::publishOrder(topic, data);
 }
 
-void httpCommand() {
+void cmd_onewire() {
+    uint8_t pin = (uint8_t)String(sCmd.next()).toInt();
+    oneWireBus.set(pin);
+    if (!oneWireBus.exists()) {
+        pm.error("on create OneWire");
+    }
+}
+
+//ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
+void cmd_ultrasonicCm() {
+    String measure_unit = sCmd.next();
+
+    String trig = sCmd.next();
+    String echo = sCmd.next();
+    String widget = sCmd.next();
+    String page = sCmd.next();
+    String type = sCmd.next();
+    String empty_level = sCmd.next();
+    String full_level = sCmd.next();
+    String page_number = sCmd.next();
+
+    ultrasonicCm_value_name = measure_unit;
+
+    jsonWriteStr(configOptionJson, "trig", trig);
+    jsonWriteStr(configOptionJson, "echo", echo);
+    pinMode(trig.toInt(), OUTPUT);
+    pinMode(echo.toInt(), INPUT);
+
+    createWidget(widget, page, page_number, type, measure_unit);
+
+    Sensors::enable(0);
+}
+
+//dallas temp1 0x14 Температура Датчики anydata 1
+//dallas temp2 0x15 Температура Датчики anydata 2
+void cmd_dallas() {
+    if (!oneWireBus.exists()) {
+        pm.error("needs OneWire");
+        return;
+    }
+
+    if (dallasSensors.count() == 0) {
+        dallasTemperature = new DallasTemperature(oneWireBus.get());
+        dallasTemperature->begin();
+        dallasTemperature->setResolution(12);
+    }
+
+    String value = sCmd.next();
+
+    // uint8_t *address = String(sCmd.next()).toInt();
+
+    // dallasSensors.create(address, value);
+
+    String widget = sCmd.next();
+    String page = sCmd.next();
+    String type = sCmd.next();
+    String pageNumber = sCmd.next();
+
+    // jsonWriteStr(configOptionJson, value + "_ds", String(address, DEC));
+
+    dallas_value_name += value + ";";
+    createWidget(widget, page, pageNumber, type, value);
+
+    Sensors::enable(3);
+}
+
+//levelPr p 14 12 Вода#в#баке,#% Датчики fillgauge 125 20 1
+void cmd_levelPr() {
+    String value_name = sCmd.next();
+    String trig = sCmd.next();
+    String echo = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String empty_level = sCmd.next();
+    String full_level = sCmd.next();
+    String page_number = sCmd.next();
+    levelPr_value_name = value_name;
+    jsonWriteStr(configOptionJson, "e_lev", empty_level);
+    jsonWriteStr(configOptionJson, "f_lev", full_level);
+    jsonWriteStr(configOptionJson, "trig", trig);
+    jsonWriteStr(configOptionJson, "echo", echo);
+    pinMode(trig.toInt(), OUTPUT);
+    pinMode(echo.toInt(), INPUT);
+    createWidget(widget_name, page_name, page_number, type, value_name);
+
+    Sensors::enable(0);
+}
+
+//dhtH h 2 dht11 Влажность#DHT,#t°C Датчики any-data 1
+void cmd_dhtH() {
+    String value_name = sCmd.next();
+    String pin = sCmd.next();
+    String sensor_type = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String page_number = sCmd.next();
+    dhtH_value_name = value_name;
+    if (sensor_type == "dht11") {
+        dht.setup(pin.toInt(), DHTesp::DHT11);
+    }
+    if (sensor_type == "dht22") {
+        dht.setup(pin.toInt(), DHTesp::DHT22);
+    }
+    createWidget(widget_name, page_name, page_number, type, value_name);
+
+    Sensors::enable(5);
+}
+
+// dhtT t 2 dht11 Температура#DHT,#t°C Датчики any-data 1
+void cmd_dhtT() {
+    String value_name = sCmd.next();
+    String pin = sCmd.next();
+    String sensor_type = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String page_number = sCmd.next();
+    dhtT_value_name = value_name;
+    if (sensor_type == "dht11") {
+        dht.setup(pin.toInt(), DHTesp::DHT11);
+    }
+    if (sensor_type == "dht22") {
+        dht.setup(pin.toInt(), DHTesp::DHT22);
+    }
+
+    createWidget(widget_name, page_name, page_number, type, value_name);
+
+    Sensors::enable(4);
+}
+
+//dhtDewpoint Точка#росы: Датчики 5
+void cmd_dhtDewpoint() {
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String page_number = sCmd.next();
+
+    createWidget(widget_name, page_name, page_number, "anydata", "dhtDewpoint");
+
+    Sensors::enable(8);
+}
+
+// dhtPerception Восприятие: Датчики 4
+void cmd_dhtPerception() {
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String page_number = sCmd.next();
+
+    createWidget(widget_name, page_name, page_number, "any-data", "dhtPerception");
+
+    Sensors::enable(6);
+}
+
+// dhtComfort Степень#комфорта: Датчики 3
+void cmd_dhtComfort() {
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String page_number = sCmd.next();
+
+    createWidget(widget_name, page_name, page_number, "anydata", "dhtComfort");
+
+    Sensors::enable(7);
+}
+
+// analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
+void cmd_analog() {
+    String value_name = sCmd.next();
+    String pin = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String analog_start = sCmd.next();
+    String analog_end = sCmd.next();
+    String analog_start_out = sCmd.next();
+    String analog_end_out = sCmd.next();
+    String page_number = sCmd.next();
+    analog_value_names_list += value_name + ",";
+    enter_to_analog_counter++;
+    jsonWriteStr(configOptionJson, value_name + "_st", analog_start);
+    jsonWriteStr(configOptionJson, value_name + "_end", analog_end);
+    jsonWriteStr(configOptionJson, value_name + "_st_out", analog_start_out);
+    jsonWriteStr(configOptionJson, value_name + "_end_out", analog_end_out);
+
+    createWidget(widget_name, page_name, page_number, type, value_name);
+
+    if (enter_to_analog_counter == 1) {
+        Sensors::enable(1);
+    }
+    if (enter_to_analog_counter == 2) {
+        Sensors::enable(2);
+    }
+}
+
+// bmp280T temp1 0x76 Температура#bmp280 Датчики any-data 1
+void cmd_bmp280T() {
+    String value_name = sCmd.next();
+    String address = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String page_number = sCmd.next();
+    bmp280T_value_name = value_name;
+
+    bmp.begin(hexStringToUint8(address));
+    bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                    Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                    Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                    Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                    Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+
+    createWidget(widget_name, page_name, page_number, type, value_name);
+
+    Sensors::enable(9);
+}
+
+//bmp280P press1 0x76 Давление#bmp280 Датчики any-data 2
+void cmd_bmp280P() {
+    String value_name = sCmd.next();
+    String address = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String page_number = sCmd.next();
+    bmp280P_value_name = value_name;
+
+    bmp.begin(hexStringToUint8(address));
+    bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                    Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                    Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                    Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                    Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+
+    createWidget(widget_name, page_name, page_number, type, value_name);
+
+    Sensors::enable(10);
+}
+
+//=========================================================================================================================================
+//=============================================Модуль сенсоров bme280======================================================================
+//bme280T temp1 0x76 Температура#bmp280 Датчики any-data 1
+void cmd_bme280T() {
+    String value_name = sCmd.next();
+    String address = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String page_number = sCmd.next();
+    bme280T_value_name = value_name;
+
+    bme.begin(hexStringToUint8(address));
+
+    createWidget(widget_name, page_name, page_number, type, value_name);
+
+    Sensors::enable(11);
+}
+
+//bme280P pres1 0x76 Давление#bmp280 Датчики any-data 1
+void cmd_bme280P() {
+    String value_name = sCmd.next();
+    String address = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String page_number = sCmd.next();
+    bme280P_value_name = value_name;
+
+    bme.begin(hexStringToUint8(address));
+
+    createWidget(widget_name, page_name, page_number, type, value_name);
+
+    Sensors::enable(12);
+}
+
+//bme280H hum1 0x76 Влажность#bmp280 Датчики any-data 1
+void cmd_bme280H() {
+    String value_name = sCmd.next();
+    String address = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String page_number = sCmd.next();
+    bme280H_value_name = value_name;
+
+    bme.begin(hexStringToUint8(address));
+
+    createWidget(widget_name, page_name, page_number, type, value_name);
+
+    Sensors::enable(13);
+}
+
+//bme280A altit1 0x76 Высота#bmp280 Датчики any-data 1
+void cmd_bme280A() {
+    String value_name = sCmd.next();
+    String address = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String page_number = sCmd.next();
+    bme280A_value_name = value_name;
+
+    bme.begin(hexStringToUint8(address));
+
+    createWidget(widget_name, page_name, page_number, type, value_name);
+
+    Sensors::enable(14);
+}
+
+void cmd_http() {
     String host = sCmd.next();
     String param = sCmd.next();
     param.replace("_", "%20");
@@ -525,11 +791,11 @@ void httpCommand() {
     WebClient::get(url);
 }
 
-void firmwareUpdate() {
+void cmd_firmwareUpdate() {
     updateFlag = true;
 }
 
-void firmwareVersion() {
+void cmd_firmwareVersion() {
     String widget = sCmd.next();
     String page = sCmd.next();
     String pageNumber = sCmd.next();

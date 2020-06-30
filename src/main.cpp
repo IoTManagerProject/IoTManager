@@ -4,6 +4,7 @@
 #include "Bus/I2CScanner.h"
 #include "Bus/DallasScanner.h"
 #include "TickerScheduler/Metric.h"
+#include "Sensors.h"
 
 void not_async_actions();
 
@@ -48,7 +49,7 @@ void setup() {
     cmd_init();
 
     pm.info(String("Sensors"));
-    sensors_init();
+    Sensors::init();
 
     pm.info(String("Init"));
     all_init();
@@ -157,8 +158,6 @@ void not_async_actions() {
     do_scan_bus();
 }
 
-
-
 void setChipId() {
     chipId = getChipId();
     pm.info("id: " + chipId);
@@ -220,6 +219,14 @@ void clock_init() {
     ts.add(
         TIME_SYNC, 30000, [&](void*) {
             timeNow->hasSync();
+        },
+        nullptr, true);
+
+    ts.add(
+        TIME, 1000, [&](void*) {
+            jsonWriteStr(configLiveJson, "time", timeNow->getTime());
+            jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
+            fireEvent("timenow", "");
         },
         nullptr, true);
 }

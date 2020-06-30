@@ -30,7 +30,7 @@
 /* 
 * Sensor 
 */
-#define TANK_LEVEL_SAMPLES 10
+
 #define LEVEL_ENABLED
 #define ANALOG_ENABLED
 #define DALLAS_ENABLED
