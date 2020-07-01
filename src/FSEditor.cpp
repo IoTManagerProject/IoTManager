@@ -1,7 +1,7 @@
 #include "SPIFFSEditor.h"
 #include <FS.h>
 
-#define SPIFFS_MAXLENGTH_FILEPATH 32
+#define FS_MAXLENGTH_FILEPATH 32
 const char *excludeListFile = "/.exclude.files";
 
 typedef struct ExcludeListS {
@@ -59,7 +59,7 @@ static bool addExclude(const char *item) {
 }
 
 static void loadExcludeList(fs::FS &_fs, const char *filename) {
-    static char linebuf[SPIFFS_MAXLENGTH_FILEPATH];
+    static char linebuf[FS_MAXLENGTH_FILEPATH];
     fs::File excludeFile = _fs.open(filename, "r");
     if (!excludeFile) {
         //addExclude("/*.js.gz");
@@ -83,13 +83,13 @@ static void loadExcludeList(fs::FS &_fs, const char *filename) {
                 if (lastChar != '\r') {
                     linebuf[idx++] = (char)lastChar;
                 }
-            } while ((lastChar >= 0) && (lastChar != '\n') && (idx < SPIFFS_MAXLENGTH_FILEPATH));
+            } while ((lastChar >= 0) && (lastChar != '\n') && (idx < FS_MAXLENGTH_FILEPATH));
 
             if (isOverflowed) {
                 isOverflowed = (lastChar != '\n');
                 continue;
             }
-            isOverflowed = (idx >= SPIFFS_MAXLENGTH_FILEPATH);
+            isOverflowed = (idx >= FS_MAXLENGTH_FILEPATH);
             linebuf[idx - 1] = '\0';
             if (!addExclude(linebuf)) {
                 excludeFile.close();
