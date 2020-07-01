@@ -13,37 +13,37 @@
       "class": "alert-default"
     },
     {
-			"type": "text",
-			"class": "alert alert-light",
-			"title": "<center><img src='/icon.jpeg' alt='IoT Manager'></center>"
-		},
+      "type": "text",
+      "class": "alert alert-light",
+      "title": "<center><img src='/icon.jpeg' alt='IoT Manager'></center>"
+    },
     {
       "type": "link",
-      "title": "Конфигурация устройства",
+      "title": "Конфигурация",
       "action": "/?set.device",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
-      "title": "Список других устройств в сети",
+      "title": "Устройства в сети",
       "action": "/?set.udp",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
-      "title": "Конфигурация WIFI",
+      "title": "Настройка WiFi",
       "action": "/?set.wifi",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
-      "title": "Конфигурация MQTT",
+      "title": "Настройка MQTT",
       "action": "/?set.mqtt",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "link",
-      "title": "Конфигурация push",
+      "title": "Настройка Push",
       "action": "/?set.push",
       "class": "btn btn-block btn-default"
     },
