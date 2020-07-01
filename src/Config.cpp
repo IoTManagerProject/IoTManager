@@ -6,7 +6,8 @@ Config::Config() : _items{
                        new GeneralConfig(),
                        new ClockConfig(),
                        new NetworkConfig(),
-                       new MqttConfig()} {};
+                       new MqttConfig(),
+                       new WebConfig()} {};
 
 GeneralConfig* Config::general() {
     return (GeneralConfig*)_items[CONFIG_GENERAL];
@@ -24,22 +25,33 @@ MqttConfig* Config::mqtt() {
     return (MqttConfig*)_items[CONFIG_MQTT];
 }
 
+WebConfig* Config::web() {
+    return (WebConfig*)_items[CONFIG_WEB];
+}
+
+void Config::setSynced() {
+    unsigned long timestamp = millis();
+    for (size_t i = 0; i < NUM_CONFIGS; i++) {
+        _items[i]->setChanged(timestamp);
+    }
+    _timestamp = timestamp;
+}
+
 void Config::load(const String& str) {
     DynamicJsonBuffer buf;
     JsonObject& root = buf.parseObject(str);
 
     // "pushingboxid" : "v7C133E426B0C69E"
-    // "weblogin" : "admin", "webpass" : "admin",
-    // "udponoff" : "0",
-    // "blink" : "1",
     // "oneWirePin" : "3",
-    // "firmware_version" : "2.3.5", "ip" : "192.168.1.216", "uptime" : "00:00:28"
+    // "firmware_version" : "2.3.5",
+    // "ip" : "192.168.1.216",
+    // "uptime" : "00:00:28"
 
     for (size_t i = 0; i < NUM_CONFIGS; i++) {
         _items[i]->load(root);
     }
 
-    _changed = millis();
+    _timestamp = millis();
 }
 
 const String Config::save(String& str) {

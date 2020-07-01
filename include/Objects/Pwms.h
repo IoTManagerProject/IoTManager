@@ -16,7 +16,7 @@ class PwmItem : public Nameble,
     };
 
     void onStateChange() const override {
-        analogWrite(getPin(), state());
+        analogWrite(getPin(), getState());
     };
 };
 

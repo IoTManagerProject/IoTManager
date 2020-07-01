@@ -7,12 +7,12 @@ class ConfigItem {
    public:
     ConfigItem(){};
 
-    void setChanged() {
-        _lastChanged = millis();
+    void setChanged(unsigned long timestamp = millis()) {
+        _timestamp = timestamp;
     }
 
-    unsigned long getLastChanged() {
-        return _lastChanged;
+    unsigned long getTimestamp() {
+        return _timestamp;
     }
 
     virtual bool validate() {
@@ -20,8 +20,18 @@ class ConfigItem {
     }
 
     virtual void load(const JsonObject& root) = 0;
+
     virtual void save(JsonObject& root) = 0;
 
+   protected:
+    virtual bool updateField(char* prev, const String& next, size_t size) {
+        bool changed = !next.equals(prev);
+        if (changed) {
+            strlcpy(prev, next.c_str(), size);
+        }
+        return changed;
+    }
+
    private:
-    unsigned long _lastChanged;
+    unsigned long _timestamp;
 };

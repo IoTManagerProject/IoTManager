@@ -5,12 +5,14 @@
 #include "Config/GeneralConfig.h"
 #include "Config/NetworkConfig.h"
 #include "Config/MqttConfig.h"
+#include "Config/WebConfig.h"
 
 enum Configs {
     CONFIG_GENERAL,
     CONFIG_CLOCK,
     CONFIG_NETWORK,
     CONFIG_MQTT,
+    CONFIG_WEB,
     NUM_CONFIGS
 };
 
@@ -25,12 +27,14 @@ class Config {
     ClockConfig* clock();
     NetworkConfig* network();
     GeneralConfig* general();
+    WebConfig* web();
+
+   private:
+    void setSynced();
 
    private:
     ConfigItem* _items[NUM_CONFIGS];
-
-   private:
-    unsigned long _changed;
+    unsigned long _timestamp;
 };
 
 extern Config config;

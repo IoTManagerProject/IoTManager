@@ -14,6 +14,30 @@ void acync_actions();
 void config_backup();
 void config_restore();
 
+// Async actions
+boolean perform_updates_check = false;
+boolean perform_upgrade = false;
+
+boolean broadcast_mqtt_settings_flag = false;
+void broadcast_mqtt_settings() {
+    pm.info("broadcast mqtt");
+    broadcast_mqtt_settings_flag = true;
+}
+
+boolean perform_bus_scanning_flag = false;
+BusScanner_t perform_bus_scanning_bus;
+void perform_bus_scanning(BusScanner_t bus) {
+    pm.info("bus scan: " + bus);
+    perform_bus_scanning_flag = true;
+    perform_bus_scanning_bus = bus;
+}
+
+boolean perform_system_restart_flag = false;
+void perform_system_restart() {
+    pm.info("system restart");
+    perform_system_restart_flag = true;
+}
+
 enum LoopItems {
     LI_CLOCK,
     LI_NOT_ASYNC,
@@ -28,71 +52,6 @@ enum LoopItems {
 
 Metric m;
 boolean initialized = false;
-
-void setup() {
-    WiFi.setAutoConnect(false);
-    WiFi.persistent(false);
-
-    Serial.begin(115200);
-    Serial.flush();
-    Serial.println();
-    Serial.println("--------------started----------------");
-
-    setChipId();
-
-    pm.info(String("FS"));
-    fileSystemInit();
-
-    pm.info(String("Config"));
-    loadConfig();
-
-    pm.info(String("Clock"));
-    clock_init();
-
-    pm.info(String("Init"));
-    init_mod();
-
-    pm.info(String("Network"));
-    startSTAMode();
-
-    if (isNetworkActive()) {
-        lastVersion = Updater::check();
-        if (!lastVersion.isEmpty()) {
-            pm.info("update: " + lastVersion);
-        }
-    };
-
-    if (!TELEMETRY_UPDATE_INTERVAL) {
-        pm.info("Telemetry: disabled");
-    }
-    telemetry_init();
-
-    pm.info(String("HttpServer"));
-    HttpServer::init();
-
-    pm.info(String("WebAdmin"));
-    web_init();
-
-    pm.info("Broadcast");
-    Broadcast::init();
-
-    ts.add(
-        SYS_STAT, 1000 * 60, [&](void*) {
-            pm.info(getMemoryStatus());
-            pm.info("Loop: ");
-            m.print(Serial);
-
-            pm.info("Tickets: ");
-            ts.printMetric(Serial);
-
-            m.reset();
-            ts.resetMetric();
-        },
-        nullptr, false);
-
-    just_load = false;
-    initialized = true;
-}
 
 void loop() {
     if (!initialized) {
@@ -162,14 +121,14 @@ void acync_actions() {
         perform_upgrade = false;
     }
 
-    if (broadcast_mqtt_settings) {
+    if (broadcast_mqtt_settings_flag) {
         Broadcast::send_mqtt_settings();
-        broadcast_mqtt_settings = false;
+        broadcast_mqtt_settings_flag = false;
     }
 
-    if (perform_bus_scanning) {
+    if (perform_bus_scanning_flag) {
         BusScanner* bus;
-        switch (bus_to_scan) {
+        switch (perform_bus_scanning_bus) {
             case BS_I2C:
                 bus = new I2CScanner();
                 break;
@@ -177,20 +136,31 @@ void acync_actions() {
                 bus = new DallasScanner();
                 break;
             default:
-                pm.error("uknown bus: " + String(bus_to_scan, DEC));
-                perform_bus_scanning = false;
-                return;
+                pm.error("uknown bus: " + String(perform_bus_scanning_bus, DEC));
+                bus = nullptr;
         }
         if (bus) {
             bus->scan(configLiveJson);
         }
-        perform_bus_scanning = false;
+        perform_bus_scanning_flag = false;
+    }
+
+    if (perform_system_restart_flag) {
+        ESP.restart();
     }
 }
 
 void setChipId() {
     chipId = getChipId();
     pm.info("id: " + chipId);
+}
+
+void setPreset(size_t num) {
+    pm.info("preset #" + String(num, DEC));
+    copyFile(getConfigFile(num, CT_CONFIG), DEVICE_CONFIG_FILE);
+    copyFile(getConfigFile(num, CT_SCENARIO), DEVICE_SCENARIO_FILE);
+    device_init();
+
 }
 
 void setConfigParam(const char* param, const String& value) {
@@ -272,4 +242,69 @@ void config_restore() {
     writeFile(String(DEVICE_CONFIG_FILE), configBackup);
     writeFile("config.json", setupBackup);
     saveConfig();
+}
+
+void setup() {
+    WiFi.setAutoConnect(false);
+    WiFi.persistent(false);
+
+    Serial.begin(115200);
+    Serial.flush();
+    Serial.println();
+    Serial.println("--------------started----------------");
+
+    setChipId();
+
+    pm.info(String("FS"));
+    fileSystemInit();
+
+    pm.info(String("Config"));
+    loadConfig();
+
+    pm.info(String("Clock"));
+    clock_init();
+
+    pm.info(String("Init"));
+    init_mod();
+
+    pm.info(String("Network"));
+    startSTAMode();
+
+    if (isNetworkActive()) {
+        lastVersion = Updater::check();
+        if (!lastVersion.isEmpty()) {
+            pm.info("update: " + lastVersion);
+        }
+    };
+
+    if (!TELEMETRY_UPDATE_INTERVAL) {
+        pm.info("Telemetry: disabled");
+    }
+    telemetry_init();
+
+    pm.info(String("HttpServer"));
+    HttpServer::init();
+
+    pm.info(String("WebAdmin"));
+    web_init();
+
+    pm.info("Broadcast");
+    Broadcast::init();
+
+    ts.add(
+        SYS_STAT, 1000 * 60, [&](void*) {
+            pm.info(getMemoryStatus());
+            pm.info("Loop: ");
+            m.print(Serial);
+
+            pm.info("Tickets: ");
+            ts.printMetric(Serial);
+
+            m.reset();
+            ts.resetMetric();
+        },
+        nullptr, false);
+
+    just_load = false;
+    initialized = true;
 }

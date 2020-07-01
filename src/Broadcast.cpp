@@ -44,7 +44,7 @@ void init() {
                 String data = "iotm;";
                 data += chipId;
                 data += ";";
-                data += config.network()->getName();
+                data += config.network()->getHostname();
                 pm.info("send: " + data);
 #ifdef ESP8266
                 udp.beginPacketMulticast(MULTICAST_IP, UDP_PORT, WiFi.localIP());

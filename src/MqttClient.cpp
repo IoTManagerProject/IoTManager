@@ -26,7 +26,7 @@ void setConfig(MqttConfig* config) {
     _user = config->getUser();
     _pass = config->getPass();
     _prefix = config->getPrefix();
-    
+
     _uuid = getChipId();
     _deviceRoot = _prefix + "/" + _uuid;
 }
@@ -122,10 +122,10 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         }
     } else if (topicStr.indexOf("devc")) {
         writeFile(DEVICE_CONFIG_FILE, payloadStr);
-        Device_init();
+        device_init();
     } else if (topicStr.indexOf("devs")) {
         writeFile(DEVICE_SCENARIO_FILE, payloadStr);
-        Scenario::load();
+        Scenario::reinit();
     }
 }
 

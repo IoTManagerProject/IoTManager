@@ -68,9 +68,7 @@ extern boolean perform_updates_check;
 extern boolean perform_upgrade;
 extern boolean mqttParamsChangedFlag;
 extern boolean udp_data_parse;
-extern boolean broadcast_mqtt_settings;
 
-extern void enableScenario(boolean enable);
 extern void fireEvent(String name);
 extern void fireEvent(String name, String param);
 
@@ -78,13 +76,17 @@ extern const String readLiveData(const String& obj);
 extern const String writeLiveData(const String& obj, const String& value);
 
 /*
-* Запрос на скарнирование шины
+* Запрос на сканирование шины
 */
-extern boolean perform_bus_scanning;
+extern void perform_bus_scanning(BusScanner_t bus);
 /*
-* Запрос на сканирование шины, указание какую
+* Произвести перезагрузку
 */
-extern BusScanner_t bus_to_scan;
+extern void perform_system_restart();
+/*
+* Широковещательная расслыка настроек mqtt
+*/
+extern void broadcast_mqtt_settings();
 
 /*
 * Global functions
@@ -95,7 +97,7 @@ extern void stringExecute(String& cmdStr);
 // Init
 extern void loadConfig();
 extern void statistics_init();
-extern void Device_init();
+extern void device_init();
 extern void cmd_init();
 extern void init_mod();
 // Logging
@@ -107,13 +109,8 @@ extern void choose_log_date_and_send();
 // Main
 extern void setChipId();
 extern void saveConfig();
+extern void setPreset(size_t num);
 extern void setConfigParam(const char* param, const String& value);
-
-extern void do_fscheck();
-extern void do_scan_bus();
-extern void cmd_servo();
-extern void clock_init();
-
 extern void setLedStatus(LedStatus_t);
 
 //Scenario
@@ -133,6 +130,7 @@ extern void update_init();
 // Widget
 extern void createWidget(String widget_name, String page_name, String page_number, String file, String topic, String name1 = "", String param1 = "", String name2 = "", String param2 = "", String name3 = "", String param3 = "");
 extern void createChart(String widget_name, String page_name, String page_number, String file, String topic, String maxCount);
+extern void clearWidgets();
 
 // PushingBox
 extern void pushControl();

@@ -31,7 +31,13 @@ class Stateble {
         return _state;
     }
 
-    int state() const {
+    int toogle() {
+        _state = !_state;
+        onStateChange();
+        return _state;
+    }
+
+    int getState() const {
         return _state;
     }
 

@@ -5,15 +5,14 @@
 #include "Objects/EventQueue.h"
 
 namespace Scenario {
+void reinit();
 
 void init();
 
-void load();
-
 void process(EventQueue* events);
 
-void enable(size_t num, boolean enable);
+void enableBlock(size_t num, boolean enable);
 
-bool isEnabled(size_t num);
+bool isBlockEnabled(size_t num);
 
 }  // namespace Scenario

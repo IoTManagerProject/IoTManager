@@ -35,7 +35,6 @@ struct Button_t {
                 break;
             case BUTTON_PINNED:
                 digitalWrite(getPin(), getState());
-
                 obj = new Bounce();
                 obj->attach(getPin(), OUTPUT);
                 break;

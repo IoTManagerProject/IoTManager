@@ -108,7 +108,7 @@ void cmd_button() {
         myButtons.addButton(name, assign, param);
     }
     if (assign == "scen") {
-        enableScenario(param);
+        config.general()->enableScenario(param.toInt());
     } else if (assign.startsWith("line")) {
         String str = assign;
         while (str.length()) {
@@ -121,7 +121,9 @@ void cmd_button() {
             String number = deleteBeforeDelimiter(tmp, "e");
             number.replace(",", "");
             int number_int = number.toInt();
-            Scenario::enable(number_int, param);
+
+            Scenario::enableBlock(number_int, param);
+
             str = deleteBeforeDelimiter(str, ",");
         }
     }
@@ -131,31 +133,32 @@ void cmd_button() {
 
 void cmd_buttonSet() {
     String name = sCmd.next();
-    String param = sCmd.next();
+    String state = sCmd.next();
 
     Button_t *btn = myButtons.get(name);
 
     if (isDigitStr(btn->assign)) {
-        btn->set(param.toInt());
+        btn->set(state.toInt());
     } else if (btn->assign == "scen") {
-        enableScenario(param.toInt());
+        config.general()->enableScenario(state.toInt());
     } else if (btn->assign.startsWith("line")) {
         String str = btn->assign;
         while (str.length() != 0) {
             String tmp = selectToMarker(str, ",");            //line1,
             String number = deleteBeforeDelimiter(tmp, "e");  //1,
             number.replace(",", "");
-            Serial.println(number);
-            Scenario::enable(number.toInt(), param.toInt());
+
+            Scenario::enableBlock(number.toInt(), state.toInt());
+
             str = deleteBeforeDelimiter(str, ",");
         }
     }
 
     fireEvent("button", name);
 
-    jsonWriteStr(configLiveJson, "button" + name, param);
+    jsonWriteStr(configLiveJson, "button" + name, state);
 
-    MqttClient::publishStatus("button" + name, param);
+    MqttClient::publishStatus("button" + name, state);
 }
 
 void cmd_buttonChange() {
@@ -197,11 +200,13 @@ void cmd_pwm() {
     String state = sCmd.next();
     String order = sCmd.next();
 
+    String style = sCmd.next();
+
     myPwms.add(name, assign, state);
-    //jsonWriteStr(configOptionJson, "pwm_pin" + name, assign);
-    //jsonWriteStr(configLiveJson, "pwm" + name, state);
-    //pinMode(assign.toInt(), OUTPUT);
-    //analogWrite(assign.toInt(), state.toInt());
+    // jsonWriteStr(configOptionJson, "pwm_pin" + name, assign);
+    // jsonWriteStr(configLiveJson, "pwm" + name, state);
+    // pinMode(assign.toInt(), OUTPUT);
+    // analogWrite(assign.toInt(), state.toInt());
     createWidget(description, page, order, "range", "pwm" + name);
 }
 

@@ -1,9 +1,13 @@
 #include "Global.h"
 
+#include "Objects/Pwms.h"
+
 #ifdef WS_enable
 AsyncWebSocket ws;
 //AsyncEventSource events;
 #endif
+
+static const char* MODULE = "Global";
 
 Clock* timeNow;
 TickerScheduler ts(SYS_STAT + 1);
@@ -31,28 +35,12 @@ int enter_to_logging_counter;
 String lastVersion = "";
 boolean just_load = true;
 
-// Async actions
-boolean perform_updates_check = false;
-boolean perform_upgrade = false;
-
 boolean mqttParamsChangedFlag = false;
 boolean udp_data_parse = false;
-boolean broadcast_mqtt_settings = false;
-
-BusScanner_t bus_to_scan;
-boolean perform_bus_scanning = false;
 
 void saveConfig() {
     config.save(configSetupJson);
     writeFile(String("config.json"), configSetupJson);
-}
-
-void enableScenario(boolean enable) {
-    config.general()->enableScenario(enable);
-    if (enable) {
-        Scenario::load();
-    }
-    saveConfig();
 }
 
 void fireEvent(String name) {
@@ -67,9 +55,21 @@ void fireEvent(String name, String param) {
 }
 
 const String readLiveData(const String& obj) {
-    return jsonReadStr(configLiveJson, obj);
+    String res = "";
+    if (obj.startsWith("pwm")) {
+        String name = obj.substring(3);
+        if (Stateble* item = myPwms.get(name)) {
+            pm.info("read pwm: " + obj);
+            res = String(item->getState());
+        }
+    } else {
+        pm.info("read live: " + obj);
+        res = jsonReadStr(configLiveJson, obj);
+    }
+    return res;
 }
 
 const String writeLiveData(const String& obj, const String& value) {
+    pm.info("write live: " + obj + " " + value);
     return jsonWriteStr(configLiveJson, obj, value);
 }

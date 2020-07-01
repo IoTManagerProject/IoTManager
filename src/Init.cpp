@@ -14,9 +14,10 @@ void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
 
     config.load(configSetupJson);
+
     String tmp = "{}";
     config.save(tmp);
-    Serial.print(tmp);
+    pm.info(tmp);
 
     configSetupJson.replace(" ", "");
     configSetupJson.replace("\r\n", "");
@@ -36,7 +37,7 @@ void init_mod() {
     pm.info(String("Commands"));
     cmd_init();
 
-    Device_init();
+    device_init();
 
     pm.info(String("Scenario"));
     Scenario::init();
@@ -50,17 +51,13 @@ void init_mod() {
     uptime_init();
 }
 
-void Device_init() {
+void device_init() {
     for (int i = LOG1; i <= LOG5; i++) {
         ts.remove(i);
     }
-#ifdef LAYOUT_IN_RAM
-    all_widgets = "";
-#else
-    removeFile(String("layout.txt"));
-#endif
-
+    clearWidgets();
     fileExecute(DEVICE_CONFIG_FILE);
+    Scenario::reinit();
 }
 
 void uptime_init() {

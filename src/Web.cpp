@@ -4,13 +4,55 @@
 
 static const char* MODULE = "Web";
 
-bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
-    if (request->hasArg("preset")) {
-        preset = request->getParam("preset")->value().toInt();
-        return true;
-    }
-    return false;
-}
+static const char* TAG_SET_UTILITIES = "/?set.utilities";
+
+bool configChangeRequest(const String& param, const String& value) {
+    pm.info(param + ":" + value);
+
+    if (param.equals("devname")) {
+        config.network()->setHostname(value);
+    } else if (param.equals("udponoff")) {
+        config.general()->enableBroadcast(param.toInt());
+    } else if (param.equals("scen")) {
+        config.general()->enableScenario(value.toInt());
+    } else if (param.equals("routerssid")) {
+        config.network()->setSSID(WIFI_STA, value);
+    } else if (param.equals("routerpass")) {
+        config.network()->setPasswd(WIFI_STA, value);
+    } else if (param.equals("apssid")) {
+        config.network()->setSSID(WIFI_AP, value);
+    } else if (param.equals("appass")) {
+        config.network()->setPasswd(WIFI_AP, value);
+    } else if (param.equals("timezone")) {
+        config.clock()->setTimezone(value.toInt());
+    } else if (param.equals("ntp")) {
+        config.clock()->setNtp(value);
+    } else if (param.equals("weblogin")) {
+        config.web()->setLogin(value);
+    } else if (param.equals("webpass")) {
+        config.web()->setPass(value);
+    } else if (param.equals("blink")) {
+        config.general()->enableLed(value.toInt());
+    } else if (param.equals("mqttServer")) {
+        config.mqtt()->setServer(value);
+    } else if (param.equals("mqttPort")) {
+        config.mqtt()->setPort(value.toInt());
+    } else if (param.equals("mqttPrefix")) {
+        config.mqtt()->setPrefix(value);
+    } else if (param.equals("mqttUser")) {
+        config.mqtt()->setUser(value);
+    } else if (param.equals("mqttPass")) {
+        config.mqtt()->setPass(value);
+    } else if (param.equals("pushingboxid")) {
+        jsonWriteStr(configSetupJson, "pushingboxid", value);
+        saveConfig();
+    } else if (param.equals(TAG_ONE_WIRE_PIN)) {
+        setConfigParam(TAG_ONE_WIRE_PIN, value);
+    } else {
+        return false;
+    };
+    return true;
+};
 
 void web_init() {
     // dnsServer.start(53, "*", WiFi.softAPIP());
@@ -19,124 +61,88 @@ void web_init() {
     server.on("/restart", HTTP_GET, [](AsyncWebServerRequest* request) {
         if (request->hasArg("device")) {
             if (request->getParam("device")->value() == "ok") {
+                request->send(200);
                 ESP.restart();
             }
-            request->send(200);
         };
     });
 
-    server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
-        uint8_t preset;
-        if (parseRequestForPreset(request, preset)) {
-            pm.info("activate #" + String(preset, DEC));
-            copyFile(getConfigFile(preset, CT_CONFIG), DEVICE_CONFIG_FILE);
-            copyFile(getConfigFile(preset, CT_SCENARIO), DEVICE_SCENARIO_FILE);
-            Device_init();
-            Scenario::load();
-            request->redirect("/?set.device");
-        } else if (request->hasArg("devinit")) {
-            Device_init();
-            request->send(200);
-        } else if (request->hasArg("scen")) {
-            bool value = request->getParam("scen")->value().toInt();
-            jsonWriteBool(configSetupJson, "scen", value);
-            saveConfig();
-            Scenario::load();
-            request->send(200);
-        } else if (request->hasArg("sceninit")) {
-            Scenario::load();
-            request->send(200);
-        } else if (request->hasArg("cleanlog")) {
-            clean_log_date();
-            request->send(200);
-        } else if (request->hasArg("udponoff")) {
-            bool value = request->getParam("udponoff")->value().toInt();
-            jsonWriteBool(configSetupJson, "udponoff", value);
-            saveConfig();
-            Scenario::load();
-            request->send(200);
-        } else if (request->hasArg("updatelist")) {
-            removeFile("/dev.csv");
-            addFile("dev.csv", "device id;device name;ip address");
-            request->redirect("/?set.udp");
-        } else if (request->hasArg("updatepage")) {
-            request->redirect("/?set.udp");
-        } else if (request->hasArg("devname")) {
-            jsonWriteStr(configSetupJson, "name", request->getParam("devname")->value());
-            saveConfig();
-            request->send(200);
-        } else if (request->hasArg("mqttcheck")) {
-            String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
-            String payload = "{}";
-            jsonWriteStr(payload, "title", buf);
-            jsonWriteStr(payload, "class", "pop-up");
-            request->send(200, "text/html", payload);
-            return;
-        } else
-            for (size_t i = 0; i < request->params(); i++) {
-                String param_name = request->getParam(i)->name();
-                String param_value = request->getParam(i)->value();
-                pm.info(param_name + ":" + param_value);
-
-                if (param_name.equals("routerssid")) {
-                    config.network()->setSSID(WIFI_STA, param_value);
-                } else if (param_name.equals("routerpass")) {
-                    config.network()->setPasswd(WIFI_STA, param_value);
-                } else if (param_name.equals("apssid")) {
-                    config.network()->setSSID(WIFI_AP, param_value);
-                } else if (param_name.equals("appass")) {
-                    config.network()->setPasswd(WIFI_AP, param_value);
-                } else if (param_name.equals("timezone")) {
-                    config.clock()->setTimezone(param_value.toInt());
-                } else if (param_name.equals("ntp")) {
-                    config.clock()->setNtp(param_value);
-                } else if (request->hasArg("weblogin")) {
-                    jsonWriteStr(configSetupJson, "weblogin", request->getParam("weblogin")->value());
-                    saveConfig();
-                } else if (request->hasArg("webpass")) {
-                    jsonWriteStr(configSetupJson, "webpass", request->getParam("webpass")->value());
-                    saveConfig();
-                } else if (request->hasArg("blink")) {
-                    jsonWriteBool(configSetupJson, "blink", param_value.toInt());
-                    saveConfig();
-                } else if (param_name.equals("mqttServer")) {
-                    config.mqtt()->setServer(param_value);
-                } else if (param_name.equals("mqttPort")) {
-                    config.mqtt()->setPort(param_value.toInt());
-                } else if (request->hasArg("mqttPrefix")) {
-                    config.mqtt()->setPrefix(param_value);
-                } else if (request->hasArg("mqttUser")) {
-                    config.mqtt()->setUser(param_value);
-                } else if (request->hasArg("mqttPass")) {
-                    config.mqtt()->setPass(param_value);
-                } else if (request->hasArg("mqttsend")) {
-                    broadcast_mqtt_settings = true;
-                } else if (request->hasArg("pushingboxid")) {
-                    jsonWriteStr(configSetupJson, "pushingboxid", request->getParam("pushingboxid")->value());
-                    saveConfig();
-                    request->send(200);
-                    return;
-                } else if (request->hasArg(TAG_I2C)) {
-                    perform_bus_scanning = true;
-                    bus_to_scan = BS_I2C;
-                    request->redirect("/?set.utilities");
-                    return;
-                } else if (request->hasArg(TAG_ONE_WIRE)) {
-                    perform_bus_scanning = true;
-                    bus_to_scan = BS_ONE_WIRE;
-                    if (request->hasParam(TAG_ONE_WIRE_PIN)) {
-                        setConfigParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value());
-                    }
-                    request->redirect("/?set.utilities");
-                    return;
-                } else if (request->hasArg(TAG_ONE_WIRE_PIN)) {
-                    setConfigParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value());
-                } else {
-                    pm.error("unknown param: " + param_name);
-                };
-                request->send(200);
+    server.on(
+        "/set", HTTP_GET, [](AsyncWebServerRequest* request) {
+            /*
+            * Actions
+            */
+            if (request->hasArg("preset")) {
+                setPreset(request->getParam("preset")->value().toInt());
+                request->redirect("/?set.device");
+                return;
             }
-    });
+            if (request->hasArg("devinit")) {
+                device_init();
+                request->send(200);
+                return;
+            }
+            if (request->hasArg("sceninit")) {
+                Scenario::reinit();
+                request->send(200);
+                return;
+            }
+            if (request->hasArg("cleanlog")) {
+                clean_log_date();
+                request->send(200);
+                return;
+            }
+            if (request->hasArg("updatelist")) {
+                removeFile("/dev.csv");
+                addFile("dev.csv", "device id;device name;ip address");
+                request->redirect("/?set.udp");
+                return;
+            }
+            if (request->hasArg("updatepage")) {
+                request->redirect("/?set.udp");
+                return;
+            }
+            if (request->hasArg("mqttcheck")) {
+                String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
+                String payload = "{}";
+                jsonWriteStr(payload, "title", buf);
+                jsonWriteStr(payload, "class", "pop-up");
+                request->send(200, "text/html", payload);
+                return;
+            }
+            if (request->hasArg("mqttsend")) {
+                broadcast_mqtt_settings();
+                request->send(200);
+                return;
+            }
+            if (request->hasArg(TAG_I2C)) {
+                perform_bus_scanning(BS_I2C);
+                request->redirect(TAG_SET_UTILITIES);
+                return;
+            }
+            if (request->hasArg(TAG_ONE_WIRE)) {
+                perform_bus_scanning(BS_ONE_WIRE);
+                if (request->hasParam(TAG_ONE_WIRE_PIN)) {
+                    setConfigParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value());
+                }
+                request->redirect(TAG_SET_UTILITIES);
+                return;
+            }
+
+            /*
+            * Config
+            */
+            for (size_t i = 0; i < request->params(); i++) {
+                String param = request->getParam(i)->name();
+                String value = request->getParam(i)->value();
+                if (!configChangeRequest(param, value)) {
+                    pm.error("unknown: " + param);
+                    request->send(404);
+                    return;
+                }
+            }
+            request->send(200);
+        });
 
     /* 
     * Check

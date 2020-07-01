@@ -8,26 +8,32 @@ namespace Scenario {
 static const size_t NUM_LINES = 40;
 
 String _content = "";
-bool _lines_enabled[NUM_LINES];
+bool _block_enabled[NUM_LINES];
+bool _initialized = false;
 
-bool isEnabled(size_t num) {
-    return _lines_enabled[num];
+bool isBlockEnabled(size_t num) {
+    return _block_enabled[num];
 }
 
-void enable(size_t num, boolean enable) {
-    _lines_enabled[num] = enable;
+void enableBlock(size_t num, boolean enable) {
+    _block_enabled[num] = enable;
+}
+
+void reinit() {
+    _initialized = false;
 }
 
 void init() {
-    load();
-    memset(_lines_enabled, 1, sizeof(_lines_enabled[0]) * NUM_LINES);
-}
-
-void load() {
     _content = readFile(DEVICE_SCENARIO_FILE, 2048);
+    memset(_block_enabled, 1, sizeof(_block_enabled[0]) * NUM_LINES);
+    _initialized = true;
 }
 
 void process(EventQueue* queue) {
+    if (!_initialized) {
+        init();
+    }
+
     if (!queue->available()) {
         return;
     }
@@ -49,7 +55,7 @@ void process(EventQueue* queue) {
         if (block.isEmpty()) {
             continue;
         }
-        if (isEnabled(line++)) {
+        if (isBlockEnabled(line++)) {
             //выделяем первую строку самого сценария  button1 = 1 (условие)
             String condition = selectToMarker(block, "\n");
             String obj = selectFromMarkerToMarker(condition, " ", 0);

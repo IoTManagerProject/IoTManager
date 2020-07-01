@@ -11,6 +11,13 @@ NetworkConfig::NetworkConfig(){
     // TODO Defaults
 };
 
+void NetworkConfig::setHostname(const String str) {
+    bool changed = updateField(_hostname, str, sizeof(_hostname));
+    if (changed) {
+        setChanged();
+    }
+}
+
 void NetworkConfig::setMode(uint8_t mode) {
     bool changed = _mode != mode;
     if (changed) {
@@ -35,20 +42,12 @@ void NetworkConfig::setPasswd(uint8_t mode, const String& str) {
     }
 }
 
-bool NetworkConfig::updateField(char* prev, const String& next, size_t size) {
-    bool changed = !next.equals(prev);
-    if (changed) {
-        strlcpy(prev, next.c_str(), size);
-    }
-    return changed;
-}
-
 uint8_t NetworkConfig::getMode() const {
     return _mode;
 }
 
-const char* NetworkConfig::getName() const {
-    return _name;
+const char* NetworkConfig::getHostname() const {
+    return _hostname;
 }
 
 void NetworkConfig::getSSID(uint8_t mode, String& str) const {
@@ -61,7 +60,7 @@ void NetworkConfig::getPasswd(uint8_t mode, String& str) const {
 
 void NetworkConfig::load(const JsonObject& root) {
     _mode = root[TAG_WIFI_MODE] | 2;
-    strlcpy(_name, root[TAG_HOSTNAME], sizeof(_name));
+    strlcpy(_hostname, root[TAG_HOSTNAME], sizeof(_hostname));
     strlcpy(_ap_ssid, root[TAG_AP_SSID], sizeof(_ap_ssid));
     strlcpy(_ap_passwd, root[TAG_AP_PASSWD], sizeof(_ap_passwd));
     strlcpy(_sta_ssid, root[TAG_STA_SSID], sizeof(_sta_ssid));
@@ -70,7 +69,7 @@ void NetworkConfig::load(const JsonObject& root) {
 
 void NetworkConfig::save(JsonObject& root) {
     root[TAG_WIFI_MODE] = _mode;
-    root[TAG_HOSTNAME] = _name;
+    root[TAG_HOSTNAME] = _hostname;
     root[TAG_AP_SSID] = _ap_ssid;
     root[TAG_AP_PASSWD] = _ap_passwd;
     root[TAG_STA_SSID] = _sta_ssid;
