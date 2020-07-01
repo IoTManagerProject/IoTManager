@@ -12,12 +12,12 @@ void initMDNS();
 void initWS();
 
 void init() {
-    String login = jsonReadStr(configSetupJson, "weblogin");
-    String pass = jsonReadStr(configSetupJson, "webpass");
+    String login = config.web()->getLogin();
+    String pass = config.web()->getPass();
 #ifdef ESP32
     server.addHandler(new SPIFFSEditor(LittleFS, login, pass));
 #else
-    server.addHandler(new SPIFFSEditor(login, pass));
+    server.addHandler(new FSEditor(login, pass));
 #endif
 
     server.serveStatic("/css/", LittleFS, "/css/").setCacheControl("max-age=600");

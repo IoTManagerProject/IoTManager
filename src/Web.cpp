@@ -162,7 +162,6 @@ void web_init() {
             perform_updates_check = true;
             msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
         } else {
-            pm.info("version: " + lastVersion);
             // TODO Версия должна быть выше
             if (lastVersion == FIRMWARE_VERSION) {
                 msg = F("Актуальная версия прошивки уже установлена.");
@@ -170,10 +169,10 @@ void web_init() {
                 msg = F("Доступно обновление<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет установка, по ее заверщению страница автоматически перезагрузится...')\">Установить</a>");
             }
         }
-        String tmp = "{}";
-        jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + msg);
-        jsonWriteStr(tmp, "class", "pop-up");
-        request->send(200, "text/html", tmp);
+        String payload = "{}";
+        jsonWriteStr(payload, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + msg);
+        jsonWriteStr(payload, "class", "pop-up");
+        request->send(200, "text/html", payload);
     });
 
     /* 
