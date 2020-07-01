@@ -24,7 +24,7 @@ void init() {
 }
 
 void load() {
-    _content = readFile(String(DEVICE_SCENARIO_FILE), 2048);
+    _content = readFile(DEVICE_SCENARIO_FILE, 2048);
 }
 
 void process(EventQueue* queue) {

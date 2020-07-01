@@ -95,22 +95,23 @@ void startSTAMode() {
 
 bool startAPMode() {
     setLedStatus(LED_ON);
-    String ssid = jsonReadStr(configSetupJson, "apssid");
-    String passwd = jsonReadStr(configSetupJson, "appass");
+    String ssid, passwd;
+    config.network()->getSSID(WIFI_AP, ssid);
+    config.network()->getPasswd(WIFI_AP, passwd);
     pm.info("AP Mode: " + ssid);
 
     WiFi.mode(WIFI_AP);
-
     WiFi.softAP(ssid.c_str(), passwd.c_str());
     String hostIpStr = WiFi.softAPIP().toString();
-    pm.info("Host IP: " + hostIpStr);
+    pm.info("http://" + hostIpStr);
+
     jsonWriteStr(configSetupJson, "ip", hostIpStr);
 
     ts.add(
         WIFI_SCAN, 10 * 1000,
         [&](void*) {
             String sta_ssid = jsonReadStr(configSetupJson, "routerssid");
-            pm.info("scanning for " + sta_ssid);
+            pm.info("scan for " + sta_ssid);
             if (scanWiFi(sta_ssid)) {
                 ts.remove(WIFI_SCAN);
                 startSTAMode();

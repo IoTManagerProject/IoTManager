@@ -5,6 +5,7 @@
 #include "WebClient.h"
 #include "Sensors.h"
 #include "Objects/Buttons.h"
+#include "Objects/Pwms.h"
 #include "Objects/Servos.h"
 #include "Bus/OneWireBus.h"
 
@@ -188,37 +189,31 @@ void cmd_pinChange() {
 //==================================================================================================================
 //==========================================Модуль управления ШИМ===================================================
 void cmd_pwm() {
-    //static boolean flag = true;
-    String pwm_number = sCmd.next();
-    String pwm_pin = sCmd.next();
-    String widget_name = sCmd.next();
-    widget_name.replace("#", " ");
-    String page_name = sCmd.next();
-    String start_state = sCmd.next();
-    String page_number = sCmd.next();
+    String name = sCmd.next();
+    String assign = sCmd.next();
+    String description = sCmd.next();
 
-    uint8_t pwm_pin_int = pwm_pin.toInt();
-    jsonWriteStr(configOptionJson, "pwm_pin" + pwm_number, pwm_pin);
-    pinMode(pwm_pin_int, INPUT);
-    analogWrite(pwm_pin_int, start_state.toInt());
+    String page = sCmd.next();
+    String state = sCmd.next();
+    String order = sCmd.next();
 
-    jsonWriteStr(configLiveJson, "pwm" + pwm_number, start_state);
-    createWidget(widget_name, page_name, page_number, "range", "pwm" + pwm_number);
+    myPwms.add(name, assign, state);
+    //jsonWriteStr(configOptionJson, "pwm_pin" + name, assign);
+    //jsonWriteStr(configLiveJson, "pwm" + name, state);
+    //pinMode(assign.toInt(), OUTPUT);
+    //analogWrite(assign.toInt(), state.toInt());
+    createWidget(description, page, order, "range", "pwm" + name);
 }
 
 void cmd_pwmSet() {
-    String pwm_number = sCmd.next();
-    String pwm_state = sCmd.next();
-    int pwm_state_int = pwm_state.toInt();
-
-    int pin = jsonReadInt(configOptionJson, "pwm_pin" + pwm_number);
-    analogWrite(pin, pwm_state_int);
-
-    fireEvent("pwm", pwm_number);
-
-    jsonWriteStr(configLiveJson, "pwm" + pwm_number, pwm_state);
-
-    MqttClient::publishStatus("pwm" + pwm_number, pwm_state);
+    String name = sCmd.next();
+    String state = sCmd.next();
+    myPwms.get(name)->setInt(state.toInt());
+    fireEvent("pwm", name);
+    // analogWrite(pin, state.toInt());
+    // int pin = jsonReadInt(configOptionJson, "pwm_pin" + name);
+    // jsonWriteStr(configLiveJson, "pwm" + name, state);
+    MqttClient::publishStatus("pwm" + name, state);
 }
 
 void cmd_switch() {

@@ -25,8 +25,9 @@ void setConfig(MqttConfig* config) {
     _port = config->getPort();
     _user = config->getUser();
     _pass = config->getPass();
-    _uuid = getChipId();
     _prefix = config->getPrefix();
+    
+    _uuid = getChipId();
     _deviceRoot = _prefix + "/" + _uuid;
 }
 
@@ -51,17 +52,14 @@ bool isConnected() {
 }
 
 void subscribe() {
-    String path = _deviceRoot;
-    pm.info("subscribe: " + path);
-
-    mqtt.subscribe(path.c_str());
-    mqtt.subscribe((path + "/+/control").c_str());
-    mqtt.subscribe((path + "/order").c_str());
-    mqtt.subscribe((path + "/update").c_str());
-    mqtt.subscribe((path + "/devc").c_str());
-    mqtt.subscribe((path + "/devs").c_str());
-
+    pm.info("subscribe: " + _prefix);
     mqtt.setCallback(handleSubscribedUpdates);
+    mqtt.subscribe(_prefix.c_str());
+    mqtt.subscribe((_deviceRoot + "/+/control").c_str());
+    mqtt.subscribe((_deviceRoot + "/order").c_str());
+    mqtt.subscribe((_deviceRoot + "/update").c_str());
+    mqtt.subscribe((_deviceRoot + "/devc").c_str());
+    mqtt.subscribe((_deviceRoot + "/devs").c_str());
 }
 
 boolean connect() {
@@ -73,7 +71,6 @@ boolean connect() {
         subscribe();
     } else {
         pm.error("could't connect: " + getStateStr());
-        //  + ", retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
     }
     return res;
 }
@@ -93,14 +90,13 @@ const String parseControl(const String& str) {
 }
 
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
+    pm.info("incoming: " + String(topic));
     String topicStr = String(topic);
-    pm.info("incoming: " + topicStr);
     String payloadStr = "";
     payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
         payloadStr += (char)payload[i];
     }
-
     if (payloadStr.equalsIgnoreCase("hello")) {
         pm.info(String("hello"));
         publishWidgets();
