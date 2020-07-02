@@ -23,9 +23,9 @@ void init() {
             if (sensor_enabled[0])
                 ultrasonic_reading();
             if (sensor_enabled[1])
-                analog_reading1();
+                AnalogSensor::analog_reading1();
             if (sensor_enabled[2])
-                analog_reading2();
+                AnalogSensor::analog_reading2();
             if (sensor_enabled[3])
                 dallas_reading();
             if (sensor_enabled[4])

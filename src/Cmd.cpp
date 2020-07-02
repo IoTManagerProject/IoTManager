@@ -1,5 +1,6 @@
 #include "Cmd.h"
 
+#include "Sensor/AnalogSensor.h"
 #include "Events.h"
 #include "Logger.h"
 #include "Module/Terminal.h"
@@ -99,24 +100,16 @@ void cmd_init() {
 //===============================================Логирование============================================================
 //logging temp1 1 10 Температура Датчики 2
 void cmd_logging() {
-    String value_name = sCmd.next();
-    String period_min = sCmd.next();
-    String maxCount = sCmd.next();
-    String widget_name = sCmd.next();
-    widget_name.replace("#", " ");
-    String page_name = sCmd.next();
-    String page_number = sCmd.next();
+    String name = sCmd.next();
+    String period = sCmd.next();
+    String count = sCmd.next();
+    String descr = sCmd.next();
+    String page = sCmd.next();
+    String order = sCmd.next();
 
-    size_t num = Logger::add(value_name);
-
-    //создаем в файловой системе переменную количества точек на графике с отметкой _c что значит count
-    options.write(value_name + "_c", maxCount);
-
-    //создаем график в приложении с топиком _ch /prefix/3234045-1589487/value_name_ch
-    createChart(widget_name, page_name, page_number, "chart", value_name + "_ch", maxCount);
-
-    ts.add(
-        num, period_min.toInt() * 1000 * 60, [&](void *) { Logger::deleteOldDataTask(LoggerLog_t(num)); }, nullptr, false);
+    Logger::add(name, period.toInt() * 1000 * 60, count.toInt());
+    // /prefix/3234045-1589487/value_name_ch
+    createChart(descr, page, order, "chart", name + "_ch", count);
 }
 
 void cmd_button() {
@@ -667,31 +660,27 @@ void cmd_dhtComfort() {
 
 // analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
 void cmd_analog() {
-    String value_name = sCmd.next();
+    String name = sCmd.next();
     String pin = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
+    String descr = sCmd.next();
+    String page = sCmd.next();
     String type = sCmd.next();
+
     String analog_start = sCmd.next();
     String analog_end = sCmd.next();
     String analog_start_out = sCmd.next();
     String analog_end_out = sCmd.next();
-    String page_number = sCmd.next();
-    analog_value_names_list += value_name + ",";
-    enter_to_analog_counter++;
-    options.write(value_name + "_st", analog_start);
-    options.write(value_name + "_end", analog_end);
-    options.write(value_name + "_st_out", analog_start_out);
-    options.write(value_name + "_end_out", analog_end_out);
 
-    createWidget(widget_name, page_name, page_number, type, value_name);
+    String order = sCmd.next();
 
-    if (enter_to_analog_counter == 1) {
-        Sensors::enable(1);
-    }
-    if (enter_to_analog_counter == 2) {
-        Sensors::enable(2);
-    }
+    options.write(name + "_st", analog_start);
+    options.write(name + "_end", analog_end);
+    options.write(name + "_st_out", analog_start_out);
+    options.write(name + "_end_out", analog_end_out);
+
+    createWidget(descr, page, order, type, name);
+
+    AnalogSensor::add(name);
 }
 
 // bmp280T temp1 0x76 Температура#bmp280 Датчики any-data 1

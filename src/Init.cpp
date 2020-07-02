@@ -1,5 +1,6 @@
 #include "Global.h"
 
+#include "Logger.h"
 #include "WebClient.h"
 #include "Sensors.h"
 #include "MqttClient.h"
@@ -9,6 +10,9 @@ static const char* MODULE = "Init";
 void init_mod() {
     pm.info("Mqtt");
     MqttClient::setConfig(config.mqtt());
+
+    pm.info("logger");
+    Logger::init();
 
     pm.info("Commands");
     cmd_init();
@@ -27,9 +31,6 @@ void init_mod() {
 }
 
 void device_init() {
-    for (int i = LOG1; i <= LOG5; i++) {
-        ts.remove(i);
-    }
     clearWidgets();
     fileExecute(DEVICE_COMMAND_FILE);
     Scenario::reinit();
@@ -77,7 +78,7 @@ void telemetry_init() {
                     url += "Power on";
 #endif
                     url += "&";
-                    url += String(FIRMWARE_VERSION);
+                    url += FIRMWARE_VERSION;
                     String stat = WebClient::get(url);
                 }
             },

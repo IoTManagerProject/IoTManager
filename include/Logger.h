@@ -1,13 +1,10 @@
 #pragma once
 
 #include "Global.h"
-
 namespace Logger {
-void deleteOldDataTask(LoggerLog_t log);
-size_t add(String name);
-void deleteOldData(const String filename, size_t max_lines_cnt, String payload);
+void add(String name, unsigned long period, size_t count);
 void init();
-void logging();
+void loop();
 void clear();
-void choose_log_date_and_send();
-}  // namespace Logger
+void publish();
+};  // namespace Logger

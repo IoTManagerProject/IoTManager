@@ -64,24 +64,12 @@ struct Time_t {
     unsigned long valid;
 };
 
-enum LoggerLog_t {
-    LL_LOG1 = 5,
-    LL_LOG2,
-    LL_LOG3,
-    LL_LOG4,
-    LL_LOG5
-};
-
 enum TimerTask_t { WIFI_SCAN,
-                   WIFI_MQTT_CONNECTION_CHECK,
+                   MQTT_CONNECTION,
                    SENSORS,
                    STEPPER1,
                    STEPPER2,
-                   LOG1,
-                   LOG2,
-                   LOG3,
-                   LOG4,
-                   LOG5,
+                   LOGGER,
                    TIMER_COUNTDOWN,
                    TIME,
                    TIME_SYNC,

@@ -102,9 +102,7 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         pm.info(String("hello"));
         publishWidgets();
         publishState();
-#ifdef LOGGING_ENABLED
-        Logger::choose_log_date_and_send();
-#endif
+        Logger::publish();
     } else if (topicStr.indexOf("control")) {
         // название топика -  команда,
         // значение - параметр

@@ -62,8 +62,7 @@ void startSTAMode() {
 
     if (isNetworkActive()) {
         ts.add(
-            WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL,
-            [&](void*) {
+            MQTT_CONNECTION, MQTT_RECONNECT_INTERVAL, [&](void*) {
                 if (isNetworkActive()) {
                     if (MqttClient::isConnected()) {
                         if (!_connected) {
@@ -82,7 +81,7 @@ void startSTAMode() {
                         pm.error("connection lost");
                         _connected = false;
                     }
-                    ts.remove(WIFI_MQTT_CONNECTION_CHECK);
+                    ts.remove(MQTT_CONNECTION);
                     wifi_error++;
                     startAPMode();
                 }

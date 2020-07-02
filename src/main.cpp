@@ -12,20 +12,22 @@
 
 static const char* MODULE = "Main";
 
-void async_actions();
+void flag_actions();
 void config_backup();
 void config_restore();
 
 enum LoopItems {
     LI_CLOCK,
-    LI_NOT_ASYNC,
+    LT_FLAG_ACTION,
     LI_MQTT_CLIENT,
     LI_CMD,
     LI_BUTTON,
     LI_SCENARIO,
-    LI_UDP,
+    LI_BROADCAST,
     LI_SERIAL,
-    LI_TICKETS
+    LT_TASKS,
+    LT_LOGGER,
+    NUM_LOOP_ITEMS
 };
 
 Metric m;
@@ -83,8 +85,8 @@ void loop() {
 #ifdef WS_enable
     ws.cleanupClients();
 #endif
-    async_actions();
-    m.add(LI_NOT_ASYNC);
+    flag_actions();
+    m.add(LT_FLAG_ACTION);
 
     MqttClient::loop();
     m.add(LI_MQTT_CLIENT);
@@ -102,17 +104,20 @@ void loop() {
 
     if (config.general()->isBroadcastEnabled()) {
         Broadcast::loop();
-        m.add(LI_UDP);
+        m.add(LI_BROADCAST);
     }
 
     loop_serial();
     m.add(LI_SERIAL);
 
     ts.update();
-    m.add(LI_TICKETS);
+    m.add(LT_TASKS);
+
+    Logger::loop();
+    m.add(LT_LOGGER);
 }
 
-void async_actions() {
+void flag_actions() {
     if (config.hasChanged()) {
         pm.info("store " DEVICE_CONFIG_FILE);
         save_config();

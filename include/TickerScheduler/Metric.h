@@ -2,8 +2,8 @@
 
 #include "Timings.h"
 
-static const size_t NUM_ITEMS = 9;
-static const char* module_name[NUM_ITEMS] = {"Clock", "NonAsync", "Mqtt", "Cmd", "Btn", "Scen", "Udp", "Serial", "TS"};
+static const size_t NUM_ITEMS = 10;
+static const char* module_name[NUM_ITEMS] = {"Clock", "NonAsync", "Mqtt", "Cmd", "Btn", "Scen", "Udp", "Serial", "TS", "Looger"};
 
 class Metric {
    private:
