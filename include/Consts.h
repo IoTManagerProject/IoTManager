@@ -64,6 +64,14 @@ struct Time_t {
     unsigned long valid;
 };
 
+enum LoggerLog_t {
+    LL_LOG1,
+    LL_LOG2,
+    LL_LOG3,
+    LL_LOG4,
+    LL_LOG5
+};
+
 enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,
                    SENSORS,

@@ -20,8 +20,6 @@ void enable(size_t num, boolean enable = true);
 
 void ultrasonic_reading();
 
-void analog_reading1();
-void analog_reading2();
 
 void dhtC_reading();
 void dhtD_reading();

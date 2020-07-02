@@ -3,7 +3,9 @@
 #include "Global.h"
 
 namespace Logger {
-void deleteOldDate(const String filename, size_t max_lines_cnt, String payload);
+void deleteOldDataTask(LoggerLog_t log);
+size_t add(String name);
+void deleteOldData(const String filename, size_t max_lines_cnt, String payload);
 void init();
 void logging();
 void clear();

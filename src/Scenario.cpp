@@ -1,6 +1,9 @@
 #include "Scenario.h"
 
-#include "Global.h"
+#include "Cmd.h"
+#include "LiveData.h"
+#include "Utils/StringUtils.h"
+#include "Utils/FileUtils.h"
 
 static const char* MODULE = "Scen";
 
@@ -66,14 +69,14 @@ void process(EventQueue* queue) {
                 String value = selectFromMarkerToMarker(condition, " ", 2);      //читаем значение (1)
 
                 if (value.indexOf("digit") != -1) {
-                    value = readLiveData(value);
+                    value = LiveData::read(value);
                 }
                 if (value.indexOf("time") != -1) {
-                    value = readLiveData(value);
+                    value = LiveData::read(value);
                 }
 
                 boolean flag = false;
-                String param = readLiveData(obj);
+                String param = LiveData::read(obj);
                 if (operation == "=") {
                     flag = param == value;
                 } else if (operation == "!=") {

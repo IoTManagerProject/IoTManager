@@ -1,5 +1,6 @@
 #include "Global.h"
 
+#include "LiveData.h"
 #include "Objects/Pwms.h"
 
 #ifdef WS_enable
@@ -20,8 +21,6 @@ AsyncWebServer server(80);
 */
 // Json
 String runtimeJson = "{}";
-String liveJson = "{}";
-String optionJson = "{}";
 
 String prex = "";
 String all_widgets = "";
@@ -66,17 +65,6 @@ void save_runtime() {
     writeFile(DEVICE_RUNTIME_FILE, runtimeJson);
 }
 
-void fireEvent(String name) {
-    if (config.general()->isScenarioEnabled()) {
-        events.push(name);
-    }
-}
-
-// событие: имя + Set + номер
-void fireEvent(String name, String param) {
-    fireEvent(name + param);
-}
-
 const String readLiveData(const String& obj) {
     String res = "";
     if (obj.startsWith("pwm")) {
@@ -86,13 +74,7 @@ const String readLiveData(const String& obj) {
             res = String(item->getState());
         }
     } else {
-        pm.info("read live: " + obj);
-        res = jsonReadStr(liveJson, obj);
+        res = LiveData::read(obj);
     }
     return res;
-}
-
-const String writeLiveData(const String& obj, const String& value) {
-    pm.info("write live: " + obj + " " + value);
-    return jsonWriteStr(liveJson, obj, value);
 }

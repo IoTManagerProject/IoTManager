@@ -1,5 +1,8 @@
 #include "Cmd.h"
 
+#include "LiveData.h"
+#include "Events.h"
+#include "Options.h"
 #include "Logger.h"
 #include "Module/Terminal.h"
 #include "MqttClient.h"
@@ -22,8 +25,8 @@ HardwareSerial *mySerial = nullptr;
 
 void cmd_init() {
     myButtons.setOnChangeState([](Button_t *btn, uint8_t num) {
-        fireEvent("switch", String(num, DEC));
-        jsonWriteInt(liveJson, "switch" + String(num, DEC), btn->state);
+        Events::fire("switch", String(num, DEC));
+        LiveData::writeInt("switch" + String(num, DEC), btn->state);
     });
 
     sCmd.addCommand("button", cmd_button);
@@ -106,60 +109,16 @@ void cmd_logging() {
     String page_name = sCmd.next();
     String page_number = sCmd.next();
 
-    logging_value_names_list += value_name + ",";
-    //считаем количество входов в эту функцию
-    enter_to_logging_counter++;
+    size_t num = Logger::add(value_name);
+
     //создаем в файловой системе переменную количества точек на графике с отметкой _c что значит count
-    jsonWriteStr(optionJson, value_name + "_c", maxCount);
+    Options::write(value_name + "_c", maxCount);
 
     //создаем график в приложении с топиком _ch /prefix/3234045-1589487/value_name_ch
     createChart(widget_name, page_name, page_number, "chart", value_name + "_ch", maxCount);
 
-    if (enter_to_logging_counter == LOG1) {
-        ts.add(
-            LOG1, period_min.toInt() * 1000 * 60, [&](void *) {
-                String tmp_buf_1 = selectFromMarkerToMarker(logging_value_names_list, ",", 0);
-                Logger::deleteOldDate("log." + tmp_buf_1 + ".txt", jsonReadInt(optionJson, tmp_buf_1 + "_c"), jsonReadStr(liveJson, tmp_buf_1));
-                pm.info("logging for " + tmp_buf_1 + " done");
-            },
-            nullptr, false);
-    }
-    if (enter_to_logging_counter == LOG2) {
-        ts.add(
-            LOG2, period_min.toInt() * 1000 * 60, [&](void *) {
-                String tmp_buf_2 = selectFromMarkerToMarker(logging_value_names_list, ",", 1);
-                Logger::deleteOldDate("log." + tmp_buf_2 + ".txt", jsonReadInt(optionJson, tmp_buf_2 + "_c"), jsonReadStr(liveJson, tmp_buf_2));
-                pm.info("logging for " + tmp_buf_2 + " done");
-            },
-            nullptr, false);
-    }
-    if (enter_to_logging_counter == LOG3) {
-        ts.add(
-            LOG3, period_min.toInt() * 1000 * 60, [&](void *) {
-                String tmp_buf_3 = selectFromMarkerToMarker(logging_value_names_list, ",", 2);
-                Logger::deleteOldDate("log." + tmp_buf_3 + ".txt", jsonReadInt(optionJson, tmp_buf_3 + "_c"), jsonReadStr(liveJson, tmp_buf_3));
-                pm.info("logging for " + tmp_buf_3 + " done");
-            },
-            nullptr, false);
-    }
-    if (enter_to_logging_counter == LOG4) {
-        ts.add(
-            LOG4, period_min.toInt() * 1000 * 60, [&](void *) {
-                String tmp_buf_4 = selectFromMarkerToMarker(logging_value_names_list, ",", 3);
-                Logger::deleteOldDate("log." + tmp_buf_4 + ".txt", jsonReadInt(optionJson, tmp_buf_4 + "_c"), jsonReadStr(liveJson, tmp_buf_4));
-                pm.info("logging for " + tmp_buf_4 + " done");
-            },
-            nullptr, false);
-    }
-    if (enter_to_logging_counter == LOG5) {
-        ts.add(
-            LOG5, period_min.toInt() * 1000 * 60, [&](void *) {
-                String tmp_buf_5 = selectFromMarkerToMarker(logging_value_names_list, ",", 4);
-                Logger::deleteOldDate("log." + tmp_buf_5 + ".txt", jsonReadInt(optionJson, tmp_buf_5 + "_c"), jsonReadStr(liveJson, tmp_buf_5));
-                pm.info("logging for " + tmp_buf_5 + " done");
-            },
-            nullptr, false);
-    }
+    ts.add(
+        num, period_min.toInt() * 1000 * 60, [&](void *) { Logger::deleteOldDataTask(LoggerLog_t(num)); }, nullptr, false);
 }
 
 void cmd_button() {
@@ -170,7 +129,7 @@ void cmd_button() {
     String param = sCmd.next();
     String order = sCmd.next();
 
-    jsonWriteStr(liveJson, "button" + name, param);
+    LiveData::write("button" + name, param);
 
     if (isDigitStr(assign)) {
         myButtons.addButton(name, assign, param);
@@ -222,9 +181,9 @@ void cmd_buttonSet() {
         }
     }
 
-    fireEvent("button", name);
+    Events::fire("button", name);
 
-    jsonWriteStr(liveJson, "button" + name, state);
+    LiveData::write("button" + name, state);
 
     MqttClient::publishStatus("button" + name, state);
 }
@@ -238,11 +197,11 @@ void cmd_buttonChange() {
     }
     Button_t *btn = myButtons.get(name);
 
-    String stateStr = btn->toggle() ? "1" : "0";
+    String state = btn->toggle() ? "1" : "0";
 
-    jsonWriteStr(liveJson, "button" + name, stateStr);
+    LiveData::write("button" + name, state);
 
-    MqttClient::publishStatus("button" + name, stateStr);
+    MqttClient::publishStatus("button" + name, state);
 }
 
 void cmd_pinSet() {
@@ -282,7 +241,7 @@ void cmd_pwmSet() {
     String name = sCmd.next();
     String state = sCmd.next();
     myPwms.get(name)->setInt(state.toInt());
-    fireEvent("pwm", name);
+    Events::fire("pwm", name);
     // analogWrite(pin, state.toInt());
     // int pin = jsonReadInt(configOptionJson, "pwm_pin" + name);
     // jsonWriteStr(configLiveJson, "pwm" + name, state);
@@ -319,7 +278,7 @@ void cmd_inputDigit() {
     String start_state = sCmd.next();
     String page_number = sCmd.next();
 
-    jsonWriteStr(liveJson, "digit" + number, start_state);
+    LiveData::write("digit" + number, start_state);
     createWidget(widget_name, page_name, page_number, "inputNum", "digit" + number);
 }
 
@@ -327,7 +286,7 @@ void cmd_digitSet() {
     String number = sCmd.next();
     String value = sCmd.next();
 
-    jsonWriteStr(liveJson, "digit" + number, value);
+    LiveData::write("digit" + number, value);
     MqttClient::publishStatus("digit" + number, value);
 }
 
@@ -343,7 +302,7 @@ void cmd_inputTime() {
     String start_state = sCmd.next();
     String page_number = sCmd.next();
 
-    jsonWriteStr(liveJson, "time" + number, start_state);
+    LiveData::write("time" + number, start_state);
     createWidget(widget_name, page_name, page_number, "inputTime", "time" + number);
 }
 
@@ -351,7 +310,7 @@ void cmd_timeSet() {
     String number = sCmd.next();
     String value = sCmd.next();
 
-    jsonWriteStr(liveJson, "time" + number, value);
+    LiveData::write("time" + number, value);
     MqttClient::publishStatus("time" + number, value);
 }
 
@@ -375,7 +334,7 @@ void cmd_textSet() {
         text = text + " " + timeNow->getDateTimeDotFormated();
     }
 
-    jsonWriteStr(liveJson, "text" + number, text);
+    LiveData::write("text" + number, text);
     MqttClient::publishStatus("text" + number, text);
 }
 //=====================================================================================================================================
@@ -387,7 +346,7 @@ void cmd_stepper() {
     String pin_step = sCmd.next();
     String pin_dir = sCmd.next();
 
-    jsonWriteStr(optionJson, "stepper" + stepper_number, pin_step + " " + pin_dir);
+    LiveData::write("stepper" + stepper_number, pin_step + " " + pin_dir);
     pinMode(pin_step.toInt(), OUTPUT);
     pinMode(pin_dir.toInt(), OUTPUT);
 }
@@ -396,10 +355,10 @@ void cmd_stepper() {
 void cmd_stepperSet() {
     String stepper_number = sCmd.next();
     String steps = sCmd.next();
-    jsonWriteStr(optionJson, "steps" + stepper_number, steps);
+    Options::write("steps" + stepper_number, steps);
     String stepper_speed = sCmd.next();
-    String pin_step = selectToMarker(jsonReadStr(optionJson, "stepper" + stepper_number), " ");
-    String pin_dir = deleteBeforeDelimiter(jsonReadStr(optionJson, "stepper" + stepper_number), " ");
+    String pin_step = selectToMarker(Options::read("stepper" + stepper_number), " ");
+    String pin_dir = deleteBeforeDelimiter(Options::read("stepper" + stepper_number), " ");
     Serial.println(pin_step);
     Serial.println(pin_dir);
     if (steps.toInt() > 0) digitalWrite(pin_dir.toInt(), HIGH);
@@ -407,10 +366,10 @@ void cmd_stepperSet() {
     if (stepper_number == "1") {
         ts.add(
             STEPPER1, stepper_speed.toInt(), [&](void *) {
-                int steps_int = abs(jsonReadInt(optionJson, "steps1") * 2);
+                int steps_int = abs(Options::readInt("steps1") * 2);
                 static int count;
                 count++;
-                String pin_step = selectToMarker(jsonReadStr(optionJson, "stepper1"), " ");
+                String pin_step = selectToMarker(Options::read("stepper1"), " ");
                 digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
                 yield();
                 if (count > steps_int) {
@@ -424,10 +383,10 @@ void cmd_stepperSet() {
     if (stepper_number == "2") {
         ts.add(
             STEPPER2, stepper_speed.toInt(), [&](void *) {
-                int steps_int = abs(jsonReadInt(optionJson, "steps2") * 2);
+                int steps_int = abs(Options::readInt("steps2") * 2);
                 static int count;
                 count++;
-                String pin_step = selectToMarker(jsonReadStr(optionJson, "stepper2"), " ");
+                String pin_step = selectToMarker(Options::read("stepper2"), " ");
                 digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
                 yield();
                 if (count > steps_int) {
@@ -456,19 +415,19 @@ void cmd_servo() {
 
     String pageNumber = sCmd.next();
 
-    jsonWriteStr(optionJson, "servo_pin" + number, String(pin, DEC));
+    Options::write("servo_pin" + number, String(pin, DEC));
 
     value = map(value, min_value, max_value, min_deg, max_deg);
 
     Servo *servo = myServo.create(number.toInt(), pin);
     servo->write(value);
 
-    jsonWriteInt(optionJson, "s_min_val" + number, min_value);
-    jsonWriteInt(optionJson, "s_max_val" + number, max_value);
-    jsonWriteInt(optionJson, "s_min_deg" + number, min_deg);
-    jsonWriteInt(optionJson, "s_max_deg" + number, max_deg);
+    Options::writeInt("s_min_val" + number, min_value);
+    Options::writeInt("s_max_val" + number, max_value);
+    Options::writeInt("s_min_deg" + number, min_deg);
+    Options::writeInt("s_max_deg" + number, max_deg);
 
-    jsonWriteInt(liveJson, "servo" + number, value);
+    LiveData::writeInt("servo" + number, value);
 
     createWidget(widget, page, pageNumber, "range", "servo" + number, "min", String(min_value), "max", String(max_value), "k", "1");
 }
@@ -478,18 +437,18 @@ void cmd_servoSet() {
     int value = String(sCmd.next()).toInt();
 
     value = map(value,
-                jsonReadInt(optionJson, "s_min_val" + number),
-                jsonReadInt(optionJson, "s_max_val" + number),
-                jsonReadInt(optionJson, "s_min_deg" + number),
-                jsonReadInt(optionJson, "s_max_deg" + number));
+                Options::readInt("s_min_val" + number),
+                Options::readInt("s_max_val" + number),
+                Options::readInt("s_min_deg" + number),
+                Options::readInt("s_max_deg" + number));
 
     Servo *servo = myServo.get(number.toInt());
     if (servo) {
         servo->write(value);
     }
 
-    fireEvent("servo", number);
-    jsonWriteInt(liveJson, "servo" + number, value);
+    Events::fire("servo", number);
+    LiveData::writeInt("servo" + number, value);
     MqttClient::publishStatus("servo" + number, String(value, DEC));
 }
 
@@ -523,7 +482,7 @@ void cmd_serialBegin() {
 
 void cmd_getData() {
     String param = sCmd.next();
-    String res = param.length() ? jsonReadStr(liveJson, param) : liveJson;
+    String res = param.isEmpty() ? LiveData::get() : LiveData::read(param);
     if (term) {
         term->println(res.c_str());
     }
@@ -566,8 +525,8 @@ void cmd_ultrasonicCm() {
 
     ultrasonicCm_value_name = measure_unit;
 
-    jsonWriteStr(optionJson, "trig", trig);
-    jsonWriteStr(optionJson, "echo", echo);
+    Options::write("trig", trig);
+    Options::write("echo", echo);
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
 
@@ -621,10 +580,10 @@ void cmd_levelPr() {
     String full_level = sCmd.next();
     String page_number = sCmd.next();
     levelPr_value_name = value_name;
-    jsonWriteStr(optionJson, "e_lev", empty_level);
-    jsonWriteStr(optionJson, "f_lev", full_level);
-    jsonWriteStr(optionJson, "trig", trig);
-    jsonWriteStr(optionJson, "echo", echo);
+    Options::write("e_lev", empty_level);
+    Options::write("f_lev", full_level);
+    Options::write("trig", trig);
+    Options::write("echo", echo);
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
     createWidget(widget_name, page_name, page_number, type, value_name);
@@ -722,10 +681,10 @@ void cmd_analog() {
     String page_number = sCmd.next();
     analog_value_names_list += value_name + ",";
     enter_to_analog_counter++;
-    jsonWriteStr(optionJson, value_name + "_st", analog_start);
-    jsonWriteStr(optionJson, value_name + "_end", analog_end);
-    jsonWriteStr(optionJson, value_name + "_st_out", analog_start_out);
-    jsonWriteStr(optionJson, value_name + "_end_out", analog_end_out);
+    Options::write(value_name + "_st", analog_start);
+    Options::write(value_name + "_end", analog_end);
+    Options::write(value_name + "_st_out", analog_start_out);
+    Options::write(value_name + "_end_out", analog_end_out);
 
     createWidget(widget_name, page_name, page_number, type, value_name);
 
@@ -869,7 +828,7 @@ void cmd_firmwareVersion() {
     String page = sCmd.next();
     String pageNumber = sCmd.next();
 
-    jsonWriteStr(liveJson, "firmver", FIRMWARE_VERSION);
+    LiveData::write("firmver", FIRMWARE_VERSION);
     createWidget(widget, page, pageNumber, "anydata", "firmver");
 }
 

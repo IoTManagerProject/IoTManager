@@ -50,19 +50,9 @@ extern boolean just_load;
 // данные среды выполнения
 extern String runtimeJson;
 
-// все данные с датчиков
-extern String liveJson;
-
-// для трансфера
-extern String optionJson;
-
-extern String chipId;
 extern String prex;
 extern String all_widgets;
 extern String order_loop;
-
-extern String logging_value_names_list;
-extern int enter_to_logging_counter;
 
 extern String lastVersion;
 
@@ -70,12 +60,6 @@ extern boolean perform_updates_check_flag;
 extern boolean perform_upgrade_flag;
 extern boolean mqtt_restart_flag;
 extern boolean udp_data_parse;
-
-extern void fireEvent(String name);
-extern void fireEvent(String name, String param);
-
-extern const String readLiveData(const String& obj);
-extern const String writeLiveData(const String& obj, const String& value);
 
 /*
 * Запрос на проверку обновлений
@@ -125,7 +109,6 @@ extern void setRuntimeParam(const char* param, const char* value);
 extern void setLedStatus(LedStatus_t);
 
 //Scenario
-extern void fireEvent(String event_name, String number);
 extern String add_set(String param_name);
 
 //Timers
@@ -135,8 +118,6 @@ extern void addTimer(String number, String time);
 extern void timerStop_();
 extern void delTimer(String number);
 extern int readTimer(int number);
-
-extern void update_init();
 
 // Widget
 extern void createWidget(String widget_name, String page_name, String page_number, String file, String topic, String name1 = "", String param1 = "", String name2 = "", String param2 = "", String name3 = "", String param3 = "");
@@ -152,11 +133,11 @@ extern void loopCmd();
 extern void loop_button();
 extern void loop_scenario();
 
-extern void do_update();
-
 // Init
 extern void uptime_task_init();
 
 extern void config_init();
 extern void web_init();
 extern void telemetry_init();
+
+extern int readOptionInt(const String& name);

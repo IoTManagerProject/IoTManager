@@ -1,5 +1,7 @@
 #include "Logger.h"
 
+#include "Options.h"
+#include "LiveData.h"
 #include "MqttClient.h"
 
 //
@@ -7,21 +9,38 @@
 
 // Logging
 String logging_value_names_list;
-int enter_to_logging_counter;
+size_t enter_to_logging_counter;
 
 static const char* MODULE = "Log";
 
 namespace Logger {
 
+size_t add(String name) {
+    logging_value_names_list += name + ",";
+    //считаем количество
+    enter_to_logging_counter++;
+    return enter_to_logging_counter;
+}
 void init() {
     logging_value_names_list = "";
     enter_to_logging_counter = LOG1 - 1;
 }
 
+const String getLogFilename(String name) {
+    return "log." + name + ".txt";
+}
+
+void deleteOldDataTask(LoggerLog_t log) {
+    String name = selectFromMarkerToMarker(logging_value_names_list, ",", log);
+    pm.info("task: " + name);
+    int lines = Options::readInt(name + "_c");
+    String value = LiveData::read(name);
+    deleteOldData(getLogFilename(name), lines, value);
+}
 /*
 * Удаление стрых данных и запись новых
 */
-void deleteOldDate(const String filename, size_t max_lines_cnt, String payload) {
+void deleteOldData(const String filename, size_t max_lines_cnt, String payload) {
     String buf;
     if (!readFile(filename.c_str(), buf, 5120)) {
         return;
@@ -51,6 +70,7 @@ void deleteOldDate(const String filename, size_t max_lines_cnt, String payload) 
 void sendLogData(String file, String topic) {
     String data;
     if (!readFile(file.c_str(), data, 5120)) {
+        pm.error("read " + file);
         return;
     }
     data.replace("\r\n", "\n");

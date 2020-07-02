@@ -1,8 +1,11 @@
 #include "HttpServer.h"
 
+#include "Options.h"
+#include "Runtime.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
 #include "FSEditor.h"
+#include "LiveData.h"
 
 namespace HttpServer {
 
@@ -45,12 +48,12 @@ void init() {
 
     // динамические данные
     server.on("/live.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", liveJson);
+        request->send(200, "application/json", LiveData::get());
     });
 
     // данные не являющиеся событиями
     server.on("/option.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", optionJson);
+        request->send(200, "application/json", Options::get());
     });
 
     // для данных среды выполнения

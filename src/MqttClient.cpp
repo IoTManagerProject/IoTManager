@@ -3,6 +3,7 @@
 #include <PubSubClient.h>
 #include <WiFiClient.h>
 #include "Logger.h"
+#include "LiveData.h"
 
 #include "Global.h"
 
@@ -211,7 +212,7 @@ void publishState() {
     // {"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
-    String str = liveJson;
+    String str = LiveData::get();
     str.replace("{", "");
     str.replace("}", "");
     str += ",";

@@ -1,7 +1,7 @@
 #include "WiFiManager.h"
 
 #include "Global.h"
-
+#include "Options.h"
 #include "MqttClient.h"
 
 static const char* MODULE = "WiFi";
@@ -52,7 +52,7 @@ void startSTAMode() {
             case WL_CONNECT_FAILED: {
                 pm.error("check credentials");
 
-                jsonWriteInt(optionJson, "pass_status", 1);
+                Options::writeInt("pass_status", 1);
 
                 keepConnecting = false;
             } break;

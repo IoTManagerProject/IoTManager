@@ -16,10 +16,12 @@ class BusScanner {
         } while (!res && --_tries);
 
         if (!_found) {
-            _res = "не найдено";
+            out = "не найдено";
         }
-        
-        jsonWriteStr(out, _tag, _res);
+    }
+
+    String getTag() {
+        return _tag;
     }
 
    protected:

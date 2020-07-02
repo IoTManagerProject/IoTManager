@@ -1,7 +1,11 @@
 #include "Global.h"
 
+#include "Options.h"
+#include "LiveData.h"
+#include "Events.h"
+
 void timer_countdown() {
-    String timers = jsonReadStr(optionJson, "timers");
+    String timers = Options::read("timers");
     if (timers.isEmpty()) {
         return;
     }
@@ -18,8 +22,8 @@ void timer_countdown() {
         int time = readTimer(number);
         if (time == 0) {
             delTimer(String(number));
-            jsonWriteStr(liveJson, "timer" + String(number), "0");
-            fireEvent("timer", String(number));
+            LiveData::write("timer" + String(number), "0");
+            Events::fire("timer", String(number));
         } else {
             time--;
             addTimer(String(number), String(time));
@@ -38,21 +42,20 @@ void timer_countdown_init() {
 
 void timerStart_() {
     String number = sCmd.next();
-    String period_of_time = sCmd.next();
+    String period = sCmd.next();
     String type = sCmd.next();
-    if (period_of_time.indexOf("digit") != -1) {
-        //period_of_time = add_set(period_of_time);
-        period_of_time = jsonReadStr(liveJson, period_of_time);
+    if (period.indexOf("digit") != -1) {
+        period = LiveData::read(period);
     }
-    if (type == "sec") period_of_time = period_of_time;
-    if (type == "min") period_of_time = String(period_of_time.toInt() * 60);
-    if (type == "hours") period_of_time = String(period_of_time.toInt() * 60 * 60);
-    addTimer(number, period_of_time);
-    jsonWriteStr(liveJson, "timer" + number, "1");
+    if (type == "sec") period = period;
+    if (type == "min") period = String(period.toInt() * 60);
+    if (type == "hours") period = String(period.toInt() * 60 * 60);
+    addTimer(number, period);
+    LiveData::write("timer" + number, "1");
 }
 
 void addTimer(String number, String time) {
-    String tmp = jsonReadStr(optionJson, "timers");  //1:60,2:120,
+    String tmp = Options::read("timers");  //1:60,2:120,
     String new_timer = number + ":" + time;
     int psn1 = tmp.indexOf(number + ":");          //0  ищем позицию таймера который надо заменить
     if (psn1 != -1) {                              //если он есть
@@ -64,8 +67,7 @@ void addTimer(String number, String time) {
     } else {  //если его нет
         tmp += new_timer + ",";
     }
-    jsonWriteStr(optionJson, "timers", tmp);
-    //Serial.println("ura");
+    Options::write("timers", tmp);
 }
 
 void timerStop_() {
@@ -74,19 +76,19 @@ void timerStop_() {
 }
 
 void delTimer(String number) {
-    String tmp = jsonReadStr(optionJson, "timers");      //1:60,2:120,
+    String tmp = Options::read("timers");                //1:60,2:120,
     int psn1 = tmp.indexOf(number + ":");                //0  ищем позицию таймера который надо удалить
     if (psn1 != -1) {                                    //если он есть
         int psn2 = tmp.indexOf(",", psn1);               //4    от этой позиции находим позицию запятой
         String timer = tmp.substring(psn1, psn2) + ",";  //1:60,  выделяем таймер который надо удалить
         tmp.replace(timer, "");                          //удаляем таймер
-        jsonWriteStr(optionJson, "timers", tmp);
+        Options::write("timers", tmp);
     }
 }
 
 int readTimer(int number) {
-    String tmp = jsonReadStr(optionJson, "timers");  //1:60,2:120,
-    int psn1 = tmp.indexOf(String(number) + ":");    //0  ищем позицию таймера который надо прочитать
+    String tmp = Options::read("timers");          //1:60,2:120,
+    int psn1 = tmp.indexOf(String(number) + ":");  //0  ищем позицию таймера который надо прочитать
     String timer;
     if (psn1 != -1) {                       //если он есть
         int psn2 = tmp.indexOf(",", psn1);  //4    от этой позиции находим позицию запятой

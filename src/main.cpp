@@ -1,5 +1,8 @@
 #include "Global.h"
 
+#include "Runtime.h"
+#include "Events.h"
+#include "LiveData.h"
 #include "Broadcast.h"
 #include "MqttClient.h"
 #include "HttpServer.h"
@@ -163,7 +166,9 @@ void async_actions() {
                 bus = nullptr;
         }
         if (bus) {
-            bus->scan(liveJson);
+            String buf;
+            bus->scan(buf);
+            LiveData::write(bus->getTag(), buf);
         }
         perform_bus_scanning_flag = false;
     }
@@ -244,9 +249,9 @@ void clock_init() {
 
     ts.add(
         TIME, 1000, [&](void*) {
-            jsonWriteStr(runtimeJson, "time", timeNow->getTime());
-            jsonWriteStr(runtimeJson, "timenow", timeNow->getTimeJson());
-            fireEvent("timenow", "");
+            Runtime::write("time", timeNow->getTime());
+            Runtime::write("timenow", timeNow->getTimeJson());
+            Events::fire("timenow");
         },
         nullptr, true);
 }

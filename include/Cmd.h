@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Arduino.h"
+
+extern void stringExecute(String &cmdStr);
+
 void cmd_pinSet();
 void cmd_pinChange();
 void cmd_pwm();
