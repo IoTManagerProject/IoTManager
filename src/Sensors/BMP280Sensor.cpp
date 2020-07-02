@@ -18,10 +18,10 @@ void bmp280T_reading() {
     sensors_event_t temp_event;
     bmp_temp->getEvent(&temp_event);
     value = temp_event.temperature;
-    liveData.write(bmp280T_value_name, String(value));
+
+    liveData.writeFloat(bmp280T_value_name, value);
     Events::fire(bmp280T_value_name);
     MqttClient::publishStatus(bmp280T_value_name, String(value));
-    Serial.println("[I] sensor '" + bmp280T_value_name + "' data: " + String(value));
 }
 
 void bmp280P_reading() {
@@ -30,9 +30,9 @@ void bmp280P_reading() {
     bmp_pressure->getEvent(&pressure_event);
     value = pressure_event.pressure;
     value = value / 1.333224;
-    liveData.write(bmp280P_value_name, String(value));
+
+    liveData.writeFloat(bmp280P_value_name, value);
     Events::fire(bmp280P_value_name);
     MqttClient::publishStatus(bmp280P_value_name, String(value));
-    Serial.println("[I] sensor '" + bmp280P_value_name + "' data: " + String(value));
 }
 }  // namespace BMP280Sensor

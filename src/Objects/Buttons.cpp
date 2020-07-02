@@ -3,39 +3,31 @@
 #include "Utils/PrintMessage.h"
 #include <functional>
 
-static const char *MODULE = "button";
+static const char* MODULE = "button";
 
 Buttons myButtons;
 
-Buttons::Buttons(){};
-
-Button_t *Buttons::addSwitch(String name, String assign, String param) {
-    pm.info("name:\"" + name + "\", pin:" + assign + ", debounce:" + param);
-    _items.push_back(Button_t{BUTTON_SWITCH, name, assign, param});
+Button* Buttons::add(String name, String assign, String value) {
+    pm.info("name:\"" + name + "\", pin:" + assign + ", state:" + value);
+    _items.push_back(Button{name, assign, value});
     return last();
 }
 
-Button_t *Buttons::addButton(String name, String assign, String param) {
-    pm.info("name:\"" + name + "\", pin:" + assign + ", state:" + param);
-    _items.push_back(Button_t{BUTTON_PINNED, name, assign, param});
-    return last();
-}
-
-Button_t *Buttons::last() {
+Button* Buttons::last() {
     return &_items.at(_items.size() - 1);
 }
 
-Button_t *Buttons::get(const String name) {
+Button* Buttons::get(const String name) {
     for (size_t i = 0; i < _items.size(); i++) {
-        auto item = _items.at(i);
-        if (item.name == name) {
+        auto* item = &_items.at(i);
+        if (name.equals(item->getName())) {
             return &_items.at(i);
         }
     }
     return nullptr;
 }
 
-Button_t *Buttons::at(size_t num) {
+Button* Buttons::at(size_t num) {
     return &_items.at(num);
 }
 
@@ -45,13 +37,13 @@ size_t Buttons::count() {
 
 void Buttons::loop() {
     for (size_t i = 0; i < _items.size(); i++) {
-        Button_t *btn = &_items.at(i);
+        Button* btn = &_items.at(i);
         if (btn->update()) {
-            onChangeState(btn, i);
+            _onChange(btn, i);
         }
     }
 }
 
 void Buttons::setOnChangeState(OnButtonChangeState h) {
-    onChangeState = h;
+    _onChange = h;
 }

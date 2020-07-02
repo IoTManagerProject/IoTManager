@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 #include "Module/Terminal.h"
-#include "Module/CircularBuffer.h"
+#include "Base/CircularBuffer.h"
 #include "Module/Runner.h"
 
 class CommandShell {

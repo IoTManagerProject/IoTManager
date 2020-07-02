@@ -92,7 +92,9 @@ class Clock {
         }
         return epoch;
     }
-
+    const unsigned long getEpoch() {
+        return _unixtime;
+    }
     const String getTimeUnix() {
         return String(_unixtime);
     }

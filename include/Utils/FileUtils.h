@@ -18,12 +18,14 @@
 * Инициализация ФС
 */
 bool fileSystemInit();
-
+/*
+* Существование файла
+*/
+bool fileExists(const char* filename);
 /*
 * Удалить файл
 */
-void removeFile(const String filename);
-
+bool removeFile(const String filename, bool fail_if_not_exists = false);
 /*
 * Открыть файл на позиции
 */

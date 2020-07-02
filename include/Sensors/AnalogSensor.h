@@ -3,10 +3,6 @@
 #include <Arduino.h>
 
 namespace AnalogSensor {
-
-void add(String name);
-
-void analog_reading1();
-void analog_reading2();
-
-}
+void add(const String& name, const String& pin, const String& min_value, const String& max_value, const String& min_deg, const String& max_deg);
+void loop();
+}  // namespace AnalogSensor

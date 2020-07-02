@@ -3,9 +3,11 @@
 #include "Events.h"
 #include "Logger.h"
 #include "Module/Terminal.h"
+#include "Module/Telnet.h"
 #include "MqttClient.h"
 #include "WebClient.h"
 #include "Sensors.h"
+#include "Sensors/AnalogSensor.h"
 #include "Objects/Buttons.h"
 #include "Objects/PwmItems.h"
 #include "Objects/ServoItems.h"
@@ -14,6 +16,7 @@
 static const char *MODULE = "Cmd";
 
 Terminal *term = nullptr;
+Telnet *telnet = nullptr;
 
 #ifdef ESP8266
 SoftwareSerial *mySerial = nullptr;
@@ -22,9 +25,9 @@ HardwareSerial *mySerial = nullptr;
 #endif
 
 void cmd_init() {
-    myButtons.setOnChangeState([](Button_t *btn, uint8_t num) {
+    myButtons.setOnChangeState([](Button *btn, uint8_t num) {
         Events::fire("switch", String(num, DEC));
-        liveData.writeInt("switch" + String(num, DEC), btn->state);
+        liveData.writeInt("switch" + String(num, DEC), btn->getState());
     });
 
     sCmd.addCommand("button", cmd_button);
@@ -94,6 +97,8 @@ void cmd_init() {
 
     sCmd.addCommand("firmwareUpdate", cmd_firmwareUpdate);
     sCmd.addCommand("firmwareVersion", cmd_firmwareVersion);
+
+    sCmd.addCommand("telnet", cmd_telnet);
 }
 
 //===============================================Логирование============================================================
@@ -114,18 +119,15 @@ void cmd_logging() {
 void cmd_button() {
     String name = sCmd.next();
     String assign = sCmd.next();
-    String description = sCmd.next();
+    String descr = sCmd.next();
     String page = sCmd.next();
-    String param = sCmd.next();
+    String state = sCmd.next();
     String order = sCmd.next();
 
-    liveData.write("button" + name, param);
+    myButtons.add(name, assign, state);
 
-    if (isDigitStr(assign)) {
-        myButtons.addButton(name, assign, param);
-    }
     if (assign == "scen") {
-        config.general()->enableScenario(param.toInt());
+        config.general()->enableScenario(state.toInt());
     } else if (assign.startsWith("line")) {
         String str = assign;
         while (str.length()) {
@@ -139,35 +141,32 @@ void cmd_button() {
             number.replace(",", "");
             int number_int = number.toInt();
 
-            Scenario::enableBlock(number_int, param);
+            Scenario::enableBlock(number_int, state);
 
             str = deleteBeforeDelimiter(str, ",");
         }
+        createWidget(descr, page, order, "toggle", "button" + name);
     }
-
-    createWidget(description, page, order, "toggle", "button" + name);
+    liveData.write("button" + name, state);
 }
-
 void cmd_buttonSet() {
     String name = sCmd.next();
     String state = sCmd.next();
 
-    Button_t *btn = myButtons.get(name);
+    Button *btn = myButtons.get(name);
+    String assign = btn->assigned();
 
-    if (isDigitStr(btn->assign)) {
-        btn->set(state.toInt());
-    } else if (btn->assign == "scen") {
+    if (isDigitStr(assign)) {
+        btn->setState(state.toInt());
+    } else if (assign == "scen") {
         config.general()->enableScenario(state.toInt());
-    } else if (btn->assign.startsWith("line")) {
-        String str = btn->assign;
-        while (str.length() != 0) {
-            String tmp = selectToMarker(str, ",");            //line1,
+    } else if (assign.startsWith("line")) {
+        while (assign.length() != 0) {
+            String tmp = selectToMarker(assign, ",");         //line1,
             String number = deleteBeforeDelimiter(tmp, "e");  //1,
             number.replace(",", "");
-
             Scenario::enableBlock(number.toInt(), state.toInt());
-
-            str = deleteBeforeDelimiter(str, ",");
+            assign = deleteBeforeDelimiter(assign, ",");
         }
     }
 
@@ -185,13 +184,12 @@ void cmd_buttonChange() {
         pm.error("wrong button " + name);
         return;
     }
-    Button_t *btn = myButtons.get(name);
 
-    String state = btn->toggle() ? "1" : "0";
+    Button *btn = myButtons.get(name);
+    btn->toggleState();
 
-    liveData.write("button" + name, state);
-
-    MqttClient::publishStatus("button" + name, state);
+    liveData.write("button" + name, String(btn->getState(), DEC));
+    MqttClient::publishStatus("button" + name, String(btn->getState(), DEC));
 }
 
 void cmd_pinSet() {
@@ -245,12 +243,15 @@ void cmd_switch() {
     String assign = sCmd.next();
     String debounce = sCmd.next();
 
-    myButtons.addSwitch(name, assign, debounce);
+    myButtons.add(name, assign, debounce);
 }
 
 void loop_serial() {
     if (term) {
         term->loop();
+    }
+    if (telnet) {
+        telnet->loop();
     }
 }
 
@@ -391,8 +392,8 @@ void cmd_stepperSet() {
     }
 }
 
-//servo 1 13 50 Мой#сервопривод Сервоприводы 0 100 0 180 2
 void cmd_servo() {
+    //servo 1 13 50 Cервопривод Сервоприводы 0 100 0 180 2
     String name = sCmd.next();
     String pin = sCmd.next();
     String value = sCmd.next();
@@ -425,15 +426,12 @@ void cmd_servoSet() {
     String name = sCmd.next();
     int value = String(sCmd.next()).toInt();
 
-    value = map(value,
-                options.readInt("s_min_val" + name),
-                options.readInt("s_max_val" + name),
-                options.readInt("s_min_deg" + name),
-                options.readInt("s_max_deg" + name));
-
-    myServo.get(name);
-    // if (servo) { servo->write(value);}
-
+    BaseServo *servo = myServo.get(name);
+    if (servo) {
+        servo->setState(value);
+    } else {
+        pm.error("servo: " + name + " not found");
+    }
     Events::fire("servo", name);
     liveData.writeInt("servo" + name, value);
     MqttClient::publishStatus("servo" + name, String(value, DEC));
@@ -671,14 +669,14 @@ void cmd_analog() {
 
     String order = sCmd.next();
 
-    options.write(name + "_st", analog_start);
-    options.write(name + "_end", analog_end);
-    options.write(name + "_st_out", analog_start_out);
-    options.write(name + "_end_out", analog_end_out);
+    // options.write(name + "_st", analog_start);
+    // options.write(name + "_end", analog_end);
+    // options.write(name + "_st_out", analog_start_out);
+    // options.write(name + "_end_out", analog_end_out);
+
+    AnalogSensor::add(name, pin, analog_start, analog_end, analog_start_out, analog_end_out);
 
     createWidget(descr, page, order, type, name);
-
-    AnalogSensor::add(name);
 }
 
 // bmp280T temp1 0x76 Температура#bmp280 Датчики any-data 1
@@ -836,6 +834,25 @@ void cmd_timerStop() {
     delTimer(number);
 }
 
+void cmd_telnet() {
+    bool enabled = String(sCmd.next()).toInt();
+    uint16_t port = String(sCmd.next()).toInt();
+    if (!telnet) {
+        telnet = new Telnet(port);
+    }
+    if (enabled) {
+        pm.info("telnet: enabled");
+        telnet->init();
+        telnet->start();
+        telnet->setOutput(&Serial);
+        telnet->setCommandShell(new CommandShell(new CmdRunner()));
+    } else {
+        pm.info("telnet: disabled");
+        telnet->stop();
+        telnet->end();
+    }
+}
+
 void addCommandLoop(const String &cmdStr) {
     order_loop += cmdStr;
     if (!cmdStr.endsWith(",")) {
@@ -862,7 +879,7 @@ void stringExecute(String &cmdStr) {
     }
 }
 
-void loopCmd() {
+void loop_cmd() {
     if (order_loop.length()) {
         //выделяем первую команду rel 5 1,
         String block = selectToMarker(order_loop, ",");

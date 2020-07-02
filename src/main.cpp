@@ -91,7 +91,7 @@ void loop() {
     MqttClient::loop();
     m.add(LI_MQTT_CLIENT);
 
-    loopCmd();
+    loop_cmd();
     m.add(LI_CMD);
 
     loop_button();
@@ -108,6 +108,7 @@ void loop() {
     }
 
     loop_serial();
+
     m.add(LI_SERIAL);
 
     ts.update();
@@ -279,7 +280,6 @@ void setup() {
 
     pm.info(String("FS"));
     fileSystemInit();
-    ;
     config_init();
 
     pm.info(String("Clock"));
@@ -312,20 +312,17 @@ void setup() {
     pm.info("Broadcast");
     Broadcast::init();
 
-    ts.add(
-        SYS_STAT, 1000 * 60, [&](void*) {
-            pm.info(getMemoryStatus());
-            pm.info("Loop: ");
-            m.print(Serial);
-
-            pm.info("Tickets: ");
-            ts.printMetric(Serial);
-
-            m.reset();
-            ts.resetMetric();
-        },
-        nullptr, false);
+    // ts.add(
+    // SYS_STAT, 1000 * 60, [&](void*) { print_sys_stat }, nullptr, false);
 
     just_load = false;
     initialized = true;
+}
+
+void print_sys_stat() {
+    pm.info(getMemoryStatus());
+    m.print(Serial);
+    ts.printMetric(Serial);
+    m.reset();
+    ts.resetMetric();
 }

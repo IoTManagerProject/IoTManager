@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-template <typename T, size_t BUFFER_SIZE>
+template <typename T, size_t S>
 class CircularBuffer {
    public:
     CircularBuffer() : _head{0}, _tail{0}, _full{false} {}
@@ -25,11 +25,11 @@ class CircularBuffer {
         size_t res = 0;
         if (!_full) {
             if (_head < _tail)
-                res = BUFFER_SIZE + _head - _tail;
+                res = S + _head - _tail;
             else
                 res = _head - _tail;
         } else {
-            res = BUFFER_SIZE;
+            res = S;
         }
         return res;
     }
@@ -37,11 +37,11 @@ class CircularBuffer {
     void push(const T &item) {
         if (_full) {
             _tail++;
-            if (_tail == BUFFER_SIZE)
+            if (_tail == S)
                 _tail = 0;
         }
         _pool[_head++] = item;
-        if (_head == BUFFER_SIZE)
+        if (_head == S)
             _head = 0;
         if (_head == _tail)
             _full = true;
@@ -51,7 +51,7 @@ class CircularBuffer {
         bool res = false;
         if (!empty()) {
             item = _pool[_tail++];
-            if (_tail == BUFFER_SIZE) _tail = 0;
+            if (_tail == S) _tail = 0;
             _full = false;
             res = true;
         }
@@ -79,7 +79,7 @@ class CircularBuffer {
     }
 
    private:
-    T _pool[BUFFER_SIZE];
+    T _pool[S];
     size_t _head;
     size_t _tail;
     bool _full;

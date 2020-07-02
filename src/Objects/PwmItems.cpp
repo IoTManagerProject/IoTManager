@@ -21,7 +21,7 @@ Pwm *Pwms::last() {
 Pwm *Pwms::get(const String name) {
     for (size_t i = 0; i < _items.size(); i++) {
         auto *item = &_items.at(i);
-        if (name.equalsIgnoreCase(item->name())) {
+        if (name.equalsIgnoreCase(item->getName())) {
             return item;
         }
     }

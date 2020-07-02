@@ -48,6 +48,8 @@ const String getHeapStats() {
     buf += " ";
     buf += frag;
     buf += '%';
+    buf += " ";
+    buf += ESP.getMaxFreeBlockSize();
     return buf;
 }
 #else

@@ -2,7 +2,7 @@
 
 #include "Utils/PrintMessage.h"
 
-const static char *MODULE = "Sensor";
+const static char *MODULE = "Sensors";
 
 namespace Sensors {
 
@@ -19,12 +19,10 @@ void enable(size_t num, boolean value) {
 }
 
 void process() {
+    AnalogSensor::loop();
+
     if (sensor_enabled[0])
         Ultrasonic::ultrasonic_reading();
-    if (sensor_enabled[1])
-        AnalogSensor::analog_reading1();
-    if (sensor_enabled[2])
-        AnalogSensor::analog_reading2();
     if (sensor_enabled[3])
         Dallas::dallas_reading();
     if (sensor_enabled[4])

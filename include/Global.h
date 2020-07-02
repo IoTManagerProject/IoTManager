@@ -128,10 +128,12 @@ extern void clearWidgets();
 extern void pushControl();
 
 extern void addCommandLoop(const String& cmdStr);
+
 extern void loop_serial();
-extern void loopCmd();
+extern void loop_cmd();
 extern void loop_button();
 extern void loop_scenario();
+
 
 // Init
 extern void uptime_task_init();

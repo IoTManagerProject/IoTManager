@@ -1,57 +1,29 @@
 #include "Sensors/AnalogSensor.h"
 
-#include "Global.h"
 #include "MqttClient.h"
 #include "Events.h"
+#include "Objects/AnalogSensorItem.h"
+
+#include "Utils/PrintMessage.h"
 
 static const char* MODULE = "AnalogSensor";
 
 namespace AnalogSensor {
 
-String _list = "";
-size_t _count = 0;
+std::vector<AnalogSensorItem> _items;
 
-void add(String name) {
-    _list += name + ",";
-    _count++;
-    Sensors::enable(_count);
+void loop() {
+    for (size_t i = 0; i < _items.size(); i++) {
+        AnalogSensorItem* item = &_items.at(i);
+        int value = item->read();
+        MqttClient::publishStatus(item->getName(), String(value));
+        Events::fire(item->getName());
+    }
 }
 
-void analog_reading1() {
-    String name = selectFromMarkerToMarker(_list, ",", 0);
-#ifdef ESP32
-    int analog_in = analogRead(34);
-#endif
-#ifdef ESP8266
-    int raw = analogRead(A0);
-#endif
-    int value = map(raw,
-                    options.readInt(name + "_st"),
-                    options.readInt(name + "_end"),
-                    options.readInt(name + "_st_out"),
-                    options.readInt(name + "_end_out"));
-    pm.info("name: " + name + ", raw:" + String(raw, DEC) + ", value: " + String(value, DEC));
-    liveData.writeInt(name, value);
-    Events::fire(name);
-    MqttClient::publishStatus(name, String(value));
+void add(const String& name, const String& pin, const String& min_value, const String& max_value, const String& min_deg, const String& max_deg) {
+    _items.push_back(AnalogSensorItem(name, pin, new ValueMapper(min_value.toInt(), max_value.toInt(), min_deg.toInt(), max_deg.toInt())));
+    pm.info("name: " + name + ", pin: " + pin);
 }
 
-void analog_reading2() {
-    String name = selectFromMarkerToMarker(_list, ",", 1);
-#ifdef ESP32
-    int raw = analogRead(35);
-#endif
-#ifdef ESP8266
-    int raw = analogRead(A0);
-#endif
-    int value = map(raw,
-                    options.readInt(name + "_st"),
-                    options.readInt(name + "_end"),
-                    options.readInt(name + "_st_out"),
-                    options.readInt(name + "_end_out"));
-    pm.info("name: " + name + ", raw:" + String(raw, DEC) + ", value: " + String(value, DEC));
-    liveData.writeInt(name, value);
-    Events::fire(name);
-    MqttClient::publishStatus(name, String(value));
-}
 }  // namespace AnalogSensor

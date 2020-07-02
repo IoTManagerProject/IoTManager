@@ -5,55 +5,78 @@
 
 static const char* MODULE = "LoggerTask";
 
-LoggerTask::LoggerTask(String name, unsigned long period, size_t limit) {
+LoggerTask::LoggerTask(const String& name, unsigned long period, size_t limit) {
     _name = name;
+    strcpy(_filename, "log.");
+    strcat(_filename, _name.c_str());
+    strcat(_filename, ".txt");
     _period = period;
     _limit = limit;
+    _buf.reserve(_limit);
+    _records = 0;
     _lastExecute = 0;
 }
 
-const String LoggerTask::getName() {
-    return _name;
-}
-const String LoggerTask::getFilename() {
-    return "log." + _name + ".txt";
+const char* LoggerTask::name() {
+    return _name.c_str();
 }
 
 void LoggerTask::update() {
     if (millis_since(_lastExecute) >= _period) {
-        post();
+        if (timeNow->hasTimeSynced()) {
+            pm.info("buf " + String(_buf.size(), DEC) + " of " + String(_limit, DEC));
+            if (_buf.size() >= _limit) {
+                flush();
+            }
+            _buf.push_back(
+                LogEntry(timeNow->getEpoch(), liveData.readInt(_name)));
+        }
         _lastExecute = millis();
     }
 }
 
-void LoggerTask::clear() {
-    removeFile(getFilename().c_str());
+void LoggerTask::flush() {
+    auto file = LittleFS.open(_filename, "a");
+    for (auto item : _buf) {
+        char payload[64];
+        char buf[16];
+        strcpy(payload, itoa(item.time, buf, DEC));
+        strcat(payload, " ");
+        strcat(payload, itoa(item.value, buf, DEC));
+        pm.info(payload);
+        file.println(payload);
+    }
+    file.close();
+    _buf.clear();
 }
 
-void LoggerTask::post() {
+void LoggerTask::publish() {
+}
+
+void LoggerTask::clear() {
+    removeFile(_filename);
+}
+
+void LoggerTask::postFile() {
     pm.info("task: " + _name);
     String value = liveData.read(_name);
-    String filename = getFilename();
     String buf;
-    if (!readFile(filename.c_str(), buf, 5120)) {
-        pm.error("on read " + filename);
-    }
-    size_t lines_cnt = itemsCount(buf, "\r\n");
-    pm.info("log " + filename + " (" + String(lines_cnt, DEC) + ")");
-    if ((lines_cnt > _limit + 1) || !lines_cnt) {
-        removeFile(filename);
-        lines_cnt = 0;
-    }
-    if (lines_cnt > _limit) {
-        buf = deleteBeforeDelimiter(buf, "\r\n");
-        if (timeNow->hasTimeSynced()) {
-            buf += timeNow->getTimeUnix() + " " + value + "\r\n";
-            writeFile(filename, buf);
+    if (readFile(_filename, buf, 5120)) {
+        size_t lines_cnt = itemsCount(buf, "\r\n");
+        if ((lines_cnt > _limit + 1) || !lines_cnt) {
+            removeFile(_filename);
+            lines_cnt = 0;
         }
-    } else {
-        if (timeNow->hasTimeSynced()) {
-            addFile(filename, timeNow->getTimeUnix() + " " + value);
+        if (lines_cnt > _limit) {
+            buf = deleteBeforeDelimiter(buf, "\r\n");
+            if (timeNow->hasTimeSynced()) {
+                buf += timeNow->getTimeUnix() + " " + value + "\r\n";
+                writeFile(_filename, buf);
+            }
         }
+    }
+    if (timeNow->hasTimeSynced()) {
+        addFile(_filename, timeNow->getTimeUnix() + " " + value);
     }
 }
 
@@ -61,11 +84,10 @@ const String LoggerTask::getTopic() {
     return _name + "_ch";
 }
 
-void LoggerTask::publish() {
-    String filename = getFilename();
+void LoggerTask::publishFile() {
     String data;
-    if (!readFile(filename.c_str(), data, 5120)) {
-        pm.error("read " + filename);
+    if (!readFile(_filename, data, 5120)) {
+        pm.error("open file");
         return;
     }
     data.replace("\r\n", "\n");

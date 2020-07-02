@@ -35,6 +35,8 @@ void cmd_inputTime();
 void cmd_firmwareUpdate();
 void cmd_firmwareVersion();
 
+void cmd_telnet();
+
 void cmd_analog();
 void cmd_dallas();
 

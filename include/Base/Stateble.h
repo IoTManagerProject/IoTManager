@@ -5,17 +5,26 @@
 
 class Stateble {
    public:
-    Stateble(int initial);
-    void setState(int value);
-    void setStateAsBool(bool value);
-    void toogleState();
-    int getState() const;
-    void updateState() {
+    Stateble(int value) {
+        _state = value;
+    }
+
+    void setState(int value) {
+        _state = value;
         onStateChange();
     }
-    virtual void onInit(){};
-    virtual void onStateChange(){};
 
-   private:
+    void toggleState() {
+        _state = !_state;
+        onStateChange();
+    }
+
+    int getState() {
+        return _state;
+    }
+
+    virtual void onStateChange() = 0;
+
+   protected:
     int _state;
 };

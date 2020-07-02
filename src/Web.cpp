@@ -58,8 +58,8 @@ void web_init() {
     server.on("/restart", HTTP_GET, [](AsyncWebServerRequest* request) {
         if (request->hasArg("device")) {
             if (request->getParam("device")->value() == "ok") {
+                perform_system_restart();
                 request->send(200);
-                ESP.restart();
             }
         };
     });

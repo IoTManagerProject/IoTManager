@@ -1,7 +1,8 @@
 #include <Servo.h>
 
 #include "Objects/ServoItems.h"
-#include "Base/ValueMapper.h"
+
+#include "Base/Value.h"
 
 ServoItems myServo;
 
@@ -9,7 +10,11 @@ ServoItems::ServoItems(){};
 
 BaseServo* ServoItems::add(const String& name, const String& pin, const String& value,
                            const String& min_value, const String& max_value, const String& min_deg, const String& max_deg) {
-    _items.push_back(BaseServo{name, pin, value, new ValueMapper(min_value.toInt(), max_value.toInt(), min_deg.toInt(), max_deg.toInt())});
+    _items.push_back(BaseServo{name, pin, value,
+                               new ValueMapper(min_value.toInt(),
+                                               max_value.toInt(),
+                                               min_deg.toInt(),
+                                               max_deg.toInt())});
     return last();
 }
 

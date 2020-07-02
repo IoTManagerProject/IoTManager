@@ -20,6 +20,7 @@ void loop() {
 }
 
 void add(String name, unsigned long period, size_t limit) {
+    pm.info("name: " + name + ", period: " + String(period, DEC) + ", limit: " + String(limit, DEC));
     _items.push_back(LoggerTask{name, period, limit});
 }
 

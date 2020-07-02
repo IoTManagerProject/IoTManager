@@ -16,15 +16,18 @@ bool fileSystemInit() {
     return true;
 }
 
-void removeFile(const String filename) {
+bool removeFile(const String filename, bool fail_not_exists) {
     String path = filepath(filename.c_str());
     if (LittleFS.exists(path)) {
         if (!LittleFS.remove(path)) {
-            pm.error("remove " + path);
+            pm.error("on remove: " + path);
+            return false;
         }
     } else {
-        pm.info("not exist" + path);
+        pm.info("on remove: " + path + " not exist");
+        return !fail_not_exists;
     }
+    return true;
 }
 
 File seekFile(const String filename, size_t position) {
@@ -102,15 +105,22 @@ const String writeFile(const String filename, const String str) {
     return "sucсess";
 }
 
+bool fileExists(const char* filename) {
+    String path = filepath(filename);
+    return LittleFS.exists(path);
+}
+
 bool readFile(const char* filename, String& str, size_t max_size) {
     String path = filepath(filename);
-    pm.info("read " + path);
     auto file = LittleFS.open(path, "r");
     if (!file) {
+        pm.error("on read" + path);
         return false;
     }
+    pm.info("read " + path);
     size_t size = file.size();
     if (size > max_size) {
+        pm.error("oversize " + path);
         file.close();
         return false;
     }

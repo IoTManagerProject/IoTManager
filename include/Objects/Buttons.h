@@ -2,89 +2,60 @@
 
 #include <Arduino.h>
 
+#include "Base/Item.h"
+
 #include <functional>
 
 #include <Bounce2.h>
 
-enum ButtonType_t { BUTTON_PINNED,
-                    BUTTON_VIRTUAL,
-                    BUTTON_SWITCH };
+class ButtonItem : public Item {
+   public:
+    ButtonItem(const String& name, const String& pin, const String& value) : Item(name, pin, value){};
+    virtual void onStateChange();
+    virtual bool update();
+};
 
-struct Button_t {
-    ButtonType_t type;
-    bool state;
-    String name;
-    String assign;
-    String param;
-    Bounce* obj;
-
-    uint8_t getPin() {
-        return assign.toInt();
+class Button : public ButtonItem {
+   public:
+    Button(const String& name, const String& pin, const String& value) : ButtonItem{name, pin, value}, _obj{nullptr} {
+        _obj = new Bounce();
+        _obj->attach(getPin(), INPUT);
     }
 
-    bool getState() {
-        return param.toInt();
-    }
-
-    Button_t(ButtonType_t type, String name, String assign, String param)
-        : type{type}, name{name}, assign{assign}, param{param} {
-        switch (type) {
-            case BUTTON_SWITCH:
-                obj = new Bounce();
-                obj->attach(getPin(), INPUT);
-                break;
-            case BUTTON_PINNED:
-                digitalWrite(getPin(), getState());
-                obj = new Bounce();
-                obj->attach(getPin(), OUTPUT);
-                break;
-            case BUTTON_VIRTUAL:
-                obj = nullptr;
-            default:
-                break;
-        };
-    }
-
-    bool set(bool value) {
-        state = value;
-        digitalWrite(getPin(), state);
-        return state;
-    }
-
-    bool toggle() {
-        state = !state;
-        digitalWrite(getPin(), state);
-        return state;
+    void onStateChange() override {
+        digitalWrite(getPin(), getState());
     }
 
     bool update() {
         bool res = false;
-        if (obj) {
-            res = obj->update();
-            state = obj->read();
+        if (_obj) {
+            res = _obj->update();
+            _state = _obj->read();
         }
         return res;
     }
+
+   private:
+    Bounce* _obj;
 };
 
-typedef std::function<void(Button_t*, uint8_t)> OnButtonChangeState;
+typedef std::function<void(Button*, uint8_t)> OnButtonChangeState;
 
 class Buttons {
    public:
-    Buttons();
-    Button_t* addSwitch(String name, String assign, String param);
-    Button_t* addButton(String name, String assign, String param);
-
-    Button_t* last();
-    Button_t* at(size_t index);
-    Button_t* get(const String name);
-    size_t count();
+    Button* add(String name, String assign, String value);
     void loop();
+    Button* last();
+    Button* at(size_t index);
+    Button* get(const String name);
+    size_t count();
+
     void setOnChangeState(OnButtonChangeState);
 
    private:
-    OnButtonChangeState onChangeState;
-    std::vector<Button_t> _items;
+    std::vector<Button> _items;
+
+    OnButtonChangeState _onChange;
 };
 
 extern Buttons myButtons;

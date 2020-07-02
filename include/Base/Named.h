@@ -4,9 +4,14 @@
 
 class Named {
    public:
-    Named(const char* name);
-    const char* name();
+    Named(const char* name) {
+        strlcpy(_name, name, sizeof(_name));
+    }
 
-   private:
+    const char* getName() const {
+        return _name;
+    }
+
+   protected:
     char _name[32];
 };

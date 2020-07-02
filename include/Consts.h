@@ -64,7 +64,7 @@ struct Time_t {
     unsigned long valid;
 };
 
-enum TimerTask_t { WIFI_SCAN,
+enum SchedulerTask { WIFI_SCAN,
                    MQTT_CONNECTION,
                    SENSORS,
                    STEPPER1,

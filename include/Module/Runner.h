@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Print.h>
+#include "Cmd.h"
 
 class Runner {
    public:

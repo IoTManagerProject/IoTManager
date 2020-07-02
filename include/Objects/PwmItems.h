@@ -1,18 +1,11 @@
 
 #pragma once
 
-#include "Base/Named.h"
-#include "Base/Assigned.h"
-#include "Base/Stateble.h"
+#include "Base/Item.h"
 
-class Pwm : public Named,
-            public Assigned,
-            public Stateble {
+class Pwm : public Item {
    public:
-    Pwm(const String& name, const String& assigned, const String& value) : Named{name.c_str()},
-                                                                           Assigned{assigned.c_str()},
-                                                                           Stateble{value.toInt()} {};
-    void onInit() override {
+    Pwm(const String& name, const String& assigned, const String& value) : Item{name, assigned, value} {
         pinMode(getPin(), OUTPUT);
     };
 

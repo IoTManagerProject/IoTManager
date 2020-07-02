@@ -1,9 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-
 #include "Base/Item.h"
-
 #include "Base/ValueMapper.h"
 
 class BaseServo : public Item {
@@ -11,19 +9,17 @@ class BaseServo : public Item {
     BaseServo(const String& name, const String& pin, const String& value, ValueMapper* mapper) : Item{name, pin, value},
                                                                                                  _mapper{mapper} {
         _obj = new Servo();
+        _obj->attach(getPin());
+        _obj->write(_mapper->getValue(_state));
+        Serial.println("new name: " + String(_name) + ", state: " + String(_state, DEC));
     };
 
-    void onInit() override {
-        _obj->attach(this->getPin());
-        updateState();
-    }
-
     void onStateChange() override {
-        int value = _mapper->transform(getState());
-        _obj->write(value);
+        Serial.println("change state name: " + String(_name) + ", state: " + String(_state, DEC) + "mapped: " + String(_mapper->getValue(_state), DEC));
+        _obj->write(_mapper->getValue(_state));
     }
 
    private:
-    Servo* _obj;
     ValueMapper* _mapper;
+    Servo* _obj;
 };
