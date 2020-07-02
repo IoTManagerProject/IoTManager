@@ -10,7 +10,7 @@ static const size_t NUM_LINES = 40;
 
 String _content = "";
 bool _block_enabled[NUM_LINES];
-bool _initialized = false;
+bool _ready_flag = false;
 
 bool isBlockEnabled(size_t num) {
     return _block_enabled[num];
@@ -21,17 +21,17 @@ void enableBlock(size_t num, boolean enable) {
 }
 
 void reinit() {
-    _initialized = false;
+    _ready_flag = false;
 }
 
 void init() {
     readFile(DEVICE_SCENARIO_FILE, _content);
     memset(_block_enabled, 1, sizeof(_block_enabled[0]) * NUM_LINES);
-    _initialized = true;
+    _ready_flag = true;
 }
 
 void process(EventQueue* queue) {
-    if (!_initialized) {
+    if (!_ready_flag) {
         init();
     }
 

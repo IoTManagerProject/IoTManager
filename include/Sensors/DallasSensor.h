@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 #include "DallasTemperature.h"
-
+namespace Dallas {
 struct DallasSensor_t {
     uint8_t address[8];
     String name;
@@ -26,7 +26,11 @@ class DallasSensors {
     std::vector<DallasSensor_t> _items;
 };
 
+void dallas_reading();
+
 extern DallasSensors dallasSensors;
 extern DallasTemperature* dallasTemperature;
 extern String dallas_value_name;
 extern int enter_to_dallas_counter;
+
+}

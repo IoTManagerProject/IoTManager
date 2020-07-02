@@ -7,6 +7,14 @@
 
 static const char* MODULE = "Init";
 
+void sensors_task() {
+    ts.add(
+        SENSORS, 1000, [&](void*) {
+            Sensors::process();
+        },
+        nullptr, true);
+}
+
 void init_mod() {
     pm.info("Mqtt");
     MqttClient::setConfig(config.mqtt());
@@ -17,13 +25,11 @@ void init_mod() {
     pm.info("Commands");
     cmd_init();
 
-    device_init();
-
-    pm.info(String("Scenario"));
-    Scenario::init();
-
     pm.info(String("Sensors"));
     Sensors::init();
+    sensors_task();
+
+    device_init();
 
     timer_countdown_init();
 
@@ -31,9 +37,10 @@ void init_mod() {
 }
 
 void device_init() {
+    pm.info("Start");
     clearWidgets();
     fileExecute(DEVICE_COMMAND_FILE);
-    Scenario::reinit();
+    Scenario::init();
 }
 
 void uptime_task_init() {

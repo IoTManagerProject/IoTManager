@@ -113,9 +113,9 @@ extern String add_set(String param_name);
 
 //Timers
 extern void timer_countdown_init();
-extern void timerStart_();
+extern void cmd_timerStart();
 extern void addTimer(String number, String time);
-extern void timerStop_();
+extern void cmd_timerStop();
 extern void delTimer(String number);
 extern int readTimer(int number);
 

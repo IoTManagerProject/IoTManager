@@ -1,6 +1,5 @@
 #include "Cmd.h"
 
-#include "Sensor/AnalogSensor.h"
 #include "Events.h"
 #include "Logger.h"
 #include "Module/Terminal.h"
@@ -82,8 +81,8 @@ void cmd_init() {
     sCmd.addCommand("inputTime", cmd_inputTime);
     sCmd.addCommand("timeSet", cmd_timeSet);
 
-    sCmd.addCommand("timerStart", timerStart_);
-    sCmd.addCommand("timerStop", timerStop_);
+    sCmd.addCommand("timerStart", cmd_timerStart);
+    sCmd.addCommand("timerStop", cmd_timerStop);
 
     sCmd.addCommand("text", cmd_text);
     sCmd.addCommand("textSet", cmd_textSet);
@@ -514,7 +513,7 @@ void cmd_ultrasonicCm() {
     String full_level = sCmd.next();
     String page_number = sCmd.next();
 
-    ultrasonicCm_value_name = measure_unit;
+    Ultrasonic::ultrasonicCm_value_name = measure_unit;
 
     options.write("trig", trig);
     options.write("echo", echo);
@@ -534,10 +533,10 @@ void cmd_dallas() {
         return;
     }
 
-    if (dallasSensors.count() == 0) {
-        dallasTemperature = new DallasTemperature(oneWireBus.get());
-        dallasTemperature->begin();
-        dallasTemperature->setResolution(12);
+    if (Dallas::dallasSensors.count() == 0) {
+        Dallas::dallasTemperature = new DallasTemperature(oneWireBus.get());
+        Dallas::dallasTemperature->begin();
+        Dallas::dallasTemperature->setResolution(12);
     }
 
     String value = sCmd.next();
@@ -553,7 +552,7 @@ void cmd_dallas() {
 
     // jsonWriteStr(configOptionJson, value + "_ds", String(address, DEC));
 
-    dallas_value_name += value + ";";
+    Dallas::dallas_value_name += value + ";";
     createWidget(widget, page, pageNumber, type, value);
 
     Sensors::enable(3);
@@ -570,7 +569,9 @@ void cmd_levelPr() {
     String empty_level = sCmd.next();
     String full_level = sCmd.next();
     String page_number = sCmd.next();
-    levelPr_value_name = value_name;
+
+    Ultrasonic::levelPr_value_name = value_name;
+
     options.write("e_lev", empty_level);
     options.write("f_lev", full_level);
     options.write("trig", trig);
@@ -591,12 +592,12 @@ void cmd_dhtH() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    dhtH_value_name = value_name;
+    DHTSensor::dhtH_value_name = value_name;
     if (sensor_type == "dht11") {
-        dht.setup(pin.toInt(), DHTesp::DHT11);
+        DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT11);
     }
     if (sensor_type == "dht22") {
-        dht.setup(pin.toInt(), DHTesp::DHT22);
+        DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT22);
     }
     createWidget(widget_name, page_name, page_number, type, value_name);
 
@@ -612,12 +613,12 @@ void cmd_dhtT() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    dhtT_value_name = value_name;
+    DHTSensor::dhtT_value_name = value_name;
     if (sensor_type == "dht11") {
-        dht.setup(pin.toInt(), DHTesp::DHT11);
+        DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT11);
     }
     if (sensor_type == "dht22") {
-        dht.setup(pin.toInt(), DHTesp::DHT22);
+        DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT22);
     }
 
     createWidget(widget_name, page_name, page_number, type, value_name);
@@ -691,14 +692,14 @@ void cmd_bmp280T() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    bmp280T_value_name = value_name;
+    BMP280Sensor::bmp280T_value_name = value_name;
 
-    bmp.begin(hexStringToUint8(address));
-    bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
-                    Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
-                    Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
-                    Adafruit_BMP280::FILTER_X16,      /* Filtering. */
-                    Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+    BMP280Sensor::bmp.begin(hexStringToUint8(address));
+    BMP280Sensor::bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
 
     createWidget(widget_name, page_name, page_number, type, value_name);
 
@@ -713,14 +714,14 @@ void cmd_bmp280P() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    bmp280P_value_name = value_name;
+    BMP280Sensor::bmp280P_value_name = value_name;
 
-    bmp.begin(hexStringToUint8(address));
-    bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
-                    Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
-                    Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
-                    Adafruit_BMP280::FILTER_X16,      /* Filtering. */
-                    Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+    BMP280Sensor::bmp.begin(hexStringToUint8(address));
+    BMP280Sensor::bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
 
     createWidget(widget_name, page_name, page_number, type, value_name);
 
@@ -737,9 +738,9 @@ void cmd_bme280T() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    bme280T_value_name = value_name;
+    BME280Sensor::bme280T_value_name = value_name;
 
-    bme.begin(hexStringToUint8(address));
+    BME280Sensor::bme.begin(hexStringToUint8(address));
 
     createWidget(widget_name, page_name, page_number, type, value_name);
 
@@ -754,9 +755,9 @@ void cmd_bme280P() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    bme280P_value_name = value_name;
+    BME280Sensor::bme280P_value_name = value_name;
 
-    bme.begin(hexStringToUint8(address));
+    BME280Sensor::bme.begin(hexStringToUint8(address));
 
     createWidget(widget_name, page_name, page_number, type, value_name);
 
@@ -771,9 +772,9 @@ void cmd_bme280H() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    bme280H_value_name = value_name;
+    BME280Sensor::bme280H_value_name = value_name;
 
-    bme.begin(hexStringToUint8(address));
+    BME280Sensor::bme.begin(hexStringToUint8(address));
 
     createWidget(widget_name, page_name, page_number, type, value_name);
 
@@ -788,9 +789,9 @@ void cmd_bme280A() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    bme280A_value_name = value_name;
+    BME280Sensor::bme280A_value_name = value_name;
 
-    bme.begin(hexStringToUint8(address));
+    BME280Sensor::bme.begin(hexStringToUint8(address));
 
     createWidget(widget_name, page_name, page_number, type, value_name);
 
@@ -817,6 +818,25 @@ void cmd_firmwareVersion() {
 
     liveData.write("firmver", FIRMWARE_VERSION);
     createWidget(widget, page, pageNumber, "anydata", "firmver");
+}
+
+void cmd_timerStart() {
+    String number = sCmd.next();
+    String period = sCmd.next();
+    String type = sCmd.next();
+    if (period.indexOf("digit") != -1) {
+        period = liveData.read(period);
+    }
+    if (type == "sec") period = period;
+    if (type == "min") period = String(period.toInt() * 60);
+    if (type == "hours") period = String(period.toInt() * 60 * 60);
+    addTimer(number, period);
+    liveData.write("timer" + number, "1");
+}
+
+void cmd_timerStop() {
+    String number = sCmd.next();
+    delTimer(number);
 }
 
 void addCommandLoop(const String &cmdStr) {

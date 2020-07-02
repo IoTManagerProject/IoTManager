@@ -24,7 +24,6 @@ class Pwms {
    public:
     Pwms();
     PwmItem* add(String name, String assign, String param);
-
     PwmItem* at(size_t index);
     PwmItem* get(const String name);
     size_t count();

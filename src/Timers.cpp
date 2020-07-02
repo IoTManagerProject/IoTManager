@@ -38,19 +38,6 @@ void timer_countdown_init() {
         nullptr, true);
 }
 
-void timerStart_() {
-    String number = sCmd.next();
-    String period = sCmd.next();
-    String type = sCmd.next();
-    if (period.indexOf("digit") != -1) {
-        period = liveData.read(period);
-    }
-    if (type == "sec") period = period;
-    if (type == "min") period = String(period.toInt() * 60);
-    if (type == "hours") period = String(period.toInt() * 60 * 60);
-    addTimer(number, period);
-    liveData.write("timer" + number, "1");
-}
 
 void addTimer(String number, String time) {
     String tmp = options.read("timers");  //1:60,2:120,
@@ -66,11 +53,6 @@ void addTimer(String number, String time) {
         tmp += new_timer + ",";
     }
     options.write("timers", tmp);
-}
-
-void timerStop_() {
-    String number = sCmd.next();
-    delTimer(number);
 }
 
 void delTimer(String number) {

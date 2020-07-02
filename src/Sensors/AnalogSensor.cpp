@@ -1,6 +1,6 @@
-#include "Sensor/AnalogSensor.h"
+#include "Sensors/AnalogSensor.h"
 
-#include "Sensors.h"
+#include "Global.h"
 #include "MqttClient.h"
 #include "Events.h"
 
@@ -30,7 +30,7 @@ void analog_reading1() {
                      options.readInt(name + "_end"),
                      options.readInt(name + "_st_out"),
                      options.readInt(name + "_end_out"));
-    pm.info(name + " raw:" + String(raw, DEC) + "map: " + String(mapped, DEC));
+    pm.info("name: " + name + ", raw:" + String(raw, DEC) + ", value: " + String(value, DEC));
     liveData.writeInt(name, mapped);
     Events::fire(name);
     MqttClient::publishStatus(name, String(mapped));

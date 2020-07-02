@@ -15,7 +15,6 @@ KeyValueFile runtime(DEVICE_RUNTIME_FILE);
 
 Clock* timeNow;
 TickerScheduler ts(SYS_STAT + 1);
-
 StringCommand sCmd;
 AsyncWebServer server(80);
 
