@@ -128,7 +128,7 @@ void async_actions() {
 
     if (perform_updates_check_flag) {
         lastVersion = Updater::check();
-        jsonWriteStr(runtimeJson, "last_version", lastVersion);
+        Runtime::write("last_version", lastVersion);
         perform_updates_check_flag = false;
     }
 
@@ -188,11 +188,6 @@ void setPreset(size_t num) {
     copyFile(getConfigFile(num, CT_CONFIG), DEVICE_COMMAND_FILE);
     copyFile(getConfigFile(num, CT_SCENARIO), DEVICE_SCENARIO_FILE);
     device_init();
-}
-
-void setRuntimeParam(const char* param, const char* value) {
-    pm.info("runtime " + String(param) + ": " + value);
-    jsonWriteStr(runtimeJson, param, value);
 }
 
 #ifdef ESP8266

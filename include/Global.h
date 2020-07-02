@@ -47,9 +47,6 @@ extern AsyncWebServer server;
 * Global vars
 */
 extern boolean just_load;
-// данные среды выполнения
-extern String runtimeJson;
-
 extern String prex;
 extern String all_widgets;
 extern String order_loop;
@@ -105,7 +102,6 @@ extern void init_mod();
 extern void save_runtime();
 extern void save_config();
 extern void setPreset(size_t num);
-extern void setRuntimeParam(const char* param, const char* value);
 extern void setLedStatus(LedStatus_t);
 
 //Scenario

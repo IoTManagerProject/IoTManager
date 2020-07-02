@@ -20,8 +20,6 @@ AsyncWebServer server(80);
 * Global vars
 */
 // Json
-String runtimeJson = "{}";
-
 String prex = "";
 String all_widgets = "";
 String order_loop = "";
@@ -44,25 +42,6 @@ void load_config() {
     if (readFile(DEVICE_CONFIG_FILE, buf)) {
         config.load(buf);
     }
-}
-
-void load_runtime() {
-    if (readFile(DEVICE_RUNTIME_FILE, runtimeJson)) {
-        runtimeJson.replace(" ", "");
-        runtimeJson.replace("\r\n", "");
-    } else {
-        runtimeJson = "{}";
-    }
-    Serial.println(runtimeJson);
-
-    jsonWriteStr(runtimeJson, "chipID", getChipId());
-    jsonWriteStr(runtimeJson, "firmware_version", FIRMWARE_VERSION);
-
-    Serial.println(runtimeJson);
-}
-
-void save_runtime() {
-    writeFile(DEVICE_RUNTIME_FILE, runtimeJson);
 }
 
 const String readLiveData(const String& obj) {

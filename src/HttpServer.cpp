@@ -58,7 +58,7 @@ void init() {
 
     // для данных среды выполнения
     server.on("/runtime.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", runtimeJson);
+        request->send(200, "application/json", Runtime::get());
     });
 
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {

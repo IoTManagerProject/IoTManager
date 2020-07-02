@@ -1,5 +1,6 @@
 #include "Global.h"
 
+#include "Runtime.h"
 #include "MqttClient.h"
 
 static const char* MODULE = "Web";
@@ -117,7 +118,7 @@ void web_init() {
             if (request->hasArg(TAG_ONE_WIRE)) {
                 perform_bus_scanning(BS_ONE_WIRE);
                 if (request->hasParam(TAG_ONE_WIRE_PIN)) {
-                    setRuntimeParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value().c_str());
+                    Runtime::write(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value().c_str());
                 }
                 request->redirect(TAG_SET_UTILITIES);
                 return;

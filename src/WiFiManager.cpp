@@ -1,5 +1,6 @@
 #include "WiFiManager.h"
 
+#include "Runtime.h"
 #include "Global.h"
 #include "Options.h"
 #include "MqttClient.h"
@@ -45,7 +46,7 @@ void startSTAMode() {
                 String hostIpStr = WiFi.localIP().toString();
                 pm.info("http://" + hostIpStr);
 
-                setRuntimeParam("ip", hostIpStr.c_str());
+                Runtime::write("ip", hostIpStr.c_str());
 
                 keepConnecting = false;
             } break;
@@ -109,7 +110,7 @@ bool startAPMode() {
     String hostIpStr = WiFi.softAPIP().toString();
     pm.info("http://" + hostIpStr);
 
-    setRuntimeParam("ip", hostIpStr.c_str());
+    Runtime::write("ip", hostIpStr.c_str());
 
     ts.add(
         WIFI_SCAN, 10 * 1000,
