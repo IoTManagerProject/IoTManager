@@ -1,24 +1,24 @@
-#include "Objects/Pwms.h"
+#include "Objects/PwmItems.h"
 
 #include "Utils/PrintMessage.h"
 
-static const char *MODULE = "pwm";
+static const char *MODULE = "PWM";
 
-Pwms myPwms;
+Pwms myPwm;
 
 Pwms::Pwms(){};
 
-PwmItem *Pwms::add(String name, String assign, String state) {
+Pwm *Pwms::add(String name, String assign, String state) {
     pm.info("name:\"" + name + "\", pin:" + assign + ", state:" + state);
-    _items.push_back(PwmItem{name, assign, state});
+    _items.push_back(Pwm{name, assign, state});
     return last();
 }
 
-PwmItem *Pwms::last() {
+Pwm *Pwms::last() {
     return &_items.at(_items.size() - 1);
 }
 
-PwmItem *Pwms::get(const String name) {
+Pwm *Pwms::get(const String name) {
     for (size_t i = 0; i < _items.size(); i++) {
         auto *item = &_items.at(i);
         if (name.equalsIgnoreCase(item->name())) {
@@ -28,7 +28,7 @@ PwmItem *Pwms::get(const String name) {
     return nullptr;
 }
 
-PwmItem *Pwms::at(size_t num) {
+Pwm *Pwms::at(size_t num) {
     return &_items.at(num);
 }
 

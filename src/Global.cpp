@@ -1,6 +1,7 @@
 #include "Global.h"
 
-#include "Objects/Pwms.h"
+#include "Objects/ServoItems.h"
+#include "Objects/PwmItems.h"
 
 #ifdef WS_enable
 AsyncWebSocket ws;
@@ -50,7 +51,7 @@ const String readLiveData(const String& obj) {
     String res = "";
     if (obj.startsWith("pwm")) {
         String name = obj.substring(3);
-        if (Stateble* item = myPwms.get(name)) {
+        if (Stateble* item = myPwm.get(name)) {
             pm.info("read pwm: " + obj);
             res = String(item->getState());
         }

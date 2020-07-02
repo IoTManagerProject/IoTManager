@@ -25,15 +25,15 @@ void analog_reading1() {
 #ifdef ESP8266
     int raw = analogRead(A0);
 #endif
-    int mapped = map(raw,
-                     options.readInt(name + "_st"),
-                     options.readInt(name + "_end"),
-                     options.readInt(name + "_st_out"),
-                     options.readInt(name + "_end_out"));
+    int value = map(raw,
+                    options.readInt(name + "_st"),
+                    options.readInt(name + "_end"),
+                    options.readInt(name + "_st_out"),
+                    options.readInt(name + "_end_out"));
     pm.info("name: " + name + ", raw:" + String(raw, DEC) + ", value: " + String(value, DEC));
-    liveData.writeInt(name, mapped);
+    liveData.writeInt(name, value);
     Events::fire(name);
-    MqttClient::publishStatus(name, String(mapped));
+    MqttClient::publishStatus(name, String(value));
 }
 
 void analog_reading2() {

@@ -7,8 +7,8 @@
 #include "WebClient.h"
 #include "Sensors.h"
 #include "Objects/Buttons.h"
-#include "Objects/Pwms.h"
-#include "Objects/Servos.h"
+#include "Objects/PwmItems.h"
+#include "Objects/ServoItems.h"
 #include "Bus/OneWireBus.h"
 
 static const char *MODULE = "Cmd";
@@ -219,7 +219,7 @@ void cmd_pwm() {
 
     String style = sCmd.next();
 
-    myPwms.add(name, assign, state);
+    myPwm.add(name, assign, state);
     // jsonWriteStr(configOptionJson, "pwm_pin" + name, assign);
     // jsonWriteStr(configLiveJson, "pwm" + name, state);
     // pinMode(assign.toInt(), OUTPUT);
@@ -229,13 +229,15 @@ void cmd_pwm() {
 
 void cmd_pwmSet() {
     String name = sCmd.next();
-    String state = sCmd.next();
-    myPwms.get(name)->setInt(state.toInt());
+    String value = sCmd.next();
+
+    myPwm.get(name)->setState(value.toInt());
+
     Events::fire("pwm", name);
     // analogWrite(pin, state.toInt());
     // int pin = jsonReadInt(configOptionJson, "pwm_pin" + name);
     // jsonWriteStr(configLiveJson, "pwm" + name, state);
-    MqttClient::publishStatus("pwm" + name, state);
+    MqttClient::publishStatus("pwm" + name, value);
 }
 
 void cmd_switch() {
@@ -391,55 +393,50 @@ void cmd_stepperSet() {
 
 //servo 1 13 50 Мой#сервопривод Сервоприводы 0 100 0 180 2
 void cmd_servo() {
-    String number = sCmd.next();
-    uint8_t pin = String(sCmd.next()).toInt();
-    int value = String(sCmd.next()).toInt();
+    String name = sCmd.next();
+    String pin = sCmd.next();
+    String value = sCmd.next();
 
-    String widget = sCmd.next();
+    String descr = sCmd.next();
     String page = sCmd.next();
 
-    int min_value = String(sCmd.next()).toInt();
-    int max_value = String(sCmd.next()).toInt();
-    int min_deg = String(sCmd.next()).toInt();
-    int max_deg = String(sCmd.next()).toInt();
+    String min_value = sCmd.next();
+    String max_value = sCmd.next();
+    String min_deg = sCmd.next();
+    String max_deg = sCmd.next();
 
-    String pageNumber = sCmd.next();
+    String order = sCmd.next();
 
-    options.write("servo_pin" + number, String(pin, DEC));
+    myServo.add(name, pin, value, min_value, max_value, min_deg, max_deg);
 
-    value = map(value, min_value, max_value, min_deg, max_deg);
+    // options.write("servo_pin" + name, pin);
+    // value = map(value, min_value, max_value, min_deg, max_deg);
+    // servo->write(value);
+    // options.writeInt("s_min_val" + name, min_value);
+    // options.writeInt("s_max_val" + name, max_value);
+    // options.writeInt("s_min_deg" + name, min_deg);
+    // options.writeInt("s_max_deg" + name, max_deg);
+    // liveData.writeInt("servo" + name, value);
 
-    Servo *servo = myServo.create(number.toInt(), pin);
-    servo->write(value);
-
-    options.writeInt("s_min_val" + number, min_value);
-    options.writeInt("s_max_val" + number, max_value);
-    options.writeInt("s_min_deg" + number, min_deg);
-    options.writeInt("s_max_deg" + number, max_deg);
-
-    liveData.writeInt("servo" + number, value);
-
-    createWidget(widget, page, pageNumber, "range", "servo" + number, "min", String(min_value), "max", String(max_value), "k", "1");
+    createWidget(descr, page, order, "range", "servo" + name, "min", String(min_value), "max", String(max_value), "k", "1");
 }
 
 void cmd_servoSet() {
-    String number = sCmd.next();
+    String name = sCmd.next();
     int value = String(sCmd.next()).toInt();
 
     value = map(value,
-                options.readInt("s_min_val" + number),
-                options.readInt("s_max_val" + number),
-                options.readInt("s_min_deg" + number),
-                options.readInt("s_max_deg" + number));
+                options.readInt("s_min_val" + name),
+                options.readInt("s_max_val" + name),
+                options.readInt("s_min_deg" + name),
+                options.readInt("s_max_deg" + name));
 
-    Servo *servo = myServo.get(number.toInt());
-    if (servo) {
-        servo->write(value);
-    }
+    myServo.get(name);
+    // if (servo) { servo->write(value);}
 
-    Events::fire("servo", number);
-    liveData.writeInt("servo" + number, value);
-    MqttClient::publishStatus("servo" + number, String(value, DEC));
+    Events::fire("servo", name);
+    liveData.writeInt("servo" + name, value);
+    MqttClient::publishStatus("servo" + name, String(value, DEC));
 }
 
 void cmd_serialBegin() {

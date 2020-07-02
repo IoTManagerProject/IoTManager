@@ -7,7 +7,7 @@
 //
 #include <LITTLEFS.h>
 
-std::vector<LoggerTask*> _items;
+std::vector<LoggerTask> _items;
 
 static const char* MODULE = "Logger";
 
@@ -15,12 +15,12 @@ namespace Logger {
 
 void loop() {
     for (size_t i = 0; i < _items.size(); i++) {
-        _items.at(i)->update();
+        _items.at(i).update();
     }
 }
 
 void add(String name, unsigned long period, size_t limit) {
-    _items.push_back(new LoggerTask{name, period, limit});
+    _items.push_back(LoggerTask{name, period, limit});
 }
 
 void init() {
@@ -29,12 +29,12 @@ void init() {
 
 void publish() {
     for (size_t i = 0; i < _items.size(); i++) {
-        _items.at(i)->publish();
+        _items.at(i).publish();
     }
 }
 void clear() {
     for (size_t i = 0; i < _items.size(); i++) {
-        _items.at(i)->clear();
+        _items.at(i).clear();
     }
 }
 

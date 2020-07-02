@@ -36,17 +36,14 @@ void LoggerTask::post() {
     String filename = getFilename();
     String buf;
     if (!readFile(filename.c_str(), buf, 5120)) {
-        return;
+        pm.error("on read " + filename);
     }
     size_t lines_cnt = itemsCount(buf, "\r\n");
-
     pm.info("log " + filename + " (" + String(lines_cnt, DEC) + ")");
-
     if ((lines_cnt > _limit + 1) || !lines_cnt) {
         removeFile(filename);
         lines_cnt = 0;
     }
-
     if (lines_cnt > _limit) {
         buf = deleteBeforeDelimiter(buf, "\r\n");
         if (timeNow->hasTimeSynced()) {
@@ -77,7 +74,7 @@ void LoggerTask::publish() {
     String json_array;
     String unix_time;
     String value;
-    while (data.length()) {
+    while (!data.isEmpty()) {
         String tmp = selectToMarker(data, "\n");
         data = deleteBeforeDelimiter(data, "\n");
         unix_time = selectToMarker(tmp, " ");
