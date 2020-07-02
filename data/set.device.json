@@ -1,11 +1,10 @@
 {
   "configs": [
-    "/config.setup.json",
-    "/config.option.json",
-    "/config.live.json",
+    "/config.json",
     "/lang/lang.ru.json"
   ],
-  "class": "col-sm-offset-1 col-sm-10",
+  "title": "{{LS_configuration}}",
+  "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
   "content": [
     {
       "type": "h5",
@@ -14,86 +13,61 @@
     },
     {
       "type": "link",
-      "title": "{{ButMainPage}}",
+      "title": "{{LS_mainPage}}",
       "action": "/",
       "class": "btn btn-block btn-default"
     },
     {
-      "type": "hr"
+      "type": "link",
+      "title": "{{LS_configuration_help}}",
+      "action": "https://github.com/IoTManagerProject/IoTManager/wiki/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F",
+      "class": "btn btn-block btn-default"
     },
     {
-      "type": "h4",
-      "title": "Device ID: {{chipID}}"
-    },
-    {
-      "type": "h4",
-      "title": "IP address: {{ip}}"
-    },
-    {
-      "type": "h4",
-      "title": "Time: {{time}}"
-    },
-    {
-      "type": "h4",
-      "title": "Uptime: {{uptime}}"
-    },
-    {
-      "type": "h4",
-      "title": "Build version: {{firmware_version}}"
-    },
-    {
-      "type": "h4",
-      "title": "LittleFS version: 2.3.5"
-    },
-    {
-      "type": "hr"
+      "type": "h2",
+      "title": "{{LS_configuration}}"
     },
     {
       "type": "dropdown",
       "name": "help-url",
-      "class": "btn btn-default",
-      "style": "display:inline",
+      "class": "btn btn-block btn-default",
       "title": {
-        "#": "{{SetDevPreset}}<span class=\"caret\"></span>",
-        "/set?preset=001": "1.Вкл. выкл. локального реле",
-        "/set?preset=002": "2.Вкл. выкл. локального реле в определенное время",
-        "/set?preset=003": "3.Вкл. выкл. локального реле на определенный период времени",
-        "/set?preset=004": "4.Вкл. выкл. нескольких локальных реле кнопкой в приложении",
-        "/set?preset=005": "5.Вкл. выкл. локального реле физической кнопкой и кнопкой в приложении параллельно (для выключателя света)",
-        "/set?preset=006": "6.Вкл. выкл. нескольких удаленных реле кнопкой в приложении (нужно указать Device ID)",
-        "/set?preset=007": "7.Вкл. выкл. нескольких удаленных реле физической кнопкой (нужно указать Device ID)",
-        "/set?preset=008": "8.Широтно импульсная модуляция",
-        "/set?preset=009": "9.Сенсор DHT11 (темп, влажность) и логгирование",
-        "/set?preset=010": "10.Сенсор DHT22, DHT33, DHT44, AM2302, RHT03 (темп, влажность) и логгирование",
-        "/set?preset=011": "11.Аналоговый сенсор и логгирование",
-        "/set?preset=012": "12.Cенсор bmp280 (темп, давление) и логгирование",
-        "/set?preset=013": "13.Cенсор bme280 (темп, давление, влажность, высота) и логгирование",
-        "/set?preset=014": "14.Сенсор DS18B20 (темп) и логгирование",
-        "/set?preset=015": "15.Термостат на DS18B20 с переключением в ручной режим и логгированием",
-        "/set?preset=016": "16.Котроль уровня в баке (датчик расстояния) на сенсорах: JSN-SR04T, HC-SR04, HY-SRF05 и логгирование",
-        "/set?preset=017": "17.Датчик движения включающий свет",
-        "/set?preset=018": "18.Охранный датчик движения",
-        "/set?preset=019": "19.Система управления шаговыми двигателями на основе драйвера A4988 (открытие закрытие штор)",
-        "/set?preset=020": "20.Система управления сервоприводами",
-        "/set?preset=021": "21.Модуль uart (serial). Двухстороняя связь с устройством через uart. Получение данных и отправка команд",
-        "/set?preset=100": "22.Настройки по умолчанию"
+        "#": "{{LS_select_preset}}<span class=\"caret\"></span>",
+        "/set?preset=001": "1. Реле",
+        "/set?preset=002": "2. Реле с таймером",
+        "/set?preset=003": "3. Реле с таймером (включение интервалами)",
+        "/set?preset=004": "4. Реле с управлением из приложения",
+        "/set?preset=005": "5. Выключатель света",
+        "/set?preset=006": "6. Управление реле подключенных к другому устройству",
+        "/set?preset=007": "7. Управление кнопкой несколькими реле на другом устройстве",
+        "/set?preset=008": "8. Использование PWM (Широтно-импульсная модуляция)",
+        "/set?preset=009": "9. Сенсор DHT11",
+        "/set?preset=010": "10. Сенсор DHT22, DHT33, DHT44, AM2302, RHT03",
+        "/set?preset=011": "11. Получение и журналирование данных ADC",
+        "/set?preset=012": "12. Cенсор BMP 280",
+        "/set?preset=013": "13. Cенсор BME 280",
+        "/set?preset=014": "14. Сенсор DS18B20",
+        "/set?preset=015": "15. Термостат на базе DS18B20 (переключение в ручной режим)",
+        "/set?preset=016": "16. Сенсор JSN-SR04T, HC-SR04, HY-SRF05 контроль уровня жидкости",
+        "/set?preset=017": "17. Датчик движения управление светом",
+        "/set?preset=018": "18. Охранный датчик движения",
+        "/set?preset=019": "19. Управление шторами (драйвер шагового двигателя A4988)",
+        "/set?preset=020": "20. Управления сервоприводом",
+        "/set?preset=021": "21. Обмен данными через uart (serial)",
+        "/set?preset=100": "22. Настройки по умолчанию"
       }
-    },
-    {
-      "type": "h2",
-      "title": "{{SetDevConf}}"
     },
     {
       "type": "file",
       "state": "dev_conf.txt",
       "style": "width:100%;height:350px",
-      "title": "Сохранить",
+      "title": "{{LS_save}}",
       "action": "/set?devinit",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "h2",
-      "title": "Сценарии"
+      "title": "Сценарий"
     },
     {
       "type": "checkbox",
@@ -106,36 +80,8 @@
       "type": "file",
       "state": "dev_scen.txt",
       "style": "width:100%;height:350px",
-      "title": "Сохранить",
+      "title": "{{LS_save}}",
       "action": "/set?sceninit",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "link",
-      "title": "Инструкция к системе автоматизации",
-      "action": "https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/wiki/Instruction",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "link",
-      "title": "Очистить логи сенсоров",
-      "action": "/set?cleanlog",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "h3",
-      "name": "my-block",
-      "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
-      "class": "hidden"
-    },
-    {
-      "type": "button",
-      "title": "Обновить прошивку устройства",
-      "action": "/check",
-      "response": "[[my-block]]",
       "class": "btn btn-block btn-default"
     }
   ]

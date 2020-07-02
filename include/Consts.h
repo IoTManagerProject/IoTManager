@@ -2,14 +2,16 @@
 /*
 * Main consts
 */
-#define FIRMWARE_VERSION "2.3.5"
+#define FIRMWARE_VERSION "2.3.5-dev"
 #define LED_PIN 2
 #define FLASH_4MB true
 #define MQTT_RECONNECT_INTERVAL 20000
 // 1000 * 60 * 60 * 2
 #define TELEMETRY_UPDATE_INTERVAL 0
 
-#define DEVICE_CONFIG_FILE "dev_conf.txt"
+#define DEVICE_RUNTIME_FILE "runtime.json"
+#define DEVICE_CONFIG_FILE "config.json"
+#define DEVICE_COMMAND_FILE "dev_conf.txt"
 #define DEVICE_SCENARIO_FILE "dev_scen.txt"
 #define DEFAULT_PRESET 100
 #define DEFAULT_SCENARIO 100
@@ -22,10 +24,8 @@
 * Optional
 */
 //#define OTA_UPDATES_ENABLED
-//#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
-#define UDP_ENABLED
 
 /* 
 * Sensor 

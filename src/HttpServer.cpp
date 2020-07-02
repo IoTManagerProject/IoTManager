@@ -2,6 +2,7 @@
 
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
+#include "FSEditor.h"
 
 namespace HttpServer {
 
@@ -15,7 +16,7 @@ void init() {
     String login = config.web()->getLogin();
     String pass = config.web()->getPass();
 #ifdef ESP32
-    server.addHandler(new SPIFFSEditor(LittleFS, login, pass));
+    server.addHandler(new FSEditor(LittleFS, login, pass));
 #else
     server.addHandler(new FSEditor(login, pass));
 #endif
@@ -43,18 +44,18 @@ void init() {
     });
 
     // динамические данные
-    server.on("/config.live.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", configLiveJson);
+    server.on("/live.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", liveJson);
     });
 
     // данные не являющиеся событиями
-    server.on("/config.option.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", configOptionJson);
+    server.on("/option.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", optionJson);
     });
 
-    // для хранения постоянных данных
-    server.on("/config.setup.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", configSetupJson);
+    // для данных среды выполнения
+    server.on("/runtime.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", runtimeJson);
     });
 
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -147,10 +148,8 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
 }
 
 void initMDNS() {
-#ifdef MDNS_ENABLED
     MDNS.addService("http", "tcp", 80);
     // TODO Add Adduino OTA
-#endif
     ;
 }
 

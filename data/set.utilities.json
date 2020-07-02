@@ -1,7 +1,6 @@
 {
   "configs": [
-    "/config.live.json",
-    "/config.setup.json",
+    "/runtime.json",
     "/lang/lang.ru.json"
   ],
   "title": "Главная",
@@ -14,7 +13,7 @@
     },
     {
       "type": "link",
-      "title": "{{ButMainPage}}",
+      "title": "{{LS_mainPage}}",
       "action": "/",
       "class": "btn btn-block btn-default"
     },
@@ -23,7 +22,7 @@
     },
     {
       "type": "h3",
-      "title": "Сканирование шины i2c"
+      "title": "{{LS_i2c_scanner}}"
     },
     {
       "type": "h4",
@@ -37,19 +36,7 @@
     },
     {
       "type": "h3",
-      "title": "Сканирование шины OneWire"
-    },
-    {
-      "type": "input",
-      "title": "Номер пина шины OneWire",
-      "name": "oneWirePin-arg",
-      "state": "{{oneWirePin}}"
-    },
-    {
-      "type": "button",
-      "title": "Сохранить",
-      "action": "/set?oneWirePin=[[oneWirePin-arg]]",
-      "class": "btn btn-block btn-default"
+      "title": "{{LS_onewire_scanner}}"
     },
     {
       "type": "h4",
@@ -60,6 +47,31 @@
       "title": "Сканировать",
       "action": "/set?oneWire=[[oneWirePin-arg]]",
       "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "link",
+      "title": "Очистить логи сенсоров",
+      "action": "/set?cleanlog",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "button",
+      "title": "Обновить прошивку устройства",
+      "action": "/check",
+      "response": "[[my-block]]",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "h3",
+      "name": "my-block",
+      "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+      "class": "hidden"
     }
   ]
 }

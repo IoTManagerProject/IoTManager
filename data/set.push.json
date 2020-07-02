@@ -1,6 +1,6 @@
 {
   "configs": [
-    "/config.setup.json",
+    "/config.json",
     "/lang/lang.ru.json"
   ],
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
@@ -12,7 +12,7 @@
     },
     {
       "type": "link",
-      "title": "{{ButMainPage}}",
+      "title": "{{LS_mainPage}}",
       "action": "/",
       "class": "btn btn-block btn-default"
     },
@@ -33,7 +33,7 @@
     },
     {
       "type": "button",
-      "title": "{{ButSave}}",
+      "title": "{{LS_save}}",
       "action": "set?pushingboxid=[[push-arg]]",
       "class": "btn btn-block btn-default",
       "style": "width:100%;display:inline"

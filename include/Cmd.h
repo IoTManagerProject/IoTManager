@@ -22,6 +22,7 @@ void cmd_buttonSet();
 void cmd_buttonChange();
 void cmd_switch();
 
+void cmd_logging();
 void cmd_inputDigit();
 void cmd_digitSet();
 void cmd_timeSet();

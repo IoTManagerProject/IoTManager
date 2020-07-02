@@ -2,6 +2,7 @@
 
 #include <PubSubClient.h>
 #include <WiFiClient.h>
+#include "Logger.h"
 
 #include "Global.h"
 
@@ -102,7 +103,7 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         publishWidgets();
         publishState();
 #ifdef LOGGING_ENABLED
-        choose_log_date_and_send();
+        Logger::choose_log_date_and_send();
 #endif
     } else if (topicStr.indexOf("control")) {
         // название топика -  команда,
@@ -118,10 +119,10 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         addCommandLoop(payloadStr);
     } else if (topicStr.indexOf("update")) {
         if (payloadStr == "1") {
-            perform_upgrade = true;
+            perform_upgrade();
         }
     } else if (topicStr.indexOf("devc")) {
-        writeFile(DEVICE_CONFIG_FILE, payloadStr);
+        writeFile(DEVICE_COMMAND_FILE, payloadStr);
         device_init();
     } else if (topicStr.indexOf("devs")) {
         writeFile(DEVICE_SCENARIO_FILE, payloadStr);
@@ -210,7 +211,7 @@ void publishState() {
     // {"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
-    String str = configLiveJson;
+    String str = liveJson;
     str.replace("{", "");
     str.replace("}", "");
     str += ",";

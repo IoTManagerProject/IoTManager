@@ -44,10 +44,7 @@ bool configChangeRequest(const String& param, const String& value) {
     } else if (param.equals("mqttPass")) {
         config.mqtt()->setPass(value);
     } else if (param.equals("pushingboxid")) {
-        jsonWriteStr(configSetupJson, "pushingboxid", value);
-        saveConfig();
-    } else if (param.equals(TAG_ONE_WIRE_PIN)) {
-        setConfigParam(TAG_ONE_WIRE_PIN, value);
+        config.general()->setPushingboxId(value);
     } else {
         return false;
     };
@@ -69,9 +66,6 @@ void web_init() {
 
     server.on(
         "/set", HTTP_GET, [](AsyncWebServerRequest* request) {
-            /*
-            * Actions
-            */
             if (request->hasArg("preset")) {
                 setPreset(request->getParam("preset")->value().toInt());
                 request->redirect("/?set.device");
@@ -88,8 +82,8 @@ void web_init() {
                 return;
             }
             if (request->hasArg("cleanlog")) {
-                clean_log_date();
-                request->send(200);
+                perform_logger_clear();
+                request->redirect(TAG_SET_UTILITIES);
                 return;
             }
             if (request->hasArg("updatelist")) {
@@ -123,15 +117,12 @@ void web_init() {
             if (request->hasArg(TAG_ONE_WIRE)) {
                 perform_bus_scanning(BS_ONE_WIRE);
                 if (request->hasParam(TAG_ONE_WIRE_PIN)) {
-                    setConfigParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value());
+                    setRuntimeParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value().c_str());
                 }
                 request->redirect(TAG_SET_UTILITIES);
                 return;
             }
 
-            /*
-            * Config
-            */
             for (size_t i = 0; i < request->params(); i++) {
                 String param = request->getParam(i)->name();
                 String value = request->getParam(i)->value();
@@ -144,9 +135,6 @@ void web_init() {
             request->send(200);
         });
 
-    /* 
-    * Check
-    */
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         String msg = "";
         // Errors
@@ -159,7 +147,7 @@ void web_init() {
         } else if (lastVersion == "notsupported") {
             msg = F("Обновление возможно только через usb!");
         } else if (lastVersion.isEmpty()) {
-            perform_updates_check = true;
+            perform_updates_check_flag = true;
             msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
         } else {
             // TODO Версия должна быть выше
@@ -179,7 +167,7 @@ void web_init() {
     * Upgrade
     */
     server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest* request) {
-        perform_upgrade = true;
+        perform_upgrade_flag = true;
         request->send(200);
     });
 }

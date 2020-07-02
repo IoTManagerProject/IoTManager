@@ -3,8 +3,9 @@
 
 static const char* MODULE = "FS";
 
-const String filepath(const String& filename) {
-    return filename.startsWith("/") ? filename : "/" + filename;
+const String filepath(const char* filename) {
+    String res = String(filename);
+    return res.startsWith("/") ? res : "/" + res;
 }
 
 bool fileSystemInit() {
@@ -16,7 +17,7 @@ bool fileSystemInit() {
 }
 
 void removeFile(const String filename) {
-    String path = filepath(filename);
+    String path = filepath(filename.c_str());
     if (LittleFS.exists(path)) {
         if (!LittleFS.remove(path)) {
             pm.error("remove " + path);
@@ -27,7 +28,7 @@ void removeFile(const String filename) {
 }
 
 File seekFile(const String filename, size_t position) {
-    String path = filepath(filename);
+    String path = filepath(filename.c_str());
     auto file = LittleFS.open(path, "r");
     if (!file) {
         pm.error("open " + path);
@@ -38,7 +39,7 @@ File seekFile(const String filename, size_t position) {
 }
 
 const String readFileString(const String filename, const String to_find) {
-    String path = filepath(filename);
+    String path = filepath(filename.c_str());
     String res = "failed";
     auto file = LittleFS.open(path, "r");
     if (!file) {
@@ -52,7 +53,7 @@ const String readFileString(const String filename, const String to_find) {
 }
 
 const String addFile(const String filename, const String str) {
-    String path = filepath(filename);
+    String path = filepath(filename.c_str());
     auto file = LittleFS.open(path, "a");
     if (!file) {
         return "failed";
@@ -63,8 +64,8 @@ const String addFile(const String filename, const String str) {
 }
 
 bool copyFile(const String src, const String dst, bool overwrite) {
-    String srcPath = filepath(src);
-    String dstPath = filepath(dst);
+    String srcPath = filepath(src.c_str());
+    String dstPath = filepath(dst.c_str());
     pm.info("copy " + srcPath + " to " + dstPath);
     if (!LittleFS.exists(srcPath)) {
         pm.error("not exist: " + srcPath);
@@ -91,7 +92,7 @@ bool copyFile(const String src, const String dst, bool overwrite) {
 }
 
 const String writeFile(const String filename, const String str) {
-    String path = filepath(filename);
+    String path = filepath(filename.c_str());
     auto file = LittleFS.open(path, "w");
     if (!file) {
         return "failed";
@@ -101,21 +102,21 @@ const String writeFile(const String filename, const String str) {
     return "sucсess";
 }
 
-const String readFile(const String filename, size_t max_size) {
+bool readFile(const char* filename, String& str, size_t max_size) {
     String path = filepath(filename);
-    pm.info("read " + filename);
+    pm.info("read " + path);
     auto file = LittleFS.open(path, "r");
     if (!file) {
-        return "failed";
+        return false;
     }
     size_t size = file.size();
     if (size > max_size) {
         file.close();
-        return "large";
+        return false;
     }
-    String temp = file.readString();
+    str = file.readString();
     file.close();
-    return temp;
+    return true;
 }
 
 const String getFileSize(const String filename) {

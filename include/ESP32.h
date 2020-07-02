@@ -16,10 +16,7 @@
 //
 #include <WiFi.h>
 #include <analogWrite.h>
-
-#ifdef MDNS_ENABLED
 #include <ESPmDNS.h>
-#endif
 
 extern AsyncUDP udp;
 

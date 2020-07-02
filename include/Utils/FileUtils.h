@@ -48,7 +48,7 @@ const String writeFile(const String filename, const String str);
 /*
 *  Чтение файла в строку
 */
-const String readFile(const String filename, size_t max_size);
+bool readFile(const char* filename, String& str, size_t max_size = 4096);
 
 /*
 *  Размер файла

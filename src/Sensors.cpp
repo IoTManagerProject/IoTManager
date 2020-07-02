@@ -67,8 +67,8 @@ void ultrasonic_reading() {
     int distance_cm;
     int level;
     static int counter;
-    int trig = jsonReadInt(configOptionJson, "trig");
-    int echo = jsonReadInt(configOptionJson, "echo");
+    int trig = jsonReadInt(optionJson, "trig");
+    int echo = jsonReadInt(optionJson, "echo");
     digitalWrite(trig, LOW);
     delayMicroseconds(2);
     digitalWrite(trig, HIGH);
@@ -81,17 +81,17 @@ void ultrasonic_reading() {
     if (counter > TANK_LEVEL_SAMPLES) {
         counter = 0;
         level = map(distance_cm,
-                    jsonReadInt(configOptionJson, "e_lev"),
-                    jsonReadInt(configOptionJson, "f_lev"), 0, 100);
+                    jsonReadInt(optionJson, "e_lev"),
+                    jsonReadInt(optionJson, "f_lev"), 0, 100);
 
-        jsonWriteInt(configLiveJson, levelPr_value_name, level);
+        jsonWriteInt(liveJson, levelPr_value_name, level);
         fireEvent(levelPr_value_name, "");
 
         MqttClient::publishStatus(levelPr_value_name, String(level));
 
         Serial.println("[I] sensor '" + levelPr_value_name + "' data: " + String(level));
 
-        jsonWriteInt(configLiveJson, ultrasonicCm_value_name, distance_cm);
+        jsonWriteInt(liveJson, ultrasonicCm_value_name, distance_cm);
         fireEvent(ultrasonicCm_value_name, "");
 
         MqttClient::publishStatus(ultrasonicCm_value_name, String(distance_cm));
@@ -110,14 +110,14 @@ void analog_reading1() {
 #endif
 
     int mapped = map(raw,
-                     jsonReadInt(configOptionJson, name + "_st"),
-                     jsonReadInt(configOptionJson, name + "_end"),
-                     jsonReadInt(configOptionJson, name + "_st_out"),
-                     jsonReadInt(configOptionJson, name + "_end_out"));
+                     jsonReadInt(optionJson, name + "_st"),
+                     jsonReadInt(optionJson, name + "_end"),
+                     jsonReadInt(optionJson, name + "_st_out"),
+                     jsonReadInt(optionJson, name + "_end_out"));
 
     pm.info("sensor: '" + name + "' value: " + String(mapped, DEC));
 
-    jsonWriteInt(configLiveJson, name, mapped);
+    jsonWriteInt(liveJson, name, mapped);
 
     fireEvent(name);
 
@@ -133,11 +133,11 @@ void analog_reading2() {
     int analog_in = analogRead(A0);
 #endif
     int analog = map(analog_in,
-                     jsonReadInt(configOptionJson, value_name + "_st"),
-                     jsonReadInt(configOptionJson, value_name + "_end"),
-                     jsonReadInt(configOptionJson, value_name + "_st_out"),
-                     jsonReadInt(configOptionJson, value_name + "_end_out"));
-    jsonWriteInt(configLiveJson, value_name, analog);
+                     jsonReadInt(optionJson, value_name + "_st"),
+                     jsonReadInt(optionJson, value_name + "_end"),
+                     jsonReadInt(optionJson, value_name + "_st_out"),
+                     jsonReadInt(optionJson, value_name + "_end_out"));
+    jsonWriteInt(liveJson, value_name, analog);
     fireEvent(value_name, "");
     MqttClient::publishStatus(value_name, String(analog));
     Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
@@ -156,7 +156,7 @@ void dallas_reading() {
         temp = dallasTemperature->getTempCByIndex(i);
         String buf = selectToMarker(dallas_value_name_tmp_buf, ";");
         dallas_value_name_tmp_buf = deleteBeforeDelimiter(dallas_value_name_tmp_buf, ";");
-        jsonWriteStr(configLiveJson, buf, String(temp));
+        jsonWriteStr(liveJson, buf, String(temp));
         fireEvent(buf, "");
         MqttClient::publishStatus(buf, String(temp));
         Serial.println("[I] sensor '" + buf + "' send date " + String(temp));
@@ -174,7 +174,7 @@ void dhtT_reading() {
         value = dht.getTemperature();
         if (String(value) != "nan") {
             fireEvent(dhtT_value_name, "");
-            jsonWriteStr(configLiveJson, dhtT_value_name, String(value));
+            jsonWriteStr(liveJson, dhtT_value_name, String(value));
             MqttClient::publishStatus(dhtT_value_name, String(value));
             Serial.println("[I] sensor '" + dhtT_value_name + "' data: " + String(value));
         }
@@ -192,7 +192,7 @@ void dhtH_reading() {
         value = dht.getHumidity();
         if (String(value) != "nan") {
             fireEvent(dhtH_value_name, "");
-            jsonWriteStr(configLiveJson, dhtH_value_name, String(value));
+            jsonWriteStr(liveJson, dhtH_value_name, String(value));
             MqttClient::publishStatus(dhtH_value_name, String(value));
             Serial.println("[I] sensor '" + dhtH_value_name + "' data: " + String(value));
         }
@@ -204,9 +204,9 @@ void dhtP_reading() {
     if (dht.getStatus() != 0) {
         MqttClient::publishStatus("dhtPerception", String(dht.getStatusString()));
     } else {
-        value = dht.computePerception(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
+        value = dht.computePerception(jsonReadStr(liveJson, dhtT_value_name).toFloat(), jsonReadStr(liveJson, dhtH_value_name).toFloat(), false);
         String final_line = perceptionStr(value);
-        jsonWriteStr(configLiveJson, "dhtPerception", final_line);
+        jsonWriteStr(liveJson, "dhtPerception", final_line);
         fireEvent("dhtPerception", "");
 
         if (MqttClient::isConnected()) {
@@ -221,9 +221,9 @@ void dhtC_reading() {
     if (dht.getStatus() != 0) {
         MqttClient::publishStatus("dhtComfort", String(dht.getStatusString()));
     } else {
-        dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
+        dht.getComfortRatio(cf, jsonReadStr(liveJson, dhtT_value_name).toFloat(), jsonReadStr(liveJson, dhtH_value_name).toFloat(), false);
         String final_line = comfortStr(cf);
-        jsonWriteStr(configLiveJson, "dhtComfort", final_line);
+        jsonWriteStr(liveJson, "dhtComfort", final_line);
         fireEvent("dhtComfort", "");
         MqttClient::publishStatus("dhtComfort", final_line);
         Serial.println("[I] sensor 'dhtComfort' send date " + final_line);
@@ -235,8 +235,8 @@ void dhtD_reading() {
     if (dht.getStatus() != 0) {
         MqttClient::publishStatus("dhtDewpoint", String(dht.getStatusString()));
     } else {
-        value = dht.computeDewPoint(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
-        jsonWriteInt(configLiveJson, "dhtDewpoint", value);
+        value = dht.computeDewPoint(jsonReadStr(liveJson, dhtT_value_name).toFloat(), jsonReadStr(liveJson, dhtH_value_name).toFloat(), false);
+        jsonWriteInt(liveJson, "dhtDewpoint", value);
         fireEvent("dhtDewpoint", "");
         MqttClient::publishStatus("dhtDewpoint", String(value));
         Serial.println("[I] sensor 'dhtDewpoint' data: " + String(value));
@@ -248,7 +248,7 @@ void bmp280T_reading() {
     sensors_event_t temp_event;
     bmp_temp->getEvent(&temp_event);
     value = temp_event.temperature;
-    jsonWriteStr(configLiveJson, bmp280T_value_name, String(value));
+    jsonWriteStr(liveJson, bmp280T_value_name, String(value));
     fireEvent(bmp280T_value_name, "");
     MqttClient::publishStatus(bmp280T_value_name, String(value));
     Serial.println("[I] sensor '" + bmp280T_value_name + "' data: " + String(value));
@@ -260,7 +260,7 @@ void bmp280P_reading() {
     bmp_pressure->getEvent(&pressure_event);
     value = pressure_event.pressure;
     value = value / 1.333224;
-    jsonWriteStr(configLiveJson, bmp280P_value_name, String(value));
+    jsonWriteStr(liveJson, bmp280P_value_name, String(value));
     fireEvent(bmp280P_value_name, "");
     MqttClient::publishStatus(bmp280P_value_name, String(value));
     Serial.println("[I] sensor '" + bmp280P_value_name + "' data: " + String(value));
@@ -269,7 +269,7 @@ void bmp280P_reading() {
 void bme280T_reading() {
     float value = 0;
     value = bme.readTemperature();
-    jsonWriteStr(configLiveJson, bme280T_value_name, String(value));
+    jsonWriteStr(liveJson, bme280T_value_name, String(value));
     fireEvent(bme280T_value_name, "");
     MqttClient::publishStatus(bme280T_value_name, String(value));
     Serial.println("[I] sensor '" + bme280T_value_name + "' data: " + String(value));
@@ -279,7 +279,7 @@ void bme280P_reading() {
     float value = 0;
     value = bme.readPressure();
     value = value / 1.333224;
-    jsonWriteStr(configLiveJson, bme280P_value_name, String(value));
+    jsonWriteStr(liveJson, bme280P_value_name, String(value));
     fireEvent(bme280P_value_name, "");
     MqttClient::publishStatus(bme280P_value_name, String(value));
     Serial.println("[I] sensor '" + bme280P_value_name + "' data: " + String(value));
@@ -288,7 +288,7 @@ void bme280P_reading() {
 void bme280H_reading() {
     float value = 0;
     value = bme.readHumidity();
-    jsonWriteStr(configLiveJson, bme280H_value_name, String(value));
+    jsonWriteStr(liveJson, bme280H_value_name, String(value));
     fireEvent(bme280H_value_name, "");
     MqttClient::publishStatus(bme280H_value_name, String(value));
     Serial.println("[I] sensor '" + bme280H_value_name + "' data: " + String(value));
@@ -296,7 +296,7 @@ void bme280H_reading() {
 
 void bme280A_reading() {
     float value = bme.readAltitude(1013.25);
-    jsonWriteStr(configLiveJson, bme280A_value_name, String(value, 2));
+    jsonWriteStr(liveJson, bme280A_value_name, String(value, 2));
 
     fireEvent(bme280A_value_name, "");
 

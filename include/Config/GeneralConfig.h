@@ -6,6 +6,9 @@ class GeneralConfig : public ConfigItem {
    public:
     GeneralConfig();
 
+    const String getPushingboxId();
+    void setPushingboxId(String value);
+
     void enableLed(bool value);
     boolean isLedEnabled();
 
@@ -19,6 +22,7 @@ class GeneralConfig : public ConfigItem {
     void save(JsonObject&) override;
 
    private:
+    String _pushingBoxId;
     bool _broadcastEnabled;
     bool _scenarioEnabled;
     bool _ledEnabled;

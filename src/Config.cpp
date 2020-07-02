@@ -37,15 +37,16 @@ void Config::setSynced() {
     _timestamp = timestamp;
 }
 
+bool Config::hasChanged() {
+    for (size_t i = 0; i < NUM_CONFIGS; i++) {
+        if (_timestamp < _items[i]->getTimestamp()) return true;
+    }
+    return false;
+}
+
 void Config::load(const String& str) {
     DynamicJsonBuffer buf;
     JsonObject& root = buf.parseObject(str);
-
-    // "pushingboxid" : "v7C133E426B0C69E"
-    // "oneWirePin" : "3",
-    // "firmware_version" : "2.3.5",
-    // "ip" : "192.168.1.216",
-    // "uptime" : "00:00:28"
 
     for (size_t i = 0; i < NUM_CONFIGS; i++) {
         _items[i]->load(root);
@@ -54,15 +55,24 @@ void Config::load(const String& str) {
     _timestamp = millis();
 }
 
-const String Config::save(String& str) {
+const String Config::append(String& str) {
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(str);
-
-    for (size_t i = 0; i < NUM_CONFIGS; i++) {
-        _items[i]->save(root);
-    }
-
+    save(root);
     str = "";
     root.printTo(str);
     return str;
+};
+
+void Config::save(String& str) {
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& root = jsonBuffer.createObject();
+    save(root);
+    root.printTo(str);
+};
+
+void Config::save(JsonObject& root) {
+    for (size_t i = 0; i < NUM_CONFIGS; i++) {
+        _items[i]->save(root);
+    }
 };

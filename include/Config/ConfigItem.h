@@ -19,6 +19,12 @@ class ConfigItem {
         return true;
     }
 
+    virtual void loadString(const String& str) {
+        DynamicJsonBuffer buf;
+        JsonObject& root = buf.parseObject(str);
+        load(root);
+    }
+
     virtual void load(const JsonObject& root) = 0;
 
     virtual void save(JsonObject& root) = 0;

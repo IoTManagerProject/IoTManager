@@ -42,7 +42,7 @@ void init() {
         BROADCASTING, udp_period, [&](void*) {
             if (config.general()->isBroadcastEnabled() && !_busy) {
                 String data = "iotm;";
-                data += chipId;
+                data += getChipId();
                 data += ";";
                 data += config.network()->getHostname();
                 pm.info("send: " + data);
@@ -107,14 +107,9 @@ void do_udp_data_parse() {
     }
 
     if (received.indexOf("mqttServer") >= 0) {
-        pm.info(String("received settings"));
-        jsonWriteStr(configSetupJson, "mqttServer", jsonReadStr(received, "mqttServer"));
-        jsonWriteInt(configSetupJson, "mqttPort", jsonReadInt(received, "mqttPort"));
-        jsonWriteStr(configSetupJson, "mqttPrefix", jsonReadStr(received, "mqttPrefix"));
-        jsonWriteStr(configSetupJson, "mqttUser", jsonReadStr(received, "mqttUser"));
-        jsonWriteStr(configSetupJson, "mqttPass", jsonReadStr(received, "mqttPass"));
-        saveConfig();
-        mqttParamsChangedFlag = true;
+        pm.info("mqtt settings");
+        config.mqtt()->loadString(received);
+        mqtt_restart_flag = true;
     }
     if (received.indexOf("iotm;") >= 0) {
         addKnownDevice("dev.csv", selectFromMarkerToMarker(received, ";", 1), selectFromMarkerToMarker(received, ";", 2), received);

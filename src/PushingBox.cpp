@@ -1,60 +1,48 @@
 #include "Global.h"
 
+static const char* MODULE = "pushingbox";
+
+static const char* logServer = "api.pushingbox.com";
+
 void Push_init() {
     server.on("/pushingboxDate", HTTP_GET, [](AsyncWebServerRequest* request) {
         if (request->hasArg("pushingbox_id")) {
-            jsonWriteStr(configSetupJson, "pushingbox_id", request->getParam("pushingbox_id")->value());
+            config.general()->setPushingboxId(request->getParam("pushingbox_id")->value());
         }
-
-        saveConfig();
-
-        request->send(200, "text/text", "ok");  // отправляем ответ о выполнении
+        request->send(200);
     });
 }
 
 void pushControl() {
     String title = sCmd.next();
-    title.replace("#", " ");
     String body = sCmd.next();
+    title.replace("#", " ");
     body.replace("#", " ");
 
-    static String body_old;
+    WiFiClient wifiClient;
+    pm.info("connecting: " + String(logServer));
 
-    const char* logServer = "api.pushingbox.com";
-    String deviceId = jsonReadStr(configSetupJson, "pushingbox_id");
-
-    Serial.println("- starting client");
-
-    WiFiClient client_push;
-
-    Serial.println("- connecting to pushing server: " + String(logServer));
-    if (!client_push.connect(logServer, 80)) {
-        Serial.println("- not connected");
-    } else {
-        Serial.println("- succesfully connected");
-
-        String postStr = "devid=";
-        postStr += String(deviceId);
-
-        postStr += "&title=";
-        postStr += String(title);
-
-        postStr += "&body=";
-        postStr += String(body);
-
-        postStr += "\r\n\r\n";
-
-        Serial.println("- sending data...");
-
-        client_push.print("POST /pushingbox HTTP/1.1\n");
-        client_push.print("Host: api.pushingbox.com\n");
-        client_push.print("Connection: close\n");
-        client_push.print("Content-Type: application/x-www-form-urlencoded\n");
-        client_push.print("Content-Length: ");
-        client_push.print(postStr.length());
-        client_push.print("\n\n");
-        client_push.print(postStr);
+    if (!wifiClient.connect(logServer, 80)) {
+        pm.error("failed");
+        return;
     }
-    client_push.stop();
-    Serial.println("- stopping the client");
+
+    String payload = "devid=";
+    payload += String(config.general()->getPushingboxId());
+    payload += "&title=";
+    payload += title;
+    payload += "&body=";
+    payload += body;
+    payload += "\r\n\r\n";
+
+    wifiClient.print("POST /pushingbox HTTP/1.1\n");
+    wifiClient.print("Host: api.pushingbox.com\n");
+    wifiClient.print("Connection: close\n");
+    wifiClient.print("Content-Type: application/x-www-form-urlencoded\n");
+    wifiClient.print("Content-Length: ");
+    wifiClient.print(payload.length());
+    wifiClient.print("\n\n");
+    wifiClient.print(payload);
+
+    wifiClient.stop();
 }

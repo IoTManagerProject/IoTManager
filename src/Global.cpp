@@ -19,28 +19,51 @@ AsyncWebServer server(80);
 * Global vars
 */
 // Json
-String configSetupJson = "{}";
-String configLiveJson = "{}";
-String configOptionJson = "{}";
+String runtimeJson = "{}";
+String liveJson = "{}";
+String optionJson = "{}";
 
-String chipId = "";
 String prex = "";
 String all_widgets = "";
 String order_loop = "";
 
-// Logging
-String logging_value_names_list;
-int enter_to_logging_counter;
-
 String lastVersion = "";
 boolean just_load = true;
 
-boolean mqttParamsChangedFlag = false;
+boolean mqtt_restart_flag = false;
 boolean udp_data_parse = false;
 
-void saveConfig() {
-    config.save(configSetupJson);
-    writeFile(String("config.json"), configSetupJson);
+void save_config() {
+    String buf;
+    config.save(buf);
+    writeFile(DEVICE_CONFIG_FILE, buf);
+    config.setSynced();
+}
+
+void load_config() {
+    String buf;
+    if (readFile(DEVICE_CONFIG_FILE, buf)) {
+        config.load(buf);
+    }
+}
+
+void load_runtime() {
+    if (readFile(DEVICE_RUNTIME_FILE, runtimeJson)) {
+        runtimeJson.replace(" ", "");
+        runtimeJson.replace("\r\n", "");
+    } else {
+        runtimeJson = "{}";
+    }
+    Serial.println(runtimeJson);
+
+    jsonWriteStr(runtimeJson, "chipID", getChipId());
+    jsonWriteStr(runtimeJson, "firmware_version", FIRMWARE_VERSION);
+
+    Serial.println(runtimeJson);
+}
+
+void save_runtime() {
+    writeFile(DEVICE_RUNTIME_FILE, runtimeJson);
 }
 
 void fireEvent(String name) {
@@ -64,12 +87,12 @@ const String readLiveData(const String& obj) {
         }
     } else {
         pm.info("read live: " + obj);
-        res = jsonReadStr(configLiveJson, obj);
+        res = jsonReadStr(liveJson, obj);
     }
     return res;
 }
 
 const String writeLiveData(const String& obj, const String& value) {
     pm.info("write live: " + obj + " " + value);
-    return jsonWriteStr(configLiveJson, obj, value);
+    return jsonWriteStr(liveJson, obj, value);
 }

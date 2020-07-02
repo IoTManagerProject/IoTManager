@@ -3,8 +3,20 @@
 static const char* TAG_SCENARIO_ENABLED = "scen";
 static const char* TAG_BROADCAST_ENABLED = "udponoff";
 static const char* TAG_LED_ENABLED = "blink";
+static const char* TAG_PUSHINGBOX_ID = "pushingboxid";
 
 GeneralConfig::GeneralConfig() {}
+
+const String GeneralConfig::getPushingboxId() {
+    return _pushingBoxId;
+}
+
+void GeneralConfig::setPushingboxId(String value) {
+    if (!_pushingBoxId.equals(value)) {
+        _pushingBoxId = value;
+        setChanged();
+    }
+}
 
 boolean GeneralConfig::isLedEnabled() {
     return _ledEnabled;
@@ -46,6 +58,7 @@ void GeneralConfig::load(const JsonObject& root) {
     _scenarioEnabled = root[TAG_SCENARIO_ENABLED] | true;
     _broadcastEnabled = root[TAG_BROADCAST_ENABLED] | true;
     _ledEnabled = root[TAG_LED_ENABLED] | true;
+    _pushingBoxId = root[TAG_PUSHINGBOX_ID].as<String>();
 }
 
 void GeneralConfig::save(JsonObject& root) {

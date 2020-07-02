@@ -20,8 +20,13 @@ class Config {
    public:
     Config();
 
+    bool hasChanged();
+
     void load(const String&);
-    const String save(String& str);
+    void save(JsonObject& root);
+
+    void save(String& str);
+    const String append(String& str);
 
     MqttConfig* mqtt();
     ClockConfig* clock();
@@ -29,7 +34,6 @@ class Config {
     GeneralConfig* general();
     WebConfig* web();
 
-   private:
     void setSynced();
 
    private:

@@ -1,4 +1,4 @@
-#include "SPIFFSEditor.h"
+#include "FSEditor.h"
 #include <FS.h>
 
 #define FS_MAXLENGTH_FILEPATH 32
@@ -219,8 +219,7 @@ void FSEditor::handleRequest(AsyncWebServerRequest *request) {
             if (request->header("If-Modified-Since").equals(buildTime)) {
                 request->send(304);
             } else {
-                AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", edit_htm_gz, edit_htm_gz_len);
-                response->addHeader("Content-Encoding", "gzip");
+                AsyncWebServerResponse *response = request->beginResponse(_fs, "/edit.htm");
                 response->addHeader("Last-Modified", buildTime);
                 request->send(response);
             }

@@ -1,6 +1,6 @@
 {
   "configs": [
-    "/config.setup.json",
+    "/config.json",
     "/lang/lang.ru.json"
   ],
   "title": "Конфигурация",
@@ -13,7 +13,7 @@
     },
     {
       "type": "link",
-      "title": "{{ButMainPage}}",
+      "title": "{{LS_mainPage}}",
       "action": "/",
       "class": "btn btn-block btn-default"
     },
@@ -33,7 +33,7 @@
     },
     {
       "type": "button",
-      "title": "{{ButSave}}",
+      "title": "{{LS_save}}",
       "action": "set?devname=[[devname-arg]]",
       "class": "btn btn-block btn-default"
     },
@@ -62,7 +62,7 @@
     },
     {
       "type": "button",
-      "title": "{{ButSave}}",
+      "title": "{{LS_save}}",
       "class": "btn btn-block btn-default",
       "action": "set?routerssid=[[routerssid-arg]]&routerpass=[[routerpass-arg]]"
     },
@@ -107,7 +107,7 @@
     },
     {
       "type": "button",
-      "title": "{{ButSave}}",
+      "title": "{{LS_save}}",
       "action": "set?apssid=[[apssid-arg]]&appass=[[appass-arg]]",
       "class": "btn btn-block btn-default"
     },
@@ -138,7 +138,7 @@
     },
     {
       "type": "button",
-      "title": "{{ButSave}}",
+      "title": "{{LS_save}}",
       "action": "set?weblogin=[[weblogin-arg]]&webpass=[[webpass-arg]]",
       "class": "btn btn-block btn-default"
     },
@@ -164,7 +164,7 @@
     },
     {
       "type": "button",
-      "title": "{{ButSave}}",
+      "title": "{{LS_save}}",
       "action": "set?timezone=[[timezone-arg]]&ntp=[[ntp-arg]]",
       "class": "btn btn-block btn-default"
     },

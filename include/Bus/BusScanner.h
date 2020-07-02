@@ -18,7 +18,7 @@ class BusScanner {
         if (!_found) {
             _res = "не найдено";
         }
-
+        
         jsonWriteStr(out, _tag, _res);
     }
 

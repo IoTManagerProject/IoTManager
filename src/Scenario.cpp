@@ -24,7 +24,7 @@ void reinit() {
 }
 
 void init() {
-    _content = readFile(DEVICE_SCENARIO_FILE, 2048);
+    readFile(DEVICE_SCENARIO_FILE, _content);
     memset(_block_enabled, 1, sizeof(_block_enabled[0]) * NUM_LINES);
     _initialized = true;
 }

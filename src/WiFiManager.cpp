@@ -13,9 +13,9 @@ bool _connected = false;
 
 void startSTAMode() {
     setLedStatus(LED_SLOW);
-
-    String ssid = jsonReadStr(configSetupJson, "routerssid");
-    String passwd = jsonReadStr(configSetupJson, "routerpass");
+    String ssid, passwd;
+    config.network()->getSSID(WIFI_STA, ssid);
+    config.network()->getPasswd(WIFI_STA, passwd);
     pm.info("STA Mode: " + ssid);
 
     WiFi.mode(WIFI_STA);
@@ -44,12 +44,16 @@ void startSTAMode() {
             case WL_CONNECTED: {
                 String hostIpStr = WiFi.localIP().toString();
                 pm.info("http://" + hostIpStr);
-                jsonWriteStr(configSetupJson, "ip", hostIpStr);
+
+                setRuntimeParam("ip", hostIpStr.c_str());
+
                 keepConnecting = false;
             } break;
             case WL_CONNECT_FAILED: {
                 pm.error("check credentials");
-                jsonWriteInt(configOptionJson, "pass_status", 1);
+
+                jsonWriteInt(optionJson, "pass_status", 1);
+
                 keepConnecting = false;
             } break;
             default:
@@ -105,12 +109,13 @@ bool startAPMode() {
     String hostIpStr = WiFi.softAPIP().toString();
     pm.info("http://" + hostIpStr);
 
-    jsonWriteStr(configSetupJson, "ip", hostIpStr);
+    setRuntimeParam("ip", hostIpStr.c_str());
 
     ts.add(
         WIFI_SCAN, 10 * 1000,
         [&](void*) {
-            String sta_ssid = jsonReadStr(configSetupJson, "routerssid");
+            String sta_ssid;
+            config.network()->getSSID(WIFI_STA, sta_ssid);
             pm.info("scan for " + sta_ssid);
             if (scanWiFi(sta_ssid)) {
                 ts.remove(WIFI_SCAN);
@@ -125,7 +130,6 @@ bool startAPMode() {
 boolean scanWiFi(String ssid) {
     bool res = false;
     int8_t n = WiFi.scanComplete();
-    pm.info("scan result: " + String(n, DEC));
     if (n == -2) {
         // не было запущено, запускаем
         pm.info(String("start scanning"));
@@ -139,6 +143,7 @@ boolean scanWiFi(String ssid) {
         pm.info(String("no networks found"));
         WiFi.scanNetworks(true, false);
     } else if (n > 0) {
+        pm.info("networks found: " + String(n, DEC));
         for (int8_t i = 0; i < n; i++) {
             if (WiFi.SSID(i) == ssid) {
                 res = true;

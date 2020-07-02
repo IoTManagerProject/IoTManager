@@ -1,6 +1,6 @@
 {
   "configs": [
-    "/config.setup.json",
+    "/config.json",
     "/lang/lang.ru.json"
   ],
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
@@ -9,18 +9,16 @@
       "type": "h5",
       "title": "{{name}}",
       "class": "alert-default"
-      
     },
     {
       "type": "link",
-      "title": "{{ButMainPage}}",
+      "title": "{{LS_mainPage}}",
       "action": "/",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "hr"
     },
-   
     {
       "type": "h4",
       "title": "{{SetMQTTServerName}}",
@@ -87,10 +85,9 @@
       "style": "position:fixed;top:30%;left:50%;width:400px;margin-left:-200px;text-align:center;",
       "class": "hidden"
     },
-    
     {
       "type": "button",
-      "title": "{{ButSave}}",
+      "title": "{{LS_save}}",
       "style": "width:100%;float:left;",
       "action": "set?mqttServer=[[mqttServer-arg]]&mqttPort=[[mqttPort-arg]]&mqttPrefix=[[mqttPrefix-arg]]&mqttUser=[[mqttUser-arg]]&mqttPass=[[mqttPass-arg]]",
       "class": "btn btn-block btn-default"
@@ -102,7 +99,6 @@
       "action": "set?mqttsend",
       "class": "btn btn-block btn-default"
     },
-    
     {
       "type": "button",
       "style": "width:100%;float:left;",
@@ -115,7 +111,6 @@
       "type": "text",
       "style": "width:100%;float:left;",
       "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetMQTTWarn1}}</p></font></div>"
-     
     },
     {
       "type": "text",

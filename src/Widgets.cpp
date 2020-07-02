@@ -71,8 +71,8 @@ void clearWidgets() {
 }
 
 bool loadWidget(const String& filename, String& buf) {
-    buf = readFile(getWidgetFile(filename), 2048);
-    bool res = !(buf == "failed" || buf == "large");
+    String path = getWidgetFile(filename);
+    bool res = readFile(path.c_str(), buf);
     if (!res) {
         pm.error("on load " + filename);
     }

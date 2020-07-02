@@ -47,12 +47,14 @@ extern AsyncWebServer server;
 * Global vars
 */
 extern boolean just_load;
-// все настройки
-extern String configSetupJson;
-// все данные с датчиков (связан с mqtt)
-extern String configLiveJson;
+// данные среды выполнения
+extern String runtimeJson;
+
+// все данные с датчиков
+extern String liveJson;
+
 // для трансфера
-extern String configOptionJson;
+extern String optionJson;
 
 extern String chipId;
 extern String prex;
@@ -64,9 +66,9 @@ extern int enter_to_logging_counter;
 
 extern String lastVersion;
 
-extern boolean perform_updates_check;
-extern boolean perform_upgrade;
-extern boolean mqttParamsChangedFlag;
+extern boolean perform_updates_check_flag;
+extern boolean perform_upgrade_flag;
+extern boolean mqtt_restart_flag;
 extern boolean udp_data_parse;
 
 extern void fireEvent(String name);
@@ -75,6 +77,18 @@ extern void fireEvent(String name, String param);
 extern const String readLiveData(const String& obj);
 extern const String writeLiveData(const String& obj, const String& value);
 
+/*
+* Запрос на проверку обновлений
+*/
+extern void perform_updates_check();
+/*
+* Запрос на аггрейд
+*/
+extern void perform_upgrade();
+/*
+* Запрос на очистук логов
+*/
+extern void perform_logger_clear();
 /*
 * Запрос на сканирование шины
 */
@@ -87,30 +101,27 @@ extern void perform_system_restart();
 * Широковещательная расслыка настроек mqtt
 */
 extern void broadcast_mqtt_settings();
-
 /*
-* Global functions
+* Запуск комманд из файла
 */
 extern void fileExecute(const String filename);
-
+/*
+* Запуск комманд из строки
+*/
 extern void stringExecute(String& cmdStr);
-// Init
-extern void loadConfig();
+
+extern void load_runtime();
+extern void load_config();
+
 extern void statistics_init();
 extern void device_init();
 extern void cmd_init();
 extern void init_mod();
-// Logging
-extern void logging();
-extern void deleteOldDate(String filename, size_t max_lines, String date_to_add);
-extern void clean_log_date();
-extern void choose_log_date_and_send();
 
-// Main
-extern void setChipId();
-extern void saveConfig();
+extern void save_runtime();
+extern void save_config();
 extern void setPreset(size_t num);
-extern void setConfigParam(const char* param, const String& value);
+extern void setRuntimeParam(const char* param, const char* value);
 extern void setLedStatus(LedStatus_t);
 
 //Scenario
@@ -118,7 +129,7 @@ extern void fireEvent(String event_name, String number);
 extern String add_set(String param_name);
 
 //Timers
-extern void Timer_countdown_init();
+extern void timer_countdown_init();
 extern void timerStart_();
 extern void addTimer(String number, String time);
 extern void timerStop_();
@@ -144,8 +155,8 @@ extern void loop_scenario();
 extern void do_update();
 
 // Init
-extern void uptime_init();
+extern void uptime_task_init();
 
-// Web
+extern void config_init();
 extern void web_init();
 extern void telemetry_init();

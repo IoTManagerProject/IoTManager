@@ -7,16 +7,40 @@
 #include "Bus/DallasScanner.h"
 #include "TickerScheduler/Metric.h"
 #include "Sensors.h"
+#include "Logger.h"
 
 static const char* MODULE = "Main";
 
-void acync_actions();
+void async_actions();
 void config_backup();
 void config_restore();
 
-// Async actions
-boolean perform_updates_check = false;
-boolean perform_upgrade = false;
+enum LoopItems {
+    LI_CLOCK,
+    LI_NOT_ASYNC,
+    LI_MQTT_CLIENT,
+    LI_CMD,
+    LI_BUTTON,
+    LI_SCENARIO,
+    LI_UDP,
+    LI_SERIAL,
+    LI_TICKETS
+};
+
+Metric m;
+boolean initialized = false;
+
+boolean perform_updates_check_flag = false;
+void perform_updates_check() {
+    pm.info("updates check");
+    perform_updates_check_flag = true;
+}
+
+boolean perform_upgrade_flag = false;
+void perform_upgrade() {
+    pm.info("upgrade");
+    perform_upgrade_flag = true;
+}
 
 boolean broadcast_mqtt_settings_flag = false;
 void broadcast_mqtt_settings() {
@@ -38,20 +62,11 @@ void perform_system_restart() {
     perform_system_restart_flag = true;
 }
 
-enum LoopItems {
-    LI_CLOCK,
-    LI_NOT_ASYNC,
-    LI_MQTT_CLIENT,
-    LI_CMD,
-    LI_BUTTON,
-    LI_SCENARIO,
-    LI_UDP,
-    LI_SERIAL,
-    LI_TICKETS
-};
-
-Metric m;
-boolean initialized = false;
+boolean perform_logger_clear_flag = false;
+void perform_logger_clear() {
+    pm.info("logger clear");
+    perform_logger_clear_flag = true;
+}
 
 void loop() {
     if (!initialized) {
@@ -67,7 +82,7 @@ void loop() {
 #ifdef WS_enable
     ws.cleanupClients();
 #endif
-    acync_actions();
+    async_actions();
     m.add(LI_NOT_ASYNC);
 
     MqttClient::loop();
@@ -96,19 +111,25 @@ void loop() {
     m.add(LI_TICKETS);
 }
 
-void acync_actions() {
-    if (mqttParamsChangedFlag) {
+void async_actions() {
+    if (config.hasChanged()) {
+        pm.info("store " DEVICE_CONFIG_FILE);
+        save_config();
+    }
+
+    if (mqtt_restart_flag) {
+        MqttClient::setConfig(config.mqtt());
         MqttClient::reconnect();
-        mqttParamsChangedFlag = false;
+        mqtt_restart_flag = false;
     }
 
-    if (perform_updates_check) {
+    if (perform_updates_check_flag) {
         lastVersion = Updater::check();
-        jsonWriteStr(configSetupJson, "last_version", lastVersion);
-        perform_updates_check = false;
+        jsonWriteStr(runtimeJson, "last_version", lastVersion);
+        perform_updates_check_flag = false;
     }
 
-    if (perform_upgrade) {
+    if (perform_upgrade_flag) {
         config_backup();
         bool res = Updater::upgrade_fs_image();
         if (res) {
@@ -117,8 +138,10 @@ void acync_actions() {
             if (res) {
                 pm.info("done! restart...");
             }
+        } else {
+            pm.error("upgrade image");
         }
-        perform_upgrade = false;
+        perform_upgrade_flag = false;
     }
 
     if (broadcast_mqtt_settings_flag) {
@@ -140,9 +163,14 @@ void acync_actions() {
                 bus = nullptr;
         }
         if (bus) {
-            bus->scan(configLiveJson);
+            bus->scan(liveJson);
         }
         perform_bus_scanning_flag = false;
+    }
+
+    if (perform_logger_clear_flag) {
+        Logger::clear();
+        perform_logger_clear_flag = false;
     }
 
     if (perform_system_restart_flag) {
@@ -150,23 +178,16 @@ void acync_actions() {
     }
 }
 
-void setChipId() {
-    chipId = getChipId();
-    pm.info("id: " + chipId);
-}
-
 void setPreset(size_t num) {
     pm.info("preset #" + String(num, DEC));
-    copyFile(getConfigFile(num, CT_CONFIG), DEVICE_CONFIG_FILE);
+    copyFile(getConfigFile(num, CT_CONFIG), DEVICE_COMMAND_FILE);
     copyFile(getConfigFile(num, CT_SCENARIO), DEVICE_SCENARIO_FILE);
     device_init();
-
 }
 
-void setConfigParam(const char* param, const String& value) {
-    pm.info("set " + String(param) + ": " + value);
-    jsonWriteStr(configSetupJson, param, value);
-    saveConfig();
+void setRuntimeParam(const char* param, const char* value) {
+    pm.info("runtime " + String(param) + ": " + value);
+    jsonWriteStr(runtimeJson, param, value);
 }
 
 #ifdef ESP8266
@@ -223,25 +244,25 @@ void clock_init() {
 
     ts.add(
         TIME, 1000, [&](void*) {
-            jsonWriteStr(configLiveJson, "time", timeNow->getTime());
-            jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
+            jsonWriteStr(runtimeJson, "time", timeNow->getTime());
+            jsonWriteStr(runtimeJson, "timenow", timeNow->getTimeJson());
             fireEvent("timenow", "");
         },
         nullptr, true);
 }
 
-String scenarioBackup, configBackup, setupBackup;
+String scenarioBackup, commandBackup, configBackup;
 void config_backup() {
-    scenarioBackup = readFile(String(DEVICE_SCENARIO_FILE), 4096);
-    configBackup = readFile(String(DEVICE_CONFIG_FILE), 4096);
-    setupBackup = configSetupJson;
+    readFile(DEVICE_SCENARIO_FILE, scenarioBackup);
+    readFile(DEVICE_COMMAND_FILE, commandBackup);
+    readFile(DEVICE_CONFIG_FILE, configBackup);
 }
 
 void config_restore() {
-    writeFile(String(DEVICE_SCENARIO_FILE), scenarioBackup);
-    writeFile(String(DEVICE_CONFIG_FILE), configBackup);
-    writeFile("config.json", setupBackup);
-    saveConfig();
+    writeFile(DEVICE_SCENARIO_FILE, scenarioBackup);
+    writeFile(DEVICE_COMMAND_FILE, commandBackup);
+    writeFile(DEVICE_CONFIG_FILE, configBackup);
+    load_config();
 }
 
 void setup() {
@@ -253,13 +274,10 @@ void setup() {
     Serial.println();
     Serial.println("--------------started----------------");
 
-    setChipId();
-
     pm.info(String("FS"));
     fileSystemInit();
-
-    pm.info(String("Config"));
-    loadConfig();
+    ;
+    config_init();
 
     pm.info(String("Clock"));
     clock_init();
