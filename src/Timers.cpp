@@ -1,11 +1,9 @@
 #include "Global.h"
 
-#include "Options.h"
-#include "LiveData.h"
 #include "Events.h"
 
 void timer_countdown() {
-    String timers = Options::read("timers");
+    String timers = options.read("timers");
     if (timers.isEmpty()) {
         return;
     }
@@ -22,7 +20,7 @@ void timer_countdown() {
         int time = readTimer(number);
         if (time == 0) {
             delTimer(String(number));
-            LiveData::write("timer" + String(number), "0");
+            liveData.write("timer" + String(number), "0");
             Events::fire("timer", String(number));
         } else {
             time--;
@@ -45,17 +43,17 @@ void timerStart_() {
     String period = sCmd.next();
     String type = sCmd.next();
     if (period.indexOf("digit") != -1) {
-        period = LiveData::read(period);
+        period = liveData.read(period);
     }
     if (type == "sec") period = period;
     if (type == "min") period = String(period.toInt() * 60);
     if (type == "hours") period = String(period.toInt() * 60 * 60);
     addTimer(number, period);
-    LiveData::write("timer" + number, "1");
+    liveData.write("timer" + number, "1");
 }
 
 void addTimer(String number, String time) {
-    String tmp = Options::read("timers");  //1:60,2:120,
+    String tmp = options.read("timers");  //1:60,2:120,
     String new_timer = number + ":" + time;
     int psn1 = tmp.indexOf(number + ":");          //0  ищем позицию таймера который надо заменить
     if (psn1 != -1) {                              //если он есть
@@ -67,7 +65,7 @@ void addTimer(String number, String time) {
     } else {  //если его нет
         tmp += new_timer + ",";
     }
-    Options::write("timers", tmp);
+    options.write("timers", tmp);
 }
 
 void timerStop_() {
@@ -76,18 +74,18 @@ void timerStop_() {
 }
 
 void delTimer(String number) {
-    String tmp = Options::read("timers");                //1:60,2:120,
+    String tmp = options.read("timers");                 //1:60,2:120,
     int psn1 = tmp.indexOf(number + ":");                //0  ищем позицию таймера который надо удалить
     if (psn1 != -1) {                                    //если он есть
         int psn2 = tmp.indexOf(",", psn1);               //4    от этой позиции находим позицию запятой
         String timer = tmp.substring(psn1, psn2) + ",";  //1:60,  выделяем таймер который надо удалить
         tmp.replace(timer, "");                          //удаляем таймер
-        Options::write("timers", tmp);
+        options.write("timers", tmp);
     }
 }
 
 int readTimer(int number) {
-    String tmp = Options::read("timers");          //1:60,2:120,
+    String tmp = options.read("timers");           //1:60,2:120,
     int psn1 = tmp.indexOf(String(number) + ":");  //0  ищем позицию таймера который надо прочитать
     String timer;
     if (psn1 != -1) {                       //если он есть

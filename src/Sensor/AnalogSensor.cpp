@@ -1,11 +1,8 @@
 #include "Sensor/AnalogSensor.h"
 
+#include "Global.h"
 #include "MqttClient.h"
 #include "Events.h"
-#include "LiveData.h"
-#include "Options.h"
-#include "Utils/PrintMessage.h"
-#include "Utils/StringUtils.h"
 
 static const char* MODULE = "AnalogSensor";
 
@@ -22,14 +19,14 @@ void analog_reading1() {
 #endif
 
     int mapped = map(raw,
-                     Options::readInt(name + "_st"),
-                     Options::readInt(name + "_end"),
-                     Options::readInt(name + "_st_out"),
-                     Options::readInt(name + "_end_out"));
+                     options.readInt(name + "_st"),
+                     options.readInt(name + "_end"),
+                     options.readInt(name + "_st_out"),
+                     options.readInt(name + "_end_out"));
 
     pm.info(name + " raw:" + String(raw, DEC) + "map: " + String(mapped, DEC));
 
-    LiveData::writeInt(name, mapped);
+    liveData.writeInt(name, mapped);
 
     Events::fire(name);
 
@@ -45,11 +42,11 @@ void analog_reading2() {
     int raw = analogRead(A0);
 #endif
     int mapped = map(raw,
-                     Options::readInt(name + "_st"),
-                     Options::readInt(name + "_end"),
-                     Options::readInt(name + "_st_out"),
-                     Options::readInt(name + "_end_out"));
-    LiveData::writeInt(name, mapped);
+                     options.readInt(name + "_st"),
+                     options.readInt(name + "_end"),
+                     options.readInt(name + "_st_out"),
+                     options.readInt(name + "_end_out"));
+    liveData.writeInt(name, mapped);
     Events::fire(name);
     MqttClient::publishStatus(name, String(mapped));
 }

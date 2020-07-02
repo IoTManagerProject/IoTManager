@@ -65,7 +65,7 @@ struct Time_t {
 };
 
 enum LoggerLog_t {
-    LL_LOG1,
+    LL_LOG1 = 5,
     LL_LOG2,
     LL_LOG3,
     LL_LOG4,

@@ -20,6 +20,12 @@ int jsonReadInt(String& json, String name) {
     return root[name];
 }
 
+float jsonReadFloat(String& json, String name) {
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& root = jsonBuffer.parseObject(json);
+    return root[name];
+}
+
 String jsonWriteStr(String& json, String name, String value) {
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(json);

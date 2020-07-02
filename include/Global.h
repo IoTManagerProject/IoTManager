@@ -17,7 +17,7 @@
 #include "Scenario.h"
 #include "Sensors.h"
 #include "WiFiManager.h"
-
+#include "Objects/KeyValueStore.h"
 #include "Objects/EventQueue.h"
 
 #include "Utils/FileUtils.h"
@@ -36,6 +36,10 @@
 extern AsyncWebSocket ws;
 //extern AsyncEventSource events;
 #endif
+
+extern KeyValueStore options;
+extern KeyValueStore liveData;
+extern KeyValueFile runtime;
 
 extern Clock* timeNow;
 extern TickerScheduler ts;

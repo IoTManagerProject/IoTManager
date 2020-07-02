@@ -1,6 +1,5 @@
 #include "Global.h"
 
-#include "LiveData.h"
 #include "Objects/Pwms.h"
 
 #ifdef WS_enable
@@ -9,6 +8,10 @@ AsyncWebSocket ws;
 #endif
 
 static const char* MODULE = "Global";
+
+KeyValueStore options;
+KeyValueStore liveData;
+KeyValueFile runtime(DEVICE_RUNTIME_FILE);
 
 Clock* timeNow;
 TickerScheduler ts(SYS_STAT + 1);
@@ -53,7 +56,7 @@ const String readLiveData(const String& obj) {
             res = String(item->getState());
         }
     } else {
-        res = LiveData::read(obj);
+        res = liveData.read(obj);
     }
     return res;
 }

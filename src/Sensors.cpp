@@ -1,8 +1,6 @@
 #include "Sensors.h"
 
-#include "Options.h"
 #include "Events.h"
-#include "LiveData.h"
 #include "MqttClient.h"
 #include "Utils/PrintMessage.h"
 
@@ -61,8 +59,8 @@ void ultrasonic_reading() {
     int distance_cm;
     int level;
     static int counter;
-    int trig = Options::readInt("trig");
-    int echo = Options::readInt("echo");
+    int trig = options.readInt("trig");
+    int echo = options.readInt("echo");
     digitalWrite(trig, LOW);
     delayMicroseconds(2);
     digitalWrite(trig, HIGH);
@@ -75,17 +73,17 @@ void ultrasonic_reading() {
     if (counter > TANK_LEVEL_SAMPLES) {
         counter = 0;
         level = map(distance_cm,
-                    Options::readInt("e_lev"),
-                    Options::readInt("f_lev"), 0, 100);
+                    options.readInt("e_lev"),
+                    options.readInt("f_lev"), 0, 100);
 
-        LiveData::writeInt(levelPr_value_name, level);
+        liveData.writeInt(levelPr_value_name, level);
         Events::fire(levelPr_value_name);
 
         MqttClient::publishStatus(levelPr_value_name, String(level));
 
         Serial.println("[I] sensor '" + levelPr_value_name + "' data: " + String(level));
 
-        LiveData::writeInt(ultrasonicCm_value_name, distance_cm);
+        liveData.writeInt(ultrasonicCm_value_name, distance_cm);
         Events::fire(ultrasonicCm_value_name);
 
         MqttClient::publishStatus(ultrasonicCm_value_name, String(distance_cm));
@@ -107,7 +105,7 @@ void dallas_reading() {
         temp = dallasTemperature->getTempCByIndex(i);
         String buf = selectToMarker(dallas_value_name_tmp_buf, ";");
         dallas_value_name_tmp_buf = deleteBeforeDelimiter(dallas_value_name_tmp_buf, ";");
-        LiveData::write(buf, String(temp));
+        liveData.write(buf, String(temp));
         Events::fire(buf);
         MqttClient::publishStatus(buf, String(temp));
         Serial.println("[I] sensor '" + buf + "' send date " + String(temp));
@@ -125,7 +123,7 @@ void dhtT_reading() {
         value = dht.getTemperature();
         if (String(value) != "nan") {
             Events::fire(dhtT_value_name);
-            LiveData::write(dhtT_value_name, String(value));
+            liveData.write(dhtT_value_name, String(value));
             MqttClient::publishStatus(dhtT_value_name, String(value));
             Serial.println("[I] sensor '" + dhtT_value_name + "' data: " + String(value));
         }
@@ -143,7 +141,7 @@ void dhtH_reading() {
         value = dht.getHumidity();
         if (String(value) != "nan") {
             Events::fire(dhtH_value_name);
-            LiveData::write(dhtH_value_name, String(value));
+            liveData.write(dhtH_value_name, String(value));
             MqttClient::publishStatus(dhtH_value_name, String(value));
             Serial.println("[I] sensor '" + dhtH_value_name + "' data: " + String(value));
         }
@@ -155,9 +153,9 @@ void dhtP_reading() {
     if (dht.getStatus() != 0) {
         MqttClient::publishStatus("dhtPerception", String(dht.getStatusString()));
     } else {
-        value = dht.computePerception(LiveData::read(dhtT_value_name).toFloat(), LiveData::read(dhtH_value_name).toFloat(), false);
+        value = dht.computePerception(liveData.read(dhtT_value_name).toFloat(), liveData.read(dhtH_value_name).toFloat(), false);
         String final_line = perceptionStr(value);
-        LiveData::write("dhtPerception", final_line);
+        liveData.write("dhtPerception", final_line);
         Events::fire("dhtPerception");
 
         if (MqttClient::isConnected()) {
@@ -173,10 +171,10 @@ void dhtC_reading() {
         MqttClient::publishStatus("dhtComfort", String(dht.getStatusString()));
     } else {
         dht.getComfortRatio(cf,
-                            LiveData::read(dhtT_value_name).toFloat(),
-                            LiveData::read(dhtH_value_name).toFloat(), false);
+                            liveData.read(dhtT_value_name).toFloat(),
+                            liveData.read(dhtH_value_name).toFloat(), false);
         String final_line = comfortStr(cf);
-        LiveData::write("dhtComfort", final_line);
+        liveData.write("dhtComfort", final_line);
         Events::fire("dhtComfort");
         MqttClient::publishStatus("dhtComfort", final_line);
         Serial.println("[I] sensor 'dhtComfort' send date " + final_line);
@@ -189,9 +187,9 @@ void dhtD_reading() {
         MqttClient::publishStatus("dhtDewpoint", String(dht.getStatusString()));
     } else {
         value = dht.computeDewPoint(
-            LiveData::read(dhtT_value_name).toFloat(),
-            LiveData::read(dhtH_value_name).toFloat(), false);
-        LiveData::writeFloat("dhtDewpoint", value);
+            liveData.read(dhtT_value_name).toFloat(),
+            liveData.read(dhtH_value_name).toFloat(), false);
+        liveData.writeFloat("dhtDewpoint", value);
         Events::fire("dhtDewpoint");
         MqttClient::publishStatus("dhtDewpoint", String(value));
         Serial.println("[I] sensor 'dhtDewpoint' data: " + String(value));
@@ -203,7 +201,7 @@ void bmp280T_reading() {
     sensors_event_t temp_event;
     bmp_temp->getEvent(&temp_event);
     value = temp_event.temperature;
-    LiveData::write(bmp280T_value_name, String(value));
+    liveData.write(bmp280T_value_name, String(value));
     Events::fire(bmp280T_value_name);
     MqttClient::publishStatus(bmp280T_value_name, String(value));
     Serial.println("[I] sensor '" + bmp280T_value_name + "' data: " + String(value));
@@ -215,7 +213,7 @@ void bmp280P_reading() {
     bmp_pressure->getEvent(&pressure_event);
     value = pressure_event.pressure;
     value = value / 1.333224;
-    LiveData::write(bmp280P_value_name, String(value));
+    liveData.write(bmp280P_value_name, String(value));
     Events::fire(bmp280P_value_name);
     MqttClient::publishStatus(bmp280P_value_name, String(value));
     Serial.println("[I] sensor '" + bmp280P_value_name + "' data: " + String(value));
@@ -224,7 +222,7 @@ void bmp280P_reading() {
 void bme280T_reading() {
     float value = 0;
     value = bme.readTemperature();
-    LiveData::write(bme280T_value_name, String(value));
+    liveData.write(bme280T_value_name, String(value));
     Events::fire(bme280T_value_name);
     MqttClient::publishStatus(bme280T_value_name, String(value));
     Serial.println("[I] sensor '" + bme280T_value_name + "' data: " + String(value));
@@ -234,7 +232,7 @@ void bme280P_reading() {
     float value = 0;
     value = bme.readPressure();
     value = value / 1.333224;
-    LiveData::write(bme280P_value_name, String(value));
+    liveData.write(bme280P_value_name, String(value));
     Events::fire(bme280P_value_name);
     MqttClient::publishStatus(bme280P_value_name, String(value));
     Serial.println("[I] sensor '" + bme280P_value_name + "' data: " + String(value));
@@ -243,7 +241,7 @@ void bme280P_reading() {
 void bme280H_reading() {
     float value = 0;
     value = bme.readHumidity();
-    LiveData::write(bme280H_value_name, String(value));
+    liveData.write(bme280H_value_name, String(value));
     Events::fire(bme280H_value_name);
     MqttClient::publishStatus(bme280H_value_name, String(value));
     Serial.println("[I] sensor '" + bme280H_value_name + "' data: " + String(value));
@@ -251,7 +249,7 @@ void bme280H_reading() {
 
 void bme280A_reading() {
     float value = bme.readAltitude(1013.25);
-    LiveData::write(bme280A_value_name, String(value, 2));
+    liveData.write(bme280A_value_name, String(value, 2));
 
     Events::fire(bme280A_value_name);
 

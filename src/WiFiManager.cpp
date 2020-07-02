@@ -1,8 +1,6 @@
 #include "WiFiManager.h"
 
-#include "Runtime.h"
 #include "Global.h"
-#include "Options.h"
 #include "MqttClient.h"
 
 static const char* MODULE = "WiFi";
@@ -46,14 +44,14 @@ void startSTAMode() {
                 String hostIpStr = WiFi.localIP().toString();
                 pm.info("http://" + hostIpStr);
 
-                Runtime::write("ip", hostIpStr.c_str());
+                runtime.write("ip", hostIpStr);
 
                 keepConnecting = false;
             } break;
             case WL_CONNECT_FAILED: {
                 pm.error("check credentials");
 
-                Options::writeInt("pass_status", 1);
+                options.writeInt("pass_status", 1);
 
                 keepConnecting = false;
             } break;
@@ -110,7 +108,7 @@ bool startAPMode() {
     String hostIpStr = WiFi.softAPIP().toString();
     pm.info("http://" + hostIpStr);
 
-    Runtime::write("ip", hostIpStr.c_str());
+    runtime.write("ip", hostIpStr.c_str());
 
     ts.add(
         WIFI_SCAN, 10 * 1000,

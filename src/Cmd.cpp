@@ -1,8 +1,6 @@
 #include "Cmd.h"
 
-#include "LiveData.h"
 #include "Events.h"
-#include "Options.h"
 #include "Logger.h"
 #include "Module/Terminal.h"
 #include "MqttClient.h"
@@ -26,7 +24,7 @@ HardwareSerial *mySerial = nullptr;
 void cmd_init() {
     myButtons.setOnChangeState([](Button_t *btn, uint8_t num) {
         Events::fire("switch", String(num, DEC));
-        LiveData::writeInt("switch" + String(num, DEC), btn->state);
+        liveData.writeInt("switch" + String(num, DEC), btn->state);
     });
 
     sCmd.addCommand("button", cmd_button);
@@ -112,7 +110,7 @@ void cmd_logging() {
     size_t num = Logger::add(value_name);
 
     //создаем в файловой системе переменную количества точек на графике с отметкой _c что значит count
-    Options::write(value_name + "_c", maxCount);
+    options.write(value_name + "_c", maxCount);
 
     //создаем график в приложении с топиком _ch /prefix/3234045-1589487/value_name_ch
     createChart(widget_name, page_name, page_number, "chart", value_name + "_ch", maxCount);
@@ -129,7 +127,7 @@ void cmd_button() {
     String param = sCmd.next();
     String order = sCmd.next();
 
-    LiveData::write("button" + name, param);
+    liveData.write("button" + name, param);
 
     if (isDigitStr(assign)) {
         myButtons.addButton(name, assign, param);
@@ -183,7 +181,7 @@ void cmd_buttonSet() {
 
     Events::fire("button", name);
 
-    LiveData::write("button" + name, state);
+    liveData.write("button" + name, state);
 
     MqttClient::publishStatus("button" + name, state);
 }
@@ -199,7 +197,7 @@ void cmd_buttonChange() {
 
     String state = btn->toggle() ? "1" : "0";
 
-    LiveData::write("button" + name, state);
+    liveData.write("button" + name, state);
 
     MqttClient::publishStatus("button" + name, state);
 }
@@ -278,7 +276,7 @@ void cmd_inputDigit() {
     String start_state = sCmd.next();
     String page_number = sCmd.next();
 
-    LiveData::write("digit" + number, start_state);
+    liveData.write("digit" + number, start_state);
     createWidget(widget_name, page_name, page_number, "inputNum", "digit" + number);
 }
 
@@ -286,7 +284,7 @@ void cmd_digitSet() {
     String number = sCmd.next();
     String value = sCmd.next();
 
-    LiveData::write("digit" + number, value);
+    liveData.write("digit" + number, value);
     MqttClient::publishStatus("digit" + number, value);
 }
 
@@ -302,7 +300,7 @@ void cmd_inputTime() {
     String start_state = sCmd.next();
     String page_number = sCmd.next();
 
-    LiveData::write("time" + number, start_state);
+    liveData.write("time" + number, start_state);
     createWidget(widget_name, page_name, page_number, "inputTime", "time" + number);
 }
 
@@ -310,7 +308,7 @@ void cmd_timeSet() {
     String number = sCmd.next();
     String value = sCmd.next();
 
-    LiveData::write("time" + number, value);
+    liveData.write("time" + number, value);
     MqttClient::publishStatus("time" + number, value);
 }
 
@@ -334,7 +332,7 @@ void cmd_textSet() {
         text = text + " " + timeNow->getDateTimeDotFormated();
     }
 
-    LiveData::write("text" + number, text);
+    liveData.write("text" + number, text);
     MqttClient::publishStatus("text" + number, text);
 }
 //=====================================================================================================================================
@@ -346,7 +344,7 @@ void cmd_stepper() {
     String pin_step = sCmd.next();
     String pin_dir = sCmd.next();
 
-    LiveData::write("stepper" + stepper_number, pin_step + " " + pin_dir);
+    liveData.write("stepper" + stepper_number, pin_step + " " + pin_dir);
     pinMode(pin_step.toInt(), OUTPUT);
     pinMode(pin_dir.toInt(), OUTPUT);
 }
@@ -355,10 +353,10 @@ void cmd_stepper() {
 void cmd_stepperSet() {
     String stepper_number = sCmd.next();
     String steps = sCmd.next();
-    Options::write("steps" + stepper_number, steps);
+    options.write("steps" + stepper_number, steps);
     String stepper_speed = sCmd.next();
-    String pin_step = selectToMarker(Options::read("stepper" + stepper_number), " ");
-    String pin_dir = deleteBeforeDelimiter(Options::read("stepper" + stepper_number), " ");
+    String pin_step = selectToMarker(options.read("stepper" + stepper_number), " ");
+    String pin_dir = deleteBeforeDelimiter(options.read("stepper" + stepper_number), " ");
     Serial.println(pin_step);
     Serial.println(pin_dir);
     if (steps.toInt() > 0) digitalWrite(pin_dir.toInt(), HIGH);
@@ -366,10 +364,10 @@ void cmd_stepperSet() {
     if (stepper_number == "1") {
         ts.add(
             STEPPER1, stepper_speed.toInt(), [&](void *) {
-                int steps_int = abs(Options::readInt("steps1") * 2);
+                int steps_int = abs(options.readInt("steps1") * 2);
                 static int count;
                 count++;
-                String pin_step = selectToMarker(Options::read("stepper1"), " ");
+                String pin_step = selectToMarker(options.read("stepper1"), " ");
                 digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
                 yield();
                 if (count > steps_int) {
@@ -383,10 +381,10 @@ void cmd_stepperSet() {
     if (stepper_number == "2") {
         ts.add(
             STEPPER2, stepper_speed.toInt(), [&](void *) {
-                int steps_int = abs(Options::readInt("steps2") * 2);
+                int steps_int = abs(options.readInt("steps2") * 2);
                 static int count;
                 count++;
-                String pin_step = selectToMarker(Options::read("stepper2"), " ");
+                String pin_step = selectToMarker(options.read("stepper2"), " ");
                 digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
                 yield();
                 if (count > steps_int) {
@@ -415,19 +413,19 @@ void cmd_servo() {
 
     String pageNumber = sCmd.next();
 
-    Options::write("servo_pin" + number, String(pin, DEC));
+    options.write("servo_pin" + number, String(pin, DEC));
 
     value = map(value, min_value, max_value, min_deg, max_deg);
 
     Servo *servo = myServo.create(number.toInt(), pin);
     servo->write(value);
 
-    Options::writeInt("s_min_val" + number, min_value);
-    Options::writeInt("s_max_val" + number, max_value);
-    Options::writeInt("s_min_deg" + number, min_deg);
-    Options::writeInt("s_max_deg" + number, max_deg);
+    options.writeInt("s_min_val" + number, min_value);
+    options.writeInt("s_max_val" + number, max_value);
+    options.writeInt("s_min_deg" + number, min_deg);
+    options.writeInt("s_max_deg" + number, max_deg);
 
-    LiveData::writeInt("servo" + number, value);
+    liveData.writeInt("servo" + number, value);
 
     createWidget(widget, page, pageNumber, "range", "servo" + number, "min", String(min_value), "max", String(max_value), "k", "1");
 }
@@ -437,10 +435,10 @@ void cmd_servoSet() {
     int value = String(sCmd.next()).toInt();
 
     value = map(value,
-                Options::readInt("s_min_val" + number),
-                Options::readInt("s_max_val" + number),
-                Options::readInt("s_min_deg" + number),
-                Options::readInt("s_max_deg" + number));
+                options.readInt("s_min_val" + number),
+                options.readInt("s_max_val" + number),
+                options.readInt("s_min_deg" + number),
+                options.readInt("s_max_deg" + number));
 
     Servo *servo = myServo.get(number.toInt());
     if (servo) {
@@ -448,7 +446,7 @@ void cmd_servoSet() {
     }
 
     Events::fire("servo", number);
-    LiveData::writeInt("servo" + number, value);
+    liveData.writeInt("servo" + number, value);
     MqttClient::publishStatus("servo" + number, String(value, DEC));
 }
 
@@ -482,7 +480,7 @@ void cmd_serialBegin() {
 
 void cmd_getData() {
     String param = sCmd.next();
-    String res = param.isEmpty() ? LiveData::get() : LiveData::read(param);
+    String res = param.isEmpty() ? liveData.get() : liveData.read(param);
     if (term) {
         term->println(res.c_str());
     }
@@ -525,8 +523,8 @@ void cmd_ultrasonicCm() {
 
     ultrasonicCm_value_name = measure_unit;
 
-    Options::write("trig", trig);
-    Options::write("echo", echo);
+    options.write("trig", trig);
+    options.write("echo", echo);
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
 
@@ -580,10 +578,10 @@ void cmd_levelPr() {
     String full_level = sCmd.next();
     String page_number = sCmd.next();
     levelPr_value_name = value_name;
-    Options::write("e_lev", empty_level);
-    Options::write("f_lev", full_level);
-    Options::write("trig", trig);
-    Options::write("echo", echo);
+    options.write("e_lev", empty_level);
+    options.write("f_lev", full_level);
+    options.write("trig", trig);
+    options.write("echo", echo);
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
     createWidget(widget_name, page_name, page_number, type, value_name);
@@ -681,10 +679,10 @@ void cmd_analog() {
     String page_number = sCmd.next();
     analog_value_names_list += value_name + ",";
     enter_to_analog_counter++;
-    Options::write(value_name + "_st", analog_start);
-    Options::write(value_name + "_end", analog_end);
-    Options::write(value_name + "_st_out", analog_start_out);
-    Options::write(value_name + "_end_out", analog_end_out);
+    options.write(value_name + "_st", analog_start);
+    options.write(value_name + "_end", analog_end);
+    options.write(value_name + "_st_out", analog_start_out);
+    options.write(value_name + "_end_out", analog_end_out);
 
     createWidget(widget_name, page_name, page_number, type, value_name);
 
@@ -828,7 +826,7 @@ void cmd_firmwareVersion() {
     String page = sCmd.next();
     String pageNumber = sCmd.next();
 
-    LiveData::write("firmver", FIRMWARE_VERSION);
+    liveData.write("firmver", FIRMWARE_VERSION);
     createWidget(widget, page, pageNumber, "anydata", "firmver");
 }
 

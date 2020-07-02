@@ -1,8 +1,6 @@
 #include "Global.h"
 
-#include "Runtime.h"
 #include "Events.h"
-#include "LiveData.h"
 #include "Broadcast.h"
 #include "MqttClient.h"
 #include "HttpServer.h"
@@ -128,7 +126,7 @@ void async_actions() {
 
     if (perform_updates_check_flag) {
         lastVersion = Updater::check();
-        Runtime::write("last_version", lastVersion);
+        runtime.write("last_version", lastVersion);
         perform_updates_check_flag = false;
     }
 
@@ -168,7 +166,7 @@ void async_actions() {
         if (bus) {
             String buf;
             bus->scan(buf);
-            LiveData::write(bus->getTag(), buf);
+            liveData.write(bus->getTag(), buf);
         }
         perform_bus_scanning_flag = false;
     }
@@ -244,8 +242,8 @@ void clock_init() {
 
     ts.add(
         TIME, 1000, [&](void*) {
-            Runtime::write("time", timeNow->getTime());
-            Runtime::write("timenow", timeNow->getTimeJson());
+            runtime.write("time", timeNow->getTime());
+            runtime.write("timenow", timeNow->getTimeJson());
             Events::fire("timenow");
         },
         nullptr, true);

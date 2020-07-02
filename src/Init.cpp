@@ -1,6 +1,5 @@
 #include "Global.h"
 
-#include "Runtime.h"
 #include "WebClient.h"
 #include "Sensors.h"
 #include "MqttClient.h"
@@ -40,7 +39,7 @@ void uptime_task_init() {
     pm.info(String("uptime task"));
     ts.add(
         UPTIME, 5000, [&](void*) {
-            Runtime::write("uptime", timeNow->getUptime());
+            runtime.write("uptime", timeNow->getUptime());
         },
         nullptr, true);
 }
@@ -48,10 +47,10 @@ void uptime_task_init() {
 void config_init() {
     pm.info("config");
     load_config();
-    
-    Runtime::load();
-    Runtime::write("chipID", getChipId());
-    Runtime::write("firmware_version", FIRMWARE_VERSION);
+
+    runtime.load();
+    runtime.write("chipID", getChipId());
+    runtime.write("firmware_version", FIRMWARE_VERSION);
 
     prex = config.mqtt()->getPrefix() + "/" + getChipId();
 }

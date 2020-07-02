@@ -1,7 +1,5 @@
 #include "Logger.h"
 
-#include "Options.h"
-#include "LiveData.h"
 #include "MqttClient.h"
 
 //
@@ -33,8 +31,8 @@ const String getLogFilename(String name) {
 void deleteOldDataTask(LoggerLog_t log) {
     String name = selectFromMarkerToMarker(logging_value_names_list, ",", log);
     pm.info("task: " + name);
-    int lines = Options::readInt(name + "_c");
-    String value = LiveData::read(name);
+    int lines = options.readInt(name + "_c");
+    String value = liveData.read(name);
     deleteOldData(getLogFilename(name), lines, value);
 }
 /*
