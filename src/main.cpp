@@ -152,7 +152,13 @@ void flag_actions() {
     }
 
     if (broadcast_mqtt_settings_flag) {
-        Broadcast::send_mqtt_settings();
+        DynamicJsonBuffer jsonBuffer;
+        JsonObject& root = jsonBuffer.createObject();
+        config.mqtt()->save(root);
+        String data;
+        root.printTo(data);
+        pm.info(data);
+        Broadcast::send(data);
         broadcast_mqtt_settings_flag = false;
     }
 

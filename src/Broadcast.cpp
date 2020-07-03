@@ -21,7 +21,6 @@ boolean _busy = false;
 
 static unsigned int UDP_PORT = 4210;
 
-//TODO Помомему тут ошибка в define'ах
 void handleUdp_esp32();
 void addKnownDevice(String fileName, String id, String dev_name, String ip);
 
@@ -124,18 +123,8 @@ void addKnownDevice(String filename, String id, String dev_name, String ip) {
     }
 }
 
-void send_mqtt_settings() {
+void send(const String data) {
     _busy = true;
-
-    String data = "{";
-    data += "mqttServer\":\"" + config.mqtt()->getServer() + "\",";
-    data += "mqttPort:" + String(config.mqtt()->getPort(), DEC) + ",";
-    data += "mqttPrefix\":\"" + config.mqtt()->getPrefix() + "\",";
-    data += "mqttUser\":\"" + config.mqtt()->getUser() + "\",";
-    data += "mqttPass\":\"" + config.mqtt()->getPass() + "\"";
-    data += "}";
-
-    pm.info("mqtt: " + data);
 #ifdef ESP8266
     udp.beginPacketMulticast(MULTICAST_IP, UDP_PORT, WiFi.localIP());
     udp.write(data.c_str());
