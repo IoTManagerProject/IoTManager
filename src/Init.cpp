@@ -20,8 +20,9 @@ void sensors_task() {
 
 void announce_task_init() {
     randomSeed(micros());
+    unsigned long period = config.general()->getBroadcastInterval() * ONE_SECOND_ms;
     ts.add(
-        ANNOUNCE, random(50000, 60000), [&](void*) {
+        ANNOUNCE, random(0.9 * period, period), [&](void*) {
             if (config.general()->isBroadcastEnabled()) {
                 Messages::announce();
             } },
