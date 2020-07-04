@@ -6,8 +6,8 @@ class GeneralConfig : public ConfigItem {
    public:
     GeneralConfig();
 
-    const String getName() const;
-    void setName(const String value);
+    const String getBroadcastName() const;
+    void setBroadcastName(const String value);
 
     const String getPushingboxId() const;
     void setPushingboxId(String value);
@@ -24,11 +24,12 @@ class GeneralConfig : public ConfigItem {
     void enableScenario(boolean value);
     boolean isScenarioEnabled() const;
 
+    bool setParamByName(const String& param, const String& value) override;
     void load(const JsonObject&) override;
     void save(JsonObject&) override;
 
    private:
-    String _name;
+    String _broadcastName;
     String _pushingBoxId;
     unsigned long _broadcastInterval;
     bool _broadcastEnabled;

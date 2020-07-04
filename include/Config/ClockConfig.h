@@ -14,6 +14,7 @@ class ClockConfig : public ConfigItem {
 
     void load(const JsonObject& root) override;
     void save(JsonObject& root) override;
+    bool setParamByName(const String& param, const String& value) override;
 
    private:
     String _ntp;

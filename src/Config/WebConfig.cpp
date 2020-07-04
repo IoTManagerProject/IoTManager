@@ -38,3 +38,15 @@ void WebConfig::save(JsonObject& root) {
     root[TAG_WEB_LOGIN] = _login;
     root[TAG_WEB_PASS] = _pass;
 };
+
+bool WebConfig::setParamByName(const String& param, const String& value) {
+    bool handled = true;
+    if (param.equals(TAG_WEB_LOGIN)) {
+        setLogin(value);
+    } else if (param.equals(TAG_WEB_PASS)) {
+        setPass(value);
+    } else {
+        handled = false;
+    }
+    return handled;
+};

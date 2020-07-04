@@ -67,4 +67,29 @@ void add(const char* id, const char* name, const char* ip) {
     }
 }
 
+const String asJson() {
+    String res = "{\"devices\":[";
+    for (size_t i = 0; i < _list->size(); i++) {
+        DeviceItem* item = _list->at(i);
+        res += "{\"id\":\"";
+        res += item->id();
+        res += "\",";
+        res += "\"name\":\"";
+        res += item->name();
+        res += "\",";
+        res += "\"url\":\"";
+        res += "<a href='http://";
+        res += item->ip();
+        res += "' target='_blank'>";
+        res += item->ip();
+        res += "</a>";
+        res += "\",";
+        res += "\"lastseen\":";
+        res += item->lastseen();
+        res += i < _list->size() - 1 ? "}," : "}";
+    }
+    res += "]}";
+    return res;
+};
+
 }  // namespace Devices

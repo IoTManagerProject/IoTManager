@@ -84,3 +84,21 @@ void MqttConfig::save(JsonObject& root) {
     root[TAG_MQTT_USER] = _user.c_str();
     root[TAG_MQTT_PASS] = _pass.c_str();
 }
+
+bool MqttConfig::setParamByName(const String& param, const String& value) {
+    bool handled = true;
+    if (param.equals(TAG_MQTT_SERVER)) {
+        setServer(value);
+    } else if (param.equals(TAG_MQTT_PORT)) {
+        setPort(value.toInt());
+    } else if (param.equals(TAG_MQTT_PREFIX)) {
+        setPrefix(value);
+    } else if (param.equals(TAG_MQTT_USER)) {
+        setUser(value);
+    } else if (param.equals(TAG_MQTT_PASS)) {
+        setPass(value);
+    } else {
+        handled = false;
+    }
+    return handled;
+}

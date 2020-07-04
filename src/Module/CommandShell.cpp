@@ -101,7 +101,7 @@ size_t CommandShell::printFarewell(Print *p) {
 
 size_t CommandShell::printPrompt(Print *p) {
     size_t n = 0;
-    n += p->print(config.general()->getName().c_str());
+    n += p->print(config.general()->getBroadcastName().c_str());
     n += p->print('>');
     n += p->print(' ');
     return n;

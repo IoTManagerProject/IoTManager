@@ -60,7 +60,7 @@ void startSTAMode() {
         }
     } while (keepConnecting && tries--);
 
-    if (isNetworkActive()) {
+    if (isNetworkActive() && config.mqtt()->validate()) {
         ts.add(
             MQTT_CONNECTION, MQTT_RECONNECT_INTERVAL, [&](void*) {
                 if (isNetworkActive()) {

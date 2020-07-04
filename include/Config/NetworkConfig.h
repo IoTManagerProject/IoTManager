@@ -17,6 +17,7 @@ class NetworkConfig : public ConfigItem {
     void setSSID(uint8_t mode, const String& str);
     void setPasswd(uint8_t mode, const String& str);
 
+    bool setParamByName(const String& param, const String& value) override;
     void load(const JsonObject& root) override;
     void save(JsonObject& root) override;
 

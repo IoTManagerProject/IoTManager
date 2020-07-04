@@ -23,7 +23,7 @@ void announce() {
     String data;
     data += getChipId();
     data += ";";
-    data += config.general()->getName();
+    data += config.general()->getBroadcastName();
     data += ";";
     data += WiFi.localIP().toString();
     data += ";";

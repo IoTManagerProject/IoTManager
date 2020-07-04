@@ -7,7 +7,7 @@
   "content": [
     {
       "type": "h5",
-      "title": "{{name}}",
+      "title": "{{devname}}",
       "class": "alert-default"
     },
     {
@@ -26,14 +26,14 @@
     {
       "type": "input",
       "title": "{{SetWiFiNameOfDev}}",
-      "name": "devname-arg",
-      "state": "{{name}}",
+      "name": "hostname-arg",
+      "state": "{{hostname}}",
       "pattern": "[A-Za-z0-9]{6,12}"
     },
     {
       "type": "button",
       "title": "{{LS_save}}",
-      "action": "set?devname=[[devname-arg]]",
+      "action": "set?hostname=[[hostname-arg]]",
       "class": "btn btn-block btn-default"
     },
     {

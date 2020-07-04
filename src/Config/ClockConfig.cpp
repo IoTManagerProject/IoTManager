@@ -38,3 +38,15 @@ void ClockConfig::save(JsonObject& root) {
     root[TAG_NTP] = _ntp.c_str();
     root[TAG_TIMEZONE] = _timezone;
 }
+
+bool ClockConfig::setParamByName(const String& param, const String& value) {
+    bool handled = true;
+    if (param.equals(TAG_TIMEZONE)) {
+        setTimezone(value.toInt());
+    } else if (param.equals(TAG_NTP)) {
+        setNtp(value);
+    } else {
+        handled = false;
+    }
+    return handled;
+};

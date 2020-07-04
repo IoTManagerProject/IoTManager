@@ -55,6 +55,17 @@ void Config::load(const String& str) {
     _timestamp = millis();
 }
 
+bool Config::setParamByName(const String& param, const String& value) {
+    bool handled = false;
+    for (size_t i = 0; i < NUM_CONFIGS; i++) {
+        if (_items[i]->setParamByName(param, value)) {
+            handled = true;
+            break;
+        }
+    }
+    return handled;
+};
+
 const String Config::append(String& str) {
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(str);

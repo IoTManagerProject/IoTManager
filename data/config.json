@@ -1,9 +1,10 @@
 {
-    "name": "iot_device",
+    "devname": "iot_device",
+    "hostname": "iot_device",
     "apssid": "IoTmanager",
     "appass": "",
     "routerssid": "",
-    "routerpass": "",
+    "routerpass": "#",
     "ntp": "",
     "timezone": 3,
     "mqttServer": "",

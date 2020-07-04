@@ -24,6 +24,7 @@ class Config {
 
     void load(const String&);
     void save(JsonObject& root);
+    bool setParamByName(const String& param, const String& value);
 
     void save(String& str);
     const String append(String& str);

@@ -18,8 +18,10 @@ class MqttConfig : public ConfigItem {
     const String getUser() const;
     const String getPass() const;
 
+    bool setParamByName(const String& param, const String& value) override;
     void load(const JsonObject& root) override;
     void save(JsonObject& root) override;
+
     bool validate() override;
 
    private:

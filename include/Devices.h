@@ -8,6 +8,7 @@ void loop();
 void saveToFile(const String filename);
 void asString(String& res, unsigned long ttl_sec = 0);
 void clear();
+const String asJson();
 }  // namespace Devices
 
 struct DeviceItem {

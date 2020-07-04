@@ -12,6 +12,7 @@ class WebConfig : public ConfigItem {
     const String getPass() const;
     void setPass(const String);
 
+    bool setParamByName(const String& param, const String& value) override;
     void load(const JsonObject&) override;
     void save(JsonObject&) override;
 

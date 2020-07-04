@@ -1,5 +1,7 @@
 #include "Config/NetworkConfig.h"
 
+#include "WiFiManager.h"
+
 static const char* TAG_WIFI_MODE = "mode";
 static const char* TAG_HOSTNAME = "hostname";
 static const char* TAG_AP_SSID = "apssid";
@@ -75,3 +77,23 @@ void NetworkConfig::save(JsonObject& root) {
     root[TAG_STA_SSID] = _sta_ssid;
     root[TAG_STA_PASSWD] = _sta_passwd;
 };
+
+bool NetworkConfig::setParamByName(const String& param, const String& value) {
+    bool handled = true;
+    if (param.equals(TAG_WIFI_MODE)) {
+        setMode(value.toInt());
+    } else if (param.equals(TAG_HOSTNAME)) {
+        setHostname(value);
+    } else if (param.equals(TAG_STA_SSID)) {
+        setSSID(WIFI_STA, value);
+    } else if (param.equals(TAG_STA_PASSWD)) {
+        setPasswd(WIFI_STA, value);
+    } else if (param.equals(TAG_AP_SSID)) {
+        setSSID(WIFI_AP, value);
+    } else if (param.equals(TAG_AP_PASSWD)) {
+        setPasswd(WIFI_AP, value);
+    } else {
+        handled = false;
+    }
+    return handled;
+}

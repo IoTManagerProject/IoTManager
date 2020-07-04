@@ -9,51 +9,6 @@ static const char* MODULE = "Web";
 static const char* TAG_SET_UTILITIES = "/?set.utilities";
 static const char* TAG_SET_UDP = "/?set.udp";
 
-bool configChangeRequest(const String& param, const String& value) {
-    pm.info(param + ":" + value);
-
-    if (param.equals("devname")) {
-        config.network()->setHostname(value);
-    } else if (param.equals("udponoff")) {
-        config.general()->enableBroadcast(param.toInt());
-    } else if (param.equals("scen")) {
-        config.general()->enableScenario(value.toInt());
-    } else if (param.equals("routerssid")) {
-        config.network()->setSSID(WIFI_STA, value);
-    } else if (param.equals("routerpass")) {
-        config.network()->setPasswd(WIFI_STA, value);
-    } else if (param.equals("apssid")) {
-        config.network()->setSSID(WIFI_AP, value);
-    } else if (param.equals("appass")) {
-        config.network()->setPasswd(WIFI_AP, value);
-    } else if (param.equals("timezone")) {
-        config.clock()->setTimezone(value.toInt());
-    } else if (param.equals("ntp")) {
-        config.clock()->setNtp(value);
-    } else if (param.equals("weblogin")) {
-        config.web()->setLogin(value);
-    } else if (param.equals("webpass")) {
-        config.web()->setPass(value);
-    } else if (param.equals("blink")) {
-        config.general()->enableLed(value.toInt());
-    } else if (param.equals("mqttServer")) {
-        config.mqtt()->setServer(value);
-    } else if (param.equals("mqttPort")) {
-        config.mqtt()->setPort(value.toInt());
-    } else if (param.equals("mqttPrefix")) {
-        config.mqtt()->setPrefix(value);
-    } else if (param.equals("mqttUser")) {
-        config.mqtt()->setUser(value);
-    } else if (param.equals("mqttPass")) {
-        config.mqtt()->setPass(value);
-    } else if (param.equals("pushingboxid")) {
-        config.general()->setPushingboxId(value);
-    } else {
-        return false;
-    };
-    return true;
-};
-
 void web_init() {
     // dnsServer.start(53, "*", WiFi.softAPIP());
     // server.addHandler(new CaptiveRequestHandler(jsonReadStr(configSetupJson, "name").c_str())).setFilter(ON_AP_FILTER);
@@ -124,11 +79,11 @@ void web_init() {
                 request->redirect(TAG_SET_UTILITIES);
                 return;
             }
-
             for (size_t i = 0; i < request->params(); i++) {
                 String param = request->getParam(i)->name();
                 String value = request->getParam(i)->value();
-                if (!configChangeRequest(param, value)) {
+                pm.info(param + ":" + value);
+                if (!config.setParamByName(param, value)) {
                     pm.error("unknown: " + param);
                     request->send(404);
                     return;

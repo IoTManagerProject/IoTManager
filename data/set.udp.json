@@ -4,10 +4,11 @@
     "/lang/lang.ru.json"
   ],
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+  "reload": "10000",
   "content": [
     {
       "type": "h5",
-      "title": "{{name}}",
+      "title": "{{devname}}",
       "class": "alert-default"
     },
     {
@@ -17,80 +18,70 @@
       "class": "btn btn-block btn-default"
     },
     {
-      "type": "hr"
+      "type": "checkbox",
+      "name": "udponoff",
+      "title": "{{LS_broadcastEnabled}}",
+      "action": "/set?udponoff=[[udponoff]]",
+      "state": "{{udpon off}}",
+      "design": "two"
     },
     {
-      "type": "h3",
-      "title": "{{SetUDPList}}"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "csv",
-      "title": [
-        "html",
-        "html",
-        "html",
-        "html"
-      ],
-      "state": "dev.csv",
-      "style": "width:100%;",
-      "class": "nan"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "link",
-      "title": "{{SetUDPUpdateList}}",
-      "action": "/set?updatelist",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "link",
-      "title": "{{SetUDPUpdatePage}}",
-      "action": "/set?updatepage",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "text",
-      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetUDPWarn1}}</p></font></div>",
-      "style": "width:100%;float:left;"
-    },
-    {
-      "type": "h3",
-      "title": "{{SetUDPNameOfDev}}"
+      "type": "h4",
+      "title": "{{SetUDPNameOfDev}}",
+      "style": "width:60%;float:left;"
     },
     {
       "type": "input",
-      "title": "{{SetUDPNameOfDev}}",
+      "title": "",
       "name": "devname-arg",
-      "state": "{{name}}",
-      "pattern": "[A-Za-z0-9]{6,12}"
+      "state": "{{devname}}",
+      "pattern": "[A-Za-z0-9,_]{6,12}",
+      "style": "width:40%;float:right"
+    },
+    {
+      "type": "h4",
+      "title": "{{LS_broadcastInterval}}",
+      "style": "width:60%;float:left;"
+    },
+    {
+      "type": "input",
+      "title": "",
+      "name": "udptime-arg",
+      "state": "{{udptime}}",
+      "pattern": "[0-9]{1,5}",
+      "style": "width:40%;float:right;"
     },
     {
       "type": "button",
       "title": "{{LS_save}}",
-      "action": "/set?devname=[[devname-arg]]",
+      "action": "/set?devname=[[devname-arg]]&udptime=[[udptime-arg]]",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "hr"
     },
     {
-      "type": "checkbox",
-      "name": "udponoff",
-      "title": "{{SetUDPDateExchange}}",
-      "action": "/set?udponoff=[[udponoff]]",
-      "state": "{{udponoff}}"
+      "type": "h4",
+      "title": "{{SetUDPList}}"
     },
     {
-      "type": "text",
-      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetUDPWarn2}}</p></font></div>"
+      "type": "table",
+      "state": "device.json",
+      "title": {
+        "id": "ID ",
+        "name": "Имя устройства",
+        "url": "Адрес",
+        "lastseen": "Время"
+      }
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "link",
+      "title": "{{LS_refresh}}",
+      "action": "/?set.udp",
+      "class": "btn btn-block btn-default"
     }
   ]
 }

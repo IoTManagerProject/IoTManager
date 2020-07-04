@@ -25,6 +25,10 @@ class ConfigItem {
         load(root);
     }
 
+    virtual bool setParamByName(const String& param, const String& value) {
+        return false;
+    }
+
     virtual void load(const JsonObject& root) = 0;
 
     virtual void save(JsonObject& root) = 0;

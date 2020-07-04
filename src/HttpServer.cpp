@@ -1,5 +1,6 @@
 #include "HttpServer.h"
 
+#include "Devices.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
 #include "FSEditor.h"
@@ -53,6 +54,10 @@ void init() {
 
     server.on("/runtime.json", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send(200, "application/json", runtime.get());
+    });
+
+    server.on("/device.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", Devices::asJson());
     });
 
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
