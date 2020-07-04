@@ -18,8 +18,10 @@ String deleteBeforeDelimiterTo(String str, String found);
 
 String selectFromMarkerToMarker(String str, String found, int number);
 
-size_t itemsCount(String str, const String& separator);
+size_t itemsCount(String str, const String &separator);
 
-boolean isDigitStr(const String&);
+boolean isDigitStr(const String &);
 
 const String prettyBytes(size_t size);
+
+char **str_split(char *str, const char delimiter, size_t &count);

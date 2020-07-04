@@ -1,7 +1,7 @@
 #include "Config/NetworkConfig.h"
 
 static const char* TAG_WIFI_MODE = "mode";
-static const char* TAG_HOSTNAME = "name";
+static const char* TAG_HOSTNAME = "hostname";
 static const char* TAG_AP_SSID = "apssid";
 static const char* TAG_AP_PASSWD = "appass";
 static const char* TAG_STA_SSID = "routerssid";
@@ -60,11 +60,11 @@ void NetworkConfig::getPasswd(uint8_t mode, String& str) const {
 
 void NetworkConfig::load(const JsonObject& root) {
     _mode = root[TAG_WIFI_MODE] | 2;
-    strlcpy(_hostname, root[TAG_HOSTNAME], sizeof(_hostname));
-    strlcpy(_ap_ssid, root[TAG_AP_SSID], sizeof(_ap_ssid));
-    strlcpy(_ap_passwd, root[TAG_AP_PASSWD], sizeof(_ap_passwd));
-    strlcpy(_sta_ssid, root[TAG_STA_SSID], sizeof(_sta_ssid));
-    strlcpy(_sta_passwd, root[TAG_STA_PASSWD], sizeof(_sta_passwd));
+    strlcpy(_hostname, root[TAG_HOSTNAME] | "", sizeof(_hostname));
+    strlcpy(_ap_ssid, root[TAG_AP_SSID] | "", sizeof(_ap_ssid));
+    strlcpy(_ap_passwd, root[TAG_AP_PASSWD] | "", sizeof(_ap_passwd));
+    strlcpy(_sta_ssid, root[TAG_STA_SSID] | "", sizeof(_sta_ssid));
+    strlcpy(_sta_passwd, root[TAG_STA_PASSWD] | "", sizeof(_sta_passwd));
 }
 
 void NetworkConfig::save(JsonObject& root) {

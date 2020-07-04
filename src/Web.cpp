@@ -1,10 +1,13 @@
-#include "Global.h"
+#include "Arduino.h"
 
-#include "MqttClient.h"
+#include "Config.h"
+#include "Devices.h"
+#include "WiFiManager.h"
 
 static const char* MODULE = "Web";
 
 static const char* TAG_SET_UTILITIES = "/?set.utilities";
+static const char* TAG_SET_UDP = "/?set.udp";
 
 bool configChangeRequest(const String& param, const String& value) {
     pm.info(param + ":" + value);
@@ -87,13 +90,12 @@ void web_init() {
                 return;
             }
             if (request->hasArg("updatelist")) {
-                removeFile("/dev.csv");
-                addFile("dev.csv", "device id;device name;ip address");
-                request->redirect("/?set.udp");
+                Devices::saveToFile(KNOWN_DEVICE_FILE);
+                request->redirect(TAG_SET_UDP);
                 return;
             }
             if (request->hasArg("updatepage")) {
-                request->redirect("/?set.udp");
+                request->redirect(TAG_SET_UDP);
                 return;
             }
             if (request->hasArg("mqttcheck")) {

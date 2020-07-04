@@ -1,5 +1,6 @@
 #include "MqttClient.h"
 
+#include "Scenario.h"
 #include <PubSubClient.h>
 #include <WiFiClient.h>
 #include "Logger.h"

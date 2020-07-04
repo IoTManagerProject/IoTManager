@@ -129,3 +129,35 @@ String getErrorLevelStr(ErrorLevel_t level) {
     }
     return String(ptr);
 }
+
+char **str_split(char *str, const char delimiter, size_t &count) {
+    char **result = 0;
+    count = 0;
+    char *tmp = str;
+    char *last_delimiter = 0;
+    char delim[2];
+    delim[0] = delimiter;
+    delim[1] = 0;
+
+    while (*tmp) {
+        if (delimiter == *tmp) {
+            count++;
+            last_delimiter = tmp;
+        }
+        tmp++;
+    }
+    count += last_delimiter < (str + strlen(str) - 1);
+    count++;
+
+    result = (char **)calloc(count, sizeof(char *));
+    if (result) {
+        size_t idx = 0;
+        char *token = strtok(str, delim);
+        while (token) {
+            *(result + idx++) = strdup(token);
+            token = strtok(0, delim);
+        }
+        *(result + idx) = 0;
+    }
+    return result;
+}

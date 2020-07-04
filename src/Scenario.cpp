@@ -30,7 +30,7 @@ void init() {
     _ready_flag = true;
 }
 
-void process(EventQueue* queue) {
+void process(StringQueue* queue) {
     if (!_ready_flag) {
         init();
     }

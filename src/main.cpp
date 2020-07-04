@@ -1,7 +1,10 @@
 #include "Global.h"
 
+#include "Scenario.h"
 #include "Events.h"
+#include "Messages.h"
 #include "Broadcast.h"
+#include "Devices.h"
 #include "MqttClient.h"
 #include "HttpServer.h"
 #include "Bus/I2CScanner.h"
@@ -98,17 +101,17 @@ void loop() {
     m.add(LI_BUTTON);
 
     if (config.general()->isScenarioEnabled()) {
-        Scenario::process(&events);
+        Scenario::process(Events::get());
         m.add(LI_SCENARIO);
     }
 
     if (config.general()->isBroadcastEnabled()) {
         Broadcast::loop();
+        Messages::loop();
         m.add(LI_BROADCAST);
     }
 
     loop_serial();
-
     m.add(LI_SERIAL);
 
     ts.update();
@@ -158,7 +161,7 @@ void flag_actions() {
         String data;
         root.printTo(data);
         pm.info(data);
-        Broadcast::send(data);
+        Broadcast::send("iot_mqtt", data);
         broadcast_mqtt_settings_flag = false;
     }
 
@@ -317,6 +320,9 @@ void setup() {
 
     pm.info("Broadcast");
     Broadcast::init();
+
+    pm.info("Devices");
+    Devices::init();
 
     // ts.add(
     // SYS_STAT, 1000 * 60, [&](void*) { print_sys_stat }, nullptr, false);

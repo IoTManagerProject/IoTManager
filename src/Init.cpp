@@ -1,7 +1,10 @@
 #include "Global.h"
 
+#include "Messages.h"
+#include "Broadcast.h"
 #include "Logger.h"
 #include "WebClient.h"
+#include "Scenario.h"
 #include "Sensors.h"
 #include "MqttClient.h"
 
@@ -13,6 +16,16 @@ void sensors_task() {
             Sensors::process();
         },
         nullptr, true);
+}
+
+void announce_task_init() {
+    randomSeed(micros());
+    ts.add(
+        ANNOUNCE, random(50000, 60000), [&](void*) {
+            if (config.general()->isBroadcastEnabled()) {
+                Messages::announce();
+            } },
+        nullptr, false);
 }
 
 void init_mod() {
@@ -34,6 +47,9 @@ void init_mod() {
     timer_countdown_init();
 
     uptime_task_init();
+
+    pm.info(String("Announce"));
+    announce_task_init();
 }
 
 void device_init() {

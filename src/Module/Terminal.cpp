@@ -1,8 +1,11 @@
 #include "Module/Terminal.h"
 
 #include "Utils/TimeUtils.h"
+#include "Utils/PrintMessage.h"
 
 #define INPUT_MAX_LENGHT 255
+
+static const char *MODULE = "Term";
 
 Terminal::Terminal(Stream *stream) : _stream{stream},
                                      _line(INPUT_MAX_LENGHT),

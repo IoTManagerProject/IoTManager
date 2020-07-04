@@ -1,5 +1,6 @@
 #include "Cmd.h"
 
+#include "Devices.h"
 #include "Events.h"
 #include "Logger.h"
 #include "Module/Terminal.h"
@@ -7,6 +8,7 @@
 #include "MqttClient.h"
 #include "WebClient.h"
 #include "Sensors.h"
+#include "Scenario.h"
 #include "Sensors/AnalogSensor.h"
 #include "Objects/Buttons.h"
 #include "Objects/PwmItems.h"
@@ -74,7 +76,6 @@ void cmd_init() {
 
     sCmd.addCommand("serialBegin", cmd_serialBegin);
     sCmd.addCommand("serialWrite", cmd_serialWrite);
-    sCmd.addCommand("getData", cmd_getData);
 
     sCmd.addCommand("logging", cmd_logging);
 
@@ -98,6 +99,7 @@ void cmd_init() {
     sCmd.addCommand("firmwareUpdate", cmd_firmwareUpdate);
     sCmd.addCommand("firmwareVersion", cmd_firmwareVersion);
 
+    sCmd.addCommand("get", cmd_get);
     sCmd.addCommand("telnet", cmd_telnet);
 }
 
@@ -126,28 +128,30 @@ void cmd_button() {
 
     myButtons.add(name, assign, state);
 
-    if (assign == "scen") {
-        config.general()->enableScenario(state.toInt());
-    } else if (assign.startsWith("line")) {
-        String str = assign;
-        while (str.length()) {
-            if (str == "") {
-                return;
-            }
-            //line1,
-            String tmp = selectToMarker(str, ",");
-            //1,
-            String number = deleteBeforeDelimiter(tmp, "e");
-            number.replace(",", "");
-            int number_int = number.toInt();
-
-            Scenario::enableBlock(number_int, state);
-
-            str = deleteBeforeDelimiter(str, ",");
-        }
-        createWidget(descr, page, order, "toggle", "button" + name);
-    }
     liveData.write("button" + name, state);
+
+    createWidget(descr, page, order, "toggle", "button" + name);
+
+    // if (assign == "scen") {
+    //     config.general()->enableScenario(state.toInt());
+    // } else if (assign.startsWith("line")) {
+    //     String str = assign;
+    //     while (str.length()) {
+    //         if (str == "") {
+    //             return;
+    //         }
+    //         //line1,
+    //         String tmp = selectToMarker(str, ",");
+    //         //1,
+    //         String number = deleteBeforeDelimiter(tmp, "e");
+    //         number.replace(",", "");
+    //         int number_int = number.toInt();
+
+    //         Scenario::enableBlock(number_int, state);
+
+    //         str = deleteBeforeDelimiter(str, ",");
+    //     }
+    // }
 }
 void cmd_buttonSet() {
     String name = sCmd.next();
@@ -465,9 +469,19 @@ void cmd_serialBegin() {
     });
 }
 
-void cmd_getData() {
+void cmd_get() {
+    String obj = sCmd.next();
     String param = sCmd.next();
-    String res = param.isEmpty() ? liveData.get() : liveData.read(param);
+    String res = "";
+    if (!obj.isEmpty()) {
+        if (obj.equalsIgnoreCase("state")) {
+            res = param.isEmpty() ? liveData.get() : liveData.read(param);
+        } else if (obj.equalsIgnoreCase("devices")) {
+            Devices::asString(res, param.toInt());
+        }
+    }
+    pm.info("result:");
+    pm.info(res);
     if (term) {
         term->println(res.c_str());
     }
@@ -837,11 +851,11 @@ void cmd_timerStop() {
 void cmd_telnet() {
     bool enabled = String(sCmd.next()).toInt();
     uint16_t port = String(sCmd.next()).toInt();
-    if (!telnet) {
-        telnet = new Telnet(port);
-    }
     if (enabled) {
         pm.info("telnet: enabled");
+        if (!telnet) {
+            telnet = new Telnet(port);
+        }
         telnet->init();
         telnet->start();
         telnet->setOutput(&Serial);

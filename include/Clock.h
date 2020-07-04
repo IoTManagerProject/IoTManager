@@ -61,7 +61,7 @@ class Clock {
 
     void startSync() {
         if (!_configured) {
-            pm.info("sync to: " + _cfg->getNtp() + " timezone: " + String(_cfg->getTimezone()));
+            pm.info("ntp: " + _cfg->getNtp() + " timezone: " + String(_cfg->getTimezone()));
             setupSntp();
             _configured = true;
             // лучше не ждать, проверим в следующий раз
@@ -69,7 +69,7 @@ class Clock {
         }
         _hasSynced = hasTimeSynced();
         if (_hasSynced) {
-            pm.info("synced " + getDateDotFormated() + " " + getTime());
+            pm.info(getDateDotFormated() + " " + getTime());
         } else {
             pm.error("failed to obtain");
         }

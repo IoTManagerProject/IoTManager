@@ -5,23 +5,27 @@
 class GeneralConfig : public ConfigItem {
    public:
     GeneralConfig();
+    
+    const String getName() const;
+    void setName(const String value);
 
-    const String getPushingboxId();
+    const String getPushingboxId() const;
     void setPushingboxId(String value);
 
     void enableLed(bool value);
-    boolean isLedEnabled();
+    boolean isLedEnabled() const;
 
     void enableBroadcast(boolean value);
-    boolean isBroadcastEnabled();
+    boolean isBroadcastEnabled() const;
 
     void enableScenario(boolean value);
-    boolean isScenarioEnabled();
+    boolean isScenarioEnabled() const;
 
     void load(const JsonObject&) override;
     void save(JsonObject&) override;
 
    private:
+    String _name;
     String _pushingBoxId;
     bool _broadcastEnabled;
     bool _scenarioEnabled;

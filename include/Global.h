@@ -9,16 +9,19 @@
 #include "ESP32.h"
 #include "ESP8266.h"
 //
+
+#include "Base/KeyValueStore.h"
+#include "Base/StringQueue.h"
+
 #include "Consts.h"
 #include "Errors.h"
 #include "Config.h"
 #include "Upgrade.h"
 #include "Clock.h"
-#include "Scenario.h"
 #include "Sensors.h"
+#include "Scenario.h"
+#include "MqttClient.h"
 #include "WiFiManager.h"
-#include "Objects/KeyValueStore.h"
-#include "Objects/EventQueue.h"
 
 #include "Utils/FileUtils.h"
 #include "Utils/JsonUtils.h"
@@ -133,7 +136,6 @@ extern void loop_serial();
 extern void loop_cmd();
 extern void loop_button();
 extern void loop_scenario();
-
 
 // Init
 extern void uptime_task_init();

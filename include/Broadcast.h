@@ -2,10 +2,11 @@
 
 #include <Arduino.h>
 
+#include "Base/StringQueue.h"
+
 namespace Broadcast {
+void send(const String header, const String data);
 void init();
 void loop();
-void handleUdp_esp32();
-void addKnownDevice(String fileName, String id, String dev_name, String ip);
-void send(const String data);
+StringQueue* received();
 }  // namespace Broadcast

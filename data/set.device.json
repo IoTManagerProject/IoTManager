@@ -3,7 +3,6 @@
     "/config.json",
     "/lang/lang.ru.json"
   ],
-  "title": "{{LS_configuration}}",
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
   "content": [
     {

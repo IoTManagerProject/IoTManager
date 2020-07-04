@@ -455,6 +455,7 @@
         var ext = /(?:\.([^.]+))?$/.exec(path)[1];
         if (typeof ext !== undefined) {
           switch (ext) {
+            case "csv":
             case "txt":
             case "htm":
             case "html":
@@ -464,13 +465,6 @@
             case "json":
             case "conf":
             case "ini":
-            case "h":
-            case "c":
-            case "cpp":
-            case "php":
-            case "hex":
-            case "ino":
-            case "pde":
               return true;
           }
         }
@@ -539,9 +533,6 @@
             case "conf": lang = "plain"; break;
             case "htm": lang = "html"; break;
             case "js": lang = "javascript"; break;
-            case "h": lang = "c_cpp"; break;
-            case "c": lang = "c_cpp"; break;
-            case "cpp": lang = "c_cpp"; break;
             case "css":
             case "scss":
             case "php":

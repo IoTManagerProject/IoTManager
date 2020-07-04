@@ -1,5 +1,7 @@
 #include "Module/CommandShell.h"
 
+#include "Config.h"
+
 CommandShell::CommandShell(Runner *runner) : _term(nullptr), _runner(runner), _path('\\'), _active(false), _greetings(false), _farewell(false) {}
 
 void CommandShell::setTerm(Terminal *term) {
@@ -99,7 +101,7 @@ size_t CommandShell::printFarewell(Print *p) {
 
 size_t CommandShell::printPrompt(Print *p) {
     size_t n = 0;
-    n += p->print(_path);
+    n += p->print(config.general()->getName().c_str());
     n += p->print('>');
     n += p->print(' ');
     return n;

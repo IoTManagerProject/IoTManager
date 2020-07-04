@@ -2,7 +2,8 @@
 
 #include "Arduino.h"
 
-extern void stringExecute(String &cmdStr);
+void addCommandLoop(const String &str);
+void stringExecute(const String &str);
 
 void cmd_pinSet();
 void cmd_pinChange();
@@ -13,8 +14,6 @@ void cmd_stepper();
 void cmd_stepperSet();
 void cmd_servo();
 void cmd_servoSet();
-void cmd_serialBegin();
-void cmd_serialWrite();
 
 void cmd_text();
 void cmd_textSet();
@@ -34,8 +33,6 @@ void cmd_inputTime();
 
 void cmd_firmwareUpdate();
 void cmd_firmwareVersion();
-
-void cmd_telnet();
 
 void cmd_analog();
 void cmd_dallas();
@@ -58,4 +55,8 @@ void cmd_dhtComfort();
 void cmd_dhtDewpoint();
 void cmd_dhtPerception();
 
-void cmd_getData();
+void cmd_get();
+void cmd_telnet();
+
+void cmd_serialBegin();
+void cmd_serialWrite();

@@ -2,14 +2,14 @@
 
 #include <Arduino.h>
 
-#include "Objects/EventQueue.h"
+#include "Global.h"
 
 namespace Scenario {
 void reinit();
 
 void init();
 
-void process(EventQueue* events);
+void process(StringQueue* events);
 
 void enableBlock(size_t num, boolean enable);
 
