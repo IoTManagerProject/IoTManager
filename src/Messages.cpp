@@ -31,31 +31,33 @@ void announce() {
     Broadcast::send(HEADER_ANNOUNCE, data);
 }
 
-void process(StringQueue* queue) {
-    char buf[255];
-    strncpy(buf, queue->pop().c_str(), sizeof(buf));
-    size_t count = 0;
-    char** tokens = str_split(buf, ';', count);
-    if (!tokens || !count) {
-        return;
+String getValue(String data, char separator, int index) {
+    size_t found = 0;
+    size_t strIndex[] = {0, -1};
+    size_t maxIndex = data.length() - 1;
+
+    for (size_t i = 0; i <= maxIndex && found <= index; i++) {
+        if (data.charAt(i) == separator || i == maxIndex) {
+            found++;
+            strIndex[0] = strIndex[1] + 1;
+            strIndex[1] = (i == maxIndex) ? i + 1 : i;
+        }
     }
-    pm.info(String(count, DEC));
-    if (strcmp(*tokens, HEADER_ANNOUNCE) == 0) {
-        char* id = *(tokens + 1);
-        char* name = *(tokens + 2);
-        char* ip = *(tokens + 3);
-        Devices::add(id, name, ip);
-    } else if (strcmp(*tokens, HEADER_MQTT_SETTINGS) == 0) {
-        char* json = *(tokens + 1);
-        config.mqtt()->loadString(json);
+
+    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
+void process(StringQueue* queue) {
+    String buf = queue->pop();
+
+    if (getValue(buf, ';', 0).equals(HEADER_ANNOUNCE)) {
+        Devices::add(getValue(buf, ';', 1).c_str(), getValue(buf, ';', 2).c_str(), getValue(buf, ';', 3).c_str());
+    } else if (getValue(buf, ';', 0).equals(HEADER_MQTT_SETTINGS)) {
+        config.mqtt()->loadString(getValue(buf, ';', 1).c_str());
         mqtt_restart_flag = true;
     } else {
         pm.error("unknown");
     }
-    while (*tokens) {
-        free(*(tokens++));
-    }
-    free(tokens);
 }
 
 }  // namespace Messages

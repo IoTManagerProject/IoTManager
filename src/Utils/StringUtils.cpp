@@ -146,7 +146,7 @@ char **str_split(char *str, const char delimiter, size_t &count) {
         }
         tmp++;
     }
-    count += last_delimiter < (str + strlen(str) - 1);
+    // count += last_delimiter < (str + strlen(str) - 1);
     count++;
 
     result = (char **)calloc(count, sizeof(char *));
