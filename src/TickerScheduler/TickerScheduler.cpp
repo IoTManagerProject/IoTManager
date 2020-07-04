@@ -108,7 +108,7 @@ void TickerScheduler::update() {
     _loop_cnt++;
 }
 
-void TickerScheduler::printMetric(Print& p) {
+void TickerScheduler::print(Print& p) {
     if (!_total_mu || !_loop_cnt) {
         return;
     }
@@ -124,7 +124,7 @@ void TickerScheduler::printMetric(Print& p) {
     }
 }
 
-void TickerScheduler::resetMetric() {
+void TickerScheduler::reset() {
     for (size_t i = 0; i < this->size; i++) {
         this->items[i].metric.reset();
     }

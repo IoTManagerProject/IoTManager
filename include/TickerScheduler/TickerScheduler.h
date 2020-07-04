@@ -46,6 +46,6 @@ class TickerScheduler {
     void disableAll();
     void update();
 
-    void printMetric(Print &p);
-    void resetMetric();
+    void print(Print &p);
+    void reset();
 };

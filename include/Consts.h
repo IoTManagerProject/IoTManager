@@ -81,7 +81,8 @@ enum SchedulerTask { WIFI_SCAN,
                      UPTIME,
                      ANNOUNCE,
                      UDP_DB,
-                     SYS_STAT };
+                     SYS_TIMINGS,
+                     SYS_MEMORY };
 
 enum ErrorType_t {
     ET_NONE,

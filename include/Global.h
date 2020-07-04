@@ -53,7 +53,6 @@ extern AsyncWebServer server;
 /*
 * Global vars
 */
-extern boolean just_load;
 extern String prex;
 extern String all_widgets;
 extern String order_loop;
@@ -63,7 +62,6 @@ extern String lastVersion;
 extern boolean perform_updates_check_flag;
 extern boolean perform_upgrade_flag;
 extern boolean mqtt_restart_flag;
-extern boolean udp_data_parse;
 
 /*
 * Запрос на проверку обновлений

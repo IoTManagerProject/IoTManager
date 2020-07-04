@@ -278,13 +278,17 @@ void config_restore() {
     load_config();
 }
 
-void print_sys_stat() {
-    pm.info(getMemoryStatus());
-    m.print(Serial);
-    ts.printMetric(Serial);
-    m.reset();
-    ts.resetMetric();
+void print_sys_memory() {
+    pm.info(getHeapStats());
 }
+void print_sys_timins() {
+    m.print(Serial);
+    m.reset();
+
+    ts.print(Serial);
+    ts.reset();
+}
+
 void setup() {
     WiFi.setAutoConnect(false);
     WiFi.persistent(false);
@@ -294,17 +298,17 @@ void setup() {
     Serial.println();
     Serial.println("--------------started----------------");
 
-    pm.info(String("FS"));
+    pm.info("FS");
     fileSystemInit();
     config_init();
 
-    pm.info(String("Clock"));
+    pm.info("Clock");
     clock_init();
 
-    pm.info(String("Init"));
+    pm.info("Init");
     init_mod();
 
-    pm.info(String("Network"));
+    pm.info("Network");
     startSTAMode();
 
     if (isNetworkActive()) {
@@ -319,10 +323,10 @@ void setup() {
     }
     telemetry_init();
 
-    pm.info(String("HttpServer"));
+    pm.info("HttpServer");
     HttpServer::init();
 
-    pm.info(String("WebAdmin"));
+    pm.info("WebAdmin");
     web_init();
 
     pm.info("Broadcast");
@@ -332,8 +336,10 @@ void setup() {
     Devices::init();
 
     ts.add(
-        SYS_STAT, 1000 * 10, [&](void*) { print_sys_stat(); }, nullptr, false);
+        SYS_MEMORY, 10 * ONE_SECOND_ms, [&](void*) { print_sys_memory(); }, nullptr, false);
 
-    just_load = false;
+    ts.add(
+        SYS_TIMINGS, ONE_MINUTE_ms, [&](void*) { print_sys_timins(); }, nullptr, false);
+
     initialized = true;
 }

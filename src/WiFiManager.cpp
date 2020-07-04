@@ -74,7 +74,7 @@ void startSTAMode() {
                         if (MqttClient::connect()) {
                             setLedStatus(LED_OFF);
                         }
-                        if (!just_load) mqtt_error++;
+                        mqtt_error++;
                     }
                 } else {
                     if (_connected) {
