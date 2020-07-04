@@ -155,7 +155,7 @@ char **str_split(char *str, const char delimiter, size_t &count) {
         char *token = strtok(str, delim);
         while (token) {
             *(result + idx++) = strdup(token);
-            token = strtok(0, delim);
+            token = strtok(NULL, delim);
         }
         *(result + idx) = 0;
     }

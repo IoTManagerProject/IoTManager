@@ -39,6 +39,7 @@ void process(StringQueue* queue) {
     if (!tokens || !count) {
         return;
     }
+    pm.info(String(count, DEC));
     if (strcmp(*tokens, HEADER_ANNOUNCE) == 0) {
         char* id = *(tokens + 1);
         char* name = *(tokens + 2);

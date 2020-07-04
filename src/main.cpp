@@ -278,6 +278,13 @@ void config_restore() {
     load_config();
 }
 
+void print_sys_stat() {
+    pm.info(getMemoryStatus());
+    m.print(Serial);
+    ts.printMetric(Serial);
+    m.reset();
+    ts.resetMetric();
+}
 void setup() {
     WiFi.setAutoConnect(false);
     WiFi.persistent(false);
@@ -324,17 +331,9 @@ void setup() {
     pm.info("Devices");
     Devices::init();
 
-    // ts.add(
-    // SYS_STAT, 1000 * 60, [&](void*) { print_sys_stat }, nullptr, false);
+    ts.add(
+        SYS_STAT, 1000 * 10, [&](void*) { print_sys_stat(); }, nullptr, false);
 
     just_load = false;
     initialized = true;
-}
-
-void print_sys_stat() {
-    pm.info(getMemoryStatus());
-    m.print(Serial);
-    ts.printMetric(Serial);
-    m.reset();
-    ts.resetMetric();
 }
