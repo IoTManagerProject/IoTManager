@@ -1,4 +1,4 @@
-#include "Module/Terminal.h"
+#include "Objects/Terminal.h"
 
 #include "Utils/TimeUtils.h"
 #include "Utils/PrintMessage.h"

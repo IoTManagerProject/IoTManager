@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Bus/BusScanner.h"
-
 #include <Wire.h>
+
+#include "Objects/BusScanner.h"
+
 class I2CScanner : public BusScanner {
    public:
     I2CScanner();

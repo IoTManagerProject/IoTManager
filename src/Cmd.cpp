@@ -3,8 +3,6 @@
 #include "Devices.h"
 #include "Events.h"
 #include "Logger.h"
-#include "Module/Terminal.h"
-#include "Module/Telnet.h"
 #include "MqttClient.h"
 #include "WebClient.h"
 #include "Sensors.h"
@@ -13,7 +11,9 @@
 #include "Objects/Buttons.h"
 #include "Objects/PwmItems.h"
 #include "Objects/ServoItems.h"
-#include "Bus/OneWireBus.h"
+#include "Objects/OneWireBus.h"
+#include "Objects/Terminal.h"
+#include "Objects/Telnet.h"
 
 static const char *MODULE = "Cmd";
 

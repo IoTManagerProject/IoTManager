@@ -1,4 +1,4 @@
-#include "Module/Telnet.h"
+#include "Objects/Telnet.h"
 
 bool Telnet::onInit() {
     _server = new WiFiServer(_port);

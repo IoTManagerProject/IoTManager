@@ -33,7 +33,7 @@ void asString(String& res, unsigned long ttl_sec) {
 void saveToFile(const String filename) {
     auto file = LittleFS.open(filename, "w");
     if (!file) {
-        pm.error("save :" + filename);
+        pm.error("save: " + filename);
         return;
     }
     file.println("id;name;url;lastseen");

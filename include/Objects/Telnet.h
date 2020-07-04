@@ -2,10 +2,9 @@
 
 #include "Global.h"
 
-#include "Module/Module.h"
-#include "Module/Terminal.h"
-#include "Module/CommandShell.h"
-
+#include "Objects/Module.h"
+#include "Objects/Terminal.h"
+#include "Objects/CommandShell.h"
 
 #include <functional>
 

@@ -2,9 +2,9 @@
 
 #include <Arduino.h>
 
-#include "Module/Terminal.h"
 #include "Base/CircularBuffer.h"
-#include "Module/Runner.h"
+#include "Objects/Terminal.h"
+#include "Objects/Runner.h"
 
 class CommandShell {
    public:

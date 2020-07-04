@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Module/CharBuffer.h"
+#include "Objects/CharBuffer.h"
 
 class EditLine : public CharBuffer {
    public:

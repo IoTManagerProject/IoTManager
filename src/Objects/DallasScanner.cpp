@@ -1,4 +1,4 @@
-#include "Bus/DallasScanner.h"
+#include "Objects/DallasScanner.h"
 
 #include "Sensors/DallasSensor.h"
 #include "Utils/PrintMessage.h"
