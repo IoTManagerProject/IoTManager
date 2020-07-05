@@ -52,8 +52,8 @@ struct DeviceItem {
     }
 
     const String asString() {
-        char buf[255];
-        sprintf(buf, "%s;%s;%s;%lu", _id, _name, _ip, _timestamp);
+        char buf[256];
+        snprintf(buf, sizeof(buf), "%s;%s;%s;%lu", _id, _name, _ip, _timestamp);
         return buf;
     }
 };

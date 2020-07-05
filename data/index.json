@@ -4,7 +4,7 @@
     "/config.json",
     "/lang/lang.ru.json"
   ],
-  "title": "{{LS_mainPage}}",
+  "title": "{{LS_main_page}}",
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
   "content": [
     {
@@ -17,19 +17,19 @@
     },
     {
       "type": "h4",
-      "title": "{{LS_chipID}}: {{chipID}}"
+      "title": "{{LS_device_id}}: {{chipID}}"
     },
     {
       "type": "h4",
-      "title": "{{LS_IPAddress}}: {{ip}}"
+      "title": "{{LS_address}}: {{ip}}"
     },
     {
       "type": "h4",
-      "title": "{{LS_localTime}}: {{time}}"
+      "title": "{{LS_time_local}}: {{time}}"
     },
     {
       "type": "h4",
-      "title": "{{LS_uptime}}: {{uptime}}"
+      "title": "{{LS_time_uptime}}: {{uptime}}"
     },
     {
       "type": "hr"
@@ -68,18 +68,6 @@
       "type": "link",
       "title": "Утилиты",
       "action": "/?set.utilities",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "link",
-      "title": "IoT Manager для android",
-      "action": "https://play.google.com/store/apps/details?id=ru.esp8266.iotmanager",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "link",
-      "title": "IoT Manager для iphone",
-      "action": "https://apps.apple.com/ru/app/iot-manager/id1155934877",
       "class": "btn btn-block btn-default"
     },
     {

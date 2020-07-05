@@ -1,6 +1,0 @@
-p > digit1
-buttonSet 1 0
-end
-p < digit2
-buttonSet 1 1
-end

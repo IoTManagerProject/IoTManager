@@ -12,16 +12,13 @@
     },
     {
       "type": "link",
-      "title": "{{LS_mainPage}}",
+      "title": "{{LS_main_page}}",
       "action": "/",
       "class": "btn btn-block btn-default"
     },
     {
-      "type": "hr"
-    },
-    {
       "type": "h4",
-      "title": "{{SetMQTTServerName}}",
+      "title": "{{LS_server_address}}",
       "style": "width:60%;float:left;"
     },
     {
@@ -41,7 +38,7 @@
       "title": "",
       "name": "mqttPort-arg",
       "state": "{{mqttPort}}",
-      "style": "width:40%;float:right"
+      "style": "width:40%;float:right;"
     },
     {
       "type": "h4",
@@ -53,7 +50,7 @@
       "title": "",
       "name": "mqttPrefix-arg",
       "state": "{{mqttPrefix}}",
-      "style": "width:40%;float:right"
+      "style": "width:40%;float:right;"
     },
     {
       "type": "h4",
@@ -65,11 +62,11 @@
       "title": "",
       "name": "mqttUser-arg",
       "state": "{{mqttUser}}",
-      "style": "width:40%;float:right"
+      "style": "width:40%;float:right;"
     },
     {
       "type": "h4",
-      "title": "{{SetMQTTPassword}}",
+      "title": "{{LS_password}}",
       "style": "width:60%;float:left;"
     },
     {
@@ -94,35 +91,10 @@
     },
     {
       "type": "button",
-      "style": "width:100%;float:left;",
-      "title": "{{SetMQTTSendSettings}}",
-      "action": "set?mqttsend",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "button",
-      "style": "width:100%;float:left;",
-      "title": "Проверить соединение с MQTT",
-      "action": "set?mqttcheck",
-      "response": "[[my-block]]",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "text",
-      "style": "width:100%;float:left;",
-      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetMQTTWarn1}}</p></font></div>"
-    },
-    {
-      "type": "text",
-      "style": "width:100%;float:left;",
-      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetMQTTWarn2}}</p></font></div>"
-    },
-    {
-      "type": "link",
-      "style": "width:100%;float:left;",
-      "title": "Перезагрузить устройство",
-      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
-      "class": "btn btn-block btn-danger"
+      "title": "{{LS_check_mqtt_settings}}",
+      "action": "set?check_mqtt",
+      "class": "btn btn-block btn-default",
+      "response": "[[my-block]]"
     }
   ]
 }

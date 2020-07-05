@@ -17,7 +17,9 @@ typedef std::function<void(TelnetEvent_t, WiFiClient*)> TelnetEventHandler;
 
 class Telnet : public Module {
    public:
-    Telnet(uint16_t port) : _port{port}, _lastConnected{false} {};
+    Telnet(uint16_t port) : _port{port},
+                            _lastConnected{false},
+                            _shell{new CommandShell()} {};
 
    public:
     void setEventHandler(TelnetEventHandler);

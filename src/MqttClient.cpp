@@ -1,11 +1,11 @@
 #include "MqttClient.h"
 
-#include "Scenario.h"
 #include <PubSubClient.h>
 #include <WiFiClient.h>
-#include "Logger.h"
 
 #include "Global.h"
+#include "Scenario.h"
+#include "Logger.h"
 
 static const char* MODULE = "Mqtt";
 

@@ -35,11 +35,6 @@
 
 #include <time.h>
 
-#ifdef WEBSOCKET_ENABLED
-extern AsyncWebSocket ws;
-//extern AsyncEventSource events;
-#endif
-
 extern KeyValueStore options;
 extern KeyValueStore liveData;
 extern KeyValueFile runtime;
@@ -48,11 +43,11 @@ extern Clock* timeNow;
 extern TickerScheduler ts;
 extern WiFiClient espClient;
 extern StringCommand sCmd;
-extern AsyncWebServer server;
 
-/*
-* Global vars
-*/
+extern AsyncWebServer server;
+extern AsyncWebSocket ws;
+extern AsyncEventSource events;
+
 extern String prex;
 extern String all_widgets;
 extern String order_loop;
@@ -141,5 +136,3 @@ extern void uptime_task_init();
 extern void config_init();
 extern void web_init();
 extern void telemetry_init();
-
-extern int readOptionInt(const String& name);

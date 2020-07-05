@@ -12,7 +12,7 @@
     },
     {
       "type": "link",
-      "title": "{{LS_mainPage}}",
+      "title": "{{LS_main_page}}",
       "action": "/",
       "class": "btn btn-block btn-default"
     },
@@ -21,11 +21,11 @@
     },
     {
       "type": "h3",
-      "title": "{{SetWiFiNameOfDev}}"
+      "title": "{{LS_device_name}}"
     },
     {
       "type": "input",
-      "title": "{{SetWiFiNameOfDev}}",
+      "title": "{{LS_device_name}}",
       "name": "hostname-arg",
       "state": "{{hostname}}",
       "pattern": "[A-Za-z0-9]{6,12}"
@@ -146,7 +146,7 @@
     },
     {
       "type": "h3",
-      "title": "{{SetWiFiTimeZone}}"
+      "title": "{{LS_timezone}}"
     },
     {
       "type": "input",
@@ -168,16 +168,12 @@
       "class": "btn btn-block btn-default"
     },
     {
-      "type": "text",
-      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetWiFiWarn4}}</p></font></div>"
-    },
-    {
       "type": "hr"
     },
     {
       "type": "link",
-      "title": "Перезагрузить устройство",
-      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/set?device=ok');}",
+      "title": "{{LS_restart_device}}",
+      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
       "class": "btn btn-block btn-danger"
     }
   ]

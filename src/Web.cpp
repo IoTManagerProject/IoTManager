@@ -53,7 +53,7 @@ void web_init() {
                 request->redirect(TAG_SET_UDP);
                 return;
             }
-            if (request->hasArg("mqttcheck")) {
+            if (request->hasArg("check_mqtt")) {
                 String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
                 String payload = "{}";
                 jsonWriteStr(payload, "title", buf);
@@ -61,7 +61,7 @@ void web_init() {
                 request->send(200, "text/html", payload);
                 return;
             }
-            if (request->hasArg("mqttsend")) {
+            if (request->hasArg("share_mqtt")) {
                 broadcast_mqtt_settings();
                 request->send(200);
                 return;

@@ -22,6 +22,6 @@ size_t itemsCount(String str, const String &separator);
 
 boolean isDigitStr(const String &);
 
-const String prettyBytes(size_t size);
+const char *getErrorLevelStr(uint8_t level);
 
-char **str_split(char *str, const char delimiter, size_t &count);
+const String prettyBytes(size_t size);

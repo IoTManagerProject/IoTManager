@@ -31,9 +31,9 @@ void announce() {
     Broadcast::send(HEADER_ANNOUNCE, data);
 }
 
-String getValue(String data, char separator, int index) {
+String getValue(const String& data, char separator, size_t index) {
     size_t found = 0;
-    size_t strIndex[] = {0, -1};
+    int strIndex[] = {0, -1};
     size_t maxIndex = data.length() - 1;
 
     for (size_t i = 0; i <= maxIndex && found <= index; i++) {

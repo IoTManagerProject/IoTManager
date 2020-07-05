@@ -13,21 +13,21 @@
     },
     {
       "type": "link",
-      "title": "{{LS_mainPage}}",
+      "title": "{{LS_main_page}}",
       "action": "/",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "checkbox",
       "name": "udponoff",
-      "title": "{{LS_broadcastEnabled}}",
+      "title": "{{LS_broadcast_enabled}}",
       "action": "/set?udponoff=[[udponoff]]",
       "state": "{{udpon off}}",
       "design": "two"
     },
     {
       "type": "h4",
-      "title": "{{SetUDPNameOfDev}}",
+      "title": "{{LS_device_name}}",
       "style": "width:60%;float:left;"
     },
     {
@@ -40,7 +40,7 @@
     },
     {
       "type": "h4",
-      "title": "{{LS_broadcastInterval}}",
+      "title": "{{LS_broadcast_interval}}",
       "style": "width:60%;float:left;"
     },
     {
@@ -62,16 +62,16 @@
     },
     {
       "type": "h4",
-      "title": "{{SetUDPList}}"
+      "title": "{{LS_known_devices}}"
     },
     {
       "type": "table",
       "state": "device.json",
       "title": {
-        "id": "ID ",
-        "name": "Имя устройства",
-        "url": "Адрес",
-        "lastseen": "Время"
+        "id": "{{LS_device_id}}",
+        "name": "{{LS_device_name}}",
+        "url": "{{LS_address}}",
+        "lastseen": "{{LS_time}}"
       }
     },
     {
@@ -81,6 +81,12 @@
       "type": "link",
       "title": "{{LS_refresh}}",
       "action": "/?set.udp",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "button",
+      "title": "{{LS_share_mqtt_settings}}",
+      "action": "set?share_mqtt",
       "class": "btn btn-block btn-default"
     }
   ]

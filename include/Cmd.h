@@ -56,7 +56,10 @@ void cmd_dhtDewpoint();
 void cmd_dhtPerception();
 
 void cmd_get();
-void cmd_telnet();
 
 void cmd_serialBegin();
+void cmd_serialEnd();
 void cmd_serialWrite();
+void cmd_serialLog();
+
+void cmd_telnet();

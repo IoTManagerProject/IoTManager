@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-String getErrorLevelStr(ErrorLevel_t level);
+#include "Utils/StringUtils.h"
 
 class Error : public Printable {
    public:
@@ -19,7 +19,7 @@ class Error : public Printable {
     }
 
    public:
-    Error() : _type{ET_NONE}, _level{EL_NONE} {};
+    Error() : _type{ET_NONE}, _level{EL_INFO} {};
 
     Error(const ErrorLevel_t level, const char *message) : Error(ET_FUNCTION, level, message){};
 
@@ -33,11 +33,11 @@ class Error : public Printable {
 
     const char *message() const { return _message; }
 
-    operator bool() const { return _level != EL_NONE; }
+    operator bool() const { return _level == EL_ERROR; }
 
     const String toString() const {
-        char buf[128];
-        sprintf(buf, "[%s] %s", getErrorLevelStr(_level).c_str(), _message);
+        char buf[256];
+        snprintf(buf, sizeof(buf), "[%s] %s", getErrorLevelStr(_level), _message);
         return String(buf);
     }
 

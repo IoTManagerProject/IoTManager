@@ -33,6 +33,7 @@ void publish() {
         _items.at(i).publish();
     }
 }
+
 void clear() {
     for (size_t i = 0; i < _items.size(); i++) {
         _items.at(i).clear();
