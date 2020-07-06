@@ -1,13 +1,10 @@
-#include "Arduino.h"
+#include <Arduino.h>
 
-#include "Config.h"
-#include "Devices.h"
-#include "WiFiManager.h"
+#include "Global.h"
 
 static const char* MODULE = "Web";
 
 static const char* TAG_SET_UTILITIES = "/?set.utilities";
-static const char* TAG_SET_UDP = "/?set.udp";
 
 void web_init() {
     // dnsServer.start(53, "*", WiFi.softAPIP());
@@ -44,15 +41,6 @@ void web_init() {
                 request->redirect(TAG_SET_UTILITIES);
                 return;
             }
-            if (request->hasArg("updatelist")) {
-                Devices::saveToFile(KNOWN_DEVICE_FILE);
-                request->redirect(TAG_SET_UDP);
-                return;
-            }
-            if (request->hasArg("updatepage")) {
-                request->redirect(TAG_SET_UDP);
-                return;
-            }
             if (request->hasArg("check_mqtt")) {
                 String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
                 String payload = "{}";
@@ -79,10 +67,11 @@ void web_init() {
                 request->redirect(TAG_SET_UTILITIES);
                 return;
             }
+
             for (size_t i = 0; i < request->params(); i++) {
                 String param = request->getParam(i)->name();
                 String value = request->getParam(i)->value();
-                pm.info(param + ":" + value);
+                pm.info(param + ": " + value);
                 if (!config.setParamByName(param, value)) {
                     pm.error("unknown: " + param);
                     request->send(404);
@@ -94,10 +83,11 @@ void web_init() {
 
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         String msg = "";
+        String lastVersion = liveData.read("last_version");
         // Errors
         if (!FLASH_4MB) {
             msg = F("Обновление \"по воздуху\" не поддерживается!");
-        } else if (!isNetworkActive()) {
+        } else if (!NetworkManager::isNetworkActive()) {
             msg = F("Устройство не подключено к роутеру!");
         } else if (lastVersion == "error") {
             msg = F("Cервер не найден. Попробуйте повторить позже...");

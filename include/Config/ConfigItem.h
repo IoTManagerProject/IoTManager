@@ -5,7 +5,7 @@
 
 class ConfigItem {
    public:
-    ConfigItem(){};
+    ConfigItem() : _timestamp{0} {};
 
     void setChanged(unsigned long timestamp = millis()) {
         _timestamp = timestamp;

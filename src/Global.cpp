@@ -1,7 +1,5 @@
 #include "Global.h"
 
-static const char* MODULE = "Global";
-
 #include "Base/Item.h"
 
 KeyValueStore options;
@@ -22,7 +20,7 @@ String order_loop = "";
 
 String lastVersion = "";
 
-boolean mqtt_restart_flag = false;
+boolean perform_mqtt_restart_flag = false;
 
 void save_config() {
     String buf;

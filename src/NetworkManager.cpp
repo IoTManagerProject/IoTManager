@@ -1,14 +1,35 @@
-#include "WiFiManager.h"
+#include "NetworkManager.h"
 
 #include "Global.h"
-#include "MqttClient.h"
 
-static const char* MODULE = "WiFi";
+namespace NetworkManager {
+
+static const char* MODULE = "Network";
 
 // Errors
 int wifi_error = 0;
 int mqtt_error = 0;
 bool _connected = false;
+
+void init() {
+    pm.info("init");
+#ifdef ESP8266
+    WiFi.hostname(config.network()->getHostname());
+#else
+#endif
+    WiFiMode_t mode = (WiFiMode_t)config.network()->getMode();
+
+    switch (mode) {
+        case WIFI_AP:
+            startAPMode();
+            break;
+        case WIFI_STA:
+            startSTAMode();
+            break;
+        default:
+            break;
+    }
+}
 
 void startSTAMode() {
     setLedStatus(LED_SLOW);
@@ -28,12 +49,12 @@ void startSTAMode() {
 
     bool keepConnecting = true;
     uint8_t tries = 20;
-    sint8_t connRes;
+    int connRes;
     do {
 #ifdef ESP8266
         connRes = WiFi.waitForConnectResult(1000);
 #else
-        byte connRes = WiFi.waitForConnectResult();
+        connRes = WiFi.waitForConnectResult();
 #endif
         switch (connRes) {
             case WL_NO_SSID_AVAIL: {
@@ -155,3 +176,9 @@ boolean scanWiFi(String ssid) {
 boolean isNetworkActive() {
     return WiFi.status() == WL_CONNECTED;
 }
+
+IPAddress getHostIP() {
+    return WiFi.getMode() == WIFI_STA ? WiFi.localIP() : WiFi.localIP();
+}
+
+}  // namespace NetworkManager

@@ -1,6 +1,10 @@
 #include "Config/NetworkConfig.h"
 
-#include "WiFiManager.h"
+#ifdef ESP8266
+#include <ESP8266WiFi.h>
+#else
+#include <WiFi.h>
+#endif
 
 static const char* TAG_WIFI_MODE = "mode";
 static const char* TAG_HOSTNAME = "hostname";
@@ -61,7 +65,7 @@ void NetworkConfig::getPasswd(uint8_t mode, String& str) const {
 }
 
 void NetworkConfig::load(const JsonObject& root) {
-    _mode = root[TAG_WIFI_MODE] | 2;
+    _mode = root[TAG_WIFI_MODE] | 1;
     strlcpy(_hostname, root[TAG_HOSTNAME] | "", sizeof(_hostname));
     strlcpy(_ap_ssid, root[TAG_AP_SSID] | "", sizeof(_ap_ssid));
     strlcpy(_ap_passwd, root[TAG_AP_PASSWD] | "", sizeof(_ap_passwd));

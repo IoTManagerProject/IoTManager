@@ -16,12 +16,12 @@
 #include "Consts.h"
 #include "Errors.h"
 #include "Config.h"
-#include "Upgrade.h"
+#include "Updater.h"
 #include "Clock.h"
 #include "Sensors.h"
 #include "Scenario.h"
 #include "MqttClient.h"
-#include "WiFiManager.h"
+#include "NetworkManager.h"
 
 #include "Utils/FileUtils.h"
 #include "Utils/JsonUtils.h"
@@ -52,12 +52,12 @@ extern String prex;
 extern String all_widgets;
 extern String order_loop;
 
-extern String lastVersion;
-
 extern boolean perform_updates_check_flag;
 extern boolean perform_upgrade_flag;
-extern boolean mqtt_restart_flag;
+extern boolean perform_mqtt_restart_flag;
 
+extern void print_sys_memory();
+extern void print_sys_timins();
 /*
 * Запрос на проверку обновлений
 */

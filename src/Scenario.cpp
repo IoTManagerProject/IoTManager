@@ -38,8 +38,8 @@ void process(StringQueue* queue) {
     if (!queue->available()) {
         return;
     }
-
-    String event = queue->pop();
+    String event;
+    queue->pop(event);
     if (event.isEmpty()) {
         return;
     }

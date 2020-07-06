@@ -1,8 +1,12 @@
 #include "Updater.h"
 
-#include "ESP8266.h"
-#include "Utils/PrintMessage.h"
 #include "WebClient.h"
+#ifdef ESP8266
+#include "ESP8266.h"
+#else
+#include "ESP32.h"
+#endif
+#include "Utils/PrintMessage.h"
 
 namespace Updater {
 static const char* UPDATE_SERVER_URL PROGMEM = "http://91.204.228.124:1100/update/%s/%s";
@@ -42,7 +46,7 @@ bool upgrade_fs_image() {
     HTTPUpdateResult ret = ESPhttpUpdate.updateSpiffs(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FS_IMAGE));
 #else
     httpUpdate.rebootOnUpdate(false);
-    HTTPUpdateResult ret = httpUpdate.updateSpiffs(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FS_IMAGE);
+    HTTPUpdateResult ret = httpUpdate.updateSpiffs(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FS_IMAGE));
 #endif
     return ret == HTTP_UPDATE_OK;
 }
@@ -53,7 +57,7 @@ bool upgrade_firmware() {
 #ifdef ESP8266
     HTTPUpdateResult ret = ESPhttpUpdate.update(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FIRMWARE_BIN));
 #else
-    ret = httpUpdate.update(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FIRMWARE_BIN));
+    HTTPUpdateResult ret = httpUpdate.update(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FIRMWARE_BIN));
 #endif
     return (ret == HTTP_UPDATE_OK);
 }

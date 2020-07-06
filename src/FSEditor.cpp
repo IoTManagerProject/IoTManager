@@ -117,7 +117,7 @@ static bool isExcluded(fs::FS &_fs, const char *filename) {
 // WEB HANDLER IMPLEMENTATION
 
 #ifdef ESP32
-SPIFFSEditor::SPIFFSEditor(const fs::FS &fs, const String &username, const String &password)
+FSEditor::FSEditor(const fs::FS &fs, const String &username, const String &password)
 #else
 FSEditor::FSEditor(const String &username, const String &password, const fs::FS &fs)
 #endif

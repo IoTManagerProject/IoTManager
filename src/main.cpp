@@ -1,6 +1,7 @@
 #include "Global.h"
 
 #include "Scenario.h"
+#include "NetworkManager.h"
 #include "Events.h"
 #include "Messages.h"
 #include "Broadcast.h"
@@ -127,15 +128,15 @@ void flag_actions() {
         save_config();
     }
 
-    if (mqtt_restart_flag) {
+    if (perform_mqtt_restart_flag) {
         MqttClient::setConfig(config.mqtt());
         MqttClient::reconnect();
-        mqtt_restart_flag = false;
+        perform_mqtt_restart_flag = false;
     }
 
     if (perform_updates_check_flag) {
-        lastVersion = Updater::check();
-        runtime.write("last_version", lastVersion);
+        String res = Updater::check();
+        runtime.write("last_version", res);
         perform_updates_check_flag = false;
     }
 
@@ -246,6 +247,7 @@ void setLedStatus(LedStatus_t status) {
 #endif
 
 void clock_init() {
+    pm.info("init");
     timeNow = new Clock();
     timeNow->setConfig(config.clock());
 
@@ -298,30 +300,13 @@ void setup() {
     Serial.println();
     Serial.println("--------------started----------------");
 
-    pm.info("FS");
     fileSystemInit();
+
     config_init();
 
-    pm.info("Clock");
     clock_init();
 
-    pm.info("Init");
-    init_mod();
-
-    pm.info("Network");
-    startSTAMode();
-
-    if (isNetworkActive()) {
-        lastVersion = Updater::check();
-        if (!lastVersion.isEmpty()) {
-            pm.info("update: " + lastVersion);
-        }
-    };
-
-    if (!TELEMETRY_UPDATE_INTERVAL) {
-        pm.info("Telemetry: disabled");
-    }
-    telemetry_init();
+    NetworkManager::init();
 
     pm.info("HttpServer");
     HttpServer::init();
@@ -332,14 +317,13 @@ void setup() {
     pm.info("Broadcast");
     Broadcast::init();
 
+    telemetry_init();
+
     pm.info("Devices");
     Devices::init();
 
-    ts.add(
-        SYS_MEMORY, 10 * ONE_SECOND_ms, [&](void*) { print_sys_memory(); }, nullptr, false);
-
-    ts.add(
-        SYS_TIMINGS, ONE_MINUTE_ms, [&](void*) { print_sys_timins(); }, nullptr, false);
+    pm.info("Init");
+    init_mod();
 
     initialized = true;
 }

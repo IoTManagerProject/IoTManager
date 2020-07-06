@@ -1,14 +1,11 @@
 #pragma once
 
 #ifdef ESP32
-// don't change order
-#include "WiFi.h"
-//
 
-#include "ESPAsyncWebServer.h"
-#include "SPIFFSEditor.h"
-// don't change order
+#include <ESPAsyncWebServer.h>
 #include <AsyncUDP.h>
+// don't change order
+
 #include <ESP32Servo.h>
 #include <HTTPClient.h>
 #include <HTTPUpdate.h>
@@ -17,7 +14,5 @@
 #include <WiFi.h>
 #include <analogWrite.h>
 #include <ESPmDNS.h>
-
-extern AsyncUDP udp;
 
 #endif

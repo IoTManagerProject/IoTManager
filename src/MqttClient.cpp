@@ -44,7 +44,7 @@ void reconnect() {
 }
 
 void loop() {
-    if (isNetworkActive() && mqtt.connected()) {
+    if (mqtt.connected()) {
         mqtt.loop();
     }
 }

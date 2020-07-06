@@ -1,6 +1,13 @@
 #pragma once
 
 #include <Arduino.h>
+
+#ifdef ESP8266
+#include <Servo.h>
+#else
+#include <ESP32Servo.h>
+#endif
+
 #include "Base/Item.h"
 #include "Base/ValueMapper.h"
 
