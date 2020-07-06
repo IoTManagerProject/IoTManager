@@ -216,6 +216,9 @@
       "title": "{{LS_save}}",
       "action": "set?updateurl=[[updateurl-arg]]",
       "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "hr"
     }
   ]
 }

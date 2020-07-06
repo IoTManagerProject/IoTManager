@@ -101,6 +101,9 @@
       "action": "set?check_mqtt",
       "class": "btn btn-block btn-default",
       "response": "[[my-block]]"
+    },
+    {
+      "type": "hr"
     }
   ]
 }
