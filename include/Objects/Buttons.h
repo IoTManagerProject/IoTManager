@@ -1,32 +1,37 @@
 #pragma once
 
 #include <Arduino.h>
+#include <functional>
 
 #include "Base/Item.h"
 
-#include <Bounce2.h>
-#include <functional>
-
-class Button : public Item {
+class ButtonItem : public Item {
    public:
-    Button(const String& name, const String& pin, const String& value) : Item{name, pin, value} {
+    ButtonItem(const String& name, const String& pin, const String& value) : Item{name, pin, value} {
         pinMode(getPin(), OUTPUT);
     }
+};
+
+class Button : public ButtonItem {
+   public:
+    Button(const String& name, const String& pin, const String& value, bool inverted) : ButtonItem{name, pin, value}, _inverted{inverted} {};
     void onStateChange() override {
-        digitalWrite(getPin(), _state);
+        digitalWrite(getPin(), _inverted ? _state : !_state);
     }
+
+    bool _inverted;
 };
 
 class Buttons {
    public:
-    Button* add(String name, String assign, String value);
-    Button* last();
-    Button* at(size_t index);
-    Button* get(const String name);
+    ButtonItem* add(const String& name, const String& assign, const String& value, const String& inverted);
+    ButtonItem* last();
+    ButtonItem* at(size_t index);
+    ButtonItem* get(const String name);
     size_t count();
 
    private:
-    std::vector<Button> _items;
+    std::vector<ButtonItem*> _items;
 };
 
 extern Buttons myButtons;

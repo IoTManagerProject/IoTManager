@@ -28,14 +28,16 @@ HardwareSerial *mySerial = nullptr;
 #endif
 
 void cmd_init() {
-    mySwitches.setOnChangeState([](Switch *btn, uint8_t num) {
-        Events::fire("switch", String(num, DEC));
-        liveData.writeInt("switch" + String(num, DEC), btn->getState());
+    mySwitches.setOnChangeState([](Switch *obj) {
+        String name = String("switch") + obj->getName();
+        Events::fire(name);
+        liveData.writeInt(name, obj->getState());
     });
 
     sCmd.addCommand("button", cmd_button);
     sCmd.addCommand("buttonSet", cmd_buttonSet);
     sCmd.addCommand("buttonChange", cmd_buttonChange);
+
     sCmd.addCommand("switch", cmd_switch);
 
     sCmd.addCommand("pinSet", cmd_pinSet);
@@ -129,8 +131,9 @@ void cmd_button() {
     String page = sCmd.next();
     String state = sCmd.next();
     String order = sCmd.next();
+    String inverted = sCmd.next();
 
-    myButtons.add(name, assign, state);
+    myButtons.add(name, assign, state, inverted);
 
     liveData.write("button" + name, state);
 
@@ -161,7 +164,7 @@ void cmd_buttonSet() {
     String name = sCmd.next();
     String state = sCmd.next();
 
-    Button *btn = myButtons.get(name);
+    ButtonItem *btn = myButtons.get(name);
     String assign = btn->assigned();
 
     if (isDigitStr(assign)) {
@@ -193,7 +196,7 @@ void cmd_buttonChange() {
         return;
     }
 
-    Button *btn = myButtons.get(name);
+    ButtonItem *btn = myButtons.get(name);
     btn->toggleState();
 
     liveData.write("button" + name, String(btn->getState(), DEC));

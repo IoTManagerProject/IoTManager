@@ -1,12 +1,10 @@
 #pragma once
 
 #include <Arduino.h>
-
-#include "Base/Item.h"
-
+#include <Bounce2.h>
 #include <functional>
 
-#include <Bounce2.h>
+#include "Base/Item.h"
 
 class Switch : public Item {
    public:
@@ -33,7 +31,7 @@ class Switch : public Item {
     Bounce* _obj;
 };
 
-typedef std::function<void(Switch*, uint8_t)> OnSwitchChangeState;
+typedef std::function<void(Switch*)> OnSwitchChangeState;
 
 class Switches {
    public:

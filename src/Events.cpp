@@ -1,6 +1,9 @@
 #include "Events.h"
 
 #include "Config.h"
+#include "Utils/PrintMessage.h"
+
+static const char* MODULE = "Events";
 
 namespace Events {
 
@@ -15,6 +18,7 @@ void fire(String name, String param) {
 }
 
 void fire(String name) {
+    pm.info(name);
     if (config.general()->isScenarioEnabled()) {
         _events.push(name);
     }
