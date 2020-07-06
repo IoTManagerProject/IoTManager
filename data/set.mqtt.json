@@ -25,7 +25,7 @@
       "type": "input",
       "title": "",
       "name": "mqttServer-arg",
-      "state": "{{LS_server}}",
+      "state": "{{mqttServer}}",
       "style": "width:40%;float:right"
     },
     {
