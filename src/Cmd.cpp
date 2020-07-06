@@ -252,7 +252,9 @@ void cmd_switch() {
     String assign = sCmd.next();
     String debounce = sCmd.next();
 
-    mySwitches.add(name, assign, debounce);
+    Switch *item = mySwitches.add(name, assign, debounce);
+
+    liveData.writeInt(String("switch") + name, item->getState());
 }
 
 void loop_serial() {

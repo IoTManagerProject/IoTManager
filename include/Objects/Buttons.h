@@ -14,11 +14,15 @@ class ButtonItem : public Item {
 
 class Button : public ButtonItem {
    public:
-    Button(const String& name, const String& pin, const String& value, bool inverted) : ButtonItem{name, pin, value}, _inverted{inverted} {};
+    Button(const String& name, const String& assign, const String& value, const String& inverted) : ButtonItem{name, assign, value} {
+        _inverted = inverted.toInt();
+    };
+
     void onStateChange() override {
         digitalWrite(getPin(), _inverted ? _state : !_state);
     }
 
+   private:
     bool _inverted;
 };
 

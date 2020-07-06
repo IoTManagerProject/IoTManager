@@ -8,6 +8,7 @@ Buttons myButtons;
 
 ButtonItem* Buttons::add(const String& name, const String& assign, const String& value, const String& inverted) {
     pm.info("name: \"" + name + "\", pin: " + assign + ", state: " + value + ", inverted: " + inverted);
+
     ButtonItem* item = new Button{name, assign, value, inverted};
     _items.push_back(item);
     return last();
