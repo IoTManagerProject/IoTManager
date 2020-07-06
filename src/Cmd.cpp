@@ -9,6 +9,7 @@
 #include "Sensors.h"
 #include "Scenario.h"
 #include "Sensors/AnalogSensor.h"
+#include "Timers.h"
 #include "Objects/Switches.h"
 #include "Objects/Buttons.h"
 #include "Objects/PwmItems.h"
@@ -344,10 +345,8 @@ void cmd_textSet() {
     liveData.write("text" + number, text);
     MqttClient::publishStatus("text" + number, text);
 }
-//=====================================================================================================================================
-//=========================================Модуль шагового мотора======================================================================
 
-//stepper 1 12 13
+// stepper 1 12 13
 void cmd_stepper() {
     String stepper_number = sCmd.next();
     String pin_step = sCmd.next();
@@ -387,6 +386,7 @@ void cmd_stepperSet() {
             },
             nullptr, true);
     }
+
     if (stepper_number == "2") {
         ts.add(
             STEPPER2, stepper_speed.toInt(), [&](void *) {
@@ -879,22 +879,29 @@ void cmd_reboot() {
 }
 
 void cmd_timerStart() {
-    String number = sCmd.next();
+    String name = sCmd.next();
     String period = sCmd.next();
     String type = sCmd.next();
+
+    unsigned long value = 0;
     if (period.indexOf("digit") != -1) {
-        period = liveData.read(period);
+        value = liveData.readInt(period);
+    } else if (type == "sec") {
+        value = period.toInt();
+    } else if (type == "min") {
+        value = period.toInt() * ONE_MINUTE_s;
+    } else if (type == "hours") {
+        value = period.toInt() * ONE_HOUR_s;
     }
-    if (type == "sec") period = period;
-    if (type == "min") period = String(period.toInt() * 60);
-    if (type == "hours") period = String(period.toInt() * 60 * 60);
-    addTimer(number, period);
-    liveData.write("timer" + number, "1");
+
+    Timers::add(name, value);
+
+    liveData.writeInt("timer" + name, 1);
 }
 
 void cmd_timerStop() {
-    String number = sCmd.next();
-    delTimer(number);
+    String name = sCmd.next();
+    Timers::erase(name);
 }
 
 void fileExecute(const String filename) {

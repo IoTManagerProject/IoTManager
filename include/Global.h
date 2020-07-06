@@ -56,7 +56,6 @@ extern boolean perform_updates_check_flag;
 extern boolean perform_upgrade_flag;
 extern boolean perform_mqtt_restart_flag;
 
-extern void timer_countdown();
 extern void print_sys_memory();
 extern void print_sys_timins();
 /*
@@ -107,14 +106,6 @@ extern void setLedStatus(LedStatus_t);
 
 //Scenario
 extern String add_set(String param_name);
-
-//Timers
-extern void timer_countdown_task();
-extern void cmd_timerStart();
-extern void addTimer(String number, String time);
-extern void cmd_timerStop();
-extern void delTimer(String number);
-extern int readTimer(int number);
 
 // Widget
 extern void createWidget(String widget_name, String page_name, String page_number, String file, String topic, String name1 = "", String param1 = "", String name2 = "", String param2 = "", String name3 = "", String param3 = "");

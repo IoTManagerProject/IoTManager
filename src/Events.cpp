@@ -3,9 +3,9 @@
 #include "Config.h"
 #include "Utils/PrintMessage.h"
 
-static const char* MODULE = "Events";
-
 namespace Events {
+
+static const char* MODULE = "Events";
 
 StringQueue _events;
 

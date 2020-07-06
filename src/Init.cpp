@@ -6,6 +6,7 @@
 #include "WebClient.h"
 #include "Scenario.h"
 #include "Sensors.h"
+#include "Timers.h"
 #include "MqttClient.h"
 #include "NetworkManager.h"
 
@@ -28,14 +29,14 @@ void announce_task() {
         nullptr, false);
 }
 
-void timer_countdown_task() {
+void timers_task() {
     ts.add(
-        TIMER_COUNTDOWN, 1000, [&](void*) { timer_countdown(); }, nullptr, true);
+        TIMERS, ONE_SECOND_ms, [&](void*) { Timers::loop(); }, nullptr, true);
 }
 
 void uptime_task() {
     ts.add(
-        UPTIME, 5000, [&](void*) { runtime.write("uptime", timeNow->getUptime()); }, nullptr, true);
+        UPTIME, 5 * ONE_SECOND_ms, [&](void*) { runtime.write("uptime", timeNow->getUptime()); }, nullptr, true);
 }
 
 void init_mod() {
@@ -49,7 +50,7 @@ void init_mod() {
 
     sensors_task();
 
-    timer_countdown_task();
+    timers_task();
 
     uptime_task();
 

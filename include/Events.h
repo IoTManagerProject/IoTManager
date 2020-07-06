@@ -4,6 +4,7 @@
 
 #include "Base/StringQueue.h"
 
+
 namespace Events {
 StringQueue* get();
 

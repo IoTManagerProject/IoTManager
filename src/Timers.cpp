@@ -1,70 +1,75 @@
-#include "Global.h"
+#include "Timers.h"
 
 #include "Events.h"
+#include "Global.h"
 
-void timer_countdown() {
-    String timers = options.read("timers");
-    if (timers.isEmpty()) {
-        return;
+Timer::Timer(const char* name, unsigned long time) {
+    strncpy(_name, name, sizeof(_name));
+    _time = time;
+}
+
+bool Timer::tick() {
+    if (!_enabled) {
+        return false;
     }
-    size_t i = 0;
-    do {
-        Serial.println(timers);
-        String timer = selectFromMarkerToMarker(timers, ",", i);
-        Serial.print("timer no " + String(i) + ": ");
-        Serial.println(timer);
-        if (timer == "not found" || timer == "") {
-            return;
+    if (!_time--) {
+        onTimer();
+        return true;
+    };
+    return false;
+}
+
+const char* Timer::name() const {
+    return _name;
+}
+
+void Timer::onTimer() {
+    String name = "timer";
+    name += _name;
+    
+    liveData.writeInt(name, 0);
+    Events::fire(name);
+}
+
+void Timer::setTime(unsigned long value) {
+    _time = value;
+}
+
+void Timer::stop() {
+    _enabled = false;
+}
+namespace Timers {
+std::vector<Timer*> _items;
+
+void loop() {
+    for (size_t i = 0; i < _items.size(); i++) {
+        Timer* item = _items.at(i);
+        if (item->tick()) {
+            _items.erase(_items.begin() + i);
         }
-        int number = selectToMarker(timer, ":").toInt();
-        int time = readTimer(number);
-        if (time == 0) {
-            delTimer(String(number));
-            liveData.write("timer" + String(number), "0");
-            Events::fire("timer", String(number));
-        } else {
-            time--;
-            addTimer(String(number), String(time));
+    }
+}
+
+Timer* add(const String& name, unsigned long time) {
+    for (size_t i = 0; i < _items.size(); i++) {
+        Timer* item = _items.at(i);
+        if (name.equalsIgnoreCase(item->name())) {
+            item->setTime(time);
+            return item;
         }
-        i++;
-    } while (i <= 9);
-}
-
-void addTimer(String number, String time) {
-    String tmp = options.read("timers");  //1:60,2:120,
-    String new_timer = number + ":" + time;
-    int psn1 = tmp.indexOf(number + ":");          //0  ищем позицию таймера который надо заменить
-    if (psn1 != -1) {                              //если он есть
-        int psn2 = tmp.indexOf(",", psn1);         //4    от этой позиции находим позицию запятой
-        String timer = tmp.substring(psn1, psn2);  //1:60  выделяем таймер который надо заменить
-        ///tmp.replace(timer, new_timer);            //заменяем таймер на новый (во всей стороке)
-        tmp.replace(timer + ",", "");
-        tmp += new_timer + ",";
-    } else {  //если его нет
-        tmp += new_timer + ",";
     }
-    options.write("timers", tmp);
+    _items.push_back(new Timer{name.c_str(), time});
+    return _items.at(_items.size() - 1);
 }
 
-void delTimer(String number) {
-    String tmp = options.read("timers");                 //1:60,2:120,
-    int psn1 = tmp.indexOf(number + ":");                //0  ищем позицию таймера который надо удалить
-    if (psn1 != -1) {                                    //если он есть
-        int psn2 = tmp.indexOf(",", psn1);               //4    от этой позиции находим позицию запятой
-        String timer = tmp.substring(psn1, psn2) + ",";  //1:60,  выделяем таймер который надо удалить
-        tmp.replace(timer, "");                          //удаляем таймер
-        options.write("timers", tmp);
+void erase(const String& name) {
+    for (size_t i = 0; i < _items.size(); i++) {
+        Timer* item = _items.at(i);
+        if (name.equalsIgnoreCase(item->name())) {
+            _items.erase(_items.begin() + i);
+            break;
+        }
     }
 }
 
-int readTimer(int number) {
-    String tmp = options.read("timers");           //1:60,2:120,
-    int psn1 = tmp.indexOf(String(number) + ":");  //0  ищем позицию таймера который надо прочитать
-    String timer;
-    if (psn1 != -1) {                       //если он есть
-        int psn2 = tmp.indexOf(",", psn1);  //4    от этой позиции находим позицию запятой
-        timer = tmp.substring(psn1, psn2);  //1:60  выделяем таймер который надо прочитать
-        timer = deleteBeforeDelimiter(timer, ":");
-    }
-    return timer.toInt();
-}
+}  // namespace Timers

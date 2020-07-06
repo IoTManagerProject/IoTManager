@@ -64,3 +64,6 @@ void cmd_serialWrite();
 void cmd_serialLog();
 
 void cmd_telnet();
+
+void cmd_timerStop();
+void cmd_timerStart();
