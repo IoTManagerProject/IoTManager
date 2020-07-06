@@ -30,15 +30,6 @@ void timer_countdown() {
     } while (i <= 9);
 }
 
-void timer_countdown_init() {
-    ts.add(
-        TIMER_COUNTDOWN, 1000, [&](void*) {
-            timer_countdown();
-        },
-        nullptr, true);
-}
-
-
 void addTimer(String number, String time) {
     String tmp = options.read("timers");  //1:60,2:120,
     String new_timer = number + ":" + time;

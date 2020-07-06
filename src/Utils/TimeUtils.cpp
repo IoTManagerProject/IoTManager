@@ -1,7 +1,7 @@
 #include "Utils\TimeUtils.h"
 #include "Utils\StringUtils.h"
 
-static const uint8_t DAYS_IN_MONTH[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
 static const char* WEEK_DAYS[7] = {"Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"};
 static const char* TIME_FORMAT PROGMEM = "%02d:%02d:%02d";
 static const char* TIME_FORMAT_WITH_DAYS PROGMEM = "%dd %02d:%02d";
@@ -67,54 +67,4 @@ int getOffsetInSeconds(int timezone) {
 
 int getOffsetInMinutes(int timezone) {
     return timezone * ONE_HOUR_m;
-}
-
-void breakEpochToTime(unsigned long epoch, Time_t& tm) {
-    // break the given time_input into time components
-    // this is a more compact version of the C library localtime function
-
-    unsigned long time = epoch;
-    tm.second = time % 60;
-    time /= 60;  // now it is minutes
-    tm.minute = time % 60;
-    time /= 60;  // now it is hours
-    tm.hour = time % 24;
-    time /= 24;  // now it is days
-    tm.days = time;
-    tm.day_of_week = ((time + 4) % 7) + 1;  // Sunday is day 1
-
-    uint8_t year = 0;
-    unsigned long days = 0;
-
-    while ((unsigned)(days += (LEAP_YEAR(year) ? 366 : 365)) <= time) {
-        year++;
-    }
-    tm.year = year - 30;
-
-    days -= LEAP_YEAR(year) ? 366 : 365;
-    time -= days;  // now it is days in this year, starting at 0
-    tm.day_of_year = time;
-
-    uint8_t month;
-    uint8_t month_length;
-    for (month = 0; month < 12; month++) {
-        if (1 == month) {  // february
-            if (LEAP_YEAR(year)) {
-                month_length = 29;
-            } else {
-                month_length = 28;
-            }
-        } else {
-            month_length = DAYS_IN_MONTH[month];
-        }
-
-        if (time >= month_length) {
-            time -= month_length;
-        } else {
-            break;
-        }
-    }
-    tm.month = month + 1;        // jan is month 1
-    tm.day_of_month = time + 1;  // day of month
-    tm.valid = (epoch > MIN_DATETIME);
 }

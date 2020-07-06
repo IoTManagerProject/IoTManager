@@ -56,6 +56,7 @@ extern boolean perform_updates_check_flag;
 extern boolean perform_upgrade_flag;
 extern boolean perform_mqtt_restart_flag;
 
+extern void timer_countdown();
 extern void print_sys_memory();
 extern void print_sys_timins();
 /*
@@ -89,7 +90,7 @@ extern void fileExecute(const String filename);
 /*
 * Запуск комманд из строки
 */
-extern void stringExecute(String& cmdStr);
+extern void stringExecute(String cmdStr);
 
 extern void load_runtime();
 extern void load_config();
@@ -108,7 +109,7 @@ extern void setLedStatus(LedStatus_t);
 extern String add_set(String param_name);
 
 //Timers
-extern void timer_countdown_init();
+extern void timer_countdown_task();
 extern void cmd_timerStart();
 extern void addTimer(String number, String time);
 extern void cmd_timerStop();
@@ -123,16 +124,13 @@ extern void clearWidgets();
 // PushingBox
 extern void pushControl();
 
-extern void addCommandLoop(const String& cmdStr);
-
+extern void addOrder(const String& cmdStr);
+extern void config_init();
 extern void loop_serial();
 extern void loop_cmd();
 extern void loop_items();
 extern void loop_scenario();
 
 // Init
-extern void uptime_task_init();
-
-extern void config_init();
 extern void web_init();
 extern void telemetry_init();

@@ -22,12 +22,14 @@ String _pass;
 String _uuid;
 String _prefix;
 
-void setConfig(MqttConfig* config) {
-    _addr = config->getServer();
-    _port = config->getPort();
-    _user = config->getUser();
-    _pass = config->getPass();
-    _prefix = config->getPrefix();
+void init() {
+    pm.info(TAG_INIT);
+
+    _addr = config.mqtt()->getServer();
+    _port = config.mqtt()->getPort();
+    _user = config.mqtt()->getUser();
+    _pass = config.mqtt()->getPass();
+    _prefix = config.mqtt()->getPrefix();
 
     _uuid = getChipId();
     _deviceRoot = _prefix + "/" + _uuid;
@@ -40,6 +42,7 @@ void disconnect() {
 
 void reconnect() {
     disconnect();
+    init();
     connect();
 }
 
@@ -112,10 +115,10 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         topic = parseControl(topic);
         String number = selectToMarkerLast(topic, "Set");
         topic.replace(number, "");
-        addCommandLoop(topic + " " + number + " " + payloadStr);
+        addOrder(topic + " " + number + " " + payloadStr);
     } else if (topicStr.indexOf("order")) {
         payloadStr.replace("_", " ");
-        addCommandLoop(payloadStr);
+        addOrder(payloadStr);
     } else if (topicStr.indexOf("update")) {
         if (payloadStr == "1") {
             perform_upgrade();

@@ -25,6 +25,7 @@ void add(String name, unsigned long period, size_t limit) {
 }
 
 void init() {
+    pm.info(TAG_INIT);
     _items.clear();
 }
 

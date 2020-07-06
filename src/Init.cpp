@@ -19,7 +19,7 @@ void sensors_task() {
         nullptr, true);
 }
 
-void announce_task_init() {
+void announce_task() {
     ts.add(
         ANNOUNCE, random(0.9 * config.general()->getBroadcastInterval() * ONE_SECOND_ms, config.general()->getBroadcastInterval()), [&](void*) {
             if (config.general()->isBroadcastEnabled()) {
@@ -28,28 +28,32 @@ void announce_task_init() {
         nullptr, false);
 }
 
-void init_mod() {
-    pm.info("Mqtt");
-    MqttClient::setConfig(config.mqtt());
+void timer_countdown_task() {
+    ts.add(
+        TIMER_COUNTDOWN, 1000, [&](void*) { timer_countdown(); }, nullptr, true);
+}
 
-    pm.info("logger");
+void uptime_task() {
+    ts.add(
+        UPTIME, 5000, [&](void*) { runtime.write("uptime", timeNow->getUptime()); }, nullptr, true);
+}
+
+void init_mod() {
+    MqttClient::init();
+
     Logger::init();
 
-    pm.info("Commands");
     cmd_init();
 
-    pm.info("Sensors");
     Sensors::init();
+
     sensors_task();
 
-    device_init();
+    timer_countdown_task();
 
-    timer_countdown_init();
+    uptime_task();
 
-    uptime_task_init();
-
-    pm.info(String("Announce"));
-    announce_task_init();
+    announce_task();
 
     ts.add(
         SYS_MEMORY, 10 * ONE_SECOND_ms, [&](void*) { print_sys_memory(); }, nullptr, false);
@@ -60,33 +64,8 @@ void init_mod() {
     if (NetworkManager::isNetworkActive()) {
         perform_updates_check_flag = true;
     };
-}
 
-void device_init() {
-    pm.info("Start");
-    clearWidgets();
-    fileExecute(DEVICE_COMMAND_FILE);
-    Scenario::init();
-}
-
-void uptime_task_init() {
-    pm.info(String("uptime task"));
-    ts.add(
-        UPTIME, 5000, [&](void*) {
-            runtime.write("uptime", timeNow->getUptime());
-        },
-        nullptr, true);
-}
-
-void config_init() {
-    pm.info("config");
-    load_config();
-
-    runtime.load();
-    runtime.write("chipID", getChipId());
-    runtime.write("firmware_version", FIRMWARE_VERSION);
-
-    prex = config.mqtt()->getPrefix() + "/" + getChipId();
+    device_init();
 }
 
 void telemetry_init() {

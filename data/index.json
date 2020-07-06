@@ -71,6 +71,12 @@
       "class": "btn btn-block btn-default"
     },
     {
+      "type": "link",
+      "title": "{{LS_restart_device}}",
+      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
+      "class": "btn btn-block btn-danger"
+    },
+    {
       "type": "h4",
       "title": "{{LS_firmware}}: {{firmware_version}}"
     }

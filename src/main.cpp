@@ -80,15 +80,14 @@ void loop() {
         return;
     }
     m.loop();
+
     timeNow->loop();
     m.add(LI_CLOCK);
 
-#ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.handle();
-#endif
-#ifdef WS_enable
+
     ws.cleanupClients();
-#endif
+
     flag_actions();
     m.add(LT_FLAG_ACTION);
 
@@ -112,24 +111,19 @@ void loop() {
         m.add(LI_BROADCAST);
     }
 
-    loop_serial();
-    m.add(LI_SERIAL);
-
     ts.update();
     m.add(LT_TASKS);
 
     Logger::loop();
     m.add(LT_LOGGER);
+
+    if (config.hasChanged()) {
+        save_config();
+    }
 }
 
 void flag_actions() {
-    if (config.hasChanged()) {
-        pm.info("store " DEVICE_CONFIG_FILE);
-        save_config();
-    }
-
     if (perform_mqtt_restart_flag) {
-        MqttClient::setConfig(config.mqtt());
         MqttClient::reconnect();
         perform_mqtt_restart_flag = false;
     }
@@ -195,13 +189,6 @@ void flag_actions() {
     if (perform_system_restart_flag) {
         ESP.restart();
     }
-}
-
-void setPreset(size_t num) {
-    pm.info("preset #" + String(num, DEC));
-    copyFile(getConfigFile(num, CT_CONFIG), DEVICE_COMMAND_FILE);
-    copyFile(getConfigFile(num, CT_SCENARIO), DEVICE_SCENARIO_FILE);
-    device_init();
 }
 
 #ifdef ESP8266
@@ -283,6 +270,7 @@ void config_restore() {
 void print_sys_memory() {
     pm.info(getHeapStats());
 }
+
 void print_sys_timins() {
     m.print(Serial);
     m.reset();

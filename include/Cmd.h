@@ -2,8 +2,8 @@
 
 #include "Arduino.h"
 
-void addCommandLoop(const String &str);
-void stringExecute(const String &str);
+void addOrder(const String &str);
+void stringExecute(String cmdStr);
 
 void cmd_pinSet();
 void cmd_pinChange();
@@ -33,6 +33,7 @@ void cmd_inputTime();
 
 void cmd_firmwareUpdate();
 void cmd_firmwareVersion();
+void cmd_reboot();
 
 void cmd_analog();
 void cmd_dallas();

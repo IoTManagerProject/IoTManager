@@ -18,6 +18,8 @@
 
 static const char *MODULE = "Cmd";
 
+StringQueue _orders;
+
 Terminal *term = nullptr;
 Telnet *telnet = nullptr;
 
@@ -28,6 +30,7 @@ HardwareSerial *mySerial = nullptr;
 #endif
 
 void cmd_init() {
+    pm.info(TAG_INIT);
     mySwitches.setOnChangeState([](Switch *obj) {
         String name = String("switch") + obj->getName();
         Events::fire(name);
@@ -107,6 +110,8 @@ void cmd_init() {
     sCmd.addCommand("firmwareVersion", cmd_firmwareVersion);
 
     sCmd.addCommand("get", cmd_get);
+
+    sCmd.addCommand("reboot", cmd_reboot);
 }
 
 //===============================================Логирование============================================================
@@ -257,16 +262,14 @@ void cmd_switch() {
     liveData.writeInt(String("switch") + name, item->getState());
 }
 
-void loop_serial() {
+void loop_items() {
     if (term) {
         term->loop();
     }
     if (telnet) {
         telnet->loop();
     }
-}
 
-void loop_items() {
     mySwitches.loop();
 }
 
@@ -461,7 +464,7 @@ void cmd_serialBegin() {
 #endif
     term = new Terminal(mySerial);
     term->setOnReadLine([](const char *str) {
-        addCommandLoop(str);
+        addOrder(str);
     });
 }
 
@@ -862,6 +865,10 @@ void cmd_firmwareVersion() {
     createWidget(widget, page, pageNumber, "anydata", "firmver");
 }
 
+void cmd_reboot() {
+    perform_system_restart();
+}
+
 void cmd_timerStart() {
     String number = sCmd.next();
     String period = sCmd.next();
@@ -881,13 +888,6 @@ void cmd_timerStop() {
     delTimer(number);
 }
 
-void addCommandLoop(const String &cmdStr) {
-    order_loop += cmdStr;
-    if (!cmdStr.endsWith(",")) {
-        order_loop += ",";
-    }
-}
-
 void fileExecute(const String filename) {
     String buf;
     if (readFile(filename.c_str(), buf)) {
@@ -895,26 +895,27 @@ void fileExecute(const String filename) {
     }
 }
 
-void stringExecute(String &cmdStr) {
-    cmdStr += "\r\n";
-    cmdStr.replace("\r\n", "\n");
-    cmdStr.replace("\r", "\n");
+void stringExecute(String str) {
+    str += "\r\n";
+    str.replace("\r\n", "\n");
+    str.replace("\r", "\n");
 
-    while (cmdStr.length()) {
-        String buf = selectToMarker(cmdStr, "\n");
+    while (!str.isEmpty()) {
+        String buf = selectToMarker(str, "\n");
         sCmd.readStr(buf);
-        cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
+        str = deleteBeforeDelimiter(str, "\n");
     }
 }
 
+void addOrder(const String &str) {
+    _orders.push(str);
+}
+
 void loop_cmd() {
-    if (order_loop.length()) {
-        //выделяем первую команду rel 5 1,
-        String block = selectToMarker(order_loop, ",");
-        pm.info("execute: " + block);
-        //выполняем
-        sCmd.readStr(block);
-        //осекаем
-        order_loop = deleteBeforeDelimiter(order_loop, ",");
+    if (_orders.available()) {
+        String buf;
+        _orders.pop(buf);
+        pm.info("execute: " + buf);
+        sCmd.readStr(buf);
     }
 }

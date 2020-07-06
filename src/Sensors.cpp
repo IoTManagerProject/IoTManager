@@ -9,6 +9,7 @@ namespace Sensors {
 boolean sensor_enabled[NUM_SENSORS] = {false};
 
 void init() {
+    pm.info(TAG_INIT);
     for (size_t i = 0; i < NUM_SENSORS; i++) {
         enable(i, false);
     }

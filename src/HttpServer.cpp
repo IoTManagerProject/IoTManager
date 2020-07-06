@@ -58,7 +58,7 @@ void init() {
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
         String cmdStr = request->getParam("command")->value();
         pm.info("do: " + cmdStr);
-        addCommandLoop(cmdStr);
+        addOrder(cmdStr);
         request->send(200);
     });
 

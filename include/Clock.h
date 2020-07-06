@@ -10,6 +10,19 @@
 #include "sntp.h"
 #endif
 
+struct Time_t {
+    uint8_t second;
+    uint8_t minute;
+    uint8_t hour;
+    uint8_t day_of_week;
+    uint8_t day_of_month;
+    uint8_t month;
+    uint16_t day_of_year;
+    uint16_t year;
+    unsigned long days;
+    unsigned long valid;
+};
+
 class Clock {
     const char* MODULE = "Clock";
 
@@ -21,6 +34,7 @@ class Clock {
     bool _hasSynced;
     bool _configured;
     ClockConfig* _cfg;
+    const uint8_t DAYS_IN_MONTH[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
    public:
     Clock() : _uptime{millis()}, _hasSynced{false}, _configured{false} {};
@@ -146,5 +160,58 @@ class Clock {
     */
     const String getUptime() {
         return prettyMillis(_uptime);
+    }
+
+    /*
+    * Разбивает время на составляющие
+    */
+    void breakEpochToTime(unsigned long epoch, Time_t& tm) {
+        // break the given time_input into time components
+        // this is a more compact version of the C library localtime function
+
+        unsigned long time = epoch;
+        tm.second = time % 60;
+        time /= 60;  // now it is minutes
+        tm.minute = time % 60;
+        time /= 60;  // now it is hours
+        tm.hour = time % 24;
+        time /= 24;  // now it is days
+        tm.days = time;
+        tm.day_of_week = ((time + 4) % 7) + 1;  // Sunday is day 1
+
+        uint8_t year = 0;
+        unsigned long days = 0;
+
+        while ((unsigned)(days += (LEAP_YEAR(year) ? 366 : 365)) <= time) {
+            year++;
+        }
+        tm.year = year - 30;
+
+        days -= LEAP_YEAR(year) ? 366 : 365;
+        time -= days;  // now it is days in this year, starting at 0
+        tm.day_of_year = time;
+
+        uint8_t month;
+        uint8_t month_length;
+        for (month = 0; month < 12; month++) {
+            if (1 == month) {  // february
+                if (LEAP_YEAR(year)) {
+                    month_length = 29;
+                } else {
+                    month_length = 28;
+                }
+            } else {
+                month_length = DAYS_IN_MONTH[month];
+            }
+
+            if (time >= month_length) {
+                time -= month_length;
+            } else {
+                break;
+            }
+        }
+        tm.month = month + 1;        // jan is month 1
+        tm.day_of_month = time + 1;  // day of month
+        tm.valid = (epoch > MIN_DATETIME);
     }
 };

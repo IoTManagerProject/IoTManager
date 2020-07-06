@@ -35,3 +35,25 @@ void load_config() {
         config.load(buf);
     }
 }
+
+void config_init() {
+    load_config();
+
+    runtime.load();
+    runtime.write("chipID", getChipId());
+    runtime.write("firmware_version", FIRMWARE_VERSION);
+
+    prex = config.mqtt()->getPrefix() + "/" + getChipId();
+}
+
+void setPreset(size_t num) {
+    copyFile(getConfigFile(num, CT_CONFIG), DEVICE_COMMAND_FILE);
+    copyFile(getConfigFile(num, CT_SCENARIO), DEVICE_SCENARIO_FILE);
+    device_init();
+}
+
+void device_init() {
+    clearWidgets();
+    fileExecute(DEVICE_COMMAND_FILE);
+    Scenario::init();
+}

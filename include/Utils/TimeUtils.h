@@ -45,8 +45,3 @@ int getOffsetInSeconds(int timezone);
 * Тайм зона в минутах
 */
 int getOffsetInMinutes(int timezone);
-
-/*
-* Разбивает время на составляющие
-*/
-void breakEpochToTime(unsigned long epoch, Time_t& tm);

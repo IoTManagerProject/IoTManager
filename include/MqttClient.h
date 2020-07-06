@@ -6,7 +6,8 @@
 
 namespace MqttClient {
 
-void setConfig(MqttConfig*);
+void init();
+
 bool isConnected();
 bool connect();
 void reconnect();
