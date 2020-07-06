@@ -127,7 +127,7 @@ extern void addCommandLoop(const String& cmdStr);
 
 extern void loop_serial();
 extern void loop_cmd();
-extern void loop_button();
+extern void loop_items();
 extern void loop_scenario();
 
 // Init

@@ -25,7 +25,7 @@ enum LoopItems {
     LT_FLAG_ACTION,
     LI_MQTT_CLIENT,
     LI_CMD,
-    LI_BUTTON,
+    LI_ITEMS,
     LI_SCENARIO,
     LI_BROADCAST,
     LI_SERIAL,
@@ -98,8 +98,8 @@ void loop() {
     loop_cmd();
     m.add(LI_CMD);
 
-    loop_button();
-    m.add(LI_BUTTON);
+    loop_items();
+    m.add(LI_ITEMS);
 
     if (config.general()->isScenarioEnabled()) {
         Scenario::process(Events::get());

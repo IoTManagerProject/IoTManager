@@ -8,6 +8,7 @@
 #include "Sensors.h"
 #include "Scenario.h"
 #include "Sensors/AnalogSensor.h"
+#include "Objects/Switches.h"
 #include "Objects/Buttons.h"
 #include "Objects/PwmItems.h"
 #include "Objects/ServoItems.h"
@@ -27,7 +28,7 @@ HardwareSerial *mySerial = nullptr;
 #endif
 
 void cmd_init() {
-    myButtons.setOnChangeState([](Button *btn, uint8_t num) {
+    mySwitches.setOnChangeState([](Switch *btn, uint8_t num) {
         Events::fire("switch", String(num, DEC));
         liveData.writeInt("switch" + String(num, DEC), btn->getState());
     });
@@ -211,8 +212,7 @@ void cmd_pinChange() {
     pinMode(pin_number.toInt(), OUTPUT);
     digitalWrite(pin_number.toInt(), !digitalRead(pin_number.toInt()));
 }
-//==================================================================================================================
-//==========================================Модуль управления ШИМ===================================================
+
 void cmd_pwm() {
     String name = sCmd.next();
     String assign = sCmd.next();
@@ -249,7 +249,7 @@ void cmd_switch() {
     String assign = sCmd.next();
     String debounce = sCmd.next();
 
-    myButtons.add(name, assign, debounce);
+    mySwitches.add(name, assign, debounce);
 }
 
 void loop_serial() {
@@ -261,12 +261,10 @@ void loop_serial() {
     }
 }
 
-void loop_button() {
-    myButtons.loop();
+void loop_items() {
+    mySwitches.loop();
 }
 
-//=====================================================================================================================================
-//=========================================Добавление окна ввода цифры=================================================================
 void cmd_inputDigit() {
     String value_name = sCmd.next();
     String number = value_name.substring(5);

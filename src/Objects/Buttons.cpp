@@ -34,16 +34,3 @@ Button* Buttons::at(size_t num) {
 size_t Buttons::count() {
     return _items.size();
 }
-
-void Buttons::loop() {
-    for (size_t i = 0; i < _items.size(); i++) {
-        Button* btn = &_items.at(i);
-        if (btn->update()) {
-            _onChange(btn, i);
-        }
-    }
-}
-
-void Buttons::setOnChangeState(OnButtonChangeState h) {
-    _onChange = h;
-}
