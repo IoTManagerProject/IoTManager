@@ -915,10 +915,12 @@ void stringExecute(String str) {
     str += "\r\n";
     str.replace("\r\n", "\n");
     str.replace("\r", "\n");
-
     while (!str.isEmpty()) {
         String buf = selectToMarker(str, "\n");
-        sCmd.readStr(buf);
+        // Comments
+        if (!buf.startsWith("//")) {
+            sCmd.readStr(buf);
+        }
         str = deleteBeforeDelimiter(str, "\n");
     }
 }
