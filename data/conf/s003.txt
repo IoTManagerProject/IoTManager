@@ -1,0 +1,6 @@
+button1 = 1
+timerStart 1 digit1 sec
+end
+timer1 = 0
+buttonSet 1 0
+end

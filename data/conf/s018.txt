@@ -1,0 +1,10 @@
+switch1 = 1
+textSet 1 обнаружено#движение-time
+end
+button1 = 1
+textSet 1 не#обнаружено-time
+buttonSet 1 0
+end
+switch1 = 1
+push Внимание обнаружено#движение!
+end

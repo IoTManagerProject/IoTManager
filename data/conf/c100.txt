@@ -10,16 +10,3 @@ logging adc 1 100 Аналоговый#вход Датчики 7
 //Кнопка номер 1 связана с кнопкой 2, 3 и с pwm 2
 //Так же продемонстрированна система логгирования данных строкой logging
 //1 - это интервал между точками в минутах, 100 это количество точек 
-button1 = 1
-buttonSet 2 1
-buttonSet 3 1
-pwmSet 2 1024
-end
-button1 = 0
-buttonSet 2 0
-buttonSet 3 0
-pwmSet 2 0
-end
-adc > 50
-buttonSet 2 1
-end
