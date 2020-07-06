@@ -1,5 +1,6 @@
 #include "Cmd.h"
 
+#include "Consts.h"
 #include "Devices.h"
 #include "Events.h"
 #include "Logger.h"
@@ -15,6 +16,7 @@
 #include "Objects/OneWireBus.h"
 #include "Objects/Terminal.h"
 #include "Objects/Telnet.h"
+#include "Utils/PrintMessage.h"
 
 static const char *MODULE = "Cmd";
 
@@ -517,13 +519,20 @@ void cmd_get() {
     String param = sCmd.next();
     String res = "";
     if (!obj.isEmpty()) {
-        if (obj.equalsIgnoreCase("state")) {
+        if (obj.equalsIgnoreCase(TAG_OPTIONS)) {
+            res = param.isEmpty() ? options.get() : options.read(param);
+        } else if (obj.equalsIgnoreCase(TAG_RUNTIME)) {
+            res = param.isEmpty() ? runtime.get() : runtime.read(param);
+        } else if (obj.equalsIgnoreCase("state")) {
             res = param.isEmpty() ? liveData.get() : liveData.read(param);
         } else if (obj.equalsIgnoreCase("devices")) {
             Devices::asString(res, param.toInt());
+        } else {
+            res = F("unknown param");
         }
+    } else {
+        res = F("unknown obj");
     }
-    pm.info("result: ");
     pm.info(res);
     if (term) {
         term->println(res.c_str());
@@ -545,7 +554,7 @@ void cmd_onewire() {
     }
 }
 
-//ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
+// ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
 void cmd_ultrasonicCm() {
     String measure_unit = sCmd.next();
 
@@ -570,8 +579,8 @@ void cmd_ultrasonicCm() {
     Sensors::enable(0);
 }
 
-//dallas temp1 0x14 Температура Датчики anydata 1
-//dallas temp2 0x15 Температура Датчики anydata 2
+// dallas temp1 0x14 Температура Датчики anydata 1
+// dallas temp2 0x15 Температура Датчики anydata 2
 void cmd_dallas() {
     if (!oneWireBus.exists()) {
         pm.error("needs OneWire");

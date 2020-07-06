@@ -83,7 +83,7 @@ void web_init() {
 
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         String msg = "";
-        String lastVersion = liveData.read("last_version");
+        String lastVersion = Updater::check();
         // Errors
         if (!FLASH_4MB) {
             msg = F("Обновление \"по воздуху\" не поддерживается!");
@@ -94,14 +94,16 @@ void web_init() {
         } else if (lastVersion == "notsupported") {
             msg = F("Обновление возможно только через usb!");
         } else if (lastVersion.isEmpty()) {
-            perform_updates_check_flag = true;
+            perform_updates_check();
             msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
         } else {
             // TODO Версия должна быть выше
             if (lastVersion == FIRMWARE_VERSION) {
                 msg = F("Актуальная версия прошивки уже установлена.");
             } else if (lastVersion != FIRMWARE_VERSION) {
-                msg = F("Доступно обновление<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет установка, по ее заверщению страница автоматически перезагрузится...')\">Установить</a>");
+                msg = F("Доступно обновление");
+                msg += lastVersion;
+                msg += F("<a href =\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет установка, по ее заверщению страница автоматически перезагрузится...')\">Установить</a>");
             }
         }
         String payload = "{}";

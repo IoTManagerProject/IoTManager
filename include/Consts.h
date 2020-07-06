@@ -102,3 +102,5 @@ enum BusScanner_t {
 };
 
 extern const char* TAG_INIT;
+extern const char* TAG_OPTIONS;
+extern const char* TAG_RUNTIME;

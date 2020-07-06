@@ -6,7 +6,6 @@ KeyValueStore options;
 KeyValueStore liveData;
 KeyValueFile runtime(DEVICE_RUNTIME_FILE);
 
-Clock* timeNow;
 TickerScheduler ts(SYS_MEMORY + 1);
 StringCommand sCmd;
 

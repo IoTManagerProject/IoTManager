@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Arduino.h"
+#include "Clock.h"
 #include "Utils\StringUtils.h"
 #include "Utils\TimeUtils.h"
 #include "Errors.h"
@@ -41,7 +41,13 @@ class PrintMessage {
    private:
     void print(const ErrorLevel_t level, const String& str) {
         char buf[256];
-        snprintf(buf, sizeof(buf), "%s [%s] [%s] %s", prettyMillis(millis()).c_str(), getErrorLevelStr(level), _module, str.c_str());
+        String now;
+        if (timeNow && timeNow->hasSynced()) {
+            now = timeNow->getTime();
+        } else {
+            now = prettyMillis();
+        }
+        snprintf(buf, sizeof(buf), "%s [%s] [%s] %s", now.c_str(), getErrorLevelStr(level), _module, str.c_str());
         if (_printEnabled) {
             if (_out) {
                 _out->println(buf);

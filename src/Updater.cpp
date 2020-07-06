@@ -1,5 +1,6 @@
 #include "Updater.h"
 
+#include "Config.h"
 #include "WebClient.h"
 #ifdef ESP8266
 #include "ESP8266.h"
@@ -9,7 +10,6 @@
 #include "Utils/PrintMessage.h"
 
 namespace Updater {
-static const char* UPDATE_SERVER_URL PROGMEM = "http://91.204.228.124:1100/update/%s/%s";
 
 #ifdef ESP8266
 static const char* TAG_MCU = "esp8266";
@@ -22,20 +22,23 @@ static const char* TAG_FS_IMAGE = "fs.bin";
 
 static const char* MODULE = "Update";
 
-const String buildUpdateUrl(const char* mcu, const char* file) {
-    char buf[128];
-    sprintf_P(buf, UPDATE_SERVER_URL, mcu, file);
+const String buildUpdateUrl(const char* file) {
+    String buf = config.general()->getUpdateUrl();
+    if (!buf.endsWith("/")) {
+        buf += "/";
+    }
+    buf += TAG_MCU;
+    buf += "/";
+    buf += file;
     return buf;
 }
 
 const String check() {
-    String url;
-#ifdef ESP8266
-    url = buildUpdateUrl(TAG_MCU, TAG_METADATA);
-#else
-    url = buildUpdateUrl(TAG_MCU, TAG_METADATA);
-#endif
-    return WebClient::get(url);
+    String url = buildUpdateUrl(TAG_METADATA);
+    pm.info(url);
+    String res = WebClient::get(url);
+    pm.info(res);
+    return res;
 }
 
 bool upgrade_fs_image() {
@@ -43,10 +46,10 @@ bool upgrade_fs_image() {
     WiFiClient wifiClient;
 #ifdef ESP8266
     ESPhttpUpdate.rebootOnUpdate(false);
-    HTTPUpdateResult ret = ESPhttpUpdate.updateSpiffs(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FS_IMAGE));
+    HTTPUpdateResult ret = ESPhttpUpdate.updateSpiffs(wifiClient, buildUpdateUrl(TAG_FS_IMAGE));
 #else
     httpUpdate.rebootOnUpdate(false);
-    HTTPUpdateResult ret = httpUpdate.updateSpiffs(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FS_IMAGE));
+    HTTPUpdateResult ret = httpUpdate.updateSpiffs(wifiClient, buildUpdateUrl(TAG_FS_IMAGE));
 #endif
     return ret == HTTP_UPDATE_OK;
 }
@@ -55,9 +58,9 @@ bool upgrade_firmware() {
     pm.info(TAG_FIRMWARE_BIN);
     WiFiClient wifiClient;
 #ifdef ESP8266
-    HTTPUpdateResult ret = ESPhttpUpdate.update(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FIRMWARE_BIN));
+    HTTPUpdateResult ret = ESPhttpUpdate.update(wifiClient, buildUpdateUrl(TAG_FIRMWARE_BIN));
 #else
-    HTTPUpdateResult ret = httpUpdate.update(wifiClient, buildUpdateUrl(TAG_MCU, TAG_FIRMWARE_BIN));
+    HTTPUpdateResult ret = httpUpdate.update(wifiClient, buildUpdateUrl(TAG_FIRMWARE_BIN));
 #endif
     return (ret == HTTP_UPDATE_OK);
 }

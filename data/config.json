@@ -18,5 +18,6 @@
     "webpass": "admin",
     "udponoff": "1",
     "udptime": 60,
-    "blink": "1"
+    "blink": "1",
+    "updateurl": "http://91.204.228.124:1100/update/"
 }

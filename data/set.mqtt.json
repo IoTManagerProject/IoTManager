@@ -18,19 +18,19 @@
     },
     {
       "type": "h4",
-      "title": "{{LS_server_address}}",
+      "title": "{{LS_address}}",
       "style": "width:60%;float:left;"
     },
     {
       "type": "input",
       "title": "",
       "name": "mqttServer-arg",
-      "state": "{{mqttServer}}",
+      "state": "{{LS_server}}",
       "style": "width:40%;float:right"
     },
     {
       "type": "h4",
-      "title": "{{SetMQTTPort}}",
+      "title": "{{LS_port}}",
       "style": "width:60%;float:left;"
     },
     {
@@ -42,7 +42,7 @@
     },
     {
       "type": "h4",
-      "title": "{{SetMQTTPrefix}}",
+      "title": "{{LS_prefix}}",
       "style": "width:60%;float:left;"
     },
     {
@@ -54,7 +54,7 @@
     },
     {
       "type": "h4",
-      "title": "{{SetMQTTUserName}}",
+      "title": "{{LS_username}}",
       "style": "width:60%;float:left;"
     },
     {
@@ -83,11 +83,17 @@
       "class": "hidden"
     },
     {
+      "type": "hr"
+    },
+    {
       "type": "button",
       "title": "{{LS_save}}",
       "style": "width:100%;float:left;",
       "action": "set?mqttServer=[[mqttServer-arg]]&mqttPort=[[mqttPort-arg]]&mqttPrefix=[[mqttPrefix-arg]]&mqttUser=[[mqttUser-arg]]&mqttPass=[[mqttPass-arg]]",
       "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "hr"
     },
     {
       "type": "button",

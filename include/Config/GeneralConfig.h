@@ -6,6 +6,9 @@ class GeneralConfig : public ConfigItem {
    public:
     GeneralConfig();
 
+    const String getUpdateUrl() const;
+    void setUpdateUrl(const String value);
+
     const String getBroadcastName() const;
     void setBroadcastName(const String value);
 
@@ -29,6 +32,7 @@ class GeneralConfig : public ConfigItem {
     void save(JsonObject&) override;
 
    private:
+    String _updateUrl;
     String _broadcastName;
     String _pushingBoxId;
     int _broadcastInterval;

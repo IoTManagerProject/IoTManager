@@ -1,6 +1,6 @@
 {
   "configs": [
-    "/live.json",
+    "/runtime.json",
     "/config.json",
     "/lang/lang.ru.json"
   ],
@@ -61,10 +61,21 @@
       "type": "hr"
     },
     {
+      "type": "h4",
+      "title": "{{LS_available_version}}",
+      "style": "width:30%;float:left;"
+    },
+    {
+      "type": "h4",
+      "title": "{{last_version}}",
+      "style": "width:70%;float:right"
+    },
+    {
       "type": "button",
-      "title": "Обновить прошивку устройства",
+      "title": "{{LS_update_firmware}}",
       "action": "/check",
       "response": "[[my-block]]",
+      "style": "inline",
       "class": "btn btn-block btn-default"
     },
     {

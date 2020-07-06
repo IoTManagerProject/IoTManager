@@ -145,11 +145,11 @@ void init() {
     buf.replace("\r", "\n");
     while (!buf.isEmpty()) {
         String block = selectToMarker(buf, "end");
-        buf = deleteBeforeDelimiter(buf, "end\n");
         if (block.isEmpty()) {
             continue;
         }
         _items.push_back(new ScenarioItem(block));
+        buf = deleteBeforeDelimiter(buf, "end\n");
     }
     pm.info("blocks: " + String(_items.size(), DEC));
     _ready_flag = true;

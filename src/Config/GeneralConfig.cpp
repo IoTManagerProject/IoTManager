@@ -6,8 +6,20 @@ static const char* TAG_BROADCAST_INTERVAL = "udptime";
 static const char* TAG_SCENARIO_ENABLED = "scen";
 static const char* TAG_LED_ENABLED = "blink";
 static const char* TAG_PUSHINGBOX_ID = "pushingboxid";
+static const char* TAG_UPDATE_URL = "updateurl";
 
 GeneralConfig::GeneralConfig() {}
+
+void GeneralConfig::setUpdateUrl(const String value) {
+    if (!_updateUrl.equals(value)) {
+        _updateUrl = value;
+        setChanged();
+    }
+}
+
+const String GeneralConfig::getUpdateUrl() const {
+    return _updateUrl;
+}
 
 void GeneralConfig::setBroadcastName(const String value) {
     if (!_broadcastName.equals(value)) {
@@ -85,6 +97,7 @@ void GeneralConfig::load(const JsonObject& root) {
     _scenarioEnabled = root[TAG_SCENARIO_ENABLED] | true;
     _ledEnabled = root[TAG_LED_ENABLED] | true;
     _pushingBoxId = root[TAG_PUSHINGBOX_ID].as<String>();
+    _updateUrl = root[TAG_UPDATE_URL].as<String>();
 }
 
 void GeneralConfig::save(JsonObject& root) {
@@ -94,6 +107,7 @@ void GeneralConfig::save(JsonObject& root) {
     root[TAG_SCENARIO_ENABLED] = _scenarioEnabled;
     root[TAG_LED_ENABLED] = _ledEnabled;
     root[TAG_PUSHINGBOX_ID] = _pushingBoxId.c_str();
+    root[TAG_UPDATE_URL] = _updateUrl.c_str();
 };
 
 bool GeneralConfig::setParamByName(const String& param, const String& value) {
@@ -110,6 +124,8 @@ bool GeneralConfig::setParamByName(const String& param, const String& value) {
         enableLed(value.toInt());
     } else if (param.equals(TAG_PUSHINGBOX_ID)) {
         setPushingboxId(value);
+    } else if (param.equals(TAG_UPDATE_URL)) {
+        setUpdateUrl(value);
     } else {
         handled = false;
     }

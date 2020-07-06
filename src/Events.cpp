@@ -18,9 +18,6 @@ void fire(String name, String param) {
 }
 
 void fire(String name) {
-    if (!name.equals("timenow")) {
-        pm.info(name);
-    }
     if (config.general()->isScenarioEnabled()) {
         _events.push(name);
     }

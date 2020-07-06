@@ -23,7 +23,7 @@ const char* LoggerTask::name() {
 
 void LoggerTask::update() {
     if (millis_since(_lastExecute) >= _period) {
-        if (timeNow->hasTimeSynced()) {
+        if (timeNow->hasSynced()) {
             if (_buf.size() >= _limit) {
                 flush();
             }
@@ -70,13 +70,13 @@ void LoggerTask::postFile() {
         }
         if (lines_cnt > _limit) {
             buf = deleteBeforeDelimiter(buf, "\r\n");
-            if (timeNow->hasTimeSynced()) {
+            if (timeNow->hasSynced()) {
                 buf += timeNow->getTimeUnix() + " " + value + "\r\n";
                 writeFile(_filename, buf);
             }
         }
     }
-    if (timeNow->hasTimeSynced()) {
+    if (timeNow->hasSynced()) {
         addFile(_filename, timeNow->getTimeUnix() + " " + value);
     }
 }

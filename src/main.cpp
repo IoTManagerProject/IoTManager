@@ -176,7 +176,7 @@ void flag_actions() {
         if (bus) {
             String buf;
             bus->scan(buf);
-            liveData.write(bus->getTag(), buf);
+            runtime.write(bus->getTag(), buf);
         }
         perform_bus_scanning_flag = false;
     }
@@ -240,7 +240,7 @@ void clock_init() {
 
     ts.add(
         TIME_SYNC, 30000, [&](void*) {
-            timeNow->hasSync();
+            timeNow->sync();
         },
         nullptr, true);
 
