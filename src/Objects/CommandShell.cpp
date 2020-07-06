@@ -2,8 +2,6 @@
 
 #include "Config.h"
 
-CommandShell::CommandShell(Runner *runner) : _term(nullptr), _runner(runner), _path('\\'), _active(false), _greetings(false), _farewell(false) {}
-
 void CommandShell::setTerm(Terminal *term) {
     _term = term;
     if (_term != nullptr) {

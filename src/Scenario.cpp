@@ -3,7 +3,7 @@
 #include "Global.h"
 #include "Cmd.h"
 
-static const char* MODULE = "Scen";
+static const char* MODULE = "Scenario";
 
 namespace Scenario {
 static const size_t NUM_LINES = 40;
@@ -38,8 +38,8 @@ void process(StringQueue* queue) {
     if (!queue->available()) {
         return;
     }
-
-    String event = queue->pop();
+    String event;
+    queue->pop(event);
     if (event.isEmpty()) {
         return;
     }

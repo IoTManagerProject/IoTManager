@@ -12,6 +12,4 @@
 #include <SoftwareSerial.h>
 #include <ESP8266mDNS.h>
 
-extern WiFiUDP udp;
-
 #endif

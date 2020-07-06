@@ -20,7 +20,6 @@ const String getChipId() {
     return res;
 }
 
-
 #ifdef ESP8266
 const String getHeapStats() {
     uint32_t free;

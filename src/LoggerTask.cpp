@@ -24,12 +24,13 @@ const char* LoggerTask::name() {
 void LoggerTask::update() {
     if (millis_since(_lastExecute) >= _period) {
         if (timeNow->hasTimeSynced()) {
-            pm.info("buf " + String(_buf.size(), DEC) + " of " + String(_limit, DEC));
             if (_buf.size() >= _limit) {
                 flush();
             }
             _buf.push_back(
                 LogEntry(timeNow->getEpoch(), liveData.readInt(_name)));
+
+            pm.info("buf " + String(_buf.size(), DEC) + " of " + String(_limit, DEC));
         }
         _lastExecute = millis();
     }

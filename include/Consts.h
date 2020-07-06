@@ -92,7 +92,6 @@ enum ErrorType_t {
 };
 
 enum ErrorLevel_t {
-    EL_NONE,
     EL_INFO,
     EL_WARNING,
     EL_ERROR

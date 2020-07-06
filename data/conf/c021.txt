@@ -5,3 +5,9 @@ text 1 Текст#из#arduino Serial 3
 
 //12 13 это пины uart к которым вы можете подключить arduino. Скетч для arduino выложен в группу.
 //команда serialWrite ard-on отправит в arduino текст ard-on
+button2 = 1
+serialWrite ard-11-1
+end
+button2 = 0
+serialWrite ard-11-0
+end

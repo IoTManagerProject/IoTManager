@@ -3,25 +3,28 @@
 #include "Utils/TimeUtils.h"
 #include "Utils/PrintMessage.h"
 
-#define INPUT_MAX_LENGHT 255
+static const size_t INPUT_MAX_LENGHT = 256;
 
-static const char *MODULE = "Term";
+Terminal::Terminal(Stream *stream) : Terminal{stream, nullptr} {};
 
-Terminal::Terminal(Stream *stream) : _stream{stream},
-                                     _line(INPUT_MAX_LENGHT),
-                                     _cc_pos(0),
-                                     _color(false),
-                                     _controlCodes(false),
-                                     _echo(false),
-                                     _eol(CRLF) { state = ST_NORMAL; };
+Terminal::Terminal(Stream *stream, TerminalInputEventHandler h) : _stream{stream},
+                                                                  _inputHandler{h},
+                                                                  _state{ST_NORMAL},
+                                                                  _lastReceived{0},
+                                                                  _line{INPUT_MAX_LENGHT},
+                                                                  _cc_pos{0},
+                                                                  _color{false},
+                                                                  _controlCodes{false},
+                                                                  _echo{false},
+                                                                  _eol{LF} {};
 
 void Terminal::setStream(Stream *stream) {
     _stream = stream;
 }
 
-void Terminal::setOnReadLine(TerminalInputEventHandler h) { inputHandler_ = h; }
+void Terminal::setOnReadLine(TerminalInputEventHandler h) { _inputHandler = h; }
 
-void Terminal::setOnEvent(TerminalEventHandler h) { eventHandler_ = h; }
+void Terminal::setOnEvent(TerminalEventHandler h) { _eventHandler = h; }
 
 bool Terminal::available() {
     return _stream != nullptr ? _stream->available() : false;
@@ -55,12 +58,12 @@ void Terminal::loop() {
 
     _lastReceived = millis();
 
-    if (state == ST_INACTIVE) {
+    if (_state == ST_INACTIVE) {
         // wait for CR
         if (c == CHAR_CR) {
-            if (eventHandler_) {
-                eventHandler_(EVENT_OPEN, _stream);
-                state = ST_NORMAL;
+            if (_eventHandler) {
+                _eventHandler(EVENT_OPEN, _stream);
+                _state = ST_NORMAL;
             }
         }
         // or ignore all other
@@ -72,7 +75,7 @@ void Terminal::loop() {
 
     // Esc
     if (c == CHAR_ESC || c == 195) {
-        state = ST_ESC_SEQ;
+        _state = ST_ESC_SEQ;
         _cc_pos = 0;
         for (size_t i = 0; i < 2; ++i) {
             bool timeout = false;
@@ -81,7 +84,7 @@ void Terminal::loop() {
                 delay(0);
             }
             if (timeout) {
-                state = ST_NORMAL;
+                _state = ST_NORMAL;
                 break;
             }
             _lastReceived = millis();
@@ -96,24 +99,24 @@ void Terminal::loop() {
         for (i = 0; i < 10; ++i) {
             if (strcmp(_cc_buf, keyMap[i].cc) == 0) {
                 c = keyMap[i].ch;
-                state = ST_NORMAL;
+                _state = ST_NORMAL;
             }
         }
     }
 
-    if (state == ST_ESC_SEQ) {
-        state = ST_NORMAL;
+    if (_state == ST_ESC_SEQ) {
+        _state = ST_NORMAL;
         return;
     }
 
     // WHEN NORMAL
-    if (state == ST_NORMAL) {
+    if (_state == ST_NORMAL) {
         if (c == CHAR_ESC) {
             if (!_line.available()) {
                 // QUIT
-                state = ST_INACTIVE;
-                if (eventHandler_)
-                    eventHandler_(EVENT_CLOSE, _stream);
+                _state = ST_INACTIVE;
+                if (_eventHandler)
+                    _eventHandler(EVENT_CLOSE, _stream);
             } else {
                 // CLEAR
                 _line.clear();
@@ -129,14 +132,14 @@ void Terminal::loop() {
         switch (c) {
             case CHAR_CR:
                 println();
-                if (inputHandler_)
-                    inputHandler_(_line.c_str());
+                if (_inputHandler)
+                    _inputHandler(_line.c_str());
                 _line.clear();
                 moveY++;
                 break;
             case CHAR_TAB:
-                if (eventHandler_)
-                    eventHandler_(EVENT_TAB, _stream);
+                if (_eventHandler)
+                    _eventHandler(EVENT_TAB, _stream);
                 return;
             case KEY_LEFT:
                 if (_line.prev())

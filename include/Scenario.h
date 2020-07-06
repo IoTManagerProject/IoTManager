@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-#include "Global.h"
+#include "Base/StringQueue.h"
 
 namespace Scenario {
 void reinit();

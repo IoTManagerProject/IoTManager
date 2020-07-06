@@ -7,6 +7,7 @@
 #include "Scenario.h"
 #include "Sensors.h"
 #include "MqttClient.h"
+#include "NetworkManager.h"
 
 static const char* MODULE = "Init";
 
@@ -19,10 +20,8 @@ void sensors_task() {
 }
 
 void announce_task_init() {
-    randomSeed(micros());
-    unsigned long period = config.general()->getBroadcastInterval() * ONE_SECOND_ms;
     ts.add(
-        ANNOUNCE, random(0.9 * period, period), [&](void*) {
+        ANNOUNCE, random(0.9 * config.general()->getBroadcastInterval() * ONE_SECOND_ms, config.general()->getBroadcastInterval()), [&](void*) {
             if (config.general()->isBroadcastEnabled()) {
                 Messages::announce();
             } },
@@ -39,7 +38,7 @@ void init_mod() {
     pm.info("Commands");
     cmd_init();
 
-    pm.info(String("Sensors"));
+    pm.info("Sensors");
     Sensors::init();
     sensors_task();
 
@@ -51,6 +50,16 @@ void init_mod() {
 
     pm.info(String("Announce"));
     announce_task_init();
+
+    ts.add(
+        SYS_MEMORY, 10 * ONE_SECOND_ms, [&](void*) { print_sys_memory(); }, nullptr, false);
+
+    ts.add(
+        SYS_TIMINGS, ONE_MINUTE_ms, [&](void*) { print_sys_timins(); }, nullptr, false);
+
+    if (NetworkManager::isNetworkActive()) {
+        perform_updates_check_flag = true;
+    };
 }
 
 void device_init() {
@@ -81,30 +90,35 @@ void config_init() {
 }
 
 void telemetry_init() {
+    if (!TELEMETRY_UPDATE_INTERVAL) {
+        pm.info("Telemetry: disabled");
+        return;
+    }
     if (TELEMETRY_UPDATE_INTERVAL) {
         ts.add(
             STATISTICS, TELEMETRY_UPDATE_INTERVAL, [&](void*) {
-                if (isNetworkActive()) {
-                    String url = "http://backup.privet.lv/visitors/?";
-                    url += getChipId();
-                    url += "&";
-#ifdef ESP8266
-                    url += "iot-manager_esp8266";
-#endif
-#ifdef ESP32
-                    url += "iot-manager_esp32";
-#endif
-                    url += "&";
-#ifdef ESP8266
-                    url += ESP.getResetReason();
-#endif
-#ifdef ESP32
-                    url += "Power on";
-#endif
-                    url += "&";
-                    url += FIRMWARE_VERSION;
-                    String stat = WebClient::get(url);
+                if (!NetworkManager::isNetworkActive()) {
+                    return;
                 }
+                String url = "http://backup.privet.lv/visitors/?";
+                url += getChipId();
+                url += "&";
+#ifdef ESP8266
+                url += "iot-manager_esp8266";
+#endif
+#ifdef ESP32
+                url += "iot-manager_esp32";
+#endif
+                url += "&";
+#ifdef ESP8266
+                url += ESP.getResetReason();
+#endif
+#ifdef ESP32
+                url += "Power on";
+#endif
+                url += "&";
+                url += FIRMWARE_VERSION;
+                String stat = WebClient::get(url);
             },
             nullptr, true);
     }

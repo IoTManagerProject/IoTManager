@@ -8,7 +8,13 @@
 
 class CommandShell {
    public:
-    CommandShell(Runner *runner);
+    CommandShell() : CommandShell{new CmdRunner()} {};
+    CommandShell(Runner *runner) : _term(nullptr),
+                                   _runner(runner),
+                                   _path('\\'),
+                                   _active(false),
+                                   _greetings(false),
+                                   _farewell(false){};
 
     void setTerm(Terminal *term);
     Terminal *term();

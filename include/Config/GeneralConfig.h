@@ -16,7 +16,7 @@ class GeneralConfig : public ConfigItem {
     boolean isLedEnabled() const;
 
     unsigned long getBroadcastInterval() const;
-    void setBroadcastInterval(unsigned long value);
+    void setBroadcastInterval(int value);
 
     void enableBroadcast(boolean value);
     boolean isBroadcastEnabled() const;
@@ -31,7 +31,7 @@ class GeneralConfig : public ConfigItem {
    private:
     String _broadcastName;
     String _pushingBoxId;
-    unsigned long _broadcastInterval;
+    int _broadcastInterval;
     bool _broadcastEnabled;
     bool _scenarioEnabled;
     bool _ledEnabled;

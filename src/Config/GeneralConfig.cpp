@@ -24,7 +24,7 @@ unsigned long GeneralConfig::getBroadcastInterval() const {
     return _broadcastInterval;
 }
 
-void GeneralConfig::setBroadcastInterval(unsigned long value) {
+void GeneralConfig::setBroadcastInterval(int value) {
     bool changed = _broadcastInterval != value;
     if (changed) {
         _broadcastInterval = value;
@@ -101,9 +101,9 @@ bool GeneralConfig::setParamByName(const String& param, const String& value) {
     if (param.equals(TAG_BROADCAST_NAME)) {
         setBroadcastName(value);
     } else if (param.equals(TAG_BROADCAST_ENABLED)) {
-        enableBroadcast(param.toInt());
+        enableBroadcast(value.toInt());
     } else if (param.equals(TAG_BROADCAST_INTERVAL)) {
-        setBroadcastInterval(param.toInt());
+        setBroadcastInterval(value.toInt());
     } else if (param.equals(TAG_SCENARIO_ENABLED)) {
         enableScenario(value.toInt());
     } else if (param.equals(TAG_LED_ENABLED)) {

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <script defer src="js/build.chart.js?v07.04.2018" charset="utf-8"></script>
+  <link rel="stylesheet" type="text/css" href="css/build.css?v07.04.2018">
+  <script defer type="text/javascript" src="js/function.js?v07.04.2018"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <script type="text/javascript">
+    var jsonResponse;
+    window.onload = function () {
+      setContent('first');
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container loader-bg">
+    <ul id="url-content" class="hidden" onclick="document.getElementById('content').style.zIndex=0;"></ul>
+    <div id="headers"></div>
+    <div class="row hidden" id="container_column">
+      <h1 id="title"></h1>
+      <div id="content" onclick="this.style.zIndex=10"></div>
+    </div>
+    <div id="footer"></div>
+    <div id="edit-content" class="hidden" onclick="document.getElementById('content').style.zIndex=0;">
+      <textarea class="form-control" onkeyup="isValidJson(this.value,'edit-json')" spellcheck="false"
+        id="edit-json"></textarea>
+      <div id="error-json"></div>
+      <div class="btn-group btn-block">
+        <input class="btn btn-success" style="width:40%" id="edit-view"
+          onclick="setContent('edit');this.value='Loading...';html('url-content', ' ');" value="View" type="button">
+        <input class="btn btn-danger" style="width:40%" id="edit-save"
+          onclick="var urlPages=window.location.search.substring(1).split('&')[0];httpDelete('/'+urlPages+'.json.gz');send_request_edit(this, val('edit-json'),(urlPages?urlPages:'index')+'.json');toggle('edit-content');toggle('url-content');"
+          value="Save" type="button">
+        <a class="btn btn-info" style="width:20%" href="#" id="download-json" download="" title="Save to PC"><i>
+            <class="download-img">
+          </i></a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

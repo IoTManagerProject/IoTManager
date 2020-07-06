@@ -1,10 +1,11 @@
 #include "Messages.h"
 
+#include "Global.h"
+#include "Consts.h"
 #include "Config.h"
 #include "Broadcast.h"
 #include "Devices.h"
-#include "WiFiManager.h"
-
+#include "NetworkManager.h"
 #include "Utils/SysUtils.h"
 
 static const char* MODULE = "Messages";
@@ -25,15 +26,15 @@ void announce() {
     data += ";";
     data += config.general()->getBroadcastName();
     data += ";";
-    data += WiFi.localIP().toString();
+    data += NetworkManager::getHostIP().toString();
     data += ";";
 
     Broadcast::send(HEADER_ANNOUNCE, data);
 }
 
-String getValue(String data, char separator, int index) {
+String getValue(const String& data, char separator, size_t index) {
     size_t found = 0;
-    size_t strIndex[] = {0, -1};
+    int strIndex[] = {0, -1};
     size_t maxIndex = data.length() - 1;
 
     for (size_t i = 0; i <= maxIndex && found <= index; i++) {
@@ -48,13 +49,13 @@ String getValue(String data, char separator, int index) {
 }
 
 void process(StringQueue* queue) {
-    String buf = queue->pop();
-
+    String buf;
+    queue->pop(buf);
     if (getValue(buf, ';', 0).equals(HEADER_ANNOUNCE)) {
         Devices::add(getValue(buf, ';', 1).c_str(), getValue(buf, ';', 2).c_str(), getValue(buf, ';', 3).c_str());
     } else if (getValue(buf, ';', 0).equals(HEADER_MQTT_SETTINGS)) {
         config.mqtt()->loadString(getValue(buf, ';', 1).c_str());
-        mqtt_restart_flag = true;
+        perform_mqtt_restart_flag = true;
     } else {
         pm.error("unknown");
     }

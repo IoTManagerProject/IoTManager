@@ -12,7 +12,7 @@
     },
     {
       "type": "link",
-      "title": "{{LS_mainPage}}",
+      "title": "{{LS_main_page}}",
       "action": "/",
       "class": "btn btn-block btn-default"
     },
@@ -43,7 +43,7 @@
     },
     {
       "type": "link",
-      "title": "Перезагрузить устройство",
+      "title": "{{LS_restart_device}}",
       "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
       "class": "btn btn-block btn-danger"
     }

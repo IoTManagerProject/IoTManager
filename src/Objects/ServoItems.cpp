@@ -1,8 +1,10 @@
-#include <Servo.h>
-
 #include "Objects/ServoItems.h"
-
 #include "Base/Value.h"
+#ifdef ESP8266
+#include <Servo.h>
+#else
+#include <ESP32Servo.h>
+#endif
 
 ServoItems myServo;
 

@@ -116,18 +116,20 @@ enum State { ST_INACTIVE,
 
 class Terminal : public Print {
    public:
+    Terminal(Stream *stream, TerminalInputEventHandler h);
     Terminal(Stream *stream = nullptr);
-
     void setStream(Stream *stream);
-    void setEOL(EOLType_t code);
-    void enableControlCodes(bool enabled = true);
-    void enableEcho(bool enabled = true);
-    void enableColors(bool enabled = true);
     void setOnEvent(TerminalEventHandler);
     void setOnSpecKeyPress(SpecialKeyPressedEvent);
     void setOnReadLine(TerminalInputEventHandler);
 
     bool setLine(const uint8_t *bytes, size_t size);
+
+    void setEOL(EOLType_t code);
+    void enableControlCodes(bool enabled = true);
+    void enableEcho(bool enabled = true);
+    void enableColors(bool enabled = true);
+
     CharBuffer &getLine();
 
     void backsp();
@@ -148,23 +150,23 @@ class Terminal : public Print {
 
    private:
     void move(uint8_t y, uint8_t x);
-    TerminalEventHandler eventHandler_;
-    TerminalInputEventHandler inputHandler_;
 
+   private:
+    Stream *_stream;
+    TerminalEventHandler _eventHandler;
+    TerminalInputEventHandler _inputHandler;
+    State _state;
+    unsigned long _lastReceived;
     uint8_t attr = 0xff;
     uint8_t curY = 0xff;
     uint8_t curX = 0xff;
-
-    unsigned long _lastReceived = 0;
-    State state;
-    Stream *_stream;
     EditLine _line;
-    char _cc_buf[32] = {0};
+    char _cc_buf[32];
     size_t _cc_pos = 0;
-    bool _color = false;
-    bool _controlCodes = false;
-    bool _echo = false;
-    EOLType_t _eol = CRLF;
+    bool _color;
+    bool _controlCodes;
+    bool _echo;
+    EOLType_t _eol;
 
     struct ControlCode {
         const char *cc;

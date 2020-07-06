@@ -106,58 +106,8 @@ const String prettyBytes(size_t size) {
         return String(size / 1024.0 / 1024.0 / 1024.0) + "GB";
 }
 
-static const char *str_info = "I";
-static const char *str_warn = "W";
-static const char *str_error = "E";
-static const char *str_unknown = "?";
+static const char *error_levels[] = {"I", "W", "E", "?"};
 
-String getErrorLevelStr(ErrorLevel_t level) {
-    const char *ptr;
-    switch (level) {
-        case EL_INFO:
-            ptr = str_info;
-            break;
-        case EL_WARNING:
-            ptr = str_warn;
-            break;
-        case EL_ERROR:
-            ptr = str_error;
-            break;
-        default:
-            ptr = str_unknown;
-            break;
-    }
-    return String(ptr);
-}
-
-char **str_split(char *str, const char delimiter, size_t &count) {
-    char **result = 0;
-    count = 0;
-    char *tmp = str;
-    char *last_delimiter = 0;
-    char delim[2];
-    delim[0] = delimiter;
-    delim[1] = 0;
-
-    while (*tmp) {
-        if (delimiter == *tmp) {
-            count++;
-            last_delimiter = tmp;
-        }
-        tmp++;
-    }
-    // count += last_delimiter < (str + strlen(str) - 1);
-    count++;
-
-    result = (char **)calloc(count, sizeof(char *));
-    if (result) {
-        size_t idx = 0;
-        char *token = strtok(str, delim);
-        while (token) {
-            *(result + idx++) = strdup(token);
-            token = strtok(NULL, delim);
-        }
-        *(result + idx) = 0;
-    }
-    return result;
+const char *getErrorLevelStr(uint8_t level) {
+    return error_levels[level];
 }

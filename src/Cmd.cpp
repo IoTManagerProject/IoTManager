@@ -75,7 +75,11 @@ void cmd_init() {
     sCmd.addCommand("servoSet", cmd_servoSet);
 
     sCmd.addCommand("serialBegin", cmd_serialBegin);
+    sCmd.addCommand("serialEnd", cmd_serialEnd);
     sCmd.addCommand("serialWrite", cmd_serialWrite);
+    sCmd.addCommand("serialLog", cmd_serialLog);
+
+    sCmd.addCommand("telnet", cmd_telnet);
 
     sCmd.addCommand("logging", cmd_logging);
 
@@ -100,7 +104,6 @@ void cmd_init() {
     sCmd.addCommand("firmwareVersion", cmd_firmwareVersion);
 
     sCmd.addCommand("get", cmd_get);
-    sCmd.addCommand("telnet", cmd_telnet);
 }
 
 //===============================================Логирование============================================================
@@ -216,16 +219,15 @@ void cmd_pwm() {
     String description = sCmd.next();
 
     String page = sCmd.next();
-    String state = sCmd.next();
+    String value = sCmd.next();
     String order = sCmd.next();
 
     String style = sCmd.next();
 
-    myPwm.add(name, assign, state);
-    // jsonWriteStr(configOptionJson, "pwm_pin" + name, assign);
-    // jsonWriteStr(configLiveJson, "pwm" + name, state);
-    // pinMode(assign.toInt(), OUTPUT);
-    // analogWrite(assign.toInt(), state.toInt());
+    myPwm.add(name, assign, value);
+
+    liveData.writeInt("pwm" + name, value.toInt());
+
     createWidget(description, page, order, "range", "pwm" + name);
 }
 
@@ -236,9 +238,9 @@ void cmd_pwmSet() {
     myPwm.get(name)->setState(value.toInt());
 
     Events::fire("pwm", name);
-    // analogWrite(pin, state.toInt());
-    // int pin = jsonReadInt(configOptionJson, "pwm_pin" + name);
-    // jsonWriteStr(configLiveJson, "pwm" + name, state);
+
+    liveData.writeInt("pwm" + name, value.toInt());
+
     MqttClient::publishStatus("pwm" + name, value);
 }
 
@@ -442,31 +444,66 @@ void cmd_servoSet() {
 }
 
 void cmd_serialBegin() {
-    String s_speed = sCmd.next();
-    String rxPin = sCmd.next();
-    String txPin = sCmd.next();
+    uint32_t baud = atoi(sCmd.next());
+    int8_t rx = atoi(sCmd.next());
+    int8_t tx = atoi(sCmd.next());
 
-    if (mySerial) {
-        delete mySerial;
-    }
-
+    cmd_serialEnd();
 #ifdef ESP8266
-    mySerial = new SoftwareSerial(rxPin.toInt(), txPin.toInt());
-    mySerial->begin(s_speed.toInt());
+    mySerial = new SoftwareSerial(rx, tx);
+    mySerial->begin(baud);
 #else
     mySerial = new HardwareSerial(2);
-    mySerial->begin(rxPin.toInt(), txPin.toInt());
+    mySerial->begin(rx, tx);
 #endif
-
     term = new Terminal(mySerial);
-    term->setEOL(LF);
-    term->enableColors(false);
-    term->enableControlCodes(false);
-    term->enableEcho(false);
     term->setOnReadLine([](const char *str) {
-        String line = String(str);
-        addCommandLoop(line);
+        addCommandLoop(str);
     });
+}
+
+void cmd_serialEnd() {
+    if (mySerial) {
+        mySerial->end();
+        delete mySerial;
+    }
+}
+
+void cmd_serialWrite() {
+    String payload = sCmd.next();
+    if (term) {
+        term->println(payload.c_str());
+    }
+}
+
+void cmd_serialLog() {
+    bool enabled = atoi(sCmd.next());
+    String out = sCmd.next();
+
+    pm.enablePrint(enabled);
+    pm.setOutput(out.equalsIgnoreCase("serial1") ? &Serial : &Serial);
+
+    if (enabled) {
+        pm.info("serialLog: enabled");
+    }
+}
+
+void cmd_telnet() {
+    bool enabled = atoi(sCmd.next());
+    uint16_t port = atoi(sCmd.next());
+
+    if (enabled) {
+        pm.info("telnet: enabled");
+        if (!telnet) {
+            telnet = new Telnet(port);
+        }
+        telnet->setOutput(pm.getOutput());
+        telnet->start();
+    } else {
+        pm.info("telnet: disabled");
+        telnet->stop();
+        telnet->end();
+    }
 }
 
 void cmd_get() {
@@ -480,17 +517,10 @@ void cmd_get() {
             Devices::asString(res, param.toInt());
         }
     }
-    pm.info("result:");
+    pm.info("result: ");
     pm.info(res);
     if (term) {
         term->println(res.c_str());
-    }
-}
-
-void cmd_serialWrite() {
-    String payload = sCmd.next();
-    if (term) {
-        term->println(payload.c_str());
     }
 }
 
@@ -846,25 +876,6 @@ void cmd_timerStart() {
 void cmd_timerStop() {
     String number = sCmd.next();
     delTimer(number);
-}
-
-void cmd_telnet() {
-    bool enabled = String(sCmd.next()).toInt();
-    uint16_t port = String(sCmd.next()).toInt();
-    if (enabled) {
-        pm.info("telnet: enabled");
-        if (!telnet) {
-            telnet = new Telnet(port);
-        }
-        telnet->init();
-        telnet->start();
-        telnet->setOutput(&Serial);
-        telnet->setCommandShell(new CommandShell(new CmdRunner()));
-    } else {
-        pm.info("telnet: disabled");
-        telnet->stop();
-        telnet->end();
-    }
 }
 
 void addCommandLoop(const String &cmdStr) {

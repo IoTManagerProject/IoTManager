@@ -9,8 +9,9 @@ const String filepath(const char* filename) {
 }
 
 bool fileSystemInit() {
+    pm.info("init");
     if (!LittleFS.begin()) {
-        pm.error("init");
+        pm.error("on begin");
         return false;
     }
     return true;

@@ -8,10 +8,6 @@
 namespace HttpServer {
 
 static const char *MODULE = "Http";
-/* Forward declaration */
-void initOta();
-void initMDNS();
-void initWS();
 
 void init() {
     String login = config.web()->getLogin();
@@ -26,7 +22,6 @@ void init() {
     server.serveStatic("/js/", LittleFS, "/js/").setCacheControl("max-age=600");
     server.serveStatic("/favicon.ico", LittleFS, "/favicon.ico").setCacheControl("max-age=600");
     server.serveStatic("/icon.jpeg", LittleFS, "/icon.jpeg").setCacheControl("max-age=600");
-
     server.serveStatic("/", LittleFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
 
     server.onNotFound([](AsyncWebServerRequest *request) {
@@ -75,11 +70,8 @@ void init() {
 }
 
 void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
-#ifdef WS_enable
     if (type == WS_EVT_CONNECT) {
-        Serial.printf("ws[%s][%u] connect\n", server->url(), client->id());
-        client->printf(json.c_str(), client->id());
-        //client->ping();
+        pm.info("connect: " + String(server->url()) + " " + String(client->id(), DEC));
     } else if (type == WS_EVT_DISCONNECT) {
         Serial.printf("ws[%s][%u] disconnect\n", server->url(), client->id());
     } else if (type == WS_EVT_ERROR) {
@@ -145,29 +137,37 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
             }
         }
     }
-#endif
-    ;
 }
 
 void initMDNS() {
     MDNS.addService("http", "tcp", 80);
     // TODO Add Adduino OTA
-    ;
+}
+
+void initWS() {
+    ws.onEvent(onWsEvent);
+    server.addHandler(&ws);
+    events.onConnect([](AsyncEventSourceClient *client) {
+        client->send("", NULL, millis(), 1000);
+    });
+    server.addHandler(&events);
 }
 
 void initOta() {
-#ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.onStart([]() {
         events.send("Update Start", "ota");
     });
+
     ArduinoOTA.onEnd([]() {
         events.send("Update End", "ota");
     });
+
     ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
         char p[32];
         sprintf(p, "Progress: %u%%\n", (progress / (total / 100)));
         events.send(p, "ota");
     });
+
     ArduinoOTA.onError([](ota_error_t error) {
         if (error == OTA_AUTH_ERROR)
             events.send("Auth Failed", "ota");
@@ -180,22 +180,9 @@ void initOta() {
         else if (error == OTA_END_ERROR)
             events.send("End Failed", "ota");
     });
-    ArduinoOTA.setHostname(hostName);
-    ArduinoOTA.begin();
-#endif
-    ;
-}
 
-void initWS() {
-#ifdef WS_enable
-    ws.onEvent(onWsEvent);
-    server.addHandler(&ws);
-    events.onConnect([](AsyncEventSourceClient *client) {
-        client->send("", NULL, millis(), 1000);
-    });
-    server.addHandler(&events);
-#endif
-    ;
+    ArduinoOTA.setHostname(config.network()->getHostname());
+    ArduinoOTA.begin();
 }
 
 }  // namespace HttpServer

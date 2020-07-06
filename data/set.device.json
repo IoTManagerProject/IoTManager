@@ -12,7 +12,7 @@
     },
     {
       "type": "link",
-      "title": "{{LS_mainPage}}",
+      "title": "{{LS_main_page}}",
       "action": "/",
       "class": "btn btn-block btn-default"
     },
@@ -23,7 +23,7 @@
       "class": "btn btn-block btn-default"
     },
     {
-      "type": "h2",
+      "type": "h3",
       "title": "{{LS_configuration}}"
     },
     {
@@ -32,40 +32,40 @@
       "class": "btn btn-block btn-default",
       "title": {
         "#": "{{LS_select_preset}}<span class=\"caret\"></span>",
-        "/set?preset=001": "1. Реле",
-        "/set?preset=002": "2. Реле с таймером",
-        "/set?preset=003": "3. Реле с таймером (включение интервалами)",
-        "/set?preset=004": "4. Реле с управлением из приложения",
-        "/set?preset=005": "5. Выключатель света",
-        "/set?preset=006": "6. Управление реле подключенных к другому устройству",
-        "/set?preset=007": "7. Управление кнопкой несколькими реле на другом устройстве",
-        "/set?preset=008": "8. Использование PWM (Широтно-импульсная модуляция)",
-        "/set?preset=009": "9. Сенсор DHT11",
+        "/set?preset=000": " 0. Настройки по умолчанию",
+        "/set?preset=001": " 1. Реле",
+        "/set?preset=002": " 2. Реле с таймером",
+        "/set?preset=003": " 3. Реле с таймером (интервалы включения)",
+        "/set?preset=004": " 4. Реле с управлением из приложения",
+        "/set?preset=005": " 5. Выключатель света",
+        "/set?preset=006": " 6. Управление другим устройством: реле",
+        "/set?preset=007": " 7. Управление другим устройством: одной кнопкой несколькими реле",
+        "/set?preset=008": " 8. Использование ШИМ (широтно-импульсная модуляция)",
+        "/set?preset=009": " 9. Сенсор DHT11",
         "/set?preset=010": "10. Сенсор DHT22, DHT33, DHT44, AM2302, RHT03",
-        "/set?preset=011": "11. Получение и журналирование данных ADC",
+        "/set?preset=011": "11. Журналирование данных: ADC",
         "/set?preset=012": "12. Cенсор BMP 280",
         "/set?preset=013": "13. Cенсор BME 280",
         "/set?preset=014": "14. Сенсор DS18B20",
-        "/set?preset=015": "15. Термостат на базе DS18B20 (переключение в ручной режим)",
-        "/set?preset=016": "16. Сенсор JSN-SR04T, HC-SR04, HY-SRF05 контроль уровня жидкости",
-        "/set?preset=017": "17. Датчик движения управление светом",
-        "/set?preset=018": "18. Охранный датчик движения",
-        "/set?preset=019": "19. Управление шторами (драйвер шагового двигателя A4988)",
-        "/set?preset=020": "20. Управления сервоприводом",
-        "/set?preset=021": "21. Обмен данными через uart (serial)",
-        "/set?preset=100": "22. Настройки по умолчанию"
+        "/set?preset=015": "15. Датчик температры DS18B20: термостат",
+        "/set?preset=016": "16. Датчик JSN-SR04T, HC-SR04, HY-SRF05: контроль уровня жидкости",
+        "/set?preset=017": "17. Датчик движения: управление освещением",
+        "/set?preset=018": "18. Датчик движения: охрана",
+        "/set?preset=019": "19. Управление шаговым двигателем (драйвер A4988)",
+        "/set?preset=020": "20. Управление сервоприводом",
+        "/set?preset=021": "21. Обмен данными через UART"
       }
     },
     {
       "type": "file",
       "state": "dev_conf.txt",
-      "style": "width:100%;height:350px",
+      "style": "width:100%;height:250px",
       "title": "{{LS_save}}",
       "action": "/set?devinit",
       "class": "btn btn-block btn-default"
     },
     {
-      "type": "h2",
+      "type": "h3",
       "title": "Сценарий"
     },
     {
@@ -73,12 +73,13 @@
       "name": "scen",
       "title": "Включить сценарии",
       "action": "/set?scen=[[scen]]",
-      "state": "{{scen}}"
+      "state": "{{scen}}",
+      "design": "two"
     },
     {
       "type": "file",
       "state": "dev_scen.txt",
-      "style": "width:100%;height:350px",
+      "style": "width:100%;height:250px",
       "title": "{{LS_save}}",
       "action": "/set?sceninit",
       "class": "btn btn-block btn-default"

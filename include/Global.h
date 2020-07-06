@@ -16,12 +16,12 @@
 #include "Consts.h"
 #include "Errors.h"
 #include "Config.h"
-#include "Upgrade.h"
+#include "Updater.h"
 #include "Clock.h"
 #include "Sensors.h"
 #include "Scenario.h"
 #include "MqttClient.h"
-#include "WiFiManager.h"
+#include "NetworkManager.h"
 
 #include "Utils/FileUtils.h"
 #include "Utils/JsonUtils.h"
@@ -35,11 +35,6 @@
 
 #include <time.h>
 
-#ifdef WEBSOCKET_ENABLED
-extern AsyncWebSocket ws;
-//extern AsyncEventSource events;
-#endif
-
 extern KeyValueStore options;
 extern KeyValueStore liveData;
 extern KeyValueFile runtime;
@@ -48,21 +43,21 @@ extern Clock* timeNow;
 extern TickerScheduler ts;
 extern WiFiClient espClient;
 extern StringCommand sCmd;
-extern AsyncWebServer server;
 
-/*
-* Global vars
-*/
+extern AsyncWebServer server;
+extern AsyncWebSocket ws;
+extern AsyncEventSource events;
+
 extern String prex;
 extern String all_widgets;
 extern String order_loop;
 
-extern String lastVersion;
-
 extern boolean perform_updates_check_flag;
 extern boolean perform_upgrade_flag;
-extern boolean mqtt_restart_flag;
+extern boolean perform_mqtt_restart_flag;
 
+extern void print_sys_memory();
+extern void print_sys_timins();
 /*
 * Запрос на проверку обновлений
 */
@@ -141,5 +136,3 @@ extern void uptime_task_init();
 extern void config_init();
 extern void web_init();
 extern void telemetry_init();
-
-extern int readOptionInt(const String& name);

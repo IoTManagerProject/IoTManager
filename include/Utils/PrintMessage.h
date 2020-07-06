@@ -9,9 +9,10 @@
 
 class PrintMessage {
    public:
-    PrintMessage(const char* module) {
-        _module = module;
-    }
+    PrintMessage(const char* module) : _module{module},
+                                       _printEnabled{true},
+                                       _logEnabled{true},
+                                       _out{&Serial} {};
 
     void error(const String str) {
         print(EL_ERROR, str);
@@ -21,11 +22,36 @@ class PrintMessage {
         print(EL_INFO, str);
     }
 
+    void setOutput(Print* out) {
+        _out = out;
+    }
+
+    Print* getOutput() {
+        return _out;
+    }
+
+    void enablePrint(bool value) {
+        _printEnabled = value;
+    }
+
+    void enableLog(bool value) {
+        _logEnabled = value;
+    }
+
    private:
     void print(const ErrorLevel_t level, const String& str) {
-        Serial.printf("%s [%s] [%s] %s\n", prettyMillis(millis()).c_str(), getErrorLevelStr(level).c_str(), _module, str.c_str());
+        char buf[256];
+        snprintf(buf, sizeof(buf), "%s [%s] [%s] %s", prettyMillis(millis()).c_str(), getErrorLevelStr(level), _module, str.c_str());
+        if (_printEnabled) {
+            if (_out) {
+                _out->println(buf);
+            };
+        }
     }
 
    private:
     const char* _module;
+    bool _printEnabled;
+    bool _logEnabled;
+    Print* _out;
 };
