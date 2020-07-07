@@ -52,17 +52,11 @@ void cmd_init() {
     sCmd.addCommand("pwm", cmd_pwm);
     sCmd.addCommand("pwmSet", cmd_pwmSet);
 
-#ifdef ANALOG_ENABLED
     sCmd.addCommand("analog", cmd_analog);
-#endif
-#ifdef LEVEL_ENABLED
+
     sCmd.addCommand("levelPr", cmd_levelPr);
     sCmd.addCommand("ultrasonicCm", cmd_ultrasonicCm);
-#endif
-#ifdef DALLAS_ENABLED
     sCmd.addCommand("dallas", cmd_dallas);
-#endif
-
     sCmd.addCommand("dhtT", cmd_dhtT);
     sCmd.addCommand("dhtH", cmd_dhtH);
     sCmd.addCommand("dhtPerception", cmd_dhtPerception);
@@ -117,7 +111,23 @@ void cmd_init() {
     sCmd.addCommand("reboot", cmd_reboot);
 }
 
-//===============================================Логирование============================================================
+unsigned long parsePeriod(const String &str) {
+    unsigned long res = 0;
+
+    if (str.endsWith("ms")) {
+        res = str.substring(0, str.indexOf("ms")).toInt();
+    } else if (str.endsWith("s")) {
+        res = str.substring(0, str.indexOf("s")).toInt() * ONE_SECOND_ms;
+    } else if (str.endsWith("m")) {
+        res = str.substring(0, str.indexOf("m")).toInt() * ONE_MINUTE_ms;
+    } else if (str.endsWith("h")) {
+        res = str.substring(0, str.indexOf("h")).toInt() * ONE_HOUR_s * ONE_SECOND_ms;
+    } else {
+        res = str.toInt() * ONE_MINUTE_ms;
+    }
+    return res;
+}
+
 //logging temp1 1 10 Температура Датчики 2
 void cmd_logging() {
     String name = sCmd.next();
@@ -127,7 +137,7 @@ void cmd_logging() {
     String page = sCmd.next();
     String order = sCmd.next();
 
-    Logger::add(name, period.toInt() * 1000 * 60, count.toInt());
+    Logger::add(name, parsePeriod(period), count.toInt());
     // /prefix/3234045-1589487/value_name_ch
     createChart(descr, page, order, "chart", name + "_ch", count);
 }

@@ -9,14 +9,6 @@
 // 1000 * 60 * 60 * 2
 #define TELEMETRY_UPDATE_INTERVAL 0
 
-#define DEVICE_RUNTIME_FILE "runtime.json"
-#define DEVICE_CONFIG_FILE "config.json"
-#define DEVICE_COMMAND_FILE "dev_conf.txt"
-#define DEVICE_SCENARIO_FILE "dev_scen.txt"
-#define KNOWN_DEVICE_FILE "dev.csv"
-#define HEADER_ANNOUNCE "iot_device"
-#define HEADER_MQTT_SETTINGS "iot_mqtt"
-
 #define DEFAULT_PRESET 100
 #define DEFAULT_SCENARIO 100
 
@@ -100,6 +92,16 @@ enum BusScanner_t {
     BS_I2C,
     BS_ONE_WIRE
 };
+
+extern const char* DEVICE_LAYOUT_FILE;
+extern const char* DEVICE_RUNTIME_FILE;
+extern const char* DEVICE_CONFIG_FILE;
+extern const char* DEVICE_COMMAND_FILE;
+extern const char* DEVICE_SCENARIO_FILE;
+extern const char* KNOWN_DEVICE_FILE;
+
+extern const char* HEADER_ANNOUNCE;
+extern const char* HEADER_MQTT_SETTINGS;
 
 extern const char* TAG_INIT;
 extern const char* TAG_OPTIONS;

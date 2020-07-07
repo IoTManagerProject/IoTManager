@@ -3,7 +3,7 @@
 static const char* MODULE = "Widget";
 
 void createWidget(String descr, String page, String order, String filename, String topic, String name1, String param1, String name2, String param2, String name3, String param3);
-void createChart(String widget, String page, String pageNumber, String filename, String topic, String maxCount);
+void createChart(String widget, String page, String order, String filename, String topic, String maxCount);
 void clearWidgets();
 
 const String getWidgetFile(const String& name);

@@ -1,12 +1,8 @@
 #pragma once
 
-#include "Arduino.h"
+#include <Arduino.h>
 
-struct LogEntry {
-    unsigned long time;
-    unsigned short value;
-    LogEntry(unsigned long time, uint16_t value) : time{time}, value{value} {};
-};
+#include "LogFile.h"
 
 class LoggerTask {
    public:
@@ -24,11 +20,9 @@ class LoggerTask {
     const String getTopic();
 
    private:
-    std::vector<LogEntry> _buf;
+    std::vector<LogEntry*> _buf;
     String _name;
-    char _filename[32];
     unsigned long _period;
     size_t _limit;
-    size_t _records;
     unsigned long _lastExecute;
 };
