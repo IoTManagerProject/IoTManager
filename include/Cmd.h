@@ -67,3 +67,5 @@ void cmd_telnet();
 
 void cmd_timerStop();
 void cmd_timerStart();
+
+void cmd_oneWire();

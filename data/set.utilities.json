@@ -30,58 +30,82 @@
     },
     {
       "type": "link",
-      "title": "Сканировать",
+      "title": "{{LS_scan}}",
       "action": "/set?i2c",
+      "style": "margin:5% 20% 5%;width:60%",
       "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "hr"
     },
     {
       "type": "h3",
       "title": "{{LS_onewire_scanner}}"
     },
     {
-      "type": "h4",
-      "title": "{{oneWire}}"
+      "type": "table",
+      "state": "onewire.json",
+      "style": "margin:0% 10% 0% 10%;width:80%",
+      "title": {
+        "num": "{{LS_num}}",
+        "addr": "{{LS_address}}",
+        "url": "{{LS_family}}"
+      }
     },
     {
       "type": "link",
-      "title": "Сканировать",
-      "action": "/set?oneWire=[[oneWirePin-arg]]",
+      "title": "{{LS_scan}}",
+      "action": "/set?oneWire",
+      "style": "margin:5% 20% 5%;width:60%",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "hr"
     },
     {
+      "type": "h3",
+      "title": "{{LS_sensor_logs}}"
+    },
+    {
+      "type": "table",
+      "state": "logs.json",
+      "style": "margin:0% 10% 0% 10%;width:80%",
+      "title": {
+        "name": "{{LS_name}}",
+        "entries": "{{LS_entries}}",
+        "size": "{{LS_size}}"
+      }
+    },
+    {
       "type": "link",
-      "title": "Очистить логи сенсоров",
-      "action": "/set?cleanlog",
+      "title": "{{LS_clear}}",
+      "action": "/set?clear_log",
+      "style": "margin:5% 20% 5%;width:60%",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "hr"
     },
     {
-      "type": "h4",
-      "title": "{{LS_available_version}}",
-      "style": "width:30%;float:left;"
+      "type": "h3",
+      "title": "{{LS_available_version}}"
     },
     {
-      "type": "h4",
-      "title": "{{last_version}}",
-      "style": "width:70%;float:right"
+      "type": "h3",
+      "title": "{{last_version}}"
     },
     {
       "type": "button",
       "title": "{{LS_update_firmware}}",
       "action": "/check",
       "response": "[[my-block]]",
-      "style": "inline",
+      "style": "margin:5% 20% 5%;width:60%",
       "class": "btn btn-block btn-default"
     },
     {
       "type": "h3",
       "name": "my-block",
-      "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+      "style": "position:fixed;top:50%;left:50%;width:20%;margin-left:-10%;text-align:center;",
       "class": "hidden"
     }
   ]

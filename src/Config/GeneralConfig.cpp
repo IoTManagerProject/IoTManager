@@ -47,6 +47,15 @@ void GeneralConfig::setBroadcastInterval(int value) {
 boolean GeneralConfig::isBroadcastEnabled() const {
     return _broadcastEnabled;
 }
+
+void GeneralConfig::enableBroadcast(bool value) {
+    bool changed = _broadcastEnabled != value;
+    if (changed) {
+        _broadcastEnabled = value;
+        setChanged();
+    }
+}
+
 const String GeneralConfig::getPushingboxId() const {
     return _pushingBoxId;
 }
@@ -66,14 +75,6 @@ void GeneralConfig::enableLed(bool value) {
     bool changed = _ledEnabled != value;
     if (changed) {
         _ledEnabled = value;
-        setChanged();
-    }
-}
-
-void GeneralConfig::enableBroadcast(bool value) {
-    bool changed = _broadcastEnabled != value;
-    if (changed) {
-        _broadcastEnabled = value;
         setChanged();
     }
 }

@@ -17,10 +17,6 @@ String prex = "";
 String all_widgets = "";
 String order_loop = "";
 
-String lastVersion = "";
-
-boolean perform_mqtt_restart_flag = false;
-
 void save_config() {
     String buf;
     config.save(buf);

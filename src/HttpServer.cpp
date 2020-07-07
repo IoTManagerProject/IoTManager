@@ -1,6 +1,8 @@
 #include "HttpServer.h"
 
+#include "Logger.h"
 #include "Devices.h"
+#include "Sensors/OnewireBus.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
 #include "FSEditor.h"
@@ -55,11 +57,24 @@ void init() {
         request->send(200, "application/json", Devices::asJson());
     });
 
+    server.on("/onewire.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", onewire.asJson());
+    });
+
+    server.on("/logs.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", Logger::asJson());
+    });
+
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
         String cmdStr = request->getParam("command")->value();
-        pm.info("do: " + cmdStr);
         addOrder(cmdStr);
         request->send(200);
+    });
+
+    server.on("/add", HTTP_GET, [](AsyncWebServerRequest *request) {
+        String cmdStr = request->getParam("command")->value();
+        addOrder(cmdStr);
+        request->redirect("/?set.device");
     });
 
     server.begin();

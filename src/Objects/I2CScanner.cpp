@@ -1,27 +1,33 @@
-#include "Objects/I2CScanner.h"
-
-#include "Utils/PrintMessage.h"
+#include "Sensors/I2CScanner.h"
 
 #include <Wire.h>
 
-static const char* MODULE = "I2C";
+#include "Utils/PrintMessage.h"
 
-I2CScanner::I2CScanner() : BusScanner(TAG_I2C, 2){};
+I2CScanner::I2CScanner() : BusScanner(TAG_I2C){};
 
-void I2CScanner::init() {
+I2CScanner::~I2CScanner() {
+}
+bool I2CScanner::onInit() {
     Wire.begin();
+    _addr = 8;
+    return true;
 }
 
-boolean I2CScanner::syncScan() {
-    pm.info(String("scanning..."));
-    size_t cnt = 0;
-    for (uint8_t i = 8; i < 120; i++) {
-        Wire.beginTransmission(i);
-        if (Wire.endTransmission() == 0) {
-            pm.info("found: " + String(i, DEC));
-            addResult(i, i < 119);
-            cnt++;
-        }
+void format(uint8_t addr, String& res) {
+    String str = "0x";
+    if (addr < 16) {
+        str += "0";
     }
-    return cnt;
+    str += String(addr, HEX);
+    str += ", ";
+    res += str;
+};
+
+boolean I2CScanner::onScan() {
+    Wire.beginTransmission(_addr);
+    if (Wire.endTransmission() == 0) {
+        format(_addr, _results);
+    }
+    return ++_addr > 120;
 }

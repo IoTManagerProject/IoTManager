@@ -9,17 +9,22 @@ static const char* MODULE = "LoggerTask";
 LoggerTask::LoggerTask(const String& name, unsigned long period, size_t limit) : _name{name},
                                                                                  _period{period},
                                                                                  _limit{limit},
-                                                                                 _lastExecute{0} { _buf.reserve(_limit); };
+                                                                                 _lastExecute{0},
+                                                                                 _log{_name.c_str()} {
+    _buf.reserve(_limit);
+};
 
 void LoggerTask::flush() {
-    LogFile log{_name.c_str()};
-    log.open();
+    _log.open();
     for (size_t i = 0; i < _buf.size(); i++) {
-        log.write(_buf.at(i));
+        _log.write(_buf.at(i));
     }
-    log.close();
+    _log.close();
     _buf.clear();
-    log.metadata()->print(Serial);
+}
+
+LogMetadata* LoggerTask::getMetadata() {
+    return _log.metadata();
 }
 
 const char* LoggerTask::name() {

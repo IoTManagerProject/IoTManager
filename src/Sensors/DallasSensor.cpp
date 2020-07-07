@@ -57,11 +57,10 @@ size_t DallasSensors::count() {
     return _items.size();
 }
 
-void dallas_reading() {
+void loop() {
     if (!dallasTemperature) {
         return;
     }
-
     float temp = 0;
     byte num = dallasTemperature->getDS18Count();
     String dallas_value_name_tmp_buf = dallas_value_name;

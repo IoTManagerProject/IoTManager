@@ -26,10 +26,10 @@ class DallasSensors {
     std::vector<DallasSensor_t> _items;
 };
 
-void dallas_reading();
+void loop();
 
-extern DallasSensors dallasSensors;
 extern DallasTemperature* dallasTemperature;
+extern DallasSensors dallasSensors;
 extern String dallas_value_name;
 extern int enter_to_dallas_counter;
 

@@ -11,7 +11,7 @@
 #define MIN_DATETIME 1575158400
 #define ONE_SECOND_ms 1000
 #define ONE_MINUTE_ms 60 * ONE_SECOND_ms
-
+#define ONE_HOUR_ms ONE_HOUR_m * ONE_MINUTE_ms
 /*
 * Время (мс) прошедщее с @since
 */

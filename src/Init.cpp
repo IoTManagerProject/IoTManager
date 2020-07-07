@@ -63,7 +63,7 @@ void init_mod() {
         SYS_TIMINGS, ONE_MINUTE_ms, [&](void*) { print_sys_timins(); }, nullptr, false);
 
     if (NetworkManager::isNetworkActive()) {
-        perform_updates_check_flag = true;
+        perform_updates_check();
     };
 
     device_init();

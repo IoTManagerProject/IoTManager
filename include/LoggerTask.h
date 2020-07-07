@@ -11,6 +11,7 @@ class LoggerTask {
     void publish();
     void update();
     void clear();
+    LogMetadata* getMetadata();
 
    private:
     void publishFile();
@@ -25,4 +26,5 @@ class LoggerTask {
     unsigned long _period;
     size_t _limit;
     unsigned long _lastExecute;
+    LogFile _log;
 };

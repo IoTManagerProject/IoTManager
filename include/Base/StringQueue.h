@@ -1,22 +1,26 @@
 #pragma once
 
 #include <Arduino.h>
+#include "circular_queue/circular_queue.h"
 
 class StringQueue {
    private:
-    std::vector<String> _pool;
+    circular_queue<String> _pool{32};
 
    public:
     void push(const String item) {
-        _pool.push_back(item);
+        _pool.push(item);
     }
 
-    void pop(String& item) {
-        item = _pool.back();
-        _pool.pop_back();
+    String pop() {
+        return _pool.pop();
     }
 
     size_t available() {
-        return _pool.size();
+        return _pool.available();
     };
+
+    size_t free() {
+        return _pool.available_for_push();
+    }
 };

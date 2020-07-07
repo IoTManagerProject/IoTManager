@@ -8,8 +8,8 @@
 #include "Devices.h"
 #include "MqttClient.h"
 #include "HttpServer.h"
-#include "Objects/I2CScanner.h"
-#include "Objects/DallasScanner.h"
+#include "Sensors/I2CScanner.h"
+#include "Sensors/OneWireScanner.h"
 #include "TickerScheduler/Metric.h"
 #include "Sensors.h"
 #include "Logger.h"
@@ -36,20 +36,27 @@ enum LoopItems {
 
 Metric m;
 boolean initialized = false;
+BusScanner* bus = NULL;
 
-boolean perform_updates_check_flag = false;
+bool perform_mqtt_restart_flag = false;
+void perform_mqtt_restart() {
+    pm.info("mqtt restart");
+    perform_mqtt_restart_flag = true;
+}
+
+bool perform_updates_check_flag = false;
 void perform_updates_check() {
     pm.info("updates check");
     perform_updates_check_flag = true;
 }
 
-boolean perform_upgrade_flag = false;
+bool perform_upgrade_flag = false;
 void perform_upgrade() {
     pm.info("upgrade");
     perform_upgrade_flag = true;
 }
 
-boolean broadcast_mqtt_settings_flag = false;
+bool broadcast_mqtt_settings_flag = false;
 void broadcast_mqtt_settings() {
     pm.info("broadcast mqtt");
     broadcast_mqtt_settings_flag = true;
@@ -58,18 +65,18 @@ void broadcast_mqtt_settings() {
 boolean perform_bus_scanning_flag = false;
 BusScanner_t perform_bus_scanning_bus;
 void perform_bus_scanning(BusScanner_t bus) {
-    pm.info("bus scan: " + bus);
+    pm.info("scan bus");
     perform_bus_scanning_flag = true;
     perform_bus_scanning_bus = bus;
 }
 
-boolean perform_system_restart_flag = false;
+bool perform_system_restart_flag = false;
 void perform_system_restart() {
     pm.info("system restart");
     perform_system_restart_flag = true;
 }
 
-boolean perform_logger_clear_flag = false;
+bool perform_logger_clear_flag = false;
 void perform_logger_clear() {
     pm.info("logger clear");
     perform_logger_clear_flag = true;
@@ -106,8 +113,8 @@ void loop() {
     }
 
     if (config.general()->isBroadcastEnabled()) {
-        Broadcast::loop();
         Messages::loop();
+        Broadcast::loop();
         m.add(LI_BROADCAST);
     }
 
@@ -161,24 +168,27 @@ void flag_actions() {
     }
 
     if (perform_bus_scanning_flag) {
-        BusScanner* bus;
-        switch (perform_bus_scanning_bus) {
-            case BS_I2C:
-                bus = new I2CScanner();
-                break;
-            case BS_ONE_WIRE:
-                bus = new DallasScanner();
-                break;
-            default:
-                pm.error("uknown bus: " + String(perform_bus_scanning_bus, DEC));
-                bus = nullptr;
+        if (bus == NULL) {
+            switch (perform_bus_scanning_bus) {
+                case BS_I2C:
+                    bus = new I2CScanner();
+                    break;
+                case BS_ONE_WIRE:
+                    bus = new OneWireScanner();
+                    break;
+                default:
+                    pm.error("uknown bus: " + String(perform_bus_scanning_bus, DEC));
+            }
         }
         if (bus) {
-            String buf;
-            bus->scan(buf);
-            runtime.write(bus->getTag(), buf);
+            if (bus->scan()) {
+                pm.info("scan done");
+                runtime.write(bus->tag(), bus->results());
+                perform_bus_scanning_flag = false;
+                delete bus;
+                bus = NULL;
+            }
         }
-        perform_bus_scanning_flag = false;
     }
 
     if (perform_logger_clear_flag) {

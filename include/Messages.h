@@ -6,6 +6,9 @@
 
 namespace Messages {
 void announce();
+
 void loop();
-void process(StringQueue* queue);
+
+void parseReceived(StringQueue* queue);
+
 }

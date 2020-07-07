@@ -52,9 +52,7 @@ extern String prex;
 extern String all_widgets;
 extern String order_loop;
 
-extern boolean perform_updates_check_flag;
-extern boolean perform_upgrade_flag;
-extern boolean perform_mqtt_restart_flag;
+void perform_mqtt_restart();
 
 extern void print_sys_memory();
 extern void print_sys_timins();

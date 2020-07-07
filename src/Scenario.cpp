@@ -162,8 +162,7 @@ void process(StringQueue* queue) {
     if (!queue->available()) {
         return;
     }
-    String event;
-    queue->pop(event);
+    String event = queue->pop();
     if (event.isEmpty()) {
         return;
     }

@@ -15,42 +15,53 @@ namespace Broadcast {
 static const uint16_t UDP_PORT{4210};
 static const IPAddress BROADCAST_IP{255, 255, 255, 255};
 
-StringQueue* _income_messages = new StringQueue();
-StringQueue* _outcome_messages = new StringQueue();
 AsyncUDP udp;
+StringQueue* _income = new StringQueue();
+StringQueue* _outcome = new StringQueue();
 
 void init() {
     if (!udp.listen(BROADCAST_IP, UDP_PORT)) {
         pm.error("unable to bind: " + String(UDP_PORT, DEC));
         return;
     }
+
     udp.onPacket([](AsyncUDPPacket packet) {
-        String data = (char*)packet.data();
-        IPAddress remoteIP = packet.remoteIP();
-        uint16_t remotePort = packet.remotePort();
-        pm.info("income " + prettyBytes(data.length()) + " from " + remoteIP.toString() + ":" + String(remotePort, DEC));
-        if (data.length()) {
-            _income_messages->push(data);
+        if (packet.length()) {
+            size_t size = packet.length();
+            char buf[size];
+            uint8_t* ptr = packet.data();
+            size_t i = 0;
+            while (i < size) {
+                buf[i++] = *(char*)ptr++;
+            }
+            buf[size] = '\x00';
+
+            IPAddress remoteIP = packet.remoteIP();
+            uint16_t remotePort = packet.remotePort();
+
+            pm.info("<= " + remoteIP.toString() + ":" + String(remotePort, DEC) + " " + prettyBytes(size));
+
+            _income->push(buf);
         }
     });
 }
 
 StringQueue* received() {
-    return _income_messages;
+    return _income;
 }
 
 void send(const String header, const String data) {
     String payload = header + ";" + data;
     pm.info(payload);
-    _outcome_messages->push(payload);
+    _outcome->push(payload);
 }
 
 void loop() {
-    if (!_outcome_messages->available()) {
+    if (!_outcome->available()) {
         return;
     }
-    String payload;
-    _outcome_messages->pop(payload);
+    String payload = _outcome->pop();
+
     if (payload.isEmpty()) {
         return;
     }

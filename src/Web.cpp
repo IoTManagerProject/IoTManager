@@ -36,7 +36,7 @@ void web_init() {
                 request->send(200);
                 return;
             }
-            if (request->hasArg("cleanlog")) {
+            if (request->hasArg("clear_log")) {
                 perform_logger_clear();
                 request->redirect(TAG_SET_UTILITIES);
                 return;
@@ -116,7 +116,7 @@ void web_init() {
     * Upgrade
     */
     server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest* request) {
-        perform_upgrade_flag = true;
+        perform_upgrade();
         request->send(200);
     });
 }

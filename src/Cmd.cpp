@@ -14,7 +14,7 @@
 #include "Objects/Buttons.h"
 #include "Objects/PwmItems.h"
 #include "Objects/ServoItems.h"
-#include "Objects/OneWireBus.h"
+#include "Sensors/OneWireBus.h"
 #include "Objects/Terminal.h"
 #include "Objects/Telnet.h"
 #include "Utils/PrintMessage.h"
@@ -109,11 +109,12 @@ void cmd_init() {
     sCmd.addCommand("get", cmd_get);
 
     sCmd.addCommand("reboot", cmd_reboot);
+
+    sCmd.addCommand("oneWire", cmd_oneWire);
 }
 
-unsigned long parsePeriod(const String &str) {
+unsigned long parsePeriod(const String &str, unsigned long default_multiplier = ONE_MINUTE_ms) {
     unsigned long res = 0;
-
     if (str.endsWith("ms")) {
         res = str.substring(0, str.indexOf("ms")).toInt();
     } else if (str.endsWith("s")) {
@@ -121,9 +122,9 @@ unsigned long parsePeriod(const String &str) {
     } else if (str.endsWith("m")) {
         res = str.substring(0, str.indexOf("m")).toInt() * ONE_MINUTE_ms;
     } else if (str.endsWith("h")) {
-        res = str.substring(0, str.indexOf("h")).toInt() * ONE_HOUR_s * ONE_SECOND_ms;
+        res = str.substring(0, str.indexOf("h")).toInt() * ONE_HOUR_ms;
     } else {
-        res = str.toInt() * ONE_MINUTE_ms;
+        res = str.toInt() * default_multiplier;
     }
     return res;
 }
@@ -132,14 +133,14 @@ unsigned long parsePeriod(const String &str) {
 void cmd_logging() {
     String name = sCmd.next();
     String period = sCmd.next();
-    String count = sCmd.next();
+    String limit = sCmd.next();
     String descr = sCmd.next();
     String page = sCmd.next();
     String order = sCmd.next();
 
-    Logger::add(name, parsePeriod(period), count.toInt());
+    Logger::add(name, parsePeriod(period), limit.toInt());
     // /prefix/3234045-1589487/value_name_ch
-    createChart(descr, page, order, "chart", name + "_ch", count);
+    createChart(descr, page, order, "chart", name + "_ch", limit);
 }
 
 void cmd_button() {
@@ -556,14 +557,6 @@ void cmd_mqtt() {
     MqttClient::publishOrder(topic, data);
 }
 
-void cmd_onewire() {
-    uint8_t pin = (uint8_t)String(sCmd.next()).toInt();
-    oneWireBus.set(pin);
-    if (!oneWireBus.exists()) {
-        pm.error("on create OneWire");
-    }
-}
-
 // ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
 void cmd_ultrasonicCm() {
     String measure_unit = sCmd.next();
@@ -589,16 +582,21 @@ void cmd_ultrasonicCm() {
     Sensors::enable(0);
 }
 
+void cmd_oneWire() {
+    uint8_t pin = atoi(sCmd.next());
+    onewire.attach(pin);
+}
+
 // dallas temp1 0x14 Температура Датчики anydata 1
 // dallas temp2 0x15 Температура Датчики anydata 2
 void cmd_dallas() {
-    if (!oneWireBus.exists()) {
-        pm.error("needs OneWire");
+    if (!onewire.attached()) {
+        pm.error("attach bus first");
         return;
     }
 
-    if (Dallas::dallasSensors.count() == 0) {
-        Dallas::dallasTemperature = new DallasTemperature(oneWireBus.get());
+    if (!Dallas::dallasTemperature) {
+        Dallas::dallasTemperature = new DallasTemperature(onewire.get());
         Dallas::dallasTemperature->begin();
         Dallas::dallasTemperature->setResolution(12);
     }
@@ -866,13 +864,13 @@ void cmd_http() {
     String host = sCmd.next();
     String param = sCmd.next();
     param.replace("_", "%20");
-
     String url = "http://" + host + "/cmd?command=" + param;
+
     WebClient::get(url);
 }
 
 void cmd_firmwareUpdate() {
-    perform_upgrade_flag = true;
+    perform_upgrade();
 }
 
 void cmd_firmwareVersion() {
@@ -941,8 +939,7 @@ void addOrder(const String &str) {
 
 void loop_cmd() {
     if (_orders.available()) {
-        String buf;
-        _orders.pop(buf);
+        String buf = _orders.pop();
         pm.info("execute: " + buf);
         sCmd.readStr(buf);
     }

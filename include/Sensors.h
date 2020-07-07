@@ -2,7 +2,7 @@
 
 #include "Global.h"
 
-#include "Objects/OneWireBus.h"
+#include "Sensors/OneWireBus.h"
 #include "Sensors/AnalogSensor.h"
 #include "Sensors/DallasSensor.h"
 #include "Sensors/DHTSensor.h"

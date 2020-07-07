@@ -21,11 +21,9 @@ void enable(size_t num, boolean value) {
 
 void process() {
     AnalogSensor::loop();
-
+    Dallas::loop();
     if (sensor_enabled[0])
         Ultrasonic::ultrasonic_reading();
-    if (sensor_enabled[3])
-        Dallas::dallas_reading();
     if (sensor_enabled[4])
         DHTSensor::dhtT_reading();
     if (sensor_enabled[5])
