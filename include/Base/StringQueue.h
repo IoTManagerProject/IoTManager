@@ -8,8 +8,8 @@ class StringQueue {
     circular_queue<String> _pool{32};
 
    public:
-    void push(const String item) {
-        _pool.push(item);
+    bool push(const String& item) {
+        return _pool.push(item);
     }
 
     String pop() {

@@ -14,7 +14,10 @@
       "type": "link",
       "title": "{{LS_main_page}}",
       "action": "/",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
+    },
+    {
+      "type": "hr"
     },
     {
       "type": "checkbox",
@@ -22,7 +25,7 @@
       "title": "{{LS_broadcast_enabled}}",
       "action": "/set?udponoff=[[udponoff]]",
       "state": "{{udponoff}}",
-      "design": "two"
+      "design": "three"
     },
     {
       "type": "h4",
@@ -54,19 +57,19 @@
       "type": "button",
       "title": "{{LS_save}}",
       "action": "/set?devname=[[devname-arg]]&udptime=[[udptime-arg]]",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "hr"
-      
     },
     {
-      "type": "h4",
+      "type": "h3",
       "title": "{{LS_known_devices}}"
     },
     {
       "type": "table",
       "state": "device.json",
+      "style": "margin:0% 10% 0% 10%;width:80%;text-align:center",
       "title": {
         "id": "{{LS_device_id}}",
         "name": "{{LS_device_name}}",
@@ -81,13 +84,13 @@
       "type": "link",
       "title": "{{LS_refresh}}",
       "action": "/?set.udp",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "button",
       "title": "{{LS_share_mqtt_settings}}",
       "action": "set?share_mqtt",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     }
   ]
 }

@@ -6,7 +6,7 @@
 
 namespace Broadcast {
 void send(const String header, const String data);
-void init();
+bool init();
 void loop();
 StringQueue* received();
 }  // namespace Broadcast

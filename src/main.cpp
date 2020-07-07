@@ -58,7 +58,6 @@ void perform_upgrade() {
 
 bool broadcast_mqtt_settings_flag = false;
 void broadcast_mqtt_settings() {
-    pm.info("broadcast mqtt");
     broadcast_mqtt_settings_flag = true;
 }
 
@@ -160,10 +159,11 @@ void flag_actions() {
         DynamicJsonBuffer jsonBuffer;
         JsonObject& root = jsonBuffer.createObject();
         config.mqtt()->save(root);
-        String data;
-        root.printTo(data);
-        pm.info(data);
-        Broadcast::send("iot_mqtt", data);
+
+        String buf;
+        root.printTo(buf);
+        Broadcast::send(HEADER_MQTT_SETTINGS, buf);
+
         broadcast_mqtt_settings_flag = false;
     }
 

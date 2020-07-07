@@ -6,8 +6,7 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
 .alert-dismissable .close,.alert-dismissible .close {position:relative;top:-5px;right:-25px;}
 .alert a{color:#fff;text-decoration:underline;}
 .alert a.btn {text-decoration:none;}
-.alert ul.dropdown-menu li a{color:#158cba;text-decoration:none;}
-display: block;}
+.alert ul.dropdown-menu li a{color:#158cba;text-decoration:none; display: block;}
 .dropdown-toggle:focus { outline: 0 none;}
 .dropdown-menu { background-clip: padding-box; background-color: #ffffff; border: 1px solid #e7e7e7; border-radius: 4px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176); display: none; float: left; font-size: 14px; left: 0; list-style: outside none none; margin: 2px 0 0; min-width: 160px; padding: 5px 0; position: absolute; text-align: left; top: 100%; z-index: 1000;}
 .dropdown-menu > li > a { clear: both; color: #999999; display: block; font-weight: normal; line-height: 1.42857; padding: 3px 20px; white-space: nowrap;}
@@ -18,17 +17,6 @@ display: block;}
 .caret { border-left: 4px solid transparent;border-right: 4px solid transparent;border-top: 4px dashed;display: inline-block;height: 0;margin-left: 2px;vertical-align: middle;width: 0;}
 .label-default {background-color:#999999;}.label-primary {background-color:#158cba;}.label-success {background-color:#28b62c;}.label-warning {background-color:#ff851b;}.label-danger {background-color:#ff4136;}.label-info {background-color:#75caeb;}
 .label {border-radius:0.25em;color:#ffffff;display:inline;font-size:75%;font-weight:bold;line-height:1;padding:0.2em 0.6em 0.3em;text-align:center;vertical-align:baseline;white-space:nowrap;}
-/*
-Web Developer: Renats Kevrels (ex. Zozula)
-Site: http://www.onclick.lv
-Contact: info [at] onclick.lv
-Skype: renat2985
-Twitter: @Ramzies
-Facebook: http://www.facebook.com/renat2985
-GitHub: https://github.com/renat2985
-From: Latvia, Valmiera
-*/
-
 body, html {
  background-color:#E9F0F0;
 }
@@ -233,16 +221,16 @@ ul#history {
 .layer{width:100%;background-color:#ebf7fc;transition:.3s ease all;z-index:1}
 .knobs:before{position:absolute;top:4px;left:4px;width:27px;height:27px;color:#fff;font-size:10px;font-weight:700;text-align:center;line-height:1;padding:9px 4px;background-color:#03A9F4;border-radius:50%}
 /* "design":"one" */
-.one .knobs:before{content:'ON';transition:.3s cubic-bezier(0.18,0.89,0.35,1.15) all}
-.one .checkbox:checked + .knobs:before{content:'OFF';left:42px;background-color:#f44336}
+.one .knobs:before{content:'Вкл';transition:.3s cubic-bezier(0.18,0.89,0.35,1.15) all}
+.one .checkbox:checked + .knobs:before{content:'Выкл';left:42px;background-color:#f44336}
 .one .checkbox:checked ~ .layer{background-color:#fcebeb}
 .one .knobs,.one .knobs:before,.one .layer{transition:.3s ease all}
 /* "design":"two" */
 .two{overflow:visible}
-.two .knobs:before{content:'YES'}
+.two .knobs:before{content:'Да'}
 .two .layer,.two .knobs,.two .knobs:before{transform:rotateZ(0);transition:.4s cubic-bezier(0.18,0.89,0.35,1.15) all}
 .two .checkbox:checked + .knobs{transform:rotateZ(-180deg)}
-.two .checkbox:checked + .knobs:before{content:'NO';background-color:#f44336;transform:rotateZ(180deg)}
+.two .checkbox:checked + .knobs:before{content:'Нет';background-color:#f44336;transform:rotateZ(180deg)}
 .two .checkbox:checked ~ .layer{background-color:#fcebeb;transform:rotateZ(180deg)}
 /* "design":"one big-size" */
 .big-size .knobs::before{width:56%;height:55%;font-size:15px;line-height:0.1;padding:28% 4px;}
@@ -307,3 +295,15 @@ ul#history {
 }
 
 .animated{animation-duration:.6s;animation-fill-mode:both}@keyframes tdFadeIn{0%{opacity:0}100%{opacity:1}}@keyframes tdFadeOut{0%{opacity:1}100%{opacity:0}}.tdFadeIn{animation-name:tdFadeIn}.tdFadeOut{animation-name:tdFadeOut}@keyframes tdFadeInDown{0%{opacity:0;transform:translateY(-10px);animation-timing-function:cubic-bezier(0,.59,.375,1)}100%{opacity:1;transform:translateY(0)}}@keyframes tdFadeInLeft{0%{opacity:0;transform:translateX(10px);animation-timing-function:cubic-bezier(0,.59,.375,1)}100%{opacity:1;transform:translateX(0)}}@keyframes tdFadeInUp{0%{opacity:0;transform:translateY(10px);animation-timing-function:cubic-bezier(0,.59,.375,1)}100%{opacity:1;transform:translateY(0)}}@keyframes tdFadeInRight{0%{opacity:0;transform:translateX(-10px);animation-timing-function:cubic-bezier(0,.59,.375,1)}100%{opacity:1;transform:translateX(0)}}@keyframes tdFadeOutUp{0%{opacity:1;transform:translateY(0);animation-timing-function:cubic-bezier(0,.59,.375,1)}100%{opacity:0;transform:translateY(-10px)}}@keyframes tdFadeOutRight{0%{opacity:1;transform:translateX(0);animation-timing-function:cubic-bezier(0,.59,.375,1)}100%{opacity:0;transform:translateX(10px)}}@keyframes tdFadeOutDown{0%{opacity:1;transform:translateY(0);animation-timing-function:cubic-bezier(0,.59,.375,1)}100%{opacity:0;transform:translateY(10px)}}@keyframes tdFadeOutLeft{0%{opacity:1;transform:translateX(0);animation-timing-function:cubic-bezier(0,.59,.375,1)}100%{opacity:0;transform:translateX(-10px)}}.tdFadeInDown{animation-name:tdFadeInDown}.tdFadeInLeft{animation-name:tdFadeInLeft}.tdFadeInUp{animation-name:tdFadeInUp}.tdFadeInRight{animation-name:tdFadeInRight}.tdFadeOutUp{animation-name:tdFadeOutUp}.tdFadeOutRight{animation-name:tdFadeOutRight}.tdFadeOutDown{animation-name:tdFadeOutDown}.tdFadeOutLeft{animation-name:tdFadeOutLeft}@keyframes tdExpandIn{0%{opacity:0;transform:scale(.85);animation-timing-function:cubic-bezier(0,.59,.375,1)}100%{opacity:1;transform:scale(1)}}.tdExpandIn{animation-name:tdExpandIn}
+
+/* "design":"three" */
+.three{overflow:visible}
+.three .knobs:before{content:'Да'}
+.three .layer,.two .knobs,.two .knobs:before{transform:rotateZ(0);transition:.4s cubic-bezier(0.18,0.89,0.35,1.15) all}
+.three .checkbox:checked + .knobs{transform:rotateZ(-180deg)}
+.three .checkbox:checked + .knobs:before{content:'Нет';background-color:#f44336;transform:rotateZ(180deg)}
+.three .checkbox:checked ~ .layer{background-color:#fcebeb;transform:rotateZ(180deg)}
+
+.btn.btn-block.btn-center {
+    margin:2% 20% 2%;width:60%
+}

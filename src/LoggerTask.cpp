@@ -38,10 +38,8 @@ void LoggerTask::update() {
                 flush();
                 _buf.clear();
             }
-            _buf.push_back(
-                new LogEntry(timeNow->getEpoch(), liveData.readInt(_name)));
-
-            pm.info(String(_buf.size(), DEC) + "/ " + String(_limit, DEC));
+            _buf.push_back(new LogEntry(timeNow->getEpoch(), liveData.readInt(_name)));
+            pm.info(String(_buf.size(), DEC) + " / " + String(_limit, DEC));
         }
         _lastExecute = millis();
     }

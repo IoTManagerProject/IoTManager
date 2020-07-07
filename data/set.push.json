@@ -14,7 +14,7 @@
       "type": "link",
       "title": "{{LS_main_page}}",
       "action": "/",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "hr"
@@ -35,17 +35,7 @@
       "type": "button",
       "title": "{{LS_save}}",
       "action": "set?pushingboxid=[[push-arg]]",
-      "class": "btn btn-block btn-default",
-      "style": "width:100%;display:inline"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "link",
-      "title": "{{LS_restart_device}}",
-      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
-      "class": "btn btn-block btn-danger"
+      "class": "btn btn-block btn-center"
     }
   ]
 }

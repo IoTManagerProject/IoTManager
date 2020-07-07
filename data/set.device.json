@@ -14,13 +14,13 @@
       "type": "link",
       "title": "{{LS_main_page}}",
       "action": "/",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "link",
       "title": "{{LS_configuration_help}}",
       "action": "https://github.com/IoTManagerProject/IoTManager/wiki/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "h3",
@@ -62,11 +62,7 @@
       "style": "width:100%;height:250px",
       "title": "{{LS_save}}",
       "action": "/set?devinit",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "h3",
-      "title": "Сценарий"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "checkbox",
@@ -74,7 +70,7 @@
       "title": "Включить сценарии",
       "action": "/set?scen=[[scen]]",
       "state": "{{scen}}",
-      "design": "two"
+      "design": "three"
     },
     {
       "type": "file",
@@ -82,7 +78,7 @@
       "style": "width:100%;height:250px",
       "title": "{{LS_save}}",
       "action": "/set?sceninit",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     }
   ]
 }

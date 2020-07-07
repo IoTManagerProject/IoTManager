@@ -32,49 +32,49 @@
       "title": "{{LS_time_uptime}}: {{uptime}}"
     },
     {
+      "type": "link",
+      "title": "{{LS_restart_device}}",
+      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
+      "class": "btn btn-danger"
+    },
+    {
       "type": "hr"
     },
     {
       "type": "link",
       "title": "Конфигурация",
       "action": "/?set.device",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "link",
       "title": "Устройства в сети",
       "action": "/?set.udp",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "link",
       "title": "Настройка WiFi",
       "action": "/?set.wifi",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "link",
       "title": "Настройка MQTT",
       "action": "/?set.mqtt",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "link",
       "title": "Настройка Push",
       "action": "/?set.push",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "link",
       "title": "Утилиты",
       "action": "/?set.utilities",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "link",
-      "title": "{{LS_restart_device}}",
-      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
-      "class": "btn btn-block btn-danger"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "h4",

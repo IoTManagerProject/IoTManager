@@ -14,7 +14,7 @@
       "type": "link",
       "title": "{{LS_main_page}}",
       "action": "/",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "h4",
@@ -88,22 +88,15 @@
     {
       "type": "button",
       "title": "{{LS_save}}",
-      "style": "width:100%;float:left;",
       "action": "set?mqttServer=[[mqttServer-arg]]&mqttPort=[[mqttPort-arg]]&mqttPrefix=[[mqttPrefix-arg]]&mqttUser=[[mqttUser-arg]]&mqttPass=[[mqttPass-arg]]",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "hr"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "button",
       "title": "{{LS_check_mqtt_settings}}",
       "action": "set?check_mqtt",
-      "class": "btn btn-block btn-default",
+      "class": "btn btn-block btn-center",
       "response": "[[my-block]]"
-    },
-    {
-      "type": "hr"
     }
   ]
 }

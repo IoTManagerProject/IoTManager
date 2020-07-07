@@ -14,7 +14,7 @@
       "type": "link",
       "title": "{{LS_main_page}}",
       "action": "/",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "hr"
@@ -26,30 +26,33 @@
     {
       "type": "h4",
       "title": "{{LS_SSID}}",
-      "style": "width:30%;float:left;"
+      "style": "width:40%;float:left;"
     },
     {
       "type": "input",
       "title": "",
       "name": "routerssid-arg",
+      "style": "width:60%;float:right;",
       "state": "{{routerssid}}",
       "pattern": ".{1,31}"
     },
     {
       "type": "h4",
-      "title": "{{LS_password}}"
+      "title": "{{LS_password}}",
+      "style": "width:40%;float:left;"
     },
     {
       "type": "password",
       "title": "",
       "name": "routerpass-arg",
+      "style": "width:60%;float:right;",
       "state": "{{routerpass}}",
       "pattern": ".{8,31}"
     },
     {
       "type": "button",
       "title": "{{LS_save}}",
-      "class": "btn btn-block btn-default",
+      "class": "btn btn-block btn-center",
       "action": "set?routerssid=[[routerssid-arg]]&routerpass=[[routerpass-arg]]"
     },
     {
@@ -72,7 +75,7 @@
       "type": "button",
       "title": "{{LS_save}}",
       "action": "set?hostname=[[hostname-arg]]",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "hr"
@@ -121,7 +124,7 @@
       "type": "button",
       "title": "{{LS_save}}",
       "action": "set?apssid=[[apssid-arg]]&appass=[[appass-arg]]",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "hr"
@@ -156,7 +159,7 @@
       "type": "button",
       "title": "{{LS_save}}",
       "action": "set?weblogin=[[weblogin-arg]]&webpass=[[webpass-arg]]",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "hr"
@@ -190,7 +193,7 @@
       "type": "button",
       "title": "{{LS_save}}",
       "action": "set?timezone=[[timezone-arg]]&ntp=[[ntp-arg]]",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "hr"
@@ -215,7 +218,7 @@
       "type": "button",
       "title": "{{LS_save}}",
       "action": "set?updateurl=[[updateurl-arg]]",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "hr"
