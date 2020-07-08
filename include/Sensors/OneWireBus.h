@@ -10,14 +10,14 @@ class OneWireAddress {
         memcpy(&_addr[0], addr_ptr, sizeof(_addr[0]) * 8);
     }
 
-    uint8_t at(uint8_t index) {
+    uint8_t at(size_t index) {
         return _addr[index];
     }
 
     const String asString() {
-        String res;
-        for (uint8_t i = 0; i < 8; i++) {
-            res += _addr[i] < 16 ? "0" : "" + String(_addr[i], HEX);
+        String res = "";
+        for (size_t i = 0; i < 8; i++) {
+            res += (_addr[i] < 16 ? "0" : "") + String(_addr[i], HEX);
         }
         return res;
     }
