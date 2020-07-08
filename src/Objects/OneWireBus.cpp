@@ -1,7 +1,5 @@
 #include "Sensors/OneWireBus.h"
 
-#include "Sensors/DallasSensor.h"
-
 OneWireBus onewire;
 
 const String getFamily(uint8_t family) {
@@ -12,15 +10,16 @@ const String getFamily(uint8_t family) {
             break;
         case 0x28:
             res = F("DS18B20");
+            break;
         case 0x22:
-            break;
             res = F("DS1822");
+            break;
         case 0x3B:
-            break;
             res = F("DS1825");
-        case 0x42:
             break;
+        case 0x42:
             res = F("DS28EA00");
+            break;
         default:
             res = F("-");
     }
