@@ -70,6 +70,14 @@ uint16_t hexStringToUint16(String hex) {
     }
 }
 
+uint8_t decodeHex(char c) {
+    if (c < 'A') {
+        return uint8_t(c - '0');
+    }
+    c = char(c & ~0x20);
+    return uint8_t(c - 'A' + 10);
+}
+
 size_t itemsCount(String str, const String &separator) {
     // если строки поиск нет сразу выход
     if (str.indexOf(separator) == -1) {

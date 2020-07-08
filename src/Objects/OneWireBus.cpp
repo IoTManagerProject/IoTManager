@@ -26,10 +26,6 @@ const String getFamily(uint8_t family) {
     return res;
 };
 
-const String getFamily(OneWireAddress addr) {
-    return getFamily(addr.at(0));
-}
-
 OneWireBus::OneWireBus() : _pin{0}, _bus{nullptr} {};
 
 OneWireBus::~OneWireBus() {
@@ -58,7 +54,7 @@ const String OneWireBus::asJson() {
         res += item->getAddUrl();
         res += "\"";
         res += ",\"family\":\"";
-        res += getFamily(item->getAddress());
+        res += getFamily(item->getAddress().at(0));
         res += "\"";
         res += i < _items.size() - 1 ? "}," : "}";
     }

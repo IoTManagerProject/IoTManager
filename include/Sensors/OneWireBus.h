@@ -17,7 +17,10 @@ class OneWireAddress {
     const String asString() {
         String res = "";
         for (size_t i = 0; i < 8; i++) {
-            res += (_addr[i] < 16 ? "0" : "") + String(_addr[i], HEX);
+            if (_addr[i] < 0x10) {
+                res += '0';
+            }
+            res += String(_addr[i], HEX);
         }
         return res;
     }
@@ -65,8 +68,6 @@ class OneBusItem {
 };
 
 const String getFamily(uint8_t family);
-
-const String getFamily(OneWireAddress addr);
 
 class OneWireBus {
    public:
