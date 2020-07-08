@@ -77,8 +77,12 @@
       "class": "btn btn-block btn-center"
     },
     {
+      "type": "hr"
+    },
+    {
       "type": "h4",
-      "title": "{{LS_firmware}}: {{firmware_version}}"
+      "title": "{{firmware_version}}",
+      "style": "float:right"
     }
   ]
 }

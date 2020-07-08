@@ -61,9 +61,6 @@ void web_init() {
             }
             if (request->hasArg(TAG_ONE_WIRE)) {
                 perform_bus_scanning(BS_ONE_WIRE);
-                if (request->hasParam(TAG_ONE_WIRE_PIN)) {
-                    runtime.write(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value().c_str());
-                }
                 request->redirect(TAG_SET_UTILITIES);
                 return;
             }
@@ -83,7 +80,7 @@ void web_init() {
 
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         String msg = "";
-        String lastVersion = Updater::check();
+        String lastVersion = runtime.read("last_version");
         // Errors
         if (!FLASH_4MB) {
             msg = F("Обновление \"по воздуху\" не поддерживается!");
