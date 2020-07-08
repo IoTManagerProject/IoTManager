@@ -43,8 +43,8 @@
       "style": "margin:0% 10% 0% 10%;width:80%;text-align:center",
       "title": {
         "num": "{{LS_num}}",
-        "addr": "{{LS_address}}",
-        "url": "{{LS_family}}"
+        "url": "{{LS_address}}",
+        "family": "{{LS_family}}"
       }
     },
     {

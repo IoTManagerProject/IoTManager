@@ -1,0 +1,136 @@
+{
+ "json-header-json":[
+  {
+   "type":"select",
+   "state":"{{lang}}",
+   "name":"languages",
+   "action":"/lang?set=[[languages]]",
+   "response":"page.htm?{{urlArray0}}",
+   "style":"margin-top:-47px;float:right;width:70px",
+   "title":{"ru":"RU","en":"EN","lv":"LV","ua":"UA"}
+  },
+  {
+   "type":"link",
+   "title":"{{LangDevices}}",
+   "action":"/",
+   "class":"btn btn-danger",
+   "style":"width:80%;"
+  },
+  {
+   "type":"link",
+   "title":"<i class=\"dashboard-img\"></i>",
+   "action":"/page.htm?scenary",
+   "class":"btn btn-info",
+   "style":"width:10%;"
+  },
+  {
+   "type":"link",
+   "class":"btn btn-default dropdown-toggle",
+   "action":"/page.htm?timer",
+   "title":"<i class=\"clock-img\"></i>",
+   "style":"width:10%;"
+  },
+  {
+   "type":"link",
+   "title":"br",
+   "class":"btn btn-block",
+   "style":"display:none"
+  },
+  {
+   "type":"link",
+   "title":"<i class=\"set-img\"></i>{{LangOptions1}} RGB SHIM",
+   "module":"rgbs",
+   "action":"/page.htm?rgbs",
+   "class":"btn btn-block btn-default",
+   "style":"('{{urlArray0}}'=='rgbs'?'display:none':'')"
+  },
+  {
+   "type":"link",
+   "title":"<i class=\"set-img\"></i>{{LangOptions1}} RGB",
+   "module":"rgb",
+   "action":"/page.htm?rgb",
+   "class":"btn btn-block btn-default",
+   "style":"('{{urlArray0}}'=='rgb'?'display:none':'')"
+  },
+  {
+   "type":"link",
+   "title":"<i class=\"set-img\"></i>{{LangOptions1}} Relay",
+   "module":"relay",
+   "action":"/page.htm?relay",
+   "class":"btn btn-block btn-default",
+   "style":"('{{urlArray0}}'=='relay'?'display:none':'')"
+  },
+  {
+   "type":"link",
+   "title":"<i class=\"set-img\"></i>{{LangOptions1}} Jalousie",
+   "module":"jalousie",
+   "action":"/page.htm?jalousie",
+   "class":"btn btn-block btn-default",
+   "style":"('{{urlArray0}}'=='jalousie'?'display:none':'')"
+  },
+  {
+   "type":"link",
+   "title":"<i class=\"set-img\"></i>{{LangOptions1}} Livolo",
+   "module":"rfLivolo",
+   "action":"/page.htm?livolo",
+   "class":"btn btn-block btn-default",
+   "style":"('{{urlArray0}}'=='livolo'?'display:none':'')"
+  },
+  {
+   "type":"link",
+   "title":"<i class=\"opt-img\"></i> {{LangSetting3}}",
+   "action":"/page.htm?setup",
+   "class":"btn btn-block btn-default",
+   "style":"('{{urlArray0}}'=='setup'?'display:none':'')"
+  },
+
+  {
+   "type":"link",
+   "module":"admin",
+   "title":"Ctrl+M",
+   "style":"width:20%;",
+   "action":"javascript:toggle('edit-content'); toggle('url-content');",
+   "class":"btn btn-sm btn-primary"
+  },
+  {
+   "type":"link",
+   "module":"admin",
+   "title":"File manager",
+   "action":"/edit",
+   "class":"btn btn-sm btn-primary",
+   "style":"width:20%;"
+  },
+  {
+   "type":"link",
+   "module":"admin",
+   "title":"Debug",
+   "action":"/page.htm?debug",
+   "class":"btn btn-sm btn-primary",
+   "style":"width:20%;"
+  },
+  {
+   "type":"link",
+   "module":"admin",
+   "title":"{{LangReset1}}",
+   "style":"width:40%;",
+   "action":"javascript:if(confirm(renameBlock(jsonResponse,'{{LangReset3}}'))){send_request(this,'/restart?device=ok');toggle('restart-esp');timeout('toggle(\\'restart-esp\\')',20000);}",
+   "class":"btn btn-sm btn-warning"
+  },
+  {
+   "type":"hr"
+  },
+  {
+   "type":"text",
+   "name":"restart-esp",
+   "title":"<div class=\"loader\"></div><h3>{{LangReset1}}</h3>",
+   "style":"position:fixed;top:30%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+   "class":"pop-up hidden"
+  },
+  {
+   "type":"link",
+   "class":"btn btn-default top",
+   "action":"#",
+   "title":"TOP"
+  }
+ ]
+}

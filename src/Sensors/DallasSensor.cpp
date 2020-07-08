@@ -15,41 +15,28 @@ int enter_to_dallas_counter = 0;
 
 DallasSensors::DallasSensors(){};
 
-DallasSensor_t *DallasSensors::create(uint8_t *address, String name) {
+DallasSensor *DallasSensors::add(String name, OneBusItem item) {
     for (size_t i = 0; i < _items.size(); i++) {
         auto item = _items.at(i);
-        if (item.address == address) {
-            item.name = name;
+        if (name.equals(item.name())) {
             return &_items.at(i);
         }
     }
-    // Добавляем новый
-    DallasSensor_t newItem{address, name};
-    _items.push_back(newItem);
-    return get(address);
+    _items.push_back(DallasSensor(name.c_str(), item.getAddress()));
+    return get(name);
 }
 
-DallasSensor_t *DallasSensors::get(String name) {
+DallasSensor *DallasSensors::get(String name) {
     for (size_t i = 0; i < _items.size(); i++) {
         auto item = _items.at(i);
-        if (item.name == name) {
+        if (name.equals(item.name())) {
             return &_items.at(i);
         }
     }
-    return nullptr;
+    return NULL;
 }
 
-DallasSensor_t *DallasSensors::get(uint8_t *address) {
-    for (size_t i = 0; i < _items.size(); i++) {
-        auto item = _items.at(i);
-        if (item.address == address) {
-            return &_items.at(i);
-        }
-    }
-    return nullptr;
-}
-
-DallasSensor_t *DallasSensors::at(size_t index) {
+DallasSensor *DallasSensors::at(size_t index) {
     return &_items.at(index);
 }
 
@@ -75,4 +62,4 @@ void loop() {
         Serial.println("[I] sensor '" + buf + "' send date " + String(temp));
     }
 }
-}
+}  // namespace Dallas

@@ -2,28 +2,42 @@
 
 #include <Arduino.h>
 
-#include "DallasTemperature.h"
+#include <DallasTemperature.h>
+
+#include "OneWireBus.h"
+
 namespace Dallas {
-struct DallasSensor_t {
-    uint8_t address[8];
-    String name;
-    DallasSensor_t(uint8_t* address, String name) {
-        memcpy(&address, address, sizeof(&address[0]) * 8);
-        this->name = name;
+class DallasSensor {
+   public:
+    DallasSensor(const char* name, OneWireAddress addr) : _addr{addr} {
+        strncpy(_name, name, sizeof(_name));
     }
+
+    const char* name() {
+        return _name;
+    }
+
+    OneWireAddress* addr() {
+        return &_addr;
+    }
+
+   private:
+    OneWireAddress _addr;
+    char _name[16];
 };
+
 
 class DallasSensors {
    public:
     DallasSensors();
-    DallasSensor_t* create(uint8_t* address, String name);
-    DallasSensor_t* at(size_t index);
-    DallasSensor_t* get(uint8_t* address);
-    DallasSensor_t* get(String name);
+    DallasSensor* add(String name, OneBusItem item);
+    DallasSensor* at(size_t index);
+    DallasSensor* get(uint8_t* address);
+    DallasSensor* get(String name);
     size_t count();
 
    private:
-    std::vector<DallasSensor_t> _items;
+    std::vector<DallasSensor> _items;
 };
 
 void loop();
@@ -33,4 +47,4 @@ extern DallasSensors dallasSensors;
 extern String dallas_value_name;
 extern int enter_to_dallas_counter;
 
-}
+}  // namespace Dallas

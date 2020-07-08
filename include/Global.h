@@ -97,6 +97,7 @@ extern void device_init();
 extern void cmd_init();
 extern void init_mod();
 
+extern void configAdd(const String&);
 extern void save_runtime();
 extern void save_config();
 extern void setPreset(size_t num);

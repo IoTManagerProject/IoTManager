@@ -20,6 +20,15 @@ void web_init() {
     });
 
     server.on(
+        "/config", HTTP_GET, [](AsyncWebServerRequest* request) {
+            if (request->hasArg("add")) {
+                configAdd(request->getParam("add")->value());
+                request->redirect("/?set.device");
+                return;
+            }
+        });
+
+    server.on(
         "/set", HTTP_GET, [](AsyncWebServerRequest* request) {
             if (request->hasArg("preset")) {
                 setPreset(request->getParam("preset")->value().toInt());

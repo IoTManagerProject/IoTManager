@@ -41,6 +41,10 @@ void config_init() {
     prex = config.mqtt()->getPrefix() + "/" + getChipId();
 }
 
+void configAdd(const String& str) {
+    addFile(DEVICE_COMMAND_FILE, str);
+}
+
 void setPreset(size_t num) {
     copyFile(getConfigFile(num, CT_CONFIG), DEVICE_COMMAND_FILE);
     copyFile(getConfigFile(num, CT_SCENARIO), DEVICE_SCENARIO_FILE);
