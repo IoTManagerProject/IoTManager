@@ -18,6 +18,10 @@ OneWireAddress* DallasSensor::addr() {
 }
 
 bool DallasSensor::update() {
+    if (!isConnected()) {
+        return false;
+    }
+
     switch (_state) {
         case DALLAS_IDLE:
             if (requestTemperature()) {
@@ -29,9 +33,9 @@ bool DallasSensor::update() {
         case DALLAS_CONVERSATION:
             if (millis_since(_requestConversationTime) >= getWaitTimeForConversion()) {
                 if (isConversionComplete()) {
-                    _state = DALLAS_IDLE;
                     _value = getTempC();
                     _hasValue = true;
+                    _state = DALLAS_IDLE;
                 }
             };
             break;

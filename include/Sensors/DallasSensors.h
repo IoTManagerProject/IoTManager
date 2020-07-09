@@ -23,7 +23,6 @@ class DallasSensors {
     std::vector<DallasSensor> _items;
 };
 
-extern DallasTemperature* dallasTemperature;
 extern DallasSensors dallasSensors;
 
 }  // namespace Dallas
