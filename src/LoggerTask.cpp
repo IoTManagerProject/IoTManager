@@ -49,8 +49,8 @@ void LoggerTask::publish() {
 }
 
 void LoggerTask::postFile() {
-    // pm.info("task: " + _name);
-    // String value = liveData.read(_name);
+    pm.info("task: " + _name);
+    String value = liveData.read(_name);
     // String buf;
     // if (readFile(_filename, buf, 5120)) {
     //     size_t lines_cnt = itemsCount(buf, "\r\n");

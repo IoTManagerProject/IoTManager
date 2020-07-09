@@ -112,10 +112,16 @@ void web_init() {
                 msg += F("<a href =\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет установка, по ее заверщению страница автоматически перезагрузится...')\">Установить</a>");
             }
         }
-        String payload = "{}";
-        jsonWriteStr(payload, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + msg);
-        jsonWriteStr(payload, "class", "pop-up");
-        request->send(200, "text/html", payload);
+        String payload = F("<button class=\"close\" onclick=\"toggle('my-block')\">");
+        payload += msg;
+        payload += "</button>";
+        DynamicJsonBuffer buf;
+        JsonObject& root = buf.createObject();
+        root["title"] = payload.c_str();
+        root["class"] = "pop-up";
+        String json;
+        root.printTo(json);
+        request->send(200, "text/html", json);
     });
 
     /* 

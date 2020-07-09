@@ -15,11 +15,10 @@ bool OneWireScanner::onInit() {
 }
 
 bool OneWireScanner::onScan() {
-    uint8_t addr[8];
-    if (!onewire.get()->search(addr)) {
+    if (!onewire.get()->search(_addr)) {
         onewire.get()->reset_search();
         return true;
     }
-    onewire.addItem(addr);
+    onewire.addItem(_addr);
     return false;
 }

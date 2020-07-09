@@ -10,4 +10,7 @@ class OneWireScanner : public BusScanner {
    protected:
     bool onInit() override;
     boolean onScan() override;
+
+   private:
+    uint8_t _addr[8];
 };

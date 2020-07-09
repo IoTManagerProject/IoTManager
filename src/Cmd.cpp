@@ -9,12 +9,13 @@
 #include "Sensors.h"
 #include "Scenario.h"
 #include "Sensors/AnalogSensor.h"
+#include "Sensors/DallasSensors.h"
+#include "Sensors/OneWireBus.h"
 #include "Timers.h"
 #include "Objects/Switches.h"
 #include "Objects/Buttons.h"
 #include "Objects/PwmItems.h"
 #include "Objects/ServoItems.h"
-#include "Sensors/OneWireBus.h"
 #include "Objects/Terminal.h"
 #include "Objects/Telnet.h"
 #include "Utils/PrintMessage.h"
@@ -595,27 +596,16 @@ void cmd_dallas() {
         return;
     }
 
-    if (!Dallas::dallasTemperature) {
-        Dallas::dallasTemperature = new DallasTemperature(onewire.get());
-        Dallas::dallasTemperature->begin();
-        Dallas::dallasTemperature->setResolution(12);
-    }
-
-    String value = sCmd.next();
-
-    // uint8_t *address = String(sCmd.next()).toInt();
-
-    // dallasSensors.create(address, value);
-
+    String name = sCmd.next();
+    String address = sCmd.next();
     String widget = sCmd.next();
     String page = sCmd.next();
     String type = sCmd.next();
-    String pageNumber = sCmd.next();
+    String order = sCmd.next();
 
-    // jsonWriteStr(configOptionJson, value + "_ds", String(address, DEC));
-
-    Dallas::dallas_value_name += value + ";";
-    createWidget(widget, page, pageNumber, type, value);
+    // uint8_t *address = String(sCmd.next()).toInt();
+    Dallas::dallasSensors.add(name, address);
+    createWidget(widget, page, order, type, name);
 
     Sensors::enable(3);
 }

@@ -88,7 +88,7 @@
       "title": "{{last_version}}"
     },
     {
-      "type": "link",
+      "type": "button",
       "title": "{{LS_update_firmware}}",
       "action": "/check",
       "response": "[[my-block]]",

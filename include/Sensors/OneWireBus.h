@@ -4,8 +4,17 @@
 
 #include <OneWire.h>
 
+#include "Utils\StringUtils.h"
+
 class OneWireAddress {
    public:
+    OneWireAddress(String addr) {
+        for (size_t i = 0; i < 8; i++) {
+            String b = addr.substring(i * 2, (i * 2) + 2);
+            _addr[i] = decodeHex(b[0]) * 16 + decodeHex(b[1]);
+        }
+    }
+
     OneWireAddress(uint8_t* addr_ptr) {
         memcpy(&_addr[0], addr_ptr, sizeof(_addr[0]) * 8);
     }
@@ -14,6 +23,10 @@ class OneWireAddress {
         return _addr[index];
     }
 
+    const uint8_t* get() {
+        return &_addr[0];
+    }
+    
     const String asString() {
         String res = "";
         for (size_t i = 0; i < 8; i++) {
