@@ -20,15 +20,15 @@ struct DeviceItem {
 
    public:
     DeviceItem(const char* id, const char* name, const char* ip) {
-        strlcpy(_id, id, sizeof(_id));
-        strlcpy(_name, name, sizeof(_name));
-        strlcpy(_ip, ip, sizeof(_ip));
+        strcpy(_id, id);
+        strcpy(_name, name);
+        strcpy(_ip, ip);
         _timestamp = millis();
     }
 
     void update(const char* name, const char* ip) {
-        strlcpy(_name, name, sizeof(_name));
-        strlcpy(_ip, ip, sizeof(_ip));
+        strcpy(_name, name);
+        strcpy(_ip, ip);
         _timestamp = millis();
     }
 
