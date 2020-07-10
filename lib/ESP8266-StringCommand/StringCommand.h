@@ -25,11 +25,11 @@
 #define StringCommand_h
 
 #if defined(WIRING) && WIRING >= 100
-  #include <Wiring.h>
+#include <Wiring.h>
 #elif defined(ARDUINO) && ARDUINO >= 100
-  #include <Arduino.h>
+#include <Arduino.h>
 #else
-  #include <WProgram.h>
+#include <WProgram.h>
 #endif
 #include <string.h>
 
@@ -41,35 +41,35 @@
 // Uncomment the next line to run the library in debug mode (verbose messages)
 //#define SERIALCOMMAND_DEBUG
 
-
 class StringCommand {
-  public:
-    StringCommand();      // Constructor
-    void addCommand(const char *command, void(*function)());  // Add a command to the processing dictionary.
-    void setDefaultHandler(void (*function)(const char *));   // A handler to call when no valid command received.
+   public:
+    StringCommand();                                           // Constructor
+    void addCommand(const char *command, void (*function)());  // Add a command to the processing dictionary.
+    void setDefaultHandler(void (*function)(const char *));    // A handler to call when no valid command received.
 
-    void readStr(String sBuffer );    // Main entry point.
-    void clearBuffer();   // Clears the input buffer.
-    char *next();         // Returns pointer to next token found in command buffer (for getting arguments to commands).
+    void readStr(String sBuffer);  // Main entry point.
+    void clearBuffer();            // Clears the input buffer.
+    char *next();                  // Returns pointer to next token found in command buffer (for getting arguments to commands).
+    int nextInt();
 
-  private:
+   private:
     // Command/handler dictionary
     struct StringCommandCallback {
-      char command[SERIALCOMMAND_MAXCOMMANDLENGTH + 1];
-      void (*function)();
-    };                                    // Data structure to hold Command/Handler function key-value pairs
-    StringCommandCallback *commandList;   // Actual definition for command/handler array
+        char command[SERIALCOMMAND_MAXCOMMANDLENGTH + 1];
+        void (*function)();
+    };                                   // Data structure to hold Command/Handler function key-value pairs
+    StringCommandCallback *commandList;  // Actual definition for command/handler array
     byte commandCount;
 
     // Pointer to the default handler function
     void (*defaultHandler)(const char *);
 
-    char delim[2]; // null-terminated list of character to be used as delimeters for tokenizing (default " ")
-    char term;     // Character that signals end of command (default '\n')
+    char delim[2];  // null-terminated list of character to be used as delimeters for tokenizing (default " ")
+    char term;      // Character that signals end of command (default '\n')
 
-    char buffer[SERIALCOMMAND_BUFFER + 1]; // Buffer of stored characters while waiting for terminator character
-    byte bufPos;                        // Current position in the buffer
-    char *last;                         // State variable used by strtok_r during processing
+    char buffer[SERIALCOMMAND_BUFFER + 1];  // Buffer of stored characters while waiting for terminator character
+    byte bufPos;                            // Current position in the buffer
+    char *last;                             // State variable used by strtok_r during processing
 };
 
-#endif //StringCommand_h
+#endif  //StringCommand_h
