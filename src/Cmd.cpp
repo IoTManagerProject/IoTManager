@@ -137,7 +137,7 @@ void cmd_logging() {
     String limit = sCmd.next();
     String descr = sCmd.next();
     String page = sCmd.next();
-    String order = sCmd.next();
+    int order = sCmd.nextInt();
 
     Logger::add(name, parsePeriod(period), limit.toInt());
     // /prefix/3234045-1589487/value_name_ch
@@ -150,7 +150,7 @@ void cmd_button() {
     String descr = sCmd.next();
     String page = sCmd.next();
     String state = sCmd.next();
-    String order = sCmd.next();
+    int order = sCmd.nextInt();
     String inverted = sCmd.next();
 
     myButtons.add(name, assign, state, inverted);
@@ -185,7 +185,7 @@ void cmd_buttonSet() {
     String state = sCmd.next();
 
     ButtonItem *btn = myButtons.get(name);
-    String assign = btn->assigned();
+    String assign = btn->getAssign();
 
     if (isDigitStr(assign)) {
         btn->setState(state.toInt());
@@ -243,7 +243,7 @@ void cmd_pwm() {
 
     String page = sCmd.next();
     String value = sCmd.next();
-    String order = sCmd.next();
+    int order = sCmd.nextInt();
 
     String style = sCmd.next();
 
@@ -296,10 +296,10 @@ void cmd_inputDigit() {
     String page_name = sCmd.next();
     page_name.replace("#", " ");
     String start_state = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
 
     liveData.write("digit" + number, start_state);
-    createWidget(widget_name, page_name, page_number, "inputNum", "digit" + number);
+    createWidget(widget_name, page_name, order, "inputNum", "digit" + number);
 }
 
 void cmd_digitSet() {
@@ -320,10 +320,10 @@ void cmd_inputTime() {
     String page_name = sCmd.next();
     page_name.replace("#", " ");
     String start_state = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
 
     liveData.write("time" + number, start_state);
-    createWidget(widget_name, page_name, page_number, "inputTime", "time" + number);
+    createWidget(widget_name, page_name, order, "inputTime", "time" + number);
 }
 
 void cmd_timeSet() {
@@ -338,9 +338,9 @@ void cmd_text() {
     String number = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
 
-    createWidget(widget_name, page_name, page_number, "anydata", "text" + number);
+    createWidget(widget_name, page_name, order, "anydata", "text" + number);
 }
 
 void cmd_textSet() {
@@ -432,7 +432,7 @@ void cmd_servo() {
     String min_deg = sCmd.next();
     String max_deg = sCmd.next();
 
-    String order = sCmd.next();
+    int order = sCmd.nextInt();
 
     myServo.add(name, pin, value, min_value, max_value, min_deg, max_deg);
 
@@ -569,7 +569,7 @@ void cmd_ultrasonicCm() {
     String type = sCmd.next();
     String empty_level = sCmd.next();
     String full_level = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
 
     Ultrasonic::ultrasonicCm_value_name = measure_unit;
 
@@ -578,7 +578,7 @@ void cmd_ultrasonicCm() {
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
 
-    createWidget(widget, page, page_number, type, measure_unit);
+    createWidget(widget, page, order, type, measure_unit);
 
     Sensors::enable(0);
 }
@@ -601,7 +601,7 @@ void cmd_dallas() {
     String widget = sCmd.next();
     String page = sCmd.next();
     String type = sCmd.next();
-    String order = sCmd.next();
+    int order = sCmd.nextInt();
 
     // uint8_t *address = String(sCmd.next()).toInt();
     Dallas::dallasSensors.add(name, address);
@@ -620,7 +620,7 @@ void cmd_levelPr() {
     String type = sCmd.next();
     String empty_level = sCmd.next();
     String full_level = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
 
     Ultrasonic::levelPr_value_name = value_name;
 
@@ -630,7 +630,7 @@ void cmd_levelPr() {
     options.write("echo", echo);
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
-    createWidget(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, order, type, value_name);
 
     Sensors::enable(0);
 }
@@ -643,7 +643,7 @@ void cmd_dhtH() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
     DHTSensor::dhtH_value_name = value_name;
     if (sensor_type == "dht11") {
         DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT11);
@@ -651,7 +651,7 @@ void cmd_dhtH() {
     if (sensor_type == "dht22") {
         DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT22);
     }
-    createWidget(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, order, type, value_name);
 
     Sensors::enable(5);
 }
@@ -664,7 +664,7 @@ void cmd_dhtT() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
     DHTSensor::dhtT_value_name = value_name;
     if (sensor_type == "dht11") {
         DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT11);
@@ -673,7 +673,7 @@ void cmd_dhtT() {
         DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT22);
     }
 
-    createWidget(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, order, type, value_name);
 
     Sensors::enable(4);
 }
@@ -682,9 +682,9 @@ void cmd_dhtT() {
 void cmd_dhtDewpoint() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
 
-    createWidget(widget_name, page_name, page_number, "anydata", "dhtDewpoint");
+    createWidget(widget_name, page_name, order, "anydata", "dhtDewpoint");
 
     Sensors::enable(8);
 }
@@ -693,9 +693,9 @@ void cmd_dhtDewpoint() {
 void cmd_dhtPerception() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
 
-    createWidget(widget_name, page_name, page_number, "any-data", "dhtPerception");
+    createWidget(widget_name, page_name, order, "any-data", "dhtPerception");
 
     Sensors::enable(6);
 }
@@ -704,9 +704,9 @@ void cmd_dhtPerception() {
 void cmd_dhtComfort() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
 
-    createWidget(widget_name, page_name, page_number, "anydata", "dhtComfort");
+    createWidget(widget_name, page_name, order, "anydata", "dhtComfort");
 
     Sensors::enable(7);
 }
@@ -719,19 +719,14 @@ void cmd_analog() {
     String page = sCmd.next();
     String type = sCmd.next();
 
-    String analog_start = sCmd.next();
-    String analog_end = sCmd.next();
-    String analog_start_out = sCmd.next();
-    String analog_end_out = sCmd.next();
+    int in_min = sCmd.nextInt();
+    int in_max = sCmd.nextInt();
+    int out_min = sCmd.nextInt();
+    int out_max = sCmd.nextInt();
 
-    String order = sCmd.next();
+    int order = sCmd.nextInt();
 
-    // options.write(name + "_st", analog_start);
-    // options.write(name + "_end", analog_end);
-    // options.write(name + "_st_out", analog_start_out);
-    // options.write(name + "_end_out", analog_end_out);
-
-    AnalogSensor::add(name, pin, analog_start, analog_end, analog_start_out, analog_end_out);
+    analogSensor.add(name, pin)->setMap(in_min, in_max, out_min, out_max);
 
     createWidget(descr, page, order, type, name);
 }
@@ -743,7 +738,7 @@ void cmd_bmp280T() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
     BMP280Sensor::bmp280T_value_name = value_name;
 
     BMP280Sensor::bmp.begin(hexStringToUint8(address));
@@ -753,7 +748,7 @@ void cmd_bmp280T() {
                                   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
                                   Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
 
-    createWidget(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, order, type, value_name);
 
     Sensors::enable(9);
 }
@@ -765,7 +760,7 @@ void cmd_bmp280P() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
     BMP280Sensor::bmp280P_value_name = value_name;
 
     BMP280Sensor::bmp.begin(hexStringToUint8(address));
@@ -775,7 +770,7 @@ void cmd_bmp280P() {
                                   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
                                   Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
 
-    createWidget(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, order, type, value_name);
 
     Sensors::enable(10);
 }
@@ -789,12 +784,12 @@ void cmd_bme280T() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
     BME280Sensor::bme280T_value_name = value_name;
 
     BME280Sensor::bme.begin(hexStringToUint8(address));
 
-    createWidget(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, order, type, value_name);
 
     Sensors::enable(11);
 }
@@ -806,12 +801,12 @@ void cmd_bme280P() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
     BME280Sensor::bme280P_value_name = value_name;
 
     BME280Sensor::bme.begin(hexStringToUint8(address));
 
-    createWidget(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, order, type, value_name);
 
     Sensors::enable(12);
 }
@@ -823,12 +818,12 @@ void cmd_bme280H() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
     BME280Sensor::bme280H_value_name = value_name;
 
     BME280Sensor::bme.begin(hexStringToUint8(address));
 
-    createWidget(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, order, type, value_name);
 
     Sensors::enable(13);
 }
@@ -840,12 +835,12 @@ void cmd_bme280A() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    String page_number = sCmd.next();
+    int order = sCmd.nextInt();
     BME280Sensor::bme280A_value_name = value_name;
 
     BME280Sensor::bme.begin(hexStringToUint8(address));
 
-    createWidget(widget_name, page_name, page_number, type, value_name);
+    createWidget(widget_name, page_name, order, type, value_name);
 
     Sensors::enable(14);
 }
@@ -866,10 +861,10 @@ void cmd_firmwareUpdate() {
 void cmd_firmwareVersion() {
     String widget = sCmd.next();
     String page = sCmd.next();
-    String pageNumber = sCmd.next();
+    int order = sCmd.nextInt();
 
     liveData.write("firmver", FIRMWARE_VERSION);
-    createWidget(widget, page, pageNumber, "anydata", "firmver");
+    createWidget(widget, page, order, "anydata", "firmver");
 }
 
 void cmd_reboot() {

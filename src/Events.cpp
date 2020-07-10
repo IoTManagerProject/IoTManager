@@ -15,6 +15,10 @@ void fire(String name, String param) {
     fire(name + param);
 }
 
+void fire(Named* obj) {
+    fire(obj->getName());
+}
+
 void fire(const String& name) {
     if (config.general()->isScenarioEnabled()) {
         _events.push(name);

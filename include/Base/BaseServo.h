@@ -9,24 +9,29 @@
 #endif
 
 #include "Base/Item.h"
-#include "Base/ValueMapper.h"
+#include "Base/ValueMap.h"
 
 class BaseServo : public Item {
    public:
-    BaseServo(const String& name, const String& pin, const String& value, ValueMapper* mapper) : Item{name, pin, value},
-                                                                                                 _mapper{mapper} {
+    BaseServo(const String& name, const String& pin, const String& value, Mapper* map) : Item{name, pin, value},
+                                                                                         _mapper{map} {
         _obj = new Servo();
-        _obj->attach(getPin());
-        _obj->write(_mapper->getValue(_state));
+        _obj->write(_mapper->evaluate(_state));
         Serial.println("new name: " + String(_name) + ", state: " + String(_state, DEC));
     };
 
+    void onAssign(const char* value) {
+        _pin = atoi(value);
+        _obj->attach(_pin);
+    }
+
     void onStateChange() override {
-        Serial.println("change state name: " + String(_name) + ", state: " + String(_state, DEC) + "mapped: " + String(_mapper->getValue(_state), DEC));
-        _obj->write(_mapper->getValue(_state));
+        Serial.println("change state name: " + String(_name) + ", state: " + String(_state, DEC) + "mapped: " + String(_mapper->evaluate(_state), DEC));
+        _obj->write(_mapper->evaluate(_state));
     }
 
    private:
-    ValueMapper* _mapper;
+    uint8_t _pin;
+    Mapper* _mapper;
     Servo* _obj;
 };

@@ -6,11 +6,14 @@
 
 #include "Base/Item.h"
 
-class Switch : public Item {
+class Switch : public Item, public PinAssigned {
    public:
-    Switch(const String& name, uint8_t pin, uint16_t debounce) : Item{name, String(pin, DEC), String(0, DEC)}, _obj{nullptr} {
+    Switch(const String& name, const String& assign, uint16_t debounce) : Item{name, assign, String(0, DEC)}, PinAssigned(assign) {
         _obj = new Bounce();
         _obj->interval(debounce);
+    }
+
+    void onPinAssign() override {
         _obj->attach(getPin(), INPUT);
         _state = _obj->read();
     }

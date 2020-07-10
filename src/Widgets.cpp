@@ -10,7 +10,7 @@ const String getWidgetFile(const String& name);
 void addWidget(const String& widget);
 bool loadWidget(const String& filename, String& buf);
 
-void createWidget(String descr, String page, String order, String filename, String topic,
+void createWidget(String descr, String page, int order, String filename, String topic,
                   String name1, String param1, String name2, String param2, String name3, String param3) {
     String buf = "";
     if (!loadWidget(filename, buf)) {
@@ -20,7 +20,7 @@ void createWidget(String descr, String page, String order, String filename, Stri
     descr.replace("#", " ");
 
     jsonWriteStr(buf, "page", page);
-    jsonWriteStr(buf, "order", order);
+    jsonWriteInt(buf, "order", order);
     jsonWriteStr(buf, "descr", descr);
     jsonWriteStr(buf, "topic", prex + "/" + topic);
 
@@ -31,7 +31,7 @@ void createWidget(String descr, String page, String order, String filename, Stri
     addWidget(buf);
 }
 
-void createChart(String widget, String page, String pageNumber, String filename, String topic,
+void createChart(String widget, String page, int order, String filename, String topic,
                  String maxCount) {
     String buf = "";
     if (!loadWidget(filename, buf)) {
@@ -42,7 +42,7 @@ void createChart(String widget, String page, String pageNumber, String filename,
     page.replace("#", " ");
 
     jsonWriteStr(buf, "page", page);
-    jsonWriteStr(buf, "order", pageNumber);
+    jsonWriteInt(buf, "order", order);
     jsonWriteStr(buf, "series", widget);
     jsonWriteStr(buf, "maxCount", maxCount);
     jsonWriteStr(buf, "topic", prex + "/" + topic);

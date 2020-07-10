@@ -4,12 +4,14 @@
 
 class Value {
    public:
-    Value(long value) : _value{value} {};
+    Value(){};
 
-    long value() {
-        return _value;
+    virtual int read() {
+        return onRead();
     }
 
+    virtual int onRead();
+
    protected:
-    long _value;
+    int _value;
 };

@@ -5,18 +5,23 @@
 
 #include "Base/Item.h"
 
-class ButtonItem : public Item {
+class ButtonItem : public Item,
+                   public Assigned {
    public:
-    ButtonItem(const String& name, const String& pin, const String& value) : Item{name, pin, value} {
-        pinMode(getPin(), OUTPUT);
-    }
+    ButtonItem(const String& name, const String& assign, const String& value) : Item{name, assign, value},
+                                                                                Assigned(assign.c_str()){};
 };
 
-class Button : public ButtonItem {
+class Button : public ButtonItem, public PinAssigned {
    public:
-    Button(const String& name, const String& assign, const String& value, const String& inverted) : ButtonItem{name, assign, value} {
+    Button(const String& name, const String& assign, const String& value, const String& inverted) : ButtonItem{name, assign, value},
+                                                                                                    PinAssigned(assign.c_str()) {
         _inverted = inverted.toInt();
     };
+
+    void onPinAssign() override {
+        pinMode(getPin(), OUTPUT);
+    }
 
     void onStateChange() override {
         digitalWrite(getPin(), _inverted ? _state : !_state);

@@ -4,18 +4,36 @@
 
 class Assigned {
    public:
-    Assigned(const char* assigned) {
-        strlcpy(_assigned, assigned, sizeof(_assigned));
+    Assigned(const String& assign) {
+        strlcpy(_assign, assign.c_str(), sizeof(_assign));
+        onAssign();
     }
 
-    const char* assigned() {
-        return _assigned;
+    virtual void onAssign() {}
+
+    const char* getAssign() {
+        return _assign;
     }
 
-    uint8_t getPin() const {
-        return String(_assigned).toInt();
+   protected:
+    char _assign[8];
+};
+
+class PinAssigned : public Assigned {
+   public:
+    PinAssigned(const String& assign) : Assigned(assign){};
+
+    void onAssign() override {
+        _pin = atoi(_assign);
+        onPinAssign();
+    };
+
+    virtual void onPinAssign() {}
+
+    uint8_t getPin() {
+        return _pin;
     }
 
-   private:
-    char _assigned[8];
+   protected:
+    uint8_t _pin;
 };

@@ -18,8 +18,7 @@ Switch* Switches::add(const String& name, const String& assign, const String& va
     }
 
     uint16_t debounce = value.toInt();
-    uint8_t pin = assign.toInt();
-    _items.push_back(Switch{name, pin, debounce});
+    _items.push_back(Switch{name, assign, debounce});
     return last();
 }
 

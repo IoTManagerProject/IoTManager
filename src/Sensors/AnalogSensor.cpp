@@ -2,28 +2,26 @@
 
 #include "MqttClient.h"
 #include "Events.h"
-#include "Objects/AnalogSensorItem.h"
-
 #include "Utils/PrintMessage.h"
 
 static const char* MODULE = "AnalogSensor";
 
-namespace AnalogSensor {
+AnalogSensors analogSensor;
 
-std::vector<AnalogSensorItem> _items;
+AnalogSensorItem* AnalogSensors::add(const String& name, const String& pin) {
+    pm.info("name: " + name + ", pin: " + pin);
+    _items.push_back(AnalogSensorItem(name, pin));
+    return last();
+}
 
-void loop() {
-    for (size_t i = 0; i < _items.size(); i++) {
-        AnalogSensorItem* item = &_items.at(i);
-        int value = item->read();
-        MqttClient::publishStatus(item->getName(), String(value));
-        Events::fire(item->getName());
+void AnalogSensors::update() {
+    for (auto item : _items) {
+        int value = item.read();
+        MqttClient::publishStatus(item.getName(), String(value));
+        Events::fire(&item);
     }
 }
 
-void add(const String& name, const String& pin, const String& min_value, const String& max_value, const String& min_deg, const String& max_deg) {
-    _items.push_back(AnalogSensorItem(name, pin, new ValueMapper(min_value.toInt(), max_value.toInt(), min_deg.toInt(), max_deg.toInt())));
-    pm.info("name: " + name + ", pin: " + pin);
+AnalogSensorItem* AnalogSensors::last() {
+    return &_items.at(_items.size() - 1);
 }
-
-}  // namespace AnalogSensor

@@ -11,14 +11,16 @@
 
 #include "Base/Item.h"
 
-class Pwm : public Item {
+class Pwm : public Item, public PinAssigned {
    public:
-    Pwm(const String& name, const String& assigned, const String& value) : Item{name, assigned, value} {
-        pinMode(getPin(), OUTPUT);
-    };
+    Pwm(const String& name, const String& assign, const String& value) : Item{name, assign, value}, PinAssigned(assign){};
+
+    void onPinAssigned(uint8_t pin) {
+        pinMode(pin, OUTPUT);
+    }
 
     void onStateChange() override {
-        analogWrite(getPin(), getState());
+        analogWrite(_pin, getState());
     };
 };
 

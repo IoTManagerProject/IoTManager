@@ -20,7 +20,7 @@ void enable(size_t num, boolean value) {
 }
 
 void process() {
-    AnalogSensor::loop();
+    analogSensor.update();
 
     Dallas::dallasSensors.loop();
 
