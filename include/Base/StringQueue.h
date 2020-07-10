@@ -8,11 +8,11 @@ class StringQueue {
     circular_queue<String> _pool{32};
 
    public:
-    bool push(const String& item) {
+    bool push(const String item) {
         return _pool.push(item);
     }
 
-    String pop() {
+    const String pop() {
         return _pool.pop();
     }
 

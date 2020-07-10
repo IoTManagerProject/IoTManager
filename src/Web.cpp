@@ -4,8 +4,8 @@
 
 static const char* MODULE = "Web";
 
-static const char* TAG_SET_UTILITIES = "/?set.utilities";
-
+static const char* PAGE_UTILITIES = "/?set.utilities";
+static const char* PAGE_SETUP = "/?set.device";
 void web_init() {
     // dnsServer.start(53, "*", WiFi.softAPIP());
     // server.addHandler(new CaptiveRequestHandler(jsonReadStr(configSetupJson, "name").c_str())).setFilter(ON_AP_FILTER);
@@ -23,7 +23,7 @@ void web_init() {
         "/config", HTTP_GET, [](AsyncWebServerRequest* request) {
             if (request->hasArg("add")) {
                 configAdd(request->getParam("add")->value());
-                request->redirect("/?set.device");
+                request->redirect(PAGE_SETUP);
                 return;
             }
         });
@@ -32,7 +32,7 @@ void web_init() {
         "/set", HTTP_GET, [](AsyncWebServerRequest* request) {
             if (request->hasArg("preset")) {
                 setPreset(request->getParam("preset")->value().toInt());
-                request->redirect("/?set.device");
+                request->redirect(PAGE_SETUP);
                 return;
             }
             if (request->hasArg("devinit")) {
@@ -47,30 +47,32 @@ void web_init() {
             }
             if (request->hasArg("clear_log")) {
                 perform_logger_clear();
-                request->redirect(TAG_SET_UTILITIES);
+                request->redirect(PAGE_UTILITIES);
                 return;
             }
-            if (request->hasArg("check_mqtt")) {
-                String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
-                String payload = "{}";
-                jsonWriteStr(payload, "title", buf);
-                jsonWriteStr(payload, "class", "pop-up");
-                request->send(200, "text/html", payload);
+            if (request->hasArg(TAG_CHECK_MQTT)) {
+                DynamicJsonBuffer json;
+                JsonObject& root = json.createObject();
+                root["title"] = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
+                root["class"] = "pop-up";
+                String buf;
+                root.printTo(buf);
+                request->send(200, "text/html", buf);
                 return;
             }
-            if (request->hasArg("share_mqtt")) {
+            if (request->hasArg(TAG_SHARE_MQTT)) {
                 broadcast_mqtt_settings();
                 request->send(200);
                 return;
             }
             if (request->hasArg(TAG_I2C)) {
                 perform_bus_scanning(BS_I2C);
-                request->redirect(TAG_SET_UTILITIES);
+                request->redirect(PAGE_UTILITIES);
                 return;
             }
             if (request->hasArg(TAG_ONE_WIRE)) {
                 perform_bus_scanning(BS_ONE_WIRE);
-                request->redirect(TAG_SET_UTILITIES);
+                request->redirect(PAGE_UTILITIES);
                 return;
             }
 
@@ -89,39 +91,34 @@ void web_init() {
 
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         String msg = "";
-        String lastVersion = runtime.read("last_version");
+        String lastVersion = runtime.read(TAG_LAST_VERSION);
         // Errors
         if (!FLASH_4MB) {
             msg = F("Обновление \"по воздуху\" не поддерживается!");
         } else if (!NetworkManager::isNetworkActive()) {
             msg = F("Устройство не подключено к роутеру!");
-        } else if (lastVersion == "error") {
-            msg = F("Cервер не найден. Попробуйте повторить позже...");
         } else if (lastVersion == "notsupported") {
             msg = F("Обновление возможно только через usb!");
-        } else if (lastVersion.isEmpty()) {
+        } else if (lastVersion == "error" || lastVersion.isEmpty()) {
             perform_updates_check();
             msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
         } else {
             // TODO Версия должна быть выше
             if (lastVersion == FIRMWARE_VERSION) {
-                msg = F("Актуальная версия прошивки уже установлена.");
+                msg = "Версия прошивки актуальна.";
             } else if (lastVersion != FIRMWARE_VERSION) {
-                msg = F("Доступно обновление");
+                msg = "Обновление: ";
                 msg += lastVersion;
                 msg += F("<a href =\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет установка, по ее заверщению страница автоматически перезагрузится...')\">Установить</a>");
             }
         }
-        String payload = F("<button class=\"close\" onclick=\"toggle('my-block')\">");
-        payload += msg;
-        payload += "</button>";
-        DynamicJsonBuffer buf;
-        JsonObject& root = buf.createObject();
-        root["title"] = payload.c_str();
+        DynamicJsonBuffer json;
+        JsonObject& root = json.createObject();
+        root["title"] = "<button class=\"close\" onclick=\"toggle('my-block')\">" + msg + "</button>";
         root["class"] = "pop-up";
-        String json;
-        root.printTo(json);
-        request->send(200, "text/html", json);
+        String buf;
+        root.printTo(buf);
+        request->send(200, "text/html", buf);
     });
 
     /* 

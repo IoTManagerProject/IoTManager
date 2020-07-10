@@ -69,7 +69,7 @@ void subscribe() {
 
 boolean connect() {
     bool res = false;
-    pm.info("connecting to " + _addr + ":" + String(_port, DEC));
+    pm.info("connecting " + _addr + ":" + String(_port, DEC));
     mqtt.setServer(_addr.c_str(), _port);
     res = mqtt.connect(_uuid.c_str(), _user.c_str(), _pass.c_str());
     if (res) {
@@ -95,7 +95,7 @@ const String parseControl(const String& str) {
 }
 
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
-    pm.info("incoming: " + String(topic));
+    pm.info("<= " + String(topic));
     String topicStr = String(topic);
     String payloadStr = "";
     payloadStr.reserve(length + 1);
@@ -103,7 +103,6 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         payloadStr += (char)payload[i];
     }
     if (payloadStr.equalsIgnoreCase("hello")) {
-        pm.info(String("hello"));
         publishWidgets();
         publishState();
         Logger::publish();
@@ -133,11 +132,14 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
 }
 
 boolean publish(const String& topic, const String& data) {
+    if (!mqtt.connected()) {
+        return false;
+    }
     if (mqtt.beginPublish(topic.c_str(), data.length(), false)) {
         mqtt.print(data);
         return mqtt.endPublish();
     }
-    pm.error("on publish topic: " + topic + ", data: " + data);
+    pm.error("on publish " + topic + " " + data);
     return false;
 }
 

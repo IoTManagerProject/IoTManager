@@ -50,7 +50,6 @@ void Clock::startSync() {
         pm.info("ntp: " + _cfg->getNtp() + " timezone: " + String(_cfg->getTimezone()));
         setupSntp();
         _configured = true;
-        // лучше не ждать, проверим в следующий раз
         return;
     }
     _hasSynced = hasSynced();
@@ -81,6 +80,7 @@ time_t Clock::getSystemTime() const {
 const unsigned long Clock::getEpoch() {
     return _unixtime;
 }
+
 const String Clock::getTimeUnix() {
     return String(_unixtime);
 }

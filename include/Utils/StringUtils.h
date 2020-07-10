@@ -26,6 +26,6 @@ const char *getErrorLevelStr(uint8_t level);
 
 const String prettyBytes(size_t size);
 
-String getValue(const String &data, char separator, size_t index);
+const String getValue(const String &data, const char separator, const int index);
 
 uint8_t decodeHex(char c);

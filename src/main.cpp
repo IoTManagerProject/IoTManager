@@ -1,5 +1,6 @@
 #include "Global.h"
 
+#include "Consts.h"
 #include "Scenario.h"
 #include "NetworkManager.h"
 #include "Events.h"
@@ -40,19 +41,16 @@ BusScanner* bus = NULL;
 
 bool perform_mqtt_restart_flag = false;
 void perform_mqtt_restart() {
-    pm.info("mqtt restart");
     perform_mqtt_restart_flag = true;
 }
 
 bool perform_updates_check_flag = false;
 void perform_updates_check() {
-    pm.info("updates check");
     perform_updates_check_flag = true;
 }
 
 bool perform_upgrade_flag = false;
 void perform_upgrade() {
-    pm.info("upgrade");
     perform_upgrade_flag = true;
 }
 
@@ -64,20 +62,17 @@ void broadcast_mqtt_settings() {
 boolean perform_bus_scanning_flag = false;
 BusScanner_t perform_bus_scanning_bus;
 void perform_bus_scanning(BusScanner_t bus) {
-    pm.info("scan bus");
     perform_bus_scanning_flag = true;
     perform_bus_scanning_bus = bus;
 }
 
 bool perform_system_restart_flag = false;
 void perform_system_restart() {
-    pm.info("system restart");
     perform_system_restart_flag = true;
 }
 
 bool perform_logger_clear_flag = false;
 void perform_logger_clear() {
-    pm.info("logger clear");
     perform_logger_clear_flag = true;
 }
 
@@ -91,8 +86,7 @@ void loop() {
     m.add(LI_CLOCK);
 
     ArduinoOTA.handle();
-
-    ws.cleanupClients();
+    // ws.cleanupClients();
 
     flag_actions();
     m.add(LT_FLAG_ACTION);
@@ -135,8 +129,7 @@ void flag_actions() {
     }
 
     if (perform_updates_check_flag) {
-        String res = Updater::check();
-        runtime.write("last_version", res);
+        runtime.write(TAG_LAST_VERSION, Updater::check());
         perform_updates_check_flag = false;
     }
 
@@ -145,12 +138,9 @@ void flag_actions() {
         bool res = Updater::upgrade_fs_image();
         if (res) {
             config_restore();
-            res = Updater::upgrade_firmware();
-            if (res) {
+            if (Updater::upgrade_firmware()) {
                 pm.info("done! restart...");
             }
-        } else {
-            pm.error("upgrade image");
         }
         perform_upgrade_flag = false;
     }
@@ -162,7 +152,8 @@ void flag_actions() {
 
         String buf;
         root.printTo(buf);
-        Broadcast::send(HEADER_MQTT_SETTINGS, buf);
+
+        Messages::post(BM_MQTT_SETTINGS, buf);
 
         broadcast_mqtt_settings_flag = false;
     }
@@ -244,7 +235,6 @@ void setLedStatus(LedStatus_t status) {
 #endif
 
 void clock_init() {
-    pm.info("init");
     timeNow = new Clock();
     timeNow->setConfig(config.clock());
 

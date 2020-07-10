@@ -9,6 +9,6 @@ void init();
 bool isNetworkActive();
 void startSTAMode();
 bool startAPMode();
-bool scanWiFi(String ssid);
+void startScaninng();
 IPAddress getHostIP();
 }

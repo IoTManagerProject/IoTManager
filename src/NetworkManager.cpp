@@ -32,6 +32,7 @@ void init() {
 }
 
 void startSTAMode() {
+    ts.remove(WIFI_SCAN);
     setLedStatus(LED_SLOW);
     String ssid, passwd;
     config.network()->getSSID(WIFI_STA, ssid);
@@ -52,7 +53,7 @@ void startSTAMode() {
     int connRes;
     do {
 #ifdef ESP8266
-        connRes = WiFi.waitForConnectResult(1000);
+        connRes = WiFi.waitForConnectResult(200);
 #else
         connRes = WiFi.waitForConnectResult();
 #endif
@@ -81,7 +82,7 @@ void startSTAMode() {
         }
     } while (keepConnecting && tries--);
 
-    if (isNetworkActive() && config.mqtt()->validate()) {
+    if (isNetworkActive()) {
         ts.add(
             MQTT_CONNECTION, MQTT_RECONNECT_INTERVAL, [&](void*) {
                 if (isNetworkActive()) {
@@ -92,6 +93,7 @@ void startSTAMode() {
                         }
                     } else {
                         setLedStatus(LED_FAST);
+                        if (!config.mqtt()->validate()) return;
                         if (MqttClient::connect()) {
                             setLedStatus(LED_OFF);
                         }
@@ -107,7 +109,7 @@ void startSTAMode() {
                     startAPMode();
                 }
             },
-            nullptr, true);
+            nullptr, false);
 
         setLedStatus(LED_OFF);
     } else {
@@ -131,46 +133,34 @@ bool startAPMode() {
     runtime.write("ip", hostIpStr.c_str());
 
     ts.add(
-        WIFI_SCAN, 10 * 1000,
+        WIFI_SCAN, 10 * ONE_SECOND_ms,
         [&](void*) {
-            String sta_ssid;
-            config.network()->getSSID(WIFI_STA, sta_ssid);
-            pm.info("scan for " + sta_ssid);
-            if (scanWiFi(sta_ssid)) {
-                ts.remove(WIFI_SCAN);
-                startSTAMode();
+            if (WiFi.scanComplete()) {
+                startScaninng();
             }
         },
         nullptr, true);
-
     return true;
 }
 
-boolean scanWiFi(String ssid) {
-    bool res = false;
-    int8_t n = WiFi.scanComplete();
-    if (n == -2) {
-        // не было запущено, запускаем
-        pm.info(String("start scanning"));
-        // async, show_hidden
-        WiFi.scanNetworks(true, false);
-    } else if (n == -1) {
-        // все еще выполняется
-        pm.info(String("scanning in progress"));
-    } else if (n == 0) {
-        // не найдена ни одна сеть
-        pm.info(String("no networks found"));
-        WiFi.scanNetworks(true, false);
-    } else if (n > 0) {
-        pm.info("networks found: " + String(n, DEC));
+void startScaninng() {
+    WiFi.scanNetworksAsync([](int n) {
+        if (!n) {
+            pm.info(String("no networks found"));
+        }
+        String ssid;
+        config.network()->getSSID(WIFI_STA, ssid);
+        pm.info("found: " + String(n, DEC));
+        bool res = false;
         for (int8_t i = 0; i < n; i++) {
-            if (WiFi.SSID(i) == ssid) {
+            if (ssid == WiFi.SSID(i)) {
                 res = true;
             }
             pm.info((res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
         }
-    }
-    return res;
+        if (res) startSTAMode();
+    },
+                           true);
 }
 
 boolean isNetworkActive() {

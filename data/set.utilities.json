@@ -22,7 +22,7 @@
     },
     {
       "type": "h3",
-      "title": "{{LS_i2c_scanner}} {{i2c}}"
+      "title": "{{LS_i2c}} {{i2c}}"
     },
     {
       "type": "link",
@@ -35,7 +35,7 @@
     },
     {
       "type": "h3",
-      "title": "{{LS_onewire_scanner}} {{oneWire}}"
+      "title": "{{LS_onewire}} {{oneWire}}"
     },
     {
       "type": "table",

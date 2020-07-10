@@ -56,7 +56,7 @@ void saveToFile(const String filename) {
     file.close();
 }
 
-void add(const char* id, const char* name, const char* ip) {
+void add(const String& id, const String& name, const String& ip) {
     DeviceItem* item = _list->get(id);
     if (item) {
         item->update(name, ip);

@@ -24,8 +24,17 @@ void announce_task() {
     ts.add(
         ANNOUNCE, random(0.9 * config.general()->getBroadcastInterval() * ONE_SECOND_ms, config.general()->getBroadcastInterval()), [&](void*) {
             if (config.general()->isBroadcastEnabled()) {
-                Messages::announce();
-            } },
+                String data;
+                data += getChipId();
+                data += ";";
+                data += config.general()->getBroadcastName();
+                data += ";";
+                data += NetworkManager::getHostIP().toString();
+                data += ";";
+
+                Messages::post(BM_ANNOUNCE, data);
+            }
+        },
         nullptr, false);
 }
 
@@ -62,11 +71,11 @@ void init_mod() {
     ts.add(
         SYS_TIMINGS, ONE_MINUTE_ms, [&](void*) { print_sys_timins(); }, nullptr, false);
 
+    device_init();
+
     if (NetworkManager::isNetworkActive()) {
         perform_updates_check();
     };
-
-    device_init();
 }
 
 void telemetry_init() {

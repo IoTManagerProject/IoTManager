@@ -51,8 +51,11 @@ bool upgrade_fs_image() {
     httpUpdate.rebootOnUpdate(false);
     HTTPUpdateResult ret = httpUpdate.updateSpiffs(wifiClient, buildUpdateUrl(TAG_FS_IMAGE));
 #endif
+    if (ret != HTTP_UPDATE_OK) {
+        pm.error(TAG_FS_IMAGE);
+    }
     return ret == HTTP_UPDATE_OK;
-}
+}  // namespace Updater
 
 bool upgrade_firmware() {
     pm.info(TAG_FIRMWARE_BIN);
@@ -62,6 +65,9 @@ bool upgrade_firmware() {
 #else
     HTTPUpdateResult ret = httpUpdate.update(wifiClient, buildUpdateUrl(TAG_FIRMWARE_BIN));
 #endif
+    if (ret != HTTP_UPDATE_OK) {
+        pm.error(TAG_FIRMWARE_BIN);
+    }
     return (ret == HTTP_UPDATE_OK);
 }
 

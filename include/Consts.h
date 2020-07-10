@@ -1,4 +1,10 @@
 #pragma once
+
+/* 
+* Optional
+*/
+//#define LAYOUT_IN_RAM
+
 /*
 * Main consts
 */
@@ -8,44 +14,6 @@
 #define MQTT_RECONNECT_INTERVAL 20000
 // 1000 * 60 * 60 * 2
 #define TELEMETRY_UPDATE_INTERVAL 0
-
-#define DEFAULT_PRESET 100
-#define DEFAULT_SCENARIO 100
-
-#define TAG_ONE_WIRE "oneWire"
-#define TAG_I2C "i2c"
-#define TAG_ONE_WIRE_PIN "oneWirePin"
-
-/* 
-* Optional
-*/
-//#define OTA_UPDATES_ENABLED
-//#define WEBSOCKET_ENABLED
-//#define LAYOUT_IN_RAM
-
-/* 
-* Sensor 
-*/
-
-#define LEVEL_ENABLED
-#define ANALOG_ENABLED
-#define DALLAS_ENABLED
-#define DHT_ENABLED
-#define BMP_ENABLED
-#define BME_ENABLED
-
-/* 
-* Gears 
-*/
-#define STEPPER_ENABLED
-#define SERVO_ENABLED
-
-/* 
-* Other
-*/
-#define LOGGING_ENABLED
-#define SERIAL_ENABLED
-#define PUSH_ENABLED
 
 enum SchedulerTask { WIFI_SCAN,
                      MQTT_CONNECTION,
@@ -93,6 +61,12 @@ enum BusScanner_t {
     BS_ONE_WIRE
 };
 
+enum BroadcastMessage_t {
+    BM_ANNOUNCE,
+    BM_MQTT_SETTINGS,
+    NUM_BROADCAST_MESSAGES
+};
+
 extern const char* DEVICE_LAYOUT_FILE;
 extern const char* DEVICE_RUNTIME_FILE;
 extern const char* DEVICE_CONFIG_FILE;
@@ -100,9 +74,15 @@ extern const char* DEVICE_COMMAND_FILE;
 extern const char* DEVICE_SCENARIO_FILE;
 extern const char* KNOWN_DEVICE_FILE;
 
-extern const char* HEADER_ANNOUNCE;
-extern const char* HEADER_MQTT_SETTINGS;
-
 extern const char* TAG_INIT;
 extern const char* TAG_OPTIONS;
 extern const char* TAG_RUNTIME;
+extern const char* TAG_LAST_VERSION;
+
+#define TAG_ONE_WIRE "oneWire"
+#define TAG_I2C "i2c"
+#define TAG_SHARE_MQTT "share_mqtt"
+#define TAG_CHECK_MQTT "check_mqtt"
+
+extern const char* getMessageType(BroadcastMessage_t message_type);
+BroadcastMessage_t getMessageType(const char* str);

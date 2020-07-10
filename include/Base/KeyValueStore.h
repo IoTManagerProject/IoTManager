@@ -19,11 +19,11 @@ class KeyValueStore {
         return jsonWriteStr(_pool, name, value);
     }
 
-    String read(const String& obj) {
+    String read(const String obj) {
         return jsonReadStr(_pool, obj);
     }
 
-    int readInt(const String& name) {
+    int readInt(const String name) {
         return jsonReadInt(_pool, name);
     }
 

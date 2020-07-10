@@ -5,8 +5,6 @@
 
 namespace Events {
 
-static const char* MODULE = "Events";
-
 StringQueue _events;
 
 StringQueue* get() {
@@ -17,7 +15,7 @@ void fire(String name, String param) {
     fire(name + param);
 }
 
-void fire(String name) {
+void fire(const String& name) {
     if (config.general()->isScenarioEnabled()) {
         _events.push(name);
     }

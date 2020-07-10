@@ -3,7 +3,7 @@
 namespace Devices {
 void init();
 void announce_task();
-void add(const char* id, const char* name, const char* ip);
+void add(const String& deviceId, const String& name, const String& ip);
 void loop();
 void saveToFile(const String filename);
 void asString(String& res, unsigned long ttl_sec = 0);
@@ -19,16 +19,16 @@ struct DeviceItem {
     unsigned long _timestamp;
 
    public:
-    DeviceItem(const char* id, const char* name, const char* ip) {
-        strcpy(_id, id);
-        strcpy(_name, name);
-        strcpy(_ip, ip);
+    DeviceItem(const String& id, const String& name, const String& ip) {
+        strcpy(_id, id.c_str());
+        strcpy(_name, name.c_str());
+        strcpy(_ip, ip.c_str());
         _timestamp = millis();
     }
 
-    void update(const char* name, const char* ip) {
-        strcpy(_name, name);
-        strcpy(_ip, ip);
+    void update(const String& name, const String& ip) {
+        strcpy(_name, name.c_str());
+        strcpy(_ip, ip.c_str());
         _timestamp = millis();
     }
 
@@ -53,7 +53,7 @@ struct DeviceItem {
 
     const String asString() {
         char buf[256];
-        snprintf(buf, sizeof(buf), "%s;%s;%s;%lu", _id, _name, _ip, _timestamp);
+        sprintf(buf, "%s;%s;%s;%lu", _id, _name, _ip, _timestamp);
         return buf;
     }
 };
@@ -62,7 +62,7 @@ class DeviceList {
    public:
     DeviceList(){};
 
-    DeviceItem* add(const char* id, const char* name, const char* ip) {
+    DeviceItem* add(const String& id, const String& name, const String& ip) {
         _items.push_back(DeviceItem{id, name, ip});
         return last();
     }
@@ -75,18 +75,18 @@ class DeviceList {
         return &_items.at(i);
     }
 
-    DeviceItem* get(const char* id) {
+    DeviceItem* get(const String& id) {
         for (size_t i = 0; i < _items.size(); i++) {
-            if (!strcmp(id, _items.at(i).id())) {
+            if (id.equals(_items.at(i).id())) {
                 return &_items.at(i);
             }
         }
-        return nullptr;
+        return NULL;
     }
 
    private:
     DeviceItem* last() {
-        return _items.size() ? &_items.at(_items.size() - 1) : nullptr;
+        return _items.size() ? &_items.at(_items.size() - 1) : NULL;
     }
 
    private:
