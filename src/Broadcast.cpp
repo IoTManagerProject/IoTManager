@@ -18,7 +18,7 @@ static const uint16_t UDP_PORT{4210};
 // static const IPAddress BROADCAST_IP{255, 255, 255, 255};
 
 AsyncUDP udp;
-bool _initialized = false;
+bool _ready = false;
 bool _busy = false;
 
 bool init() {
@@ -26,14 +26,14 @@ bool init() {
         return false;
     }
     if (!udp.listen(UDP_PORT)) {
-        pm.error("unable to bind: " + String(UDP_PORT, DEC));
+        pm.error("on bind: " + String(UDP_PORT, DEC));
         return false;
     } else {
         udp.onPacket([](AsyncUDPPacket packet) {
             _busy = true;
             if (packet.length()) {
                 size_t size = packet.length();
-                char buf[size];
+                char buf[size + 1];
                 uint8_t* ptr = packet.data();
                 size_t i = 0;
                 while (i < size) {
@@ -63,13 +63,14 @@ bool init() {
 }
 
 void loop() {
-    if (!_initialized) {
-        _initialized = init();
+    if (!_ready) {
+        _ready = init();
         return;
     }
     if (!_busy) {
-        if (Messages::outcome()->available()) {
-            String buf = Messages::outcome()->pop();
+        if (Messages::available()) {
+            String buf;
+            Messages::outcome(buf);
             if (!buf.isEmpty()) {
                 udp.broadcast(buf.c_str());
             }
