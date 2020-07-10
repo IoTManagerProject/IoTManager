@@ -138,6 +138,8 @@ void init() {
     String buf;
     if (!readFile(DEVICE_SCENARIO_FILE, buf)) {
         _ready_flag = true;
+        _items.clear();
+        config.general()->enableScenario(false);
         return;
     }
     buf += "\n";
