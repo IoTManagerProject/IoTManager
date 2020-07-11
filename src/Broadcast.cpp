@@ -44,9 +44,8 @@ bool init() {
                 IPAddress remoteIP = packet.remoteIP();
                 uint16_t remotePort = packet.remotePort();
 
-                String info_msg = "<= ";
-                info_msg += packet.isBroadcast() ? "b" : packet.isMulticast() ? "m" : "u";
-                info_msg += " ";
+                String info_msg = packet.isBroadcast() ? "b" : packet.isMulticast() ? "m" : "u";
+                info_msg += " <= ";
                 info_msg += remoteIP.toString() + ":" + String(remotePort, DEC);
                 info_msg += " ";
                 info_msg += prettyBytes(size);
