@@ -7,7 +7,10 @@
 
 namespace Messages {
 void post(const BroadcastMessage_t, const String&);
-StringQueue* outcome();
+
+void outcome(String& str);
+bool available();
+
 void loop();
 void income(const String& str);
 void parse(String buf);
