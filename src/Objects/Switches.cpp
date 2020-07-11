@@ -6,19 +6,17 @@ static const char* MODULE = "Switch";
 
 Switches mySwitches;
 
-Switch* Switches::add(const String& name, const String& assign, const String& value) {
-    pm.info("name: \"" + name + "\", pin: " + assign + ", debounce: " + value);
+void Switches::setOnChangeState(OnSwitchChangeState h) {
+    _onChange = h;
+}
+
+Switch* Switches::add(const String& name, const String& assign) {
+    pm.info("name: \"" + name + "\", pin: " + assign);
     if (!isDigitStr(assign)) {
         pm.error("wrong pin");
         return nullptr;
     }
-    if (!isDigitStr(value)) {
-        pm.error("wrong debounce");
-        return nullptr;
-    }
-
-    uint16_t debounce = value.toInt();
-    _items.push_back(Switch{name, assign, debounce});
+    _items.push_back(Switch{name, assign});
     return last();
 }
 
@@ -51,8 +49,4 @@ void Switches::loop() {
             _onChange(item);
         }
     }
-}
-
-void Switches::setOnChangeState(OnSwitchChangeState h) {
-    _onChange = h;
 }

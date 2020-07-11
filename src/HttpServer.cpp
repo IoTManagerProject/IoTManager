@@ -42,15 +42,15 @@ void init() {
     });
 
     server.on("/live.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", liveData.get());
+        request->send(200, "application/json", liveData.asJson());
     });
 
     server.on("/option.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", options.get());
+        request->send(200, "application/json", options.asJson());
     });
 
     server.on("/runtime.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", runtime.get());
+        request->send(200, "application/json", runtime.asJson());
     });
 
     server.on("/device.json", HTTP_GET, [](AsyncWebServerRequest *request) {

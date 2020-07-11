@@ -135,13 +135,14 @@ void reinit() {
 
 void init() {
     _items.clear();
+
     String buf;
     if (!readFile(DEVICE_SCENARIO_FILE, buf)) {
         _ready_flag = true;
-        _items.clear();
         config.general()->enableScenario(false);
         return;
     }
+
     buf += "\n";
     buf.replace("\r\n", "\n");
     buf.replace("\r", "\n");
@@ -164,12 +165,12 @@ void process(StringQueue* queue) {
     if (!queue->available()) {
         return;
     }
-    String event = queue->pop();
+    String event;
+    queue->pop(event);
     if (event.isEmpty()) {
         return;
     }
-    for (size_t i = 0; i < _items.size(); i++) {
-        ScenarioItem* item = _items.at(i);
+    for (auto item : _items) {
         if (item->isEnabled()) {
             item->run(event);
         }

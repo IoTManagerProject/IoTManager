@@ -1,67 +1,192 @@
 #pragma once
 
-#include "Arduino.h"
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <functional>
+#include <Utils/FileUtils.h>
 
-#include "Utils/JsonUtils.h"
-#include "Utils/FileUtils.h"
-
-class KeyValueStore {
-   public:
-    KeyValueStore() {
-        _pool.reserve(1024);
-    }
-
-    String get() {
-        return _pool;
-    }
-
-    String write(String name, String value) {
-        return jsonWriteStr(_pool, name, value);
-    }
-
-    String read(const String obj) {
-        return jsonReadStr(_pool, obj);
-    }
-
-    int readInt(const String name) {
-        return jsonReadInt(_pool, name);
-    }
-
-    void writeInt(String name, int value) {
-        jsonWriteInt(_pool, name, value);
-    }
-
-    void writeFloat(String name, float value) {
-        jsonWriteFloat(_pool, name, value);
-    }
-
-    float readFloat(String name) {
-        return jsonReadFloat(_pool, name);
-    }
-
-   protected:
-    String _pool;
+enum ValueType_t {
+    VT_STRING,
+    VT_FLOAT,
+    VT_INT
 };
 
-class KeyValueFile : public KeyValueStore {
+struct KeyValue : Printable {
+   private:
+    String _key;
+    String _value;
+    ValueType_t _type;
+
    public:
-    KeyValueFile(const char* filename) {
-        strncpy(_filename, filename, sizeof(_filename));
+    KeyValue(const char* key, const char* value, ValueType_t type) : _key{key},
+                                                                     _value{value},
+                                                                     _type{type} {};
+    ValueType_t getType() const {
+        return _type;
     }
 
-    void save() {
-        writeFile(_filename, _pool);
+    const String getKey() const {
+        return _key;
     }
 
-    void load() {
-        if (readFile(_filename, _pool)) {
-            _pool.replace(" ", "");
-            _pool.replace("\r\n", "");
-        } else {
-            _pool = "{}";
+    const String getValue() const {
+        return _value;
+    }
+
+    void setValue(const char* value) {
+        _value = value;
+        _type = VT_STRING;
+    };
+    void setValueInt(int value) {
+        _value = value;
+        _type = VT_INT;
+    };
+    void setValueFloat(int value) {
+        _value = value;
+        _type = VT_FLOAT;
+    };
+
+    size_t printTo(Print& p) const override {
+        return p.println(String(_type) + ":" + _key + "=" + _value);
+    }
+};
+
+typedef std::function<void(const ValueType_t, const String&, const String&)> KeyValueHandler;
+
+class KeyValueStore {
+   protected:
+    std::vector<KeyValue> _items;
+
+   public:
+    KeyValueStore() {
+        _items.reserve(16);
+    }
+
+    void forEach(KeyValueHandler h) {
+        for (auto item : _items) {
+            h(item.getType(), item.getKey(), item.getValue());
         }
     }
 
+    const String asJson() {
+        DynamicJsonBuffer json;
+        JsonObject& root = json.createObject();
+        for (auto item : _items) {
+            Serial.print(item);
+            switch (item.getType()) {
+                case VT_STRING:
+                    root[item.getKey()] = item.getValue();
+                    break;
+                case VT_FLOAT:
+                    root[item.getKey()] = atof(item.getValue().c_str());
+                    break;
+                case VT_INT:
+                    root[item.getKey()] = atoi(item.getValue().c_str());
+                default:
+                    break;
+            }
+        }
+        String buf;
+        root.printTo(buf);
+        return buf;
+    }
+
+    KeyValue* findKey(const String key) {
+        for (size_t i = 0; i < _items.size(); i++) {
+            if (_items.at(i).getKey() == key) {
+                return &_items.at(i);
+            }
+        }
+        return NULL;
+    }
+
+    void write(const String& key, const String& value) {
+        auto item = findKey(key);
+        if (item) {
+            item->setValue(value.c_str());
+        } else {
+            _items.push_back(KeyValue{key.c_str(), value.c_str(), VT_STRING});
+        }
+        // return jsonWriteStr(_pool, key, value);
+    }
+
+    const String read(const String& key) {
+        auto item = findKey(key);
+        return item ? item->getValue() : "";
+        //return  jsonReadStr(_pool, obj);
+    }
+
+    int readInt(const String& key) {
+        String buf = read(key);
+        return buf.toInt();
+        //return read(_pool, name);
+    }
+
+    void writeInt(const String& key, int value) {
+        auto item = findKey(key);
+        if (item) {
+            item->setValueInt(value);
+        } else {
+            _items.push_back(KeyValue{key.c_str(), String(value, DEC).c_str(), VT_INT});
+        }
+        // jsonWriteInt(_pool, name, value);
+    }
+
+    void writeFloat(const String& key, float value) {
+        // jsonWriteFloat(_pool, name, value);
+        auto item = findKey(key);
+        if (item) {
+            item->setValueFloat(value);
+        } else {
+            _items.push_back(KeyValue{key.c_str(), String(value, 4).c_str(), VT_FLOAT});
+        }
+    }
+
+    float readFloat(const String& key) {
+        String buf = read(key);
+        return buf.toFloat();
+        //return jsonReadFloat(_pool, name);
+    }
+};
+
+class KeyValueFile : public KeyValueStore {
    private:
-    char _filename[33];
+    char _filename[32];
+
+   public:
+    KeyValueFile(const char* filename) {
+        if (!(filename[0] == '/')) {
+            _filename[0] = '/';
+        };
+        strncat(_filename, filename, sizeof(_filename));
+    }
+
+    bool save() {
+        bool res = false;
+        String buf = asJson();
+        auto file = LittleFS.open(_filename, "w");
+        if (file) {
+            file.print(buf);
+            res = true;
+        }
+        file.close();
+        return res;
+    }
+
+    bool load() {
+        bool res = false;
+        DynamicJsonBuffer buf;
+        auto file = LittleFS.open(_filename, "r");
+        if (file) {
+            JsonObject& root = buf.parse(file);
+            for (JsonPair& p : root) {
+                String key = p.key;
+                String value{p.value.as<String>()};
+                _items.push_back(KeyValue{key.c_str(), value.c_str(), VT_STRING});
+            }
+            res = true;
+        }
+        file.close();
+        return res;
+    }
 };

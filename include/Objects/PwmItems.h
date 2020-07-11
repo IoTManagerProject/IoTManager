@@ -13,14 +13,15 @@
 
 class Pwm : public Item, public PinAssigned {
    public:
-    Pwm(const String& name, const String& assign, const String& value) : Item{name, assign, value}, PinAssigned(assign){};
+    Pwm(const String& name, const String& assign, const String& value) : Item{name, assign, value},
+                                                                         PinAssigned(assign){};
 
-    void onPinAssigned(uint8_t pin) {
-        pinMode(pin, OUTPUT);
+    void onAssigned(uint8_t pin) {
+        pinMode(getPin(), OUTPUT);
     }
 
     void onStateChange() override {
-        analogWrite(_pin, getState());
+        analogWrite(getPin(), getState());
     };
 };
 

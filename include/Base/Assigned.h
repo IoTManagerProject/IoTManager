@@ -23,17 +23,7 @@ class PinAssigned : public Assigned {
    public:
     PinAssigned(const String& assign) : Assigned(assign){};
 
-    void onAssign() override {
-        _pin = atoi(_assign);
-        onPinAssign();
-    };
-
-    virtual void onPinAssign() {}
-
     uint8_t getPin() {
-        return _pin;
+        return atoi(_assign);
     }
-
-   protected:
-    uint8_t _pin;
 };

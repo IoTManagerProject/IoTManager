@@ -21,7 +21,7 @@ void bmp280T_reading() {
 
     liveData.writeFloat(bmp280T_value_name, value);
     Events::fire(bmp280T_value_name);
-    MqttClient::publishStatus(bmp280T_value_name, String(value));
+    MqttClient::publishStatus(VT_FLOAT, bmp280T_value_name, String(value, 2));
 }
 
 void bmp280P_reading() {
@@ -33,6 +33,6 @@ void bmp280P_reading() {
 
     liveData.writeFloat(bmp280P_value_name, value);
     Events::fire(bmp280P_value_name);
-    MqttClient::publishStatus(bmp280P_value_name, String(value));
+    MqttClient::publishStatus(VT_FLOAT, bmp280P_value_name, String(value, 2));
 }
 }  // namespace BMP280Sensor

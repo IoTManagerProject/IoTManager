@@ -4,9 +4,6 @@
 
 #include "Sensors/DallasSensors.h"
 #include "Sensors/DallasSensor.h"
-
-namespace Dallas {
-
 class DallasSensors {
    public:
     DallasSensors();
@@ -24,5 +21,3 @@ class DallasSensors {
 };
 
 extern DallasSensors dallasSensors;
-
-}  // namespace Dallas

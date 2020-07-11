@@ -19,7 +19,7 @@ class Button : public ButtonItem, public PinAssigned {
         _inverted = inverted.toInt();
     };
 
-    void onPinAssign() override {
+    void onAssign() override {
         pinMode(getPin(), OUTPUT);
     }
 

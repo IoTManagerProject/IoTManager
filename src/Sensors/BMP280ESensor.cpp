@@ -5,51 +5,46 @@
 #include "MqttClient.h"
 #include "Utils/PrintMessage.h"
 
-namespace BME280Sensor {
 Adafruit_BME280 bme;
-Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
-Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
-Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
+class BME280Sensor : public SensorItem {
+   public:
+    BME280Sensor(const String& name, const String& assign) : SensorItem(name, assign) {
+        if (name == "temperature") {
+            obj = bme.getTemperatureSensor();
+        } else if (assign == "humidity") {
+            obj = bme.getHumiditySensor();
+        } else if (assign == "pressure") {
+            obj = bme.getPressureSensor();
+        } else if (assign == "altitude") {
+            obj = bme.getPressureSensor();
+        };
+    }
 
-String bme280T_value_name = "";
-String bme280P_value_name = "";
-String bme280H_value_name = "";
-String bme280A_value_name = "";
+    void onAssign() override {
+        bme.begin(hexStringToUint8(getAssign()));
+    }
 
-void bme280T_reading() {
-    float value = 0;
-    value = bme.readTemperature();
+    bool onRead() override {
+        String assign = getAssign();
+        float value;
+        if (assign == "temperature") {
+            value = bme.readTemperature();
+        } else if (assign == "humidity") {
+            value = bme.readHumidity();
+        } else if (assign == "pressure") {
+            value = bme.readPressure();
+            value = value / 1.333224;
+        } else if (assign == "altitude") {
+            value = bme.readAltitude(1013.25);
+        }
 
-    liveData.writeFloat(bme280T_value_name, value);
-    Events::fire(bme280T_value_name);
-    MqttClient::publishStatus(bme280T_value_name, String(value));
-}
+        liveData.writeFloat(getName(), value);
+        Events::fire(getName());
+        MqttClient::publishStatus(VT_FLOAT, getName(), String(value, 2));
 
-void bme280P_reading() {
-    float value = 0;
-    value = bme.readPressure();
-    value = value / 1.333224;
+        return true;
+    }
 
-    liveData.writeFloat(bme280P_value_name, value);
-    Events::fire(bme280P_value_name);
-    MqttClient::publishStatus(bme280P_value_name, String(value));
-}
-
-void bme280H_reading() {
-    float value = 0;
-    value = bme.readHumidity();
-
-    liveData.writeFloat(bme280H_value_name, value);
-    Events::fire(bme280H_value_name);
-    MqttClient::publishStatus(bme280H_value_name, String(value));
-}
-
-void bme280A_reading() {
-    float value = bme.readAltitude(1013.25);
-
-    liveData.writeFloat(bme280A_value_name, value);
-    Events::fire(bme280A_value_name);
-    MqttClient::publishStatus(bme280A_value_name, String(value));
-}
-
-}  // namespace BME280Sensor
+   private:
+    Adafruit_Sensor* obj;
+};

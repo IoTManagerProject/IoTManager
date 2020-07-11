@@ -158,16 +158,37 @@ boolean publishControl(const String& id, const String& topic, const String& stat
     return publish(path.c_str(), state.c_str());
 }
 
-boolean publishStatus(const String& topic, const String& data) {
-    String path = _deviceRoot + "/" + topic + "/status";
-    String json = "{}";
-    jsonWriteStr(json, "status", data);
-    return publish(path.c_str(), json.c_str());
+const String getStatusPath(const String& topic) {
+    String res = _deviceRoot;
+    res += "/";
+    res += topic;
+    res += "/status";
+    return res;
+}
+
+const String getOrderPath(const String& topic) {
+    String res = _prefix;
+    res += "/";
+    res += topic;
+    res += "/order";
+    return res;
+}
+
+boolean publishStatus(ValueType_t type, const String& topic, const String& data) {
+    String status = "{\"status\":";
+    if (type == VT_STRING) {
+        status += "\"";
+    }
+    status += data;
+    if (type == VT_STRING) {
+        status += "\"";
+    }
+    status += "}";
+    return publish(getStatusPath(topic).c_str(), status.c_str());
 }
 
 boolean publishOrder(const String& topic, const String& order) {
-    String path = _prefix + "/" + topic + "/order";
-    return publish(path.c_str(), order.c_str());
+    return publish(getOrderPath(topic).c_str(), order.c_str());
 }
 
 #ifdef LAYOUT_IN_RAM
@@ -211,29 +232,34 @@ void publishWidgets() {
 #endif
 
 void publishState() {
-    // берет строку json и ключи превращает в топики а значения колючей в них посылает
+    // строка в топик/значения
     // {"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
-    String str = liveData.get();
-    str.replace("{", "");
-    str.replace("}", "");
-    str += ",";
 
-    while (str.length()) {
-        String tmp = selectToMarker(str, ",");
+    liveData.forEach([](const ValueType_t type, const String& key, const String& value) {
+        publishStatus(type, key, value);
+    });
 
-        String topic = selectToMarker(tmp, ":");
-        topic.replace("\"", "");
+    // String str = liveData.asJson();
+    // str.replace("{", "");
+    // str.replace("}", "");
+    // str += ",";
 
-        String state = selectToMarkerLast(tmp, ":");
-        state.replace("\"", "");
+    // while (str.length()) {
+    //     String tmp = selectToMarker(str, ",");
 
-        if ((topic != "time") && (topic != "name") && (topic != "lang") && (topic != "ip") && (topic.indexOf("_in") < 0)) {
-            publishStatus(topic, state);
-        }
-        str = deleteBeforeDelimiter(str, ",");
-    }
+    //     String topic = selectToMarker(tmp, ":");
+    //     topic.replace("\"", "");
+
+    //     String state = selectToMarkerLast(tmp, ":");
+    //     state.replace("\"", "");
+
+    //     if ((topic != "time") && (topic != "name") && (topic != "lang") && (topic != "ip") && (topic.indexOf("_in") < 0)) {
+    //         publishStatus(topic, state);
+    //     }
+    //     str = deleteBeforeDelimiter(str, ",");
+    // }
 }
 
 const String getStateStr() {

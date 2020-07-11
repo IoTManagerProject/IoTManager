@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 
+#include <Base/KeyValueStore.h>
 #include "Config/MqttConfig.h"
 
 namespace MqttClient {
@@ -18,7 +19,7 @@ boolean publish(const String& topic, const String& data);
 boolean publishData(const String& topic, const String& data);
 boolean publishChart(const String& topic, const String& data);
 boolean publishControl(String id, String topic, String state);
-boolean publishStatus(const String& topic, const String& data);
+boolean publishStatus(ValueType_t type, const String& topic, const String& data);
 boolean publishOrder(const String& topic, const String& data);
 
 void publishWidgets();

@@ -37,6 +37,8 @@ void cmd_init() {
     pm.info(TAG_INIT);
     mySwitches.setOnChangeState([](Switch *obj) {
         String name = String("switch") + obj->getName();
+
+        pm.info(name);
         Events::fire(name);
         liveData.writeInt(name, obj->getState());
     });
@@ -190,22 +192,22 @@ void cmd_buttonSet() {
     if (isDigitStr(assign)) {
         btn->setState(state.toInt());
     } else if (assign == "scen") {
-        config.general()->enableScenario(state.toInt());
+        config.general()->enableScenario(state);
     } else if (assign.startsWith("line")) {
         while (assign.length() != 0) {
             String tmp = selectToMarker(assign, ",");         //line1,
             String number = deleteBeforeDelimiter(tmp, "e");  //1,
             number.replace(",", "");
-            Scenario::enableBlock(number.toInt(), state.toInt());
+            Scenario::enableBlock(number.toInt(), state);
             assign = deleteBeforeDelimiter(assign, ",");
         }
     }
 
     Events::fire("button", name);
 
-    liveData.write("button" + name, state);
+    liveData.writeInt("button" + name, state.toInt());
 
-    MqttClient::publishStatus("button" + name, state);
+    MqttClient::publishStatus(VT_INT, "button" + name, state);
 }
 
 void cmd_buttonChange() {
@@ -219,8 +221,10 @@ void cmd_buttonChange() {
     ButtonItem *btn = myButtons.get(name);
     btn->toggleState();
 
-    liveData.write("button" + name, String(btn->getState(), DEC));
-    MqttClient::publishStatus("button" + name, String(btn->getState(), DEC));
+    String objName = "button" + name;
+    liveData.writeInt(objName, btn->getState());
+
+    MqttClient::publishStatus(VT_INT, objName, String(btn->getState(), DEC));
 }
 
 void cmd_pinSet() {
@@ -260,19 +264,27 @@ void cmd_pwmSet() {
 
     myPwm.get(name)->setState(value.toInt());
 
-    Events::fire("pwm", name);
+    String objName = "pwm" + name;
 
-    liveData.writeInt("pwm" + name, value.toInt());
+    Events::fire(objName);
 
-    MqttClient::publishStatus("pwm" + name, value);
+    liveData.writeInt(objName, value.toInt());
+
+    MqttClient::publishStatus(VT_INT, objName, value);
 }
 
 void cmd_switch() {
     String name = sCmd.next();
     String assign = sCmd.next();
-    String debounce = sCmd.next();
+    int debounce = sCmd.nextInt();
 
-    Switch *item = mySwitches.add(name, assign, debounce);
+    Switch *item = mySwitches.add(name, assign);
+    if (!item) {
+        pm.error("bad command");
+        return;
+    }
+
+    item->setDebounce(debounce);
 
     liveData.writeInt(String("switch") + name, item->getState());
 }
@@ -303,11 +315,12 @@ void cmd_inputDigit() {
 }
 
 void cmd_digitSet() {
-    String number = sCmd.next();
+    String name = sCmd.next();
     String value = sCmd.next();
 
-    liveData.write("digit" + number, value);
-    MqttClient::publishStatus("digit" + number, value);
+    String objName = "pwm" + name;
+    liveData.write(objName, value);
+    MqttClient::publishStatus(VT_STRING, objName, value);
 }
 
 //=====================================================================================================================================
@@ -327,11 +340,12 @@ void cmd_inputTime() {
 }
 
 void cmd_timeSet() {
-    String number = sCmd.next();
+    String name = sCmd.next();
     String value = sCmd.next();
 
-    liveData.write("time" + number, value);
-    MqttClient::publishStatus("time" + number, value);
+    String objName = "time" + name;
+    liveData.write(objName, value);
+    MqttClient::publishStatus(VT_STRING, objName, value);
 }
 
 void cmd_text() {
@@ -344,7 +358,7 @@ void cmd_text() {
 }
 
 void cmd_textSet() {
-    String number = sCmd.next();
+    String name = sCmd.next();
     String text = sCmd.next();
     text.replace("_", " ");
 
@@ -354,22 +368,22 @@ void cmd_textSet() {
         text = text + " " + timeNow->getDateTimeDotFormated();
     }
 
-    liveData.write("text" + number, text);
-    MqttClient::publishStatus("text" + number, text);
+    String objName = "text" + name;
+    liveData.write(objName, text);
+    MqttClient::publishStatus(VT_STRING, objName, text);
 }
 
-// stepper 1 12 13
 void cmd_stepper() {
-    String stepper_number = sCmd.next();
+    String name = sCmd.next();
     String pin_step = sCmd.next();
     String pin_dir = sCmd.next();
 
-    liveData.write("stepper" + stepper_number, pin_step + " " + pin_dir);
+    liveData.write("stepper" + name, pin_step + " " + pin_dir);
+
     pinMode(pin_step.toInt(), OUTPUT);
     pinMode(pin_dir.toInt(), OUTPUT);
 }
 
-//stepperSet 1 100 5
 void cmd_stepperSet() {
     String stepper_number = sCmd.next();
     String steps = sCmd.next();
@@ -458,9 +472,12 @@ void cmd_servoSet() {
     } else {
         pm.error("servo: " + name + " not found");
     }
-    Events::fire("servo", name);
-    liveData.writeInt("servo" + name, value);
-    MqttClient::publishStatus("servo" + name, String(value, DEC));
+
+    String objName = "servo" + name;
+
+    Events::fire(objName);
+    liveData.writeInt(objName, value);
+    MqttClient::publishStatus(VT_INT, objName, String(value, DEC));
 }
 
 void cmd_serialBegin() {
@@ -532,11 +549,11 @@ void cmd_get() {
     String res = "";
     if (!obj.isEmpty()) {
         if (obj.equalsIgnoreCase(TAG_OPTIONS)) {
-            res = param.isEmpty() ? options.get() : options.read(param);
+            res = param.isEmpty() ? options.asJson() : options.read(param);
         } else if (obj.equalsIgnoreCase(TAG_RUNTIME)) {
-            res = param.isEmpty() ? runtime.get() : runtime.read(param);
+            res = param.isEmpty() ? runtime.asJson() : runtime.read(param);
         } else if (obj.equalsIgnoreCase("state")) {
-            res = param.isEmpty() ? liveData.get() : liveData.read(param);
+            res = param.isEmpty() ? liveData.asJson() : liveData.read(param);
         } else if (obj.equalsIgnoreCase("devices")) {
             Devices::asString(res, param.toInt());
         } else {
@@ -579,12 +596,10 @@ void cmd_ultrasonicCm() {
     pinMode(echo.toInt(), INPUT);
 
     createWidget(widget, page, order, type, measure_unit);
-
-    Sensors::enable(0);
 }
 
 void cmd_oneWire() {
-    uint8_t pin = atoi(sCmd.next());
+    uint8_t pin = sCmd.nextInt();
     onewire.attach(pin);
 }
 
@@ -604,10 +619,10 @@ void cmd_dallas() {
     int order = sCmd.nextInt();
 
     // uint8_t *address = String(sCmd.next()).toInt();
-    Dallas::dallasSensors.add(name, address);
+    dallasSensors.add(name, address);
+
     createWidget(widget, page, order, type, name);
 
-    Sensors::enable(3);
 }
 
 //levelPr p 14 12 Вода#в#баке,#% Датчики fillgauge 125 20 1
@@ -631,8 +646,6 @@ void cmd_levelPr() {
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
     createWidget(widget_name, page_name, order, type, value_name);
-
-    Sensors::enable(0);
 }
 
 //dhtH h 2 dht11 Влажность#DHT,#t°C Датчики any-data 1
@@ -652,8 +665,6 @@ void cmd_dhtH() {
         DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT22);
     }
     createWidget(widget_name, page_name, order, type, value_name);
-
-    Sensors::enable(5);
 }
 
 // dhtT t 2 dht11 Температура#DHT,#t°C Датчики any-data 1
@@ -675,7 +686,6 @@ void cmd_dhtT() {
 
     createWidget(widget_name, page_name, order, type, value_name);
 
-    Sensors::enable(4);
 }
 
 //dhtDewpoint Точка#росы: Датчики 5
@@ -686,7 +696,6 @@ void cmd_dhtDewpoint() {
 
     createWidget(widget_name, page_name, order, "anydata", "dhtDewpoint");
 
-    Sensors::enable(8);
 }
 
 // dhtPerception Восприятие: Датчики 4
@@ -697,7 +706,6 @@ void cmd_dhtPerception() {
 
     createWidget(widget_name, page_name, order, "any-data", "dhtPerception");
 
-    Sensors::enable(6);
 }
 
 // dhtComfort Степень#комфорта: Датчики 3
@@ -708,7 +716,6 @@ void cmd_dhtComfort() {
 
     createWidget(widget_name, page_name, order, "anydata", "dhtComfort");
 
-    Sensors::enable(7);
 }
 
 // analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
@@ -726,7 +733,7 @@ void cmd_analog() {
 
     int order = sCmd.nextInt();
 
-    analogSensor.add(name, pin)->setMap(in_min, in_max, out_min, out_max);
+    Sensors::add(name, pin)->setMap(in_min, in_max, out_min, out_max);
 
     createWidget(descr, page, order, type, name);
 }
@@ -750,7 +757,6 @@ void cmd_bmp280T() {
 
     createWidget(widget_name, page_name, order, type, value_name);
 
-    Sensors::enable(9);
 }
 
 //bmp280P press1 0x76 Давление#bmp280 Датчики any-data 2
@@ -772,26 +778,21 @@ void cmd_bmp280P() {
 
     createWidget(widget_name, page_name, order, type, value_name);
 
-    Sensors::enable(10);
 }
 
 //=========================================================================================================================================
 //=============================================Модуль сенсоров bme280======================================================================
 //bme280T temp1 0x76 Температура#bmp280 Датчики any-data 1
 void cmd_bme280T() {
-    String value_name = sCmd.next();
+    String name = sCmd.next();
     String address = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
+    String descr = sCmd.next();
+    String page = sCmd.next();
     String type = sCmd.next();
     int order = sCmd.nextInt();
-    BME280Sensor::bme280T_value_name = value_name;
 
-    BME280Sensor::bme.begin(hexStringToUint8(address));
+    createWidget(descr, page, order, type, name);
 
-    createWidget(widget_name, page_name, order, type, value_name);
-
-    Sensors::enable(11);
 }
 
 //bme280P pres1 0x76 Давление#bmp280 Датчики any-data 1
@@ -802,13 +803,9 @@ void cmd_bme280P() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     int order = sCmd.nextInt();
-    BME280Sensor::bme280P_value_name = value_name;
-
-    BME280Sensor::bme.begin(hexStringToUint8(address));
 
     createWidget(widget_name, page_name, order, type, value_name);
 
-    Sensors::enable(12);
 }
 
 //bme280H hum1 0x76 Влажность#bmp280 Датчики any-data 1
@@ -819,13 +816,9 @@ void cmd_bme280H() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     int order = sCmd.nextInt();
-    BME280Sensor::bme280H_value_name = value_name;
-
-    BME280Sensor::bme.begin(hexStringToUint8(address));
 
     createWidget(widget_name, page_name, order, type, value_name);
 
-    Sensors::enable(13);
 }
 
 //bme280A altit1 0x76 Высота#bmp280 Датчики any-data 1
@@ -836,13 +829,10 @@ void cmd_bme280A() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     int order = sCmd.nextInt();
-    BME280Sensor::bme280A_value_name = value_name;
-
-    BME280Sensor::bme.begin(hexStringToUint8(address));
 
     createWidget(widget_name, page_name, order, type, value_name);
 
-    Sensors::enable(14);
+
 }
 
 void cmd_http() {
@@ -924,7 +914,8 @@ void addOrder(const String &str) {
 
 void loop_cmd() {
     if (_orders.available()) {
-        String buf = _orders.pop();
+        String buf;
+        _orders.pop(buf);
         pm.info("execute: " + buf);
         sCmd.readStr(buf);
     }

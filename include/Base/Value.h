@@ -7,10 +7,11 @@ class Value {
     Value(){};
 
     virtual int read() {
-        return onRead();
+        onRead();
+        return _value;
     }
 
-    virtual int onRead();
+    virtual bool onRead();
 
    protected:
     int _value;

@@ -126,5 +126,6 @@ char *StringCommand::next() {
 }
 
 int StringCommand::nextInt() {
-    return atoi(next());
+    char *n = next();
+    return n ? atoi(n) : 0;
 }

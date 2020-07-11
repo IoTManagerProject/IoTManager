@@ -7,8 +7,6 @@
 
 static const char *MODULE = "Dallas";
 
-namespace Dallas {
-
 DallasSensors dallasSensors;
 
 DallasSensors::DallasSensors(){
@@ -58,4 +56,3 @@ void DallasSensors::loop() {
         // MqttClient::publishStatus(item.name(), String(temp, 2));
     }
 }
-}  // namespace Dallas

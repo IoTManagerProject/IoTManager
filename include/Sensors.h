@@ -13,8 +13,7 @@
 #define NUM_SENSORS 15
 
 namespace Sensors {
-void init();
-void process();
-void enable(size_t num, boolean enable = true);
-
+AnalogSensor* add(const String& name, const String& pin);
+void update();
+SensorItem* last();
 }  // namespace Sensors

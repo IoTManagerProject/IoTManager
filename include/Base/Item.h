@@ -7,6 +7,8 @@
 class Item : public Named,
              public Stateble {
    public:
+    Item(const String& name, const String& assigned) : Item(name, assigned, String("")){};
+
     Item(const String& name, const String& assigned, const String& value) : Named{name.c_str()},
                                                                             Stateble{value.toInt()} {};
 };

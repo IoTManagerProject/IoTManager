@@ -52,12 +52,11 @@ void startSTAMode() {
     uint8_t tries = 20;
     int connRes;
     do {
-#ifdef ESP8266
-        connRes = WiFi.waitForConnectResult(200);
-#else
         connRes = WiFi.waitForConnectResult();
-#endif
         switch (connRes) {
+            case -1: {
+                pm.error("on timeout");
+            } break;
             case WL_NO_SSID_AVAIL: {
                 pm.error("no network");
                 keepConnecting = false;
@@ -65,16 +64,11 @@ void startSTAMode() {
             case WL_CONNECTED: {
                 String hostIpStr = WiFi.localIP().toString();
                 pm.info("http://" + hostIpStr);
-
                 runtime.write("ip", hostIpStr);
-
                 keepConnecting = false;
             } break;
             case WL_CONNECT_FAILED: {
                 pm.error("check credentials");
-
-                options.writeInt("pass_status", 1);
-
                 keepConnecting = false;
             } break;
             default:

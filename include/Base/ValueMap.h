@@ -14,10 +14,13 @@ class ValueMap : public Value {
     }
 
     int read() override {
-        return _mapper ? _mapper->evaluate(onRead()) : Value::read();
+        onRead();
+        return _mapper ? _mapper->evaluate(_value) : _value;
     }
 
-    virtual int onRead() = 0;
+    virtual bool onRead() {
+        return false;
+    };
 
    private:
     Mapper* _mapper;

@@ -15,7 +15,7 @@ static const char* MODULE = "Init";
 void sensors_task() {
     ts.add(
         SENSORS, 1000, [&](void*) {
-            Sensors::process();
+            Sensors::update();
         },
         nullptr, true);
 }
@@ -54,8 +54,6 @@ void init_mod() {
     Logger::init();
 
     cmd_init();
-
-    Sensors::init();
 
     sensors_task();
 

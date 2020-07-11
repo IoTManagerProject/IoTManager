@@ -8,14 +8,18 @@
 
 class Switch : public Item, public PinAssigned {
    public:
-    Switch(const String& name, const String& assign, uint16_t debounce) : Item{name, assign, String(0, DEC)}, PinAssigned(assign) {
+    Switch(const String& name, const String& assign) : Item{name, assign},
+                                                       PinAssigned{assign} {
         _obj = new Bounce();
-        _obj->interval(debounce);
     }
 
-    void onPinAssign() override {
+    void onAssign() override {
         _obj->attach(getPin(), INPUT);
         _state = _obj->read();
+    }
+
+    void setDebounce(int value) {
+        _obj->interval(value);
     }
 
     bool update() {
@@ -38,7 +42,7 @@ typedef std::function<void(Switch*)> OnSwitchChangeState;
 
 class Switches {
    public:
-    Switch* add(const String& name, const String& pin, const String& debounce);
+    Switch* add(const String& name, const String& pin);
     void loop();
     Switch* last();
     Switch* at(size_t index);

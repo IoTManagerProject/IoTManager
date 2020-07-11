@@ -168,7 +168,7 @@ void flag_actions() {
                     bus = new OneWireScanner();
                     break;
                 default:
-                    pm.error("uknown bus: " + String(perform_bus_scanning_bus, DEC));
+                    pm.error("unknown bus: " + String(perform_bus_scanning_bus, DEC));
             }
         }
         if (bus) {
