@@ -11,28 +11,30 @@ StringQueue _income;
 StringQueue _outcome;
 namespace Messages {
 
-StringQueue* outcome() {
-    return &_outcome;
+bool available() {
+    return _outcome.available();
 }
 
 void post(const BroadcastMessage_t type, const String& content) {
     String buf = getMessageType(type);
     buf += ";";
     buf += content;
-    if (!_outcome.push(buf)) {
-        pm.error("outcome push");
-    }
+    _outcome.push(buf);
+}
+
+void outcome(String& str) {
+    _outcome.pop(str);
 }
 
 void income(const String& str) {
-    if (!_income.push(str)) {
-        pm.error("income push");
-    }
+    _income.push(str);
 }
 
 void loop() {
     if (_income.available()) {
-        parse(_income.pop());
+        String buf;
+        _income.pop(buf);
+        parse(buf);
     }
 }
 
