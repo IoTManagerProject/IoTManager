@@ -91,7 +91,7 @@ const String perceptionStr(byte value) {
 //         counter = 0;
 //         value = dht.getTemperature();
 //         if (String(value) != "nan") {
-//             Events::fire(dhtT_value_name);
+//             Scenario::fire(dhtT_value_name);
 //             liveData.write(dhtT_value_name, String(value));
 //             MqttClient::publishStatus(dhtT_value_name, String(value));
 //             Serial.println("[I] sensor '" + dhtT_value_name + "' data: " + String(value));
@@ -109,7 +109,7 @@ const String perceptionStr(byte value) {
 //         counter = 0;
 //         value = dht.getHumidity();
 //         if (String(value) != "nan") {
-//             Events::fire(dhtH_value_name);
+//             Scenario::fire(dhtH_value_name);
 //             liveData.write(dhtH_value_name, String(value));
 //             MqttClient::publishStatus(dhtH_value_name, String(value));
 //             Serial.println("[I] sensor '" + dhtH_value_name + "' data: " + String(value));
@@ -125,7 +125,7 @@ const String perceptionStr(byte value) {
 //         value = dht.computePerception(liveData.read(dhtT_value_name).toFloat(), liveData.read(dhtH_value_name).toFloat(), false);
 //         String final_line = perceptionStr(value);
 //         liveData.write("dhtPerception", final_line);
-//         Events::fire("dhtPerception");
+//         Scenario::fire("dhtPerception");
 
 //         if (MqttClient::isConnected()) {
 //             MqttClient::publishStatus("dhtPerception", final_line);
@@ -144,7 +144,7 @@ const String perceptionStr(byte value) {
 //                             liveData.read(dhtH_value_name).toFloat(), false);
 //         String final_line = comfortStr(cf);
 //         liveData.write("dhtComfort", final_line);
-//         Events::fire("dhtComfort");
+//         Scenario::fire("dhtComfort");
 //         MqttClient::publishStatus("dhtComfort", final_line);
 //         Serial.println("[I] sensor 'dhtComfort' send date " + final_line);
 //     }
@@ -159,7 +159,7 @@ const String perceptionStr(byte value) {
 //             liveData.read(dhtT_value_name).toFloat(),
 //             liveData.read(dhtH_value_name).toFloat(), false);
 //         liveData.writeFloat("dhtDewpoint", value);
-//         Events::fire("dhtDewpoint");
+//         Scenario::fire("dhtDewpoint");
 //         MqttClient::publishStatus("dhtDewpoint", String(value));
 //         Serial.println("[I] sensor 'dhtDewpoint' data: " + String(value));
 //     }

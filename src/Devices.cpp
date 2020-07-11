@@ -10,24 +10,13 @@ static const char* MODULE = "Devices";
 
 namespace Devices {
 
-DeviceList* _list;
-
-void init() {
-    _list = new DeviceList();
-}
+DeviceList _list;
 
 void loadFromFile() {
 }
 
-void asString(String& res, unsigned long ttl_sec) {
-    for (size_t i = 0; i < _list->size(); i++) {
-        DeviceItem* item = _list->at(i);
-        if (ttl_sec > 0 && item->lastseen() > ttl_sec) {
-            continue;
-        }
-        res += item->asString();
-        res += "\r\n";
-    }
+void get(String& res, unsigned long ttl_sec) {
+    _list.asString(res, ttl_sec);
 }
 
 void saveToFile(const String filename) {
@@ -37,8 +26,8 @@ void saveToFile(const String filename) {
         return;
     }
     file.println("id;name;url;lastseen");
-    for (size_t i = 0; i < _list->size(); i++) {
-        DeviceItem* item = _list->at(i);
+    for (size_t i = 0; i < _list.size(); i++) {
+        DeviceItem* item = _list.at(i);
         String data;
         data = item->id();
         data += ";";
@@ -57,20 +46,20 @@ void saveToFile(const String filename) {
 }
 
 void add(const String& id, const String& name, const String& ip) {
-    DeviceItem* item = _list->get(id);
+    DeviceItem* item = _list.get(id);
     if (item) {
         item->update(name, ip);
         pm.info("updated");
     } else {
-        _list->add(id, name, ip);
+        _list.add(id, name, ip);
         pm.info("added");
     }
 }
 
 const String asJson() {
     String res = "{\"devices\":[";
-    for (size_t i = 0; i < _list->size(); i++) {
-        DeviceItem* item = _list->at(i);
+    for (size_t i = 0; i < _list.size(); i++) {
+        DeviceItem* item = _list.at(i);
         res += "{\"id\":\"";
         res += item->id();
         res += "\",";
@@ -86,7 +75,7 @@ const String asJson() {
         res += "\",";
         res += "\"lastseen\":";
         res += item->lastseen();
-        res += i < _list->size() - 1 ? "}," : "}";
+        res += i < _list.size() - 1 ? "}," : "}";
     }
     res += "]}";
     return res;

@@ -39,7 +39,7 @@ class BME280Sensor : public SensorItem {
         }
 
         liveData.writeFloat(getName(), value);
-        Events::fire(getName());
+        Scenario::fire(getName());
         MqttClient::publishStatus(VT_FLOAT, getName(), String(value, 2));
 
         return true;

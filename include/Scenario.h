@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 
+#include "Base/Named.h"
 #include "Base/StringQueue.h"
 
 enum EquationSign {
@@ -59,11 +60,16 @@ class ScenarioItem {
 };
 
 namespace Scenario {
+
+void fire(Named* obj);
+
+void fire(const String& name);
+
 void reinit();
 
 void init();
 
-void process(StringQueue* events);
+void loop();
 
 void enableBlock(size_t num, boolean enable);
 

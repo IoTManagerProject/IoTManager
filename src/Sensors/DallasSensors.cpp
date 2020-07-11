@@ -52,7 +52,7 @@ void DallasSensors::loop() {
             pm.info(item.addr()->asString() + ":" + String(temp, 2));
         }
         // liveData.writeFloat(item.name(), temp);
-        // Events::fire(item.name());
+        // Scenario::fire(item.name());
         // MqttClient::publishStatus(item.name(), String(temp, 2));
     }
 }

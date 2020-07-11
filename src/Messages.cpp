@@ -1,5 +1,6 @@
 #include "Messages.h"
 
+#include "Base/StringCommand.h"
 #include "Global.h"
 #include "Config.h"
 #include "Broadcast.h"
@@ -7,9 +8,12 @@
 #include "Utils/SysUtils.h"
 
 static const char* MODULE = "Messages";
+
+namespace Messages {
+bool _ready;
 StringQueue _income;
 StringQueue _outcome;
-namespace Messages {
+StringCommand _cmd{";"};
 
 bool available() {
     return _outcome.available();
@@ -26,34 +30,40 @@ void outcome(String& str) {
     _outcome.pop(str);
 }
 
-void income(const String& str) {
+void income(const String str) {
     _income.push(str);
 }
 
+void cmd_device() {
+    Devices::add(_cmd.next(), _cmd.next(), _cmd.next());
+}
+
+void cmd_mqttSettings() {
+    config.mqtt()->loadString(_cmd.next());
+    perform_mqtt_restart();
+}
+
+void onUnknownCommand(const char* str) {
+    pm.error(str);
+}
+
+void init() {
+    _cmd.addCommand(getMessageType(BM_ANNOUNCE), cmd_device);
+    _cmd.addCommand(getMessageType(BM_MQTT_SETTINGS), cmd_mqttSettings);
+    _cmd.setDefaultHandler(onUnknownCommand);
+}
+
 void loop() {
+    if (!_ready) {
+        init();
+        _ready = true;
+    }
     if (_income.available()) {
         String buf;
         _income.pop(buf);
-        parse(buf);
+        pm.info(buf);
+        _cmd.readStr(buf);
     }
-}
-
-void parse(String buf) {
-    BroadcastMessage_t type = getMessageType(getValue(buf, ';', 0).c_str());
-    switch (type) {
-        case BM_ANNOUNCE: {
-            Devices::add(getValue(buf, ';', 1), getValue(buf, ';', 2), getValue(buf, ';', 3));
-            break;
-        }
-        case BM_MQTT_SETTINGS:
-            config.mqtt()->loadString(getValue(buf, ';', 1).c_str());
-            perform_mqtt_restart();
-            break;
-        default:
-            pm.error("unknown");
-            break;
-    }
-    return;
 }
 
 }  // namespace Messages

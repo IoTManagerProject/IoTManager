@@ -72,7 +72,6 @@ extern const char* DEVICE_RUNTIME_FILE;
 extern const char* DEVICE_CONFIG_FILE;
 extern const char* DEVICE_COMMAND_FILE;
 extern const char* DEVICE_SCENARIO_FILE;
-extern const char* KNOWN_DEVICE_FILE;
 
 extern const char* TAG_INIT;
 extern const char* TAG_OPTIONS;
@@ -85,4 +84,3 @@ extern const char* TAG_LAST_VERSION;
 #define TAG_CHECK_MQTT "check_mqtt"
 
 extern const char* getMessageType(BroadcastMessage_t message_type);
-BroadcastMessage_t getMessageType(const char* str);

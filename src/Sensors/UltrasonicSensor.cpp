@@ -33,14 +33,14 @@ void ultrasonic_reading() {
                     options.readInt("f_lev"), 0, 100);
 
         liveData.writeInt(levelPr_value_name, level);
-        Events::fire(levelPr_value_name);
+        Scenario::fire(levelPr_value_name);
 
         MqttClient::publishStatus(VT_FLOAT, levelPr_value_name, String(level));
 
         Serial.println("[I] sensor '" + levelPr_value_name + "' data: " + String(level));
 
         liveData.writeInt(ultrasonicCm_value_name, distance_cm);
-        Events::fire(ultrasonicCm_value_name);
+        Scenario::fire(ultrasonicCm_value_name);
 
         MqttClient::publishStatus(VT_FLOAT, ultrasonicCm_value_name, String(distance_cm));
 

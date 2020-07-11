@@ -19,6 +19,7 @@ void cmd_text();
 void cmd_textSet();
 void cmd_mqtt();
 void cmd_http();
+void cmd_push();
 
 void cmd_button();
 void cmd_buttonSet();

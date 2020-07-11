@@ -12,6 +12,7 @@
 
 #include "Base/KeyValueStore.h"
 #include "Base/StringQueue.h"
+#include "Base/StringCommand.h"
 
 #include "Consts.h"
 #include "Errors.h"
@@ -31,8 +32,6 @@
 #include "TickerScheduler/TickerScheduler.h"
 
 #include <ArduinoOTA.h>
-#include <StringCommand.h>
-
 #include <time.h>
 
 extern KeyValueStore options;
@@ -42,7 +41,6 @@ extern KeyValueFile runtime;
 extern Clock* timeNow;
 extern TickerScheduler ts;
 extern WiFiClient espClient;
-extern StringCommand sCmd;
 
 extern AsyncWebServer server;
 extern AsyncWebSocket ws;
@@ -112,7 +110,7 @@ extern void createChart(String widget_name, String page_name, int order, String 
 extern void clearWidgets();
 
 // PushingBox
-extern void pushControl();
+extern void pushControl(const String& title, const String& body);
 
 extern void addOrder(const String& cmdStr);
 extern void config_init();

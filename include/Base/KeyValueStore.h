@@ -11,7 +11,7 @@ enum ValueType_t {
     VT_INT
 };
 
-struct KeyValue : Printable {
+class KeyValue {
    private:
     String _key;
     String _value;
@@ -41,14 +41,10 @@ struct KeyValue : Printable {
         _value = value;
         _type = VT_INT;
     };
-    void setValueFloat(int value) {
+    void setValueFloat(float value) {
         _value = value;
         _type = VT_FLOAT;
     };
-
-    size_t printTo(Print& p) const override {
-        return p.println(String(_type) + ":" + _key + "=" + _value);
-    }
 };
 
 typedef std::function<void(const ValueType_t, const String&, const String&)> KeyValueHandler;
@@ -62,9 +58,9 @@ class KeyValueStore {
         _items.reserve(16);
     }
 
-    void forEach(KeyValueHandler h) {
+    void forEach(KeyValueHandler func) {
         for (auto item : _items) {
-            h(item.getType(), item.getKey(), item.getValue());
+            func(item.getType(), item.getKey(), item.getValue());
         }
     }
 
@@ -72,8 +68,7 @@ class KeyValueStore {
         DynamicJsonBuffer json;
         JsonObject& root = json.createObject();
         for (auto item : _items) {
-            Serial.print(item);
-            switch (item.getType()) {
+             switch (item.getType()) {
                 case VT_STRING:
                     root[item.getKey()] = item.getValue();
                     break;

@@ -237,9 +237,9 @@ void publishState() {
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
     // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
 
-    liveData.forEach([](const ValueType_t type, const String& key, const String& value) {
-        publishStatus(type, key, value);
-    });
+    // liveData.forEach([](const ValueType_t type, const String& key, const String& value) {
+    //     publishStatus(type, key, value);
+    // });
 
     // String str = liveData.asJson();
     // str.replace("{", "");

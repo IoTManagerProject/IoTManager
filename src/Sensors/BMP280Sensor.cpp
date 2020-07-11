@@ -20,7 +20,7 @@ void bmp280T_reading() {
     value = temp_event.temperature;
 
     liveData.writeFloat(bmp280T_value_name, value);
-    Events::fire(bmp280T_value_name);
+    Scenario::fire(bmp280T_value_name);
     MqttClient::publishStatus(VT_FLOAT, bmp280T_value_name, String(value, 2));
 }
 
@@ -32,7 +32,7 @@ void bmp280P_reading() {
     value = value / 1.333224;
 
     liveData.writeFloat(bmp280P_value_name, value);
-    Events::fire(bmp280P_value_name);
+    Scenario::fire(bmp280P_value_name);
     MqttClient::publishStatus(VT_FLOAT, bmp280P_value_name, String(value, 2));
 }
 }  // namespace BMP280Sensor

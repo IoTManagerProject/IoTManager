@@ -32,27 +32,25 @@ bool init() {
         udp.onPacket([](AsyncUDPPacket packet) {
             _busy = true;
             if (packet.length()) {
-                size_t size = packet.length();
-                char buf[size + 1];
-                uint8_t* ptr = packet.data();
-                size_t i = 0;
-                while (i < size) {
-                    buf[i++] = *(char*)ptr++;
-                }
-                buf[size] = '\x00';
-
+                size_t len = packet.length();
+                char* buf = (char*)malloc(len + 1);
+                memcpy(buf, packet.data(), len);
+                buf[len] = 0;
                 IPAddress remoteIP = packet.remoteIP();
                 uint16_t remotePort = packet.remotePort();
 
-                String info_msg = packet.isBroadcast() ? "b" : packet.isMulticast() ? "m" : "u";
+                String info_msg = "~" + String(buf) + "~";
+                info_msg += packet.isBroadcast() ? "b" : packet.isMulticast() ? "m" : "u";
                 info_msg += " <= ";
                 info_msg += remoteIP.toString() + ":" + String(remotePort, DEC);
                 info_msg += " ";
-                info_msg += prettyBytes(size);
+                info_msg += prettyBytes(len);
 
                 pm.info(info_msg);
 
-                Messages::income(buf);
+                Messages::income(String(buf));
+
+                free(buf);
             }
             _busy = false;
         });

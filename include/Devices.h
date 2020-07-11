@@ -1,12 +1,10 @@
 #include <Arduino.h>
 
 namespace Devices {
-void init();
-void announce_task();
 void add(const String& deviceId, const String& name, const String& ip);
 void loop();
+void get(String& result, unsigned long ttl_sec = 0);
 void saveToFile(const String filename);
-void asString(String& res, unsigned long ttl_sec = 0);
 void clear();
 const String asJson();
 }  // namespace Devices
@@ -23,10 +21,14 @@ struct DeviceItem {
         strcpy(_id, id.c_str());
         strcpy(_name, name.c_str());
         strcpy(_ip, ip.c_str());
+        Serial.print(name);
+        Serial.print(ip);
         _timestamp = millis();
     }
 
     void update(const String& name, const String& ip) {
+        Serial.print(name);
+        Serial.print(ip);
         strcpy(_name, name.c_str());
         strcpy(_ip, ip.c_str());
         _timestamp = millis();
@@ -84,8 +86,19 @@ class DeviceList {
         return NULL;
     }
 
+    void asString(String& res, unsigned long ttl_sec) {
+        for (auto item : _items) {
+            if (ttl_sec && item.lastseen() > ttl_sec) {
+                continue;
+            }
+            res += item.asString();
+            res += "\r\n";
+        }
+    }
+
    private:
-    DeviceItem* last() {
+    DeviceItem*
+    last() {
         return _items.size() ? &_items.at(_items.size() - 1) : NULL;
     }
 

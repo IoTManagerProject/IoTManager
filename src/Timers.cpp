@@ -28,7 +28,7 @@ void Timer::onTimer() {
     name += _name;
     
     liveData.writeInt(name, 0);
-    Events::fire(name);
+    Scenario::fire(name);
 }
 
 void Timer::setTime(unsigned long value) {

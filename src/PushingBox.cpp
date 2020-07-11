@@ -13,12 +13,7 @@ void Push_init() {
     });
 }
 
-void pushControl() {
-    String title = sCmd.next();
-    String body = sCmd.next();
-    title.replace("#", " ");
-    body.replace("#", " ");
-
+void pushControl(const String& title, const String& body) {
     WiFiClient wifiClient;
     pm.info("connecting: " + String(logServer));
 

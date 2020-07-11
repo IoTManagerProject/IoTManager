@@ -118,8 +118,22 @@ bool ScenarioItem::parseSign(const String& str, EquationSign& sign) {
 }
 
 namespace Scenario {
+
 std::vector<ScenarioItem*> _items;
-bool _ready_flag = false;
+
+StringQueue _events;
+
+bool _ready = false;
+
+void fire(Named* obj) {
+    fire(obj->getName());
+}
+
+void fire(const String& name) {
+    if (config.general()->isScenarioEnabled()) {
+        _events.push(name);
+    }
+}
 
 bool isBlockEnabled(size_t num) {
     return _items.at(num)->isEnabled();
@@ -130,19 +144,16 @@ void enableBlock(size_t num, boolean value) {
 }
 
 void reinit() {
-    _ready_flag = false;
+    _ready = false;
 }
 
 void init() {
     _items.clear();
-
     String buf;
     if (!readFile(DEVICE_SCENARIO_FILE, buf)) {
-        _ready_flag = true;
         config.general()->enableScenario(false);
         return;
     }
-
     buf += "\n";
     buf.replace("\r\n", "\n");
     buf.replace("\r", "\n");
@@ -155,24 +166,25 @@ void init() {
         buf = deleteBeforeDelimiter(buf, "end\n");
     }
     pm.info("blocks: " + String(_items.size(), DEC));
-    _ready_flag = true;
-}  // namespace Scenario
+    _ready = true;
+}
 
-void process(StringQueue* queue) {
-    if (!_ready_flag) {
+void loop() {
+    if (!_ready) {
         init();
+        _ready = true;
     }
-    if (!queue->available()) {
+    if (!_events.available()) {
         return;
     }
-    String event;
-    queue->pop(event);
-    if (event.isEmpty()) {
+    String buf;
+    _events.pop(buf);
+    if (buf.isEmpty()) {
         return;
     }
     for (auto item : _items) {
         if (item->isEnabled()) {
-            item->run(event);
+            item->run(buf);
         }
     }
 }

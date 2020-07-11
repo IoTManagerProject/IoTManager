@@ -101,7 +101,7 @@ void loop() {
     m.add(LI_ITEMS);
 
     if (config.general()->isScenarioEnabled()) {
-        Scenario::process(Events::get());
+        Scenario::loop();
         m.add(LI_SCENARIO);
     }
 
@@ -149,12 +149,9 @@ void flag_actions() {
         DynamicJsonBuffer jsonBuffer;
         JsonObject& root = jsonBuffer.createObject();
         config.mqtt()->save(root);
-
         String buf;
         root.printTo(buf);
-
         Messages::post(BM_MQTT_SETTINGS, buf);
-
         broadcast_mqtt_settings_flag = false;
     }
 
@@ -248,7 +245,7 @@ void clock_init() {
         TIME, 1000, [&](void*) {
             runtime.write("time", timeNow->getTime());
             runtime.write("timenow", timeNow->getTimeJson());
-            Events::fire("timenow");
+            Scenario::fire("timenow");
         },
         nullptr, true);
 }
@@ -306,9 +303,6 @@ void setup() {
     Broadcast::init();
 
     telemetry_init();
-
-    pm.info("Devices");
-    Devices::init();
 
     pm.info("Init");
     init_mod();

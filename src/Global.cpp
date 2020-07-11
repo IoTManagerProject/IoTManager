@@ -7,7 +7,7 @@ KeyValueStore liveData;
 KeyValueFile runtime(DEVICE_RUNTIME_FILE);
 
 TickerScheduler ts(SYS_MEMORY + 1);
-StringCommand sCmd;
+
 
 AsyncWebServer server{80};
 AsyncWebSocket ws{"/ws"};
