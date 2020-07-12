@@ -9,7 +9,7 @@ class Mapper {
                                                                    _out_min{out_min},
                                                                    _out_max{out_max} {}
 
-    int evaluate(int value) {
+    int mapValue(int value) {
         return map(value, _in_min, _in_max, _out_min, _out_max);
     }
 

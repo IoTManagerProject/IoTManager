@@ -2,21 +2,18 @@
 
 #include <Arduino.h>
 
-#include "Objects/SensorItem.h"
-#include "Base/Assigned.h"
+#include "Base/BaseSensor.h"
 
-class AnalogSensor : public SensorItem,
-                     public PinAssigned {
+class AnalogSensor : public BaseSensor {
    public:
-    AnalogSensor(const String& name, const String& assign) : SensorItem(name, assign),
-                                                             PinAssigned{assign} {}
+    AnalogSensor(const String& name, const String& assign) : BaseSensor(name, assign){};
 
     void onAssign() override {
+        Serial.printf("pin: %d" + getPin());
         pinMode(getPin(), INPUT);
     }
 
-    bool onRead() override {
-        _value = analogRead(getPin());
-        return true;
-    };
+    int onReadSensor() override {
+        return analogRead(getPin());
+    }
 };

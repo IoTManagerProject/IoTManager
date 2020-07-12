@@ -12,10 +12,11 @@ class StringCommand {
    private:
     struct StringCommandCallback {
         char command[COMMAND_MAX_LENGHT + 1];
-        void (*function)();
-        StringCommandCallback(const char *str, void (*callback)()) {
+        void (*callbk)();
+
+        StringCommandCallback(const char *str, void (*func)()) {
             strncpy(command, str, COMMAND_MAX_LENGHT + 1);
-            function = callback;
+            callbk = func;
         };
     };
 
@@ -50,21 +51,21 @@ class StringCommand {
     void readStr(const String str) {
         str.toCharArray(_buffer, COMMAND_BUFFER_SIZE);
         // Search for command at start of buffer
-        char *command = strtok_r(_buffer, _delim, &_last);
-        if (!command) {
+        char *cmdStr = strtok_r(_buffer, _delim, &_last);
+        if (!cmdStr) {
             return;
         }
         bool matched = false;
         for (auto item : _list) {
-            if (strncmp(command, item.command, COMMAND_MAX_LENGHT) == 0) {
-                (*item.function)();
+            if (strncmp(cmdStr, item.command, COMMAND_MAX_LENGHT) == 0) {
                 matched = true;
+                (*item.callbk)();
                 break;
             }
         }
         if (!matched) {
-            if (_defaultHandler != NULL) {
-                (*_defaultHandler)(command);
+            if (_defaultHandler) {
+                (*_defaultHandler)(cmdStr);
             }
             clearBuffer();
         }
@@ -72,10 +73,5 @@ class StringCommand {
 
     char *next() {
         return strtok_r(NULL, _delim, &_last);
-    }
-
-    int nextInt() {
-        char *n = next();
-        return n ? atoi(n) : 0;
     }
 };

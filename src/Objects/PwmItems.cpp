@@ -10,7 +10,7 @@ Pwms::Pwms(){};
 
 Pwm *Pwms::add(String name, String assign, String state) {
     pm.info("name:\"" + name + "\", pin:" + assign + ", state:" + state);
-    _items.push_back(Pwm{name, assign, state});
+    _items.push_back(Pwm{name, assign});    
     return last();
 }
 

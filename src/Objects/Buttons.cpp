@@ -6,30 +6,33 @@ static const char* MODULE = "Button";
 
 Buttons myButtons;
 
-ButtonItem* Buttons::add(const String& name, const String& assign, const String& value, const String& inverted) {
+Button* Buttons::add(const String& name, const String& assign, const String& value, const String& inverted) {
     pm.info("name: \"" + name + "\", pin: " + assign + ", state: " + value + ", inverted: " + inverted);
 
-    ButtonItem* item = new Button{name, assign, value, inverted};
+    Button item(name, assign, value);
+    item.setInverted(inverted.toInt());
+    item.setValue(value);
+
     _items.push_back(item);
     return last();
 }
 
-ButtonItem* Buttons::last() {
-    return _items.at(_items.size() - 1);
+Button* Buttons::last() {
+    return &_items.at(_items.size() - 1);
 }
 
-ButtonItem* Buttons::get(const String name) {
+Button* Buttons::get(const String name) {
     for (size_t i = 0; i < _items.size(); i++) {
-        auto item = _items.at(i);
+        auto item = &_items.at(i);
         if (name.equals(item->getName())) {
-            return _items.at(i);
+            return &_items.at(i);
         }
     }
-    return nullptr;
+    return NULL;
 }
 
-ButtonItem* Buttons::at(size_t num) {
-    return _items.at(num);
+Button* Buttons::at(size_t num) {
+    return &_items.at(num);
 }
 
 size_t Buttons::count() {

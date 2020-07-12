@@ -2,43 +2,85 @@
 
 #include "Global.h"
 #include "MqttClient.h"
-#include "LogFile.h"
 
 static const char* MODULE = "LoggerTask";
 
-LoggerTask::LoggerTask(const String& name, unsigned long period, size_t limit) : _name{name},
-                                                                                 _period{period},
+LoggerTask::LoggerTask(const String& name, unsigned long period, size_t limit) : _period{period},
                                                                                  _limit{limit},
-                                                                                 _lastExecute{0},
-                                                                                 _log{_name.c_str()} {
+                                                                                 _lastExecute{0} {
+    strcpy(_name, name.c_str());
     _buf.reserve(_limit);
-};
 
-void LoggerTask::flush() {
-    _log.open();
-    for (size_t i = 0; i < _buf.size(); i++) {
-        _log.write(_buf.at(i));
+    String metafile = getMetaFilename();
+    if (LittleFS.exists(metafile)) {
+        auto file = LittleFS.open(metafile, FILE_READ);
+        file.read((uint8_t*)&_meta, sizeof(_meta));
+        file.close();
     }
-    _log.close();
-    _buf.clear();
+}
+
+const String LoggerTask::getName() const {
+    return _name;
+}
+
+const String LoggerTask::getTopic() {
+    char buf[32];
+    strcpy(buf, _name);
+    strcat(buf, "_ch");
+    return buf;
+}
+
+const String LoggerTask::getMetaFilename() const {
+    char buf[32];
+    strcpy(buf, "log_");
+    strcat(buf, _name);
+    strcat(buf, ".dat");
+    return buf;
+}
+
+const String LoggerTask::getDataFile() const {
+    char buf[32];
+    strcpy(buf, "log_");
+    strcat(buf, _name);
+    strcat(buf, ".txt");
+    return buf;
 }
 
 LogMetadata* LoggerTask::getMetadata() {
-    return _log.metadata();
+    return &_meta;
 }
 
-const char* LoggerTask::name() {
-    return _name.c_str();
+void LoggerTask::clear() {
+    removeFile(getDataFile().c_str());
+}
+
+void LoggerTask::storeMeta() {
+    auto file = LittleFS.open(getMetaFilename(), FILE_WRITE);
+    if (file) {
+        file.write((uint8_t*)&_meta, sizeof(_meta));
+    } else {
+        pm.error("store meta");
+    }
+    file.close();
 }
 
 void LoggerTask::update() {
+    if (_buf.size() >= _limit) {
+        auto file = LittleFS.open(getDataFile().c_str(), "a");
+        if (file) {
+            for (auto entry : _buf) {
+                size_t bytes = entry.printTo(file);
+                _meta.add(bytes, entry.time());
+            }
+            _buf.clear();
+            file.close();
+            storeMeta();
+        }
+    }
+
     if (millis_since(_lastExecute) >= _period) {
         if (timeNow->hasSynced()) {
-            if (_buf.size() >= _limit) {
-                flush();
-                _buf.clear();
-            }
-            _buf.push_back(new LogEntry(timeNow->getEpoch(), liveData.readInt(_name)));
+            _buf.push_back(LogEntry(timeNow->getEpoch(), liveData.readInt(_name)));
             pm.info(String(_buf.size(), DEC) + " / " + String(_limit, DEC));
         }
         _lastExecute = millis();
@@ -49,8 +91,7 @@ void LoggerTask::publish() {
 }
 
 void LoggerTask::postFile() {
-    pm.info("task: " + _name);
-    String value = liveData.read(_name);
+    // pm.info("task: " + _name);
     // String buf;
     // if (readFile(_filename, buf, 5120)) {
     //     size_t lines_cnt = itemsCount(buf, "\r\n");
@@ -71,19 +112,12 @@ void LoggerTask::postFile() {
     // }
 }
 
-const String LoggerTask::getTopic() {
-    return _name + "_ch";
-}
-void LoggerTask::clear() {
-}
 void LoggerTask::publishFile() {
     // String data;
-    // if (!readFile(_filename, data, 5120)) {
+    // if (!LittleFS.open(_ma,e, "r") {
     //     pm.error("open file");
     //     return;
     // }
-    // data.replace("\r\n", "\n");
-    // data.replace("\r", "\n");
     // String buf = "{}";
     // String json_array;
     // String unix_time;

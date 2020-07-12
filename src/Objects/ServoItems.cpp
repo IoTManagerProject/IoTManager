@@ -11,12 +11,11 @@ ServoItems myServo;
 ServoItems::ServoItems(){};
 
 BaseServo* ServoItems::add(const String& name, const String& pin, const String& value,
-                           const String& min_value, const String& max_value, const String& min_deg, const String& max_deg) {
-    _items.push_back(BaseServo{name, pin, value,
-                               new Mapper(min_value.toInt(),
-                                          max_value.toInt(),
-                                          min_deg.toInt(),
-                                          max_deg.toInt())});
+                           const String& in_min, const String& in_max, const String& out_min, const String& out_max) {
+    BaseServo item{name, pin, value};
+
+    item.setMap(in_min.toInt(), in_max.toInt(), out_min.toInt(), out_max.toInt());
+
     return last();
 }
 

@@ -2,13 +2,12 @@
 
 #include "Named.h"
 #include "Assigned.h"
-#include "Stateble.h"
+#include "Value.h"
 
 class Item : public Named,
-             public Stateble {
+             public Assigned,
+             public Value {
    public:
-    Item(const String& name, const String& assigned) : Item(name, assigned, String("")){};
-
-    Item(const String& name, const String& assigned, const String& value) : Named{name.c_str()},
-                                                                            Stateble{value.toInt()} {};
+    Item(const String& name, const String& assign) : Named{name.c_str()},
+                                                     Assigned{assign.c_str()} {};
 };

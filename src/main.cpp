@@ -3,7 +3,6 @@
 #include "Consts.h"
 #include "Scenario.h"
 #include "NetworkManager.h"
-#include "Events.h"
 #include "Messages.h"
 #include "Broadcast.h"
 #include "Devices.h"
@@ -20,20 +19,6 @@ static const char* MODULE = "Main";
 void flag_actions();
 void config_backup();
 void config_restore();
-
-enum LoopItems {
-    LI_CLOCK,
-    LT_FLAG_ACTION,
-    LI_MQTT_CLIENT,
-    LI_CMD,
-    LI_ITEMS,
-    LI_SCENARIO,
-    LI_BROADCAST,
-    LI_SERIAL,
-    LT_TASKS,
-    LT_LOGGER,
-    NUM_LOOP_ITEMS
-};
 
 Metric m;
 boolean initialized = false;

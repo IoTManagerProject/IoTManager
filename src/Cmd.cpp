@@ -2,7 +2,6 @@
 
 #include "Consts.h"
 #include "Devices.h"
-#include "Events.h"
 #include "Logger.h"
 #include "MqttClient.h"
 #include "WebClient.h"
@@ -42,7 +41,7 @@ void cmd_init() {
         String name = String("switch") + obj->getName();
         pm.info(name);
         Scenario::fire(name);
-        liveData.writeInt(name, obj->getState());
+        liveData.writeInt(name, obj->getValue());
     });
 
     sCmd.addCommand("button", cmd_button);
@@ -138,14 +137,14 @@ unsigned long parsePeriod(const String &str, unsigned long default_multiplier = 
 void cmd_logging() {
     String name = sCmd.next();
     String period = sCmd.next();
-    String limit = sCmd.next();
+    String maxCount = sCmd.next();
     String descr = sCmd.next();
     String page = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
-    Logger::add(name, parsePeriod(period), limit.toInt());
+    Logger::add(name, parsePeriod(period), maxCount.toInt());
     // /prefix/3234045-1589487/value_name_ch
-    createChart(descr, page, order, "chart", name + "_ch", limit);
+    createChart(descr, page, order, "chart", name + "_ch", maxCount);
 }
 
 void cmd_button() {
@@ -154,14 +153,16 @@ void cmd_button() {
     String descr = sCmd.next();
     String page = sCmd.next();
     String state = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
     String inverted = sCmd.next();
 
-    myButtons.add(name, assign, state, inverted);
+    String objName = "button" + name;
 
-    liveData.write("button" + name, state);
+    myButtons.add(objName, assign, state, inverted);
 
-    createWidget(descr, page, order, "toggle", "button" + name);
+    liveData.write(objName, state);
+
+    createWidget(descr, page, order, "toggle", objName);
 
     // if (assign == "scen") {
     //     config.general()->enableScenario(state.toInt());
@@ -184,29 +185,31 @@ void cmd_button() {
     //     }
     // }
 }
+
 void cmd_buttonSet() {
     String name = sCmd.next();
     String state = sCmd.next();
 
-    ButtonItem *btn = myButtons.get(name);
+    Button *btn = myButtons.get(name);
     String assign = btn->getAssign();
 
-    if (isDigitStr(assign)) {
-        btn->setState(state.toInt());
-    } else if (assign == "scen") {
-        config.general()->enableScenario(state);
-    } else if (assign.startsWith("line")) {
-        while (assign.length() != 0) {
-            String tmp = selectToMarker(assign, ",");         //line1,
-            String number = deleteBeforeDelimiter(tmp, "e");  //1,
-            number.replace(",", "");
-            Scenario::enableBlock(number.toInt(), state);
-            assign = deleteBeforeDelimiter(assign, ",");
-        }
-    }
+    // if (isDigitStr(assign)) {
+    //     btn->setState(state.toInt());
+    // } else if (assign == "scen") {
+    //     config.general()->enableScenario(state);
+    // } else if (assign.startsWith("line")) {
+    //     while (assign.length() != 0) {
+    //         String tmp = selectToMarker(assign, ",");         //line1,
+    //         String number = deleteBeforeDelimiter(tmp, "e");  //1,
+    //         number.replace(",", "");
+    //         Scenario::enableBlock(number.toInt(), state);
+    //         assign = deleteBeforeDelimiter(assign, ",");
+    //     }
+    // }
     String objName = "button" + name;
+
     Scenario::fire(objName);
-    liveData.writeInt(objName, state.toInt());
+    liveData.writeInt(objName, state);
     MqttClient::publishStatus(VT_INT, objName, state);
 }
 
@@ -223,8 +226,8 @@ void cmd_buttonChange() {
 
     String objName = "button" + name;
 
-    liveData.writeInt(objName, btn->getState());
-    MqttClient::publishStatus(VT_INT, objName, String(btn->getState(), DEC));
+    liveData.writeInt(objName, btn->getValue());
+    MqttClient::publishStatus(VT_INT, objName, btn->getValue());
 }
 
 void cmd_pinSet() {
@@ -247,28 +250,28 @@ void cmd_pwm() {
 
     String page = sCmd.next();
     String value = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     String style = sCmd.next();
 
-    myPwm.add(name, assign, value);
+    String objName = "pwm" + name;
 
-    liveData.writeInt("pwm" + name, value.toInt());
-
-    createWidget(description, page, order, "range", "pwm" + name);
+    myPwm.add(objName, assign, value);
+    liveData.writeInt(objName, value);
+    createWidget(description, page, order, "range", objName);
 }
 
 void cmd_pwmSet() {
     String name = sCmd.next();
     String value = sCmd.next();
 
-    myPwm.get(name)->setState(value.toInt());
+    myPwm.get(name)->setValue(value);
 
     String objName = "pwm" + name;
 
     Scenario::fire(objName);
 
-    liveData.writeInt(objName, value.toInt());
+    liveData.writeInt(objName, value);
 
     MqttClient::publishStatus(VT_INT, objName, value);
 }
@@ -276,17 +279,18 @@ void cmd_pwmSet() {
 void cmd_switch() {
     String name = sCmd.next();
     String assign = sCmd.next();
-    int debounce = sCmd.nextInt();
+    String debounce = sCmd.next();
 
     Switch *item = mySwitches.add(name, assign);
     if (!item) {
         pm.error("bad command");
         return;
     }
+    item->setDebounce(debounce.toInt());
 
-    item->setDebounce(debounce);
+    String objName = "switch" + name;
 
-    liveData.writeInt(String("switch") + name, item->getState());
+    liveData.writeInt(objName, item->getValue());
 }
 
 void loop_items() {
@@ -301,14 +305,14 @@ void loop_items() {
 }
 
 void cmd_inputDigit() {
-    String value_name = sCmd.next();
-    String number = value_name.substring(5);
+    String name = sCmd.next();
+    String number = name.substring(5);
     String widget_name = sCmd.next();
     widget_name.replace("#", " ");
     String page_name = sCmd.next();
     page_name.replace("#", " ");
     String start_state = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     liveData.write("digit" + number, start_state);
     createWidget(widget_name, page_name, order, "inputNum", "digit" + number);
@@ -326,14 +330,14 @@ void cmd_digitSet() {
 //=====================================================================================================================================
 //=========================================Добавление окна ввода времени===============================================================
 void cmd_inputTime() {
-    String value_name = sCmd.next();
-    String number = value_name.substring(4);
+    String name = sCmd.next();
+    String number = name.substring(4);
     String widget_name = sCmd.next();
     widget_name.replace("#", " ");
     String page_name = sCmd.next();
     page_name.replace("#", " ");
     String start_state = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     liveData.write("time" + number, start_state);
     createWidget(widget_name, page_name, order, "inputTime", "time" + number);
@@ -352,7 +356,7 @@ void cmd_text() {
     String number = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     createWidget(widget_name, page_name, order, "anydata", "text" + number);
 }
@@ -446,7 +450,7 @@ void cmd_servo() {
     String min_deg = sCmd.next();
     String max_deg = sCmd.next();
 
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     myServo.add(name, pin, value, min_value, max_value, min_deg, max_deg);
 
@@ -464,11 +468,11 @@ void cmd_servo() {
 
 void cmd_servoSet() {
     String name = sCmd.next();
-    int value = String(sCmd.next()).toInt();
+    String value = sCmd.next();
 
     BaseServo *servo = myServo.get(name);
     if (servo) {
-        servo->setState(value);
+        servo->setValue(value);
     } else {
         pm.error("servo: " + name + " not found");
     }
@@ -477,7 +481,7 @@ void cmd_servoSet() {
 
     Scenario::fire(objName);
     liveData.writeInt(objName, value);
-    MqttClient::publishStatus(VT_INT, objName, String(value, DEC));
+    MqttClient::publishStatus(VT_INT, objName, value);
 }
 
 void cmd_serialBegin() {
@@ -586,7 +590,7 @@ void cmd_ultrasonicCm() {
     String type = sCmd.next();
     String empty_level = sCmd.next();
     String full_level = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     Ultrasonic::ultrasonicCm_value_name = measure_unit;
 
@@ -599,8 +603,8 @@ void cmd_ultrasonicCm() {
 }
 
 void cmd_oneWire() {
-    uint8_t pin = sCmd.nextInt();
-    onewire.attach(pin);
+    String assign = sCmd.next();
+    onewire.attach(assign.toInt());
 }
 
 // dallas temp1 0x14 Температура Датчики anydata 1
@@ -616,7 +620,7 @@ void cmd_dallas() {
     String widget = sCmd.next();
     String page = sCmd.next();
     String type = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     // uint8_t *address = String(sCmd.next()).toInt();
     dallasSensors.add(name, address);
@@ -626,7 +630,7 @@ void cmd_dallas() {
 
 //levelPr p 14 12 Вода#в#баке,#% Датчики fillgauge 125 20 1
 void cmd_levelPr() {
-    String value_name = sCmd.next();
+    String name = sCmd.next();
     String trig = sCmd.next();
     String echo = sCmd.next();
     String widget_name = sCmd.next();
@@ -634,9 +638,9 @@ void cmd_levelPr() {
     String type = sCmd.next();
     String empty_level = sCmd.next();
     String full_level = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
-    Ultrasonic::levelPr_value_name = value_name;
+    Ultrasonic::levelPr_value_name = name;
 
     options.write("e_lev", empty_level);
     options.write("f_lev", full_level);
@@ -644,38 +648,38 @@ void cmd_levelPr() {
     options.write("echo", echo);
     pinMode(trig.toInt(), OUTPUT);
     pinMode(echo.toInt(), INPUT);
-    createWidget(widget_name, page_name, order, type, value_name);
+    createWidget(widget_name, page_name, order, type, name);
 }
 
 //dhtH h 2 dht11 Влажность#DHT,#t°C Датчики any-data 1
 void cmd_dhtH() {
-    String value_name = sCmd.next();
+    String name = sCmd.next();
     String pin = sCmd.next();
     String sensor_type = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    int order = sCmd.nextInt();
-    DHTSensor::dhtH_value_name = value_name;
+    String order = sCmd.next();
+    DHTSensor::dhtH_value_name = name;
     if (sensor_type == "dht11") {
         DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT11);
     }
     if (sensor_type == "dht22") {
         DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT22);
     }
-    createWidget(widget_name, page_name, order, type, value_name);
+    createWidget(widget_name, page_name, order, type, name);
 }
 
 // dhtT t 2 dht11 Температура#DHT,#t°C Датчики any-data 1
 void cmd_dhtT() {
-    String value_name = sCmd.next();
+    String name = sCmd.next();
     String pin = sCmd.next();
     String sensor_type = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    int order = sCmd.nextInt();
-    DHTSensor::dhtT_value_name = value_name;
+    String order = sCmd.next();
+    DHTSensor::dhtT_value_name = name;
     if (sensor_type == "dht11") {
         DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT11);
     }
@@ -683,14 +687,14 @@ void cmd_dhtT() {
         DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT22);
     }
 
-    createWidget(widget_name, page_name, order, type, value_name);
+    createWidget(widget_name, page_name, order, type, name);
 }
 
 //dhtDewpoint Точка#росы: Датчики 5
 void cmd_dhtDewpoint() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     createWidget(widget_name, page_name, order, "anydata", "dhtDewpoint");
 }
@@ -699,7 +703,7 @@ void cmd_dhtDewpoint() {
 void cmd_dhtPerception() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     createWidget(widget_name, page_name, order, "any-data", "dhtPerception");
 }
@@ -708,7 +712,7 @@ void cmd_dhtPerception() {
 void cmd_dhtComfort() {
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     createWidget(widget_name, page_name, order, "anydata", "dhtComfort");
 }
@@ -721,27 +725,28 @@ void cmd_analog() {
     String page = sCmd.next();
     String type = sCmd.next();
 
-    int in_min = sCmd.nextInt();
-    int in_max = sCmd.nextInt();
-    int out_min = sCmd.nextInt();
-    int out_max = sCmd.nextInt();
+    String in_min = sCmd.next();
+    String in_max = sCmd.next();
+    String out_min = sCmd.next();
+    String out_max = sCmd.next();
 
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
-    Sensors::add(name, pin)->setMap(in_min, in_max, out_min, out_max);
+    BaseSensor *item = Sensors::add(name, pin);
+    item->setMap(in_min.toInt(), in_max.toInt(), out_min.toInt(), out_max.toInt());
 
     createWidget(descr, page, order, type, name);
 }
 
 // bmp280T temp1 0x76 Температура#bmp280 Датчики any-data 1
 void cmd_bmp280T() {
-    String value_name = sCmd.next();
+    String name = sCmd.next();
     String address = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    int order = sCmd.nextInt();
-    BMP280Sensor::bmp280T_value_name = value_name;
+    String order = sCmd.next();
+    BMP280Sensor::bmp280T_value_name = name;
 
     BMP280Sensor::bmp.begin(hexStringToUint8(address));
     BMP280Sensor::bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
@@ -750,18 +755,18 @@ void cmd_bmp280T() {
                                   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
                                   Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
 
-    createWidget(widget_name, page_name, order, type, value_name);
+    createWidget(widget_name, page_name, order, type, name);
 }
 
 //bmp280P press1 0x76 Давление#bmp280 Датчики any-data 2
 void cmd_bmp280P() {
-    String value_name = sCmd.next();
+    String name = sCmd.next();
     String address = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    int order = sCmd.nextInt();
-    BMP280Sensor::bmp280P_value_name = value_name;
+    String order = sCmd.next();
+    BMP280Sensor::bmp280P_value_name = name;
 
     BMP280Sensor::bmp.begin(hexStringToUint8(address));
     BMP280Sensor::bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
@@ -770,7 +775,7 @@ void cmd_bmp280P() {
                                   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
                                   Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
 
-    createWidget(widget_name, page_name, order, type, value_name);
+    createWidget(widget_name, page_name, order, type, name);
 }
 
 //=========================================================================================================================================
@@ -782,45 +787,45 @@ void cmd_bme280T() {
     String descr = sCmd.next();
     String page = sCmd.next();
     String type = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     createWidget(descr, page, order, type, name);
 }
 
 //bme280P pres1 0x76 Давление#bmp280 Датчики any-data 1
 void cmd_bme280P() {
-    String value_name = sCmd.next();
+    String name = sCmd.next();
     String address = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
-    createWidget(widget_name, page_name, order, type, value_name);
+    createWidget(widget_name, page_name, order, type, name);
 }
 
 //bme280H hum1 0x76 Влажность#bmp280 Датчики any-data 1
 void cmd_bme280H() {
-    String value_name = sCmd.next();
+    String name = sCmd.next();
     String address = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
-    createWidget(widget_name, page_name, order, type, value_name);
+    createWidget(widget_name, page_name, order, type, name);
 }
 
 //bme280A altit1 0x76 Высота#bmp280 Датчики any-data 1
 void cmd_bme280A() {
-    String value_name = sCmd.next();
+    String name = sCmd.next();
     String address = sCmd.next();
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
-    createWidget(widget_name, page_name, order, type, value_name);
+    createWidget(widget_name, page_name, order, type, name);
 }
 
 void cmd_http() {
@@ -839,7 +844,7 @@ void cmd_firmwareUpdate() {
 void cmd_firmwareVersion() {
     String widget = sCmd.next();
     String page = sCmd.next();
-    int order = sCmd.nextInt();
+    String order = sCmd.next();
 
     liveData.write("firmver", FIRMWARE_VERSION);
     createWidget(widget, page, order, "anydata", "firmver");
@@ -865,9 +870,10 @@ void cmd_timerStart() {
         value = period.toInt() * ONE_HOUR_s;
     }
 
-    Timers::add(name, value);
+    String objName = "timer" + name;
 
-    liveData.writeInt("timer" + name, 1);
+    Timers::add(objName, value);
+    liveData.writeInt(objName, "1");
 }
 
 void cmd_push() {

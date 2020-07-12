@@ -105,8 +105,8 @@ extern void setLedStatus(LedStatus_t);
 extern String add_set(String param_name);
 
 // Widget
-extern void createWidget(String widget_name, String page_name, int order, String file, String topic, String name1 = "", String param1 = "", String name2 = "", String param2 = "", String name3 = "", String param3 = "");
-extern void createChart(String widget_name, String page_name, int order, String file, String topic, String maxCount);
+extern void createWidget(String widget_name, String page_name, String order, String file, String topic, String name1 = "", String param1 = "", String name2 = "", String param2 = "", String name3 = "", String param3 = "");
+extern void createChart(String widget_name, String page_name, String order, String file, String topic, String maxCount);
 extern void clearWidgets();
 
 // PushingBox

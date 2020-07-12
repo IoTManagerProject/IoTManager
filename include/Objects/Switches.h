@@ -5,33 +5,30 @@
 #include <functional>
 
 #include "Base/Item.h"
+#include "Base/Assigned.h"
 
-class Switch : public Item, public PinAssigned {
+class Switch : public Item,
+               public PinAssigned {
    public:
     Switch(const String& name, const String& assign) : Item{name, assign},
-                                                       PinAssigned{assign} {
+                                                       PinAssigned{this} {
         _obj = new Bounce();
     }
 
     void onAssign() override {
         _obj->attach(getPin(), INPUT);
-        _state = _obj->read();
     }
 
     void setDebounce(int value) {
         _obj->interval(value);
     }
 
-    bool update() {
-        bool res = false;
-        if (_obj) {
-            res = _obj->update();
-            _state = _obj->read();
-        }
-        return res;
+    bool hasValue() override {
+        return _obj->update();
     }
 
-    void onStateChange() override {
+    const String onGetValue() override {
+        return _obj->read() ? "1" : "0";
     }
 
    private:
@@ -42,7 +39,7 @@ typedef std::function<void(Switch*)> OnSwitchChangeState;
 
 class Switches {
    public:
-    Switch* add(const String& name, const String& pin);
+    Switch* add(const String& name, const String& assign);
     void loop();
     Switch* last();
     Switch* at(size_t index);

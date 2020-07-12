@@ -1,7 +1,6 @@
 #include "Sensors/BMP280Sensor.h"
 
 #include "Global.h"
-#include "Events.h"
 #include "MqttClient.h"
 #include "Utils/PrintMessage.h"
 

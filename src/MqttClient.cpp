@@ -94,6 +94,29 @@ const String parseControl(const String& str) {
     return res;
 }
 
+const String getStatusPath(const String& topic) {
+    String res = _deviceRoot;
+    res += "/";
+    res += topic.c_str();
+    res += "/status";
+    return res;
+}
+
+bool publshLogEntry(const String topic, unsigned long time, float value) {
+    String json = "{\"status\":[";
+    json += "\"x\":\"";
+    json += String(time, DEC);
+    json += "\",\"y1\":\"";
+    json += String(value, 2);
+    json += "\"]}";
+
+    return publish(getStatusPath(topic).c_str(), json.c_str());
+}
+
+void publishCharts() {
+    Logger::publishTasks(publshLogEntry);
+}
+
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     pm.info("<= " + String(topic));
     String topicStr = String(topic);
@@ -105,7 +128,7 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     if (payloadStr.equalsIgnoreCase("hello")) {
         publishWidgets();
         publishState();
-        Logger::publish();
+        publishCharts();
     } else if (topicStr.indexOf("control")) {
         // название топика -  команда,
         // значение - параметр
@@ -158,14 +181,6 @@ boolean publishControl(const String& id, const String& topic, const String& stat
     return publish(path.c_str(), state.c_str());
 }
 
-const String getStatusPath(const String& topic) {
-    String res = _deviceRoot;
-    res += "/";
-    res += topic;
-    res += "/status";
-    return res;
-}
-
 const String getOrderPath(const String& topic) {
     String res = _prefix;
     res += "/";
@@ -213,9 +228,7 @@ void publishWidgets() {
         getMemoryLoad("[I] after send all widgets");
     }
 }
-#endif
-
-#ifndef LAYOUT_IN_RAM
+#else
 void publishWidgets() {
     auto file = seekFile("layout.txt");
     if (!file) {
@@ -231,35 +244,20 @@ void publishWidgets() {
 }
 #endif
 
+bool isExcludedKey(const String& key) {
+    return key.equals("time") ||
+           key.equals("name") ||
+           key.equals("lang") ||
+           key.equals("ip") ||
+           key.endsWith("_in");
+}
+
 void publishState() {
-    // строка в топик/значения
-    // {"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
-    // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
-    // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
-
-    // liveData.forEach([](const ValueType_t type, const String& key, const String& value) {
-    //     publishStatus(type, key, value);
-    // });
-
-    // String str = liveData.asJson();
-    // str.replace("{", "");
-    // str.replace("}", "");
-    // str += ",";
-
-    // while (str.length()) {
-    //     String tmp = selectToMarker(str, ",");
-
-    //     String topic = selectToMarker(tmp, ":");
-    //     topic.replace("\"", "");
-
-    //     String state = selectToMarkerLast(tmp, ":");
-    //     state.replace("\"", "");
-
-    //     if ((topic != "time") && (topic != "name") && (topic != "lang") && (topic != "ip") && (topic.indexOf("_in") < 0)) {
-    //         publishStatus(topic, state);
-    //     }
-    //     str = deleteBeforeDelimiter(str, ",");
-    // }
+    liveData.forEach([](const ValueType_t type, const String& key, const String& value) {
+        if (!isExcludedKey(key)) {
+            publishStatus(type, key, value);
+        }
+    });
 }
 
 const String getStateStr() {

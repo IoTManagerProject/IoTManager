@@ -4,43 +4,54 @@
 #include <functional>
 
 #include "Base/Item.h"
+#include "Base/Assigned.h"
 
 class ButtonItem : public Item,
-                   public Assigned {
+                   public PinAssigned {
    public:
-    ButtonItem(const String& name, const String& assign, const String& value) : Item{name, assign, value},
-                                                                                Assigned(assign.c_str()){};
-};
+    ButtonItem(const String& name, const String& assign, const String& value) : Item{name, assign},
+                                                                                PinAssigned{this} {};
 
-class Button : public ButtonItem, public PinAssigned {
-   public:
-    Button(const String& name, const String& assign, const String& value, const String& inverted) : ButtonItem{name, assign, value},
-                                                                                                    PinAssigned(assign.c_str()) {
-        _inverted = inverted.toInt();
-    };
-
-    void onAssign() override {
-        pinMode(getPin(), OUTPUT);
+    void setInverted(bool value) {
+        _inverted = value;
     }
 
-    void onStateChange() override {
-        digitalWrite(getPin(), _inverted ? _state : !_state);
+    bool isInverted() {
+        return _inverted;
+    }
+
+    void toggleState() {
+        bool state = !getValue().toInt();
+        setValue(String(state));
     }
 
    private:
     bool _inverted;
 };
 
+class Button : public ButtonItem {
+   public:
+    Button(const String& name, const String& assign, const String& value) : ButtonItem{name, assign, value} {};
+
+    void onAssign() override {
+        pinMode(getPin(), OUTPUT);
+    }
+
+    void onValueUpdate(const String& value) override {
+        digitalWrite(getPin(), isInverted() ? value.toInt() : !value.toInt());
+    }
+};
+
 class Buttons {
    public:
-    ButtonItem* add(const String& name, const String& assign, const String& value, const String& inverted);
-    ButtonItem* last();
-    ButtonItem* at(size_t index);
-    ButtonItem* get(const String name);
+    Button* add(const String& name, const String& assign, const String& value, const String& inverted);
+    Button* last();
+    Button* at(size_t index);
+    Button* get(const String name);
     size_t count();
 
    private:
-    std::vector<ButtonItem*> _items;
+    std::vector<Button> _items;
 };
 
 extern Buttons myButtons;

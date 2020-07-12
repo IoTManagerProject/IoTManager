@@ -9,7 +9,8 @@ class Assigned {
         onAssign();
     }
 
-    virtual void onAssign() {}
+    virtual void onAssign() {
+    }
 
     const char* getAssign() {
         return _assign;
@@ -19,11 +20,14 @@ class Assigned {
     char _assign[8];
 };
 
-class PinAssigned : public Assigned {
+class PinAssigned {
    public:
-    PinAssigned(const String& assign) : Assigned(assign){};
+    PinAssigned(Assigned* obj) : _obj{obj} {};
 
     uint8_t getPin() {
-        return atoi(_assign);
+        return atoi(_obj->getAssign());
     }
+
+   private:
+    Assigned* _obj;
 };

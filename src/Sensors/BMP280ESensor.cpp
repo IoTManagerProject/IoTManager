@@ -1,14 +1,13 @@
 #include "Sensors/BME280Sensor.h"
 
 #include "Global.h"
-#include "Events.h"
 #include "MqttClient.h"
 #include "Utils/PrintMessage.h"
 
 Adafruit_BME280 bme;
-class BME280Sensor : public SensorItem {
+class BME280Sensor : public BaseSensor {
    public:
-    BME280Sensor(const String& name, const String& assign) : SensorItem(name, assign) {
+    BME280Sensor(const String& name, const String& assign) : BaseSensor(name, assign) {
         if (name == "temperature") {
             obj = bme.getTemperatureSensor();
         } else if (assign == "humidity") {
@@ -24,7 +23,7 @@ class BME280Sensor : public SensorItem {
         bme.begin(hexStringToUint8(getAssign()));
     }
 
-    bool onRead() override {
+    const String onGetValue() override {
         String assign = getAssign();
         float value;
         if (assign == "temperature") {
@@ -38,11 +37,7 @@ class BME280Sensor : public SensorItem {
             value = bme.readAltitude(1013.25);
         }
 
-        liveData.writeFloat(getName(), value);
-        Scenario::fire(getName());
-        MqttClient::publishStatus(VT_FLOAT, getName(), String(value, 2));
-
-        return true;
+        return String(value, DEC);
     }
 
    private:

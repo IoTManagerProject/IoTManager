@@ -10,19 +10,23 @@
 #endif
 
 #include "Base/Item.h"
+#include "Base/Assigned.h"
 
-class Pwm : public Item, public PinAssigned {
+class Pwm : public Item,
+            public PinAssigned,
+            public ValueMap {
    public:
-    Pwm(const String& name, const String& assign, const String& value) : Item{name, assign, value},
-                                                                         PinAssigned(assign){};
-
-    void onAssigned(uint8_t pin) {
+    Pwm(const String& name, const String& assign) : Item{name, assign},
+                                                    PinAssigned{this},
+                                                    ValueMap{this} {};
+    void onAssign() override {
         pinMode(getPin(), OUTPUT);
     }
 
-    void onStateChange() override {
-        analogWrite(getPin(), getState());
-    };
+   protected:
+    void onValueUpdate(const String& value) override {
+        analogWrite(getPin(), mapValue(value.toInt()));
+    }
 };
 
 class Pwms {

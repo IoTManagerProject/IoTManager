@@ -37,10 +37,12 @@ class KeyValue {
         _value = value;
         _type = VT_STRING;
     };
-    void setValueInt(int value) {
+
+    void setValueInt(String value) {
         _value = value;
         _type = VT_INT;
     };
+
     void setValueFloat(float value) {
         _value = value;
         _type = VT_FLOAT;
@@ -68,7 +70,7 @@ class KeyValueStore {
         DynamicJsonBuffer json;
         JsonObject& root = json.createObject();
         for (auto item : _items) {
-             switch (item.getType()) {
+            switch (item.getType()) {
                 case VT_STRING:
                     root[item.getKey()] = item.getValue();
                     break;
@@ -102,33 +104,28 @@ class KeyValueStore {
         } else {
             _items.push_back(KeyValue{key.c_str(), value.c_str(), VT_STRING});
         }
-        // return jsonWriteStr(_pool, key, value);
     }
 
     const String read(const String& key) {
         auto item = findKey(key);
         return item ? item->getValue() : "";
-        //return  jsonReadStr(_pool, obj);
     }
 
     int readInt(const String& key) {
         String buf = read(key);
         return buf.toInt();
-        //return read(_pool, name);
     }
 
-    void writeInt(const String& key, int value) {
+    void writeInt(const String& key, const String& value) {
         auto item = findKey(key);
         if (item) {
             item->setValueInt(value);
         } else {
-            _items.push_back(KeyValue{key.c_str(), String(value, DEC).c_str(), VT_INT});
+            _items.push_back(KeyValue{key.c_str(), value.c_str(), VT_INT});
         }
-        // jsonWriteInt(_pool, name, value);
     }
 
     void writeFloat(const String& key, float value) {
-        // jsonWriteFloat(_pool, name, value);
         auto item = findKey(key);
         if (item) {
             item->setValueFloat(value);
@@ -140,7 +137,6 @@ class KeyValueStore {
     float readFloat(const String& key) {
         String buf = read(key);
         return buf.toFloat();
-        //return jsonReadFloat(_pool, name);
     }
 };
 

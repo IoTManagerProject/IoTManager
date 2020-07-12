@@ -67,6 +67,20 @@ enum BroadcastMessage_t {
     NUM_BROADCAST_MESSAGES
 };
 
+enum LoopItems {
+    LI_CLOCK,
+    LT_FLAG_ACTION,
+    LI_MQTT_CLIENT,
+    LI_CMD,
+    LI_ITEMS,
+    LI_SCENARIO,
+    LI_BROADCAST,
+    LI_SERIAL,
+    LT_TASKS,
+    LT_LOGGER,
+    NUM_LOOP_ITEMS
+};
+
 extern const char* DEVICE_LAYOUT_FILE;
 extern const char* DEVICE_RUNTIME_FILE;
 extern const char* DEVICE_CONFIG_FILE;

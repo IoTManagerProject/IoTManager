@@ -15,5 +15,5 @@
 namespace Sensors {
 AnalogSensor* add(const String& name, const String& pin);
 void update();
-SensorItem* last();
+
 }  // namespace Sensors

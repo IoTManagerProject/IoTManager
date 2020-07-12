@@ -13,5 +13,5 @@ class Named {
     }
 
    protected:
-    char _name[32];
+    char _name[16];
 };

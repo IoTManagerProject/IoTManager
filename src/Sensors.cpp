@@ -1,27 +1,33 @@
 #include "Sensors.h"
 
-#include "Events.h"
 #include "Utils/PrintMessage.h"
 
 const static char* MODULE = "Sensors";
 
 namespace Sensors {
-std::vector<SensorItem> _items;
+
+std::vector<BaseSensor*> _items;
+
+BaseSensor* last() {
+    return _items.at(_items.size() - 1);
+}
 
 AnalogSensor* add(const String& name, const String& pin) {
-    pm.info("name: " + name + ", pin: " + pin);
-    _items.push_back(AnalogSensor(name, pin));
+    _items.push_back(new AnalogSensor(name, pin));
     return (AnalogSensor*)last();
 }
 
-SensorItem* last() {
-    return &_items.at(_items.size() - 1);
-}
-
 void update() {
-    for (auto item : _items) {
-        MqttClient::publishStatus(VT_INT, item.getName(), String(item.read(), DEC));
-        Scenario::fire(&item);
+    for (BaseSensor* item : _items) {
+    
+        String name = item->getName();
+        String value = item->getValue();
+        
+        Scenario::fire(item);
+        liveData.write(name, value);
+        MqttClient::publishStatus(VT_INT, name, value);
+        
+        //MqttClient::publishStatus(VT_FLOAT, getName(), String(value, 2));
     }
 }
 }  // namespace Sensors

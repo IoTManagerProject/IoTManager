@@ -1,6 +1,5 @@
 #include "Timers.h"
 
-#include "Events.h"
 #include "Global.h"
 
 Timer::Timer(const char* name, unsigned long time) {
@@ -24,11 +23,9 @@ const char* Timer::name() const {
 }
 
 void Timer::onTimer() {
-    String name = "timer";
-    name += _name;
-    
-    liveData.writeInt(name, 0);
-    Scenario::fire(name);
+    String objName = String("timer") + _name;
+    liveData.writeInt(objName, "0");
+    Scenario::fire(objName);
 }
 
 void Timer::setTime(unsigned long value) {
