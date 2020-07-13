@@ -24,7 +24,7 @@ const char* Timer::name() const {
 
 void Timer::onTimer() {
     String objName = String("timer") + _name;
-    liveData.writeInt(objName, "0");
+    liveData.write(objName, "0", VT_INT);
     Scenario::fire(objName);
 }
 

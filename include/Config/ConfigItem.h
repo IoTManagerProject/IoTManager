@@ -15,10 +15,6 @@ class ConfigItem {
         return _timestamp;
     }
 
-    virtual bool validate() {
-        return true;
-    }
-
     virtual void loadString(const String& str) {
         DynamicJsonBuffer buf;
         JsonObject& root = buf.parseObject(str);

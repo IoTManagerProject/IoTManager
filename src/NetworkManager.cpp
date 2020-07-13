@@ -6,10 +6,14 @@ namespace NetworkManager {
 
 static const char* MODULE = "Network";
 
-// Errors
+enum ConnectionStatus_t {
+    CONNECTION_ERROR,
+    CONNECTION_OK,
+};
+
 int wifi_error = 0;
 int mqtt_error = 0;
-bool _connected = false;
+bool _lastStatus = false;
 
 void init() {
     pm.info("init");
@@ -31,12 +35,42 @@ void init() {
     }
 }
 
+boolean isNetworkActive() {
+    return WiFi.status() == WL_CONNECTED;
+}
+
+IPAddress getHostIP() {
+    return WiFi.getMode() == WIFI_STA ? WiFi.localIP() : WiFi.localIP();
+}
+
+void check_network_status() {
+    LedStatus_t _led = LED_OFF;
+    if (isNetworkActive()) {
+        if (_lastStatus == CONNECTION_ERROR) {
+            _lastStatus = CONNECTION_OK;
+        }
+        if (config.mqtt()->isEnabled()) {
+            if (!MqttClient::isConnected()) {
+                _led = LED_SLOW;
+            }
+        }
+    } else {
+        if (_lastStatus == CONNECTION_OK) {
+            pm.error("connection lost");
+            _led = LED_FAST;
+            _lastStatus = CONNECTION_ERROR;
+        }
+    }
+    setLedStatus(_led);
+}
+
 void startSTAMode() {
     ts.remove(WIFI_SCAN);
-    setLedStatus(LED_SLOW);
+
     String ssid, passwd;
     config.network()->getSSID(WIFI_STA, ssid);
     config.network()->getPasswd(WIFI_STA, passwd);
+
     pm.info("STA Mode: " + ssid);
 
     WiFi.mode(WIFI_STA);
@@ -78,38 +112,11 @@ void startSTAMode() {
 
     if (isNetworkActive()) {
         ts.add(
-            MQTT_CONNECTION, MQTT_RECONNECT_INTERVAL, [&](void*) {
-                if (isNetworkActive()) {
-                    if (MqttClient::isConnected()) {
-                        if (!_connected) {
-                            setLedStatus(LED_OFF);
-                            _connected = true;
-                        }
-                    } else {
-                        setLedStatus(LED_FAST);
-                        if (!config.mqtt()->validate()) return;
-                        if (MqttClient::connect()) {
-                            setLedStatus(LED_OFF);
-                        }
-                        mqtt_error++;
-                    }
-                } else {
-                    if (_connected) {
-                        pm.error("connection lost");
-                        _connected = false;
-                    }
-                    ts.remove(MQTT_CONNECTION);
-                    wifi_error++;
-                    startAPMode();
-                }
+            NETWORK_CONNECTION, ONE_SECOND_ms, [&](void*) {
+                check_network_status();
             },
             nullptr, false);
-
-        setLedStatus(LED_OFF);
-    } else {
-        pm.error("failed: " + String(connRes, DEC));
-        startAPMode();
-    };
+    }
 }
 
 bool startAPMode() {
@@ -155,14 +162,6 @@ void startScaninng() {
         if (res) startSTAMode();
     },
                            true);
-}
-
-boolean isNetworkActive() {
-    return WiFi.status() == WL_CONNECTED;
-}
-
-IPAddress getHostIP() {
-    return WiFi.getMode() == WIFI_STA ? WiFi.localIP() : WiFi.localIP();
 }
 
 }  // namespace NetworkManager

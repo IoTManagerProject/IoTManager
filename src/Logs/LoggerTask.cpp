@@ -1,22 +1,27 @@
-#include "LoggerTask.h"
+#include "Logs/LoggerTask.h"
 
 #include "Global.h"
 #include "MqttClient.h"
 
 static const char* MODULE = "LoggerTask";
 
-LoggerTask::LoggerTask(const String& name, unsigned long period, size_t limit) : _period{period},
-                                                                                 _limit{limit},
-                                                                                 _lastExecute{0} {
-    strcpy(_name, name.c_str());
+LoggerTask::LoggerTask(const size_t id, const char* name, unsigned long period, size_t limit) : _id{id},
+                                                                                                _logInterval{period},
+                                                                                                _limit{limit},
+                                                                                                _lastUpdated{0} {
+    _name = strdup(name);
     _buf.reserve(_limit);
 
-    String metafile = getMetaFilename();
+    String metafile = getMetaFile();
     if (LittleFS.exists(metafile)) {
         auto file = LittleFS.open(metafile, FILE_READ);
         file.read((uint8_t*)&_meta, sizeof(_meta));
         file.close();
     }
+}
+
+LoggerTask::~LoggerTask() {
+    delete _name;
 }
 
 const String LoggerTask::getName() const {
@@ -30,7 +35,7 @@ const String LoggerTask::getTopic() {
     return buf;
 }
 
-const String LoggerTask::getMetaFilename() const {
+const String LoggerTask::getMetaFile() const {
     char buf[32];
     strcpy(buf, "log_");
     strcat(buf, _name);
@@ -55,7 +60,7 @@ void LoggerTask::clear() {
 }
 
 void LoggerTask::storeMeta() {
-    auto file = LittleFS.open(getMetaFilename(), FILE_WRITE);
+    auto file = LittleFS.open(getMetaFile(), FILE_WRITE);
     if (file) {
         file.write((uint8_t*)&_meta, sizeof(_meta));
     } else {
@@ -69,8 +74,8 @@ void LoggerTask::update() {
         auto file = LittleFS.open(getDataFile().c_str(), "a");
         if (file) {
             for (auto entry : _buf) {
-                size_t bytes = entry.printTo(file);
-                _meta.add(bytes, entry.time());
+                entry.printTo(file);
+                _meta.add(entry);
             }
             _buf.clear();
             file.close();
@@ -78,16 +83,42 @@ void LoggerTask::update() {
         }
     }
 
-    if (millis_since(_lastExecute) >= _period) {
-        if (timeNow->hasSynced()) {
-            _buf.push_back(LogEntry(timeNow->getEpoch(), liveData.readInt(_name)));
-            pm.info(String(_buf.size(), DEC) + " / " + String(_limit, DEC));
+    if (millis_since(_lastUpdated) >= _logInterval) {
+        if (now.hasSynced()) {
+            unsigned long epoch = now.getEpoch();
+            String value;
+            ValueType_t valueType;
+            if (liveData.read(_name, value, valueType)) {
+                LogEntry entry = LogEntry(epoch, value, valueType);
+                _buf.push_back(entry);
+
+                MqttClient::publishStatus(_name, value, valueType);
+                pm.info(String(_name) + ": " + value);
+            }
         }
-        _lastExecute = millis();
+        _lastUpdated = millis();
     }
 }
 
-void LoggerTask::publish() {
+const String LoggerTask::asJson() {
+    String res;
+    res += "{\"id\":\"";
+    res += String(_id, DEC);
+    res += "\",";
+    res += "\"name\":\"";
+    res += _name;
+    res += "\",";
+    res += "\"entries\":\"";
+    res += String(getMetadata()->entry_count, DEC);
+    res += "\",";
+    res += "\"size\":\"";
+    res += prettyBytes(getMetadata()->size());
+    res += "\"";
+    res += "}";
+    return res;
+}
+
+void LoggerTask::publish(Writer*) {
 }
 
 void LoggerTask::postFile() {

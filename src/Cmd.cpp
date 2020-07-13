@@ -7,10 +7,9 @@
 #include "WebClient.h"
 #include "Sensors.h"
 #include "Scenario.h"
-#include "Sensors/AnalogSensor.h"
-#include "Sensors/DallasSensors.h"
-#include "Sensors/OneWireBus.h"
 #include "Timers.h"
+#include "Widgets.h"
+#include "Base/StringCommand.h"
 #include "Objects/Switches.h"
 #include "Objects/Buttons.h"
 #include "Objects/PwmItems.h"
@@ -18,7 +17,8 @@
 #include "Objects/Terminal.h"
 #include "Objects/Telnet.h"
 #include "Utils/PrintMessage.h"
-#include "Base/StringCommand.h"
+#include "Sensors/AnalogSensor.h"
+#include "Sensors/OneWireBus.h"
 
 static const char *MODULE = "Cmd";
 
@@ -37,11 +37,12 @@ HardwareSerial *mySerial = nullptr;
 
 void cmd_init() {
     pm.info(TAG_INIT);
+
     mySwitches.setOnChangeState([](Switch *obj) {
         String name = String("switch") + obj->getName();
         pm.info(name);
         Scenario::fire(name);
-        liveData.writeInt(name, obj->getValue());
+        liveData.write(name, obj->getValue(), VT_INT);
     });
 
     sCmd.addCommand("button", cmd_button);
@@ -142,9 +143,9 @@ void cmd_logging() {
     String page = sCmd.next();
     String order = sCmd.next();
 
-    Logger::add(name, parsePeriod(period), maxCount.toInt());
+    Logger::add(name.c_str(), parsePeriod(period), maxCount.toInt());
     // /prefix/3234045-1589487/value_name_ch
-    createChart(descr, page, order, "chart", name + "_ch", maxCount);
+    Widgets::createChart(descr, page, order, "chart", name + "_ch", maxCount);
 }
 
 void cmd_button() {
@@ -160,9 +161,9 @@ void cmd_button() {
 
     myButtons.add(objName, assign, state, inverted);
 
-    liveData.write(objName, state);
+    liveData.write(objName, state, VT_INT);
 
-    createWidget(descr, page, order, "toggle", objName);
+    Widgets::createWidget(descr, page, order, "toggle", objName);
 
     // if (assign == "scen") {
     //     config.general()->enableScenario(state.toInt());
@@ -209,8 +210,8 @@ void cmd_buttonSet() {
     String objName = "button" + name;
 
     Scenario::fire(objName);
-    liveData.writeInt(objName, state);
-    MqttClient::publishStatus(VT_INT, objName, state);
+    liveData.write(objName, state, VT_INT);
+    MqttClient::publishStatus(objName, state, VT_INT);
 }
 
 void cmd_buttonChange() {
@@ -225,9 +226,9 @@ void cmd_buttonChange() {
     btn->toggleState();
 
     String objName = "button" + name;
-
-    liveData.writeInt(objName, btn->getValue());
-    MqttClient::publishStatus(VT_INT, objName, btn->getValue());
+    String value = btn->getValue();
+    liveData.write(objName, value, VT_INT);
+    MqttClient::publishStatus(objName, value, VT_INT);
 }
 
 void cmd_pinSet() {
@@ -257,8 +258,8 @@ void cmd_pwm() {
     String objName = "pwm" + name;
 
     myPwm.add(objName, assign, value);
-    liveData.writeInt(objName, value);
-    createWidget(description, page, order, "range", objName);
+    liveData.write(objName, value, VT_INT);
+    Widgets::createWidget(description, page, order, "range", objName);
 }
 
 void cmd_pwmSet() {
@@ -270,10 +271,8 @@ void cmd_pwmSet() {
     String objName = "pwm" + name;
 
     Scenario::fire(objName);
-
-    liveData.writeInt(objName, value);
-
-    MqttClient::publishStatus(VT_INT, objName, value);
+    liveData.write(objName, value, VT_INT);
+    MqttClient::publishStatus(objName, value, VT_INT);
 }
 
 void cmd_switch() {
@@ -290,7 +289,7 @@ void cmd_switch() {
 
     String objName = "switch" + name;
 
-    liveData.writeInt(objName, item->getValue());
+    liveData.write(objName, item->getValue(), VT_INT);
 }
 
 void loop_items() {
@@ -314,17 +313,17 @@ void cmd_inputDigit() {
     String start_state = sCmd.next();
     String order = sCmd.next();
 
-    liveData.write("digit" + number, start_state);
-    createWidget(widget_name, page_name, order, "inputNum", "digit" + number);
+    liveData.write("digit" + number, start_state, VT_STRING);
+    Widgets::createWidget(widget_name, page_name, order, "inputNum", "digit" + number);
 }
 
 void cmd_digitSet() {
     String name = sCmd.next();
     String value = sCmd.next();
 
-    String objName = "pwm" + name;
-    liveData.write(objName, value);
-    MqttClient::publishStatus(VT_STRING, objName, value);
+    String objName = "digit" + name;
+    liveData.write(objName, value, VT_STRING);
+    MqttClient::publishStatus(objName, value, VT_STRING);
 }
 
 //=====================================================================================================================================
@@ -336,11 +335,11 @@ void cmd_inputTime() {
     widget_name.replace("#", " ");
     String page_name = sCmd.next();
     page_name.replace("#", " ");
-    String start_state = sCmd.next();
+    String state = sCmd.next();
     String order = sCmd.next();
 
-    liveData.write("time" + number, start_state);
-    createWidget(widget_name, page_name, order, "inputTime", "time" + number);
+    liveData.write("time" + number, state, VT_STRING);
+    Widgets::createWidget(widget_name, page_name, order, "inputTime", "time" + number);
 }
 
 void cmd_timeSet() {
@@ -348,33 +347,34 @@ void cmd_timeSet() {
     String value = sCmd.next();
 
     String objName = "time" + name;
-    liveData.write(objName, value);
-    MqttClient::publishStatus(VT_STRING, objName, value);
+    liveData.write(objName, value, VT_STRING);
+    MqttClient::publishStatus(objName, value, VT_STRING);
 }
 
 void cmd_text() {
-    String number = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
+    String name = sCmd.next();
+    String descr = sCmd.next();
+    String page = sCmd.next();
     String order = sCmd.next();
 
-    createWidget(widget_name, page_name, order, "anydata", "text" + number);
+    String objName = "text" + name;
+    Widgets::createWidget(descr, page, order, "anydata", objName);
 }
 
 void cmd_textSet() {
     String name = sCmd.next();
-    String text = sCmd.next();
-    text.replace("_", " ");
+    String value = sCmd.next();
+    value.replace("_", " ");
 
-    if (text.indexOf("-time") >= 0) {
-        text.replace("-time", "");
-        text.replace("#", " ");
-        text = text + " " + timeNow->getDateTimeDotFormated();
+    if (value.indexOf("-time") >= 0) {
+        value.replace("-time", "");
+        value.replace("#", " ");
+        value = value + " " + now.getDateTimeDotFormated();
     }
 
     String objName = "text" + name;
-    liveData.write(objName, text);
-    MqttClient::publishStatus(VT_STRING, objName, text);
+    liveData.write(objName, value, VT_STRING);
+    MqttClient::publishStatus(objName, value, VT_STRING);
 }
 
 void cmd_stepper() {
@@ -382,58 +382,59 @@ void cmd_stepper() {
     String pin_step = sCmd.next();
     String pin_dir = sCmd.next();
 
-    liveData.write("stepper" + name, pin_step + " " + pin_dir);
+    // String objName = "stepper" + name;
+    // liveData.write(objName, pin_step + " " + pin_dir);
 
-    pinMode(pin_step.toInt(), OUTPUT);
-    pinMode(pin_dir.toInt(), OUTPUT);
+    // pinMode(pin_step.toInt(), OUTPUT);
+    // pinMode(pin_dir.toInt(), OUTPUT);
 }
 
 void cmd_stepperSet() {
     String stepper_number = sCmd.next();
     String steps = sCmd.next();
-    options.write("steps" + stepper_number, steps);
-    String stepper_speed = sCmd.next();
-    String pin_step = selectToMarker(options.read("stepper" + stepper_number), " ");
-    String pin_dir = deleteBeforeDelimiter(options.read("stepper" + stepper_number), " ");
-    Serial.println(pin_step);
-    Serial.println(pin_dir);
-    if (steps.toInt() > 0) digitalWrite(pin_dir.toInt(), HIGH);
-    if (steps.toInt() < 0) digitalWrite(pin_dir.toInt(), LOW);
-    if (stepper_number == "1") {
-        ts.add(
-            STEPPER1, stepper_speed.toInt(), [&](void *) {
-                int steps_int = abs(options.readInt("steps1") * 2);
-                static int count;
-                count++;
-                String pin_step = selectToMarker(options.read("stepper1"), " ");
-                digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
-                yield();
-                if (count > steps_int) {
-                    digitalWrite(pin_step.toInt(), LOW);
-                    ts.remove(STEPPER1);
-                    count = 0;
-                }
-            },
-            nullptr, true);
-    }
+    // options.write("steps" + stepper_number, steps);
+    // String stepper_speed = sCmd.next();
+    // String pin_step = selectToMarker(options.read("stepper" + stepper_number), " ");
+    // String pin_dir = deleteBeforeDelimiter(options.read("stepper" + stepper_number), " ");
+    // Serial.println(pin_step);
+    // Serial.println(pin_dir);
+    // if (steps.toInt() > 0) digitalWrite(pin_dir.toInt(), HIGH);
+    // if (steps.toInt() < 0) digitalWrite(pin_dir.toInt(), LOW);
+    // if (stepper_number == "1") {
+    //     ts.add(
+    //         STEPPER1, stepper_speed.toInt(), [&](void *) {
+    //             int steps_int = abs(options.readInt("steps1") * 2);
+    //             static int count;
+    //             count++;
+    //             String pin_step = selectToMarker(options.read("stepper1"), " ");
+    //             digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
+    //             yield();
+    //             if (count > steps_int) {
+    //                 digitalWrite(pin_step.toInt(), LOW);
+    //                 ts.remove(STEPPER1);
+    //                 count = 0;
+    //             }
+    //         },
+    //         nullptr, true);
+    // }
 
-    if (stepper_number == "2") {
-        ts.add(
-            STEPPER2, stepper_speed.toInt(), [&](void *) {
-                int steps_int = abs(options.readInt("steps2") * 2);
-                static int count;
-                count++;
-                String pin_step = selectToMarker(options.read("stepper2"), " ");
-                digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
-                yield();
-                if (count > steps_int) {
-                    digitalWrite(pin_step.toInt(), LOW);
-                    ts.remove(STEPPER2);
-                    count = 0;
-                }
-            },
-            nullptr, true);
-    }
+    // if (stepper_number == "2") {
+    //     ts.add(
+    //         STEPPER2, stepper_speed.toInt(), [&](void *) {
+    //             int steps_int = abs(options.readInt("steps2") * 2);
+    //             static int count;
+    //             count++;
+    //             String pin_step = selectToMarker(options.read("stepper2"), " ");
+    //             digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
+    //             yield();
+    //             if (count > steps_int) {
+    //                 digitalWrite(pin_step.toInt(), LOW);
+    //                 ts.remove(STEPPER2);
+    //                 count = 0;
+    //             }
+    //         },
+    //         nullptr, true);
+    // }
 }
 
 void cmd_servo() {
@@ -463,7 +464,7 @@ void cmd_servo() {
     // options.writeInt("s_max_deg" + name, max_deg);
     // liveData.writeInt("servo" + name, value);
 
-    createWidget(descr, page, order, "range", "servo" + name, "min", String(min_value), "max", String(max_value), "k", "1");
+    Widgets::createWidget(descr, page, order, "range", "servo" + name, "min", String(min_value), "max", String(max_value), "k", "1");
 }
 
 void cmd_servoSet() {
@@ -478,10 +479,9 @@ void cmd_servoSet() {
     }
 
     String objName = "servo" + name;
-
     Scenario::fire(objName);
-    liveData.writeInt(objName, value);
-    MqttClient::publishStatus(VT_INT, objName, value);
+    liveData.write(objName, value, VT_INT);
+    MqttClient::publishStatus(objName, value, VT_INT);
 }
 
 void cmd_serialBegin() {
@@ -594,12 +594,12 @@ void cmd_ultrasonicCm() {
 
     Ultrasonic::ultrasonicCm_value_name = measure_unit;
 
-    options.write("trig", trig);
-    options.write("echo", echo);
-    pinMode(trig.toInt(), OUTPUT);
-    pinMode(echo.toInt(), INPUT);
+    // options.write("trig", trig);
+    // options.write("echo", echo);
+    // pinMode(trig.toInt(), OUTPUT);
+    // pinMode(echo.toInt(), INPUT);
 
-    createWidget(widget, page, order, type, measure_unit);
+    Widgets::createWidget(widget, page, order, type, measure_unit);
 }
 
 void cmd_oneWire() {
@@ -617,15 +617,14 @@ void cmd_dallas() {
 
     String name = sCmd.next();
     String address = sCmd.next();
-    String widget = sCmd.next();
+    String descr = sCmd.next();
     String page = sCmd.next();
-    String type = sCmd.next();
+    String widget = sCmd.next();
     String order = sCmd.next();
 
-    // uint8_t *address = String(sCmd.next()).toInt();
-    dallasSensors.add(name, address);
+    auto *item = Sensors::add(SENSOR_DALLAS, name, address);
 
-    createWidget(widget, page, order, type, name);
+    Widgets::createWidget(descr, page, order, widget, name);
 }
 
 //levelPr p 14 12 Вода#в#баке,#% Датчики fillgauge 125 20 1
@@ -642,13 +641,13 @@ void cmd_levelPr() {
 
     Ultrasonic::levelPr_value_name = name;
 
-    options.write("e_lev", empty_level);
-    options.write("f_lev", full_level);
-    options.write("trig", trig);
-    options.write("echo", echo);
-    pinMode(trig.toInt(), OUTPUT);
-    pinMode(echo.toInt(), INPUT);
-    createWidget(widget_name, page_name, order, type, name);
+    // options.write("e_lev", empty_level);
+    // options.write("f_lev", full_level);
+    // options.write("trig", trig);
+    // options.write("echo", echo);
+    // pinMode(trig.toInt(), OUTPUT);
+    // pinMode(echo.toInt(), INPUT);
+    Widgets::createWidget(widget_name, page_name, order, type, name);
 }
 
 //dhtH h 2 dht11 Влажность#DHT,#t°C Датчики any-data 1
@@ -667,7 +666,7 @@ void cmd_dhtH() {
     if (sensor_type == "dht22") {
         DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT22);
     }
-    createWidget(widget_name, page_name, order, type, name);
+    Widgets::createWidget(widget_name, page_name, order, type, name);
 }
 
 // dhtT t 2 dht11 Температура#DHT,#t°C Датчики any-data 1
@@ -687,7 +686,7 @@ void cmd_dhtT() {
         DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT22);
     }
 
-    createWidget(widget_name, page_name, order, type, name);
+    Widgets::createWidget(widget_name, page_name, order, type, name);
 }
 
 //dhtDewpoint Точка#росы: Датчики 5
@@ -696,7 +695,7 @@ void cmd_dhtDewpoint() {
     String page_name = sCmd.next();
     String order = sCmd.next();
 
-    createWidget(widget_name, page_name, order, "anydata", "dhtDewpoint");
+    Widgets::createWidget(widget_name, page_name, order, "anydata", "dhtDewpoint");
 }
 
 // dhtPerception Восприятие: Датчики 4
@@ -705,7 +704,7 @@ void cmd_dhtPerception() {
     String page_name = sCmd.next();
     String order = sCmd.next();
 
-    createWidget(widget_name, page_name, order, "any-data", "dhtPerception");
+    Widgets::createWidget(widget_name, page_name, order, "any-data", "dhtPerception");
 }
 
 // dhtComfort Степень#комфорта: Датчики 3
@@ -714,7 +713,7 @@ void cmd_dhtComfort() {
     String page_name = sCmd.next();
     String order = sCmd.next();
 
-    createWidget(widget_name, page_name, order, "anydata", "dhtComfort");
+    Widgets::createWidget(widget_name, page_name, order, "anydata", "dhtComfort");
 }
 
 // analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
@@ -723,7 +722,7 @@ void cmd_analog() {
     String pin = sCmd.next();
     String descr = sCmd.next();
     String page = sCmd.next();
-    String type = sCmd.next();
+    String templat = sCmd.next();
 
     String in_min = sCmd.next();
     String in_max = sCmd.next();
@@ -732,10 +731,10 @@ void cmd_analog() {
 
     String order = sCmd.next();
 
-    BaseSensor *item = Sensors::add(name, pin);
+    AnalogSensor *item = (AnalogSensor *)Sensors::add(SENSOR_ADC, name, pin);
     item->setMap(in_min.toInt(), in_max.toInt(), out_min.toInt(), out_max.toInt());
 
-    createWidget(descr, page, order, type, name);
+    Widgets::createWidget(descr, page, order, templat, name);
 }
 
 // bmp280T temp1 0x76 Температура#bmp280 Датчики any-data 1
@@ -755,7 +754,7 @@ void cmd_bmp280T() {
                                   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
                                   Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
 
-    createWidget(widget_name, page_name, order, type, name);
+    Widgets::createWidget(widget_name, page_name, order, type, name);
 }
 
 //bmp280P press1 0x76 Давление#bmp280 Датчики any-data 2
@@ -775,7 +774,7 @@ void cmd_bmp280P() {
                                   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
                                   Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
 
-    createWidget(widget_name, page_name, order, type, name);
+    Widgets::createWidget(widget_name, page_name, order, type, name);
 }
 
 //=========================================================================================================================================
@@ -789,7 +788,7 @@ void cmd_bme280T() {
     String type = sCmd.next();
     String order = sCmd.next();
 
-    createWidget(descr, page, order, type, name);
+    Widgets::createWidget(descr, page, order, type, name);
 }
 
 //bme280P pres1 0x76 Давление#bmp280 Датчики any-data 1
@@ -801,7 +800,7 @@ void cmd_bme280P() {
     String type = sCmd.next();
     String order = sCmd.next();
 
-    createWidget(widget_name, page_name, order, type, name);
+    Widgets::createWidget(widget_name, page_name, order, type, name);
 }
 
 //bme280H hum1 0x76 Влажность#bmp280 Датчики any-data 1
@@ -813,7 +812,7 @@ void cmd_bme280H() {
     String type = sCmd.next();
     String order = sCmd.next();
 
-    createWidget(widget_name, page_name, order, type, name);
+    Widgets::createWidget(widget_name, page_name, order, type, name);
 }
 
 //bme280A altit1 0x76 Высота#bmp280 Датчики any-data 1
@@ -825,7 +824,7 @@ void cmd_bme280A() {
     String type = sCmd.next();
     String order = sCmd.next();
 
-    createWidget(widget_name, page_name, order, type, name);
+    Widgets::createWidget(widget_name, page_name, order, type, name);
 }
 
 void cmd_http() {
@@ -846,8 +845,8 @@ void cmd_firmwareVersion() {
     String page = sCmd.next();
     String order = sCmd.next();
 
-    liveData.write("firmver", FIRMWARE_VERSION);
-    createWidget(widget, page, order, "anydata", "firmver");
+    liveData.write("firmver", FIRMWARE_VERSION, VT_STRING);
+    Widgets::createWidget(widget, page, order, "anydata", "firmver");
 }
 
 void cmd_reboot() {
@@ -873,7 +872,7 @@ void cmd_timerStart() {
     String objName = "timer" + name;
 
     Timers::add(objName, value);
-    liveData.writeInt(objName, "1");
+    liveData.write(objName, "1", VT_INT);
 }
 
 void cmd_push() {

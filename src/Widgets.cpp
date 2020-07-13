@@ -1,80 +1,70 @@
+#include "Widgets.h"
+
 #include "Global.h"
+
+#include "Widget.h"
 
 static const char* MODULE = "Widget";
 
-void createWidget(String descr, String page, String order, String filename, String topic, String name1, String param1, String name2, String param2, String name3, String param3);
-void createChart(String widget, String page, String order, String filename, String topic, String maxCount);
-void clearWidgets();
+namespace Widgets {
+std::vector<Widget*> _list;
 
-const String getWidgetFile(const String& name);
-void addWidget(const String& widget);
-bool loadWidget(const String& filename, String& buf);
-
-void createWidget(String descr, String page, String order, String filename, String topic,
+void createWidget(String descr, String page, String order, String templateName, String topic,
                   String name1, String param1, String name2, String param2, String name3, String param3) {
-    String buf = "";
-    if (!loadWidget(filename, buf)) {
+    Widget* widget = new Widget();
+    if (!widget->loadTemplate(templateName.c_str())) {
         return;
     }
+
     page.replace("#", " ");
+    widget->write("page", page);
+    widget->writeInt("order", order);
     descr.replace("#", " ");
+    widget->write("descr", descr);
 
-    jsonWriteStr(buf, "page", page);
-    jsonWriteInt(buf, "order", order.toInt());
-    jsonWriteStr(buf, "descr", descr);
-    jsonWriteStr(buf, "topic", prex + "/" + topic);
+    String prefix = runtime.read("mqtt_prefix");
+    widget->write("topic", prefix + "/" + topic);
 
-    if (name1.length()) jsonWriteStr(buf, name1, param1);
-    if (name2.length()) jsonWriteStr(buf, name2, param2);
-    if (name3.length()) jsonWriteStr(buf, name3, param3);
+    if (!name1.isEmpty()) {
+        widget->write(name1, param1);
+    }
+    if (!name2.isEmpty()) {
+        widget->write(name2, param1);
+    }
+    if (!name3.isEmpty()) {
+        widget->write(name3, param1);
+    }
 
-    addWidget(buf);
+    _list.push_back(widget);
 }
 
-void createChart(String widget, String page, String order, String filename, String topic,
+void createChart(String series, String page, String order, String templateName, String topic,
                  String maxCount) {
-    String buf = "";
-    if (!loadWidget(filename, buf)) {
+    Widget* widget = new Widget();
+    if (!widget->loadTemplate(templateName.c_str())) {
         return;
     }
 
-    widget.replace("#", " ");
-    page.replace("#", " ");
+    widget->write("page", page);
+    widget->writeInt("order", order);
 
-    jsonWriteStr(buf, "page", page);
-    jsonWriteInt(buf, "order", order.toInt());
-    jsonWriteStr(buf, "series", widget);
-    jsonWriteStr(buf, "maxCount", maxCount);
-    jsonWriteStr(buf, "topic", prex + "/" + topic);
+    series.replace("#", " ");
+    widget->write("series", series);
+    widget->writeInt("maxCount", maxCount);
 
-    addWidget(buf);
+    String prefix = runtime.read("mqtt_prefix");
+    widget->write("topic", prefix + "/" + topic);
+
+    _list.push_back(widget);
 }
 
-const String getWidgetFile(const String& widget_type) {
-    return "widgets/" + widget_type + ".json";
+void clear() {
+    _list.clear();
 }
 
-void addWidget(const String& widget) {
-#ifdef LAYOUT_IN_RAM
-    all_widgets += widget + "\r\n";
-#else
-    addFile("layout.txt", widget);
-#endif
-}
-
-void clearWidgets() {
-#ifdef LAYOUT_IN_RAM
-    all_widgets = "";
-#else
-    removeFile("layout.txt");
-#endif
-}
-
-bool loadWidget(const String& filename, String& buf) {
-    String path = getWidgetFile(filename);
-    bool res = readFile(path.c_str(), buf);
-    if (!res) {
-        pm.error("on load " + filename);
+void forEach(JsonHandler func) {
+    for (auto item : _list) {
+        if (!func(item->asJson())) break;
     }
-    return res;
 }
+}  // namespace Widgets

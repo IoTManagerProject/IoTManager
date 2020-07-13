@@ -1,13 +1,27 @@
 #include "Config/MqttConfig.h"
 
+#include "Utils/PrintMessage.h"
+
 static const char* TAG_MQTT_SERVER = "mqttServer";
 static const char* TAG_MQTT_PORT = "mqttPort";
 static const char* TAG_MQTT_USER = "mqttUser";
 static const char* TAG_MQTT_PASS = "mqttPass";
 static const char* TAG_MQTT_PREFIX = "mqttPrefix";
 
+static const char* MODULE = "MqttConfig";
+
 MqttConfig::MqttConfig() {
     // TODO Defaults
+    _enabled = true;
+}
+
+void MqttConfig::enable(bool enable) {
+    pm.info(enable ? "enabled" : "disabled");
+    _enabled = enable;
+}
+
+bool MqttConfig::isEnabled() {
+    return _enabled && isValid();
 }
 
 void MqttConfig::setServer(const String value) {
@@ -65,7 +79,7 @@ const String MqttConfig::getPrefix() const {
     return _prefix;
 };
 
-bool MqttConfig::validate() {
+bool MqttConfig::isValid() {
     return !_server.isEmpty() && _port != 0;
 }
 

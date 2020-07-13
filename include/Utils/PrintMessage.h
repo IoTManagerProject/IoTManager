@@ -45,13 +45,13 @@ class PrintMessage {
    private:
     void print(const ErrorLevel_t level, Printable* obj) {
         char buf[256];
-        String now;
-        if (timeNow && timeNow->hasSynced()) {
-            now = timeNow->getTime();
+        String str;
+        if (now.hasSynced()) {
+            str = now.getTime();
         } else {
-            now = prettyMillis();
+            str = prettyMillis();
         }
-        snprintf(buf, sizeof(buf), "%s [%s] [%s]", now.c_str(), getErrorLevelStr(level), _module);
+        snprintf(buf, sizeof(buf), "%s [%s] [%s]", str.c_str(), getErrorLevelStr(level), _module);
         if (_printEnabled) {
             if (_out) {
                 _out->print(buf);
@@ -62,13 +62,7 @@ class PrintMessage {
 
     void print(const ErrorLevel_t level, const String& str) {
         char buf[256];
-        String now;
-        if (timeNow && timeNow->hasSynced()) {
-            now = timeNow->getTime();
-        } else {
-            now = prettyMillis();
-        }
-        snprintf(buf, sizeof(buf), "%s [%s] [%s] %s", now.c_str(), getErrorLevelStr(level), _module, str.c_str());
+        snprintf(buf, sizeof(buf), "%s [%s] [%s] %s", (now.hasSynced() ? now.getTime() : now.getUptime()).c_str(), getErrorLevelStr(level), _module, str.c_str());
         if (_printEnabled) {
             if (_out) {
                 _out->println(buf);

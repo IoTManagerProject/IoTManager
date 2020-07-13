@@ -22,6 +22,10 @@ void Clock::loop() {
     }
     _uptime += passed;
 
+    if (!_hasSynced) {
+        startSync();
+    }
+
     // world time
     time_t now = getSystemTime();
     time_t estimated = _unixtime + (passed / ONE_SECOND_ms);
@@ -38,13 +42,6 @@ void Clock::loop() {
     breakEpochToTime(_unixtime + getOffsetInSeconds(_cfg->getTimezone()), _time_local);
 }
 
-bool Clock::sync() {
-    if (!_hasSynced) {
-        startSync();
-    }
-    return _hasSynced;
-}
-
 void Clock::startSync() {
     if (!_configured) {
         pm.info("ntp: " + _cfg->getNtp() + " timezone: " + String(_cfg->getTimezone()));
@@ -55,8 +52,6 @@ void Clock::startSync() {
     _hasSynced = hasSynced();
     if (_hasSynced) {
         pm.info(getDateDotFormated() + " " + getTime());
-    } else {
-        pm.error("failed to obtain");
     }
 }
 
@@ -77,6 +72,7 @@ time_t Clock::getSystemTime() const {
     }
     return epoch;
 }
+
 const unsigned long Clock::getEpoch() {
     return _unixtime;
 }
@@ -89,7 +85,7 @@ const String Clock::getTimeUnix() {
     * Локальное время "дд.ММ.гг"
     */
 const String Clock::getDateDotFormated() {
-    char buf[32];
+    char buf[16];
     sprintf(buf, "%02d.%02d.%02d", _time_local.day_of_month, _time_local.month, _time_local.year);
     return String(buf);
 }
@@ -107,20 +103,20 @@ const String Clock::getDateTimeDotFormated() {
     * Локальное время "чч:мм:cc"
     */
 const String Clock::getTime() {
-    char buf[32];
+    char buf[16];
     sprintf(buf, "%02d:%02d:%02d", _time_local.hour, _time_local.minute, _time_local.second);
     return String(buf);
 }
 
 const String Clock::getTimeJson() {
-    char buf[32];
+    char buf[16];
     sprintf(buf, "%02d-%02d-%02d", _time_local.hour, _time_local.minute, _time_local.second);
     return String(buf);
 }
 
 /*
-    * Локальное время "чч:мм"
-    */
+* Локальное время "чч:мм"
+*/
 const String Clock::getTimeWOsec() {
     char buf[32];
     sprintf(buf, "%02d:%02d", _time_local.hour, _time_local.minute);
@@ -187,4 +183,4 @@ void Clock::breakEpochToTime(unsigned long epoch, Time_t& tm) {
     tm.valid = (epoch > MIN_DATETIME);
 }
 
-Clock* timeNow;
+Clock now;

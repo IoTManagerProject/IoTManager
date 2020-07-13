@@ -7,10 +7,10 @@
 #include "Base/Assigned.h"
 
 class ButtonItem : public Item,
+                   public Value,
                    public PinAssigned {
    public:
-    ButtonItem(const String& name, const String& assign, const String& value) : Item{name, assign},
-                                                                                PinAssigned{this} {};
+    ButtonItem(const String& name, const String& assign, const String& value) : Item{name}, Value{VT_INT}, PinAssigned{this} {};
 
     void setInverted(bool value) {
         _inverted = value;

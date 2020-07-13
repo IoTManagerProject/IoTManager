@@ -25,20 +25,16 @@ class Clock {
     Clock();
     void setConfig(ClockConfig* cfg);
     void loop();
-    bool sync();
-    void startSync();
-    void setupSntp();
+
     bool hasSynced() const;
+
     time_t getSystemTime() const;
     const unsigned long getEpoch();
-
     const String getTimeUnix();
-
     /*
     * Локальное время "дд.ММ.гг"
     */
-    const String
-    getDateDotFormated();
+    const String getDateDotFormated();
 
     /*
     * Локальное дата время "дд.ММ.гг чч.мм.cc"
@@ -66,6 +62,10 @@ class Clock {
     void breakEpochToTime(unsigned long epoch, Time_t& tm);
 
    private:
+    void startSync();
+    void setupSntp();
+
+   private:
     Time_t _time_local;
     Time_t _time_utc;
     unsigned long _uptime;
@@ -76,4 +76,4 @@ class Clock {
     const uint8_t DAYS_IN_MONTH[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 };
 
-extern Clock* timeNow;
+extern Clock now;

@@ -8,10 +8,12 @@
 #include "Base/Assigned.h"
 
 class Switch : public Item,
+               public Value,
                public PinAssigned {
    public:
-    Switch(const String& name, const String& assign) : Item{name, assign},
-                                                       PinAssigned{this} {
+    Switch(const String& name) : Item{name},
+                                 Value{VT_INT},
+                                 PinAssigned{this} {
         _obj = new Bounce();
     }
 
@@ -23,7 +25,7 @@ class Switch : public Item,
         _obj->interval(value);
     }
 
-    bool hasValue() override {
+    const bool hasValue() override {
         return _obj->update();
     }
 
@@ -49,7 +51,7 @@ class Switches {
     void setOnChangeState(OnSwitchChangeState);
 
    private:
-    std::vector<Switch> _items;
+    std::vector<Switch*> _items;
     OnSwitchChangeState _onChange;
 };
 

@@ -6,6 +6,10 @@ class MqttConfig : public ConfigItem {
    public:
     MqttConfig();
 
+    void enable(bool enable = true);
+    bool isEnabled();
+    bool isValid();
+
     void setPrefix(const String value);
     void setServer(const String value);
     void setPort(const int value);
@@ -22,9 +26,8 @@ class MqttConfig : public ConfigItem {
     void load(const JsonObject& root) override;
     void save(JsonObject& root) override;
 
-    bool validate() override;
-
    private:
+    bool _enabled;
     String _prefix;
     String _server;
     int _port;

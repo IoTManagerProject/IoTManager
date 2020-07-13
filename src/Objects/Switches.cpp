@@ -16,26 +16,28 @@ Switch* Switches::add(const String& name, const String& assign) {
         pm.error("wrong pin");
         return nullptr;
     }
-    _items.push_back(Switch{name, assign});
+    Switch* item = new Switch{name};
+    item->setAssign(assign);
+    _items.push_back(item);
     return last();
 }
 
 Switch* Switches::last() {
-    return &_items.at(_items.size() - 1);
+    return _items.at(_items.size() - 1);
 }
 
 Switch* Switches::get(const String name) {
     for (size_t i = 0; i < _items.size(); i++) {
-        auto* item = &_items.at(i);
+        auto* item = _items.at(i);
         if (name.equals(item->getName())) {
-            return &_items.at(i);
+            return _items.at(i);
         }
     }
     return nullptr;
 }
 
 Switch* Switches::at(size_t num) {
-    return &_items.at(num);
+    return _items.at(num);
 }
 
 size_t Switches::count() {
@@ -44,7 +46,7 @@ size_t Switches::count() {
 
 void Switches::loop() {
     for (size_t i = 0; i < _items.size(); i++) {
-        Switch* item = &_items.at(i);
+        Switch* item = _items.at(i);
         if (item->hasValue()) {
             item->getValue();
         }

@@ -4,16 +4,27 @@
 
 #include "Base/BaseSensor.h"
 
-class AnalogSensor : public BaseSensor {
+class AnalogSensor : public BaseSensor,
+                     public ValueMap,
+                     public PinAssigned {
    public:
-    AnalogSensor(const String& name, const String& assign) : BaseSensor(name, assign){};
+    AnalogSensor(const String& name) : BaseSensor{name, VT_INT}, ValueMap{this}, PinAssigned{this} {};
 
     void onAssign() override {
-        Serial.printf("pin: %d" + getPin());
         pinMode(getPin(), INPUT);
     }
 
-    int onReadSensor() override {
-        return analogRead(getPin());
+    const bool hasValue() override {
+        return true;
+    }
+
+    const String onGetValue() override {
+        int raw = onReadSensor().toInt();
+        int mapped = mapValue(raw);
+        return String(mapped, DEC);
+    }
+
+    const String onReadSensor() override {
+        return String(analogRead(getPin()), DEC);
     }
 };

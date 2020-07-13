@@ -3,17 +3,15 @@
 #include "Item.h"
 
 class BaseSensor : public Item,
-                   public PinAssigned,
-                   public ValueMap {
+                   public Value {
    public:
-    BaseSensor(const String& name, const String& assign) : Item{name, assign},
-                                                           PinAssigned{this},
-                                                           ValueMap{this} {}
-    const String onGetValue() override {
-        int raw = onReadSensor();
-        int mapped = mapValue(raw);
-        return String(mapped, DEC);
-    }
+    BaseSensor(const String& name, const ValueType_t type) : Item{name},
+                                                             Value{type} {}
 
-    virtual int onReadSensor() = 0;
+    virtual const String onReadSensor() = 0;
+
+   protected:
+    const String onGetValue() override {
+        return onReadSensor();
+    }
 };

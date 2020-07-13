@@ -5,9 +5,15 @@
 #include "Item.h"
 #include "Mapper.h"
 
+enum ValueType_t {
+    VT_STRING,
+    VT_FLOAT,
+    VT_INT
+};
+
 class Value {
    public:
-    Value() : _lastValue{""}, _lastTime{0} {}
+    Value(ValueType_t type) : _type{type}, _lastValue{""}, _lastTime{0} {}
 
     void setValue(const String& value) {
         onSetValue(value);
@@ -18,7 +24,11 @@ class Value {
         return onGetValue();
     }
 
-    virtual bool hasValue() {
+    const ValueType_t getValueType() {
+        return _type;
+    }
+
+    virtual const bool hasValue() {
         return false;
     }
 
@@ -40,6 +50,7 @@ class Value {
         onValueUpdate(value);
     };
 
+    ValueType_t _type;
     String _lastValue;
     unsigned long _lastTime;
 };

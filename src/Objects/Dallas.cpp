@@ -2,62 +2,24 @@
 
 #include "Utils/TimeUtils.h"
 
-DallasSensor::DallasSensor(const char* name, OneWireAddress addr) : _wire(onewire.get()),
-                                                                    _addr{addr},
-                                                                    _bitResolution{9},
-                                                                    _requestConversationTime{0} {
-    strncpy(_name, name, sizeof(_name));
-}
+Dallas::Dallas(uint8_t* addr) : _wire(onewire.get()),
+                                _addr{addr},
+                                _bitResolution{9},
+                                _requestConversationTime{0} {}
 
-const char* DallasSensor::name() {
-    return _name;
-}
-
-OneWireAddress* DallasSensor::addr() {
-    return &_addr;
-}
-
-bool DallasSensor::update() {
-    if (!isConnected()) {
-        return false;
-    }
-
-    switch (_state) {
-        case DALLAS_IDLE:
-            if (requestTemperature()) {
-                _state = DALLAS_CONVERSATION;
-                _requestConversationTime = millis();
-                _hasValue = false;
-            }
-            break;
-        case DALLAS_CONVERSATION:
-            if (millis_since(_requestConversationTime) >= getWaitTimeForConversion()) {
-                if (isConversionComplete()) {
-                    _value = getTempC();
-                    _hasValue = true;
-                    _state = DALLAS_IDLE;
-                }
-            };
-            break;
-        default:
-            break;
-    };
-    return _hasValue;
-}
-
-bool DallasSensor::isConversionComplete() {
+bool Dallas::isConversionComplete() {
     return _wire->read_bit();
 }
 
-bool DallasSensor::isConnected() {
+bool Dallas::isConnected() {
     return readRawData() && isValid();
 }
 
-bool DallasSensor::isValid() {
+bool Dallas::isValid() {
     return !isZeros(_rawData) && (_wire->crc8(_rawData, 8) == _rawData[CRC_DATA_BYTE]);
 }
 
-bool DallasSensor::isZeros(uint8_t* data, const size_t len) {
+bool Dallas::isZeros(uint8_t* data, const size_t len) {
     for (size_t i = 0; i < len; i++) {
         if (*(data + i) != 0) {
             return false;
@@ -67,7 +29,7 @@ bool DallasSensor::isZeros(uint8_t* data, const size_t len) {
 }
 
 // convert from raw to Celsius
-float DallasSensor::rawToCelsius(int16_t raw) {
+float Dallas::rawToCelsius(int16_t raw) {
     if (raw <= DEVICE_DISCONNECTED_RAW) {
         return DEVICE_DISCONNECTED_C;
     }
@@ -75,7 +37,7 @@ float DallasSensor::rawToCelsius(int16_t raw) {
     return (float)raw * 0.0078125;
 }
 
-bool DallasSensor::readRawData() {
+bool Dallas::readRawData() {
     if (!_wire->reset()) {
         return false;
     };
@@ -90,7 +52,7 @@ bool DallasSensor::readRawData() {
     return (_wire->reset() == 1);
 }
 
-float DallasSensor::rawToFahrenheit(int16_t raw) {
+float Dallas::rawToFahrenheit(int16_t raw) {
     if (raw <= DEVICE_DISCONNECTED_RAW)
         return DEVICE_DISCONNECTED_F;
     // C = RAW/128
@@ -98,7 +60,7 @@ float DallasSensor::rawToFahrenheit(int16_t raw) {
     return ((float)raw * 0.0140625) + 32;
 }
 
-int16_t DallasSensor::calculateTemperature() {
+int16_t Dallas::calculateTemperature() {
     int16_t fpTemperature = (((int16_t)_rawData[TEMP_MSB]) << 11) | (((int16_t)_rawData[TEMP_LSB]) << 3);
 
     if ((_addr.at(0) == DS18S20MODEL) && (_rawData[COUNT_PER_C] != 0)) {
@@ -108,7 +70,7 @@ int16_t DallasSensor::calculateTemperature() {
     return fpTemperature;
 }
 
-int16_t DallasSensor::getTemp() {
+int16_t Dallas::getTemp() {
     if (isConnected()) {
         return calculateTemperature();
     } else {
@@ -116,19 +78,15 @@ int16_t DallasSensor::getTemp() {
     }
 }
 
-float DallasSensor::getTempC() {
+float Dallas::getTempC() {
     return rawToCelsius(getTemp());
 }
 
-float DallasSensor::getTempF() {
+float Dallas::getTempF() {
     return rawToFahrenheit(getTemp());
 }
 
-void DallasSensor::setAddr(OneWireAddress addr) {
-    _addr = addr;
-}
-
-bool DallasSensor::requestTemperature() {
+bool Dallas::requestTemperature() {
     if (!_bitResolution) {
         return false;
     }
@@ -140,7 +98,7 @@ bool DallasSensor::requestTemperature() {
     return true;
 }
 
-uint16_t DallasSensor::getWaitTimeForConversion() {
+uint16_t Dallas::getWaitTimeForConversion() {
     switch (_bitResolution) {
         case 9:
             return 94;

@@ -10,17 +10,19 @@ Pwms::Pwms(){};
 
 Pwm *Pwms::add(String name, String assign, String state) {
     pm.info("name:\"" + name + "\", pin:" + assign + ", state:" + state);
-    _items.push_back(Pwm{name, assign});    
+    Pwm *item = new Pwm{name};
+    item->setAssign(assign);
+    _items.push_back(item);
     return last();
 }
 
 Pwm *Pwms::last() {
-    return &_items.at(_items.size() - 1);
+    return _items.at(_items.size() - 1);
 }
 
 Pwm *Pwms::get(const String name) {
     for (size_t i = 0; i < _items.size(); i++) {
-        auto *item = &_items.at(i);
+        auto *item = _items.at(i);
         if (name.equalsIgnoreCase(item->getName())) {
             return item;
         }
@@ -29,7 +31,7 @@ Pwm *Pwms::get(const String name) {
 }
 
 Pwm *Pwms::at(size_t num) {
-    return &_items.at(num);
+    return _items.at(num);
 }
 
 size_t Pwms::count() {

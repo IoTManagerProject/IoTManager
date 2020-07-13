@@ -38,17 +38,12 @@ extern KeyValueStore options;
 extern KeyValueStore liveData;
 extern KeyValueFile runtime;
 
-extern Clock* timeNow;
 extern TickerScheduler ts;
 extern WiFiClient espClient;
 
 extern AsyncWebServer server;
 extern AsyncWebSocket ws;
 extern AsyncEventSource events;
-
-extern String prex;
-extern String all_widgets;
-extern String order_loop;
 
 void perform_mqtt_restart();
 
@@ -94,6 +89,7 @@ extern void statistics_init();
 extern void device_init();
 extern void cmd_init();
 extern void init_mod();
+extern void publishWidgets();
 
 extern void configAdd(const String&);
 extern void save_runtime();
@@ -103,11 +99,6 @@ extern void setLedStatus(LedStatus_t);
 
 //Scenario
 extern String add_set(String param_name);
-
-// Widget
-extern void createWidget(String widget_name, String page_name, String order, String file, String topic, String name1 = "", String param1 = "", String name2 = "", String param2 = "", String name3 = "", String param3 = "");
-extern void createChart(String widget_name, String page_name, String order, String file, String topic, String maxCount);
-extern void clearWidgets();
 
 // PushingBox
 extern void pushControl(const String& title, const String& body);

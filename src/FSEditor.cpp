@@ -2,6 +2,7 @@
 #include <FS.h>
 
 #define FS_MAXLENGTH_FILEPATH 32
+
 const char *excludeListFile = "/.exclude.files";
 
 typedef struct ExcludeListS {
@@ -62,15 +63,12 @@ static void loadExcludeList(fs::FS &_fs, const char *filename) {
     static char linebuf[FS_MAXLENGTH_FILEPATH];
     fs::File excludeFile = _fs.open(filename, "r");
     if (!excludeFile) {
-        //addExclude("/*.js.gz");
         return;
     }
-#ifdef ESP32
     if (excludeFile.isDirectory()) {
         excludeFile.close();
         return;
     }
-#endif
     if (excludeFile.size() > 0) {
         uint8_t idx;
         bool isOverflowed = false;
@@ -134,24 +132,20 @@ bool FSEditor::canHandle(AsyncWebServerRequest *request) {
                 if (!request->_tempFile) {
                     return false;
                 }
-#ifdef ESP32
                 if (request->_tempFile.isDirectory()) {
                     request->_tempFile.close();
                     return false;
                 }
-#endif
             }
             if (request->hasParam("download")) {
                 request->_tempFile = _fs.open(request->arg("download"), "r");
                 if (!request->_tempFile) {
                     return false;
                 }
-#ifdef ESP32
                 if (request->_tempFile.isDirectory()) {
                     request->_tempFile.close();
                     return false;
                 }
-#endif
             }
             request->addInterestingHeader("If-Modified-Since");
             return true;
@@ -172,43 +166,23 @@ void FSEditor::handleRequest(AsyncWebServerRequest *request) {
     if (request->method() == HTTP_GET) {
         if (request->hasParam("list")) {
             String path = request->getParam("list")->value();
-#ifdef ESP32
-            File dir = _fs.open(path);
-#else
-            Dir dir = _fs.openDir(path);
-#endif
+            auto dir = _fs.openDir(path);
             path = String();
             String output = "[";
-#ifdef ESP32
-            File entry = dir.openNextFile();
-            while (entry) {
-#else
             while (dir.next()) {
-                fs::File entry = dir.openFile("r");
-#endif
-                if (isExcluded(_fs, entry.name())) {
-#ifdef ESP32
-                    entry = dir.openNextFile();
-#endif
+                if (isExcluded(_fs, dir.fileName().c_str())) {
                     continue;
                 }
                 if (output != "[") output += ',';
                 output += "{\"type\":\"";
-                output += "file";
+                output += dir.isFile() ? "file" : "dir";
                 output += "\",\"name\":\"";
-                output += String(entry.name());
+                output += dir.fileName();
                 output += "\",\"size\":";
-                output += String(entry.size());
+                output += String(dir.fileSize());
                 output += "}";
-#ifdef ESP32
-                entry = dir.openNextFile();
-#else
-                entry.close();
-#endif
             }
-#ifdef ESP32
-            dir.close();
-#endif
+
             output += "]";
             request->send(200, "application/json", output);
             output = String();

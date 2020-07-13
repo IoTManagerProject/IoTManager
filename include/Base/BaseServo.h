@@ -12,10 +12,12 @@
 
 class BaseServo : public Item,
                   public PinAssigned,
+                  public Value,
                   public ValueMap {
    public:
-    BaseServo(const String& name, const String& assign, const String& value) : Item{name, assign},
+    BaseServo(const String& name, const String& assign, const String& value) : Item{name},
                                                                                PinAssigned{this},
+                                                                               Value{VT_INT},
                                                                                ValueMap{this} {
         _obj = new Servo();
     };

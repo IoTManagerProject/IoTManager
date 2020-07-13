@@ -4,12 +4,7 @@
 #include <ArduinoJson.h>
 #include <functional>
 #include <Utils/FileUtils.h>
-
-enum ValueType_t {
-    VT_STRING,
-    VT_FLOAT,
-    VT_INT
-};
+#include "Value.h"
 
 class KeyValue {
    private:
@@ -33,12 +28,17 @@ class KeyValue {
         return _value;
     }
 
+    void setValue(ValueType_t type, const String& value) {
+        _type = type;
+        _value = value.c_str();
+    };
+
     void setValue(const char* value) {
         _value = value;
         _type = VT_STRING;
     };
 
-    void setValueInt(String value) {
+    void setValueInt(int value) {
         _value = value;
         _type = VT_INT;
     };
@@ -58,6 +58,10 @@ class KeyValueStore {
    public:
     KeyValueStore() {
         _items.reserve(16);
+    }
+
+    void clear() {
+        _items.clear();
     }
 
     void forEach(KeyValueHandler func) {
@@ -97,12 +101,12 @@ class KeyValueStore {
         return NULL;
     }
 
-    void write(const String& key, const String& value) {
+    void write(const String& key, const String& value, ValueType_t type = VT_STRING) {
         auto item = findKey(key);
         if (item) {
-            item->setValue(value.c_str());
+            item->setValue(type, value);
         } else {
-            _items.push_back(KeyValue{key.c_str(), value.c_str(), VT_STRING});
+            _items.push_back(KeyValue{key.c_str(), value.c_str(), type});
         }
     }
 
@@ -111,27 +115,19 @@ class KeyValueStore {
         return item ? item->getValue() : "";
     }
 
+    bool read(const String& key, String& value, ValueType_t& type) {
+        auto item = findKey(key);
+        if (item) {
+            type = item->getType();
+            value = item->getValue();
+            return true;
+        }
+        return false;
+    }
+
     int readInt(const String& key) {
         String buf = read(key);
         return buf.toInt();
-    }
-
-    void writeInt(const String& key, const String& value) {
-        auto item = findKey(key);
-        if (item) {
-            item->setValueInt(value);
-        } else {
-            _items.push_back(KeyValue{key.c_str(), value.c_str(), VT_INT});
-        }
-    }
-
-    void writeFloat(const String& key, float value) {
-        auto item = findKey(key);
-        if (item) {
-            item->setValueFloat(value);
-        } else {
-            _items.push_back(KeyValue{key.c_str(), String(value, 4).c_str(), VT_FLOAT});
-        }
     }
 
     float readFloat(const String& key) {
@@ -145,6 +141,9 @@ class KeyValueFile : public KeyValueStore {
     char _filename[32];
 
    public:
+    KeyValueFile() {
+    }
+
     KeyValueFile(const char* filename) {
         if (!(filename[0] == '/')) {
             _filename[0] = '/';
@@ -164,10 +163,14 @@ class KeyValueFile : public KeyValueStore {
         return res;
     }
 
-    bool load() {
+    void load() {
+        loadFile(_filename);
+    }
+
+    bool loadFile(const char* filename) {
         bool res = false;
         DynamicJsonBuffer buf;
-        auto file = LittleFS.open(_filename, "r");
+        auto file = LittleFS.open(filename, "r");
         if (file) {
             JsonObject& root = buf.parse(file);
             for (JsonPair& p : root) {

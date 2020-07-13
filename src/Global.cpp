@@ -1,6 +1,7 @@
 #include "Global.h"
 
-#include "Base/Item.h"
+#include "Widgets.h"
+#include "MqttWriter.h"
 
 KeyValueStore options;
 KeyValueStore liveData;
@@ -8,14 +9,9 @@ KeyValueFile runtime(DEVICE_RUNTIME_FILE);
 
 TickerScheduler ts(SYS_MEMORY + 1);
 
-
 AsyncWebServer server{80};
 AsyncWebSocket ws{"/ws"};
 AsyncEventSource events{"/events"};
-
-String prex = "";
-String all_widgets = "";
-String order_loop = "";
 
 void save_config() {
     String buf;
@@ -31,14 +27,35 @@ void load_config() {
     }
 }
 
+void publishWidgets() {
+    Writer* writer = MqttClient::getWriter("config");
+    Widgets::forEach([writer](String json) {
+        writer->begin(json.length());
+        writer->write(json.c_str());
+        writer->end();
+        return true;
+    });
+    delete writer;
+}
+
+void publishCharts() {
+    // Writer* writer = MqttClient::getWriter("config");
+    // Logger::forEach([writer](String json) {
+    //     writer->begin(json.length());
+    //     writer->write(json.c_str());
+    //     writer->end();
+    //     return true;
+    // });
+    // delete writer;
+}
+
 void config_init() {
     load_config();
 
     runtime.load();
     runtime.write("chipID", getChipId());
     runtime.write("firmware_version", FIRMWARE_VERSION);
-
-    prex = config.mqtt()->getPrefix() + "/" + getChipId();
+    runtime.write("mqtt_prefix", config.mqtt()->getPrefix() + "/" + getChipId());
 }
 
 void configAdd(const String& str) {
@@ -52,7 +69,7 @@ void setPreset(size_t num) {
 }
 
 void device_init() {
-    clearWidgets();
+    Widgets::clear();
     fileExecute(DEVICE_COMMAND_FILE);
     Scenario::init();
 }

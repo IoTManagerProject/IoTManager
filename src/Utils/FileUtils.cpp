@@ -8,7 +8,7 @@ const String filepath(const char* filename) {
     return res.startsWith("/") ? res : "/" + res;
 }
 
-bool fileSystemInit() {
+bool fs_init() {
     pm.info("init");
     if (!LittleFS.begin()) {
         pm.error("on begin");

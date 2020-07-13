@@ -12,22 +12,33 @@ BaseSensor* last() {
     return _items.at(_items.size() - 1);
 }
 
-AnalogSensor* add(const String& name, const String& pin) {
-    _items.push_back(new AnalogSensor(name, pin));
-    return (AnalogSensor*)last();
+BaseSensor* add(SensorType_t type, const String& name, const String& assign) {
+    BaseSensor* item;
+    switch (type) {
+        case SENSOR_ADC:
+            item = new AnalogSensor{name};
+            break;
+        case SENSOR_DALLAS:
+            item = new DallasSensor{name};
+            break;
+        default:
+            break;
+    }
+    item->setAssign(assign);
+    _items.push_back(item);
+    return last();
 }
 
 void update() {
     for (BaseSensor* item : _items) {
-    
         String name = item->getName();
-        String value = item->getValue();
-        
-        Scenario::fire(item);
-        liveData.write(name, value);
-        MqttClient::publishStatus(VT_INT, name, value);
-        
-        //MqttClient::publishStatus(VT_FLOAT, getName(), String(value, 2));
+
+        if (item->hasValue()) {
+            String value = item->getValue();
+
+            Scenario::fire(item);
+            liveData.write(name, value, item->getValueType());
+        }
     }
 }
 }  // namespace Sensors

@@ -1,22 +1,15 @@
 #pragma once
-
-/* 
-* Optional
-*/
-//#define LAYOUT_IN_RAM
-
 /*
 * Main consts
 */
 #define FIRMWARE_VERSION "2.3.5-dev"
 #define LED_PIN 2
 #define FLASH_4MB true
-#define MQTT_RECONNECT_INTERVAL 20000
 // 1000 * 60 * 60 * 2
 #define TELEMETRY_UPDATE_INTERVAL 0
 
 enum SchedulerTask { WIFI_SCAN,
-                     MQTT_CONNECTION,
+                     NETWORK_CONNECTION,
                      SENSORS,
                      STEPPER1,
                      STEPPER2,

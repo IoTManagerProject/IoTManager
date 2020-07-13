@@ -4,16 +4,20 @@
 
 #include "Sensors/OneWireBus.h"
 #include "Sensors/AnalogSensor.h"
-#include "Sensors/DallasSensors.h"
+#include "Sensors/DallasSensor.h"
 #include "Sensors/DHTSensor.h"
 #include "Sensors/BMP280Sensor.h"
 #include "Sensors/BME280Sensor.h"
 #include "Sensors/UltrasonicSensor.h"
 
-#define NUM_SENSORS 15
+enum SensorType_t {
+    SENSOR_ADC,
+    SENSOR_DALLAS
+};
 
 namespace Sensors {
-AnalogSensor* add(const String& name, const String& pin);
-void update();
 
+BaseSensor* add(SensorType_t type, const String& name, const String& assign);
+
+void update();
 }  // namespace Sensors

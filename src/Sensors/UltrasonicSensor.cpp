@@ -30,18 +30,18 @@ void ultrasonic_reading() {
                     options.readInt("e_lev"),
                     options.readInt("f_lev"), 0, 100);
 
-        liveData.writeInt(levelPr_value_name, String(level, DEC));
+        liveData.write(levelPr_value_name, String(level, DEC), VT_INT);
         Scenario::fire(levelPr_value_name);
 
-        MqttClient::publishStatus(VT_FLOAT, levelPr_value_name, String(level));
+        MqttClient::publishStatus(levelPr_value_name, String(level, 2), VT_FLOAT);
 
         Serial.println("[I] sensor '" + levelPr_value_name + "' data: " + String(level));
 
-        liveData.writeInt(ultrasonicCm_value_name, String(distance_cm, DEC));
+        liveData.write(ultrasonicCm_value_name, String(distance_cm, DEC), VT_INT);
 
         Scenario::fire(ultrasonicCm_value_name);
 
-        MqttClient::publishStatus(VT_FLOAT, ultrasonicCm_value_name, String(distance_cm));
+        MqttClient::publishStatus(ultrasonicCm_value_name, String(distance_cm), VT_FLOAT);
     }
 }
 }  // namespace Ultrasonic

@@ -4,8 +4,12 @@
 
 class Named {
    public:
-    Named(const char* name) {
-        strlcpy(_name, name, sizeof(_name));
+    Named(const String& name) {
+        _name = strdup(name.c_str());
+    }
+
+    ~Named() {
+        delete _name;
     }
 
     const char* getName() const {
@@ -13,5 +17,5 @@ class Named {
     }
 
    protected:
-    char _name[16];
+    char* _name;
 };

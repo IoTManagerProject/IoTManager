@@ -67,7 +67,7 @@ void loop() {
     }
     m.loop();
 
-    timeNow->loop();
+    now.loop();
     m.add(LI_CLOCK);
 
     ArduinoOTA.handle();
@@ -217,19 +217,12 @@ void setLedStatus(LedStatus_t status) {
 #endif
 
 void clock_init() {
-    timeNow = new Clock();
-    timeNow->setConfig(config.clock());
-
-    ts.add(
-        TIME_SYNC, 30000, [&](void*) {
-            timeNow->sync();
-        },
-        nullptr, true);
+    now.setConfig(config.clock());
 
     ts.add(
         TIME, 1000, [&](void*) {
-            runtime.write("time", timeNow->getTime());
-            runtime.write("timenow", timeNow->getTimeJson());
+            runtime.write("time", now.getTime());
+            runtime.write("timenow", now.getTimeJson());
             Scenario::fire("timenow");
         },
         nullptr, true);
@@ -270,7 +263,7 @@ void setup() {
     Serial.println();
     Serial.println("--------------started----------------");
 
-    fileSystemInit();
+    fs_init();
 
     config_init();
 

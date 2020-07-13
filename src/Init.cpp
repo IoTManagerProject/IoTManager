@@ -45,7 +45,7 @@ void timers_task() {
 
 void uptime_task() {
     ts.add(
-        UPTIME, 5 * ONE_SECOND_ms, [&](void*) { runtime.write("uptime", timeNow->getUptime()); }, nullptr, true);
+        UPTIME, 5 * ONE_SECOND_ms, [&](void*) { runtime.write("uptime", now.getUptime()); }, nullptr, true);
 }
 
 void init_mod() {

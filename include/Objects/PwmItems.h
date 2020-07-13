@@ -14,11 +14,13 @@
 
 class Pwm : public Item,
             public PinAssigned,
+            public Value,
             public ValueMap {
    public:
-    Pwm(const String& name, const String& assign) : Item{name, assign},
-                                                    PinAssigned{this},
-                                                    ValueMap{this} {};
+    Pwm(const String& name) : Item{name},
+                              PinAssigned{this},
+                              Value{VT_INT},
+                              ValueMap{this} {};
     void onAssign() override {
         pinMode(getPin(), OUTPUT);
     }
@@ -41,7 +43,7 @@ class Pwms {
     Pwm* last();
 
    private:
-    std::vector<Pwm> _items;
+    std::vector<Pwm*> _items;
 };
 
 extern Pwms myPwm;
