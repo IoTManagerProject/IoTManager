@@ -24,8 +24,6 @@ boolean publishControl(String id, String topic, String state);
 boolean publishStatus(const String& name, const String& value, const ValueType_t type);
 boolean publishOrder(const String& topic, const String& data);
 
-void publishState();
-
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length);
 const String getStateStr();
 

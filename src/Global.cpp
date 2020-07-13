@@ -1,6 +1,7 @@
 #include "Global.h"
 
 #include "Widgets.h"
+#include "Logger.h"
 #include "MqttWriter.h"
 
 KeyValueStore options;
@@ -27,6 +28,22 @@ void load_config() {
     }
 }
 
+bool isExcludedKey(const String& key) {
+    return key.equals("time") ||
+           key.equals("name") ||
+           key.equals("lang") ||
+           key.equals("ip") ||
+           key.endsWith("_in");
+}
+
+void publishState() {
+    liveData.forEach([](const ValueType_t type, const String& key, const String& value) {
+        if (!isExcludedKey(key)) {
+            MqttClient::publishStatus(key, value, type);
+        }
+    });
+}
+
 void publishWidgets() {
     Writer* writer = MqttClient::getWriter("config");
     Widgets::forEach([writer](String json) {
@@ -39,14 +56,9 @@ void publishWidgets() {
 }
 
 void publishCharts() {
-    // Writer* writer = MqttClient::getWriter("config");
-    // Logger::forEach([writer](String json) {
-    //     writer->begin(json.length());
-    //     writer->write(json.c_str());
-    //     writer->end();
-    //     return true;
-    // });
-    // delete writer;
+    Logger::forEach([](LoggerTask* task) {
+        return true;
+    });
 }
 
 void config_init() {

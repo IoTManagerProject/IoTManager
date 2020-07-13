@@ -149,15 +149,6 @@ bool publishChartEntry(const char* name, String entry) {
     return mqtt_publish(getStatusPath(name).c_str(), payload.c_str());
 }
 
-void publishCharts() {
-    if (_mqttWriter) {
-        delete _mqttWriter;
-    }
-    _mqttWriter = new MqttWriter(&_mqtt, "test");
-
-    Logger::publish(_mqttWriter);
-}
-
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     pm.info("<= " + String(topic));
     String topicStr = String(topic);
@@ -247,22 +238,6 @@ boolean publishStatus(const String& name, const String& value, const ValueType_t
 
 boolean publishOrder(const String& topic, const String& order) {
     return mqtt_publish(getOrderPath(topic), order);
-}
-
-bool isExcludedKey(const String& key) {
-    return key.equals("time") ||
-           key.equals("name") ||
-           key.equals("lang") ||
-           key.equals("ip") ||
-           key.endsWith("_in");
-}
-
-void publishState() {
-    liveData.forEach([](const ValueType_t type, const String& key, const String& value) {
-        if (!isExcludedKey(key)) {
-            publishStatus(key, value, type);
-        }
-    });
 }
 
 const String getStateStr() {

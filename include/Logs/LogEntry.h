@@ -1,41 +1,52 @@
 #pragma once
 
 #include <Arduino.h>
+#include <FS.h>
 
-#include <Base/Value.h>
+#include "Base/Value.h"
 
 struct LogEntry;
 
 typedef std::function<bool(LogEntry)> LogEntryHandler;
 
-struct LogEntry : public Printable {
-    unsigned long _time;
-    unsigned short _value;
+struct Entry {
+    unsigned long time;
+    unsigned short value;
+};
+
+struct LogEntry {
+    Entry data;
     ValueType_t _type;
+    LogEntry(){};
+
+    LogEntry(const Entry& entry, ValueType_t type) {
+        data.time = entry.time;
+        data.value = entry.value;
+        _type = type;
+    }
 
     LogEntry(const String& str) {
         size_t split = str.indexOf(" ");
-        _time = str.substring(0, split).toInt();
-        _value = str.substring(split).toFloat();
+        data.time = str.substring(0, split).toInt();
+        data.value = str.substring(split).toInt();
+        _type = VT_INT;
     }
 
-    LogEntry(unsigned long time, const String& value, ValueType_t type) : _time{time}, _type{type} {
+    LogEntry(unsigned long time, const String& value, ValueType_t type) {
+        _type = type;
+        data.time = time;
         if (_type == VT_INT) {
-            _value = value.toInt();
+            data.value = value.toInt();
         } else if (_type == VT_FLOAT) {
-            _value = value.toFloat() * 100;
+            data.value = value.toFloat() * 100;
         } else if (_type == VT_STRING) {
-            _value = 777;
+            data.value = 777;
         }
     };
 
-    unsigned long time() {
-        return _time;
-    }
-
     const String asChartEntry(uint8_t num = 1) const {
         String str = "[\"x\":\"";
-        str += _time;
+        str += getTime();
         str += "\",\"y";
         str += String(num, DEC);
         str += ":\"";
@@ -44,14 +55,26 @@ struct LogEntry : public Printable {
         return str;
     }
 
-    const String getValue() const {
-        return VT_INT ? String(_value, DEC) : String((float)_value / 100, 2);
+    Entry* getEntry() {
+        return &data;
     }
 
-    size_t printTo(Print& p) const override {
-        size_t res = p.print(_time);
-        res += p.print(' ');
-        res += p.println(getValue());
-        return res;
+    const String getTime() const {
+        return String(data.time, DEC);
+    }
+
+    const String getValue() const {
+        return VT_INT ? String(data.value, DEC) : String((float)data.value / 100, 2);
+    }
+
+    void write(Print& p) {
+        p.write((uint8_t*)&data, sizeof(Entry));
+        p.write('\n');
+    }
+
+    void print(Print& p) const {
+        p.print(getTime());
+        p.print(' ');
+        p.println(getValue());
     }
 };

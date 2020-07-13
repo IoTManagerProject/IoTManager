@@ -1,24 +1,36 @@
 #pragma once
 
-#include <Arduino.h>
+#pragma once
 
+#include <Arduino.h>
 #include <list>
-class StringQueue {
+
+#include "Logs/LogEntry.h"
+
+class LogBuffer {
    private:
-    std::list<String> _pool;
+    std::list<LogEntry> _pool;
 
    public:
-    void push(const String& item) {
+    void reserve(size_t num) {
+   
+    }
+
+    void push(const LogEntry& item) {
         _pool.push_back(item);
     }
 
-    bool pop(String& item) {
+    bool pop(LogEntry& item) {
         if (_pool.empty()) {
             return false;
         };
         item = _pool.front();
         _pool.pop_front();
         return true;
+    }
+
+    size_t size() {
+        return _pool.size();
     }
 
     size_t available() {

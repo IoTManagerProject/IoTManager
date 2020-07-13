@@ -1,7 +1,7 @@
 {
-    "devname": "iot_device",
-    "hostname": "iot_device",
-    "apssid": "IoTmanager",
+    "devname": "iot_dev",
+    "hostname": "iot_host",
+    "apssid": "IoT_device",
     "appass": "",
     "routerssid": "***REMOVED***",
     "routerpass": "***REMOVED***",

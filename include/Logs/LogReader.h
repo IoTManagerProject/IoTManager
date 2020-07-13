@@ -4,7 +4,10 @@
 #include <LittleFS.h>
 #include <functional>
 
-#include "Logs/LogEntry.h"
+#include "Logs/LogMetadata.h"
+
+#define FILE_READ "r"
+#define FILE_WRITE "w"
 
 class LogReader {
    private:
@@ -12,12 +15,12 @@ class LogReader {
     LogEntryHandler _handler;
     bool _active;
     size_t _pos;
+    LogMetadata *_meta;
 
    public:
-    LogReader(const char* filename, LogEntryHandler handler) : _handler{handler},
-                                                               _active{false},
-                                                               _pos{0} {
-        _file = LittleFS.open(filename, "r");
+    LogReader(LogMetadata &meta, LogEntryHandler handler) : _handler{handler},
+                                                            _active{false},
+                                                            _pos{0} {
     }
 
     void setActive(bool value) {
@@ -29,12 +32,15 @@ class LogReader {
             return;
         }
         if (!_file) {
-            _active = false;
+            _file = LittleFS.open(_meta->getDataFile().c_str(), FILE_READ);
         }
         if (_file.available()) {
-            String line = _file.readStringUntil('\n');
-            Serial.println(line);
-            _handler(LogEntry(line));
+            Entry entry;
+            if (_file.readBytesUntil('\n', (uint8_t *)&entry, sizeof(Entry)) != sizeof(Entry)) {
+                Serial.println("mismatch");
+            }
+            auto logEntry = LogEntry(entry, _meta->getValueType());
+            _handler(logEntry);
             _pos++;
 
         } else {
@@ -43,3 +49,4 @@ class LogReader {
         }
     }
 };
+

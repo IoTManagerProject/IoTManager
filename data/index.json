@@ -48,6 +48,12 @@
     },
     {
       "type": "link",
+      "title": "Конфигурация",
+      "action": "/?set.device",
+      "class": "btn btn-block btn-center"
+    },
+    {
+      "type": "link",
       "title": "Устройства в сети",
       "action": "/?set.udp",
       "class": "btn btn-block btn-center"

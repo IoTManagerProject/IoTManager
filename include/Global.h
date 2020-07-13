@@ -89,7 +89,10 @@ extern void statistics_init();
 extern void device_init();
 extern void cmd_init();
 extern void init_mod();
+
+extern void publishState();
 extern void publishWidgets();
+extern void publishCharts();
 
 extern void configAdd(const String&);
 extern void save_runtime();

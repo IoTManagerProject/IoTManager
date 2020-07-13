@@ -21,6 +21,12 @@ const String asJson() {
     return res;
 }
 
+void forEach(LoggerTaskHandler func) {
+    for (auto item : _list) {
+        if (!func(item)) break;
+    }
+}
+
 void loop() {
     for (auto item : _list) {
         item->update();
@@ -35,13 +41,6 @@ void add(const char* name, unsigned long period, size_t limit) {
 
 void init() {
     _list.clear();
-}
-
-void publish(Writer* writer) {
-    for (auto item : _list) {
-        item->publish(writer);
-        break;
-    }
 }
 
 void clear() {

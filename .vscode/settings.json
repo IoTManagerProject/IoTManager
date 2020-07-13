@@ -63,6 +63,20 @@
         "cstdbool": "cpp",
         "typeinfo": "cpp",
         "cstring": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "iomanip": "cpp",
+        "mutex": "cpp",
+        "scoped_allocator": "cpp",
+        "valarray": "cpp",
+        "future": "cpp",
+        "forward_list": "cpp",
+        "typeindex": "cpp",
+        "unordered_set": "cpp",
+        "complex": "cpp",
+        "cfenv": "cpp",
+        "condition_variable": "cpp",
+        "csetjmp": "cpp",
+        "csignal": "cpp",
+        "thread": "cpp"
     }
 }
