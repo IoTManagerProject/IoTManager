@@ -43,7 +43,7 @@ class ScenarioItem {
     bool isValid();
     bool isEnabled();
     bool enable(bool value);
-    void run(const String& value);
+    bool run(const String& value);
 
    private:
     bool equation(const String& object, const String& value);

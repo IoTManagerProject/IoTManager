@@ -54,12 +54,14 @@ bool ScenarioItem::equation(const String& object, const String& value) {
     return res;
 }
 
-void ScenarioItem::run(const String& event) {
+bool ScenarioItem::run(const String& event) {
     String obj = event;
     String value = liveData.read(obj);
     if (equation(obj, value)) {
         stringExecute(_commands);
+        return true;
     }
+    return false;
 }
 
 bool ScenarioItem::enable(bool value) {
@@ -147,6 +149,21 @@ void reinit() {
     _ready = false;
 }
 
+const String removeComments(const String buf) {
+    String res = "";
+    size_t startIndex = 0;
+    while (startIndex < buf.length() - 1) {
+        size_t endIndex = buf.indexOf("\n", startIndex);
+        String line = buf.substring(startIndex, endIndex);
+        startIndex = endIndex + 1;
+        if (line.startsWith("//") || line.isEmpty()) {
+            continue;
+        }
+        res += line + "\n";
+    }
+    return res;
+}
+
 void init() {
     _items.clear();
     String buf;
@@ -157,6 +174,9 @@ void init() {
     buf += "\n";
     buf.replace("\r\n", "\n");
     buf.replace("\r", "\n");
+
+    buf = removeComments(buf);
+
     while (!buf.isEmpty()) {
         String block = selectToMarker(buf, "end");
         if (block.isEmpty()) {
@@ -165,9 +185,9 @@ void init() {
         _items.push_back(new ScenarioItem(block));
         buf = deleteBeforeDelimiter(buf, "end\n");
     }
-    pm.info("blocks: " + String(_items.size(), DEC));
+    pm.info("items: " + String(_items.size(), DEC));
     _ready = true;
-}
+}  // namespace Scenario
 
 void loop() {
     if (!_ready) {
