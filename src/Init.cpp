@@ -40,7 +40,7 @@ void announce_task() {
 
 void timers_task() {
     ts.add(
-        TIMERS, ONE_SECOND_ms, [&](void*) { Timers::loop(); }, nullptr, true);
+        TIMERS, ONE_SECOND_ms, [&](void*) { Timers::update(); }, nullptr, true);
 }
 
 void uptime_task() {

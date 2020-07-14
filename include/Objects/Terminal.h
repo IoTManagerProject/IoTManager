@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-#include "Objects/EditLine.h"
+#include "Base/EditLine.h"
 #include <functional>
 
 #define A_NORMAL 0x0000     // normal

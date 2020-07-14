@@ -6,28 +6,17 @@
 
 class Assigned {
    public:
-    Assigned() : _assign{NULL} {}
-
-    ~Assigned() {
-        if (_assign) {
-            delete _assign;
-        };
+    Assigned(const String& assign) {
+        _assign = strdup(assign.c_str());
     }
 
-    void setAssign(String assign) {
-        if (_assign) {
-            delete _assign;
-        };
-        _assign = strdup(assign.c_str());
-        onAssign();
+    ~Assigned() {
+        delete _assign;
     }
 
     char* getAssign() {
         return _assign;
     }
-
-   protected:
-    virtual void onAssign() = 0;
 
    private:
     char* _assign;
@@ -38,7 +27,7 @@ class PinAssigned {
     PinAssigned(Assigned* obj) : _obj{obj} {};
 
     uint8_t getPin() {
-        return atoi(_obj->getAssign());
+        return String(_obj->getAssign()).toInt();
     }
 
    private:

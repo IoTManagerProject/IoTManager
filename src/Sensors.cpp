@@ -16,15 +16,15 @@ BaseSensor* add(SensorType_t type, const String& name, const String& assign) {
     BaseSensor* item;
     switch (type) {
         case SENSOR_ADC:
-            item = new AnalogSensor{name};
+            item = new AnalogSensor{name, assign};
             break;
         case SENSOR_DALLAS:
-            item = new DallasSensor{name};
+            item = new DallasSensor{name, assign};
             break;
         default:
             break;
     }
-    item->setAssign(assign);
+
     _items.push_back(item);
     return last();
 }

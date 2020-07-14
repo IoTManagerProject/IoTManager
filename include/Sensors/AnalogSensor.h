@@ -5,12 +5,12 @@
 #include "Base/BaseSensor.h"
 
 class AnalogSensor : public BaseSensor,
-                     public ValueMap,
-                     public PinAssigned {
+                     public PinAssigned,
+                     public ValueMap {
    public:
-    AnalogSensor(const String& name) : BaseSensor{name, VT_INT}, ValueMap{this}, PinAssigned{this} {};
-
-    void onAssign() override {
+    AnalogSensor(const String& name, const String& assign) : BaseSensor{name, assign, VT_INT},
+                                                             PinAssigned{this},
+                                                             ValueMap{this} {
         pinMode(getPin(), INPUT);
     }
 

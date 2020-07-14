@@ -16,8 +16,7 @@ Switch* Switches::add(const String& name, const String& assign) {
         pm.error("wrong pin");
         return nullptr;
     }
-    Switch* item = new Switch{name};
-    item->setAssign(assign);
+    Switch* item = new Switch{name, assign};
     _items.push_back(item);
     return last();
 }

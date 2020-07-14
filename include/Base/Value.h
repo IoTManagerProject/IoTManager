@@ -13,7 +13,7 @@ enum ValueType_t {
 
 class Value {
    public:
-    Value(ValueType_t type) : _type{type}, _lastValue{""}, _lastTime{0} {}
+    Value(ValueType_t type) : _type{type}, _lastValue{"0"}, _lastTime{0} {}
 
     void setValue(const String& value) {
         onSetValue(value);
@@ -38,7 +38,7 @@ class Value {
     virtual void onValueChange(const String& prev, const String& value) {}
 
     virtual const String onGetValue() {
-        return "";
+        return "0";
     }
 
    private:

@@ -1,14 +1,15 @@
 #include "Cmd.h"
 
-#include "Objects/Buttons.h"
+#include "Buttons.h"
+#include "StringConsts.h"
 #include "PrintMessage.h"
 
 #include "Widgets.h"
 
-static const char *MODULE = "button";
+static const char *MODULE = TAG_BUTTON;
 
 static const String getObjectName(const char *id) {
-    return String(MODULE) + id;
+    return String(TAG_BUTTON) + id;
 }
 
 static Button *getObjectByName(const String &name) {
@@ -35,12 +36,16 @@ static bool getButtonType(const String &assign, ButtonType_t &type) {
 
 void cmd_button() {
     String name = getObjectName(sCmd.next());
+
     String assign = sCmd.next();
     String descr = sCmd.next();
     String page = sCmd.next();
     String order = sCmd.next();
     String state = sCmd.next();
     String inverted = sCmd.next();
+
+    state = state.isEmpty() ? "0" : state;
+    inverted = inverted.isEmpty() ? "0" : inverted;
 
     ButtonType_t type;
     if (getButtonType(assign, type)) {

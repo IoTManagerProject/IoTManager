@@ -15,6 +15,9 @@ const char* TAG_I2C = "i2c";
 const char* TAG_SHARE_MQTT = "share_mqtt";
 const char* TAG_CHECK_MQTT = "check_mqtt";
 
+const char* TAG_BUTTON = "button";
+const char* TAG_TIMER = "timer";
+
 const char* strBoolEnabled(bool value) {
     return value ? "enabled" : "disabled";
 }

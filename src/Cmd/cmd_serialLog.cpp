@@ -1,9 +1,13 @@
 #include "Cmd.h"
 
+/*
+* serialLog 1 serial1
+*/
+
 void cmd_serialLog() {
-    bool enabled = atoi(sCmd.next());
+    String enabled = sCmd.next();
     String out = sCmd.next();
 
     PrintMessage::setOutput(out.equalsIgnoreCase("serial1") ? &Serial1 : &Serial);
-    PrintMessage::enablePrint(enabled);
+    PrintMessage::enablePrint(enabled.toInt());
 }

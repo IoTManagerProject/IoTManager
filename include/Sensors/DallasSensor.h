@@ -11,17 +11,15 @@
 class DallasSensor : public BaseSensor,
                      public OneWireAddressAssigned {
    public:
-    DallasSensor(const String& name) : BaseSensor(name, VT_FLOAT), OneWireAddressAssigned{this} {
+    DallasSensor(const String& name, const String& assign) : BaseSensor(name, assign, VT_FLOAT),
+                                                             OneWireAddressAssigned{this} {
         _state = DALLAS_IDLE;
-    };
-
-    void onAssign() override {
         _obj = new Dallas(getAddress());
         if (!_obj->isConnected()) {
             Serial.print("not found: ");
             Serial.println(getName());
         }
-    }
+    };
 
     const bool hasValue() override {
         bool res = false;

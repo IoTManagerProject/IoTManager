@@ -7,11 +7,7 @@
 Adafruit_BME280 bme;
 class BME280Sensor : public BaseSensor {
    public:
-    BME280Sensor(const String& name) : BaseSensor(name, VT_FLOAT) {
-    }
-
-    void onAssign() override {
-        String assign = getAssign();
+    BME280Sensor(const String& name, const String& assign) : BaseSensor(name, assign, VT_FLOAT) {
         if (assign == "temperature") {
             obj = bme.getTemperatureSensor();
         } else if (assign == "humidity") {

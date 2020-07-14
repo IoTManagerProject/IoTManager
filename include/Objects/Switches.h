@@ -1,8 +1,9 @@
 #pragma once
 
 #include <Arduino.h>
-#include <Bounce2.h>
 #include <functional>
+
+#include <Bounce2.h>
 
 #include "Base/Item.h"
 #include "Base/Assigned.h"
@@ -11,13 +12,10 @@ class Switch : public Item,
                public Value,
                public PinAssigned {
    public:
-    Switch(const String& name) : Item{name},
-                                 Value{VT_INT},
-                                 PinAssigned{this} {
+    Switch(const String& name, const String& assign) : Item{name, assign},
+                                                       Value{VT_INT},
+                                                       PinAssigned{this} {
         _obj = new Bounce();
-    }
-
-    void onAssign() override {
         _obj->attach(getPin(), INPUT);
     }
 

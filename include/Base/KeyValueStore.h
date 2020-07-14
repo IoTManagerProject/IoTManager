@@ -92,6 +92,15 @@ class KeyValueStore {
         return buf;
     }
 
+    void erase(const String key) {
+        for (size_t i = 0; i < _items.size(); i++) {
+            if (_items.at(i).getKey() == key) {
+                _items.erase(_items.begin() + i);
+                break;
+            }
+        }
+    }
+
     KeyValue* findKey(const String key) {
         for (size_t i = 0; i < _items.size(); i++) {
             if (_items.at(i).getKey() == key) {

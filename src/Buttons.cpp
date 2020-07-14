@@ -1,4 +1,4 @@
-#include "Objects/Buttons.h"
+#include "Buttons.h"
 
 #include "PrintMessage.h"
 
@@ -12,7 +12,7 @@ Button* Buttons::add(const ButtonType_t type, const String& name, const String& 
     Button* item;
     switch (type) {
         case BUTTON_VIRTUAL:
-            item = new Button(name, assign, value);
+            item = new VirtualButton(name, assign, value);
             break;
         case BUTTON_GPIO:
             item = new PinButton(name, assign, value);

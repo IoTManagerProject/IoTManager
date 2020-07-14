@@ -17,11 +17,10 @@ class Pwm : public Item,
             public Value,
             public ValueMap {
    public:
-    Pwm(const String& name) : Item{name},
-                              PinAssigned{this},
-                              Value{VT_INT},
-                              ValueMap{this} {};
-    void onAssign() override {
+    Pwm(const String& name, const String& assign) : Item{name, assign},
+                                                    PinAssigned{this},
+                                                    Value{VT_INT},
+                                                    ValueMap{this} {
         pinMode(getPin(), OUTPUT);
     }
 

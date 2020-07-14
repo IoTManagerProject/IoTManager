@@ -17,9 +17,7 @@ enum ButtonType_t {
 class Button : public Item,
                public Value {
    public:
-    Button(const String& name, const String& assign, const String& value) : Item{name}, Value{VT_INT} {};
-
-    virtual void onAssign() override {}
+    Button(const String& name, const String& assign, const String& value) : Item{name, assign}, Value{VT_INT} {};
 
     void setInverted(bool value) {
         _inverted = value;
@@ -38,10 +36,16 @@ class Button : public Item,
     bool _inverted;
 };
 
+class VirtualButton : public Button {
+   public:
+    VirtualButton(const String& name, const String& assign, const String& value) : Button{name, assign, value} {};
+};
+
 class ScenButton : public Button {
    public:
     ScenButton(const String& name, const String& assign, const String& value) : Button{name, assign, value} {};
 
+   protected:
     void onValueUpdate(const String& value) override {
         bool state = getValue().toInt();
         config.general()->enableScenario(state);
@@ -52,27 +56,14 @@ class PinButton : public Button,
                   public PinAssigned {
    public:
     PinButton(const String& name, const String& assign, const String& value) : Button{name, assign, value},
-                                                                               PinAssigned{this} {};
-
-    void onAssign() override {
+                                                                               PinAssigned{this} {
+        Serial.printf("%s onCreate: %d\n", getName(), getPin());
         pinMode(getPin(), OUTPUT);
-    }
+    };
 
+   protected:
     void onValueUpdate(const String& value) override {
+        Serial.printf("%s onValueUpdate (pin:%d, inverted:%d): %li\n", getName(), getPin(), isInverted(), value.toInt());
         digitalWrite(getPin(), isInverted() ? value.toInt() : !value.toInt());
     }
 };
-
-class Buttons {
-   public:
-    Button* add(const ButtonType_t type, const String& name, const String& assign, const String& value, const String& inverted);
-    Button* last();
-    Button* at(size_t index);
-    Button* get(const String name);
-    size_t count();
-
-   private:
-    std::vector<Button*> _list;
-};
-
-extern Buttons buttons;

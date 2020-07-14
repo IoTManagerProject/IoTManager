@@ -5,8 +5,8 @@
 class BaseSensor : public Item,
                    public Value {
    public:
-    BaseSensor(const String& name, const ValueType_t type) : Item{name},
-                                                             Value{type} {}
+    BaseSensor(const String& name, const String& assign, const ValueType_t type) : Item{name, assign},
+                                                                                   Value{type} {}
 
     virtual const String onReadSensor() = 0;
 

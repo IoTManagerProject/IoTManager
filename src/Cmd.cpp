@@ -9,8 +9,8 @@
 #include "Scenario.h"
 #include "Timers.h"
 #include "Widgets.h"
+#include "Buttons.h"
 #include "Objects/Switches.h"
-#include "Objects/Buttons.h"
 #include "Objects/PwmItems.h"
 #include "Objects/ServoItems.h"
 #include "Objects/Terminal.h"
@@ -33,6 +33,26 @@ SoftwareSerial *mySerial = nullptr;
 #else
 HardwareSerial *mySerial = nullptr;
 #endif
+
+unsigned long parsePeriod(const String &str, unsigned long default_multiplier) {
+    unsigned long res = 0;
+    if (str.indexOf("digit") != -1) {
+        res = liveData.readInt(str);
+    } else {
+        if (str.endsWith("ms")) {
+            res = str.substring(0, str.indexOf("ms")).toInt();
+        } else if (str.endsWith("s")) {
+            res = str.substring(0, str.indexOf("s")).toInt() * ONE_SECOND_ms;
+        } else if (str.endsWith("m")) {
+            res = str.substring(0, str.indexOf("m")).toInt() * ONE_MINUTE_ms;
+        } else if (str.endsWith("h")) {
+            res = str.substring(0, str.indexOf("h")).toInt() * ONE_HOUR_ms;
+        } else {
+            res = str.toInt() * default_multiplier;
+        }
+    }
+    return res;
+}
 
 void cmd_init() {
     pm.info(TAG_INIT);
@@ -84,6 +104,7 @@ void cmd_init() {
     sCmd.addCommand("serialBegin", cmd_serialBegin);
     sCmd.addCommand("serialEnd", cmd_serialEnd);
     sCmd.addCommand("serialWrite", cmd_serialWrite);
+
     sCmd.addCommand("serialLog", cmd_serialLog);
 
     sCmd.addCommand("telnet", cmd_telnet);
@@ -115,22 +136,6 @@ void cmd_init() {
     sCmd.addCommand("reboot", cmd_reboot);
 
     sCmd.addCommand("oneWire", cmd_oneWire);
-}
-
-unsigned long parsePeriod(const String &str, unsigned long default_multiplier = ONE_MINUTE_ms) {
-    unsigned long res = 0;
-    if (str.endsWith("ms")) {
-        res = str.substring(0, str.indexOf("ms")).toInt();
-    } else if (str.endsWith("s")) {
-        res = str.substring(0, str.indexOf("s")).toInt() * ONE_SECOND_ms;
-    } else if (str.endsWith("m")) {
-        res = str.substring(0, str.indexOf("m")).toInt() * ONE_MINUTE_ms;
-    } else if (str.endsWith("h")) {
-        res = str.substring(0, str.indexOf("h")).toInt() * ONE_HOUR_ms;
-    } else {
-        res = str.toInt() * default_multiplier;
-    }
-    return res;
 }
 
 //logging temp1 1 10 Температура Датчики 2
@@ -616,27 +621,6 @@ void cmd_dhtComfort() {
     Widgets::createWidget(widget_name, page_name, order, "anydata", "dhtComfort");
 }
 
-// analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
-void cmd_analog() {
-    String name = sCmd.next();
-    String pin = sCmd.next();
-    String descr = sCmd.next();
-    String page = sCmd.next();
-    String templat = sCmd.next();
-
-    String in_min = sCmd.next();
-    String in_max = sCmd.next();
-    String out_min = sCmd.next();
-    String out_max = sCmd.next();
-
-    String order = sCmd.next();
-
-    AnalogSensor *item = (AnalogSensor *)Sensors::add(SENSOR_ADC, name, pin);
-    item->setMap(in_min.toInt(), in_max.toInt(), out_min.toInt(), out_max.toInt());
-
-    Widgets::createWidget(descr, page, order, templat, name);
-}
-
 // bmp280T temp1 0x76 Температура#bmp280 Датчики any-data 1
 void cmd_bmp280T() {
     String name = sCmd.next();
@@ -727,15 +711,6 @@ void cmd_bme280A() {
     Widgets::createWidget(widget_name, page_name, order, type, name);
 }
 
-void cmd_http() {
-    String host = sCmd.next();
-    String param = sCmd.next();
-    param.replace("_", "%20");
-    String url = "http://" + host + "/cmd?command=" + param;
-
-    WebClient::get(url);
-}
-
 void cmd_firmwareUpdate() {
     perform_upgrade();
 }
@@ -747,46 +722,6 @@ void cmd_firmwareVersion() {
 
     liveData.write("firmver", FIRMWARE_VERSION, VT_STRING);
     Widgets::createWidget(widget, page, order, "anydata", "firmver");
-}
-
-void cmd_reboot() {
-    perform_system_restart();
-}
-
-void cmd_timerStart() {
-    String name = sCmd.next();
-    String period = sCmd.next();
-    String type = sCmd.next();
-
-    unsigned long value = 0;
-    if (period.indexOf("digit") != -1) {
-        value = liveData.readInt(period);
-    } else if (type == "sec") {
-        value = period.toInt();
-    } else if (type == "min") {
-        value = period.toInt() * ONE_MINUTE_s;
-    } else if (type == "hours") {
-        value = period.toInt() * ONE_HOUR_s;
-    }
-
-    String objName = "timer" + name;
-
-    Timers::add(objName, value);
-    liveData.write(objName, "1", VT_INT);
-}
-
-void cmd_push() {
-    String title = sCmd.next();
-    String body = sCmd.next();
-    title.replace("#", " ");
-    body.replace("#", " ");
-
-    pushControl(title, body);
-}
-
-void cmd_timerStop() {
-    String name = sCmd.next();
-    Timers::erase(name);
 }
 
 void fileExecute(const String filename) {

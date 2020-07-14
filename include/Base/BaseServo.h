@@ -15,16 +15,13 @@ class BaseServo : public Item,
                   public Value,
                   public ValueMap {
    public:
-    BaseServo(const String& name, const String& assign, const String& value) : Item{name},
+    BaseServo(const String& name, const String& assign, const String& value) : Item{name, assign},
                                                                                PinAssigned{this},
                                                                                Value{VT_INT},
                                                                                ValueMap{this} {
         _obj = new Servo();
-    };
-
-    void onAssign() override {
         _obj->attach(getPin());
-    }
+    };
 
     void onValueUpdate(const String& value) override {
         _obj->write(value.toInt());

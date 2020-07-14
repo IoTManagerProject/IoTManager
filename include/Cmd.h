@@ -2,6 +2,10 @@
 
 #include "Global.h"
 
+extern StringCommand sCmd;
+
+extern unsigned long parsePeriod(const String &str, unsigned long default_multiplier = ONE_MINUTE_ms);
+
 void addOrder(const String &str);
 void stringExecute(String cmdStr);
 
@@ -70,5 +74,3 @@ void cmd_timerStop();
 void cmd_timerStart();
 
 void cmd_oneWire();
-
-extern StringCommand sCmd;
