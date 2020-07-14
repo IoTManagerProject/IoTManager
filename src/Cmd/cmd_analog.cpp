@@ -1,6 +1,7 @@
 #include "Cmd.h"
 
-#include "Widgets.h"
+#include "Collection/Sensors.h"
+#include "Collection/Widgets.h"
 
 // analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
 void cmd_analog() {

@@ -21,7 +21,6 @@
 #include "Config.h"
 #include "Updater.h"
 #include "Clock.h"
-#include "Sensors.h"
 #include "Scenario.h"
 #include "MqttClient.h"
 #include "NetworkManager.h"

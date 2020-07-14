@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Global.h"
+
 
 #include "Sensors/OneWireBus.h"
 #include "Sensors/AnalogSensor.h"

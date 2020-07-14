@@ -1,10 +1,10 @@
 #include "Cmd.h"
 
-#include "Buttons.h"
 #include "StringConsts.h"
 #include "PrintMessage.h"
 
-#include "Widgets.h"
+#include "Collection/Buttons.h"
+#include "Collection/Widgets.h"
 
 static const char *MODULE = TAG_BUTTON;
 

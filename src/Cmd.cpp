@@ -1,23 +1,27 @@
 #include "Cmd.h"
 
-#include "StringConsts.h"
-#include "Devices.h"
-#include "Logger.h"
-#include "MqttClient.h"
-#include "WebClient.h"
-#include "Sensors.h"
-#include "Scenario.h"
-#include "Timers.h"
-#include "Widgets.h"
-#include "Buttons.h"
+#include "Collection/Buttons.h"
+#include "Collection/Devices.h"
+#include "Collection/Logger.h"
+#include "Collection/Sensors.h"
+#include "Collection/Timers.h"
+#include "Collection/Widgets.h"
+
+#include "Sensors/AnalogSensor.h"
+#include "Sensors/OneWireBus.h"
+
 #include "Objects/Switches.h"
 #include "Objects/PwmItems.h"
 #include "Objects/ServoItems.h"
 #include "Objects/Terminal.h"
 #include "Objects/Telnet.h"
+
 #include "PrintMessage.h"
-#include "Sensors/AnalogSensor.h"
-#include "Sensors/OneWireBus.h"
+
+#include "StringConsts.h"
+#include "MqttClient.h"
+#include "WebClient.h"
+#include "Scenario.h"
 
 static const char *MODULE = "Cmd";
 

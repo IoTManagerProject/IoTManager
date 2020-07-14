@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Adafruit_BMP280.h>
 
 namespace BMP280Sensor {

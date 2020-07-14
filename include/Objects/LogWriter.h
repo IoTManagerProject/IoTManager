@@ -1,11 +1,12 @@
+#pragma once
 
 #include <Arduino.h>
-#include <LittleFS.h>
 #include <functional>
+#include <LittleFS.h>
 
-#include "Logs/LogMetadata.h"
-#include "Logs/LogEntry.h"
-#include "Logs/LogBuffer.h"
+#include "Objects/LogMetadata.h"
+#include "Objects/LogEntry.h"
+#include "Objects/LogBuffer.h"
 
 class LogWriter {
    private:

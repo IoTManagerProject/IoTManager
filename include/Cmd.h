@@ -2,6 +2,8 @@
 
 #include "Global.h"
 
+#include "Utils/TimeUtils.h"
+
 extern StringCommand sCmd;
 
 extern unsigned long parsePeriod(const String &str, unsigned long default_multiplier = ONE_MINUTE_ms);

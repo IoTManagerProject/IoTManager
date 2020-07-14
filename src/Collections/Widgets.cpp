@@ -1,10 +1,10 @@
-#include "Widgets.h"
+#include "Collection/Widgets.h"
 
 #include "Global.h"
 
-#include "Widget.h"
+#include "Objects/Widget.h"
 
-static const char* MODULE = "Widget";
+static const char* MODULE = "Widgets";
 
 namespace Widgets {
 std::vector<Widget*> _list;

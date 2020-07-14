@@ -1,21 +1,15 @@
 #pragma once
 
-#pragma once
-
 #include <Arduino.h>
 #include <list>
 
-#include "Logs/LogEntry.h"
+#include "Objects/LogEntry.h"
 
 class LogBuffer {
    private:
     std::list<LogEntry> _pool;
 
    public:
-    void reserve(size_t num) {
-   
-    }
-
     void push(const LogEntry& item) {
         _pool.push_back(item);
     }

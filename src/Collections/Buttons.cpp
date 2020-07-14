@@ -1,13 +1,13 @@
-#include "Buttons.h"
+#include "Collection/Buttons.h"
 
 #include "PrintMessage.h"
 
-static const char* MODULE = "Button";
+static const char* MODULE = "Buttons";
 
 Buttons buttons;
 
 Button* Buttons::add(const ButtonType_t type, const String& name, const String& assign, const String& value, const String& inverted) {
-    pm.info("name: \"" + name + "\", pin: " + assign + ", state: " + value + ", inverted: " + inverted);
+    pm.info("name:\"" + name + "\", pin:" + assign + ", state:" + value + ", inverted:" + inverted);
 
     Button* item;
     switch (type) {

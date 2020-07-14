@@ -1,7 +1,7 @@
 #include "Global.h"
 
-#include "Widgets.h"
-#include "Logger.h"
+#include "Collection/Widgets.h"
+#include "Collection/Logger.h"
 #include "MqttWriter.h"
 
 KeyValueStore options;

@@ -31,7 +31,6 @@ enum ErrorType_t {
     ET_SYSTEM
 };
 
-
 enum LedStatus_t {
     LED_OFF,
     LED_ON,
@@ -69,5 +68,13 @@ enum LoopItems {
     NUM_LOOP_ITEMS
 };
 
+#define ONE_MINUTE_s 60
+#define ONE_HOUR_m 60
+#define ONE_HOUR_s 60 * ONE_MINUTE_s
+#define LEAP_YEAR(Y) (((1970 + Y) > 0) && !((1970 + Y) % 4) && (((1970 + Y) % 100) || !((1970 + Y) % 400)))
+#define MIN_DATETIME 1575158400
+#define ONE_SECOND_ms 1000
+#define ONE_MINUTE_ms 60 * ONE_SECOND_ms
+#define ONE_HOUR_ms ONE_HOUR_m* ONE_MINUTE_ms
 
 extern const char* getMessageType(BroadcastMessage_t message_type);

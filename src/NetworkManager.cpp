@@ -2,6 +2,8 @@
 
 #include "Global.h"
 
+#include "Utils/TimeUtils.h"
+
 namespace NetworkManager {
 
 static const char* MODULE = "Network";

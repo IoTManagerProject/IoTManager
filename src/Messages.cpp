@@ -4,7 +4,7 @@
 #include "Global.h"
 #include "Config.h"
 #include "Broadcast.h"
-#include "Devices.h"
+#include "Collection/Devices.h"
 #include "Utils/SysUtils.h"
 
 static const char* MODULE = "Messages";

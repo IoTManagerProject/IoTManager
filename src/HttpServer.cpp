@@ -1,7 +1,7 @@
 #include "HttpServer.h"
 
-#include "Logger.h"
-#include "Devices.h"
+#include "Collection/Logger.h"
+#include "Collection/Devices.h"
 #include "Sensors/OnewireBus.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"

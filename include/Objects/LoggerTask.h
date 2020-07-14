@@ -1,12 +1,11 @@
 #pragma once
 
-#include <Logs/LogReader.h>
 #include <Base/Writer.h>
-#include <Logs/LogWriter.h>
-#include <Logs/LogEntry.h>
-#include <Logs/LogMetadata.h>
-#include <Logs/LogBuffer.h>
-
+#include <Objects/LogReader.h>
+#include <Objects/LogWriter.h>
+#include <Objects/LogEntry.h>
+#include <Objects/LogMetadata.h>
+#include <Objects/LogBuffer.h>
 
 class LoggerTask {
    public:

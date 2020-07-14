@@ -1,5 +1,6 @@
-#include "Sensors.h"
+#include "Collection/Sensors.h"
 
+#include "Global.h"
 #include "PrintMessage.h"
 
 const static char* MODULE = "Sensors";

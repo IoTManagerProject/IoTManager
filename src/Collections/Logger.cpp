@@ -1,9 +1,12 @@
-#include "Logger.h"
+#include "Collection/Logger.h"
+
+#include "Objects/LoggerTask.h"
 
 #include "Base/Writer.h"
-#include "Logs/LoggerTask.h"
 #include "MqttClient.h"
+
 #include "TickerScheduler/TickerScheduler.h"
+
 #include "Utils/StringUtils.h"
 
 #include <LITTLEFS.h>
@@ -27,7 +30,7 @@ void forEach(LoggerTaskHandler func) {
     }
 }
 
-void loop() {
+void update() {
     for (auto item : _list) {
         item->update();
     }

@@ -5,14 +5,14 @@
 #include "NetworkManager.h"
 #include "Messages.h"
 #include "Broadcast.h"
-#include "Devices.h"
+#include "Collection/Sensors.h"
+#include "Collection/Logger.h"
+#include "Collection/Devices.h"
 #include "MqttClient.h"
 #include "HttpServer.h"
 #include "Sensors/I2CScanner.h"
 #include "Sensors/OneWireScanner.h"
 #include "TickerScheduler/Metric.h"
-#include "Sensors.h"
-#include "Logger.h"
 
 static const char* MODULE = "Main";
 
@@ -99,7 +99,7 @@ void loop() {
     ts.update();
     m.add(LT_TASKS);
 
-    Logger::loop();
+    Logger::update();
     m.add(LT_LOGGER);
 
     if (config.hasChanged()) {

@@ -1,10 +1,11 @@
 #pragma once
 
 #include <Arduino.h>
-#include <LittleFS.h>
 #include <functional>
 
-#include "Logs/LogMetadata.h"
+#include <LittleFS.h>
+
+#include "Objects/LogMetadata.h"
 
 #define FILE_READ "r"
 #define FILE_WRITE "w"

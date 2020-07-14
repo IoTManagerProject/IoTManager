@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-#include <Logs/LogEntry.h>
+#include <Objects/LogEntry.h>
 
 #define FILE_READ "r"
 #define FILE_WRITE "w"
