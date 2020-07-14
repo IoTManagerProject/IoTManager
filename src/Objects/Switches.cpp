@@ -1,6 +1,6 @@
 #include "Objects/Switches.h"
 
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 
 static const char* MODULE = "Switch";
 

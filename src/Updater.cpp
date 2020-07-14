@@ -7,7 +7,7 @@
 #else
 #include "ESP32.h"
 #endif
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 
 namespace Updater {
 

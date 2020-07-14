@@ -1,6 +1,7 @@
 #include "MqttWriter.h"
 
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
+#include "Utils/StringUtils.h"
 
 static const char* MODULE = "MqttWriter";
 

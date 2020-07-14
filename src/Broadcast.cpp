@@ -8,7 +8,8 @@
 
 #include "NetworkManager.h"
 #include "Messages.h"
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
+#include "Utils/StringUtils.h"
 
 static const char* MODULE = "Broadcast";
 

@@ -6,7 +6,7 @@
 
 #include "Base/BaseSensor.h"
 #include "Utils/TimeUtils.h"
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 
 class DallasSensor : public BaseSensor,
                      public OneWireAddressAssigned {

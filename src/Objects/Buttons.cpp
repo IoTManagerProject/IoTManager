@@ -1,6 +1,6 @@
 #include "Objects/Buttons.h"
 
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 
 static const char* MODULE = "Button";
 

@@ -2,7 +2,8 @@
 
 #include <Wire.h>
 
-#include "Utils/PrintMessage.h"
+#include "StringConsts.h"
+#include "PrintMessage.h"
 
 I2CScanner::I2CScanner() : BusScanner(TAG_I2C){};
 

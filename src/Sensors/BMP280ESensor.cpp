@@ -2,7 +2,7 @@
 
 #include "Global.h"
 #include "MqttClient.h"
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 
 Adafruit_BME280 bme;
 class BME280Sensor : public BaseSensor {

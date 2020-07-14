@@ -1,7 +1,7 @@
 #include "Clock.h"
 
 #include "Utils/TimeUtils.h"
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 
 #ifdef ESP8266
 #include "sntp.h"

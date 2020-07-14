@@ -1,6 +1,6 @@
 #include "Objects/PwmItems.h"
 
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 
 static const char *MODULE = "PWM";
 

@@ -1,6 +1,6 @@
 #include "Config/MqttConfig.h"
 
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 
 static const char* TAG_MQTT_SERVER = "mqttServer";
 static const char* TAG_MQTT_PORT = "mqttPort";

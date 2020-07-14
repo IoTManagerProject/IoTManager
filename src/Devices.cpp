@@ -4,7 +4,7 @@
 #include "Config.h"
 #include "Utils/SysUtils.h"
 #include "Utils/FileUtils.h"
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 
 static const char* MODULE = "Devices";
 

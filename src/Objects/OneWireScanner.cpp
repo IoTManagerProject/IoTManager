@@ -2,7 +2,8 @@
 
 #include "Sensors/OneWireBus.h"
 
-#include "Utils/PrintMessage.h"
+#include "StringConsts.h"
+#include "PrintMessage.h"
 
 const char* MODULE = "OneWireScanner";
 

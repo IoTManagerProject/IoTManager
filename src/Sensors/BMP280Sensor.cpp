@@ -2,7 +2,7 @@
 
 #include "Global.h"
 #include "MqttClient.h"
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 
 namespace BMP280Sensor {
 Adafruit_BMP280 bmp;

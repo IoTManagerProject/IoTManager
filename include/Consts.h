@@ -31,11 +31,6 @@ enum ErrorType_t {
     ET_SYSTEM
 };
 
-enum ErrorLevel_t {
-    EL_INFO,
-    EL_WARNING,
-    EL_ERROR
-};
 
 enum LedStatus_t {
     LED_OFF,
@@ -74,20 +69,5 @@ enum LoopItems {
     NUM_LOOP_ITEMS
 };
 
-extern const char* DEVICE_LAYOUT_FILE;
-extern const char* DEVICE_RUNTIME_FILE;
-extern const char* DEVICE_CONFIG_FILE;
-extern const char* DEVICE_COMMAND_FILE;
-extern const char* DEVICE_SCENARIO_FILE;
-
-extern const char* TAG_INIT;
-extern const char* TAG_OPTIONS;
-extern const char* TAG_RUNTIME;
-extern const char* TAG_LAST_VERSION;
-
-#define TAG_ONE_WIRE "oneWire"
-#define TAG_I2C "i2c"
-#define TAG_SHARE_MQTT "share_mqtt"
-#define TAG_CHECK_MQTT "check_mqtt"
 
 extern const char* getMessageType(BroadcastMessage_t message_type);

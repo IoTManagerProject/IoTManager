@@ -1,6 +1,6 @@
 #include "Cmd.h"
 
-#include "Consts.h"
+#include "StringConsts.h"
 #include "Devices.h"
 #include "Logger.h"
 #include "MqttClient.h"
@@ -15,7 +15,7 @@
 #include "Objects/ServoItems.h"
 #include "Objects/Terminal.h"
 #include "Objects/Telnet.h"
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 #include "Sensors/AnalogSensor.h"
 #include "Sensors/OneWireBus.h"
 
@@ -426,18 +426,6 @@ void cmd_serialWrite() {
     String payload = sCmd.next();
     if (term) {
         term->println(payload.c_str());
-    }
-}
-
-void cmd_serialLog() {
-    bool enabled = atoi(sCmd.next());
-    String out = sCmd.next();
-
-    pm.enablePrint(enabled);
-    pm.setOutput(out.equalsIgnoreCase("serial1") ? &Serial : &Serial);
-
-    if (enabled) {
-        pm.info("serialLog: enabled");
     }
 }
 

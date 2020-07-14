@@ -1,7 +1,7 @@
 #include "Objects/Terminal.h"
 
 #include "Utils/TimeUtils.h"
-#include "Utils/PrintMessage.h"
+#include "PrintMessage.h"
 
 static const size_t INPUT_MAX_LENGHT = 256;
 

@@ -6,6 +6,8 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
+#include "StringConsts.h"
+
 #include "ESP32.h"
 #include "ESP8266.h"
 //
@@ -16,7 +18,6 @@
 #include "StringCommand.h"
 
 #include "Consts.h"
-#include "Errors.h"
 #include "Config.h"
 #include "Updater.h"
 #include "Clock.h"
@@ -24,12 +25,13 @@
 #include "Scenario.h"
 #include "MqttClient.h"
 #include "NetworkManager.h"
+#include "PrintMessage.h"
 
 #include "Utils/FileUtils.h"
 #include "Utils/JsonUtils.h"
 #include "Utils/StringUtils.h"
 #include "Utils/SysUtils.h"
-#include "Utils/PrintMessage.h"
+
 #include "TickerScheduler/TickerScheduler.h"
 
 #include <ArduinoOTA.h>

@@ -113,9 +113,3 @@ const String prettyBytes(size_t size) {
     else
         return String(size / 1024.0 / 1024.0 / 1024.0) + "GB";
 }
-
-static const char *error_levels[] = {"I", "W", "E", "?"};
-
-const char *getErrorLevelStr(uint8_t level) {
-    return error_levels[level];
-}
