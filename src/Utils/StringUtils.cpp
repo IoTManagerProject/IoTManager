@@ -1,5 +1,7 @@
 #include "Utils\StringUtils.h"
 
+#include "Consts.h"
+
 String selectToMarkerLast(String str, String found) {
     int p = str.lastIndexOf(found);
     return str.substring(p + found.length());
@@ -68,6 +70,14 @@ uint16_t hexStringToUint16(String hex) {
     }
 }
 
+uint8_t decodeHex(char c) {
+    if (c < 'A') {
+        return uint8_t(c - '0');
+    }
+    c = char(c & ~0x20);
+    return uint8_t(c - 'A' + 10);
+}
+
 size_t itemsCount(String str, const String &separator) {
     // если строки поиск нет сразу выход
     if (str.indexOf(separator) == -1) {
@@ -93,7 +103,7 @@ boolean isDigitStr(const String &str) {
     return str.length();
 }
 
-String prettyBytes(size_t size) {
+const String prettyBytes(size_t size) {
     if (size < 1024)
         return String(size) + "b";
     else if (size < (1024 * 1024))
@@ -102,28 +112,4 @@ String prettyBytes(size_t size) {
         return String(size / 1024.0 / 1024.0) + "MB";
     else
         return String(size / 1024.0 / 1024.0 / 1024.0) + "GB";
-}
-
-static const char *str_info = "I";
-static const char *str_warn = "W";
-static const char *str_error = "E";
-static const char *str_unknown = "?";
-
-String getErrorLevelStr(ErrorLevel_t level) {
-    const char *ptr;
-    switch (level) {
-        case EL_INFO:
-            ptr = str_info;
-            break;
-        case EL_WARNING:
-            ptr = str_warn;
-            break;
-        case EL_ERROR:
-            ptr = str_error;
-            break;
-        default:
-            ptr = str_unknown;
-            break;
-    }
-    return String(ptr);
 }

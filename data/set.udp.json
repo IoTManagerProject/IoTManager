@@ -1,82 +1,20 @@
 {
   "configs": [
-    "/config.setup.json",
+    "/config.json",
     "/lang/lang.ru.json"
   ],
-  "title": "Главная",
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
   "content": [
     {
       "type": "h5",
-      "title": "{{name}}",
+      "title": "{{devname}}",
       "class": "alert-default"
     },
     {
       "type": "link",
-      "title": "{{ButMainPage}}",
+      "title": "{{LS_main_page}}",
       "action": "/",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "h3",
-      "title": "{{SetUDPList}}"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "csv",
-      "title": [
-        "html",
-        "html",
-        "html"
-      ],
-      "state": "dev.csv",
-      "style": "width:100%;",
-      "class": "nan"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "link",
-      "title": "{{SetUDPUpdateList}}",
-      "action": "/set?updatelist",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "link",
-      "title": "{{SetUDPUpdatePage}}",
-      "action": "/set?updatepage",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "text",
-      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetUDPWarn1}}</p></font></div>",
-      "style": "width:100%;float:left;"
-    },
-    {
-      "type": "h3",
-      "title": "{{SetUDPNameOfDev}}"
-    },
-    {
-      "type": "input",
-      "title": "{{SetUDPNameOfDev}}",
-      "name": "devname-arg",
-      "state": "{{name}}",
-      "pattern": "[A-Za-z0-9]{6,12}"
-    },
-    {
-      "type": "button",
-      "title": "{{ButSave}}",
-      "action": "/set?devname=[[devname-arg]]",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "hr"
@@ -84,13 +22,75 @@
     {
       "type": "checkbox",
       "name": "udponoff",
-      "title": "{{SetUDPDateExchange}}",
+      "title": "{{LS_broadcast_enabled}}",
       "action": "/set?udponoff=[[udponoff]]",
-      "state": "{{udponoff}}"
+      "state": "{{udponoff}}",
+      "design": "three"
     },
     {
-      "type": "text",
-      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetUDPWarn2}}</p></font></div>"
+      "type": "h4",
+      "title": "{{LS_device_name}}",
+      "style": "width:60%;float:left;"
+    },
+    {
+      "type": "input",
+      "title": "",
+      "name": "devname-arg",
+      "state": "{{devname}}",
+      "pattern": "[A-Za-z0-9,_]{6,12}",
+      "style": "width:40%;float:right"
+    },
+    {
+      "type": "h4",
+      "title": "{{LS_broadcast_interval}}",
+      "style": "width:60%;float:left;"
+    },
+    {
+      "type": "input",
+      "title": "",
+      "name": "udptime-arg",
+      "state": "{{udptime}}",
+      "pattern": "[0-9]{1,5}",
+      "style": "width:40%;float:right;"
+    },
+    {
+      "type": "button",
+      "title": "{{LS_save}}",
+      "action": "/set?devname=[[devname-arg]]&udptime=[[udptime-arg]]",
+      "class": "btn btn-block btn-center"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "h3",
+      "title": "{{LS_known_devices}}"
+    },
+    {
+      "type": "table",
+      "state": "device.json",
+      "style": "margin:0% 10% 0% 10%;width:80%;text-align:center",
+      "title": {
+        "id": "{{LS_device_id}}",
+        "name": "{{LS_device_name}}",
+        "url": "{{LS_address}}",
+        "lastseen": "{{LS_time}}"
+      }
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "link",
+      "title": "{{LS_refresh}}",
+      "action": "/?set.udp",
+      "class": "btn btn-block btn-center"
+    },
+    {
+      "type": "button",
+      "title": "{{LS_share_mqtt_settings}}",
+      "action": "set?share_mqtt",
+      "class": "btn btn-block btn-center"
     }
   ]
 }

@@ -21,54 +21,26 @@ const String getChipId() {
 }
 
 #ifdef ESP8266
-static uint32_t total_memory = 52864;
-#endif
-#ifdef ESP32
-static uint32_t total_memory = 362868;
-#endif
-
-const String printMemoryStatus() {
-    uint32_t free = ESP.getFreeHeap();
-    uint32_t used = total_memory - free;
-    uint32_t memory_load = (used * 100) / total_memory;
-    char buf[64];
-    sprintf(buf, "used: %d%% free: %s", memory_load, getHeapStats().c_str());
-    return String(buf);
-}
-
-#ifdef ESP8266
 const String getHeapStats() {
     uint32_t free;
     uint16_t max;
     uint8_t frag;
     ESP.getHeapStats(&free, &max, &frag);
-    String buf;
-    buf += prettyBytes(free);
-    buf += " frag: ";
-    buf += frag;
-    buf += '%';
+    char buf[64];
+    sprintf(buf, "free:%s max:%s frag:%d%%", prettyBytes(free).c_str(), prettyBytes(max).c_str(), frag);
     return buf;
 }
-#endif
-
-#ifdef ESP32
-String getHeapStats() {
-    uint32_t free;
-    uint16_t max;
-    uint8_t frag;
-    ESP.getHeapStats(&free, &max, &frag);
+#else
+const String getHeapStats() {
     String buf;
-    buf += prettyBytes(free);
-    buf += " ";
-    buf += frag;
-    buf += '%';
+    buf = prettyBytes(ESP.getFreeHeap());
     return buf;
 }
 #endif
 
 const String getMacAddress() {
     uint8_t mac[6];
-    char buf[13] = {0};
+    char buf[16] = {0};
 #if defined(ESP8266)
     WiFi.macAddress(mac);
     sprintf(buf, MACSTR, MAC2STR(mac));

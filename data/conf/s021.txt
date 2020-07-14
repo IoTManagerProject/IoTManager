@@ -1,6 +1,18 @@
+<<<<<<< HEAD
 button2 = 1
 serialWrite ard-11-1
 end
 button2 = 0
+=======
+// Условие кнопка №2 вкл
+button2 = 1
+// Действие отправить текст "ard-11-1"
+serialWrite ard-11-1
+end
+
+// Условие кнопка №2 выкл
+button2 = 0
+// Действие отправить текст "ard-11-0"
+>>>>>>> pr/43
 serialWrite ard-11-0
 end

@@ -1,181 +1,180 @@
 #include "Global.h"
 
+#include "Consts.h"
+#include "Scenario.h"
+#include "NetworkManager.h"
+#include "Messages.h"
+#include "Broadcast.h"
+#include "Collection/Sensors.h"
+#include "Collection/Logger.h"
+#include "Collection/Devices.h"
+#include "MqttClient.h"
 #include "HttpServer.h"
-#include "Bus/BusScanner.h"
-#include "Utils/Timings.h"
-
-void not_async_actions();
+#include "Sensors/I2CScanner.h"
+#include "Sensors/OneWireScanner.h"
+#include "TickerScheduler/Metric.h"
 
 static const char* MODULE = "Main";
 
-Timings metric;
+void flag_actions();
+void config_backup();
+void config_restore();
+
+Metric m;
 boolean initialized = false;
+BusScanner* bus = NULL;
 
-void setup() {
-    WiFi.setAutoConnect(false);
-    WiFi.persistent(false);
+bool perform_mqtt_restart_flag = false;
+void perform_mqtt_restart() {
+    perform_mqtt_restart_flag = true;
+}
 
-    Serial.begin(115200);
-    Serial.flush();
-    Serial.println();
-    Serial.println("--------------started----------------");
+bool perform_updates_check_flag = false;
+void perform_updates_check() {
+    perform_updates_check_flag = true;
+}
 
-    setChipId();
+bool perform_upgrade_flag = false;
+void perform_upgrade() {
+    perform_upgrade_flag = true;
+}
 
-    pm.info("FS");
-    fileSystemInit();
+bool broadcast_mqtt_settings_flag = false;
+void broadcast_mqtt_settings() {
+    broadcast_mqtt_settings_flag = true;
+}
 
-    pm.info("Config");
-    loadConfig();
+boolean perform_bus_scanning_flag = false;
+BusScanner_t perform_bus_scanning_bus;
+void perform_bus_scanning(BusScanner_t bus) {
+    perform_bus_scanning_flag = true;
+    perform_bus_scanning_bus = bus;
+}
 
-    pm.info("Clock");
-    clock_init();
+bool perform_system_restart_flag = false;
+void perform_system_restart() {
+    perform_system_restart_flag = true;
+}
 
-    pm.info("Commands");
-    cmd_init();
-
-    pm.info("Sensors");
-    sensors_init();
-
-    pm.info("Init");
-    all_init();
-
-    pm.info("Network");
-    startSTAMode();
-
-    pm.info("Uptime");
-    uptime_init();
-
-    if (!TELEMETRY_UPDATE_INTERVAL) {
-        pm.info("Telemetry: Disabled");
-    }
-    telemetry_init();
-
-    pm.info("Updater");
-    initUpdater();
-
-    pm.info("HttpServer");
-    HttpServer::init();
-
-    pm.info("WebAdmin");
-    web_init();
-
-#ifdef UDP_ENABLED
-    pm.info("Broadcast UDP");
-    UDP_init();
-#endif
-    ts.add(
-        TEST, 1000 * 60, [&](void*) {
-            pm.info(printMemoryStatus());
-        },
-        nullptr, true);
-
-    just_load = false;
-
-    initialized = true;
+bool perform_logger_clear_flag = false;
+void perform_logger_clear() {
+    perform_logger_clear_flag = true;
 }
 
 void loop() {
     if (!initialized) {
         return;
     }
-    timeNow->loop();
+    m.loop();
 
-#ifdef OTA_UPDATES_ENABLED
+    now.loop();
+    m.add(LI_CLOCK);
+
     ArduinoOTA.handle();
-#endif
-#ifdef WS_enable
-    ws.cleanupClients();
-#endif
-    not_async_actions();
+    // ws.cleanupClients();
+
+    flag_actions();
+    m.add(LT_FLAG_ACTION);
 
     MqttClient::loop();
+    m.add(LI_MQTT_CLIENT);
 
-    loopCmd();
+    loop_cmd();
+    m.add(LI_CMD);
 
-    loopButton();
+    loop_items();
+    m.add(LI_ITEMS);
 
-    loopScenario();
+    if (config.general()->isScenarioEnabled()) {
+        Scenario::loop();
+        m.add(LI_SCENARIO);
+    }
 
-#ifdef UDP_ENABLED
-    loopUdp();
-#endif
-
-    loopSerial();
+    if (config.general()->isBroadcastEnabled()) {
+        Messages::loop();
+        Broadcast::loop();
+        m.add(LI_BROADCAST);
+    }
 
     ts.update();
+    m.add(LT_TASKS);
+
+    Logger::update();
+    m.add(LT_LOGGER);
+
+    if (config.hasChanged()) {
+        save_config();
+    }
 }
 
-void not_async_actions() {
-    if (mqttParamsChanged) {
+void flag_actions() {
+    if (perform_mqtt_restart_flag) {
         MqttClient::reconnect();
-        mqttParamsChanged = false;
+        perform_mqtt_restart_flag = false;
     }
 
-    getLastVersion();
-
-    flashUpgrade();
-
-#ifdef UDP_ENABLED
-    do_udp_data_parse();
-    do_mqtt_send_settings_to_udp();
-#endif
-
-    do_scan_bus();
-
-    do_check_fs();
-}
-
-String getURL(const String& urls) {
-    String res = "";
-    HTTPClient http;
-    http.begin(urls);
-    int httpCode = http.GET();
-    if (httpCode == HTTP_CODE_OK) {
-        res = http.getString();
-    } else {
-        res = "error";
+    if (perform_updates_check_flag) {
+        runtime.write(TAG_LAST_VERSION, Updater::check());
+        perform_updates_check_flag = false;
     }
-    http.end();
-    return res;
-}
 
-void safeDataToFile(String data, String Folder) {
-    String fileName;
-    fileName.toLowerCase();
-    fileName = deleteBeforeDelimiter(fileName, " ");
-    fileName.replace(" ", ".");
-    fileName.replace("..", ".");
-    fileName = Folder + "/" + fileName + ".txt";
+    if (perform_upgrade_flag) {
+        config_backup();
+        bool res = Updater::upgrade_fs_image();
+        if (res) {
+            config_restore();
+            if (Updater::upgrade_firmware()) {
+                pm.info("done! restart...");
+            }
+        }
+        perform_upgrade_flag = false;
+    }
 
-    jsonWriteStr(configLiveJson, "test", fileName);
-}
+    if (broadcast_mqtt_settings_flag) {
+        DynamicJsonBuffer jsonBuffer;
+        JsonObject& root = jsonBuffer.createObject();
+        config.mqtt()->save(root);
+        String buf;
+        root.printTo(buf);
+        Messages::post(BM_MQTT_SETTINGS, buf);
+        broadcast_mqtt_settings_flag = false;
+    }
 
-void sendConfig(String topic, String widgetConfig, String key, String date) {
-    yield();
-    topic = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topic + "/status";
-    String outer = "{\"widgetConfig\":";
-    String inner = "{\"";
-    inner = inner + key;
-    inner = inner + "\":\"";
-    inner = inner + date;
-    inner = inner + "\"";
-    inner = inner + "}}";
-    String t = outer + inner;
-    yield();
-}
+    if (perform_bus_scanning_flag) {
+        if (bus == NULL) {
+            switch (perform_bus_scanning_bus) {
+                case BS_I2C:
+                    bus = new I2CScanner();
+                    break;
+                case BS_ONE_WIRE:
+                    bus = new OneWireScanner();
+                    break;
+                default:
+                    pm.error("unknown bus: " + String(perform_bus_scanning_bus, DEC));
+            }
+        }
+        if (bus) {
+            if (bus->scan()) {
+                pm.info("scan done");
+                runtime.write(bus->tag(), bus->results());
+                perform_bus_scanning_flag = false;
+                delete bus;
+                bus = NULL;
+            }
+        }
+    }
 
-void setChipId() {
-    chipId = getChipId();
-    Serial.println(chipId);
-}
+    if (perform_logger_clear_flag) {
+        Logger::clear();
+        perform_logger_clear_flag = false;
+    }
 
-void saveConfig() {
-    writeFile(String("config.json"), configSetupJson);
+    if (perform_system_restart_flag) {
+        ESP.restart();
+    }
 }
 
 #ifdef ESP8266
-#ifdef LED_PIN
 void setLedStatus(LedStatus_t status) {
     pinMode(LED_PIN, OUTPUT);
     switch (status) {
@@ -197,39 +196,94 @@ void setLedStatus(LedStatus_t status) {
             break;
     }
 }
-#endif
-#endif
-
-void do_fscheck(String& results) {
-    // TODO Проверка наличие важных файлов, возможно версии ФС
+#else
+void setLedStatus(LedStatus_t status) {
+    pinMode(LED_PIN, OUTPUT);
+    switch (status) {
+        case LED_OFF:
+            digitalWrite(LED_PIN, HIGH);
+            break;
+        case LED_ON:
+            digitalWrite(LED_PIN, LOW);
+            break;
+        case LED_SLOW:
+            break;
+        case LED_FAST:
+            break;
+        default:
+            break;
+    }
 }
+#endif
 
 void clock_init() {
-    timeNow = new Clock();
-    timeNow->setNtpPool(jsonReadStr(configSetupJson, "ntp"));
-    timeNow->setTimezone(jsonReadStr(configSetupJson, "timezone").toInt());
+    now.setConfig(config.clock());
 
     ts.add(
-        TIME_SYNC, 30000, [&](void*) {
-            timeNow->hasSync();
+        TIME, 1000, [&](void*) {
+            runtime.write("time", now.getTime());
+            runtime.write("timenow", now.getTimeJson());
+            Scenario::fire("timenow");
         },
         nullptr, true);
 }
-void do_scan_bus() {
-    if (busScanFlag) {
-        String res = "";
-        BusScanner* scanner = BusScannerFactory::get(res, busToScan);
-        scanner->scan();
-        jsonWriteStr(configLiveJson, BusScannerFactory::label(busToScan), res);
-        busScanFlag = false;
-    }
+
+String scenarioBackup, commandBackup, configBackup;
+void config_backup() {
+    readFile(DEVICE_SCENARIO_FILE, scenarioBackup);
+    readFile(DEVICE_COMMAND_FILE, commandBackup);
+    readFile(DEVICE_CONFIG_FILE, configBackup);
 }
 
-void do_check_fs() {
-    if (fsCheckFlag) {
-        String buf;
-        do_fscheck(buf);
-        jsonWriteStr(configLiveJson, "fscheck", buf);
-        fsCheckFlag = false;
-    }
+void config_restore() {
+    writeFile(DEVICE_SCENARIO_FILE, scenarioBackup);
+    writeFile(DEVICE_COMMAND_FILE, commandBackup);
+    writeFile(DEVICE_CONFIG_FILE, configBackup);
+    load_config();
+}
+
+void print_sys_memory() {
+    pm.info(getHeapStats());
+}
+
+void print_sys_timins() {
+    m.print(Serial);
+    m.reset();
+
+    ts.print(Serial);
+    ts.reset();
+}
+
+void setup() {
+    WiFi.setAutoConnect(false);
+    WiFi.persistent(false);
+
+    Serial.begin(115200);
+    Serial.flush();
+    Serial.println();
+    Serial.println("--------------started----------------");
+
+    fs_init();
+
+    config_init();
+
+    clock_init();
+
+    NetworkManager::init();
+
+    pm.info("HttpServer");
+    HttpServer::init();
+
+    pm.info("WebAdmin");
+    web_init();
+
+    pm.info("Broadcast");
+    Broadcast::init();
+
+    telemetry_init();
+
+    pm.info("Init");
+    init_mod();
+
+    initialized = true;
 }

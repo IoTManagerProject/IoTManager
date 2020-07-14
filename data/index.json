@@ -1,69 +1,94 @@
 {
   "configs": [
-    "/config.live.json",
-    "/config.setup.json",
+    "/runtime.json",
+    "/config.json",
     "/lang/lang.ru.json"
   ],
-  "title": "Главная",
+  "title": "{{LS_main_page}}",
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
   "content": [
     {
       "type": "h5",
-      "title": "{{name}}",
+      "title": "{{devname}}",
       "class": "alert-default"
     },
     {
-			"type": "text",
-			"class": "alert alert-light",
-			"title": "<center><img src='/icon.jpeg' alt='IoT Manager'></center>"
-		},
+      "type": "hr"
+    },
+    {
+      "type": "h4",
+      "title": "{{LS_device_id}}: {{chipID}}"
+    },
+    {
+      "type": "h4",
+      "title": "{{LS_address}}: {{ip}}"
+    },
+    {
+      "type": "h4",
+      "title": "{{LS_time_local}}: {{time}}"
+    },
+    {
+      "type": "h4",
+      "title": "{{LS_time_uptime}}: {{uptime}}"
+    },
     {
       "type": "link",
-      "title": "Конфигурация устройства",
+      "title": "{{LS_restart_device}}",
+      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
+      "class": "btn btn-danger"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "link",
+      "title": "Конфигурация",
       "action": "/?set.device",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "link",
-      "title": "Список других устройств в сети",
+      "title": "Конфигурация",
+      "action": "/?set.device",
+      "class": "btn btn-block btn-center"
+    },
+    {
+      "type": "link",
+      "title": "Устройства в сети",
       "action": "/?set.udp",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "link",
-      "title": "Конфигурация WIFI",
+      "title": "Настройка WiFi",
       "action": "/?set.wifi",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "link",
-      "title": "Конфигурация MQTT",
+      "title": "Настройка MQTT",
       "action": "/?set.mqtt",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "link",
-      "title": "Конфигурация push",
+      "title": "Настройка Push",
       "action": "/?set.push",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "link",
       "title": "Утилиты",
       "action": "/?set.utilities",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
-      "type": "link",
-      "title": "Скачать приложение IoT Manager для android",
-      "action": "https://play.google.com/store/apps/details?id=ru.esp8266.iotmanager",
-      "class": "btn btn-block btn-default"
+      "type": "hr"
     },
     {
-      "type": "link",
-      "title": "Скачать приложение IoT Manager для iphone",
-      "action": "https://apps.apple.com/ru/app/iot-manager/id1155934877",
-      "class": "btn btn-block btn-default"
+      "type": "h4",
+      "title": "{{firmware_version}}",
+      "style": "float:right"
     }
   ]
 }

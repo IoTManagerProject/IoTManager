@@ -1,79 +1,104 @@
 #include "Global.h"
 
-#ifdef WS_enable
-AsyncWebSocket ws;
-//AsyncEventSource events;
-#endif
+#include "Collection/Widgets.h"
+#include "Collection/Logger.h"
+#include "MqttWriter.h"
 
-Clock* timeNow;
+KeyValueStore options;
+KeyValueStore liveData;
+KeyValueFile runtime(DEVICE_RUNTIME_FILE);
 
-TickerScheduler ts(TEST + 1);
+TickerScheduler ts(SYS_MEMORY + 1);
 
-WiFiClient espClient;
+AsyncWebServer server{80};
+AsyncWebSocket ws{"/ws"};
+AsyncEventSource events{"/events"};
 
-PubSubClient mqtt(espClient);
+void save_config() {
+    String buf;
+    config.save(buf);
+    writeFile(DEVICE_CONFIG_FILE, buf);
+    config.setSynced();
+}
 
-StringCommand sCmd;
+void load_config() {
+    String buf;
+    if (readFile(DEVICE_CONFIG_FILE, buf)) {
+        config.load(buf);
+    }
+}
 
-AsyncWebServer server(80);
+bool isExcludedKey(const String& key) {
+    return key.equals("time") ||
+           key.equals("name") ||
+           key.equals("lang") ||
+           key.equals("ip") ||
+           key.endsWith("_in");
+}
 
-DallasTemperature sensors;
+void publishState() {
+    liveData.forEach([](KeyValue* item) {
+        if (!isExcludedKey(item->getKey())) {
+            MqttClient::publishStatus(item->getKey(), item->getValue(), item->getType());
+        }
+    });
+}
 
-/*
-* Global vars
-*/
+void publishWidgets() {
+    Writer* writer = MqttClient::getWriter("config");
+    Widgets::forEach([writer](String json) {
+        writer->begin(json.length());
+        writer->write(json.c_str());
+        writer->end();
+        return true;
+    });
+    delete writer;
+}
 
-boolean just_load = true;
+bool publishEntry(LogMetadata* meta, LogEntry entry) {
+    String buf = "{\"status\":";
+    buf += entry.asChartEntry();
+    buf += "}";
 
-// Json
-String configSetupJson = "{}";
-String configLiveJson = "{}";
-String configOptionJson = "{}";
+    Writer* writer = MqttClient::getWriter(meta->getMqttTopic().c_str());
+    writer->begin(buf.length());
+    writer->write(buf.c_str());
+    writer->end();
+    delete writer;
+    return true;
+}
 
-// Mqtt
-String chipId = "";
-String prex = "";
-String all_widgets = "";
-String scenario = "";
-String order_loop = "";
+void publishCharts() {
+    Logger::forEach([](LoggerTask* task) {
+        task->readEntries([](LogMetadata* meta, LogEntry entry) {
+            publishEntry(meta, entry);
+            return true;
+        });
+        return true;
+    });
+}
 
-// Sensors
-String analog_value_names_list;
-int enter_to_analog_counter;
+void config_init() {
+    load_config();
 
-String levelPr_value_name;
-String ultrasonicCm_value_name;
+    runtime.load();
+    runtime.write("chipID", getChipId());
+    runtime.write("firmware_version", FIRMWARE_VERSION);
+    runtime.write("mqtt_prefix", config.mqtt()->getPrefix() + "/" + getChipId());
+}
 
-String dhtT_value_name;
-String dhtH_value_name;
+void configAdd(const String& str) {
+    addFile(DEVICE_COMMAND_FILE, str);
+}
 
-String bmp280T_value_name;
-String bmp280P_value_name;
+void setPreset(size_t num) {
+    copyFile(getConfigFile(num, CT_CONFIG), DEVICE_COMMAND_FILE);
+    copyFile(getConfigFile(num, CT_SCENARIO), DEVICE_SCENARIO_FILE);
+    device_init();
+}
 
-String bme280T_value_name;
-String bme280P_value_name;
-String bme280H_value_name;
-String bme280A_value_name;
-
-int sensors_reading_map[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-// Logging
-String logging_value_names_list;
-int enter_to_logging_counter;
-
-// Scenario
-int scenario_line_status[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-
-String lastVersion = "";
-
-// Async actions
-boolean upgrade_url = false;
-boolean upgrade = false;
-
-boolean mqttParamsChanged = false;
-boolean udp_data_parse = false;
-boolean mqtt_send_settings_to_udp = false;
-
-BusScanner_t busToScan;
-boolean busScanFlag = false;
-boolean fsCheckFlag = false;
+void device_init() {
+    Widgets::clear();
+    fileExecute(DEVICE_COMMAND_FILE);
+    Scenario::init();
+}

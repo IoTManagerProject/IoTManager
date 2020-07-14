@@ -2,8 +2,6 @@
 
 #include <Arduino.h>
 
-#include "CommonTypes.h"
-
 uint8_t hexStringToUint8(String hex);
 
 uint16_t hexStringToUint16(String hex);
@@ -20,8 +18,14 @@ String deleteBeforeDelimiterTo(String str, String found);
 
 String selectFromMarkerToMarker(String str, String found, int number);
 
-size_t itemsCount(String str, const String& separator);
+size_t itemsCount(String str, const String &separator);
 
-boolean isDigitStr(const String&);
+boolean isDigitStr(const String &);
 
-String prettyBytes(size_t size);
+const char *getErrorLevelStr(uint8_t level);
+
+const String prettyBytes(size_t size);
+
+const String getValue(const String &data, const char separator, const int index);
+
+uint8_t decodeHex(char c);

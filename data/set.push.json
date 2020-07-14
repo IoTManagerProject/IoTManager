@@ -1,20 +1,20 @@
 {
   "configs": [
-    "/config.setup.json",
+    "/config.json",
     "/lang/lang.ru.json"
   ],
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
   "content": [
     {
       "type": "h5",
-      "title": "{{name}}",
+      "title": "{{devname}}",
       "class": "alert-default"
     },
     {
       "type": "link",
-      "title": "{{ButMainPage}}",
+      "title": "{{LS_main_page}}",
       "action": "/",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "hr"
@@ -33,19 +33,9 @@
     },
     {
       "type": "button",
-      "title": "{{ButSave}}",
+      "title": "{{LS_save}}",
       "action": "set?pushingboxid=[[push-arg]]",
-      "class": "btn btn-block btn-default",
-      "style": "width:100%;display:inline"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "link",
-      "title": "Перезагрузить устройство",
-      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
-      "class": "btn btn-block btn-danger"
+      "class": "btn btn-block btn-center"
     }
   ]
 }

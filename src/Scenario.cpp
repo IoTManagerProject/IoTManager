@@ -1,102 +1,212 @@
+#include "Scenario.h"
+
 #include "Global.h"
+#include "Cmd.h"
 
-static const char* MODULE = "Scen";
+static const char* MODULE = "Scenario";
 
-boolean isScenarioEnabled() {
-    return jsonReadBool(configSetupJson, "scen") && jsonReadStr(configOptionJson, "scenario_status") != "";
+LiveParam::LiveParam(const String& name) : _name{name} {};
+
+const String LiveParam::value() {
+    return liveData.read(_name);
 }
 
-void loopScenario() {
-    if (!isScenarioEnabled()) {
-        return;
-    }
-    String str = scenario;
-    str += "\n";
-    str.replace("\r\n", "\n");
-    str.replace("\r", "\n");
+StaticParam::StaticParam(const String& value) : _value{value} {};
 
-    size_t i = 0;
-    while (str.length()) {
-        String block = selectToMarker(str, "end");
-        if (!block.length()) {
-            return;
-        }
-        i++;
-
-        if (scenario_line_status[i] == 1) {
-            //выделяем первую строку самого сценария  button1 = 1 (условие)
-            String condition = selectToMarker(block, "\n");
-            String param_name = selectFromMarkerToMarker(condition, " ", 0);
-            String order = jsonReadStr(configOptionJson, "scenario_status");  //читаем весь файл событий
-            String param = selectToMarker(order, ",");                        //читаем первое событие из файла событий
-            if (param_name == param) {                                        //если поступившее событие равно событию заданному buttonSet1 в файле начинаем его обработку
-
-                String sign = selectFromMarkerToMarker(condition, " ", 1);   //читаем знак  (=)
-                String value = selectFromMarkerToMarker(condition, " ", 2);  //читаем значение (1)
-                if (value.indexOf("digit") != -1) {
-                    //  value = add_set(value);
-                    value = jsonReadStr(configLiveJson, value);
-                }
-                if (value.indexOf("time") != -1) {
-                    //  value = add_set(value);
-                    value = jsonReadStr(configLiveJson, value);
-                }
-                boolean flag = false;  //если одно из значений совпало то только тогда начинаем выполнять комнады
-                if (sign == "=") {
-                    if (jsonReadStr(configLiveJson, param_name) == value) flag = true;
-                }
-                if (sign == "!=") {
-                    if (jsonReadStr(configLiveJson, param_name) != value) flag = true;
-                }
-                if (sign == "<") {
-                    if (jsonReadStr(configLiveJson, param_name).toInt() < value.toInt()) flag = true;
-                }
-                if (sign == ">") {
-                    if (jsonReadStr(configLiveJson, param_name).toInt() > value.toInt()) flag = true;
-                }
-                if (sign == ">=") {
-                    if (jsonReadStr(configLiveJson, param_name).toInt() >= value.toInt()) flag = true;
-                }
-                if (sign == "<=") {
-                    if (jsonReadStr(configLiveJson, param_name).toInt() <= value.toInt()) flag = true;
-                }
-
-                if (flag) {
-                    block = deleteBeforeDelimiter(block, "\n");  //удаляем строку самого сценария оставляя только команды
-                    stringExecute(block);                        //выполняем все команды
-
-                    pm.info(condition + "'");
-                }
-            }
-        }
-        str = deleteBeforeDelimiter(str, "end\n");  //удаляем первый сценарий
-                                                    //-----------------------------------------------------------------------------------------------------------------------
-    }
-    String tmp2 = jsonReadStr(configOptionJson, "scenario_status");  //читаем файл событий
-    tmp2 = deleteBeforeDelimiter(tmp2, ",");                         //удаляем выполненное событие
-    jsonWriteStr(configOptionJson, "scenario_status", tmp2);         //записываем обновленный файл событий
+const String StaticParam::value() {
+    return _value;
 }
 
-// событие: имя + Set + номер
-// button+Set+1
-void eventGen(String event_name, String number) {
-    if (!jsonReadBool(configSetupJson, "scen")) {
-        return;
-    }
-    // генерирование события
-    String tmp = jsonReadStr(configOptionJson, "scenario_status");
-    jsonWriteStr(configOptionJson, "scenario_status", tmp + event_name + number + ",");
+ScenarioItem::ScenarioItem(const String& str) {
+    size_t split = str.indexOf("\n");
+    String first_line = str.substring(0, split);
+    _commands = str.substring(split + 1, str.indexOf("\nend"));
+    _valid = parseCondition(first_line) && !_commands.isEmpty();
 }
 
-String add_set(String str) {
-    String num1 = str.substring(str.length() - 1);
-    String num2 = str.substring(str.length() - 2, str.length() - 1);
-    if (isDigitStr(num1) && isDigitStr(num2)) {
-        str = str.substring(0, str.length() - 2) + "Set" + num2 + num1;
+bool ScenarioItem::equation(const String& object, const String& value) {
+    bool res = false;
+    if (!object.equalsIgnoreCase(_obj)) {
+        return res;
+    }
+    switch (_sign) {
+        case OP_EQUAL:
+            res = value.equals(_param->value());
+            break;
+        case OP_NOT_EQUAL:
+            res = !value.equals(_param->value());
+            break;
+        case OP_LESS:
+            res = value.toFloat() < _param->value().toFloat();
+            break;
+        case OP_LESS_OR_EQAL:
+            res = value.toFloat() <= _param->value().toFloat();
+            break;
+        case OP_GREATER:
+            res = value.toFloat() > _param->value().toFloat();
+            break;
+        case OP_GREATER_OR_EQAL:
+            res = value.toFloat() >= _param->value().toFloat();
+            break;
+        default:
+            break;
+    }
+    return res;
+}
+
+bool ScenarioItem::run(const String& event) {
+    String obj = event;
+    String value = liveData.read(obj);
+    if (equation(obj, value)) {
+        stringExecute(_commands);
+        return true;
+    }
+    return false;
+}
+
+bool ScenarioItem::enable(bool value) {
+    _enabled = value;
+    return isEnabled();
+}
+
+bool ScenarioItem::isEnabled() {
+    return _valid & _enabled;
+}
+
+bool ScenarioItem::parseCondition(const String& str) {
+    size_t s1 = str.indexOf(" ");
+    size_t s2 = str.indexOf(" ", s1 + 1);
+    _obj = str.substring(0, s1);
+    if (_obj.isEmpty()) {
+        pm.error("wrong obj");
+        return false;
+    }
+    String signStr = str.substring(s1 + 1, s2);
+    if (!parseSign(signStr, _sign)) {
+        pm.error("wrong sign");
+        return false;
+    };
+    String paramStr = str.substring(s2 + 1);
+    if (paramStr.isEmpty()) {
+        pm.error("wrong param");
+        return false;
+    }
+    if (paramStr.startsWith("digit") || paramStr.startsWith("time")) {
+        _param = new LiveParam(paramStr);
     } else {
-        if (isDigitStr(num1)) {
-            str = str.substring(0, str.length() - 1) + "Set" + num1;
+        _param = new StaticParam(paramStr);
+    }
+    return true;
+}
+
+bool ScenarioItem::parseSign(const String& str, EquationSign& sign) {
+    bool res = true;
+    if (str.equals("=")) {
+        sign = OP_EQUAL;
+    } else if (str.equals("!=")) {
+        sign = OP_NOT_EQUAL;
+    } else if (str.equals("<")) {
+        sign = OP_LESS;
+    } else if (str.equals(">")) {
+        sign = OP_GREATER;
+    } else if (str.equals(">=")) {
+        sign = OP_GREATER_OR_EQAL;
+    } else if (str.equals("<=")) {
+        sign = OP_LESS_OR_EQAL;
+    } else {
+        res = false;
+    }
+    return res;
+}
+
+namespace Scenario {
+
+std::vector<ScenarioItem*> _items;
+
+StringQueue _events;
+
+bool _ready = false;
+
+void fire(Named* obj) {
+    fire(obj->getName());
+}
+
+void fire(const String& name) {
+    if (config.general()->isScenarioEnabled()) {
+        _events.push(name);
+    }
+}
+
+bool isBlockEnabled(size_t num) {
+    return _items.at(num)->isEnabled();
+}
+
+void enableBlock(size_t num, boolean value) {
+    _items.at(num)->enable(value);
+}
+
+void reinit() {
+    _ready = false;
+}
+
+const String removeComments(const String buf) {
+    String res = "";
+    size_t startIndex = 0;
+    while (startIndex < buf.length() - 1) {
+        size_t endIndex = buf.indexOf("\n", startIndex);
+        String line = buf.substring(startIndex, endIndex);
+        startIndex = endIndex + 1;
+        if (line.startsWith("//") || line.isEmpty()) {
+            continue;
+        }
+        res += line + "\n";
+    }
+    return res;
+}
+
+void init() {
+    _items.clear();
+    String buf;
+    if (!readFile(DEVICE_SCENARIO_FILE, buf)) {
+        config.general()->enableScenario(false);
+        return;
+    }
+    buf += "\n";
+    buf.replace("\r\n", "\n");
+    buf.replace("\r", "\n");
+
+    buf = removeComments(buf);
+
+    while (!buf.isEmpty()) {
+        String block = selectToMarker(buf, "end");
+        if (block.isEmpty()) {
+            continue;
+        }
+        _items.push_back(new ScenarioItem(block));
+        buf = deleteBeforeDelimiter(buf, "end\n");
+    }
+    pm.info("items: " + String(_items.size(), DEC));
+    _ready = true;
+}  // namespace Scenario
+
+void loop() {
+    if (!_ready) {
+        init();
+        _ready = true;
+    }
+    if (!_events.available()) {
+        return;
+    }
+    String buf;
+    _events.pop(buf);
+    if (buf.isEmpty()) {
+        return;
+    }
+    for (auto item : _items) {
+        if (item->isEnabled()) {
+            item->run(buf);
         }
     }
-    return str;
 }
+
+}  // namespace Scenario

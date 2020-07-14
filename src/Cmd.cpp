@@ -1,639 +1,763 @@
-#include "Global.h"
+#include "Cmd.h"
 
-#include "Module/Terminal.h"
+#include "Collection/Buttons.h"
+#include "Collection/Devices.h"
+#include "Collection/Logger.h"
+#include "Collection/Sensors.h"
+#include "Collection/Timers.h"
+#include "Collection/Widgets.h"
+
+#include "Sensors/AnalogSensor.h"
+#include "Sensors/OneWireBus.h"
+
+#include "Objects/Switches.h"
+#include "Objects/PwmItems.h"
+#include "Objects/ServoItems.h"
+#include "Objects/Terminal.h"
+#include "Objects/Telnet.h"
+
+#include "PrintMessage.h"
+
+#include "StringConsts.h"
+#include "MqttClient.h"
+#include "WebClient.h"
+#include "Scenario.h"
 
 static const char *MODULE = "Cmd";
 
+StringQueue _orders;
+
+StringCommand sCmd;
+
 Terminal *term = nullptr;
+Telnet *telnet = nullptr;
 
-boolean but[NUM_BUTTONS];
-Bounce *buttons = new Bounce[NUM_BUTTONS];
-
-Servo myServo1;
-Servo myServo2;
+#ifdef ESP8266
 SoftwareSerial *mySerial = nullptr;
+#else
+HardwareSerial *mySerial = nullptr;
+#endif
 
-void getData();
+unsigned long parsePeriod(const String &str, unsigned long default_multiplier) {
+    unsigned long res = 0;
+    if (str.indexOf("digit") != -1) {
+        res = liveData.readInt(str);
+    } else {
+        if (str.endsWith("ms")) {
+            res = str.substring(0, str.indexOf("ms")).toInt();
+        } else if (str.endsWith("s")) {
+            res = str.substring(0, str.indexOf("s")).toInt() * ONE_SECOND_ms;
+        } else if (str.endsWith("m")) {
+            res = str.substring(0, str.indexOf("m")).toInt() * ONE_MINUTE_ms;
+        } else if (str.endsWith("h")) {
+            res = str.substring(0, str.indexOf("h")).toInt() * ONE_HOUR_ms;
+        } else {
+            res = str.toInt() * default_multiplier;
+        }
+    }
+    return res;
+}
 
 void cmd_init() {
-    sCmd.addCommand("button", button);
-    sCmd.addCommand("buttonSet", buttonSet);
-    sCmd.addCommand("buttonChange", buttonChange);
+    pm.info(TAG_INIT);
 
-    sCmd.addCommand("pinSet", pinSet);
-    sCmd.addCommand("pinChange", pinChange);
+    mySwitches.setOnChangeState([](Switch *obj) {
+        String name = String("switch") + obj->getName();
+        pm.info(name);
+        Scenario::fire(name);
+        liveData.write(name, obj->getValue(), VT_INT);
+    });
 
-    sCmd.addCommand("pwm", pwm);
-    sCmd.addCommand("pwmSet", pwmSet);
+    sCmd.addCommand("button", cmd_button);
+    sCmd.addCommand("buttonSet", cmd_buttonSet);
+    sCmd.addCommand("buttonChange", cmd_buttonChange);
 
-    sCmd.addCommand("switch", switch_);
+    sCmd.addCommand("switch", cmd_switch);
 
-#ifdef ANALOG_ENABLED
-    sCmd.addCommand("analog", analog);
-#endif
-#ifdef LEVEL_ENABLED
-    sCmd.addCommand("levelPr", levelPr);
-    sCmd.addCommand("ultrasonicCm", ultrasonicCm);
-#endif
-#ifdef DALLAS_ENABLED
-    sCmd.addCommand("dallas", dallas);
-#endif
-#ifdef DHT_ENABLED
-    sCmd.addCommand("dhtT", dhtT);
-    sCmd.addCommand("dhtH", dhtH);
-    sCmd.addCommand("dhtPerception", dhtP);
-    sCmd.addCommand("dhtComfort", dhtC);
-    sCmd.addCommand("dhtDewpoint", dhtD);
-#endif
+    sCmd.addCommand("pinSet", cmd_pinSet);
+    sCmd.addCommand("pinChange", cmd_pinChange);
 
-#ifdef BMP_ENABLED
-    sCmd.addCommand("bmp280T", bmp280T);
-    sCmd.addCommand("bmp280P", bmp280P);
-#endif
+    sCmd.addCommand("pwm", cmd_pwm);
+    sCmd.addCommand("pwmSet", cmd_pwmSet);
 
-#ifdef BME_ENABLED
-    sCmd.addCommand("bme280T", bme280T);
-    sCmd.addCommand("bme280P", bme280P);
-    sCmd.addCommand("bme280H", bme280H);
-    sCmd.addCommand("bme280A", bme280A);
-#endif
+    sCmd.addCommand("analog", cmd_analog);
 
-#ifdef STEPPER_ENABLED
-    sCmd.addCommand("stepper", stepper);
-    sCmd.addCommand("stepperSet", stepperSet);
-#endif
+    sCmd.addCommand("levelPr", cmd_levelPr);
+    sCmd.addCommand("ultrasonicCm", cmd_ultrasonicCm);
+    sCmd.addCommand("dallas", cmd_dallas);
+    sCmd.addCommand("dhtT", cmd_dhtT);
+    sCmd.addCommand("dhtH", cmd_dhtH);
+    sCmd.addCommand("dhtPerception", cmd_dhtPerception);
+    sCmd.addCommand("dhtComfort", cmd_dhtComfort);
+    sCmd.addCommand("dhtDewpoint", cmd_dhtDewpoint);
 
-#ifdef SERVO_ENABLED
-    sCmd.addCommand("servo", servo_);
-    sCmd.addCommand("servoSet", servoSet);
-#endif
+    sCmd.addCommand("bmp280T", cmd_bmp280T);
+    sCmd.addCommand("bmp280P", cmd_bmp280P);
 
-#ifdef SERIAL_ENABLED
-    sCmd.addCommand("serialBegin", serialBegin);
-    sCmd.addCommand("serialWrite", serialWrite);
-    sCmd.addCommand("getData", getData);
-#endif
+    sCmd.addCommand("bme280T", cmd_bme280T);
+    sCmd.addCommand("bme280P", cmd_bme280P);
+    sCmd.addCommand("bme280H", cmd_bme280H);
+    sCmd.addCommand("bme280A", cmd_bme280A);
 
-#ifdef LOGGING_ENABLED
-    sCmd.addCommand("logging", logging);
-#endif
+    sCmd.addCommand("stepper", cmd_stepper);
+    sCmd.addCommand("stepperSet", cmd_stepperSet);
 
-    sCmd.addCommand("inputDigit", inputDigit);
-    sCmd.addCommand("digitSet", digitSet);
+    sCmd.addCommand("servo", cmd_servo);
+    sCmd.addCommand("servoSet", cmd_servoSet);
 
-    sCmd.addCommand("inputTime", inputTime);
-    sCmd.addCommand("timeSet", timeSet);
+    sCmd.addCommand("serialBegin", cmd_serialBegin);
+    sCmd.addCommand("serialEnd", cmd_serialEnd);
+    sCmd.addCommand("serialWrite", cmd_serialWrite);
 
-    sCmd.addCommand("timerStart", timerStart_);
-    sCmd.addCommand("timerStop", timerStop_);
+    sCmd.addCommand("serialLog", cmd_serialLog);
 
-    sCmd.addCommand("text", text);
-    sCmd.addCommand("textSet", textSet);
+    sCmd.addCommand("telnet", cmd_telnet);
 
-    sCmd.addCommand("mqtt", mqttOrderSend);
-    sCmd.addCommand("http", httpOrderSend);
+    sCmd.addCommand("logging", cmd_logging);
 
-#ifdef PUSH_ENABLED
-    sCmd.addCommand("push", pushControl);
-#endif
+    sCmd.addCommand("inputDigit", cmd_inputDigit);
+    sCmd.addCommand("digitSet", cmd_digitSet);
 
-    sCmd.addCommand("firmwareUpdate", firmwareUpdate);
-    sCmd.addCommand("firmwareVersion", firmwareVersion);
+    sCmd.addCommand("inputTime", cmd_inputTime);
+    sCmd.addCommand("timeSet", cmd_timeSet);
 
-    handle_time_init();
+    sCmd.addCommand("timerStart", cmd_timerStart);
+    sCmd.addCommand("timerStop", cmd_timerStop);
+
+    sCmd.addCommand("text", cmd_text);
+    sCmd.addCommand("textSet", cmd_textSet);
+
+    sCmd.addCommand("mqtt", cmd_mqtt);
+    sCmd.addCommand("http", cmd_http);
+
+    sCmd.addCommand("push", cmd_push);
+
+    sCmd.addCommand("firmwareUpdate", cmd_firmwareUpdate);
+    sCmd.addCommand("firmwareVersion", cmd_firmwareVersion);
+
+    sCmd.addCommand("get", cmd_get);
+
+    sCmd.addCommand("reboot", cmd_reboot);
+
+    sCmd.addCommand("oneWire", cmd_oneWire);
 }
 
-//==========================================================================================================
-//==========================================Модуль кнопок===================================================
-void button() {
-    pm.info("create 'button'");
-    String number = sCmd.next();
-    String param = sCmd.next();
-    String widget = sCmd.next();
+//logging temp1 1 10 Температура Датчики 2
+void cmd_logging() {
+    String name = sCmd.next();
+    String period = sCmd.next();
+    String maxCount = sCmd.next();
+    String descr = sCmd.next();
     String page = sCmd.next();
-    String state = sCmd.next();
-    String pageNumber = sCmd.next();
+    String order = sCmd.next();
 
-    jsonWriteStr(configOptionJson, "button_param" + number, param);
-    jsonWriteStr(configLiveJson, "button" + number, state);
-
-    if (isDigitStr(param)) {
-        pinMode(param.toInt(), OUTPUT);
-        digitalWrite(param.toInt(), state.toInt());
-    }
-
-    if (param == "scen") {
-        jsonWriteStr(configSetupJson, "scen", state);
-        loadScenario();
-        saveConfig();
-    }
-
-    if (param.indexOf("line") != -1) {
-        String str = param;
-        while (str.length()) {
-            if (str == "") return;
-            String tmp = selectToMarker(str, ",");            //line1,
-            String number = deleteBeforeDelimiter(tmp, "e");  //1,
-            number.replace(",", "");
-            Serial.println(number);
-            int number_int = number.toInt();
-            scenario_line_status[number_int] = state.toInt();
-            str = deleteBeforeDelimiter(str, ",");
-        }
-    }
-    createWidget(widget, page, pageNumber, "toggle", "button" + number);
+    Logger::add(name.c_str(), parsePeriod(period), maxCount.toInt());
+    // /prefix/3234045-1589487/value_name_ch
+    Widgets::createChart(descr, page, order, "chart", name + "_ch", maxCount);
 }
 
-void buttonSet() {
-    String button_number = sCmd.next();
-    String button_state = sCmd.next();
-    String button_param = jsonReadStr(configOptionJson, "button_param" + button_number);
-
-    if (button_param != "na" || button_param != "scen" || button_param.indexOf("line") != -1) {
-        digitalWrite(button_param.toInt(), button_state.toInt());
-    }
-
-    if (button_param == "scen") {
-        jsonWriteStr(configSetupJson, "scen", button_state);
-        loadScenario();
-        saveConfig();
-    }
-
-    if (button_param.indexOf("line") != -1) {
-        String str = button_param;
-        while (str.length() != 0) {
-            if (str == "") return;
-            String tmp = selectToMarker(str, ",");            //line1,
-            String number = deleteBeforeDelimiter(tmp, "e");  //1,
-            number.replace(",", "");
-            Serial.println(number);
-            int number_int = number.toInt();
-            scenario_line_status[number_int] = button_state.toInt();
-            str = deleteBeforeDelimiter(str, ",");
-        }
-    }
-
-    eventGen("button", button_number);
-
-    jsonWriteStr(configLiveJson, "button" + button_number, button_state);
-
-    MqttClient::publishStatus("button" + button_number, button_state);
-}
-
-void buttonChange() {
-    String button_number = sCmd.next();
-    String current_state = jsonReadStr(configLiveJson, "button" + button_number);
-
-    if (current_state == "1") {
-        current_state = "0";
-    } else if (current_state == "0") {
-        current_state = "1";
-    }
-    order_loop += "buttonSet " + button_number + " " + current_state + ",";
-    jsonWriteStr(configLiveJson, "button" + button_number, current_state);
-
-    MqttClient::publishStatus("button" + button_number, current_state);
-}
-
-void pinSet() {
+void cmd_pinSet() {
     String pin_number = sCmd.next();
     String pin_state = sCmd.next();
     pinMode(pin_number.toInt(), OUTPUT);
     digitalWrite(pin_number.toInt(), pin_state.toInt());
 }
 
-void pinChange() {
+void cmd_pinChange() {
     String pin_number = sCmd.next();
     pinMode(pin_number.toInt(), OUTPUT);
     digitalWrite(pin_number.toInt(), !digitalRead(pin_number.toInt()));
 }
-//==================================================================================================================
-//==========================================Модуль управления ШИМ===================================================
-void pwm() {
-    //static boolean flag = true;
-    String pwm_number = sCmd.next();
-    String pwm_pin = sCmd.next();
-    String widget_name = sCmd.next();
-    widget_name.replace("#", " ");
-    String page_name = sCmd.next();
-    String start_state = sCmd.next();
-    String page_number = sCmd.next();
 
-    uint8_t pwm_pin_int = pwm_pin.toInt();
-    jsonWriteStr(configOptionJson, "pwm_pin" + pwm_number, pwm_pin);
-    pinMode(pwm_pin_int, INPUT);
-    analogWrite(pwm_pin_int, start_state.toInt());
-    //analogWriteFreq(32000);
-    jsonWriteStr(configLiveJson, "pwm" + pwm_number, start_state);
+void cmd_pwm() {
+    String name = sCmd.next();
+    String assign = sCmd.next();
+    String description = sCmd.next();
 
-    createWidget(widget_name, page_name, page_number, "range", "pwm" + pwm_number);
+    String page = sCmd.next();
+    String value = sCmd.next();
+    String order = sCmd.next();
+
+    String style = sCmd.next();
+
+    String objName = "pwm" + name;
+
+    myPwm.add(objName, assign, value);
+    liveData.write(objName, value, VT_INT);
+    Widgets::createWidget(description, page, order, "range", objName);
 }
 
-void pwmSet() {
-    String pwm_number = sCmd.next();
-    String pwm_state = sCmd.next();
-    int pwm_state_int = pwm_state.toInt();
+void cmd_pwmSet() {
+    String name = sCmd.next();
+    String value = sCmd.next();
 
-    int pin = jsonReadInt(configOptionJson, "pwm_pin" + pwm_number);
-    analogWrite(pin, pwm_state_int);
+    myPwm.get(name)->setValue(value);
 
-    eventGen("pwm", pwm_number);
+    String objName = "pwm" + name;
 
-    jsonWriteStr(configLiveJson, "pwm" + pwm_number, pwm_state);
-
-    MqttClient::publishStatus("pwm" + pwm_number, pwm_state);
-}
-//==================================================================================================================
-//==========================================Модуль физической кнопки================================================
-void switch_() {
-    String switch_number = sCmd.next();
-    String switch_pin = sCmd.next();
-    String switch_delay = sCmd.next();
-
-    buttons[switch_number.toInt()].attach(switch_pin.toInt());
-    buttons[switch_number.toInt()].interval(switch_delay.toInt());
-    but[switch_number.toInt()] = true;
+    Scenario::fire(objName);
+    liveData.write(objName, value, VT_INT);
+    MqttClient::publishStatus(objName, value, VT_INT);
 }
 
-void loopSerial() {
+void cmd_switch() {
+    String name = sCmd.next();
+    String assign = sCmd.next();
+    String debounce = sCmd.next();
+
+    Switch *item = mySwitches.add(name, assign);
+    if (!item) {
+        pm.error("bad command");
+        return;
+    }
+    item->setDebounce(debounce.toInt());
+
+    String objName = "switch" + name;
+
+    liveData.write(objName, item->getValue(), VT_INT);
+}
+
+void loop_items() {
     if (term) {
         term->loop();
     }
+    if (telnet) {
+        telnet->loop();
+    }
+
+    mySwitches.loop();
 }
 
-void loopButton() {
-    static uint8_t switch_number = 1;
-
-    if (but[switch_number]) {
-        buttons[switch_number].update();
-        if (buttons[switch_number].fell()) {
-            eventGen("switch", String(switch_number));
-
-            jsonWriteStr(configLiveJson, "switch" + String(switch_number), "1");
-        }
-        if (buttons[switch_number].rose()) {
-            eventGen("switch", String(switch_number));
-
-            jsonWriteStr(configLiveJson, "switch" + String(switch_number), "0");
-        }
-    }
-    switch_number++;
-    if (switch_number == NUM_BUTTONS) {
-        switch_number = 0;
-    }
-}
-
-//=====================================================================================================================================
-//=========================================Добавление окна ввода цифры=================================================================
-void inputDigit() {
-    String value_name = sCmd.next();
-    String number = value_name.substring(5);
+void cmd_inputDigit() {
+    String name = sCmd.next();
+    String number = name.substring(5);
     String widget_name = sCmd.next();
     widget_name.replace("#", " ");
     String page_name = sCmd.next();
     page_name.replace("#", " ");
     String start_state = sCmd.next();
-    String page_number = sCmd.next();
-    jsonWriteStr(configLiveJson, "digit" + number, start_state);
-    createWidget(widget_name, page_name, page_number, "inputNum", "digit" + number);
+    String order = sCmd.next();
+
+    liveData.write("digit" + number, start_state, VT_STRING);
+    Widgets::createWidget(widget_name, page_name, order, "inputNum", "digit" + number);
 }
 
-void digitSet() {
-    String number = sCmd.next();
+void cmd_digitSet() {
+    String name = sCmd.next();
     String value = sCmd.next();
-    jsonWriteStr(configLiveJson, "digit" + number, value);
-    MqttClient::publishStatus("digit" + number, value);
+
+    String objName = "digit" + name;
+    liveData.write(objName, value, VT_STRING);
+    MqttClient::publishStatus(objName, value, VT_STRING);
 }
 
-//=====================================================================================================================================
-//=========================================Добавление окна ввода времени===============================================================
-void inputTime() {
-    String value_name = sCmd.next();
-    String number = value_name.substring(4);
+void cmd_inputTime() {
+    String name = sCmd.next();
+    String number = name.substring(4);
     String widget_name = sCmd.next();
     widget_name.replace("#", " ");
     String page_name = sCmd.next();
     page_name.replace("#", " ");
-    String start_state = sCmd.next();
-    String page_number = sCmd.next();
-    jsonWriteStr(configLiveJson, "time" + number, start_state);
-    createWidget(widget_name, page_name, page_number, "inputTime", "time" + number);
+    String state = sCmd.next();
+    String order = sCmd.next();
+
+    liveData.write("time" + number, state, VT_STRING);
+    Widgets::createWidget(widget_name, page_name, order, "inputTime", "time" + number);
 }
 
-void timeSet() {
-    String number = sCmd.next();
+void cmd_timeSet() {
+    String name = sCmd.next();
     String value = sCmd.next();
-    jsonWriteStr(configLiveJson, "time" + number, value);
-    MqttClient::publishStatus("time" + number, value);
+
+    String objName = "time" + name;
+    liveData.write(objName, value, VT_STRING);
+    MqttClient::publishStatus(objName, value, VT_STRING);
 }
 
-void handle_time_init() {
-    ts.add(
-        TIME, 1000, [&](void *) {
-            jsonWriteStr(configLiveJson, "time", timeNow->getTime());
-            jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
-            eventGen("timenow", "");
-        },
-        nullptr, true);
+void cmd_text() {
+    String name = sCmd.next();
+    String descr = sCmd.next();
+    String page = sCmd.next();
+    String order = sCmd.next();
+
+    String objName = "text" + name;
+    Widgets::createWidget(descr, page, order, "anydata", objName);
 }
 
-//=====================================================================================================================================
-//=========================================Добавление текстового виджета============================================================
-void text() {
-    String number = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String page_number = sCmd.next();
+void cmd_textSet() {
+    String name = sCmd.next();
+    String value = sCmd.next();
+    value.replace("_", " ");
 
-    createWidget(widget_name, page_name, page_number, "anydata", "text" + number);
-}
-
-void textSet() {
-    String number = sCmd.next();
-    String text = sCmd.next();
-    text.replace("_", " ");
-
-    if (text.indexOf("-time") >= 0) {
-        text.replace("-time", "");
-        text.replace("#", " ");
-        String time = timeNow->getTime();
-        time.replace(":", ".");
-        text = text + " " + timeNow->getDateDigitalFormated() + " " + time;
+    if (value.indexOf("-time") >= 0) {
+        value.replace("-time", "");
+        value.replace("#", " ");
+        value = value + " " + now.getDateTimeDotFormated();
     }
 
-    jsonWriteStr(configLiveJson, "text" + number, text);
-    MqttClient::publishStatus("text" + number, text);
+    String objName = "text" + name;
+    liveData.write(objName, value, VT_STRING);
+    MqttClient::publishStatus(objName, value, VT_STRING);
 }
-//=====================================================================================================================================
-//=========================================Модуль шагового мотора======================================================================
-#ifdef STEPPER_ENABLED
-//stepper 1 12 13
-void stepper() {
-    String stepper_number = sCmd.next();
+
+void cmd_stepper() {
+    String name = sCmd.next();
     String pin_step = sCmd.next();
     String pin_dir = sCmd.next();
 
-    jsonWriteStr(configOptionJson, "stepper" + stepper_number, pin_step + " " + pin_dir);
-    pinMode(pin_step.toInt(), OUTPUT);
-    pinMode(pin_dir.toInt(), OUTPUT);
+    // String objName = "stepper" + name;
+    // liveData.write(objName, pin_step + " " + pin_dir);
+
+    // pinMode(pin_step.toInt(), OUTPUT);
+    // pinMode(pin_dir.toInt(), OUTPUT);
 }
 
-//stepperSet 1 100 5
-void stepperSet() {
+void cmd_stepperSet() {
     String stepper_number = sCmd.next();
     String steps = sCmd.next();
-    jsonWriteStr(configOptionJson, "steps" + stepper_number, steps);
-    String stepper_speed = sCmd.next();
-    String pin_step = selectToMarker(jsonReadStr(configOptionJson, "stepper" + stepper_number), " ");
-    String pin_dir = deleteBeforeDelimiter(jsonReadStr(configOptionJson, "stepper" + stepper_number), " ");
-    Serial.println(pin_step);
-    Serial.println(pin_dir);
-    if (steps.toInt() > 0) digitalWrite(pin_dir.toInt(), HIGH);
-    if (steps.toInt() < 0) digitalWrite(pin_dir.toInt(), LOW);
-    if (stepper_number == "1") {
-        ts.add(
-            STEPPER1, stepper_speed.toInt(), [&](void *) {
-                int steps_int = abs(jsonReadInt(configOptionJson, "steps1") * 2);
-                static int count;
-                count++;
-                String pin_step = selectToMarker(jsonReadStr(configOptionJson, "stepper1"), " ");
-                digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
-                yield();
-                if (count > steps_int) {
-                    digitalWrite(pin_step.toInt(), LOW);
-                    ts.remove(STEPPER1);
-                    count = 0;
-                }
-            },
-            nullptr, true);
-    }
-    if (stepper_number == "2") {
-        ts.add(
-            STEPPER2, stepper_speed.toInt(), [&](void *) {
-                int steps_int = abs(jsonReadInt(configOptionJson, "steps2") * 2);
-                static int count;
-                count++;
-                String pin_step = selectToMarker(jsonReadStr(configOptionJson, "stepper2"), " ");
-                digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
-                yield();
-                if (count > steps_int) {
-                    digitalWrite(pin_step.toInt(), LOW);
-                    ts.remove(STEPPER2);
-                    count = 0;
-                }
-            },
-            nullptr, true);
-    }
+    // options.write("steps" + stepper_number, steps);
+    // String stepper_speed = sCmd.next();
+    // String pin_step = selectToMarker(options.read("stepper" + stepper_number), " ");
+    // String pin_dir = deleteBeforeDelimiter(options.read("stepper" + stepper_number), " ");
+    // Serial.println(pin_step);
+    // Serial.println(pin_dir);
+    // if (steps.toInt() > 0) digitalWrite(pin_dir.toInt(), HIGH);
+    // if (steps.toInt() < 0) digitalWrite(pin_dir.toInt(), LOW);
+    // if (stepper_number == "1") {
+    //     ts.add(
+    //         STEPPER1, stepper_speed.toInt(), [&](void *) {
+    //             int steps_int = abs(options.readInt("steps1") * 2);
+    //             static int count;
+    //             count++;
+    //             String pin_step = selectToMarker(options.read("stepper1"), " ");
+    //             digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
+    //             yield();
+    //             if (count > steps_int) {
+    //                 digitalWrite(pin_step.toInt(), LOW);
+    //                 ts.remove(STEPPER1);
+    //                 count = 0;
+    //             }
+    //         },
+    //         nullptr, true);
+    // }
+
+    // if (stepper_number == "2") {
+    //     ts.add(
+    //         STEPPER2, stepper_speed.toInt(), [&](void *) {
+    //             int steps_int = abs(options.readInt("steps2") * 2);
+    //             static int count;
+    //             count++;
+    //             String pin_step = selectToMarker(options.read("stepper2"), " ");
+    //             digitalWrite(pin_step.toInt(), !digitalRead(pin_step.toInt()));
+    //             yield();
+    //             if (count > steps_int) {
+    //                 digitalWrite(pin_step.toInt(), LOW);
+    //                 ts.remove(STEPPER2);
+    //                 count = 0;
+    //             }
+    //         },
+    //         nullptr, true);
+    // }
 }
-#endif
-//====================================================================================================================================================
-//=================================================================Сервоприводы=======================================================================
-#ifdef SERVO_ENABLED
-//servo 1 13 50 Мой#сервопривод Сервоприводы 0 100 0 180 2
-void servo_() {
-    String servo_number = sCmd.next();
-    String servo_pin = sCmd.next();
-    String start_state = sCmd.next();
-    int start_state_int = start_state.toInt();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
+
+void cmd_servo() {
+    //servo 1 13 50 Cервопривод Сервоприводы 0 100 0 180 2
+    String name = sCmd.next();
+    String pin = sCmd.next();
+    String value = sCmd.next();
+
+    String descr = sCmd.next();
+    String page = sCmd.next();
 
     String min_value = sCmd.next();
     String max_value = sCmd.next();
-
     String min_deg = sCmd.next();
     String max_deg = sCmd.next();
 
-    String page_number = sCmd.next();
+    String order = sCmd.next();
 
-    jsonWriteStr(configOptionJson, "servo_pin" + servo_number, servo_pin);
-    start_state_int = map(start_state_int, min_value.toInt(), max_value.toInt(), min_deg.toInt(), max_deg.toInt());
+    myServo.add(name, pin, value, min_value, max_value, min_deg, max_deg);
 
-    if (servo_number == "1") {
-#ifdef ESP8266
-        myServo1.attach(servo_pin.toInt());
-        myServo1.write(start_state_int);
-#endif
-#ifdef ESP32
-        myServo1.attach(servo_pin.toInt(), 500, 2400);
-        myServo1.write(start_state_int);
-#endif
-    }
+    // options.write("servo_pin" + name, pin);
+    // value = map(value, min_value, max_value, min_deg, max_deg);
+    // servo->write(value);
+    // options.writeInt("s_min_val" + name, min_value);
+    // options.writeInt("s_max_val" + name, max_value);
+    // options.writeInt("s_min_deg" + name, min_deg);
+    // options.writeInt("s_max_deg" + name, max_deg);
+    // liveData.writeInt("servo" + name, value);
 
-    if (servo_number == "2") {
-#ifdef ESP8266
-        myServo2.attach(servo_pin.toInt());
-        myServo2.write(start_state_int);
-#endif
-#ifdef ESP32
-        myServo2.attach(servo_pin.toInt(), 500, 2400);
-        myServo2.write(start_state_int);
-#endif
-    }
-
-    jsonWriteStr(configOptionJson, "s_min_val" + servo_number, min_value);
-    jsonWriteStr(configOptionJson, "s_max_val" + servo_number, max_value);
-    jsonWriteStr(configOptionJson, "s_min_deg" + servo_number, min_deg);
-    jsonWriteStr(configOptionJson, "s_max_deg" + servo_number, max_deg);
-
-    jsonWriteStr(configLiveJson, "servo" + servo_number, start_state);
-
-    createWidgetParam(widget_name, page_name, page_number, "range", "servo" + servo_number, "min", min_value, "max", max_value, "k", "1");
+    Widgets::createWidget(descr, page, order, "range", "servo" + name, "min", String(min_value), "max", String(max_value), "k", "1");
 }
 
-void servoSet() {
-    String servo_number = sCmd.next();
-    String servo_state = sCmd.next();
-    int servo_state_int = servo_state.toInt();
+void cmd_servoSet() {
+    String name = sCmd.next();
+    String value = sCmd.next();
 
-    //int pin = jsonReadInt(configOptionJson, "servo_pin" + servo_number);
-
-    servo_state_int = map(servo_state_int,
-                          jsonReadInt(configOptionJson, "s_min_val" + servo_number),
-                          jsonReadInt(configOptionJson, "s_max_val" + servo_number),
-                          jsonReadInt(configOptionJson, "s_min_deg" + servo_number),
-                          jsonReadInt(configOptionJson, "s_max_deg" + servo_number));
-
-    if (servo_number == "1") {
-#ifdef ESP8266
-        myServo1.write(servo_state_int);
-#endif
-#ifdef ESP32
-        myServo1.write(servo_state_int);
-#endif
+    BaseServo *servo = myServo.get(name);
+    if (servo) {
+        servo->setValue(value);
     }
+    String objName = "servo" + name;
 
-    if (servo_number == "2") {
-#ifdef ESP8266
-        myServo2.write(servo_state_int);
-#endif
-#ifdef ESP32
-        myServo2.write(servo_state_int);
-#endif
-    }
-
-    //Serial.println(servo_state_int);
-
-    eventGen("servo", servo_number);
-
-    jsonWriteStr(configLiveJson, "servo" + servo_number, servo_state);
-
-    MqttClient::publishStatus("servo" + servo_number, servo_state);
+    Scenario::fire(objName);
+    liveData.write(objName, value, VT_INT);
+    MqttClient::publishStatus(objName, value, VT_INT);
 }
+
+void cmd_serialBegin() {
+    uint32_t baud = atoi(sCmd.next());
+    int8_t rx = atoi(sCmd.next());
+    int8_t tx = atoi(sCmd.next());
+
+    cmd_serialEnd();
+#ifdef ESP8266
+    mySerial = new SoftwareSerial(rx, tx);
+    mySerial->begin(baud);
+#else
+    mySerial = new HardwareSerial(2);
+    mySerial->begin(rx, tx);
 #endif
-
-#ifdef SERIAL_ENABLED
-void serialBegin() {
-    String s_speed = sCmd.next();
-    String rxPin = sCmd.next();
-    String txPin = sCmd.next();
-
-    if (mySerial) {
-        delete mySerial;
-    }
-
-    mySerial = new SoftwareSerial(rxPin.toInt(), txPin.toInt());
-    mySerial->begin(s_speed.toInt());
-
     term = new Terminal(mySerial);
-    term->setEOL(LF);
-    term->enableColors(false);
-    term->enableControlCodes(false);
-    term->enableEcho(false);
     term->setOnReadLine([](const char *str) {
-        String line = String(str);
-        pm.info("serial read: " + line);
-        //line.replace("#", " ");
-        addCommandLoop(line);
+        addOrder(str);
     });
 }
 
-void getData() {
-    String param = sCmd.next();
-    String res = param.length() ? jsonReadStr(configLiveJson, param) : configLiveJson;
-    if (term) {
-        term->println(res.c_str());
+void cmd_serialEnd() {
+    if (mySerial) {
+        mySerial->end();
+        delete mySerial;
     }
 }
 
-void serialWrite() {
+void cmd_serialWrite() {
     String payload = sCmd.next();
     if (term) {
         term->println(payload.c_str());
     }
 }
-#endif
-//====================================================================================================================================================
-//=================================================Глобальные команды удаленного управления===========================================================
 
-void mqttOrderSend() {
-    String id = sCmd.next();
-    String order = sCmd.next();
+void cmd_telnet() {
+    bool enabled = atoi(sCmd.next());
+    uint16_t port = atoi(sCmd.next());
 
-    String all_line = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + id + "/order";
-    mqtt.publish(all_line.c_str(), order.c_str(), false);
+    if (enabled) {
+        pm.info("telnet: enabled");
+        if (!telnet) {
+            telnet = new Telnet(port);
+        }
+        telnet->setOutput(pm.getOutput());
+        telnet->start();
+    } else {
+        pm.info("telnet: disabled");
+        telnet->stop();
+        telnet->end();
+    }
 }
 
-void httpOrderSend() {
-    String ip = sCmd.next();
-    String order = sCmd.next();
-    order.replace("_", "%20");
-    String url = "http://" + ip + "/cmd?command=" + order;
-    getURL(url);
+void cmd_get() {
+    String obj = sCmd.next();
+    String param = sCmd.next();
+    String res = "";
+    if (!obj.isEmpty()) {
+        if (obj.equalsIgnoreCase(TAG_OPTIONS)) {
+            res = param.isEmpty() ? options.asJson() : options.read(param);
+        } else if (obj.equalsIgnoreCase(TAG_RUNTIME)) {
+            res = param.isEmpty() ? runtime.asJson() : runtime.read(param);
+        } else if (obj.equalsIgnoreCase("state")) {
+            res = param.isEmpty() ? liveData.asJson() : liveData.read(param);
+        } else if (obj.equalsIgnoreCase("devices")) {
+            Devices::get(res, param.toInt());
+        } else {
+            res = F("unknown param");
+        }
+    } else {
+        res = F("unknown obj");
+    }
+    pm.info(res);
+    if (term) {
+        term->println(res.c_str());
+    }
 }
 
-void firmwareUpdate() {
-    upgrade = true;
+void cmd_mqtt() {
+    String topic = sCmd.next();
+    String data = sCmd.next();
+
+    MqttClient::publishOrder(topic, data);
 }
 
-void firmwareVersion() {
+// ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
+void cmd_ultrasonicCm() {
+    String measure_unit = sCmd.next();
+
+    String trig = sCmd.next();
+    String echo = sCmd.next();
     String widget = sCmd.next();
     String page = sCmd.next();
-    String pageNumber = sCmd.next();
+    String type = sCmd.next();
+    String empty_level = sCmd.next();
+    String full_level = sCmd.next();
+    String order = sCmd.next();
 
-    jsonWriteStr(configLiveJson, "firmver", FIRMWARE_VERSION);
+    Ultrasonic::ultrasonicCm_value_name = measure_unit;
 
-    createWidget(widget, page, pageNumber, "anydata", "firmver");
+    // options.write("trig", trig);
+    // options.write("echo", echo);
+    // pinMode(trig.toInt(), OUTPUT);
+    // pinMode(echo.toInt(), INPUT);
+
+    Widgets::createWidget(widget, page, order, type, measure_unit);
 }
 
-void addCommandLoop(const String &cmdStr) {
-    order_loop += cmdStr;
-    if (!cmdStr.endsWith(",")) {
-        order_loop += ",";
+void cmd_oneWire() {
+    String assign = sCmd.next();
+    onewire.attach(assign.toInt());
+}
+
+// dallas temp1 0x14 Температура Датчики anydata 1
+// dallas temp2 0x15 Температура Датчики anydata 2
+void cmd_dallas() {
+    if (!onewire.attached()) {
+        pm.error("attach bus first");
+        return;
+    }
+
+    String name = sCmd.next();
+    String address = sCmd.next();
+    String descr = sCmd.next();
+    String page = sCmd.next();
+    String widget = sCmd.next();
+    String order = sCmd.next();
+
+    auto *item = Sensors::add(SENSOR_DALLAS, name, address);
+
+    Widgets::createWidget(descr, page, order, widget, name);
+}
+
+//levelPr p 14 12 Вода#в#баке,#% Датчики fillgauge 125 20 1
+void cmd_levelPr() {
+    String name = sCmd.next();
+    String trig = sCmd.next();
+    String echo = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String empty_level = sCmd.next();
+    String full_level = sCmd.next();
+    String order = sCmd.next();
+
+    Ultrasonic::levelPr_value_name = name;
+
+    // options.write("e_lev", empty_level);
+    // options.write("f_lev", full_level);
+    // options.write("trig", trig);
+    // options.write("echo", echo);
+    // pinMode(trig.toInt(), OUTPUT);
+    // pinMode(echo.toInt(), INPUT);
+    Widgets::createWidget(widget_name, page_name, order, type, name);
+}
+
+//dhtH h 2 dht11 Влажность#DHT,#t°C Датчики any-data 1
+void cmd_dhtH() {
+    String name = sCmd.next();
+    String pin = sCmd.next();
+    String sensor_type = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String order = sCmd.next();
+    DHTSensor::dhtH_value_name = name;
+    if (sensor_type == "dht11") {
+        DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT11);
+    }
+    if (sensor_type == "dht22") {
+        DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT22);
+    }
+    Widgets::createWidget(widget_name, page_name, order, type, name);
+}
+
+// dhtT t 2 dht11 Температура#DHT,#t°C Датчики any-data 1
+void cmd_dhtT() {
+    String name = sCmd.next();
+    String pin = sCmd.next();
+    String sensor_type = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String order = sCmd.next();
+    DHTSensor::dhtT_value_name = name;
+    if (sensor_type == "dht11") {
+        DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT11);
+    }
+    if (sensor_type == "dht22") {
+        DHTSensor::dht.setup(pin.toInt(), DHTesp::DHT22);
+    }
+
+    Widgets::createWidget(widget_name, page_name, order, type, name);
+}
+
+//dhtDewpoint Точка#росы: Датчики 5
+void cmd_dhtDewpoint() {
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String order = sCmd.next();
+
+    Widgets::createWidget(widget_name, page_name, order, "anydata", "dhtDewpoint");
+}
+
+// dhtPerception Восприятие: Датчики 4
+void cmd_dhtPerception() {
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String order = sCmd.next();
+
+    Widgets::createWidget(widget_name, page_name, order, "any-data", "dhtPerception");
+}
+
+// dhtComfort Степень#комфорта: Датчики 3
+void cmd_dhtComfort() {
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String order = sCmd.next();
+
+    Widgets::createWidget(widget_name, page_name, order, "anydata", "dhtComfort");
+}
+
+// bmp280T temp1 0x76 Температура#bmp280 Датчики any-data 1
+void cmd_bmp280T() {
+    String name = sCmd.next();
+    String address = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String order = sCmd.next();
+    BMP280Sensor::bmp280T_value_name = name;
+
+    BMP280Sensor::bmp.begin(hexStringToUint8(address));
+    BMP280Sensor::bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+
+    Widgets::createWidget(widget_name, page_name, order, type, name);
+}
+
+//bmp280P press1 0x76 Давление#bmp280 Датчики any-data 2
+void cmd_bmp280P() {
+    String name = sCmd.next();
+    String address = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String order = sCmd.next();
+    BMP280Sensor::bmp280P_value_name = name;
+
+    BMP280Sensor::bmp.begin(hexStringToUint8(address));
+    BMP280Sensor::bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+
+    Widgets::createWidget(widget_name, page_name, order, type, name);
+}
+
+//=========================================================================================================================================
+//=============================================Модуль сенсоров bme280======================================================================
+//bme280T temp1 0x76 Температура#bmp280 Датчики any-data 1
+void cmd_bme280T() {
+    String name = sCmd.next();
+    String address = sCmd.next();
+    String descr = sCmd.next();
+    String page = sCmd.next();
+    String type = sCmd.next();
+    String order = sCmd.next();
+
+    Widgets::createWidget(descr, page, order, type, name);
+}
+
+//bme280P pres1 0x76 Давление#bmp280 Датчики any-data 1
+void cmd_bme280P() {
+    String name = sCmd.next();
+    String address = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String order = sCmd.next();
+
+    Widgets::createWidget(widget_name, page_name, order, type, name);
+}
+
+//bme280H hum1 0x76 Влажность#bmp280 Датчики any-data 1
+void cmd_bme280H() {
+    String name = sCmd.next();
+    String address = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String order = sCmd.next();
+
+    Widgets::createWidget(widget_name, page_name, order, type, name);
+}
+
+//bme280A altit1 0x76 Высота#bmp280 Датчики any-data 1
+void cmd_bme280A() {
+    String name = sCmd.next();
+    String address = sCmd.next();
+    String widget_name = sCmd.next();
+    String page_name = sCmd.next();
+    String type = sCmd.next();
+    String order = sCmd.next();
+
+    Widgets::createWidget(widget_name, page_name, order, type, name);
+}
+
+void cmd_firmwareUpdate() {
+    perform_upgrade();
+}
+
+void cmd_firmwareVersion() {
+    String widget = sCmd.next();
+    String page = sCmd.next();
+    String order = sCmd.next();
+
+    liveData.write("firmver", FIRMWARE_VERSION, VT_STRING);
+    Widgets::createWidget(widget, page, order, "anydata", "firmver");
+}
+
+void fileExecute(const String filename) {
+    String buf;
+    if (readFile(filename.c_str(), buf)) {
+        stringExecute(buf);
     }
 }
 
-void fileExecute(const String &filename) {
-    String cmdStr = readFile(filename, 2048);
-    cmdStr += "\r\n";
-    cmdStr.replace("\r\n", "\n");
-    cmdStr.replace("\r", "\n");
+void stringExecute(String str) {
+    str += "\r\n";
+    str.replace("\r\n", "\n");
+    str.replace("\r", "\n");
+    while (!str.isEmpty()) {
+        String buf = selectToMarker(str, "\n");
+        // Comments
+        if (!buf.startsWith("//")) {
+            sCmd.readStr(buf);
+        }
+        str = deleteBeforeDelimiter(str, "\n");
+    }
+}
 
-    while (cmdStr.length() != 0) {
-        String buf = selectToMarker(cmdStr, "\n");
+void addOrder(const String &str) {
+    _orders.push(str);
+}
+
+void loop_cmd() {
+    if (_orders.available()) {
+        String buf;
+        _orders.pop(buf);
+        pm.info("execute: " + buf);
         sCmd.readStr(buf);
-        cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
-    }
-}
-
-void stringExecute(String &cmdStr) {
-    cmdStr = cmdStr + "\r\n";
-
-    cmdStr.replace("\r\n", "\n");
-    cmdStr.replace("\r", "\n");
-
-    while (cmdStr.length()) {
-        String buf = selectToMarker(cmdStr, "\n");
-        sCmd.readStr(buf);
-        cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
-    }
-}
-
-void loopCmd() {
-    if (order_loop.length()) {
-        String tmp = selectToMarker(order_loop, ",");  //выделяем первую команду rel 5 1,
-        sCmd.readStr(tmp);                             //выполняем
-        pm.info("do: " + order_loop);
-        order_loop = deleteBeforeDelimiter(order_loop, ",");  //осекаем
     }
 }

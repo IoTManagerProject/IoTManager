@@ -1,53 +1,104 @@
 {
   "configs": [
-    "/config.live.json",
-    "/config.setup.json",
+    "/runtime.json",
+    "/config.json",
     "/lang/lang.ru.json"
   ],
-  "title": "Главная",
   "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
   "content": [
     {
       "type": "h5",
-      "title": "{{name}}",
+      "title": "{{devname}}",
       "class": "alert-default"
     },
     {
       "type": "link",
-      "title": "{{ButMainPage}}",
+      "title": "{{LS_main_page}}",
       "action": "/",
-      "class": "btn btn-block btn-default"
+      "class": "btn btn-block btn-center"
     },
     {
       "type": "hr"
     },
     {
       "type": "h3",
-      "title": "Сканирование адресов шины i2c"
-    },
-    {
-      "type": "h4",
-      "title": "{{i2c}}"
+      "title": "{{LS_i2c}} {{i2c}}"
     },
     {
       "type": "link",
-      "title": "Сканировать",
-      "action": "/set?itoc",
-      "class": "btn btn-block btn-default"
+      "title": "{{LS_scan}}",
+      "action": "/set?i2c",
+      "class": "btn btn-block btn-center"
+    },
+    {
+      "type": "hr"
     },
     {
       "type": "h3",
-      "title": "Проверка ФС"
+      "title": "{{LS_onewire}} {{oneWire}}"
     },
     {
-      "type": "h4",
-      "title": "{{fscheck}}"
+      "type": "table",
+      "state": "onewire.json",
+      "style": "margin:0% 10% 0% 10%;width:80%;text-align:center",
+      "title": {
+        "num": "{{LS_num}}",
+        "url": "{{LS_address}}",
+        "family": "{{LS_family}}"
+      }
     },
     {
       "type": "link",
-      "title": "Запустить",
-      "action": "/set?fscheck",
-      "class": "btn btn-block btn-default"
+      "title": "{{LS_scan}}",
+      "action": "/set?oneWire",
+      "class": "btn btn-block btn-center"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "h3",
+      "title": "{{LS_sensor_logs}}"
+    },
+    {
+      "type": "table",
+      "state": "logs.json",
+      "style": "margin:0% 10% 0% 10%;width:80%;text-align:center",
+      "title": {
+        "name": "{{LS_name}}",
+        "entries": "{{LS_entries}}",
+        "size": "{{LS_size}}"
+      }
+    },
+    {
+      "type": "link",
+      "title": "{{LS_clear}}",
+      "action": "/set?clear_log",
+      "class": "btn btn-block btn-center"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "h3",
+      "title": "{{LS_available_version}}"
+    },
+    {
+      "type": "h3",
+      "title": "{{last_version}}"
+    },
+    {
+      "type": "button",
+      "title": "{{LS_update_firmware}}",
+      "action": "/check",
+      "response": "[[my-block]]",
+      "class": "btn btn-block btn-center"
+    },
+    {
+      "type": "h3",
+      "name": "my-block",
+      "style": "position:fixed;top:50%;left:50%;width:20%;margin-left:-10%;text-align:center;",
+      "class": "hidden"
     }
   ]
 }

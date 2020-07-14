@@ -1,34 +1,33 @@
 #include "HttpServer.h"
 
+#include "Collection/Logger.h"
+#include "Collection/Devices.h"
+#include "Sensors/OnewireBus.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
+#include "FSEditor.h"
 
 namespace HttpServer {
 
 static const char *MODULE = "Http";
-/* Forward declaration */
-void initOta();
-void initMDNS();
-void initWS();
 
 void init() {
-    String login = jsonReadStr(configSetupJson, "weblogin");
-    String pass = jsonReadStr(configSetupJson, "webpass");
+    String login = config.web()->getLogin();
+    String pass = config.web()->getPass();
 #ifdef ESP32
-    server.addHandler(new SPIFFSEditor(LittleFS, login, pass);
-#elif defined(ESP8266)
-    server.addHandler(new SPIFFSEditor(login, pass));
+    server.addHandler(new FSEditor(LittleFS, login, pass));
+#else
+    server.addHandler(new FSEditor(login, pass));
 #endif
 
     server.serveStatic("/css/", LittleFS, "/css/").setCacheControl("max-age=600");
     server.serveStatic("/js/", LittleFS, "/js/").setCacheControl("max-age=600");
     server.serveStatic("/favicon.ico", LittleFS, "/favicon.ico").setCacheControl("max-age=600");
     server.serveStatic("/icon.jpeg", LittleFS, "/icon.jpeg").setCacheControl("max-age=600");
-
     server.serveStatic("/", LittleFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
 
     server.onNotFound([](AsyncWebServerRequest *request) {
-        pm.error("not found:\n" + getRequestInfo(request));
+        pm.error("not found: " + getRequestInfo(request));
         request->send(404);
     });
 
@@ -42,41 +41,52 @@ void init() {
         }
     });
 
-    // динамические данные
-    server.on("/config.live.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", configLiveJson);
+    server.on("/live.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", liveData.asJson());
     });
 
-    // данные не являющиеся событиями
-    server.on("/config.option.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", configOptionJson);
+    server.on("/option.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", options.asJson());
     });
-    
-    // для хранения постоянных данных
-    server.on("/config.setup.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", configSetupJson);
+
+    server.on("/runtime.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", runtime.asJson());
+    });
+
+    server.on("/device.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", Devices::asJson());
+    });
+
+    server.on("/onewire.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", onewire.asJson());
+    });
+
+    server.on("/logs.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", Logger::asJson());
     });
 
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
         String cmdStr = request->getParam("command")->value();
-        pm.info("command: " + cmdStr);
-        addCommandLoop(cmdStr);
-        request->send(200, "text/text", "OK");
+        addOrder(cmdStr);
+        request->send(200);
+    });
+
+    server.on("/add", HTTP_GET, [](AsyncWebServerRequest *request) {
+        String cmdStr = request->getParam("command")->value();
+        addOrder(cmdStr);
+        request->redirect("/?set.device");
     });
 
     server.begin();
-    
+
     initOta();
     initMDNS();
     initWS();
 }
 
 void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
-#ifdef WS_enable
     if (type == WS_EVT_CONNECT) {
-        Serial.printf("ws[%s][%u] connect\n", server->url(), client->id());
-        client->printf(json.c_str(), client->id());
-        //client->ping();
+        pm.info("connect: " + String(server->url()) + " " + String(client->id(), DEC));
     } else if (type == WS_EVT_DISCONNECT) {
         Serial.printf("ws[%s][%u] disconnect\n", server->url(), client->id());
     } else if (type == WS_EVT_ERROR) {
@@ -142,31 +152,37 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
             }
         }
     }
-#endif
-    ;
 }
 
 void initMDNS() {
-#ifdef MDNS_ENABLED
     MDNS.addService("http", "tcp", 80);
     // TODO Add Adduino OTA
-#endif
-    ;
+}
+
+void initWS() {
+    ws.onEvent(onWsEvent);
+    server.addHandler(&ws);
+    events.onConnect([](AsyncEventSourceClient *client) {
+        client->send("", NULL, millis(), 1000);
+    });
+    server.addHandler(&events);
 }
 
 void initOta() {
-#ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.onStart([]() {
         events.send("Update Start", "ota");
     });
+
     ArduinoOTA.onEnd([]() {
         events.send("Update End", "ota");
     });
+
     ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
         char p[32];
         sprintf(p, "Progress: %u%%\n", (progress / (total / 100)));
         events.send(p, "ota");
     });
+
     ArduinoOTA.onError([](ota_error_t error) {
         if (error == OTA_AUTH_ERROR)
             events.send("Auth Failed", "ota");
@@ -179,22 +195,9 @@ void initOta() {
         else if (error == OTA_END_ERROR)
             events.send("End Failed", "ota");
     });
-    ArduinoOTA.setHostname(hostName);
-    ArduinoOTA.begin();
-#endif
-    ;
-}
 
-void initWS() {
-#ifdef WS_enable
-    ws.onEvent(onWsEvent);
-    server.addHandler(&ws);
-    events.onConnect([](AsyncEventSourceClient *client) {
-        //!!!client->send("hello!", NULL, millis(), 1000);
-    });
-    server.addHandler(&events);
-#endif
-    ;
+    ArduinoOTA.setHostname(config.network()->getHostname());
+    ArduinoOTA.begin();
 }
 
 }  // namespace HttpServer

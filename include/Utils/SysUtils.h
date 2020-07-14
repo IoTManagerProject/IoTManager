@@ -6,8 +6,9 @@ const String getChipId();
 
 const String getUniqueId(const String& name);
 
-const String printMemoryStatus();
+const String getMemoryStatus();
 
 const String getHeapStats();
 
 const String getMacAddress();
+
