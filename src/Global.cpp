@@ -37,9 +37,9 @@ bool isExcludedKey(const String& key) {
 }
 
 void publishState() {
-    liveData.forEach([](const ValueType_t type, const String& key, const String& value) {
-        if (!isExcludedKey(key)) {
-            MqttClient::publishStatus(key, value, type);
+    liveData.forEach([](KeyValue* item) {
+        if (!isExcludedKey(item->getKey())) {
+            MqttClient::publishStatus(item->getKey(), item->getValue(), item->getType());
         }
     });
 }
@@ -55,8 +55,25 @@ void publishWidgets() {
     delete writer;
 }
 
+bool publishEntry(LogMetadata* meta, LogEntry entry) {
+    String buf = "{\"status\":";
+    buf += entry.asChartEntry();
+    buf += "}";
+
+    Writer* writer = MqttClient::getWriter(meta->getMqttTopic().c_str());
+    writer->begin(buf.length());
+    writer->write(buf.c_str());
+    writer->end();
+    delete writer;
+    return true;
+}
+
 void publishCharts() {
     Logger::forEach([](LoggerTask* task) {
+        task->readEntries([](LogMetadata* meta, LogEntry entry) {
+            publishEntry(meta, entry);
+            return true;
+        });
         return true;
     });
 }

@@ -3,14 +3,23 @@
 #include <Arduino.h>
 #include <functional>
 
+#include "Config.h"
 #include "Base/Item.h"
 #include "Base/Assigned.h"
 
-class ButtonItem : public Item,
-                   public Value,
-                   public PinAssigned {
+enum ButtonType_t {
+    BUTTON_VIRTUAL,
+    BUTTON_GPIO,
+    BUTTON_SCEN,
+    BUTTON_SCEN_LINE
+};
+
+class Button : public Item,
+               public Value {
    public:
-    ButtonItem(const String& name, const String& assign, const String& value) : Item{name}, Value{VT_INT}, PinAssigned{this} {};
+    Button(const String& name, const String& assign, const String& value) : Item{name}, Value{VT_INT} {};
+
+    virtual void onAssign() override {}
 
     void setInverted(bool value) {
         _inverted = value;
@@ -29,9 +38,21 @@ class ButtonItem : public Item,
     bool _inverted;
 };
 
-class Button : public ButtonItem {
+class ScenButton : public Button {
    public:
-    Button(const String& name, const String& assign, const String& value) : ButtonItem{name, assign, value} {};
+    ScenButton(const String& name, const String& assign, const String& value) : Button{name, assign, value} {};
+
+    void onValueUpdate(const String& value) override {
+        bool state = getValue().toInt();
+        config.general()->enableScenario(state);
+    }
+};
+
+class PinButton : public Button,
+                  public PinAssigned {
+   public:
+    PinButton(const String& name, const String& assign, const String& value) : Button{name, assign, value},
+                                                                               PinAssigned{this} {};
 
     void onAssign() override {
         pinMode(getPin(), OUTPUT);
@@ -44,14 +65,14 @@ class Button : public ButtonItem {
 
 class Buttons {
    public:
-    Button* add(const String& name, const String& assign, const String& value, const String& inverted);
+    Button* add(const ButtonType_t type, const String& name, const String& assign, const String& value, const String& inverted);
     Button* last();
     Button* at(size_t index);
     Button* get(const String name);
     size_t count();
 
    private:
-    std::vector<Button> _items;
+    std::vector<Button*> _list;
 };
 
-extern Buttons myButtons;
+extern Buttons buttons;

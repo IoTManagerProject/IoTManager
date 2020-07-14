@@ -1,6 +1,6 @@
 #include "Messages.h"
 
-#include "Base/StringCommand.h"
+#include "StringCommand.h"
 #include "Global.h"
 #include "Config.h"
 #include "Broadcast.h"

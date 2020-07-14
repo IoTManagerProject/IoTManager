@@ -9,7 +9,6 @@
 #include "Scenario.h"
 #include "Timers.h"
 #include "Widgets.h"
-#include "Base/StringCommand.h"
 #include "Objects/Switches.h"
 #include "Objects/Buttons.h"
 #include "Objects/PwmItems.h"
@@ -148,89 +147,6 @@ void cmd_logging() {
     Widgets::createChart(descr, page, order, "chart", name + "_ch", maxCount);
 }
 
-void cmd_button() {
-    String name = sCmd.next();
-    String assign = sCmd.next();
-    String descr = sCmd.next();
-    String page = sCmd.next();
-    String state = sCmd.next();
-    String order = sCmd.next();
-    String inverted = sCmd.next();
-
-    String objName = "button" + name;
-
-    myButtons.add(objName, assign, state, inverted);
-
-    liveData.write(objName, state, VT_INT);
-
-    Widgets::createWidget(descr, page, order, "toggle", objName);
-
-    // if (assign == "scen") {
-    //     config.general()->enableScenario(state.toInt());
-    // } else if (assign.startsWith("line")) {
-    //     String str = assign;
-    //     while (str.length()) {
-    //         if (str == "") {
-    //             return;
-    //         }
-    //         //line1,
-    //         String tmp = selectToMarker(str, ",");
-    //         //1,
-    //         String number = deleteBeforeDelimiter(tmp, "e");
-    //         number.replace(",", "");
-    //         int number_int = number.toInt();
-
-    //         Scenario::enableBlock(number_int, state);
-
-    //         str = deleteBeforeDelimiter(str, ",");
-    //     }
-    // }
-}
-
-void cmd_buttonSet() {
-    String name = sCmd.next();
-    String state = sCmd.next();
-
-    Button *btn = myButtons.get(name);
-    String assign = btn->getAssign();
-
-    // if (isDigitStr(assign)) {
-    //     btn->setState(state.toInt());
-    // } else if (assign == "scen") {
-    //     config.general()->enableScenario(state);
-    // } else if (assign.startsWith("line")) {
-    //     while (assign.length() != 0) {
-    //         String tmp = selectToMarker(assign, ",");         //line1,
-    //         String number = deleteBeforeDelimiter(tmp, "e");  //1,
-    //         number.replace(",", "");
-    //         Scenario::enableBlock(number.toInt(), state);
-    //         assign = deleteBeforeDelimiter(assign, ",");
-    //     }
-    // }
-    String objName = "button" + name;
-
-    Scenario::fire(objName);
-    liveData.write(objName, state, VT_INT);
-    MqttClient::publishStatus(objName, state, VT_INT);
-}
-
-void cmd_buttonChange() {
-    String name = sCmd.next();
-
-    if (!isDigitStr(name)) {
-        pm.error("wrong button " + name);
-        return;
-    }
-
-    ButtonItem *btn = myButtons.get(name);
-    btn->toggleState();
-
-    String objName = "button" + name;
-    String value = btn->getValue();
-    liveData.write(objName, value, VT_INT);
-    MqttClient::publishStatus(objName, value, VT_INT);
-}
-
 void cmd_pinSet() {
     String pin_number = sCmd.next();
     String pin_state = sCmd.next();
@@ -326,8 +242,6 @@ void cmd_digitSet() {
     MqttClient::publishStatus(objName, value, VT_STRING);
 }
 
-//=====================================================================================================================================
-//=========================================Добавление окна ввода времени===============================================================
 void cmd_inputTime() {
     String name = sCmd.next();
     String number = name.substring(4);
@@ -474,11 +388,9 @@ void cmd_servoSet() {
     BaseServo *servo = myServo.get(name);
     if (servo) {
         servo->setValue(value);
-    } else {
-        pm.error("servo: " + name + " not found");
     }
-
     String objName = "servo" + name;
+
     Scenario::fire(objName);
     liveData.write(objName, value, VT_INT);
     MqttClient::publishStatus(objName, value, VT_INT);

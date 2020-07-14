@@ -32,13 +32,18 @@ void LoggerTask::clear() {
 
 void LoggerTask::update() {
     if (_reader) {
-        _reader->loop();
-    } else {
-        if (_buffer.size() >= _limit) {
-            _writer->setActive();
+        if (_reader->isActive()) {
+            _reader->loop();
+            return;
+        } else {
+            delete _reader;
         }
-        _writer->loop();
     }
+
+    if (_buffer.size() >= _limit) {
+        _writer->setActive();
+    }
+    _writer->loop();
 
     if (millis_since(_lastUpdated) >= _logInterval) {
         if (now.hasSynced()) {
@@ -74,8 +79,9 @@ const String LoggerTask::asJson() {
     return res;
 }
 
-void LoggerTask::publish(LogEntryHandler h) {
-    _reader = new LogReader(_meta, h);
+void LoggerTask::readEntries(LogEntryHandler h) {
+    _reader = new LogReader(&_meta, h);
+    _reader->setActive(true);
 }
 
 // pm.info("task: " + _name);

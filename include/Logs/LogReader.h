@@ -9,44 +9,47 @@
 #define FILE_READ "r"
 #define FILE_WRITE "w"
 
+typedef std::function<bool(LogMetadata *, LogEntry)> LogEntryHandler;
+
 class LogReader {
    private:
+    Entry entry;
     File _file;
-    LogEntryHandler _handler;
-    bool _active;
-    size_t _pos;
     LogMetadata *_meta;
+    LogEntryHandler _handler;
+    size_t _pos;
+    bool _active;
 
    public:
-    LogReader(LogMetadata &meta, LogEntryHandler handler) : _handler{handler},
-                                                            _active{false},
-                                                            _pos{0} {
+    LogReader(LogMetadata *meta, LogEntryHandler handler) : _meta{meta},
+                                                            _handler{handler},
+                                                            _pos{0},
+                                                            _active{false} {
     }
 
     void setActive(bool value) {
-        _active = value;
+        _file = LittleFS.open(_meta->getDataFile().c_str(), FILE_READ);
+        if (_file) {
+            _active = true;
+        }
+    }
+
+    bool isActive() {
+        return _active;
     }
 
     void loop() {
-        if (!_active) {
+        if (!_active || (!_file)) {
             return;
         }
-        if (!_file) {
-            _file = LittleFS.open(_meta->getDataFile().c_str(), FILE_READ);
-        }
-        if (_file.available()) {
-            Entry entry;
-            if (_file.readBytesUntil('\n', (uint8_t *)&entry, sizeof(Entry)) != sizeof(Entry)) {
-                Serial.println("mismatch");
-            }
-            auto logEntry = LogEntry(entry, _meta->getValueType());
-            _handler(logEntry);
-            _pos++;
 
+        if (_file.available()) {
+            _file.readBytesUntil('\n', (uint8_t *)&entry, sizeof(Entry));
+            _handler(_meta, LogEntry(entry, _meta->getValueType()));
+            _pos++;
         } else {
             _file.close();
             _active = false;
         }
     }
 };
-

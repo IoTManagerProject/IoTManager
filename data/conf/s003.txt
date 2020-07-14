@@ -1,5 +1,5 @@
 button1 = 1
-// размерности времени sec, min hours 
+// время sec, min или hours 
 timerStart 1 digit1 sec
 end
 timer1 = 0

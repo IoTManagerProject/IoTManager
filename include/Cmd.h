@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Arduino.h"
+#include "Global.h"
 
 void addOrder(const String &str);
 void stringExecute(String cmdStr);
@@ -70,3 +70,5 @@ void cmd_timerStop();
 void cmd_timerStart();
 
 void cmd_oneWire();
+
+extern StringCommand sCmd;

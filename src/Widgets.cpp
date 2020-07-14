@@ -15,12 +15,12 @@ void createWidget(String descr, String page, String order, String templateName, 
     if (!widget->loadTemplate(templateName.c_str())) {
         return;
     }
+    descr.replace("#", " ");
+    widget->write("descr", descr);
 
     page.replace("#", " ");
     widget->write("page", page);
     widget->writeInt("order", order);
-    descr.replace("#", " ");
-    widget->write("descr", descr);
 
     String prefix = runtime.read("mqtt_prefix");
     widget->write("topic", prefix + "/" + topic);

@@ -7,22 +7,21 @@
 #include <Logs/LogMetadata.h>
 #include <Logs/LogBuffer.h>
 
+
 class LoggerTask {
    public:
     LoggerTask(size_t id, const char* name, unsigned long period, size_t limit);
     ~LoggerTask();
 
-    void publish(LogEntryHandler h);
+    void readEntries(LogEntryHandler h);
     void update();
     void clear();
 
     LogMetadata* getMetadata();
-
     const String getName() const;
     const String getMetaFile() const;
 
    public:
-    LogMetadata* metadata();
     const String asJson();
 
    private:

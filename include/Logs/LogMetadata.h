@@ -38,25 +38,15 @@ class LogMetadata : public Printable {
     }
 
     const String getDataFile() const {
-        String res;
-        res = "/log_";
-        res += _data.name;
-        res += ".txt";
-        return res;
+        return "/log_" + String(_data.name) + ".txt";
     }
 
     const String getMetaFile() const {
-        String res;
-        res = "/log_";
-        res += _data.name;
-        res += ".dat";
-        return res;
+        return "/log_" + String(_data.name) + ".dat";
     }
 
     const String getMqttTopic() const {
-        String res = _data.name;
-        res += "_ch";
-        return res;
+        return String(_data.name) + "_ch";
     }
 
     ValueType_t getValueType() const {
@@ -76,8 +66,6 @@ class LogMetadata : public Printable {
             auto file = LittleFS.open(getMetaFile().c_str(), FILE_READ);
             file.read((uint8_t*)&_data, sizeof(_data));
             file.close();
-        } else {
-            Serial.println("restore meta");
         }
     }
 
@@ -85,10 +73,8 @@ class LogMetadata : public Printable {
         auto file = LittleFS.open(getMetaFile().c_str(), FILE_WRITE);
         if (file) {
             file.write((uint8_t*)&_data, sizeof(_data));
-        } else {
-            Serial.println("store meta");
+            file.close();
         }
-        file.close();
     }
 
     size_t getCount() const {

@@ -10,7 +10,7 @@ std::vector<BaseSensor*> _items;
 
 BaseSensor* last() {
     return _items.at(_items.size() - 1);
-}
+} 
 
 BaseSensor* add(SensorType_t type, const String& name, const String& assign) {
     BaseSensor* item;

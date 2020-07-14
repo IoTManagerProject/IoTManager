@@ -88,24 +88,7 @@ void telemetry_init() {
                     return;
                 }
                 String url = "http://backup.privet.lv/visitors/?";
-                url += getChipId();
-                url += "&";
-#ifdef ESP8266
-                url += "iot-manager_esp8266";
-#endif
-#ifdef ESP32
-                url += "iot-manager_esp32";
-#endif
-                url += "&";
-#ifdef ESP8266
-                url += ESP.getResetReason();
-#endif
-#ifdef ESP32
-                url += "Power on";
-#endif
-                url += "&";
-                url += FIRMWARE_VERSION;
-                String stat = WebClient::get(url);
+                WebClient::get(url);
             },
             nullptr, true);
     }

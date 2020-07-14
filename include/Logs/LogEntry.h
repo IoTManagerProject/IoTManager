@@ -5,10 +5,6 @@
 
 #include "Base/Value.h"
 
-struct LogEntry;
-
-typedef std::function<bool(LogEntry)> LogEntryHandler;
-
 struct Entry {
     unsigned long time;
     unsigned short value;
@@ -17,11 +13,12 @@ struct Entry {
 struct LogEntry {
     Entry data;
     ValueType_t _type;
+
     LogEntry(){};
 
     LogEntry(const Entry& entry, ValueType_t type) {
         data.time = entry.time;
-        data.value = entry.value;
+        data.value = type == VT_FLOAT ? entry.value / 100 : entry.value;
         _type = type;
     }
 
@@ -45,18 +42,14 @@ struct LogEntry {
     };
 
     const String asChartEntry(uint8_t num = 1) const {
-        String str = "[\"x\":\"";
+        String str = "{\"x\":";
         str += getTime();
-        str += "\",\"y";
+        str += ",\"y";
         str += String(num, DEC);
-        str += ":\"";
+        str += "\":";
         str += getValue();
-        str += "\"]";
+        str += "}";
         return str;
-    }
-
-    Entry* getEntry() {
-        return &data;
     }
 
     const String getTime() const {

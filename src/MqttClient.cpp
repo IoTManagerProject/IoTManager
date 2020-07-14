@@ -142,12 +142,7 @@ const String getStatusPath(const String& name) {
     return res;
 }
 
-bool publishChartEntry(const char* name, String entry) {
-    String payload = "{\"status\":";
-    payload += entry;
-    payload += "}";
-    return mqtt_publish(getStatusPath(name).c_str(), payload.c_str());
-}
+
 
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     pm.info("<= " + String(topic));
@@ -204,8 +199,8 @@ boolean publishData(const String& topic, const String& data) {
     return mqtt_publish(path, data);
 }
 
-boolean publishChart(const String& topic, const String& data) {
-    String path = _deviceRoot + "/" + topic + "/status";
+boolean publishChart(const String& name, const String& data) {
+    String path = _deviceRoot + "/" + name + "/status";
     return mqtt_publish(path, data);
 }
 

@@ -12,7 +12,8 @@
 
 #include "Base/KeyValueStore.h"
 #include "Base/StringQueue.h"
-#include "Base/StringCommand.h"
+
+#include "StringCommand.h"
 
 #include "Consts.h"
 #include "Errors.h"

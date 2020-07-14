@@ -23,7 +23,7 @@ const String asJson() {
 
 void forEach(LoggerTaskHandler func) {
     for (auto item : _list) {
-        if (!func(item)) break;
+        func(item);
     }
 }
 

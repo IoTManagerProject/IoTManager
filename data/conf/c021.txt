@@ -1,7 +1,11 @@
+// настройка UART скорость 9600, GPIO 12 и 13
 serialBegin 9600 12 13
-button 1 na Управляется#из#arduino Serial 0 1
-button 2 na Отправить#в#arduino Serial 0 2
-text 1 Текст#из#arduino Serial 3
 
-//12 13 это пины uart к которым вы можете подключить arduino. Скетч для arduino выложен в группу.
-//команда serialWrite ard-on отправит в arduino текст ard-on
+// кнопка №1 реагирует на команды из arduino
+button 1 na Кнопка#arduino Обмен#данными 1
+
+// кнопка №2 ее нажатие передаёт в arduino команды (см.сценарий)
+button 2 na Отправить#команду Обмен#данными 2
+
+// текстовое поле
+text 1 Текст Обмен#данными 3

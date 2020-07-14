@@ -49,7 +49,7 @@ class KeyValue {
     };
 };
 
-typedef std::function<void(const ValueType_t, const String&, const String&)> KeyValueHandler;
+typedef std::function<void(KeyValue*)> KeyValueHandler;
 
 class KeyValueStore {
    protected:
@@ -66,7 +66,7 @@ class KeyValueStore {
 
     void forEach(KeyValueHandler func) {
         for (auto item : _items) {
-            func(item.getType(), item.getKey(), item.getValue());
+            func(&item);
         }
     }
 
