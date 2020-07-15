@@ -5,7 +5,7 @@
 Timer::Timer(const char* name, unsigned long time) {
     _name = strdup(name);
     _time = time;
-    liveData.write(name, "1", VT_INT);
+    liveData.write(name, true);
 }
 
 Timer::~Timer() {
@@ -29,7 +29,7 @@ const char* Timer::name() const {
 }
 
 void Timer::onTimer() {
-    liveData.write(_name, "0", VT_INT);
+    liveData.write(_name, false);
     Scenario::fire(_name);
 }
 
