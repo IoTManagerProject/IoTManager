@@ -16,9 +16,10 @@ void cmd_logging() {
 
     unsigned long intervalTime = parsePeriod(interval);
     unsigned long storeTime = parsePeriod(store);
+
     size_t maxCount = storeTime / intervalTime;
 
-    Logger::add(name.c_str(), intervalTime, storeTime);
- 
+    Logger::add(name.c_str(), intervalTime, maxCount);
+
     Widgets::createChart(descr, page, order, "chart", name + "_ch", maxCount);
 }

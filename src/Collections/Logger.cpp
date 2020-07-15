@@ -36,9 +36,9 @@ void update() {
     }
 }
 
-void add(const char* name, unsigned long period, size_t limit) {
+void add(const char* name, unsigned long interval, size_t storeLimit) {
     size_t id = _list.size() + 1;
-    LoggerTask* item = new LoggerTask{id, name, period, limit};
+    LoggerTask* item = new LoggerTask{id, name, interval, storeLimit};
     _list.push_back(item);
 }
 
