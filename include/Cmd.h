@@ -7,6 +7,7 @@
 extern StringCommand sCmd;
 
 extern unsigned long parsePeriod(const String &str, unsigned long default_multiplier = ONE_MINUTE_ms);
+extern const String getObjectName(const char *type, const char *id);
 
 void addOrder(const String &str);
 void stringExecute(String cmdStr);

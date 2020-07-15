@@ -8,10 +8,6 @@
 
 static const char *MODULE = TAG_BUTTON;
 
-static const String getObjectName(const char *id) {
-    return String(TAG_BUTTON) + id;
-}
-
 static Button *getObjectByName(const String &name) {
     auto *obj = buttons.get(name);
     if (!obj) {
@@ -35,7 +31,7 @@ static bool getButtonType(const String &assign, ButtonType_t &type) {
 }
 
 void cmd_button() {
-    String name = getObjectName(sCmd.next());
+    String name = getObjectName(TAG_BUTTON, sCmd.next());
 
     String assign = sCmd.next();
     String descr = sCmd.next();
@@ -56,7 +52,7 @@ void cmd_button() {
 }
 
 void cmd_buttonChange() {
-    String name = getObjectName(sCmd.next());
+    String name = getObjectName(TAG_BUTTON, sCmd.next());
     auto *item = getObjectByName(name);
     if (!item) {
         return;
@@ -69,7 +65,7 @@ void cmd_buttonChange() {
 }
 
 void cmd_buttonSet() {
-    String name = getObjectName(sCmd.next());
+    String name = getObjectName(TAG_BUTTON, sCmd.next());
     auto *item = getObjectByName(name);
     if (!item) {
         return;

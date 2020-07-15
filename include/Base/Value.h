@@ -67,7 +67,11 @@ class ValueMap {
     }
 
     int mapValue(const int value) {
-        return _mapper->mapValue(value);
+        if (_mapper) {
+            return _mapper->mapValue(value);
+        } else {
+            return value;
+        }
     }
 
    private:

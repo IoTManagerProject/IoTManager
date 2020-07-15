@@ -53,11 +53,28 @@ typedef std::function<void(KeyValue*)> KeyValueHandler;
 
 class KeyValueStore {
    protected:
-    std::vector<KeyValue> _items;
+    std::vector<KeyValue*> _items;
 
    public:
-    KeyValueStore() {
-        _items.reserve(16);
+    KeyValueStore(){};
+
+    KeyValueStore(const char* str) {
+        _items.reserve(8);
+        loadString(str);
+    }
+
+    ~KeyValueStore() {
+        _items.clear();
+    }
+
+    void loadString(const char* str) {
+        DynamicJsonBuffer buf;
+        JsonObject& root = buf.parse(str);
+        for (JsonPair& p : root) {
+            String key = p.key;
+            String value{p.value.as<String>()};
+            _items.push_back(new KeyValue{key.c_str(), value.c_str(), VT_STRING});
+        }
     }
 
     void clear() {
@@ -66,7 +83,7 @@ class KeyValueStore {
 
     void forEach(KeyValueHandler func) {
         for (auto item : _items) {
-            func(&item);
+            func(item);
         }
     }
 
@@ -74,15 +91,15 @@ class KeyValueStore {
         DynamicJsonBuffer json;
         JsonObject& root = json.createObject();
         for (auto item : _items) {
-            switch (item.getType()) {
+            switch (item->getType()) {
                 case VT_STRING:
-                    root[item.getKey()] = item.getValue();
+                    root[item->getKey()] = item->getValue();
                     break;
                 case VT_FLOAT:
-                    root[item.getKey()] = atof(item.getValue().c_str());
+                    root[item->getKey()] = atof(item->getValue().c_str());
                     break;
                 case VT_INT:
-                    root[item.getKey()] = atoi(item.getValue().c_str());
+                    root[item->getKey()] = atoi(item->getValue().c_str());
                 default:
                     break;
             }
@@ -94,7 +111,7 @@ class KeyValueStore {
 
     void erase(const String key) {
         for (size_t i = 0; i < _items.size(); i++) {
-            if (_items.at(i).getKey() == key) {
+            if (_items.at(i)->getKey() == key) {
                 _items.erase(_items.begin() + i);
                 break;
             }
@@ -103,8 +120,8 @@ class KeyValueStore {
 
     KeyValue* findKey(const String key) {
         for (size_t i = 0; i < _items.size(); i++) {
-            if (_items.at(i).getKey() == key) {
-                return &_items.at(i);
+            if (_items.at(i)->getKey() == key) {
+                return _items.at(i);
             }
         }
         return NULL;
@@ -115,7 +132,7 @@ class KeyValueStore {
         if (item) {
             item->setValue(type, value);
         } else {
-            _items.push_back(KeyValue{key.c_str(), value.c_str(), type});
+            _items.push_back(new KeyValue{key.c_str(), value.c_str(), type});
         }
     }
 
@@ -172,7 +189,7 @@ class KeyValueFile : public KeyValueStore {
         return res;
     }
 
-    void load() {
+    void reload() {
         loadFile(_filename);
     }
 
@@ -185,7 +202,7 @@ class KeyValueFile : public KeyValueStore {
             for (JsonPair& p : root) {
                 String key = p.key;
                 String value{p.value.as<String>()};
-                _items.push_back(KeyValue{key.c_str(), value.c_str(), VT_STRING});
+                _items.push_back(new KeyValue{key.c_str(), value.c_str(), VT_STRING});
             }
             res = true;
         }

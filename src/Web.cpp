@@ -3,9 +3,9 @@
 #include "Global.h"
 
 static const char* MODULE = "Web";
-
 static const char* PAGE_UTILITIES = "/?set.utilities";
 static const char* PAGE_SETUP = "/?set.device";
+
 void web_init() {
     // dnsServer.start(53, "*", WiFi.softAPIP());
     // server.addHandler(new CaptiveRequestHandler(jsonReadStr(configSetupJson, "name").c_str())).setFilter(ON_AP_FILTER);
@@ -105,7 +105,7 @@ void web_init() {
         } else {
             // TODO Версия должна быть выше
             if (lastVersion == FIRMWARE_VERSION) {
-                msg = "Версия прошивки актуальна.";
+                msg = F("Версия прошивки актуальна.");
             } else if (lastVersion != FIRMWARE_VERSION) {
                 msg = "Обновление: ";
                 msg += lastVersion;

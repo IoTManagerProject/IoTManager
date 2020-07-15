@@ -16,5 +16,6 @@ extern const char* TAG_CHECK_MQTT;
 
 extern const char* TAG_BUTTON;
 extern const char* TAG_TIMER;
+extern const char* TAG_PWM;
 
 extern const char* strBoolEnabled(bool value);

@@ -38,10 +38,10 @@ void LoggerTask::update() {
     if (_reader) {
         if (_reader->isActive()) {
             _reader->loop();
-            return;
         } else {
             delete _reader;
         }
+        return;
     }
 
     if (_buffer.size() >= _limit) {

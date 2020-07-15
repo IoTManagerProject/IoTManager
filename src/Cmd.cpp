@@ -11,7 +11,7 @@
 #include "Sensors/OneWireBus.h"
 
 #include "Objects/Switches.h"
-#include "Objects/PwmItems.h"
+#include "Objects/Pwm.h"
 #include "Objects/ServoItems.h"
 #include "Objects/Terminal.h"
 #include "Objects/Telnet.h"
@@ -56,6 +56,10 @@ unsigned long parsePeriod(const String &str, unsigned long default_multiplier) {
         }
     }
     return res;
+}
+
+const String getObjectName(const char *type, const char *id) {
+    return String(type) + id;
 }
 
 void cmd_init() {
@@ -167,37 +171,6 @@ void cmd_pinChange() {
     String pin_number = sCmd.next();
     pinMode(pin_number.toInt(), OUTPUT);
     digitalWrite(pin_number.toInt(), !digitalRead(pin_number.toInt()));
-}
-
-void cmd_pwm() {
-    String name = sCmd.next();
-    String assign = sCmd.next();
-    String description = sCmd.next();
-
-    String page = sCmd.next();
-    String value = sCmd.next();
-    String order = sCmd.next();
-
-    String style = sCmd.next();
-
-    String objName = "pwm" + name;
-
-    myPwm.add(objName, assign, value);
-    liveData.write(objName, value, VT_INT);
-    Widgets::createWidget(description, page, order, "range", objName);
-}
-
-void cmd_pwmSet() {
-    String name = sCmd.next();
-    String value = sCmd.next();
-
-    myPwm.get(name)->setValue(value);
-
-    String objName = "pwm" + name;
-
-    Scenario::fire(objName);
-    liveData.write(objName, value, VT_INT);
-    MqttClient::publishStatus(objName, value, VT_INT);
 }
 
 void cmd_switch() {
@@ -531,7 +504,7 @@ void cmd_dallas() {
     String widget = sCmd.next();
     String order = sCmd.next();
 
-    auto *item = Sensors::add(SENSOR_DALLAS, name, address);
+    Sensors::add(SENSOR_DALLAS, name, address);
 
     Widgets::createWidget(descr, page, order, widget, name);
 }

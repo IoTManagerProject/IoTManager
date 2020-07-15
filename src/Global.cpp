@@ -81,7 +81,7 @@ void publishCharts() {
 void config_init() {
     load_config();
 
-    runtime.load();
+    runtime.reload();
     runtime.write("chipID", getChipId());
     runtime.write("firmware_version", FIRMWARE_VERSION);
     runtime.write("mqtt_prefix", config.mqtt()->getPrefix() + "/" + getChipId());

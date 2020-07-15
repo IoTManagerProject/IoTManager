@@ -29,20 +29,3 @@ class Pwm : public Item,
         analogWrite(getPin(), mapValue(value.toInt()));
     }
 };
-
-class Pwms {
-   public:
-    Pwms();
-    Pwm* add(String name, String assign, String param);
-    Pwm* at(size_t index);
-    Pwm* get(const String name);
-    size_t count();
-
-   private:
-    Pwm* last();
-
-   private:
-    std::vector<Pwm*> _items;
-};
-
-extern Pwms myPwm;
