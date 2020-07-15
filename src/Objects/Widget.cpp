@@ -15,7 +15,7 @@ Widget::~Widget() {
 bool Widget::loadTemplate(const char* name) {
     _content->clear();
     if (!_content->loadFile(getFilename(name).c_str())) {
-        pm.error("load template: " + String(name));
+        pm.error("template: " + String(name));
         return false;
     }
     return true;
@@ -43,7 +43,7 @@ const String Widget::asJson() {
 
 const String Widget::getFilename(const char* name) {
     String res;
-    res = "widgets/";
+    res = "/widgets/";
     res += name;
     res += ".json";
     return res;

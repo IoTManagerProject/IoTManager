@@ -127,6 +127,10 @@ class KeyValueStore {
         return NULL;
     }
 
+    void write(const String& key, int value) {
+        write(key, String(value, DEC), VT_INT);
+    }
+
     void write(const String& key, const String& value, ValueType_t type = VT_STRING) {
         auto item = findKey(key);
         if (item) {
