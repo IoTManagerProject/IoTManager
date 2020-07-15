@@ -39,7 +39,8 @@ class PrintMessage {
 
    private:
     static const char* error_levels[];
+    static bool mqttEnabled;
     static bool printEnabled;
-    static bool logEnabled;
+    static bool fileEnabled;
     static Print* out;
 };

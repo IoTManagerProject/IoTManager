@@ -10,11 +10,11 @@
 #define FILE_READ "r"
 #define FILE_WRITE "w"
 
-typedef std::function<bool(LogMetadata *, LogEntry)> LogEntryHandler;
+typedef std::function<bool(LogMetadata *, uint8_t *)> LogEntryHandler;
 
 class LogReader {
    private:
-    Entry entry;
+    uint8_t buf[sizeof(Entry)];
     File _file;
     LogMetadata *_meta;
     LogEntryHandler _handler;
@@ -45,8 +45,8 @@ class LogReader {
         }
 
         if (_file.available()) {
-            _file.readBytesUntil('\n', (uint8_t *)&entry, sizeof(Entry));
-            _handler(_meta, LogEntry(entry, _meta->getValueType()));
+            _file.readBytes((char *)&buf, sizeof(Entry));
+            _handler(_meta, buf);
             _pos++;
         } else {
             _file.close();

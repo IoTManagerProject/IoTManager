@@ -27,6 +27,10 @@ class LogWriter {
         _active = value;
     }
 
+    bool isActive() {
+        return _active;
+    }
+
     void loop() {
         if (!_active) {
             return;

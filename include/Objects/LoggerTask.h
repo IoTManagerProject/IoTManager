@@ -17,8 +17,6 @@ class LoggerTask {
     void clear();
 
     LogMetadata* getMetadata();
-    const String getName() const;
-    const String getMetaFile() const;
 
    public:
     const String asJson();
@@ -29,13 +27,11 @@ class LoggerTask {
    private:
     LogMetadata _meta;
     LogBuffer _buffer;
-    Value* _value;
-    LogReader* _reader;
-    LogWriter* _writer;
 
     size_t _id;
-    char* _name;
-    unsigned long _logInterval;
+    unsigned long _interval;
     size_t _limit;
     unsigned long _lastUpdated;
+    LogReader* _reader;
+    LogWriter* _writer;
 };

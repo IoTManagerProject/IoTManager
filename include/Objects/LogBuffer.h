@@ -17,7 +17,7 @@ class LogBuffer {
     bool pop(LogEntry& item) {
         if (_pool.empty()) {
             return false;
-        };
+        }
         item = _pool.front();
         _pool.pop_front();
         return true;

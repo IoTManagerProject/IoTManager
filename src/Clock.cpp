@@ -9,10 +9,14 @@
 
 static const char* MODULE = "Clock";
 
-Clock::Clock() : _uptime{millis()}, _hasSynced{false}, _configured{false} {};
+Clock now;
 
-void Clock::setConfig(ClockConfig* cfg) {
-    _cfg = cfg;
+Clock::Clock() : _uptime{millis()},
+                 _hasSynced{false},
+                 _configured{false} {};
+
+void Clock::setConfig(ClockConfig* config) {
+    _config = config;
 }
 
 void Clock::loop() {
@@ -39,12 +43,12 @@ void Clock::loop() {
 
     breakEpochToTime(_unixtime, _time_utc);
 
-    breakEpochToTime(_unixtime + getOffsetInSeconds(_cfg->getTimezone()), _time_local);
+    breakEpochToTime(_unixtime + getOffsetInSeconds(_config->getTimezone()), _time_local);
 }
 
 void Clock::startSync() {
     if (!_configured) {
-        pm.info("ntp: " + _cfg->getNtp() + " timezone: " + String(_cfg->getTimezone()));
+        pm.info("ntp:" + _config->getNtp() + ", timezone:" + String(_config->getTimezone()));
         setupSntp();
         _configured = true;
         return;
@@ -56,7 +60,7 @@ void Clock::startSync() {
 }
 
 void Clock::setupSntp() {
-    configTime(0, 0, _cfg->getNtp().c_str(), "ru.pool.ntp.org", "pool.ntp.org");
+    configTime(0, 0, _config->getNtp().c_str(), "ru.pool.ntp.org", "pool.ntp.org");
 }
 
 bool Clock::hasSynced() const {
@@ -124,15 +128,15 @@ const String Clock::getTimeWOsec() {
 }
 
 /*
-    * Время с момента запуска "чч:мм:cc" далее "дд чч:мм"
-    */
+* Время с момента запуска "чч:мм:cc" далее "дд чч:мм"
+*/
 const String Clock::getUptime() {
     return prettyMillis(_uptime);
 }
 
 /*
-    * Разбивает время на составляющие
-    */
+* Разбивает время на составляющие
+*/
 void Clock::breakEpochToTime(unsigned long epoch, Time_t& tm) {
     // break the given time_input into time components
     // this is a more compact version of the C library localtime function
@@ -182,5 +186,3 @@ void Clock::breakEpochToTime(unsigned long epoch, Time_t& tm) {
     tm.day_of_month = time + 1;  // day of month
     tm.valid = (epoch > MIN_DATETIME);
 }
-
-Clock now;

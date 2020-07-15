@@ -1,12 +1,14 @@
 #include "PrintMessage.h"
 
 #include "Clock.h"
+#include "MqttClient.h"
 #include "Utils\StringUtils.h"
 #include "Utils\TimeUtils.h"
 
 const char* PrintMessage::error_levels[] = {"I", "W", "E", "?"};
+bool PrintMessage::mqttEnabled = false;
+bool PrintMessage::fileEnabled = false;
 bool PrintMessage::printEnabled = true;
-bool PrintMessage::logEnabled = true;
 Print* PrintMessage::out = &Serial;
 
 void PrintMessage::setOutput(Print* output) {
@@ -22,7 +24,7 @@ void PrintMessage::enablePrint(bool value) {
 }
 
 void PrintMessage::enableLog(bool value) {
-    logEnabled = value;
+    fileEnabled = value;
 }
 
 const char* PrintMessage::getErrorLevelStr(uint8_t level) {
@@ -36,13 +38,19 @@ const String PrintMessage::getTimeToken() {
 void PrintMessage::print(const char* time, const char* level, const char* module, const char* str) {
     char buf[256];
 
-    snprintf(buf, sizeof(buf),
-             "%s [%s] [%s] %s",
-             time, level, module, str);
-    if (logEnabled) {
+    if (mqttEnabled) {
+        snprintf(buf, 256, "%s %s", module, str);
+        auto writer = MqttClient::getWriter("syslog");
+        writer->print(buf);
+        delete writer;
+    }
+
+    if (fileEnabled) {
         //
     }
     if (printEnabled) {
+        snprintf(buf, 256, "%s [%s] [%s] %s",
+                 time, level, module, str);
         if (out) {
             out->println(buf);
         };

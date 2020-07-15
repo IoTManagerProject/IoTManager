@@ -10,14 +10,14 @@
 
 class LogMetadata : public Printable {
    private:
-    struct Data {
+    struct LogHeader {
         char name[32];
         size_t entry_count;
         unsigned long start_time;
         unsigned long finish_time;
         ValueType_t type;
 
-        Data() : entry_count{0}, start_time{0}, finish_time{0}, type{VT_INT} {};
+        LogHeader() : entry_count{0}, start_time{0}, finish_time{0}, type{VT_INT} {};
         void reset() {
             entry_count = 0;
             start_time = 0;
@@ -25,46 +25,52 @@ class LogMetadata : public Printable {
         }
     };
 
-    Data _data;
+    LogHeader _header;
 
    public:
     LogMetadata(const char* name) {
-        strcpy(_data.name, name);
+        memset(&_header.name[0], 0, sizeof(name[0]) * 32);
+        strcpy(_header.name, name);
         restore();
     };
 
     void reset() {
-        _data.reset();
+        _header.reset();
+    }
+
+    const String getName() {
+        return _header.name;
     }
 
     const String getDataFile() const {
-        return "/log_" + String(_data.name) + ".txt";
+        return "/log_" + String(_header.name) + ".txt";
     }
 
     const String getMetaFile() const {
-        return "/log_" + String(_data.name) + ".dat";
+        return "/log_" + String(_header.name) + ".dat";
     }
 
     const String getMqttTopic() const {
-        return String(_data.name) + "_ch";
+        return String(_header.name) + "_ch";
     }
 
     ValueType_t getValueType() const {
-        return _data.type;
+        return _header.type;
     }
 
     void add(const LogEntry& logEntry) {
-        if (!_data.start_time) {
-            _data.start_time = logEntry.data.time;
+        unsigned long entry_time = logEntry.getTime();
+        if (!_header.start_time) {
+            _header.start_time = entry_time;
         }
-        _data.finish_time = logEntry.data.time;
-        _data.entry_count++;
+        _header.finish_time = entry_time;
+        _header.entry_count++;
     }
 
     void restore() {
         if (LittleFS.exists(getMetaFile().c_str())) {
             auto file = LittleFS.open(getMetaFile().c_str(), FILE_READ);
-            file.read((uint8_t*)&_data, sizeof(_data));
+            file.read((uint8_t*)&_header, sizeof(_header));
             file.close();
         }
     }
@@ -72,17 +78,17 @@ class LogMetadata : public Printable {
     void store() {
         auto file = LittleFS.open(getMetaFile().c_str(), FILE_WRITE);
         if (file) {
-            file.write((uint8_t*)&_data, sizeof(_data));
+            file.write((uint8_t*)&_header, sizeof(_header));
             file.close();
         }
     }
 
     size_t getCount() const {
-        return _data.entry_count;
+        return _header.entry_count;
     }
 
     size_t getSize() const {
-        return (sizeof(Entry) + 1) * _data.entry_count;
+        return (sizeof(Entry)) * _header.entry_count;
     }
 
     size_t printTo(Print& p) const {
@@ -91,9 +97,9 @@ class LogMetadata : public Printable {
         n += p.print(F(" bytes: "));
         n += p.print(getSize(), DEC);
         n += p.print(F(" start: "));
-        n += p.print(_data.start_time, DEC);
+        n += p.print(_header.start_time, DEC);
         n += p.print(F(" finish: "));
-        n += p.print(_data.finish_time, DEC);
+        n += p.print(_header.finish_time, DEC);
         n += p.print(F(" entry_size: "));
         n += p.println(sizeof(Entry));
         return n;

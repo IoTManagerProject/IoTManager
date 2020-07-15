@@ -5,21 +5,25 @@
 
 /*
 * pwm №1 подключен к PIN 12 начальное состояние 100%
-pwm {id:1, descr: "Зеленый", pin:12, state:100%, page:"Лампа" order:4}
+pwm {id:1,descr:"Зеленый",pin:12,state:100%,page:"Лампа",order:4}
 */
 void cmd_pwm() {
-    KeyValueStore param = KeyValueStore(sCmd.next());
+    KeyValueStore* params = new KeyValueStore(sCmd.next());
 
-    String name = getObjectName(TAG_PWM, param.read("id").c_str());
-    String assign = param.read("pin");
-    String descr = param.read("name");
-    String page = param.read("page");
-    String state = param.read("state");
-    String order = param.read("order");
+    String name = getObjectName(TAG_PWM, params->read("id").c_str());
+    String assign = params->read("pin");
+    String descr = params->read("name");
+    String page = params->read("page");
+    String state = params->read("state");
+    String order = params->read("order");
+
+    delete params;
+
+    String styles = sCmd.next();
 
     Pwm* item = (Pwm*)pwms.add(name, assign);
 
-    item->setMap(0, 100, 0, 1023);
+    item->setMap(1, 100, 0, 1023);
     item->setValue(state);
 
     liveData.write(name, state, VT_INT);

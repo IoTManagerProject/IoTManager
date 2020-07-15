@@ -9,19 +9,18 @@
 
 static const char* MODULE = "LoggerTask";
 
-LoggerTask::LoggerTask(const size_t id, const char* name, unsigned long period, size_t limit) : _meta{name}, _id{id}, _logInterval{period}, _limit{limit}, _lastUpdated{0} {
-    _name = strdup(name);
-    _reader = NULL;
-    _writer = new LogWriter(_meta, _buffer);
+LoggerTask::LoggerTask(const size_t id, const char* name, unsigned long interval, size_t limit) : _meta{name},
+                                                                                                  _id{id},
+                                                                                                  _interval{interval},
+                                                                                                  _limit{limit},
+                                                                                                  _lastUpdated{0},
+                                                                                                  _reader{NULL},
+                                                                                                  _writer{NULL} {
 }
 
 LoggerTask::~LoggerTask() {
-    delete _name;
-    delete _writer;
-}
-
-const String LoggerTask::getName() const {
-    return _name;
+    if (_writer) delete _writer;
+    if (_reader) delete _reader;
 }
 
 LogMetadata* LoggerTask::getMetadata() {
@@ -40,28 +39,39 @@ void LoggerTask::update() {
             _reader->loop();
         } else {
             delete _reader;
+            _reader = NULL;
         }
         return;
     }
 
-    if (_buffer.size() >= _limit) {
-        _writer->setActive();
+    if (_writer) {
+        if (_writer->isActive()) {
+            _writer->loop();
+        } else {
+            delete _writer;
+            _writer = NULL;
+        }
+        return;
     }
-    _writer->loop();
 
-    if (millis_since(_lastUpdated) >= _logInterval) {
-        if (now.hasSynced()) {
-            unsigned long epoch = now.getEpoch();
-            String value;
-            ValueType_t valueType;
-            if (liveData.read(_name, value, valueType)) {
-                LogEntry entry = LogEntry(epoch, value, valueType);
+    if ((millis_since(_lastUpdated) >= _interval) || !_lastUpdated) {
+        unsigned long epoch = now.getEpoch();
+        String name = _meta.getName();
+        String value;
+        ValueType_t valueType;
+        if (liveData.read(name, value, valueType)) {
+            if (now.hasSynced()) {
+                LogEntry entry = LogEntry(epoch, value.toFloat());
                 _buffer.push(entry);
-                MqttClient::publishStatus(_name, value, valueType);
-                pm.info(String(_name) + ": " + value);
             }
+            MqttClient::publishStatus(name, value, valueType);
+            pm.info(name + ": " + value + ", buf: " + String(_buffer.size(), DEC) + "/" + String(_limit, DEC));
         }
         _lastUpdated = millis();
+    }
+    if (_buffer.size() >= _limit) {
+        _writer = new LogWriter(_meta, _buffer);
+        _writer->setActive();
     }
 }
 
@@ -71,7 +81,7 @@ const String LoggerTask::asJson() {
     res += String(_id, DEC);
     res += "\",";
     res += "\"name\":\"";
-    res += _name;
+    res += getMetadata()->getName();
     res += "\",";
     res += "\"entries\":\"";
     res += String(getMetadata()->getCount(), DEC);

@@ -38,8 +38,7 @@ void createWidget(String descr, String page, String order, String templateName, 
     _list.push_back(widget);
 }
 
-void createChart(String series, String page, String order, String templateName, String topic,
-                 String maxCount) {
+void createChart(String series, String page, String order, String templateName, String topic, size_t maxCount) {
     Widget* widget = new Widget();
     if (!widget->loadTemplate(templateName.c_str())) {
         return;
@@ -50,7 +49,7 @@ void createChart(String series, String page, String order, String templateName, 
 
     series.replace("#", " ");
     widget->write("series", series);
-    widget->writeInt("maxCount", maxCount);
+    widget->write("maxCount", maxCount);
 
     String prefix = runtime.read("mqtt_prefix");
     widget->write("topic", prefix + "/" + topic);

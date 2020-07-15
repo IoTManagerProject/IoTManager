@@ -72,7 +72,7 @@ class Clock {
     unsigned long _unixtime;
     bool _hasSynced;
     bool _configured;
-    ClockConfig* _cfg;
+    ClockConfig* _config;
     const uint8_t DAYS_IN_MONTH[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 };
 

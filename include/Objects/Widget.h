@@ -10,7 +10,8 @@ class Widget {
     bool loadTemplate(const char* name);
 
     void write(const String& key, const String& value);
-
+    void write(const String& key, size_t value);
+    
     void writeInt(const String& key, const String& value);
 
     void writeFloat(const String& key, const String& value);

@@ -10,16 +10,17 @@ MqttWriter::MqttWriter(PubSubClient* client, const char* topic) : _client{client
 };
 
 MqttWriter::~MqttWriter() {
-    if (_topic) delete _topic;
+    delete _topic;
 }
 
-bool MqttWriter::begin(unsigned int length) {
+bool MqttWriter::begin(size_t length) {
     if (!_client->connected()) {
         pm.error("not connected");
         return false;
     }
+
     _length = length;
-    bool res = _client->beginPublish(_topic, length, false);
+    bool res = _client->beginPublish(_topic, _length, false);
     if (!res) {
         pm.error("on publish");
     }
@@ -34,4 +35,8 @@ bool MqttWriter::write(const char* data) {
 bool MqttWriter::end() {
     pm.info("published: " + prettyBytes(_length));
     return _client->endPublish();
+}
+
+bool MqttWriter::print(const char* data) {
+    return _client->publish(_topic, data);
 }

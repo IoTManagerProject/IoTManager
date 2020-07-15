@@ -38,7 +38,7 @@ SoftwareSerial *mySerial = nullptr;
 HardwareSerial *mySerial = nullptr;
 #endif
 
-unsigned long parsePeriod(const String &str, unsigned long default_multiplier) {
+unsigned long parsePeriod(const String &str, unsigned long default_time_syfix) {
     unsigned long res = 0;
     if (str.indexOf("digit") != -1) {
         res = liveData.readInt(str);
@@ -52,7 +52,7 @@ unsigned long parsePeriod(const String &str, unsigned long default_multiplier) {
         } else if (str.endsWith("h")) {
             res = str.substring(0, str.indexOf("h")).toInt() * ONE_HOUR_ms;
         } else {
-            res = str.toInt() * default_multiplier;
+            res = str.toInt() * default_time_syfix;
         }
     }
     return res;
@@ -144,20 +144,6 @@ void cmd_init() {
     sCmd.addCommand("reboot", cmd_reboot);
 
     sCmd.addCommand("oneWire", cmd_oneWire);
-}
-
-//logging temp1 1 10 Температура Датчики 2
-void cmd_logging() {
-    String name = sCmd.next();
-    String period = sCmd.next();
-    String maxCount = sCmd.next();
-    String descr = sCmd.next();
-    String page = sCmd.next();
-    String order = sCmd.next();
-
-    Logger::add(name.c_str(), parsePeriod(period), maxCount.toInt());
-    // /prefix/3234045-1589487/value_name_ch
-    Widgets::createChart(descr, page, order, "chart", name + "_ch", maxCount);
 }
 
 void cmd_pinSet() {
@@ -255,22 +241,6 @@ void cmd_text() {
 
     String objName = "text" + name;
     Widgets::createWidget(descr, page, order, "anydata", objName);
-}
-
-void cmd_textSet() {
-    String name = sCmd.next();
-    String value = sCmd.next();
-    value.replace("_", " ");
-
-    if (value.indexOf("-time") >= 0) {
-        value.replace("-time", "");
-        value.replace("#", " ");
-        value = value + " " + now.getDateTimeDotFormated();
-    }
-
-    String objName = "text" + name;
-    liveData.write(objName, value, VT_STRING);
-    MqttClient::publishStatus(objName, value, VT_STRING);
 }
 
 void cmd_stepper() {

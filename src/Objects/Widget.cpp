@@ -25,6 +25,10 @@ void Widget::write(const String& key, const String& value) {
     _content->write(key, value, VT_STRING);
 }
 
+void Widget::write(const String& key, size_t value) {
+    _content->write(key, String(value), VT_INT);
+}
+
 void Widget::writeInt(const String& key, const String& value) {
     _content->write(key, value, VT_INT);
 }
