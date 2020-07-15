@@ -1,13 +1,21 @@
-button1 = 1
-buttonSet 2 1
-buttonSet 3 1
-pwmSet 2 1024
-end
 button1 = 0
 buttonSet 2 0
 buttonSet 3 0
+end
+button1 = 1
+buttonSet 2 1
+buttonSet 3 1
+end
+button2 = 1
+pwmSet 1 100
+pwmSet 2 100
+pwmSet 3 100
+end
+button2 = 0
+pwmSet 1 0
 pwmSet 2 0
+pwmSet 3 0
 end
 adc > 50
-buttonSet 2 1
+buttonSet 3 1
 end
