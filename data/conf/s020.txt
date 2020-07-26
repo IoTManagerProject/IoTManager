@@ -1,0 +1,12 @@
+button1 = 1
+servoSet 1 100
+end
+button1 = 0
+servoSet 1 0
+end
+button2 = 1
+servoSet 2 100
+end
+button2 = 0
+servoSet 2 0
+end

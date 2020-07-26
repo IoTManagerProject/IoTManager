@@ -1,0 +1,7 @@
+{
+  "widget" : "select",
+  "size"   : "small",
+  "fill"   : "outline",
+  "options" : "["Zero item", "First item", "Second item"]",
+  "status" : 2
+}
