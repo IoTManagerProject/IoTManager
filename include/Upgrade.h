@@ -2,4 +2,4 @@
 
 void getLastVersion();
 
-void flashUpgrade();
+void do_update();

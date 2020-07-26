@@ -20,11 +20,16 @@ void startSTAMode() {
 
     bool keepConnecting = true;
     uint8_t tries = 20;
+    sint8_t connRes;
     do {
-        sint8_t connRes = WiFi.waitForConnectResult(1000);
+#ifdef ESP8266
+        connRes = WiFi.waitForConnectResult(1000);
+#else
+        byte connRes = WiFi.waitForConnectResult();
+#endif
         switch (connRes) {
             case WL_NO_SSID_AVAIL: {
-                pm.error("No ssid available");
+                pm.error("no network");
                 keepConnecting = false;
             } break;
             case WL_CONNECTED: {
@@ -34,7 +39,7 @@ void startSTAMode() {
                 keepConnecting = false;
             } break;
             case WL_CONNECT_FAILED: {
-                pm.error("Check credentials");
+                pm.error("check credentials");
                 jsonWriteInt(configOptionJson, "pass_status", 1);
                 keepConnecting = false;
             } break;
@@ -45,9 +50,9 @@ void startSTAMode() {
 
     if (isNetworkActive()) {
         MqttClient::init();
-
         setLedStatus(LED_OFF);
     } else {
+        pm.error("failed: " + String(connRes, DEC));
         startAPMode();
     };
 }

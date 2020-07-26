@@ -41,6 +41,9 @@ String order_loop = "";
 String analog_value_names_list;
 int enter_to_analog_counter;
 
+String dallas_value_name;
+int enter_to_dallas_counter;
+
 String levelPr_value_name;
 String ultrasonicCm_value_name;
 
@@ -67,8 +70,8 @@ int scenario_line_status[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 String lastVersion = "";
 
 // Async actions
-boolean upgrade_url = false;
-boolean upgrade = false;
+boolean checkUpdatesFlag = false;
+boolean updateFlag = false;
 
 boolean mqttParamsChanged = false;
 boolean udp_data_parse = false;

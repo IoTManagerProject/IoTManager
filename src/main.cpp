@@ -1,7 +1,7 @@
 #include "Global.h"
 
 #include "HttpServer.h"
-#include "Bus/BusScanner.h"
+#include "Bus/BusScannerFactory.h"
 #include "Utils/Timings.h"
 
 void not_async_actions();
@@ -62,7 +62,7 @@ void setup() {
 
 #ifdef UDP_ENABLED
     pm.info("Broadcast UDP");
-    UDP_init();
+    udp_init();
 #endif
     ts.add(
         TEST, 1000 * 60, [&](void*) {
@@ -114,7 +114,7 @@ void not_async_actions() {
 
     getLastVersion();
 
-    flashUpgrade();
+    do_update();
 
 #ifdef UDP_ENABLED
     do_udp_data_parse();
@@ -122,8 +122,6 @@ void not_async_actions() {
 #endif
 
     do_scan_bus();
-
-    do_check_fs();
 }
 
 String getURL(const String& urls) {
@@ -140,42 +138,22 @@ String getURL(const String& urls) {
     return res;
 }
 
-void safeDataToFile(String data, String Folder) {
-    String fileName;
-    fileName.toLowerCase();
-    fileName = deleteBeforeDelimiter(fileName, " ");
-    fileName.replace(" ", ".");
-    fileName.replace("..", ".");
-    fileName = Folder + "/" + fileName + ".txt";
-
-    jsonWriteStr(configLiveJson, "test", fileName);
-}
-
-void sendConfig(String topic, String widgetConfig, String key, String date) {
-    yield();
-    topic = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId + "/" + topic + "/status";
-    String outer = "{\"widgetConfig\":";
-    String inner = "{\"";
-    inner = inner + key;
-    inner = inner + "\":\"";
-    inner = inner + date;
-    inner = inner + "\"";
-    inner = inner + "}}";
-    String t = outer + inner;
-    yield();
-}
-
 void setChipId() {
     chipId = getChipId();
-    Serial.println(chipId);
+    pm.info("id: " + chipId);
 }
 
 void saveConfig() {
     writeFile(String("config.json"), configSetupJson);
 }
 
+void setConfigParam(const char* param, const String& value) {
+    pm.info("set " + String(param) + ": " + value);
+    jsonWriteStr(configSetupJson, param, value);
+    saveConfig();
+}
+
 #ifdef ESP8266
-#ifdef LED_PIN
 void setLedStatus(LedStatus_t status) {
     pinMode(LED_PIN, OUTPUT);
     switch (status) {
@@ -197,12 +175,25 @@ void setLedStatus(LedStatus_t status) {
             break;
     }
 }
-#endif
-#endif
-
-void do_fscheck(String& results) {
-    // TODO Проверка наличие важных файлов, возможно версии ФС
+#else
+void setLedStatus(LedStatus_t status) {
+    pinMode(LED_PIN, OUTPUT);
+    switch (status) {
+        case LED_OFF:
+            digitalWrite(LED_PIN, HIGH);
+            break;
+        case LED_ON:
+            digitalWrite(LED_PIN, LOW);
+            break;
+        case LED_SLOW:
+            break;
+        case LED_FAST:
+            break;
+        default:
+            break;
+    }
 }
+#endif
 
 void clock_init() {
     timeNow = new Clock();
@@ -215,21 +206,13 @@ void clock_init() {
         },
         nullptr, true);
 }
+
 void do_scan_bus() {
     if (busScanFlag) {
         String res = "";
-        BusScanner* scanner = BusScannerFactory::get(res, busToScan);
+        BusScanner* scanner = BusScannerFactory::get(configSetupJson, busToScan, res);
         scanner->scan();
-        jsonWriteStr(configLiveJson, BusScannerFactory::label(busToScan), res);
+        jsonWriteStr(configLiveJson, String(scanner->tag()), res);
         busScanFlag = false;
-    }
-}
-
-void do_check_fs() {
-    if (fsCheckFlag) {
-        String buf;
-        do_fscheck(buf);
-        jsonWriteStr(configLiveJson, "fscheck", buf);
-        fsCheckFlag = false;
     }
 }

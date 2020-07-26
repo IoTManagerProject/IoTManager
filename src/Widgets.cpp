@@ -16,7 +16,6 @@ bool loadWidget(const String& filename, String& buf) {
 void createWidget(String widget, String page, String pageNumber, String filename, String topic) {
     String buf = "{}";
     if (!loadWidget(filename, buf)) {
-        pm.error("failed " + widget);
         return;
     }
     widget.replace("#", " ");
@@ -34,7 +33,9 @@ void createWidget(String widget, String page, String pageNumber, String filename
 #endif
 }
 
-void createWidgetParam(String widget, String page, String pageNumber, String filename, String topic, String name1, String param1, String name2, String param2, String name3, String param3) {
+//TODO Вот эта процедура, и несколько оберток
+void createWidgetParam(String widget, String page, String pageNumber, String filename, String topic,
+                       String name1, String param1, String name2, String param2, String name3, String param3) {
     String buf = "";
     if (!loadWidget(filename, buf)) {
         return;
@@ -59,7 +60,8 @@ void createWidgetParam(String widget, String page, String pageNumber, String fil
 #endif
 }
 
-void createChart(String widget, String page, String pageNumber, String filename, String topic, String maxCount) {
+void createChart(String widget, String page, String pageNumber, String filename, String topic,
+                 String maxCount) {
     String buf = "";
     if (!loadWidget(filename, buf)) {
         return;
@@ -83,11 +85,9 @@ void createChart(String widget, String page, String pageNumber, String filename,
 }
 
 void createWidgetByType(String widget, String page, String pageNumber, String type, String topic) {
-    pm.info("create" + type);
     createWidget(widget, page, pageNumber, getWidgetFile(type), topic);
 }
 
 const String getWidgetFile(const String& name) {
-    pm.info("get " + name);
     return "/widgets/" + name + ".json";
 }

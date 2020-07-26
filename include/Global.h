@@ -10,8 +10,6 @@
 #include "ESP8266.h"
 //
 #include "Consts.h"
-#include "CommonTypes.h"
-#include "Bus/BusScanner.h"
 #include "Errors.h"
 #include "GyverFilters.h"
 #include "Upgrade.h"
@@ -26,7 +24,7 @@
 #include "Utils\WiFiUtils.h"
 
 //=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
-#include <SoftwareSerial.h>
+
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>
 #include <Bounce2.h>
@@ -82,6 +80,9 @@ extern String order_loop;
 extern String analog_value_names_list;
 extern int enter_to_analog_counter;
 
+extern String dallas_value_name;
+extern int enter_to_dallas_counter;
+
 extern String levelPr_value_name;
 extern String ultrasonicCm_value_name;
 
@@ -103,8 +104,8 @@ extern int scenario_line_status[40];
 
 extern String lastVersion;
 
-extern boolean upgrade_url;
-extern boolean upgrade;
+extern boolean checkUpdatesFlag;
+extern boolean updateFlag;
 extern boolean mqttParamsChanged;
 extern boolean udp_data_parse;
 extern boolean mqtt_send_settings_to_udp;
@@ -176,8 +177,10 @@ extern void choose_log_date_and_send();
 // Main
 extern void setChipId();
 extern void saveConfig();
+extern void setConfigParam(const char* param, const String& value);
+
 extern String getURL(const String& urls);
-extern void do_check_fs();
+extern void do_fscheck();
 extern void do_scan_bus();
 extern void servo_();
 extern void clock_init();
@@ -248,7 +251,7 @@ extern void createChart(String widget_name, String page_name, String page_number
 extern void pushControl();
 
 // UDP
-extern void UDP_init();
+extern void udp_init();
 extern void do_udp_data_parse();
 extern void do_mqtt_send_settings_to_udp();
 
@@ -259,7 +262,7 @@ extern void loopButton();
 extern void loopScenario();
 extern void loopUdp();
 
-extern void flashUpgrade();
+extern void do_update();
 
 // Init
 extern void uptime_init();

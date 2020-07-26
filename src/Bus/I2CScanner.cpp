@@ -1,18 +1,23 @@
-#include "Bus/BusScanner.h"
+#include "Bus/I2CScanner.h"
+#include "Utils/PrintMessage.h"
 
 #include <Wire.h>
-#include "Utils/PrintMessage.h"
 
 static const char* MODULE = "I2C";
 
-boolean I2CScanner::syncScan() {
+I2CScanner::I2CScanner(String& out) : BusScanner(TAG_I2C, out, 2){};
+
+void I2CScanner::init() {
     Wire.begin();
-    pm.info("scanning i2c...");
+}
+
+boolean I2CScanner::syncScan() {
+    pm.info("scanning...");
     size_t cnt = 0;
     for (uint8_t i = 8; i < 120; i++) {
         Wire.beginTransmission(i);
         if (Wire.endTransmission() == 0) {
-            pm.info("found device: " + i);
+            pm.info("found: " + i);
             addResult(i, i < 119);
             cnt++;
         }
