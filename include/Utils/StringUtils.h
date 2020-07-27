@@ -10,6 +10,8 @@ String selectToMarkerLast(String str, String found);
 
 String selectToMarker(String str, String found);
 
+String extractInner(String str);
+
 String deleteAfterDelimiter(String str, String found);
 
 String deleteBeforeDelimiter(String str, String found);

@@ -1,5 +1,4 @@
 #include "Global.h"
-
 #include "Module/Terminal.h"
 #include "Servo/Servos.h"
 
@@ -20,7 +19,7 @@ void getData();
 
 void cmd_init() {
     sCmd.addCommand("button", button);
-    sCmd.addCommand("buttonSet", buttonSet);
+    //sCmd.addCommand("buttonSet", buttonSet);
     sCmd.addCommand("buttonChange", buttonChange);
 
     sCmd.addCommand("pinSet", pinSet);
@@ -108,79 +107,136 @@ void cmd_init() {
 
 //==========================================================================================================
 //==========================================Модуль кнопок===================================================
-
+//button out light toggle Кнопки Свет 1 pin[12] inv[1] st[1]
 void button() {
-    pm.info("create 'button'");
-    String number = sCmd.next();
-    String param = sCmd.next();
-    String widget = sCmd.next();
+    String command = sCmd.order();
+    pm.info("create '" + command + "'");
+    String type = sCmd.next();
+    String key = sCmd.next();
+    String file = sCmd.next();
     String page = sCmd.next();
-    String state = sCmd.next();
-    String pageNumber = sCmd.next();
+    String descr = sCmd.next();
+    String order = sCmd.next();
 
-    jsonWriteStr(configOptionJson, "button_param" + number, param);
-    jsonWriteStr(configLiveJson, "button" + number, state);
+    String pin;
+    String inv;
+    String state;
 
-    if (isDigitStr(param)) {
-        pinMode(param.toInt(), OUTPUT);
-        digitalWrite(param.toInt(), state.toInt());
-    }
-
-    if (param == "scen") {
-        jsonWriteStr(configSetupJson, "scen", state);
-        loadScenario();
-        saveConfig();
-    }
-
-    if (param.indexOf("line") != -1) {
-        String str = param;
-        while (str.length()) {
-            if (str == "") return;
-            String tmp = selectToMarker(str, ",");            //line1,
-            String number = deleteBeforeDelimiter(tmp, "e");  //1,
-            number.replace(",", "");
-            Serial.println(number);
-            int number_int = number.toInt();
-            scenario_line_status[number_int] = state.toInt();
-            str = deleteBeforeDelimiter(str, ",");
+    for (int i = 1; i < 6; i++) {
+        String arg = sCmd.next();
+        if (arg != "") {
+            if (arg.indexOf("pin[") != -1) {
+                pin = extractInner(arg);
+            }
+            if (arg.indexOf("inv[") != -1) {
+                inv = extractInner(arg);
+            }
+            if (arg.indexOf("st[") != -1) {
+                state = extractInner(arg);
+            }
         }
     }
-    createWidget(widget, page, pageNumber, "toggle", "button" + number);
+
+    Serial.println(pin);
+    Serial.println(inv);
+    Serial.println(state);
+
+    createWidget(descr, page, order, file, key);
+
+    sCmd.addCommand(key.c_str(), buttonSet);
+
+    if (pin != "") {
+        pinMode(pin.toInt(), OUTPUT);
+    }
+
+    if (state != "") {
+        digitalWrite(pin.toInt(), state.toInt());
+    }
 }
+
+//void button() {
+//    pm.info("create 'button'");
+//    String number = sCmd.next();
+//    String param = sCmd.next();
+//    String widget = sCmd.next();
+//    String page = sCmd.next();
+//    String state = sCmd.next();
+//    String pageNumber = sCmd.next();
+//
+//    jsonWriteStr(configOptionJson, "button_param" + number, param);
+//    jsonWriteStr(configLiveJson, "button" + number, state);
+//
+//    if (isDigitStr(param)) {
+//        pinMode(param.toInt(), OUTPUT);
+//        digitalWrite(param.toInt(), state.toInt());
+//    }
+//
+//    if (param == "scen") {
+//        jsonWriteStr(configSetupJson, "scen", state);
+//        loadScenario();
+//        saveConfig();
+//    }
+//
+//    if (param.indexOf("line") != -1) {
+//        String str = param;
+//        while (str.length()) {
+//            if (str == "") return;
+//            String tmp = selectToMarker(str, ",");            //line1,
+//            String number = deleteBeforeDelimiter(tmp, "e");  //1,
+//            number.replace(",", "");
+//            Serial.println(number);
+//            int number_int = number.toInt();
+//            scenario_line_status[number_int] = state.toInt();
+//            str = deleteBeforeDelimiter(str, ",");
+//        }
+//    }
+//    createWidget(widget, page, pageNumber, "toggle", "button" + number);
+//}
 
 void buttonSet() {
-    String button_number = sCmd.next();
-    String button_state = sCmd.next();
-    String button_param = jsonReadStr(configOptionJson, "button_param" + button_number);
+    String order = sCmd.order();
+    String state = sCmd.next();
 
-    if (button_param != "na" || button_param != "scen" || button_param.indexOf("line") != -1) {
-        digitalWrite(button_param.toInt(), button_state.toInt());
-    }
+    //Serial.println(order);
 
-    if (button_param == "scen") {
-        jsonWriteStr(configSetupJson, "scen", button_state);
-        loadScenario();
-        saveConfig();
-    }
-
-    if (button_param.indexOf("line") != -1) {
-        String str = button_param;
-        while (str.length() != 0) {
-            if (str == "") return;
-            String tmp = selectToMarker(str, ",");            //line1,
-            String number = deleteBeforeDelimiter(tmp, "e");  //1,
-            number.replace(",", "");
-            Serial.println(number);
-            int number_int = number.toInt();
-            scenario_line_status[number_int] = button_state.toInt();
-            str = deleteBeforeDelimiter(str, ",");
-        }
-    }
-
-    eventGen("button", button_number);
-    jsonWriteStr(configLiveJson, "button" + button_number, button_state);
-    MqttClient::publishStatus("button" + button_number, button_state);
+    eventGen(order, "");
+    jsonWriteStr(configLiveJson, order, state);
+    MqttClient::publishStatus(order, state);
 }
+
+//void buttonSet() {
+//    String button_number = sCmd.next();
+//    String button_state = sCmd.next();
+//    String button_param = jsonReadStr(configOptionJson, "button_param" + button_number);
+//
+//    if (button_param != "na" || button_param != "scen" || button_param.indexOf("line") != -1) {
+//        digitalWrite(button_param.toInt(), button_state.toInt());
+//    }
+//
+//    if (button_param == "scen") {
+//        jsonWriteStr(configSetupJson, "scen", button_state);
+//        loadScenario();
+//        saveConfig();
+//    }
+//
+//    if (button_param.indexOf("line") != -1) {
+//        String str = button_param;
+//        while (str.length() != 0) {
+//            if (str == "") return;
+//            String tmp = selectToMarker(str, ",");            //line1,
+//            String number = deleteBeforeDelimiter(tmp, "e");  //1,
+//            number.replace(",", "");
+//            Serial.println(number);
+//            int number_int = number.toInt();
+//            scenario_line_status[number_int] = button_state.toInt();
+//            str = deleteBeforeDelimiter(str, ",");
+//        }
+//    }
+//
+//    eventGen("button", button_number);
+//    jsonWriteStr(configLiveJson, "button" + button_number, button_state);
+//    MqttClient::publishStatus("button" + button_number, button_state);
+//}
 
 void buttonChange() {
     String button_number = sCmd.next();

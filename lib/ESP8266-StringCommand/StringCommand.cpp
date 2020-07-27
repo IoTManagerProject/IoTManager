@@ -31,7 +31,8 @@ StringCommand::StringCommand()
     commandCount(0),
     defaultHandler(NULL),
     term('\n'),           // default terminator for commands, newline character
-    last(NULL)
+    last(NULL),
+    main(NULL)
 {
   strcpy(delim, " "); // strtok_r needs a null-terminated string
   clearBuffer();
@@ -129,4 +130,8 @@ void StringCommand::clearBuffer() {
  */
 char *StringCommand::next() {
   return strtok_r(NULL, delim, &last);
+}
+
+char *StringCommand::order() {
+  return strtok_r(buffer, delim, &main);
 }

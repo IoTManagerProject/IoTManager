@@ -12,6 +12,12 @@ String selectToMarker(String str, String found) {
     return str.substring(0, p);
 }
 
+String extractInner(String str) {
+    int p1 = str.indexOf("[");
+    int p2 = str.indexOf("]");
+    return str.substring(p1 + 1, p2);
+}
+
 String deleteAfterDelimiter(String str, String found) {
     int p = str.indexOf(found);
     return str.substring(0, p);

@@ -114,11 +114,14 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     pm.info(topicStr);
 
     String payloadStr;
+
     payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
         payloadStr += (char)payload[i];
     }
+
     pm.info(payloadStr);
+
     if (payloadStr.startsWith("HELLO")) {
         pm.info("Full update");
         publishWidgets();
@@ -126,35 +129,40 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
 #ifdef LOGGING_ENABLED
         choose_log_date_and_send();
 #endif
-    } else if (topicStr.indexOf("control")) {
-        // название топика -  команда,
-        // значение - параметр
-        //IoTmanager/800324-1458415/button99/control 1
-        String topic = selectFromMarkerToMarker(topicStr, "/", 3);
-        topic = add_set(topic);
-        String number = selectToMarkerLast(topic, "Set");
-        topic.replace(number, "");
 
-        order_loop += topic;
-        order_loop += " ";
-        order_loop += number;
+    } else if (topicStr.indexOf("control")) {
+
+        //iotTeam/12882830-1458415/light 1
+
+        String key = selectFromMarkerToMarker(topicStr, "/", 3);
+
+        order_loop += key;
         order_loop += " ";
         order_loop += payloadStr;
         order_loop += ",";
+
     } else if (topicStr.indexOf("order")) {
+
         payloadStr.replace("_", " ");
         order_loop += payloadStr;
         order_loop += ",";
+
     } else if (topicStr.indexOf("update")) {
+
         if (payloadStr == "1") {
             updateFlag = true;
         }
+
     } else if (topicStr.indexOf("devc")) {
+
         writeFile(String(DEVICE_CONFIG_FILE), payloadStr);
         Device_init();
+
     } else if (topicStr.indexOf("devs")) {
+
         writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
         loadScenario();
+
     }
 }
 

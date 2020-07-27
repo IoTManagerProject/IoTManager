@@ -13,17 +13,17 @@ bool loadWidget(const String& filename, String& buf) {
     return res;
 }
 
-void createWidget(String widget, String page, String pageNumber, String filename, String topic) {
+void createWidget(String descr, String page, String order, String filename, String topic) {
     String buf = "{}";
     if (!loadWidget(filename, buf)) {
         return;
     }
-    widget.replace("#", " ");
+    descr.replace("#", " ");
     page.replace("#", " ");
 
     jsonWriteStr(buf, "page", page);
-    jsonWriteStr(buf, "order", pageNumber);
-    jsonWriteStr(buf, "descr", widget);
+    jsonWriteStr(buf, "order", order);
+    jsonWriteStr(buf, "descr", descr);
     jsonWriteStr(buf, "topic", prex + "/" + topic);
 
 #ifdef LAYOUT_IN_RAM

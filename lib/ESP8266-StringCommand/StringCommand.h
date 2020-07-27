@@ -51,6 +51,7 @@ class StringCommand {
     void readStr(String sBuffer );    // Main entry point.
     void clearBuffer();   // Clears the input buffer.
     char *next();         // Returns pointer to next token found in command buffer (for getting arguments to commands).
+    char *order();
 
   private:
     // Command/handler dictionary
@@ -70,6 +71,7 @@ class StringCommand {
     char buffer[SERIALCOMMAND_BUFFER + 1]; // Buffer of stored characters while waiting for terminator character
     byte bufPos;                        // Current position in the buffer
     char *last;                         // State variable used by strtok_r during processing
+    char *main;
 };
 
 #endif //StringCommand_h
