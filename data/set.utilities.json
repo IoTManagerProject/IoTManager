@@ -34,32 +34,6 @@
       "title": "Сканировать",
       "action": "/set?i2c",
       "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "h3",
-      "title": "Сканирование шины OneWire"
-    },
-    {
-      "type": "input",
-      "title": "Номер пина шины OneWire",
-      "name": "oneWirePin-arg",
-      "state": "{{oneWirePin}}"
-    },
-    {
-      "type": "button",
-      "title": "Сохранить",
-      "action": "/set?oneWirePin=[[oneWirePin-arg]]",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "h4",
-      "title": "{{oneWire}}"
-    },
-    {
-      "type": "link",
-      "title": "Сканировать",
-      "action": "/set?oneWire=[[oneWirePin-arg]]",
-      "class": "btn btn-block btn-default"
     }
   ]
 }

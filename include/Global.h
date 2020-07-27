@@ -57,6 +57,8 @@ extern AsyncWebServer server;
 
 extern DallasTemperature sensors;
 
+extern OneWire *oneWire;
+
 extern boolean but[NUM_BUTTONS];
 
 extern Bounce* buttons;
