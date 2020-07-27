@@ -1,4 +1,3 @@
-#include "Bus/OneWireBus.h"
 #include "Global.h"
 
 GMedian<10, int> medianFilter;
@@ -232,18 +231,19 @@ void analog_reading2() {
 //=========================================================================================================================================
 //=========================================Модуль температурного сенсора ds18b20===========================================================
 #ifdef DALLAS_ENABLED
-//dallas temp1 2 0x14 Температура Датчики anydata 1
-//dallas temp2 2 0x14 Температура Датчики anydata 2
+//dallas temp1 2 1 Температура Датчики anydata 1
+//dallas temp2 2 2 Температура Датчики anydata 2
 void dallas() {
     String value_name = sCmd.next();
-    uint8_t pin = (uint8_t)String(sCmd.next()).toInt();
+    String pin = sCmd.next();
     String address = sCmd.next();
     jsonWriteStr(configOptionJson, value_name + "_ds", address);
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    sensors.setOneWire(oneWireBus.get(pin));
+    oneWire = new OneWire((uint8_t) pin.toInt());
+    sensors.setOneWire(oneWire);
     sensors.begin();
     sensors.setResolution(12);
     dallas_value_name += value_name + ";";

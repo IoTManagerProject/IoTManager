@@ -17,6 +17,8 @@ StringCommand sCmd;
 
 AsyncWebServer server(80);
 
+OneWire *oneWire;
+
 DallasTemperature sensors;
 
 /*
