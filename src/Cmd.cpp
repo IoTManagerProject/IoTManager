@@ -1,5 +1,6 @@
 #include "Cmd.h"
 
+#include "Class/Item.h"
 #include "Global.h"
 #include "Module/Terminal.h"
 #include "Servo/Servos.h"
@@ -21,14 +22,7 @@ void getData();
 
 void cmd_init() {
     sCmd.addCommand("button", button);
-    //sCmd.addCommand("buttonSet", buttonSet);
-    sCmd.addCommand("buttonChange", buttonChange);
-
-    sCmd.addCommand("pinSet", pinSet);
-    sCmd.addCommand("pinChange", pinChange);
-
     sCmd.addCommand("pwm", pwm);
-    sCmd.addCommand("pwmSet", pwmSet);
 
     sCmd.addCommand("switch", switch_);
 
@@ -105,134 +99,94 @@ void cmd_init() {
     sCmd.addCommand("firmwareVersion", firmwareVersion);
 
     handle_time_init();
+
+    myItem = new Item();
 }
 
 //==========================================Модуль кнопок===================================================
 //button out light toggle Кнопки Свет 1 pin[12] inv[1] st[1]
-//void button() {
-//    void itemInit();
-//}
-
 //==========================================================================================================
-
 void button() {
-    String command = sCmd.order();
-    pm.info("create '" + command + "'");
-    String type = sCmd.next();
-    String key = sCmd.next();
-    String file = sCmd.next();
-    String page = sCmd.next();
-    String descr = sCmd.next();
-    String order = sCmd.next();
-
-    String pin;
-    String inv;
-    String state;
-
-    for (int i = 1; i < 6; i++) {
-        String arg = sCmd.next();
-        if (arg != "") {
-            if (arg.indexOf("pin[") != -1) {
-                pin = extractInner(arg);
-            }
-            if (arg.indexOf("inv[") != -1) {
-                inv = extractInner(arg);
-            }
-            if (arg.indexOf("st[") != -1) {
-                state = extractInner(arg);
-            }
-        }
-    }
-
-    createWidget(descr, page, order, file, key);
+    myItem->update();
+    String key = myItem->gkey();
+    String pin = myItem->gpin();
+    String inv = myItem->ginv();
+    String state = myItem->gstate();
+    myItem->clear();
 
     sCmd.addCommand(key.c_str(), buttonSet);
 
     if (pin != "") {
         pinMode(pin.toInt(), OUTPUT);
-        jsonWriteStr(configOptionJson, key + "_pin", pin);
+        jsonWriteInt(configOptionJson, key + "_pin", pin.toInt());
+    }
+
+    if (inv != "") {
+        digitalWrite(pin.toInt(), !state.toInt());
+        jsonWriteStr(configLiveJson, key, state);
+        MqttClient::publishStatus(key, state);
     }
 
     if (state != "") {
         digitalWrite(pin.toInt(), state.toInt());
         jsonWriteStr(configLiveJson, key, state);
+        MqttClient::publishStatus(key, state);
     }
 }
 
 void buttonSet() {
     String key = sCmd.order();
     String state = sCmd.next();
-
     int pin = jsonReadInt(configOptionJson, key + "_pin");
-    digitalWrite(pin, state.toInt());
 
+    if (state == "change") {
+        int newState = !digitalRead(pin);
+        digitalWrite(pin, newState);
+        eventGen(key, "");
+        jsonWriteStr(configLiveJson, key, String(newState));
+        MqttClient::publishStatus(key, String(newState));
+    }
+
+    if (state == "0" || state == "1") {
+        digitalWrite(pin, state.toInt());
+        eventGen(key, "");
+        jsonWriteStr(configLiveJson, key, state);
+        MqttClient::publishStatus(key, state);
+    }
+}
+
+//==========================================Модуль управления ШИМ===================================================
+//pwm out volume range Кнопки Свет 1 pin[12] st[500]
+//==================================================================================================================
+void pwm() {
+    myItem->update();
+    String key = myItem->gkey();
+    String pin = myItem->gpin();
+    String state = myItem->gstate();
+    myItem->clear();
+
+    sCmd.addCommand(key.c_str(), pwmSet);
+
+    if (pin != "") {
+        jsonWriteInt(configOptionJson, key + "_pin", pin.toInt());
+        analogWrite(pin.toInt(), state.toInt());
+        jsonWriteInt(configLiveJson, key, state.toInt());
+        MqttClient::publishStatus(key, String(state));
+    }
+}
+
+void pwmSet() {
+    String key = sCmd.order();
+    String state = sCmd.next();
+    int pin = jsonReadInt(configOptionJson, key + "_pin");
+
+    analogWrite(pin, state.toInt());
     eventGen(key, "");
     jsonWriteStr(configLiveJson, key, state);
     MqttClient::publishStatus(key, state);
 }
 
-void buttonChange() {
-    String button_number = sCmd.next();
-    if (!isDigitStr(button_number)) {
-        pm.error("wrong button " + button_number);
-        return;
-    }
-    String name = "button" + button_number;
-    bool current_state = !jsonReadBool(configLiveJson, name);
-    String stateStr = current_state ? "1" : "0";
 
-    jsonWriteStr(configLiveJson, name, stateStr);
-    addCommandLoop("buttonSet " + button_number + " " + stateStr);
-    MqttClient::publishStatus(name, stateStr);
-}
-
-void pinSet() {
-    String pin_number = sCmd.next();
-    String pin_state = sCmd.next();
-    pinMode(pin_number.toInt(), OUTPUT);
-    digitalWrite(pin_number.toInt(), pin_state.toInt());
-}
-
-void pinChange() {
-    String pin_number = sCmd.next();
-    pinMode(pin_number.toInt(), OUTPUT);
-    digitalWrite(pin_number.toInt(), !digitalRead(pin_number.toInt()));
-}
-//==================================================================================================================
-//==========================================Модуль управления ШИМ===================================================
-void pwm() {
-    //static boolean flag = true;
-    String pwm_number = sCmd.next();
-    String pwm_pin = sCmd.next();
-    String widget_name = sCmd.next();
-    widget_name.replace("#", " ");
-    String page_name = sCmd.next();
-    String start_state = sCmd.next();
-    String page_number = sCmd.next();
-
-    uint8_t pwm_pin_int = pwm_pin.toInt();
-    jsonWriteStr(configOptionJson, "pwm_pin" + pwm_number, pwm_pin);
-    pinMode(pwm_pin_int, INPUT);
-    analogWrite(pwm_pin_int, start_state.toInt());
-
-    jsonWriteStr(configLiveJson, "pwm" + pwm_number, start_state);
-    createWidget(widget_name, page_name, page_number, "range", "pwm" + pwm_number);
-}
-
-void pwmSet() {
-    String pwm_number = sCmd.next();
-    String pwm_state = sCmd.next();
-    int pwm_state_int = pwm_state.toInt();
-
-    int pin = jsonReadInt(configOptionJson, "pwm_pin" + pwm_number);
-    analogWrite(pin, pwm_state_int);
-
-    eventGen("pwm", pwm_number);
-
-    jsonWriteStr(configLiveJson, "pwm" + pwm_number, pwm_state);
-
-    MqttClient::publishStatus("pwm" + pwm_number, pwm_state);
-}
 //==================================================================================================================
 //==========================================Модуль физической кнопки================================================
 void switch_() {

@@ -238,7 +238,7 @@ void publishWidgets() {
 void publishWidgets() {
     auto file = seekFile("layout.txt");
     if (!file) {
-        pm.error("on seek layout.txt");
+        pm.error("no file layout.txt");
         return;
     }
     while (file.available()) {
