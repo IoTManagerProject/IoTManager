@@ -1,5 +1,6 @@
 #include "Global.h"
-
+#include "Init.h"
+#include "Cmd.h"
 #include "HttpServer.h"
 #include "Bus/BusScannerFactory.h"
 #include "Utils/Timings.h"

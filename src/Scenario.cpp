@@ -1,4 +1,5 @@
 #include "Global.h"
+#include "Cmd.h"
 
 static const char* MODULE = "Scen";
 

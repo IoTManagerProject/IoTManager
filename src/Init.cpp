@@ -1,8 +1,7 @@
 #include "Global.h"
+#include "Init.h"
+#include "Cmd.h"
 
-void handle_uptime();
-void handle_statistics();
-void telemetry_init();
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);

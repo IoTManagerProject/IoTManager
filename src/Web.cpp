@@ -1,4 +1,5 @@
 #include "Global.h"
+#include "Init.h"
 
 static const char* MODULE = "Web";
 

@@ -1,5 +1,6 @@
 #include "MqttClient.h"
 #include "Global.h"
+#include "Init.h"
 #include <LittleFS.h>
 
 static const char* MODULE = "Mqtt";
