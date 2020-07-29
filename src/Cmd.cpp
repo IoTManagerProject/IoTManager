@@ -1,6 +1,7 @@
 #include "Cmd.h"
 
 #include "Class/Item.h"
+#include "Class/Button.h"
 #include "Global.h"
 #include "Module/Terminal.h"
 #include "Servo/Servos.h"
@@ -112,9 +113,12 @@ void button() {
     String pin = myItem->gpin();
     String inv = myItem->ginv();
     String state = myItem->gstate();
-    myItem->clear();
+    
 
     sCmd.addCommand(key.c_str(), buttonSet);
+
+
+    myItem->pinModeSet(pin.toInt);
 
     if (pin != "") {
         pinMode(pin.toInt(), OUTPUT);
@@ -132,6 +136,7 @@ void button() {
         jsonWriteStr(configLiveJson, key, state);
         MqttClient::publishStatus(key, state);
     }
+    myItem->clear();
 }
 
 void buttonSet() {
