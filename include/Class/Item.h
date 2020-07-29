@@ -4,8 +4,8 @@
 
 #include "Global.h"
 
-class Item {
-    
+class Item  : public Item {
+
    protected:
     String type;
     String key;

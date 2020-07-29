@@ -5,7 +5,7 @@
 #include "Class/Item.h"
 #include "Global.h"
 
-class Button : public Item {
+class Button  {
    public:
 
     void pinModeSet(int pinf) {
