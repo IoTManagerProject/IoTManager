@@ -4,7 +4,7 @@
 
 #include "Global.h"
 
-class Item  : public Button {
+class Item   {
 
    protected:
     String type;
