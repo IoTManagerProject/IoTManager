@@ -1,7 +1,7 @@
 #include "Cmd.h"
 
-#include "Class/Item.h"
 #include "Class/Button.h"
+#include "Class/LineParsing.h"
 #include "Global.h"
 #include "Module/Terminal.h"
 #include "Servo/Servos.h"
@@ -101,63 +101,35 @@ void cmd_init() {
 
     handle_time_init();
 
-    myItem = new Item();
-    myClass = new Button();
+    myButton = new Button();
 }
 
 //==========================================Модуль кнопок===================================================
 //button out light toggle Кнопки Свет 1 pin[12] inv[1] st[1]
 //==========================================================================================================
 void button() {
-    myItem->update();
-    String key = myItem->gkey();
-    String pin = myItem->gpin();
-    String inv = myItem->ginv();
-    String state = myItem->gstate();
-    
-
+    myButton->update();
+    String key = myButton->gkey();
+    String pin = myButton->gpin();
+    String inv = myButton->ginv();
     sCmd.addCommand(key.c_str(), buttonSet);
-
-
-    myClass->pinModeSet(pin.toInt());
-
-    if (pin != "") {
-        pinMode(pin.toInt(), OUTPUT);
-        jsonWriteInt(configOptionJson, key + "_pin", pin.toInt());
-    }
-
-    if (inv != "") {
-        digitalWrite(pin.toInt(), !state.toInt());
-        jsonWriteStr(configLiveJson, key, state);
-        MqttClient::publishStatus(key, state);
-    }
-
-    if (state != "") {
-        digitalWrite(pin.toInt(), state.toInt());
-        jsonWriteStr(configLiveJson, key, state);
-        MqttClient::publishStatus(key, state);
-    }
-    myItem->clear();
+    jsonWriteStr(configOptionJson, key + "_pin", pin);
+    jsonWriteStr(configOptionJson, key + "_inv", inv);
+    myButton->pinModeSet();
+    myButton->pinStateSetDefault();
+    myButton->pinStateSetInvDefault();
+    myButton->clear();
 }
 
 void buttonSet() {
     String key = sCmd.order();
     String state = sCmd.next();
-    int pin = jsonReadInt(configOptionJson, key + "_pin");
-
-    if (state == "change") {
-        int newState = !digitalRead(pin);
-        digitalWrite(pin, newState);
-        eventGen(key, "");
-        jsonWriteStr(configLiveJson, key, String(newState));
-        MqttClient::publishStatus(key, String(newState));
-    }
-
-    if (state == "0" || state == "1") {
-        digitalWrite(pin, state.toInt());
-        eventGen(key, "");
-        jsonWriteStr(configLiveJson, key, state);
-        MqttClient::publishStatus(key, state);
+    String pin = jsonReadStr(configOptionJson, key + "_pin");
+    String inv = jsonReadStr(configOptionJson, key + "_inv");
+    if (inv == "") {
+        myButton->pinChange(key, pin, state, true);
+    } else {
+        myButton->pinChange(key, pin, state, false);
     }
 }
 
@@ -165,20 +137,20 @@ void buttonSet() {
 //pwm out volume range Кнопки Свет 1 pin[12] st[500]
 //==================================================================================================================
 void pwm() {
-    myItem->update();
-    String key = myItem->gkey();
-    String pin = myItem->gpin();
-    String state = myItem->gstate();
-    myItem->clear();
+    //line->update();
+    //String key = line->gkey();
+    //String pin = line->gpin();
+    //String state = line->gstate();
+    //line->clear();
 
-    sCmd.addCommand(key.c_str(), pwmSet);
-
-    if (pin != "") {
-        jsonWriteInt(configOptionJson, key + "_pin", pin.toInt());
-        analogWrite(pin.toInt(), state.toInt());
-        jsonWriteInt(configLiveJson, key, state.toInt());
-        MqttClient::publishStatus(key, String(state));
-    }
+    //sCmd.addCommand(key.c_str(), pwmSet);
+    //
+    //if (pin != "") {
+    //    jsonWriteInt(configOptionJson, key + "_pin", pin.toInt());
+    //    analogWrite(pin.toInt(), state.toInt());
+    //    jsonWriteInt(configLiveJson, key, state.toInt());
+    //    MqttClient::publishStatus(key, String(state));
+    //}
 }
 
 void pwmSet() {
@@ -191,7 +163,6 @@ void pwmSet() {
     jsonWriteStr(configLiveJson, key, state);
     MqttClient::publishStatus(key, state);
 }
-
 
 //==================================================================================================================
 //==========================================Модуль физической кнопки================================================

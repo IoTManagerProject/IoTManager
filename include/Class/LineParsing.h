@@ -1,38 +1,39 @@
 #pragma once
 
 #include <Arduino.h>
-#include "Class/Button.h"
 #include "Global.h"
 
-class Item   {
+class LineParsing   {
    protected:
-    String type;
-    String key;
-    String file;
-    String page;
-    String descr;
-    String order;
+    String _type;
+    String _key;
+    String _file;
+    String _page;
+    String _descr;
+    String _order;
 
-    String addr;
-    String pin;
-    String map;
-    String c;
-    String inv;
-    String state;
+    String _addr;
+    String _pin;
+    String _map;
+    String _c;
+    String _inv;
+    String _state;
 
    public:
-    Item() : type{""},
-             key{""},
-             file{""},
-             page{""},
-             descr{""},
-             order{""},
-             addr{""},
-             pin{""},
-             map{""},
-             c{""},
-             inv{""},
-             state{""}
+    LineParsing() : 
+
+             _type{""},
+             _key{""},
+             _file{""},
+             _page{""},
+             _descr{""},
+             _order{""},
+             _addr{""},
+             _pin{""},
+             _map{""},
+             _c{""},
+             _inv{""},
+             _state{""}
 
              {};
 
@@ -40,72 +41,72 @@ class Item   {
         //String order = sCmd.order();
         //pm.info("create '" + order + "'");
         for (int i = 1; i < 12; i++) {
-            if (i == 1) type = sCmd.next();
-            if (i == 2) key = sCmd.next();
-            if (i == 3) file = sCmd.next();
-            if (i == 4) page = sCmd.next();
-            if (i == 5) descr = sCmd.next();
-            if (i == 6) order = sCmd.next();
+            if (i == 1) _type = sCmd.next();
+            if (i == 2) _key = sCmd.next();
+            if (i == 3) _file = sCmd.next();
+            if (i == 4) _page = sCmd.next();
+            if (i == 5) _descr = sCmd.next();
+            if (i == 6) _order = sCmd.next();
         }
 
         for (int i = 1; i < 6; i++) {
             String arg = sCmd.next();
             if (arg != "") {
                 if (arg.indexOf("pin[") != -1) {
-                    pin = extractInner(arg);
+                    _pin = extractInner(arg);
                 }
                 if (arg.indexOf("inv[") != -1) {
-                    inv = extractInner(arg);
+                    _inv = extractInner(arg);
                 }
                 if (arg.indexOf("st[") != -1) {
-                    state = extractInner(arg);
+                    _state = extractInner(arg);
                 }
             }
         }
-        createWidgetClass(descr, page, order, file, key);
+        createWidgetClass(_descr, _page, _order, _file, _key);
     }
 
     String gtype() {
-        return type;
+        return _type;
     }
     String gkey() {
-        return key;
+        return _key;
     }
     String gfile() {
-        return file;
+        return _file;
     }
     String gpage() {
-        return page;
+        return _page;
     }
     String gdescr() {
-        return descr;
+        return _descr;
     }
     String gorder() {
-        return order;
+        return _order;
     }
     String gpin() {
-        return pin;
+        return _pin;
     }
     String ginv() {
-        return inv;
+        return _inv;
     }
     String gstate() {
-        return state;
+        return _state;
     }
 
     void clear() {
-        type = "";
-        key = "";
-        file = "";
-        page = "";
-        descr = "";
-        order = "";
-        addr = "";
-        pin = "";
-        map = "";
-        c = "";
-        inv = "";
-        state = "";
+        _type = "";
+        _key = "";
+        _file = "";
+        _page = "";
+        _descr = "";
+        _order = "";
+        _addr = "";
+        _pin = "";
+        _map = "";
+        _c = "";
+        _inv = "";
+        _state = "";
     }
 
     String extractInnerDigit(String str) {
@@ -147,5 +148,3 @@ class Item   {
         return "/widgets/" + name + ".json";
     }
 };
-
-extern Item* myItem;

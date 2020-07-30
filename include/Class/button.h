@@ -1,35 +1,44 @@
 #pragma once
 
 #include <Arduino.h>
-
-#include "Class/Item.h"
+#include "Class/LineParsing.h"
 #include "Global.h"
 
-class Button : public Item {
+class Button : public LineParsing {
    public:
-    Button() : Item() {};
+    Button() : LineParsing(){};
 
-    void pinModeSet(int pinf) {
-        if (pin != "") {
-            pinMode(pinf, OUTPUT);
+    void pinModeSet() {
+        if (_pin != "") {
+            Serial.println(_pin);
+            pinMode(_pin.toInt(), OUTPUT);
         }
     }
 
-    void pinStateSet(int pinf, int statef) {
-        if (state != "") {
-            digitalWrite(pinf, statef);
-            jsonWriteInt(configLiveJson, key, statef);
-            MqttClient::publishStatus(key, String(statef));
+    void pinStateSetDefault() {
+        if (_inv == "" && _state != "") {
+            pinChange(_key, _pin, _state, true);
         }
     }
 
-    void pinStateSetInv(int pinf, int statef) {
-        if (inv != "" && state != "") {
-            digitalWrite(pinf, !statef);
-            jsonWriteInt(configLiveJson, key, !statef);
-            MqttClient::publishStatus(key, String(!statef));
+    void pinStateSetInvDefault() {
+        if (_inv != "" && _state != "") {
+            pinChange(_key, _pin, _state, false);
         }
+    }
+
+    void pinChange(String key, String pin, String state, bool rev) {
+        int pinInt = pin.toInt();
+        int stateInt;
+        if (rev) {
+            digitalWrite(pinInt, state.toInt());
+        } else {
+            digitalWrite(pinInt, !state.toInt());
+        }
+        eventGen(key, "");
+        jsonWriteInt(configLiveJson, key, state.toInt());
+        MqttClient::publishStatus(key, state);
     }
 };
 
-extern Button* myClass;
+extern Button* myButton;

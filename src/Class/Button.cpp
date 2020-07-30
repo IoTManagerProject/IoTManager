@@ -1,4 +1,3 @@
 #include "Class/Button.h"
 
-
-Button* myClass;
+Button* myButton;
