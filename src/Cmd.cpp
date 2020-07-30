@@ -2,6 +2,7 @@
 
 #include "Class/Button.h"
 #include "Class/LineParsing.h"
+#include "Class/Pwm.h"
 #include "Global.h"
 #include "Module/Terminal.h"
 #include "Servo/Servos.h"
@@ -99,15 +100,14 @@ void cmd_init() {
     sCmd.addCommand("firmwareUpdate", firmwareUpdate);
     sCmd.addCommand("firmwareVersion", firmwareVersion);
 
-    handle_time_init();
-
-    myButton = new Button();
+    handle_time_init(); 
 }
 
 //==========================================Модуль кнопок===================================================
 //button out light toggle Кнопки Свет 1 pin[12] inv[1] st[1]
 //==========================================================================================================
 void button() {
+    myButton = new Button();
     myButton->update();
     String key = myButton->gkey();
     String pin = myButton->gpin();
@@ -137,31 +137,23 @@ void buttonSet() {
 //pwm out volume range Кнопки Свет 1 pin[12] st[500]
 //==================================================================================================================
 void pwm() {
-    //line->update();
-    //String key = line->gkey();
-    //String pin = line->gpin();
-    //String state = line->gstate();
-    //line->clear();
-
-    //sCmd.addCommand(key.c_str(), pwmSet);
-    //
-    //if (pin != "") {
-    //    jsonWriteInt(configOptionJson, key + "_pin", pin.toInt());
-    //    analogWrite(pin.toInt(), state.toInt());
-    //    jsonWriteInt(configLiveJson, key, state.toInt());
-    //    MqttClient::publishStatus(key, String(state));
-    //}
+    myPwm = new Pwm();
+    myPwm->update();
+    String key = myPwm->gkey();
+    String pin = myPwm->gpin();
+    String inv = myPwm->ginv();
+    sCmd.addCommand(key.c_str(), pwmSet);
+    jsonWriteStr(configOptionJson, key + "_pin", pin);
+    myPwm->pwmModeSet();
+    myPwm->pwmStateSetDefault();
+    myPwm->clear();
 }
 
 void pwmSet() {
     String key = sCmd.order();
     String state = sCmd.next();
-    int pin = jsonReadInt(configOptionJson, key + "_pin");
-
-    analogWrite(pin, state.toInt());
-    eventGen(key, "");
-    jsonWriteStr(configLiveJson, key, state);
-    MqttClient::publishStatus(key, state);
+    String pin = jsonReadStr(configOptionJson, key + "_pin");
+    myPwm->pwmChange(key, pin, state);
 }
 
 //==================================================================================================================

@@ -10,7 +10,6 @@ class Button : public LineParsing {
 
     void pinModeSet() {
         if (_pin != "") {
-            Serial.println(_pin);
             pinMode(_pin.toInt(), OUTPUT);
         }
     }
