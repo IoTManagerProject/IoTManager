@@ -32,4 +32,4 @@ class Button : public Item {
     }
 };
 
-//extern Button* myButton;
+extern Button* myClass;

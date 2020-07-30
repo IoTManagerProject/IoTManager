@@ -102,6 +102,7 @@ void cmd_init() {
     handle_time_init();
 
     myItem = new Item();
+    myClass = new Button();
 }
 
 //==========================================Модуль кнопок===================================================
@@ -118,7 +119,7 @@ void button() {
     sCmd.addCommand(key.c_str(), buttonSet);
 
 
-    myItem->pinModeSet(pin.toInt());
+    myClass->pinModeSet(pin.toInt());
 
     if (pin != "") {
         pinMode(pin.toInt(), OUTPUT);
