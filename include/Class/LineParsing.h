@@ -18,6 +18,7 @@ class LineParsing   {
     String _c;
     String _inv;
     String _state;
+    String _db;
 
    public:
     LineParsing() : 
@@ -33,7 +34,8 @@ class LineParsing   {
              _map{""},
              _c{""},
              _inv{""},
-             _state{""}
+             _state{""},
+             _db{""}
 
              {};
 
@@ -60,6 +62,9 @@ class LineParsing   {
                 }
                 if (arg.indexOf("st[") != -1) {
                     _state = extractInner(arg);
+                }
+                if (arg.indexOf("db[") != -1) {
+                    _db = extractInner(arg);
                 }
             }
         }
@@ -107,6 +112,7 @@ class LineParsing   {
         _c = "";
         _inv = "";
         _state = "";
+        _db = "";
     }
 
     String extractInnerDigit(String str) {
