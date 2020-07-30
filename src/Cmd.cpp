@@ -118,7 +118,7 @@ void button() {
     sCmd.addCommand(key.c_str(), buttonSet);
 
 
-    myItem->pinModeSet(pin.toInt);
+    myItem->pinModeSet(pin.toInt());
 
     if (pin != "") {
         pinMode(pin.toInt(), OUTPUT);

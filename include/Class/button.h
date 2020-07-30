@@ -7,7 +7,7 @@
 
 class Button : public Item {
    public:
-    Button() : Item() {}
+    Button() : Item() 
 
     void pinModeSet(int pinf) {
         if (pin != "") {
@@ -32,4 +32,4 @@ class Button : public Item {
     }
 };
 
-extern Button* myButton;
+//extern Button* myButton;
