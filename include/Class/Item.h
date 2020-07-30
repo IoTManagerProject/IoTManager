@@ -5,7 +5,6 @@
 #include "Global.h"
 
 class Item   {
-
    protected:
     String type;
     String key;
