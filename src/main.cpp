@@ -4,6 +4,7 @@
 #include "HttpServer.h"
 #include "Bus/BusScannerFactory.h"
 #include "Utils/Timings.h"
+#include "Class/Switch.h"
 
 void not_async_actions();
 
@@ -94,7 +95,7 @@ void loop() {
 
     loopCmd();
 
-    loopButton();
+    mySwitch->loop();
 
     loopScenario();
 

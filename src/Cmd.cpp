@@ -1,8 +1,11 @@
 #include "Cmd.h"
 
 #include "Class/Button.h"
+#include "Class/Input.h"
 #include "Class/LineParsing.h"
 #include "Class/Pwm.h"
+#include "Class/Switch.h"
+//-----------------------------
 #include "Global.h"
 #include "Module/Terminal.h"
 #include "Servo/Servos.h"
@@ -23,10 +26,19 @@ HardwareSerial *mySerial = nullptr;
 void getData();
 
 void cmd_init() {
-    sCmd.addCommand("button", button);
-    sCmd.addCommand("pwm", pwm);
+    sCmd.addCommand("button-out", buttonOut);
+    sCmd.addCommand("pwm-out", pwmOut);
+    sCmd.addCommand("button-in", buttonIn);
+    sCmd.addCommand("input-digit", inputDigit);
 
-    sCmd.addCommand("switch", switch_);
+    sCmd.addCommand("inputTime", inputTime);
+    sCmd.addCommand("timeSet", timeSet);
+
+    sCmd.addCommand("timerStart", timerStart_);
+    sCmd.addCommand("timerStop", timerStop_);
+
+    sCmd.addCommand("text", text);
+    sCmd.addCommand("textSet", textSet);
 
 #ifdef ANALOG_ENABLED
     sCmd.addCommand("analog", analog);
@@ -78,18 +90,6 @@ void cmd_init() {
     sCmd.addCommand("logging", logging);
 #endif
 
-    sCmd.addCommand("inputDigit", inputDigit);
-    sCmd.addCommand("digitSet", digitSet);
-
-    sCmd.addCommand("inputTime", inputTime);
-    sCmd.addCommand("timeSet", timeSet);
-
-    sCmd.addCommand("timerStart", timerStart_);
-    sCmd.addCommand("timerStop", timerStop_);
-
-    sCmd.addCommand("text", text);
-    sCmd.addCommand("textSet", textSet);
-
     sCmd.addCommand("mqtt", mqttOrderSend);
     sCmd.addCommand("http", httpOrderSend);
 
@@ -100,19 +100,19 @@ void cmd_init() {
     sCmd.addCommand("firmwareUpdate", firmwareUpdate);
     sCmd.addCommand("firmwareVersion", firmwareVersion);
 
-    handle_time_init(); 
+    handle_time_init();
 }
 
 //==========================================Модуль кнопок===================================================
-//button out light toggle Кнопки Свет 1 pin[12] inv[1] st[1]
+//button-out light toggle Кнопки Свет 1 pin[12] inv[1] st[1]
 //==========================================================================================================
-void button() {
+void buttonOut() {
     myButton = new Button();
     myButton->update();
     String key = myButton->gkey();
     String pin = myButton->gpin();
     String inv = myButton->ginv();
-    sCmd.addCommand(key.c_str(), buttonSet);
+    sCmd.addCommand(key.c_str(), buttonOutSet);
     jsonWriteStr(configOptionJson, key + "_pin", pin);
     jsonWriteStr(configOptionJson, key + "_inv", inv);
     myButton->pinModeSet();
@@ -121,7 +121,7 @@ void button() {
     myButton->clear();
 }
 
-void buttonSet() {
+void buttonOutSet() {
     String key = sCmd.order();
     String state = sCmd.next();
     String pin = jsonReadStr(configOptionJson, key + "_pin");
@@ -134,22 +134,22 @@ void buttonSet() {
 }
 
 //==========================================Модуль управления ШИМ===================================================
-//pwm out volume range Кнопки Свет 1 pin[12] st[500]
+//pwm-out volume range Кнопки Свет 1 pin[12] st[500]
 //==================================================================================================================
-void pwm() {
+void pwmOut() {
     myPwm = new Pwm();
     myPwm->update();
     String key = myPwm->gkey();
     String pin = myPwm->gpin();
     String inv = myPwm->ginv();
-    sCmd.addCommand(key.c_str(), pwmSet);
+    sCmd.addCommand(key.c_str(), pwmOutSet);
     jsonWriteStr(configOptionJson, key + "_pin", pin);
     myPwm->pwmModeSet();
     myPwm->pwmStateSetDefault();
     myPwm->clear();
 }
 
-void pwmSet() {
+void pwmOutSet() {
     String key = sCmd.order();
     String state = sCmd.next();
     String pin = jsonReadStr(configOptionJson, key + "_pin");
@@ -157,68 +157,40 @@ void pwmSet() {
 }
 
 //==========================================Модуль физических кнопок========================================
-//switch in switch1 toggle Кнопки Свет 1 pin[2] inv[1] db[20]
+//button-in switch1 toggle Кнопки Свет 1 pin[2] db[20]
 //==========================================================================================================
-void switch_() {
-    int number = String(sCmd.next()).toInt();
-    int pin = String(sCmd.next()).toInt();
-    int delay = String(sCmd.next()).toInt();
-
-    buttons[number].attach(pin);
-    buttons[number].interval(delay);
-    but[number] = true;
+void buttonIn() {
+    mySwitch = new Switch();
+    mySwitch->update();
+    String key = mySwitch->gkey();
+    String pin = mySwitch->gpin();
+    sCmd.addCommand(key.c_str(), buttonInSet);
+    mySwitch->init();
+    mySwitch->switchStateSetDefault();
+    mySwitch->clear();
 }
 
-void loopSerial() {
-    if (term) {
-        term->loop();
-    }
+void buttonInSet() {
+    String key = sCmd.order();
+    String state = sCmd.next();
+    mySwitch->switchChangeVirtual(key, state);
 }
 
-void loopButton() {
-    static uint8_t switch_number = 1;
-
-    if (but[switch_number]) {
-        buttons[switch_number].update();
-        if (buttons[switch_number].fell()) {
-            eventGen("switch", String(switch_number));
-
-            jsonWriteStr(configLiveJson, "switch" + String(switch_number), "1");
-        }
-        if (buttons[switch_number].rose()) {
-            eventGen("switch", String(switch_number));
-
-            jsonWriteStr(configLiveJson, "switch" + String(switch_number), "0");
-        }
-    }
-    switch_number++;
-    if (switch_number == NUM_BUTTONS) {
-        switch_number = 0;
-    }
-}
-
-//=====================================================================================================================================
-//=========================================Добавление окна ввода цифры=================================================================
+//==========================================Модуль ввода цифровых значений==================================
+//digit-input digit1 inputNum Ввод Введите 1 st[60]
+//==========================================================================================================
 void inputDigit() {
-    String value_name = sCmd.next();
-    String number = value_name.substring(5);
-    String widget_name = sCmd.next();
-    widget_name.replace("#", " ");
-    String page_name = sCmd.next();
-    page_name.replace("#", " ");
-    String start_state = sCmd.next();
-    String page_number = sCmd.next();
-
-    jsonWriteStr(configLiveJson, "digit" + number, start_state);
-    createWidget(widget_name, page_name, page_number, "inputNum", "digit" + number);
+    myInput = new Input();
+    myInput->update();
+    String key = myInput->gkey();
+    sCmd.addCommand(key.c_str(), inputDigitSet);
+    myInput->inputSetDefault();
 }
 
-void digitSet() {
-    String number = sCmd.next();
-    String value = sCmd.next();
+void inputDigitSet() {
 
-    jsonWriteStr(configLiveJson, "digit" + number, value);
-    MqttClient::publishStatus("digit" + number, value);
+  
+    
 }
 
 //=====================================================================================================================================
@@ -511,5 +483,11 @@ void loopCmd() {
         pm.info("do: " + tmp);
         sCmd.readStr(tmp);                                    //выполняем
         order_loop = deleteBeforeDelimiter(order_loop, ",");  //осекаем
+    }
+}
+
+void loopSerial() {
+    if (term) {
+        term->loop();
     }
 }

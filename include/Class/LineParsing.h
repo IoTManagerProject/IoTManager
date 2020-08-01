@@ -5,7 +5,6 @@
 
 class LineParsing   {
    protected:
-    String _type;
     String _key;
     String _file;
     String _page;
@@ -23,7 +22,6 @@ class LineParsing   {
    public:
     LineParsing() : 
 
-             _type{""},
              _key{""},
              _file{""},
              _page{""},
@@ -43,12 +41,11 @@ class LineParsing   {
         //String order = sCmd.order();
         //pm.info("create '" + order + "'");
         for (int i = 1; i < 12; i++) {
-            if (i == 1) _type = sCmd.next();
-            if (i == 2) _key = sCmd.next();
-            if (i == 3) _file = sCmd.next();
-            if (i == 4) _page = sCmd.next();
-            if (i == 5) _descr = sCmd.next();
-            if (i == 6) _order = sCmd.next();
+            if (i == 1) _key = sCmd.next();
+            if (i == 2) _file = sCmd.next();
+            if (i == 3) _page = sCmd.next();
+            if (i == 4) _descr = sCmd.next();
+            if (i == 5) _order = sCmd.next();
         }
 
         for (int i = 1; i < 6; i++) {
@@ -71,9 +68,6 @@ class LineParsing   {
         createWidgetClass(_descr, _page, _order, _file, _key);
     }
 
-    String gtype() {
-        return _type;
-    }
     String gkey() {
         return _key;
     }
@@ -100,7 +94,6 @@ class LineParsing   {
     }
 
     void clear() {
-        _type = "";
         _key = "";
         _file = "";
         _page = "";

@@ -222,7 +222,6 @@ extern void do_mqtt_send_settings_to_udp();
 extern void addCommandLoop(const String& cmdStr);
 extern void loopSerial();
 extern void loopCmd();
-extern void loopButton();
 extern void loopScenario();
 extern void loopUdp();
 
