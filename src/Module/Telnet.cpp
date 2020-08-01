@@ -16,7 +16,7 @@ void Telnet::onEnd() {
 bool Telnet::onStart() {
     _server->begin();
     _server->setNoDelay(true);
-    return _server->status() != CLOSED;
+    return true;
 }
 
 void Telnet::onStop() {

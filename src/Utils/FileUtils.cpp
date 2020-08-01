@@ -127,3 +127,24 @@ const String getFileSize(const String filename) {
     file.close();
     return String(size);
 }
+
+const String getFSSizeInfo() {
+    String res;
+#ifdef ESP8266
+    FSInfo info;
+    if (LittleFS.info(info)) {
+        res = prettyBytes(info.usedBytes) + " of " + prettyBytes(info.totalBytes);
+    } else {
+        res = "error";
+    }
+#else
+    res = prettyBytes(LittleFS.usedBytes()) + " of " + prettyBytes(LittleFS.totalBytes());
+#endif
+    return res;
+}
+
+const String getConfigFile(uint8_t preset, ConfigType_t type) {
+    char buf[64];
+    sprintf(buf, "/conf/%s%03d.txt", (type == CT_CONFIG) ? "c" : "s", preset);
+    return String(buf);
+}

@@ -1,6 +1,9 @@
 #pragma once
 
+#include <Arduino.h>
+
 #include "Module/EditLine.h"
+#include <functional>
 
 #define A_NORMAL 0x0000     // normal
 #define A_UNDERLINE 0x0001  // underline

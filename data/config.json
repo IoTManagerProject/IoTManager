@@ -17,5 +17,6 @@
     "weblogin": "admin",
     "webpass": "admin",
     "udponoff": "1",
-    "blink": "1"
+    "blink": "1",
+    "oneWirePin": "2"
 }

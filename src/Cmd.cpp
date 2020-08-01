@@ -1,6 +1,7 @@
 #include "Global.h"
 
 #include "Module/Terminal.h"
+#include "Servo/Servos.h"
 
 static const char *MODULE = "Cmd";
 
@@ -9,9 +10,11 @@ Terminal *term = nullptr;
 boolean but[NUM_BUTTONS];
 Bounce *buttons = new Bounce[NUM_BUTTONS];
 
-Servo myServo1;
-Servo myServo2;
+#ifdef ESP8266
 SoftwareSerial *mySerial = nullptr;
+#else
+HardwareSerial *mySerial = nullptr;
+#endif
 
 void getData();
 
@@ -105,6 +108,7 @@ void cmd_init() {
 
 //==========================================================================================================
 //==========================================Модуль кнопок===================================================
+
 void button() {
     pm.info("create 'button'");
     String number = sCmd.next();
@@ -174,25 +178,23 @@ void buttonSet() {
     }
 
     eventGen("button", button_number);
-
     jsonWriteStr(configLiveJson, "button" + button_number, button_state);
-
     MqttClient::publishStatus("button" + button_number, button_state);
 }
 
 void buttonChange() {
     String button_number = sCmd.next();
-    String current_state = jsonReadStr(configLiveJson, "button" + button_number);
-
-    if (current_state == "1") {
-        current_state = "0";
-    } else if (current_state == "0") {
-        current_state = "1";
+    if (!isDigitStr(button_number)) {
+        pm.error("wrong button " + button_number);
+        return;
     }
-    order_loop += "buttonSet " + button_number + " " + current_state + ",";
-    jsonWriteStr(configLiveJson, "button" + button_number, current_state);
+    String name = "button" + button_number;
+    bool current_state = !jsonReadBool(configLiveJson, name);
+    String stateStr = current_state ? "1" : "0";
 
-    MqttClient::publishStatus("button" + button_number, current_state);
+    jsonWriteStr(configLiveJson, name, stateStr);
+    addCommandLoop("buttonSet " + button_number + " " + stateStr);
+    MqttClient::publishStatus(name, stateStr);
 }
 
 void pinSet() {
@@ -223,9 +225,8 @@ void pwm() {
     jsonWriteStr(configOptionJson, "pwm_pin" + pwm_number, pwm_pin);
     pinMode(pwm_pin_int, INPUT);
     analogWrite(pwm_pin_int, start_state.toInt());
-    //analogWriteFreq(32000);
-    jsonWriteStr(configLiveJson, "pwm" + pwm_number, start_state);
 
+    jsonWriteStr(configLiveJson, "pwm" + pwm_number, start_state);
     createWidget(widget_name, page_name, page_number, "range", "pwm" + pwm_number);
 }
 
@@ -246,13 +247,13 @@ void pwmSet() {
 //==================================================================================================================
 //==========================================Модуль физической кнопки================================================
 void switch_() {
-    String switch_number = sCmd.next();
-    String switch_pin = sCmd.next();
-    String switch_delay = sCmd.next();
+    int number = String(sCmd.next()).toInt();
+    int pin = String(sCmd.next()).toInt();
+    int delay = String(sCmd.next()).toInt();
 
-    buttons[switch_number.toInt()].attach(switch_pin.toInt());
-    buttons[switch_number.toInt()].interval(switch_delay.toInt());
-    but[switch_number.toInt()] = true;
+    buttons[number].attach(pin);
+    buttons[number].interval(delay);
+    but[number] = true;
 }
 
 void loopSerial() {
@@ -294,6 +295,7 @@ void inputDigit() {
     page_name.replace("#", " ");
     String start_state = sCmd.next();
     String page_number = sCmd.next();
+
     jsonWriteStr(configLiveJson, "digit" + number, start_state);
     createWidget(widget_name, page_name, page_number, "inputNum", "digit" + number);
 }
@@ -301,6 +303,7 @@ void inputDigit() {
 void digitSet() {
     String number = sCmd.next();
     String value = sCmd.next();
+
     jsonWriteStr(configLiveJson, "digit" + number, value);
     MqttClient::publishStatus("digit" + number, value);
 }
@@ -316,6 +319,7 @@ void inputTime() {
     page_name.replace("#", " ");
     String start_state = sCmd.next();
     String page_number = sCmd.next();
+
     jsonWriteStr(configLiveJson, "time" + number, start_state);
     createWidget(widget_name, page_name, page_number, "inputTime", "time" + number);
 }
@@ -323,6 +327,7 @@ void inputTime() {
 void timeSet() {
     String number = sCmd.next();
     String value = sCmd.next();
+
     jsonWriteStr(configLiveJson, "time" + number, value);
     MqttClient::publishStatus("time" + number, value);
 }
@@ -356,9 +361,7 @@ void textSet() {
     if (text.indexOf("-time") >= 0) {
         text.replace("-time", "");
         text.replace("#", " ");
-        String time = timeNow->getTime();
-        time.replace(":", ".");
-        text = text + " " + timeNow->getDateDigitalFormated() + " " + time;
+        text = text + " " + timeNow->getDateTimeDotFormated();
     }
 
     jsonWriteStr(configLiveJson, "text" + number, text);
@@ -431,94 +434,59 @@ void stepperSet() {
 #ifdef SERVO_ENABLED
 //servo 1 13 50 Мой#сервопривод Сервоприводы 0 100 0 180 2
 void servo_() {
-    String servo_number = sCmd.next();
-    String servo_pin = sCmd.next();
-    String start_state = sCmd.next();
-    int start_state_int = start_state.toInt();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
+    String number = sCmd.next();
+    uint8_t pin = String(sCmd.next()).toInt();
+    int value = String(sCmd.next()).toInt();
 
-    String min_value = sCmd.next();
-    String max_value = sCmd.next();
+    String widget = sCmd.next();
+    String page = sCmd.next();
 
-    String min_deg = sCmd.next();
-    String max_deg = sCmd.next();
+    int min_value = String(sCmd.next()).toInt();
+    int max_value = String(sCmd.next()).toInt();
+    int min_deg = String(sCmd.next()).toInt();
+    int max_deg = String(sCmd.next()).toInt();
 
-    String page_number = sCmd.next();
+    String pageNumber = sCmd.next();
 
-    jsonWriteStr(configOptionJson, "servo_pin" + servo_number, servo_pin);
-    start_state_int = map(start_state_int, min_value.toInt(), max_value.toInt(), min_deg.toInt(), max_deg.toInt());
+    jsonWriteStr(configOptionJson, "servo_pin" + number, String(pin, DEC));
 
-    if (servo_number == "1") {
-#ifdef ESP8266
-        myServo1.attach(servo_pin.toInt());
-        myServo1.write(start_state_int);
-#endif
+    value = map(value, min_value, max_value, min_deg, max_deg);
+
+    Servo *servo = myServo.create(number.toInt(), pin);
+    servo->write(value);
 #ifdef ESP32
-        myServo1.attach(servo_pin.toInt(), 500, 2400);
-        myServo1.write(start_state_int);
+    myServo1.attach(servo_pin.toInt(), 500, 2400);
+    myServo1.write(start_state_int);
 #endif
-    }
 
-    if (servo_number == "2") {
-#ifdef ESP8266
-        myServo2.attach(servo_pin.toInt());
-        myServo2.write(start_state_int);
-#endif
-#ifdef ESP32
-        myServo2.attach(servo_pin.toInt(), 500, 2400);
-        myServo2.write(start_state_int);
-#endif
-    }
+    jsonWriteInt(configOptionJson, "s_min_val" + number, min_value);
+    jsonWriteInt(configOptionJson, "s_max_val" + number, max_value);
+    jsonWriteInt(configOptionJson, "s_min_deg" + number, min_deg);
+    jsonWriteInt(configOptionJson, "s_max_deg" + number, max_deg);
 
-    jsonWriteStr(configOptionJson, "s_min_val" + servo_number, min_value);
-    jsonWriteStr(configOptionJson, "s_max_val" + servo_number, max_value);
-    jsonWriteStr(configOptionJson, "s_min_deg" + servo_number, min_deg);
-    jsonWriteStr(configOptionJson, "s_max_deg" + servo_number, max_deg);
+    jsonWriteInt(configLiveJson, "servo" + number, value);
 
-    jsonWriteStr(configLiveJson, "servo" + servo_number, start_state);
-
-    createWidgetParam(widget_name, page_name, page_number, "range", "servo" + servo_number, "min", min_value, "max", max_value, "k", "1");
+    createWidgetParam(widget, page, pageNumber, "range", "servo" + number, "min", String(min_value), "max", String(max_value), "k", "1");
 }
 
 void servoSet() {
-    String servo_number = sCmd.next();
-    String servo_state = sCmd.next();
-    int servo_state_int = servo_state.toInt();
+    String number = sCmd.next();
+    int value = String(sCmd.next()).toInt();
 
-    //int pin = jsonReadInt(configOptionJson, "servo_pin" + servo_number);
+    value = map(value,
+                jsonReadInt(configOptionJson, "s_min_val" + number),
+                jsonReadInt(configOptionJson, "s_max_val" + number),
+                jsonReadInt(configOptionJson, "s_min_deg" + number),
+                jsonReadInt(configOptionJson, "s_max_deg" + number));
 
-    servo_state_int = map(servo_state_int,
-                          jsonReadInt(configOptionJson, "s_min_val" + servo_number),
-                          jsonReadInt(configOptionJson, "s_max_val" + servo_number),
-                          jsonReadInt(configOptionJson, "s_min_deg" + servo_number),
-                          jsonReadInt(configOptionJson, "s_max_deg" + servo_number));
-
-    if (servo_number == "1") {
-#ifdef ESP8266
-        myServo1.write(servo_state_int);
-#endif
-#ifdef ESP32
-        myServo1.write(servo_state_int);
-#endif
+    Servo *servo = myServo.get(number.toInt());
+    if (servo) {
+        servo->write(value);
     }
 
-    if (servo_number == "2") {
-#ifdef ESP8266
-        myServo2.write(servo_state_int);
-#endif
-#ifdef ESP32
-        myServo2.write(servo_state_int);
-#endif
-    }
-
-    //Serial.println(servo_state_int);
-
-    eventGen("servo", servo_number);
-
-    jsonWriteStr(configLiveJson, "servo" + servo_number, servo_state);
-
-    MqttClient::publishStatus("servo" + servo_number, servo_state);
+    eventGen("servo", number);
+    jsonWriteInt(configLiveJson, "servo" + number, value);
+    MqttClient::publishStatus("servo" + number, String(value, DEC));
 }
 #endif
 
@@ -532,8 +500,13 @@ void serialBegin() {
         delete mySerial;
     }
 
+#ifdef ESP8266
     mySerial = new SoftwareSerial(rxPin.toInt(), txPin.toInt());
     mySerial->begin(s_speed.toInt());
+#else
+    mySerial = new HardwareSerial(2);
+    mySerial->begin(rxPin.toInt(), txPin.toInt());
+#endif
 
     term = new Terminal(mySerial);
     term->setEOL(LF);
@@ -542,8 +515,6 @@ void serialBegin() {
     term->enableEcho(false);
     term->setOnReadLine([](const char *str) {
         String line = String(str);
-        pm.info("serial read: " + line);
-        //line.replace("#", " ");
         addCommandLoop(line);
     });
 }
@@ -583,7 +554,7 @@ void httpOrderSend() {
 }
 
 void firmwareUpdate() {
-    upgrade = true;
+    updateFlag = true;
 }
 
 void firmwareVersion() {
@@ -592,7 +563,6 @@ void firmwareVersion() {
     String pageNumber = sCmd.next();
 
     jsonWriteStr(configLiveJson, "firmver", FIRMWARE_VERSION);
-
     createWidget(widget, page, pageNumber, "anydata", "firmver");
 }
 
@@ -605,20 +575,11 @@ void addCommandLoop(const String &cmdStr) {
 
 void fileExecute(const String &filename) {
     String cmdStr = readFile(filename, 2048);
-    cmdStr += "\r\n";
-    cmdStr.replace("\r\n", "\n");
-    cmdStr.replace("\r", "\n");
-
-    while (cmdStr.length() != 0) {
-        String buf = selectToMarker(cmdStr, "\n");
-        sCmd.readStr(buf);
-        cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
-    }
+    stringExecute(cmdStr);
 }
 
 void stringExecute(String &cmdStr) {
-    cmdStr = cmdStr + "\r\n";
-
+    cmdStr += "\r\n";
     cmdStr.replace("\r\n", "\n");
     cmdStr.replace("\r", "\n");
 
@@ -632,8 +593,8 @@ void stringExecute(String &cmdStr) {
 void loopCmd() {
     if (order_loop.length()) {
         String tmp = selectToMarker(order_loop, ",");  //выделяем первую команду rel 5 1,
-        sCmd.readStr(tmp);                             //выполняем
-        pm.info("do: " + order_loop);
+        pm.info("do: " + tmp);
+        sCmd.readStr(tmp);                                    //выполняем
         order_loop = deleteBeforeDelimiter(order_loop, ",");  //осекаем
     }
 }

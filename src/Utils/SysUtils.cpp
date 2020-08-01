@@ -22,9 +22,8 @@ const String getChipId() {
 
 #ifdef ESP8266
 static uint32_t total_memory = 52864;
-#endif
-#ifdef ESP32
-static uint32_t total_memory = 362868;
+#else
+static uint32_t total_memory = ESP.getHeapSize();
 #endif
 
 const String printMemoryStatus() {
@@ -49,19 +48,10 @@ const String getHeapStats() {
     buf += '%';
     return buf;
 }
-#endif
-
-#ifdef ESP32
-String getHeapStats() {
-    uint32_t free;
-    uint16_t max;
-    uint8_t frag;
-    ESP.getHeapStats(&free, &max, &frag);
+#else
+const String getHeapStats() {
     String buf;
-    buf += prettyBytes(free);
-    buf += " ";
-    buf += frag;
-    buf += '%';
+    buf = prettyBytes(ESP.getFreeHeap());
     return buf;
 }
 #endif

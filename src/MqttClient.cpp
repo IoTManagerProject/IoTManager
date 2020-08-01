@@ -147,7 +147,7 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         order_loop += ",";
     } else if (topicStr.indexOf("update")) {
         if (payloadStr == "1") {
-            upgrade = true;
+            updateFlag = true;
         }
     } else if (topicStr.indexOf("devc")) {
         writeFile(String(DEVICE_CONFIG_FILE), payloadStr);
@@ -279,7 +279,7 @@ const String getStateStr() {
             return F("connection failed");
             break;
         case -1:
-            return F("client disconnected ");
+            return F("client disconnected");
             break;
         case 0:
             return F("client connected");

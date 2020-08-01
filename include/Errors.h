@@ -2,8 +2,6 @@
 
 #include <Arduino.h>
 
-#include "CommonTypes.h"
-
 String getErrorLevelStr(ErrorLevel_t level);
 
 class Error : public Printable {

@@ -1,6 +1,5 @@
 #include "Global.h"
 
-OneWire *oneWire;
 GMedian<10, int> medianFilter;
 DHTesp dht;
 
@@ -232,32 +231,40 @@ void analog_reading2() {
 //=========================================================================================================================================
 //=========================================Модуль температурного сенсора ds18b20===========================================================
 #ifdef DALLAS_ENABLED
+//dallas temp1 2 1 Температура Датчики anydata 1
+//dallas temp2 2 2 Температура Датчики anydata 2
 void dallas() {
     String value_name = sCmd.next();
     String pin = sCmd.next();
     String address = sCmd.next();
+    jsonWriteStr(configOptionJson, value_name + "_ds", address);
     String widget_name = sCmd.next();
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    oneWire = new OneWire((uint8_t)pin.toInt());
-
+    oneWire = new OneWire((uint8_t) pin.toInt());
     sensors.setOneWire(oneWire);
     sensors.begin();
     sensors.setResolution(12);
-
-    createWidgetByType(widget_name, page_name, page_number, type, "dallas");
+    dallas_value_name += value_name + ";";
+    createWidgetByType(widget_name, page_name, page_number, type, value_name);
     sensors_reading_map[3] = 1;
 }
 
 void dallas_reading() {
     float temp = 0;
+    byte num = sensors.getDS18Count();
+    String dallas_value_name_tmp_buf = dallas_value_name;
     sensors.requestTemperatures();
-    temp = sensors.getTempCByIndex(0);
-    jsonWriteStr(configLiveJson, "dallas", String(temp));
-    eventGen("dallas", "");
-    MqttClient::publishStatus("dallas", String(temp));
-    Serial.println("[I] sensor 'dallas' send date " + String(temp));
+    for (byte i = 0; i < num; i++) {     
+        temp = sensors.getTempCByIndex(i);
+        String buf = selectToMarker(dallas_value_name_tmp_buf, ";");
+        dallas_value_name_tmp_buf = deleteBeforeDelimiter(dallas_value_name_tmp_buf, ";");
+        jsonWriteStr(configLiveJson, buf, String(temp));
+        eventGen(buf, "");
+        MqttClient::publishStatus(buf, String(temp));
+        Serial.println("[I] sensor '" + buf + "' send date " + String(temp));
+    }
 }
 #endif
 //=========================================================================================================================================

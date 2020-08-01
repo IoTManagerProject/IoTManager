@@ -23,7 +23,7 @@
     },
     {
       "type": "h3",
-      "title": "Сканирование адресов шины i2c"
+      "title": "Сканирование шины i2c"
     },
     {
       "type": "h4",
@@ -32,21 +32,7 @@
     {
       "type": "link",
       "title": "Сканировать",
-      "action": "/set?itoc",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "h3",
-      "title": "Проверка ФС"
-    },
-    {
-      "type": "h4",
-      "title": "{{fscheck}}"
-    },
-    {
-      "type": "link",
-      "title": "Запустить",
-      "action": "/set?fscheck",
+      "action": "/set?i2c",
       "class": "btn btn-block btn-default"
     }
   ]
