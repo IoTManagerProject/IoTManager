@@ -595,7 +595,7 @@ void bme280P() {
 void bme280P_reading() {
     float value = 0;
     value = bme.readPressure();
-    value = value / 1.333224;
+    value = value / 1.333224 / 100;
     jsonWriteStr(configLiveJson, bme280P_value_name, String(value));
     eventGen(bme280P_value_name, "");
     MqttClient::publishStatus(bme280P_value_name, String(value));
