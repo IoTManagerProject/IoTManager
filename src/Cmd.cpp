@@ -30,15 +30,18 @@ void cmd_init() {
     sCmd.addCommand("pwm-out", pwmOut);
     sCmd.addCommand("button-in", buttonIn);
     sCmd.addCommand("input-digit", inputDigit);
+    sCmd.addCommand("input-time", inputTime);
 
-    sCmd.addCommand("inputTime", inputTime);
-    sCmd.addCommand("timeSet", timeSet);
+    sCmd.addCommand("text", text);
+    sCmd.addCommand("textSet", textSet);
+
+
+
 
     sCmd.addCommand("timerStart", timerStart_);
     sCmd.addCommand("timerStop", timerStop_);
 
-    sCmd.addCommand("text", text);
-    sCmd.addCommand("textSet", textSet);
+    
 
 #ifdef ANALOG_ENABLED
     sCmd.addCommand("analog", analog);
@@ -177,45 +180,39 @@ void buttonInSet() {
 }
 
 //==========================================Модуль ввода цифровых значений==================================
-//input-digit digit1 inputNum Ввод Введите 4 st[60]
+//input-digit digit1 inputDigit Ввод Введите.цифру 4 st[60]
 //==========================================================================================================
 void inputDigit() {
     myInput = new Input();
     myInput->update();
     String key = myInput->gkey();
     sCmd.addCommand(key.c_str(), inputDigitSet);
-    myInput->inputSetDefault();
+    myInput->inputSetDefaultFloat();
     myInput->clear();
 }
 
 void inputDigitSet() {
     String key = sCmd.order();
     String state = sCmd.next();
-    myInput->inputSet(key, state);
+    myInput->inputSetFloat(key, state);
 }
 
-//=====================================================================================================================================
-//=========================================Добавление окна ввода времени===============================================================
+//==========================================Модуль ввода времени============================================
+//input-time time1 inputTime Ввод Введите.время 4 st[10-00-00]
+//==========================================================================================================
 void inputTime() {
-    String value_name = sCmd.next();
-    String number = value_name.substring(4);
-    String widget_name = sCmd.next();
-    widget_name.replace("#", " ");
-    String page_name = sCmd.next();
-    page_name.replace("#", " ");
-    String start_state = sCmd.next();
-    String page_number = sCmd.next();
-
-    jsonWriteStr(configLiveJson, "time" + number, start_state);
-    createWidget(widget_name, page_name, page_number, "inputTime", "time" + number);
+    myInput = new Input();
+    myInput->update();
+    String key = myInput->gkey();
+    sCmd.addCommand(key.c_str(), inputTimeSet);
+    myInput->inputSetDefaultStr();
+    myInput->clear();
 }
 
-void timeSet() {
-    String number = sCmd.next();
-    String value = sCmd.next();
-
-    jsonWriteStr(configLiveJson, "time" + number, value);
-    MqttClient::publishStatus("time" + number, value);
+void inputTimeSet() {
+    String key = sCmd.order();
+    String state = sCmd.next();
+    myInput->inputSetStr(key, state);
 }
 
 void handle_time_init() {
