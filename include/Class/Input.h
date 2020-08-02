@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+
 #include "Class/LineParsing.h"
 #include "Global.h"
 
@@ -14,7 +15,7 @@ class Input : public LineParsing {
 
     void inputSet(String key, String state) {
         eventGen(key, "");
-        jsonWriteInt(configLiveJson, key, state.toInt());
+        jsonWriteFloat(configLiveJson, key, state.toFloat());
         MqttClient::publishStatus(key, state);
     }
 };

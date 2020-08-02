@@ -177,7 +177,7 @@ void buttonInSet() {
 }
 
 //==========================================Модуль ввода цифровых значений==================================
-//digit-input digit1 inputNum Ввод Введите 1 st[60]
+//input-digit digit1 inputNum Ввод Введите 4 st[60]
 //==========================================================================================================
 void inputDigit() {
     myInput = new Input();
@@ -185,12 +185,13 @@ void inputDigit() {
     String key = myInput->gkey();
     sCmd.addCommand(key.c_str(), inputDigitSet);
     myInput->inputSetDefault();
+    myInput->clear();
 }
 
 void inputDigitSet() {
-
-  
-    
+    String key = sCmd.order();
+    String state = sCmd.next();
+    myInput->inputSet(key, state);
 }
 
 //=====================================================================================================================================

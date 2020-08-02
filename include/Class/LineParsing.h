@@ -1,9 +1,10 @@
 #pragma once
 
 #include <Arduino.h>
+
 #include "Global.h"
 
-class LineParsing   {
+class LineParsing {
    protected:
     String _key;
     String _file;
@@ -20,22 +21,22 @@ class LineParsing   {
     String _db;
 
    public:
-    LineParsing() : 
+    LineParsing() :
 
-             _key{""},
-             _file{""},
-             _page{""},
-             _descr{""},
-             _order{""},
-             _addr{""},
-             _pin{""},
-             _map{""},
-             _c{""},
-             _inv{""},
-             _state{""},
-             _db{""}
+                    _key{""},
+                    _file{""},
+                    _page{""},
+                    _descr{""},
+                    _order{""},
+                    _addr{""},
+                    _pin{""},
+                    _map{""},
+                    _c{""},
+                    _inv{""},
+                    _state{""},
+                    _db{""}
 
-             {};
+                    {};
 
     void update() {
         //String order = sCmd.order();
@@ -65,6 +66,10 @@ class LineParsing   {
                 }
             }
         }
+        _page.replace("#", " ");
+        _descr.replace("#", " ");
+        _page.replace(".", " ");
+        _descr.replace(".", " ");
         createWidgetClass(_descr, _page, _order, _file, _key);
     }
 
