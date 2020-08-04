@@ -29,7 +29,7 @@ void createWidget(String descr, String page, String order, String filename, Stri
 #ifdef LAYOUT_IN_RAM
     all_widgets += widget + "\r\n";
 #else
-    addFile("layout.txt", buf);
+    addFileLn("layout.txt", buf);
 #endif
 }
 
@@ -56,7 +56,7 @@ void createWidgetParam(String widget, String page, String pageNumber, String fil
 #ifdef LAYOUT_IN_RAM
     all_widgets += widget + "\r\n";
 #else
-    addFile("layout.txt", buf);
+    addFileLn("layout.txt", buf);
 #endif
 }
 
@@ -80,7 +80,7 @@ void createChart(String widget, String page, String pageNumber, String filename,
 #ifdef LAYOUT_IN_RAM
     all_widgets += widget + "\r\n";
 #else
-    addFile("layout.txt", buf);
+    addFileLn("layout.txt", buf);
 #endif
 }
 

@@ -24,7 +24,7 @@ void add_dev_in_list(String fileName, String id, String dev_name, String ip);
 #ifdef UDP_ENABLED
 void udp_init() {
     removeFile("dev.csv");
-    addFile("dev.csv", "device id;device name;ip address");
+    addFileLn("dev.csv", "device id;device name;ip address");
 
 #ifdef ESP8266
     udp.begin(udp_port);
@@ -130,7 +130,7 @@ void do_udp_data_parse() {
 void add_dev_in_list(String filename, String id, String dev_name, String ip) {
     auto file = seekFile("/" + filename);
     if (!file.find(id.c_str())) {
-        addFile(filename, id + ";" + dev_name + "; <a href=\"http://" + ip + "\" target=\"_blank\"\">" + ip + "</a>");
+        addFileLn(filename, id + ";" + dev_name + "; <a href=\"http://" + ip + "\" target=\"_blank\"\">" + ip + "</a>");
     }
 }
 

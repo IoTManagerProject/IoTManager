@@ -38,6 +38,16 @@ void web_init() {
         }
 
         //--------------------------------------------------------------------------------
+        if (request->hasArg("element")) {
+            String name = request->getParam("element")->value();
+            String item = readFile("items/" + name + ".txt", 1024);
+            item.replace("\r\n", "");
+            item.replace("\r", "");
+            item.replace("\n", "");
+            addFile("conf.csv", "\n" + item);
+            request->redirect("/?setn.device");
+        }
+        //--------------------------------------------------------------------------------
         if (request->hasArg("devinit")) {
             Device_init();
             request->send(200);
@@ -73,7 +83,7 @@ void web_init() {
         //--------------------------------------------------------------------------------
         if (request->hasArg("updatelist")) {
             removeFile("/dev.csv");
-            addFile("dev.csv", "device id;device name;ip address");
+            addFileLn("dev.csv", "device id;device name;ip address");
             request->redirect("/?set.udp");
         }
         //--------------------------------------------------------------------------------

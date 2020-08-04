@@ -135,7 +135,7 @@ class LineParsing {
 #ifdef LAYOUT_IN_RAM
         all_widgets += widget + "\r\n";
 #else
-        addFile("layout.txt", buf);
+        addFileLn("layout.txt", buf);
 #endif
     }
 

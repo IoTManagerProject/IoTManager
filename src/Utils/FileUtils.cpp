@@ -51,13 +51,24 @@ const String readFileString(const String& filename, const String& to_find) {
     return res;
 }
 
-const String addFile(const String& filename, const String& str) {
+const String addFileLn(const String& filename, const String& str) {
     String path = filepath(filename);
     auto file = LittleFS.open(path, "a");
     if (!file) {
         return "failed";
     }
     file.println(str);
+    file.close();
+    return "sucсess";
+}
+
+const String addFile(const String& filename, const String& str) {
+    String path = filepath(filename);
+    auto file = LittleFS.open(path, "a");
+    if (!file) {
+        return "failed";
+    }
+    file.print(str);
     file.close();
     return "sucсess";
 }

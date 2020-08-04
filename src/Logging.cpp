@@ -94,7 +94,7 @@ void deleteOldDate(const String filename, size_t max_lines_cnt, String payload) 
         }
     } else {
         if (timeNow->hasTimeSynced()) {
-            addFile(filename, timeNow->getTimeUnix() + " " + payload);
+            addFileLn(filename, timeNow->getTimeUnix() + " " + payload);
         }
     }
 }

@@ -38,6 +38,11 @@ const String readFileString(const String& filename, const String& to_find);
 /* 
 * Добовление строки в файл
 */
+const String addFileLn(const String& filename, const String& str);
+
+/* 
+* Добовление строки в файл
+*/
 const String addFile(const String& filename, const String& str);
 
 /*
