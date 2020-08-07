@@ -174,81 +174,125 @@ void FSEditor::handleRequest(AsyncWebServerRequest *request) {
     if (request->method() == HTTP_GET) {
         if (request->hasParam("list")) {
             String path = request->getParam("list")->value();
-#if ESP32
-            auto dir = _fs.open(path);
+#ifdef ESP32
+            File dir = _fs.open(path);
 #else
-            auto dir = _fs.openDir(path);
+            fs::Dir dir = _fs.openDir(path);
 #endif
             path = String();
             String output = "[";
-#if ESP32
-            while (dir.openNextFile()) {
+#ifdef ESP32
+            File entry = dir.openNextFile();
+            while (entry) {
 #else
             while (dir.next()) {
+                fs::File entry = dir.openFile("r");
 #endif
-#if ESP32
-                if (isExcluded(_fs, dir.name())) {
-#else
-                if (isExcluded(_fs, dir.fileName().c_str())) {
+                String fname = entry.fullName();
+                if (fname.charAt(0) != '/') fname = "/" + fname;
+
+                if (isExcluded(_fs, fname.c_str())) {
+#ifdef ESP32
+                    entry = dir.openNextFile();
 #endif
                     continue;
                 }
                 if (output != "[") output += ',';
                 output += "{\"type\":\"";
-#if ESP32
-                output += dir.isDirectory() ? "file" : "dir";
-#else
-                output += dir.isFile() ? "file" : "dir";
-#endif
-
+                output += "file";
                 output += "\",\"name\":\"";
-#if ESP32
-                output += dir.name();
-#else
-                output += dir.fileName();
-#endif
+                output += String(fname);
                 output += "\",\"size\":";
-#if ESP32
-                output += String(dir.size());
-#else
-
-                output += String(dir.fileSize());
-#endif
+                output += String(entry.size());
                 output += "}";
+#ifdef ESP32
+                entry = dir.openNextFile();
+#else
+                entry.close();
+#endif
             }
-
+#ifdef ESP32
+            dir.close();
+#endif
             output += "]";
             request->send(200, "application/json", output);
             output = String();
         } else if (request->hasParam("edit") || request->hasParam("download")) {
-            request->send(request->_tempFile, request->_tempFile.name(), String(), request->hasParam("download"));
+            request->send(request->_tempFile, request->_tempFile.fullName(), String(), request->hasParam("download"));
         } else {
             const char *buildTime = __DATE__ " " __TIME__ " GMT";
             if (request->header("If-Modified-Since").equals(buildTime)) {
                 request->send(304);
             } else {
-                AsyncWebServerResponse *response = request->beginResponse(_fs, "/edit.htm");
+                AsyncWebServerResponse *response = request->beginResponse(LittleFS, "/edit.htm", "text/html");
+                // response->addHeader("Content-Encoding", "gzip");
                 response->addHeader("Last-Modified", buildTime);
                 request->send(response);
             }
         }
     } else if (request->method() == HTTP_DELETE) {
         if (request->hasParam("path", true)) {
-            _fs.remove(request->getParam("path", true)->value());
+            if (!(_fs.remove(request->getParam("path", true)->value()))) {
+#ifdef ESP32
+                _fs.rmdir(request->getParam("path", true)->value());  // try rmdir for littlefs
+#endif
+            }
+
             request->send(200, "", "DELETE: " + request->getParam("path", true)->value());
         } else
             request->send(404);
     } else if (request->method() == HTTP_POST) {
         if (request->hasParam("data", true, true) && _fs.exists(request->getParam("data", true, true)->value()))
             request->send(200, "", "UPLOADED: " + request->getParam("data", true, true)->value());
-        else
+
+        else if (request->hasParam("rawname", true) && request->hasParam("raw0", true)) {
+            String rawnam = request->getParam("rawname", true)->value();
+
+            if (_fs.exists(rawnam)) _fs.remove(rawnam);  // delete it to allow a mode
+
+            int k = 0;
+            uint16_t i = 0;
+            fs::File f = _fs.open(rawnam, "a");
+
+            while (request->hasParam("raw" + String(k), true)) {  //raw0 .. raw1
+                if (f) {
+                    i += f.print(request->getParam("raw" + String(k), true)->value());
+                }
+                k++;
+            }
+            f.close();
+            request->send(200, "", "IPADWRITE: " + rawnam + ":" + String(i));
+
+        } else {
             request->send(500);
+        }
+
     } else if (request->method() == HTTP_PUT) {
         if (request->hasParam("path", true)) {
             String filename = request->getParam("path", true)->value();
             if (_fs.exists(filename)) {
                 request->send(200);
             } else {
+/*******************************************************/
+#ifdef ESP32
+                if (strchr(filename.c_str(), '/')) {
+                    // For file creation, silently make subdirs as needed.  If any fail,
+                    // it will be caught by the real file open later on
+                    char *pathStr = strdup(filename.c_str());
+                    if (pathStr) {
+                        // Make dirs up to the final fnamepart
+                        char *ptr = strchr(pathStr, '/');
+                        while (ptr) {
+                            *ptr = 0;
+                            _fs.mkdir(pathStr);
+                            *ptr = '/';
+                            ptr = strchr(ptr + 1, '/');
+                        }
+                    }
+                    free(pathStr);
+                }
+#endif
+                /*******************************************************/
                 fs::File f = _fs.open(filename, "w");
                 if (f) {
                     f.write((uint8_t)0x00);
