@@ -110,7 +110,7 @@ void cmd_init() {
 //button-out light toggle Кнопки Свет 1 pin[12] inv[1] st[1]
 //==========================================================================================================
 void buttonOut() {
-    myButton = new Button();
+    myButton = new Button1();
     myButton->update();
     String key = myButton->gkey();
     String pin = myButton->gpin();

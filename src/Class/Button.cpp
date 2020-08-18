@@ -1,2 +1,2 @@
 #include "Class/Button.h"
-Button* myButton;
+Button1* myButton;

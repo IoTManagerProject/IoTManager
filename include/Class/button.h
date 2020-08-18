@@ -4,9 +4,9 @@
 #include "Class/LineParsing.h"
 #include "Global.h"
 
-class Button : public LineParsing {
+class Button1 : public LineParsing {
    public:
-    Button() : LineParsing(){};
+    Button1() : LineParsing(){};
 
     void pinModeSet() {
         if (_pin != "") {
@@ -40,4 +40,4 @@ class Button : public LineParsing {
     }
 };
 
-extern Button* myButton;
+extern Button1* myButton;
