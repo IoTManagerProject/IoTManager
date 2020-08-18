@@ -2,6 +2,7 @@
 
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
+#include "FSEditor.h"
 
 namespace HttpServer {
 
@@ -15,9 +16,9 @@ void init() {
     String login = jsonReadStr(configSetupJson, "weblogin");
     String pass = jsonReadStr(configSetupJson, "webpass");
 #ifdef ESP32
-    server.addHandler(new SPIFFSEditor(LittleFS, login, pass));
+    server.addHandler(new FSEditor(LittleFS, login, pass));
 #else
-    server.addHandler(new SPIFFSEditor(login, pass));
+    server.addHandler(new FSEditor(login, pass));
 #endif
 
     server.serveStatic("/css/", LittleFS, "/css/").setCacheControl("max-age=600");
