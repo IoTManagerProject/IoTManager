@@ -16,12 +16,12 @@
 #include "Clock.h"
 
 #include "MqttClient.h"
-#include "Utils\FileUtils.h"
-#include "Utils\JsonUtils.h"
-#include "Utils\StringUtils.h"
-#include "Utils\SysUtils.h"
-#include "Utils\PrintMessage.h"
-#include "Utils\WiFiUtils.h"
+#include "Utils/FileUtils.h"
+#include "Utils/JsonUtils.h"
+#include "Utils/StringUtils.h"
+#include "Utils/SysUtils.h"
+#include "Utils/PrintMessage.h"
+#include "Utils/WiFiUtils.h"
 
 //=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
 

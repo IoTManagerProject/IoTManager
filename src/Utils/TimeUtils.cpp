@@ -1,5 +1,5 @@
-#include "Utils\TimeUtils.h"
-#include "Utils\StringUtils.h"
+#include "Utils/TimeUtils.h"
+#include "Utils/StringUtils.h"
 
 static const uint8_t days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 static const char* week_days[7] = {"Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"};
