@@ -463,14 +463,17 @@ void fileExecute(const String &filename) {
     stringExecute(cmdStr);
 }
 
-void stringExecute(String &cmdStr) {
+void stringExecute(String &cmdStr) { 
+    cmdStr.replace("x;","");
+    cmdStr.replace(";"," ");
     cmdStr += "\r\n";
     cmdStr.replace("\r\n", "\n");
     cmdStr.replace("\r", "\n");
-
+    int count = 0;
     while (cmdStr.length()) {
         String buf = selectToMarker(cmdStr, "\n");
-        sCmd.readStr(buf);
+        count++;
+        if (count > 1)sCmd.readStr(buf);
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
     }
 }

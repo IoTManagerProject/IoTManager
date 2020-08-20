@@ -38,20 +38,22 @@ void web_init() {
             request->redirect("/?set.device");
         }
 
-        //--------------------------------------------------------------------------------
+        //==============================list of items=====================================================
         if (request->hasArg("element")) {
             String name = request->getParam("element")->value();
             addElement(name);
+            Device_init();
             request->redirect("/?setn.device");
         }
 
         if (request->hasArg("cleanconf")) {
             delAllElement();
+            Device_init();
             request->redirect("/?setn.device");
         }
 
-        if (request->hasArg("delete")) {
-            delElementFlag = true;
+        if (request->hasArg("save")) {
+            Device_init();
             request->redirect("/?setn.device");
         }
 
@@ -234,6 +236,19 @@ void web_init() {
             request->send(200);
         }
     });
+
+    //==============================list of items=====================================================
+    //server.on("/del", HTTP_GET, [](AsyncWebServerRequest* request) {
+    //    if (request->hasArg("file")) {
+    //        itemsFile = request->getParam("file")->value();
+    //    }
+    //    if (request->hasArg("line")) {
+    //        itemsLine = request->getParam("line")->value();
+    //    }
+    //    delElementFlag = true;
+    //    Device_init();
+    //    request->redirect("/?setn.device");
+    //});
 
     /* 
     * Check

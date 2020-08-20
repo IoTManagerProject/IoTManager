@@ -10,7 +10,7 @@
 
 #define TELEMETRY_UPDATE_INTERVAL 7200000
 
-#define DEVICE_CONFIG_FILE "dev_conf.txt"
+#define DEVICE_CONFIG_FILE "conf.csv"
 #define DEVICE_SCENARIO_FILE "dev_scen.txt"
 #define DEFAULT_PRESET 100
 #define DEFAULT_SCENARIO 100

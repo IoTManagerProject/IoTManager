@@ -40,7 +40,6 @@
         {
             "type": "csv",
             "title": [
-                "checkbox",
                 "html",
                 "text",
                 "text",
@@ -50,11 +49,8 @@
             ],
             "state": "conf.csv",
             "style": "width:100%;",
-            "action": "/set?delete",
+            "action": "/set?save",
             "class": "btn btn-block btn-default"
-        },
-        {
-            "type": "hr"
         },
         {
             "type": "link",

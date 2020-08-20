@@ -62,6 +62,7 @@ void Device_init() {
     removeFile(String("layout.txt"));
 #endif
 
+
     fileExecute(String(DEVICE_CONFIG_FILE));
     //outcoming_date();
 }

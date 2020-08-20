@@ -1,1 +1,1 @@
-0;button-out;light1;toggle;Кнопки;Свет;1;pin[12];st[0]
+button-out;id;toggle;Кнопки;Освещение;order;pin[12];st[0]

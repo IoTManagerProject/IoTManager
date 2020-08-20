@@ -1,1 +1,1 @@
-0;pwm-out;volume;range;Кнопки;Свет;1;pin[12];st[500]
+pwm-out;id;range;Ползунки;Яркость;order;pin[12];st[500]

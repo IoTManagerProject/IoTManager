@@ -39,6 +39,9 @@ String all_widgets = "";
 String scenario = "";
 String order_loop = "";
 
+String itemsFile = "";
+String itemsLine = "";
+
 // Sensors
 String analog_value_names_list;
 int enter_to_analog_counter;
