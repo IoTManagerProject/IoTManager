@@ -1,3 +1,4 @@
+#include "DeviceList.h"
 #include "Global.h"
 #include "Init.h"
 
@@ -40,13 +41,20 @@ void web_init() {
         //--------------------------------------------------------------------------------
         if (request->hasArg("element")) {
             String name = request->getParam("element")->value();
-            String item = readFile("items/" + name + ".txt", 1024);
-            item.replace("\r\n", "");
-            item.replace("\r", "");
-            item.replace("\n", "");
-            addFile("conf.csv", "\n" + item);
+            addElement(name);
             request->redirect("/?setn.device");
         }
+
+        if (request->hasArg("cleanconf")) {
+            delAllElement();
+            request->redirect("/?setn.device");
+        }
+
+        if (request->hasArg("delete")) {
+            delElementFlag = true;
+            request->redirect("/?setn.device");
+        }
+
         //--------------------------------------------------------------------------------
         if (request->hasArg("devinit")) {
             Device_init();

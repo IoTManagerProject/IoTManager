@@ -5,6 +5,7 @@
 #include "Bus/BusScannerFactory.h"
 #include "Utils/Timings.h"
 #include "Class/Switch.h"
+#include "DeviceList.h"
 
 void not_async_actions();
 
@@ -124,6 +125,8 @@ void not_async_actions() {
 #endif
 
     do_scan_bus();
+
+    do_delElement();
 }
 
 String getURL(const String& urls) {

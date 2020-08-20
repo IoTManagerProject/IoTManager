@@ -48,10 +48,10 @@ void timerStart_() {
 void addTimer(String number, String time) {
     String tmp = jsonReadStr(configOptionJson, "timers");  //1:60,2:120,
     String new_timer = number + ":" + time;
-    int psn1 = tmp.indexOf(number + ":");          //0  ищем позицию таймера который надо заменить
-    if (psn1 != -1) {                              //если он есть
-        int psn2 = tmp.indexOf(",", psn1);         //4    от этой позиции находим позицию запятой
-        String timer = tmp.substring(psn1, psn2);  //1:60  выделяем таймер который надо заменить
+    int psn1 = tmp.indexOf(number + ":");            //0  ищем позицию таймера который надо заменить
+    if (psn1 != -1) {                                //если он есть
+        int psn2 = tmp.indexOf(",", psn1);           //4    от этой позиции находим позицию запятой
+        String timer = tmp.substring(psn1, psn2);    //1:60  выделяем таймер который надо заменить
         ///tmp.replace(timer, new_timer);            //заменяем таймер на новый (во всей стороке)
         tmp.replace(timer + ",", "");
         tmp += new_timer + ",";

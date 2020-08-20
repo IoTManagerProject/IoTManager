@@ -82,3 +82,4 @@ boolean mqtt_send_settings_to_udp = false;
 BusScanner_t busToScan;
 boolean busScanFlag = false;
 boolean fsCheckFlag = false;
+boolean delElementFlag = false;

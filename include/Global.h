@@ -111,6 +111,7 @@ extern boolean updateFlag;
 extern boolean mqttParamsChanged;
 extern boolean udp_data_parse;
 extern boolean mqtt_send_settings_to_udp;
+extern boolean delElementFlag;
 
 /*
 * Запрос на скарнирование шины

@@ -50,6 +50,7 @@
             ],
             "state": "conf.csv",
             "style": "width:100%;",
+            "action": "/set?delete",
             "class": "btn btn-block btn-default"
         },
         {
