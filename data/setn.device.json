@@ -57,6 +57,13 @@
             "title": "Удалить все",
             "action": "/set?cleanconf",
             "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "select",
+            "name": "id-arg",
+            "action": "/set?id=[[id-arg]]",
+            "state": "en",
+            "title": "elements.json"
         }
     ]
 }

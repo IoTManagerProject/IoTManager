@@ -30,6 +30,8 @@ int getNewElementNumber(String file) {
     return number;
 }
 
+
+
 void do_delElement() {
     if (delElementFlag) {
         delElementFlag = false;
