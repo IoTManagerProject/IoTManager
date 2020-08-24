@@ -1,7 +1,6 @@
 #pragma once
 #include <Arduino.h>
 #include <stdint.h>
-
 #include <functional>
 
 // Декларируем тип - сигнатуру метода , который мы готовы принять в данном случае это
@@ -21,13 +20,7 @@ class AsyncActions {
    public:
     AsyncActions();
     void loop();
-
-    void setCallback(AsyncActionCb cb) {  //передаем внутрь класса функцию любую void функцию без агрументов
-        _cb = cb;
-    }
-
-    void setCallback(AsyncParamActionCb cb) {  //передаем внутрь класса функцию любую void функцию с аргументами
-        _pcb = cb;
-    }
+    void setCallback(AsyncActionCb cb);
+    void setCallback(AsyncParamActionCb pcb);
 };
 extern AsyncActions* async;

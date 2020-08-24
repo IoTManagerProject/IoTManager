@@ -77,19 +77,13 @@ void setup() {
 
     async = new AsyncActions();
 
-    //async->setCallback([&](void*) {
-    //
-    //
-    //});
-
     async->setCallback([]() {
         Serial.println("123");
     });
 
     async->setCallback([](const String str) {
         Serial.println(str);
-        
-        return false;
+        return true;
     });
     
 }
