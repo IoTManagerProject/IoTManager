@@ -59,11 +59,65 @@
             "class": "btn btn-block btn-default"
         },
         {
+            "type": "hr"
+        },
+        {
+            "type": "h4",
+            "title": "Если",
+            "style": "width:25%;float:left;"
+        },
+        {
             "type": "select",
             "name": "id-arg",
             "action": "/set?id=[[id-arg]]",
             "state": "en",
-            "title": "elements.json"
+            "title": "items/elements.json",
+            "style": "width:25%;float:left"
+        },
+        {
+            "type": "select",
+            "name": "id-arg2",
+            "action": "/set?id=[[id-arg2]]",
+            "state": "en",
+            "title": "items/signs.json",
+            "style": "width:25%;float:left"
+        },
+        {
+            "type": "input",
+            "title": "",
+            "name": "fsi-arg",
+            "pattern": "",
+            "state": "{{fsi}}",
+            "style": "width:25%;float:left"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "h4",
+            "title": "То",
+            "style": "width:25%;float:left;"
+        },
+        {
+            "type": "select",
+            "name": "id-arg3",
+            "action": "/set?id=[[id-arg3]]",
+            "state": "en",
+            "title": "items/elements.json",
+            "style": "width:25%;float:left"
+        },
+        {
+            "type": "h4",
+            "title": "=",
+            "style": "width:25%;float:left;"
+        },
+        {
+            "type": "input",
+            "title": "",
+            "name": "fsi-arg",
+            "pattern": "",
+            "state": "{{fsi}}",
+            "style": "width:25%;float:left"
         }
     ]
 }

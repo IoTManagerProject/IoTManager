@@ -115,6 +115,10 @@ extern boolean mqttParamsChanged;
 extern boolean udp_data_parse;
 extern boolean mqtt_send_settings_to_udp;
 extern boolean delElementFlag;
+extern boolean getJsonListFromCsvFlag;
+
+extern String csvFile;
+extern int colum;
 
 /*
 * Запрос на скарнирование шины

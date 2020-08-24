@@ -86,3 +86,7 @@ BusScanner_t busToScan;
 boolean busScanFlag = false;
 boolean fsCheckFlag = false;
 boolean delElementFlag = false;
+boolean getJsonListFromCsvFlag = false;
+
+String csvFile = "";
+int colum;

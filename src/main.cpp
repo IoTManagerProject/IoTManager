@@ -1,11 +1,12 @@
-#include "Global.h"
-#include "Init.h"
-#include "Cmd.h"
-#include "HttpServer.h"
 #include "Bus/BusScannerFactory.h"
-#include "Utils/Timings.h"
 #include "Class/Switch.h"
+#include "Cmd.h"
 #include "DeviceList.h"
+#include "Global.h"
+#include "HttpServer.h"
+#include "Init.h"
+#include "Utils/Timings.h"
+#include "Class/AsyncActions.h"
 
 void not_async_actions();
 
@@ -67,49 +68,54 @@ void setup() {
     pm.info("Broadcast UDP");
     udp_init();
 #endif
-    ts.add(
-        TEST, 1000 * 60, [&](void*) {
-            pm.info(printMemoryStatus());
-        },
-        nullptr, true);
+
+    ts.add(TEST, 1000 * 60, [&](void*) { pm.info(printMemoryStatus()); }, nullptr, true);
 
     just_load = false;
-
     initialized = true;
+
+    async = new AsyncActions();
+
+    //async->setCallback([&](void*) {
+//
+//
+    //});
+
+    async->setCallback(myCallback); //
+
+
+
 }
 
 void loop() {
     if (!initialized) {
         return;
     }
-    timeNow->loop();
-
 #ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.handle();
 #endif
 #ifdef WS_enable
     ws.cleanupClients();
 #endif
-    not_async_actions();
-
-    MqttClient::loop();
-
-    loopCmd();
-
-    mySwitch->loop();
-
-    loopScenario();
-
 #ifdef UDP_ENABLED
     loopUdp();
 #endif
-
+    timeNow->loop();
+    async->loop();
+    not_async_actions();
+    MqttClient::loop();
+    loopCmd();
+    mySwitch->loop();
+    loopScenario();
     loopSerial();
-
     ts.update();
 }
 
 void not_async_actions() {
+#ifdef UDP_ENABLED
+    do_udp_data_parse();
+    do_mqtt_send_settings_to_udp();
+#endif
     if (mqttParamsChanged) {
         MqttClient::reconnect();
         mqttParamsChanged = false;
@@ -118,15 +124,9 @@ void not_async_actions() {
     getLastVersion();
 
     do_update();
-
-#ifdef UDP_ENABLED
-    do_udp_data_parse();
-    do_mqtt_send_settings_to_udp();
-#endif
-
     do_scan_bus();
-
     do_delElement();
+    do_getJsonListFromCsv();
 }
 
 String getURL(const String& urls) {

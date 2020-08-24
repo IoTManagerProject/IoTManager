@@ -42,20 +42,26 @@ void web_init() {
         if (request->hasArg("element")) {
             String name = request->getParam("element")->value();
             addElement(name);
+            getJsonListFromCsvFlag = true;
             Device_init();
             request->redirect("/?setn.device");
         }
 
         if (request->hasArg("cleanconf")) {
             delAllElement();
+            removeFile("items/elements.json");
             Device_init();
             request->redirect("/?setn.device");
         }
 
         if (request->hasArg("save")) {
             Device_init();
+            getJsonListFromCsvFlag = true;
             request->redirect("/?setn.device");
         }
+
+
+
 
         //--------------------------------------------------------------------------------
         if (request->hasArg("devinit")) {
