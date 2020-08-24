@@ -1,4 +1,5 @@
 #include "Bus/BusScannerFactory.h"
+#include "Class/AsyncActions.h"
 #include "Class/Switch.h"
 #include "Cmd.h"
 #include "DeviceList.h"
@@ -6,7 +7,6 @@
 #include "HttpServer.h"
 #include "Init.h"
 #include "Utils/Timings.h"
-#include "Class/AsyncActions.h"
 
 void not_async_actions();
 
@@ -69,7 +69,8 @@ void setup() {
     udp_init();
 #endif
 
-    ts.add(TEST, 1000 * 60, [&](void*) { pm.info(printMemoryStatus()); }, nullptr, true);
+    ts.add(
+        TEST, 1000 * 60, [&](void*) { pm.info(printMemoryStatus()); }, nullptr, true);
 
     just_load = false;
     initialized = true;
@@ -77,14 +78,20 @@ void setup() {
     async = new AsyncActions();
 
     //async->setCallback([&](void*) {
-//
-//
+    //
+    //
     //});
 
-    async->setCallback(myCallback); //
+    async->setCallback([]() {
+        Serial.println("123");
+    });
 
-
-
+    async->setCallback([](const String str) {
+        Serial.println(str);
+        
+        return false;
+    });
+    
 }
 
 void loop() {
