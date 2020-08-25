@@ -56,9 +56,10 @@
             "title": {
                 "#": "Выберите элемент из списка<span class=\"caret\"></span>",
                 "/set?addItem=button-out": "1.Кнопка управляющая пином",
-                "/set?addItem=button-out-i": "2.Кнопка управляющая пином с инверсией",
-                "/set?addItem=pwm-out": "3.Широтно импульсная подуляция",
-                "/set?addItem=button-in": "4.Физическая кнопка"
+                "/set?addItem=pwm-out": "2.Широтно импульсная подуляция",
+                "/set?addItem=button-in": "3.Физическая кнопка",
+                "/set?addItem=input-digit": "4.Окно ввода цифровых значений",
+                "/set?addItem=input-time": "5.Окно ввода времени"
             }
         },
         {
