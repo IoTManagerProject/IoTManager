@@ -1,5 +1,8 @@
 #pragma once
 
-void getLastVersion();
+#include <Arduino.h>
 
-void do_update();
+const String getAvailableUrl(const char* mcu);
+void getLastVersion();
+void upgradeInit();
+void upgrade_firmware();

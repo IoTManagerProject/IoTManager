@@ -1,3 +1,6 @@
+#include "Class/NotAsinc.h"
+#include "udp.h"
+#include "udp_.h"
 #include "Global.h"
 
 static const char* MODULE = "Udp";
@@ -16,13 +19,21 @@ int udp_period;
 boolean udp_busy = false;
 unsigned int udp_port = 4210;
 
-//TODO Помомему тут ошибка в define'ах
-void handleUdp_esp32();
-
-void add_dev_in_list(String fileName, String id, String dev_name, String ip);
 
 #ifdef UDP_ENABLED
-void udp_init() {
+void udpInit() {
+    myNotAsincActions->add(
+        do_UDPDATAPARSE, [&](void*) {
+            do_udp_data_parse();
+        },
+        nullptr);
+
+    myNotAsincActions->add(
+        do_MQTTUDP, [&](void*) {
+            send_mqtt_to_udp();
+        },
+        nullptr);
+
     removeFile("dev.csv");
     addFileLn("dev.csv", "device id;device name;ip address");
 
@@ -82,7 +93,7 @@ void loopUdp() {
     }
     received = String(udp_packet);
     if (received.indexOf("iotm;") >= 0 || received.indexOf("mqttServer") >= 0) {
-        udp_data_parse = true;
+        myNotAsincActions->make(do_UDPDATAPARSE);
     }
 #endif
     ;
@@ -96,10 +107,10 @@ void handleUdp_esp32() {
             remote_ip = packet.remoteIP().toString();
             if (jsonReadStr(configSetupJson, "udponoff") == "1") {
                 if (received.indexOf("iotm;") >= 0) {
-                    udp_data_parse = true;
+                    myNotAsincActions->make(do_UDPDATAPARSE);
                 }
                 if (received.indexOf("mqttServer") >= 0) {
-                    udp_data_parse = true;
+                    myNotAsincActions->make(do_UDPDATAPARSE);
                 }
             }
         });
@@ -108,9 +119,6 @@ void handleUdp_esp32() {
 }
 
 void do_udp_data_parse() {
-    if (!udp_data_parse) {
-        return;
-    }
     if (received.indexOf("mqttServer") >= 0) {
         pm.info("received setting");
         jsonWriteStr(configSetupJson, "mqttServer", jsonReadStr(received, "mqttServer"));
@@ -119,12 +127,11 @@ void do_udp_data_parse() {
         jsonWriteStr(configSetupJson, "mqttUser", jsonReadStr(received, "mqttUser"));
         jsonWriteStr(configSetupJson, "mqttPass", jsonReadStr(received, "mqttPass"));
         saveConfig();
-        mqttParamsChanged = true;
+        myNotAsincActions->make(do_MQTTPARAMSCHANGED);
     }
     if (received.indexOf("iotm;") >= 0) {
         add_dev_in_list("dev.csv", selectFromMarkerToMarker(received, ";", 1), selectFromMarkerToMarker(received, ";", 2), received);
     }
-    udp_data_parse = false;
 }
 
 void add_dev_in_list(String filename, String id, String dev_name, String ip) {
@@ -157,10 +164,4 @@ void send_mqtt_to_udp() {
     udp_busy = false;
 }
 
-void do_mqtt_send_settings_to_udp() {
-    if (mqtt_send_settings_to_udp) {
-        mqtt_send_settings_to_udp = false;
-        send_mqtt_to_udp();
-    }
-}
 #endif

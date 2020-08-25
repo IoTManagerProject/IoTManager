@@ -1,4 +1,4 @@
-#include "Bus/BusScannerFactory.h"
+
 #include "Class/CallBackTest.h"
 #include "Class/NotAsinc.h"
 #include "Class/Switch.h"
@@ -67,7 +67,7 @@ void setup() {
 
 #ifdef UDP_ENABLED
     pm.info("Broadcast UDP");
-    udp_init();
+    udpInit();
 #endif
 
     ts.add(
@@ -96,31 +96,17 @@ void loop() {
     loopUdp();
 #endif
     timeNow->loop();
-    myNotAsincActions->loop();
-    not_async_actions();
     MqttClient::loop();
     loopCmd();
     mySwitch->loop();
     loopScenario();
     loopSerial();
+    
+    myNotAsincActions->loop();
     ts.update();
 }
 
-void not_async_actions() {
-#ifdef UDP_ENABLED
-    do_udp_data_parse();
-    do_mqtt_send_settings_to_udp();
-#endif
-    if (mqttParamsChanged) {
-        MqttClient::reconnect();
-        mqttParamsChanged = false;
-    }
 
-    getLastVersion();
-
-   
-    do_scan_bus();
-}
 
 String getURL(const String& urls) {
     String res = "";
@@ -205,12 +191,4 @@ void clock_init() {
         nullptr, true);
 }
 
-void do_scan_bus() {
-    if (busScanFlag) {
-        String res = "";
-        BusScanner* scanner = BusScannerFactory::get(configSetupJson, busToScan, res);
-        scanner->scan();
-        jsonWriteStr(configLiveJson, String(scanner->tag()), res);
-        busScanFlag = false;
-    }
-}
+

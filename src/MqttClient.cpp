@@ -1,8 +1,10 @@
 #include "MqttClient.h"
+
+#include <LittleFS.h>
+
+#include "Class/NotAsinc.h"
 #include "Global.h"
 #include "Init.h"
-#include <LittleFS.h>
-#include "Class/NotAsinc.h"
 
 static const char* MODULE = "Mqtt";
 
@@ -18,6 +20,13 @@ String mqttPrefix;
 String mqttRootDevice;
 
 void init() {
+
+    myNotAsincActions->add(
+        do_MQTTPARAMSCHANGED, [&](void*) {
+            reconnect();
+        },
+        nullptr);
+
     mqtt.setCallback(handleSubscribedUpdates);
 
     ts.add(
@@ -133,7 +142,6 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
 #endif
 
     } else if (topicStr.indexOf("control")) {
-
         //iotTeam/12882830-1458415/light 1
 
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
@@ -144,27 +152,22 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         order_loop += ",";
 
     } else if (topicStr.indexOf("order")) {
-
         payloadStr.replace("_", " ");
         order_loop += payloadStr;
         order_loop += ",";
 
     } else if (topicStr.indexOf("update")) {
-
         if (payloadStr == "1") {
             myNotAsincActions->make(do_UPGRADE);
         }
 
     } else if (topicStr.indexOf("devc")) {
-
         writeFile(String(DEVICE_CONFIG_FILE), payloadStr);
         Device_init();
 
     } else if (topicStr.indexOf("devs")) {
-
         writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
         loadScenario();
-
     }
 }
 

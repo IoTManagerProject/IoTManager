@@ -153,7 +153,7 @@ extern void setConfigParam(const char* param, const String& value);
 
 extern String getURL(const String& urls);
 extern void do_fscheck();
-extern void do_scan_bus();
+extern void doBusScan();
 extern void servo_();
 extern void clock_init();
 
@@ -223,7 +223,7 @@ extern void createChart(String widget_name, String page_name, String page_number
 extern void pushControl();
 
 // UDP
-extern void udp_init();
+extern void udpInit();
 extern void do_udp_data_parse();
 extern void do_mqtt_send_settings_to_udp();
 

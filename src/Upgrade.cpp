@@ -1,37 +1,22 @@
 #include "Upgrade.h"
+
 #include "Class/NotAsinc.h"
-#include "Global.h"
 #include "ESP8266.h"
+#include "Global.h"
 
 static const char* MODULE = "Update";
-
 static const char* check_update_url PROGMEM = "http://91.204.228.124:1100/update/%s/version.txt";
 
-const String getAvailableUrl(const char* mcu) {
-    char buf[128];
-    sprintf_P(buf, check_update_url, mcu);
-    return buf;
-}
-
-void getLastVersion() {
-    if (checkUpdatesFlag) {
-        String url;
-#ifdef ESP8266
-        url = getAvailableUrl("esp8266");
-#else
-        url = getAvailableUrl("esp32");
-#endif
-        lastVersion = getURL(url);
-        jsonWriteStr(configSetupJson, "last_version", lastVersion);
-        checkUpdatesFlag = false;
-    }
-}
-
 void upgradeInit() {
-
     myNotAsincActions->add(
         do_UPGRADE, [&](void*) {
-           upgrade_firmware(); 
+            upgrade_firmware();
+        },
+        nullptr);
+
+    myNotAsincActions->add(
+        do_GETLASTVERSION, [&](void*) {
+            getLastVersion();
         },
         nullptr);
 
@@ -41,6 +26,23 @@ void upgradeInit() {
             pm.info("available: " + lastVersion);
         }
     };
+}
+
+const String getAvailableUrl(const char* mcu) {
+    char buf[128];
+    sprintf_P(buf, check_update_url, mcu);
+    return buf;
+}
+
+void getLastVersion() {
+        String url;
+#ifdef ESP8266
+        url = getAvailableUrl("esp8266");
+#else
+        url = getAvailableUrl("esp32");
+#endif
+        lastVersion = getURL(url);
+        jsonWriteStr(configSetupJson, "last_version", lastVersion);
 }
 
 void upgrade_firmware() {

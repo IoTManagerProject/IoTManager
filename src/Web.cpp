@@ -167,37 +167,37 @@ void web_init() {
         if (request->hasArg("mqttServer")) {
             jsonWriteStr(configSetupJson, "mqttServer", request->getParam("mqttServer")->value());
             saveConfig();
-            mqttParamsChanged = true;
+            myNotAsincActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
         if (request->hasArg("mqttPort")) {
             int port = (request->getParam("mqttPort")->value()).toInt();
             jsonWriteInt(configSetupJson, "mqttPort", port);
             saveConfig();
-            mqttParamsChanged = true;
+            myNotAsincActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
         if (request->hasArg("mqttPrefix")) {
             jsonWriteStr(configSetupJson, "mqttPrefix", request->getParam("mqttPrefix")->value());
             saveConfig();
-            mqttParamsChanged = true;
+            myNotAsincActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
         if (request->hasArg("mqttUser")) {
             jsonWriteStr(configSetupJson, "mqttUser", request->getParam("mqttUser")->value());
             saveConfig();
-            mqttParamsChanged = true;
+            myNotAsincActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
         if (request->hasArg("mqttPass")) {
             jsonWriteStr(configSetupJson, "mqttPass", request->getParam("mqttPass")->value());
             saveConfig();
-            mqttParamsChanged = true;
+            myNotAsincActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
         //--------------------------------------------------------------------------------
         if (request->hasArg("mqttsend")) {
-            mqtt_send_settings_to_udp = true;
+            myNotAsincActions->make(do_MQTTUDP);
             request->send(200);
         }
 
@@ -256,7 +256,7 @@ void web_init() {
     * Check
     */
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
-        checkUpdatesFlag = true;
+        myNotAsincActions->make(do_GETLASTVERSION);
         pm.info("firmware version: " + lastVersion);
 
         if (!FLASH_4MB) {
