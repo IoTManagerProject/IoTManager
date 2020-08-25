@@ -1,11 +1,10 @@
-#include "Class/AsyncActions.h"
+#include "Class/CallBackTest.h"
 
-AsyncActions::AsyncActions(){};
+CallBackTest::CallBackTest(){};
 
-void AsyncActions::loop() {
+void CallBackTest::loop() {
     count++;
     if (count > 5000) {
-
         // Проверяем что переменная содержит указатель - не пустая не null
         // и непосредственно вызываем то, на что это указывает
         // просто пишем имя - без () - это указатель на фунецию.
@@ -30,12 +29,21 @@ void AsyncActions::loop() {
 }
 
 //передаем внутрь класса функцию любую void функцию без агрументов
-void AsyncActions::setCallback(AsyncActionCb cb) {  
+void CallBackTest::setCallback(AsyncActionCb cb) {
     _cb = cb;
 }
 
 //передаем внутрь класса функцию любую void функцию с аргументами
-void AsyncActions::setCallback(AsyncParamActionCb pcb) {  
+void CallBackTest::setCallback(AsyncParamActionCb pcb) {
     _pcb = pcb;
 }
-AsyncActions* async;
+CallBackTest* CB;
+
+//CB->setCallback([]() {
+//    Serial.println("123");
+//});
+//
+//CB->setCallback([](const String str) {
+//    Serial.println(str);
+//    return true;
+//});

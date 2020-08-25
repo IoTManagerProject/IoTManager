@@ -75,13 +75,13 @@ void setup() {
     just_load = false;
     initialized = true;
 
-    async = new AsyncActions();
+    CB = new CallBackTest();
 
-    async->setCallback([]() {
+    CB->setCallback([]() {
         Serial.println("123");
     });
 
-    async->setCallback([](const String str) {
+    CB->setCallback([](const String str) {
         Serial.println(str);
         return true;
     });
