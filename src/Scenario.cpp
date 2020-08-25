@@ -62,7 +62,7 @@ void loopScenario() {
                     block = deleteBeforeDelimiter(block, "\n");
                     pm.info("do: " + block);
                     // выполняем все команды
-                    stringExecute(block);
+                    spaceExecute(block);
                 }
             }
         }

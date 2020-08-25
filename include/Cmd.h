@@ -42,4 +42,5 @@ extern void firmwareUpdate();
 extern void loadScenario();
 
 extern void fileExecute(const String& filename);
-extern void stringExecute(String& cmdStr);
+extern void csvExecute(String& cmdStr);
+extern void spaceExecute(String& cmdStr);

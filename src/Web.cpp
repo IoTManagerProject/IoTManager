@@ -29,37 +29,38 @@ void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
 
         //==============================presets===========================================================================================================
-        uint8_t preset;
-        if (parseRequestForPreset(request, preset)) {
-            pm.info("activate #" + String(preset, DEC));
-            String configFile = DEVICE_CONFIG_FILE;
-            String scenarioFile = DEVICE_SCENARIO_FILE;
-            copyFile(getConfigFile(preset, CT_CONFIG), configFile);
-            copyFile(getConfigFile(preset, CT_SCENARIO), scenarioFile);
-            Device_init();
-            loadScenario();
-            request->redirect("/?set.device");
-        }
+        //uint8_t preset;
+        //if (parseRequestForPreset(request, preset)) {
+        //    pm.info("activate #" + String(preset, DEC));
+        //    String configFile = DEVICE_CONFIG_FILE;
+        //    String scenarioFile = DEVICE_SCENARIO_FILE;
+        //    copyFile(getConfigFile(preset, CT_CONFIG), configFile);
+        //    copyFile(getConfigFile(preset, CT_SCENARIO), scenarioFile);
+        //    Device_init();
+        //    loadScenario();
+        //    request->redirect("/?set.device");
+        //}
 
-        //==============================list of items====================================================================================================
+        //==============================set.device.json====================================================================================================
         if (request->hasArg("addItem")) {
             String name = request->getParam("addItem")->value();
             addItem(name);
             Device_init();
-            request->redirect("/?setn.device");
+            request->redirect("/?set.device");
         }
 
         if (request->hasArg("delAllItems")) {
             delAllItems();
             Device_init();
-            request->redirect("/?setn.device");
+            request->redirect("/?set.device");
         }
 
         if (request->hasArg("saveItems")) {
             Device_init();
-            request->redirect("/?setn.device");
+            request->redirect("/?set.device");
         }
 
+        //==============================init====================================================================================================
         if (request->hasArg("devinit")) {
             Device_init();
             request->send(200);

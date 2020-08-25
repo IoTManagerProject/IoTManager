@@ -27,6 +27,8 @@ void setup() {
 
     setChipId();
 
+    myNotAsincActions = new NotAsinc(do_LAST);
+
     pm.info("FS");
     fileSystemInit();
 
@@ -51,9 +53,7 @@ void setup() {
     pm.info("Uptime");
     uptime_init();
 
-    if (!TELEMETRY_UPDATE_INTERVAL) {
-        pm.info("Telemetry: Disabled");
-    }
+    pm.info("telemetry");
     telemetry_init();
 
     pm.info("Updater");
@@ -78,8 +78,6 @@ void setup() {
 
     just_load = false;
     initialized = true;
-
-    myNotAsincActions = new NotAsinc(5);
 }
 
 void loop() {
@@ -97,9 +95,9 @@ void loop() {
 #endif
     timeNow->loop();
     MqttClient::loop();
-    loopCmd();
     mySwitch->loop();
     loopScenario();
+    loopCmd();
     loopSerial();
     
     myNotAsincActions->loop();

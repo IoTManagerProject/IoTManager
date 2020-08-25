@@ -128,6 +128,12 @@ void buttonOut() {
 void buttonOutSet() {
     String key = sCmd.order();
     String state = sCmd.next();
+
+    Serial.println("==");
+    Serial.println(key);
+    Serial.println(state);
+    Serial.println("==");
+
     String pin = jsonReadStr(configOptionJson, key + "_pin");
     String inv = jsonReadStr(configOptionJson, key + "_inv");
     if (inv == "") {
@@ -461,11 +467,10 @@ void addCommandLoop(const String &cmdStr) {
 
 void fileExecute(const String &filename) {
     String cmdStr = readFile(filename, 2048);
-    stringExecute(cmdStr);
+    csvExecute(cmdStr);
 }
 
-void stringExecute(String &cmdStr) { 
-    cmdStr.replace("x;","");
+void csvExecute(String &cmdStr) { 
     cmdStr.replace(";"," ");
     cmdStr += "\r\n";
     cmdStr.replace("\r\n", "\n");
@@ -475,6 +480,17 @@ void stringExecute(String &cmdStr) {
         String buf = selectToMarker(cmdStr, "\n");
         count++;
         if (count > 1)sCmd.readStr(buf);
+        cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
+    }
+}
+
+void spaceExecute(String &cmdStr) { 
+    cmdStr += "\r\n";
+    cmdStr.replace("\r\n", "\n");
+    cmdStr.replace("\r", "\n");
+    while (cmdStr.length()) {
+        String buf = selectToMarker(cmdStr, "\n");
+        sCmd.readStr(buf);
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
     }
 }

@@ -85,13 +85,14 @@ enum TimerTask_t { WIFI_SCAN,
                    TEST };
 
 enum notAsincActions {
-   ZERO, 
+   do_ZERO, 
    do_UPGRADE,
    do_GETLASTVERSION,
    do_UDPDATAPARSE,
    do_MQTTUDP,
    do_BUSSCAN,
    do_MQTTPARAMSCHANGED,
+   do_LAST,
 };                   
 
 enum ErrorType_t {

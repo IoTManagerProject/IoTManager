@@ -47,6 +47,8 @@ extern Clock* timeNow;
 
 extern TickerScheduler ts;
 
+
+
 extern WiFiClient espClient;
 
 extern PubSubClient mqtt;

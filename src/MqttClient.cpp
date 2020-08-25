@@ -122,6 +122,7 @@ boolean connect() {
 
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     String topicStr = String(topic);
+
     pm.info(topicStr);
 
     String payloadStr;
@@ -142,6 +143,7 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
 #endif
 
     } else if (topicStr.indexOf("control")) {
+        
         //iotTeam/12882830-1458415/light 1
 
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
