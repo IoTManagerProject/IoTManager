@@ -84,6 +84,11 @@ enum TimerTask_t { WIFI_SCAN,
                    UDP_DB,
                    TEST };
 
+enum notAsincActions {
+   ZERO, 
+   do_UPGRADE,
+};                   
+
 enum ErrorType_t {
     ET_NONE,
     ET_FUNCTION,

@@ -2,6 +2,7 @@
 #include "Global.h"
 #include "Init.h"
 #include <LittleFS.h>
+#include "Class/NotAsinc.h"
 
 static const char* MODULE = "Mqtt";
 
@@ -151,7 +152,7 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     } else if (topicStr.indexOf("update")) {
 
         if (payloadStr == "1") {
-            updateFlag = true;
+            myNotAsincActions->make(do_UPGRADE);
         }
 
     } else if (topicStr.indexOf("devc")) {

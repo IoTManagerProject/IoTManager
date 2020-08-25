@@ -211,7 +211,7 @@ extern void timerStop_();
 extern void delTimer(String number);
 extern int readTimer(int number);
 
-extern void initUpdater();
+extern void upgradeInit();
 
 // widget
 extern void createWidgetByType(String widget_name, String page_name, String page_number, String file, String topic);

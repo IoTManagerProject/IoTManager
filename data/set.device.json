@@ -1,143 +1,65 @@
 {
-  "configs": [
-    "/config.setup.json",
-    "/config.option.json",
-    "/config.live.json",
-    "/lang/lang.ru.json"
-  ],
-  "class": "col-sm-offset-1 col-sm-10",
-  "content": [
-    {
-      "type": "h5",
-      "title": "{{name}}",
-      "class": "alert-default"
-    },
-    {
-      "type": "link",
-      "title": "{{ButMainPage}}",
-      "action": "/",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "h4",
-      "title": "Device ID: {{chipID}}"
-    },
-    {
-      "type": "h4",
-      "title": "IP address: {{ip}}"
-    },
-    {
-      "type": "h4",
-      "title": "Time: {{time}}"
-    },
-    {
-      "type": "h4",
-      "title": "Uptime: {{uptime}}"
-    },
-    {
-      "type": "h4",
-      "title": "Build version: {{firmware_version}}"
-    },
-    {
-      "type": "h4",
-      "title": "LittleFS version: 2.3.5"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "dropdown",
-      "name": "help-url",
-      "class": "btn btn-default",
-      "style": "display:inline",
-      "title": {
-        "#": "{{SetDevPreset}}<span class=\"caret\"></span>",
-        "/set?preset=001": "1.Вкл. выкл. локального реле",
-        "/set?preset=002": "2.Вкл. выкл. локального реле в определенное время",
-        "/set?preset=003": "3.Вкл. выкл. локального реле на определенный период времени",
-        "/set?preset=004": "4.Вкл. выкл. нескольких локальных реле кнопкой в приложении",
-        "/set?preset=005": "5.Вкл. выкл. локального реле физической кнопкой и кнопкой в приложении параллельно (для выключателя света)",
-        "/set?preset=006": "6.Вкл. выкл. нескольких удаленных реле кнопкой в приложении (нужно указать Device ID)",
-        "/set?preset=007": "7.Вкл. выкл. нескольких удаленных реле физической кнопкой (нужно указать Device ID)",
-        "/set?preset=008": "8.Широтно импульсная модуляция",
-        "/set?preset=009": "9.Сенсор DHT11 (темп, влажность) и логгирование",
-        "/set?preset=010": "10.Сенсор DHT22, DHT33, DHT44, AM2302, RHT03 (темп, влажность) и логгирование",
-        "/set?preset=011": "11.Аналоговый сенсор и логгирование",
-        "/set?preset=012": "12.Cенсор bmp280 (темп, давление) и логгирование",
-        "/set?preset=013": "13.Cенсор bme280 (темп, давление, влажность, высота) и логгирование",
-        "/set?preset=014": "14.Сенсор DS18B20 (темп) и логгирование",
-        "/set?preset=015": "15.Термостат на DS18B20 с переключением в ручной режим и логгированием",
-        "/set?preset=016": "16.Котроль уровня в баке (датчик расстояния) на сенсорах: JSN-SR04T, HC-SR04, HY-SRF05 и логгирование",
-        "/set?preset=017": "17.Датчик движения включающий свет",
-        "/set?preset=018": "18.Охранный датчик движения",
-        "/set?preset=019": "19.Система управления шаговыми двигателями на основе драйвера A4988 (открытие закрытие штор)",
-        "/set?preset=020": "20.Система управления сервоприводами",
-        "/set?preset=021": "21.Модуль uart (serial). Двухстороняя связь с устройством через uart. Получение данных и отправка команд",
-        "/set?preset=100": "22.Настройки по умолчанию"
-      }
-    },
-    {
-      "type": "h2",
-      "title": "{{SetDevConf}}"
-    },
-    {
-      "type": "file",
-      "state": "dev_conf.txt",
-      "style": "width:100%;height:350px",
-      "title": "Сохранить",
-      "action": "/set?devinit",
-      "class": "btn btn-block btn-default"
-    },
-   
-    {
-      "type": "h2",
-      "title": "Сценарии"
-    },
-    {
-      "type": "checkbox",
-      "name": "scen",
-      "title": "Включить сценарии",
-      "action": "/set?scen=[[scen]]",
-      "state": "{{scen}}"
-    },
-    {
-      "type": "file",
-      "state": "dev_scen.txt",
-      "style": "width:100%;height:350px",
-      "title": "Сохранить",
-      "action": "/set?sceninit",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "link",
-      "title": "Инструкция к системе автоматизации",
-      "action": "https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/wiki/Instruction",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "link",
-      "title": "Очистить логи сенсоров",
-      "action": "/set?cleanlog",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "hr"
-    },
-    {
-      "type": "h3",
-      "name": "my-block",
-      "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
-      "class": "hidden"
-    },
-    {
-      "type": "button",
-      "title": "Обновить прошивку устройства",
-      "action": "/check",
-      "response": "[[my-block]]",
-      "class": "btn btn-block btn-default"
-    }
-  ]
+    "configs": [
+        "/config.setup.json",
+        "/config.option.json",
+        "/config.live.json",
+        "/lang/lang.ru.json"
+    ],
+    "class": "col-sm-offset-1 col-sm-10",
+    "content": [
+        {
+            "type": "h5",
+            "title": "{{name}}",
+            "class": "alert-default"
+        },
+        {
+            "type": "link",
+            "title": "{{ButMainPage}}",
+            "action": "/",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "dropdown",
+            "name": "help-url",
+            "class": "btn btn-default",
+            "style": "display:inline",
+            "title": {
+                "#": "Выберите элемент из списка<span class=\"caret\"></span>",
+                "/set?addItem=button-out": "1.Кнопка управляющая пином",
+                "/set?addItem=button-out-i": "2.Кнопка управляющая пином с инверсией",
+                "/set?addItem=pwm-out": "3.Широтно импульсная подуляция",
+                "/set?addItem=button-in": "4.Физическая кнопка"
+            }
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "csv",
+            "title": [
+                "html",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text"
+            ],
+            "state": "conf.csv",
+            "style": "width:100%;",
+            "action": "/set?saveItems",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "link",
+            "title": "Удалить все",
+            "action": "/set?delAllItems",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        }
+    ]
 }

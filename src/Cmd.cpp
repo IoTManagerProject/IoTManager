@@ -6,6 +6,7 @@
 #include "Class/Pwm.h"
 #include "Class/Switch.h"
 //-----------------------------
+#include "Class/NotAsinc.h"
 #include "Global.h"
 #include "Module/Terminal.h"
 #include "Servo/Servos.h"
@@ -439,7 +440,7 @@ void httpOrderSend() {
 }
 
 void firmwareUpdate() {
-    updateFlag = true;
+    myNotAsincActions->make(do_UPGRADE);
 }
 
 void firmwareVersion() {

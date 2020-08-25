@@ -1,5 +1,6 @@
 #include "Bus/BusScannerFactory.h"
-#include "Class/AsyncActions.h"
+#include "Class/CallBackTest.h"
+#include "Class/NotAsinc.h"
 #include "Class/Switch.h"
 #include "Cmd.h"
 #include "DeviceList.h"
@@ -56,7 +57,7 @@ void setup() {
     telemetry_init();
 
     pm.info("Updater");
-    initUpdater();
+    upgradeInit();
 
     pm.info("HttpServer");
     HttpServer::init();
@@ -70,22 +71,15 @@ void setup() {
 #endif
 
     ts.add(
-        TEST, 1000 * 60, [&](void*) { pm.info(printMemoryStatus()); }, nullptr, true);
+        TEST, 1000 * 60, [&](void*) {
+            pm.info(printMemoryStatus());
+        },
+        nullptr, true);
 
     just_load = false;
     initialized = true;
 
-    CB = new CallBackTest();
-
-    CB->setCallback([]() {
-        Serial.println("123");
-    });
-
-    CB->setCallback([](const String str) {
-        Serial.println(str);
-        return true;
-    });
-    
+    myNotAsincActions = new NotAsinc(5);
 }
 
 void loop() {
@@ -102,7 +96,7 @@ void loop() {
     loopUdp();
 #endif
     timeNow->loop();
-    async->loop();
+    myNotAsincActions->loop();
     not_async_actions();
     MqttClient::loop();
     loopCmd();
@@ -124,10 +118,8 @@ void not_async_actions() {
 
     getLastVersion();
 
-    do_update();
+   
     do_scan_bus();
-    do_delElement();
-    do_getJsonListFromCsv();
 }
 
 String getURL(const String& urls) {

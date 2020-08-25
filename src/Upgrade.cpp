@@ -1,5 +1,5 @@
 #include "Upgrade.h"
-
+#include "Class/NotAsinc.h"
 #include "Global.h"
 #include "ESP8266.h"
 
@@ -27,7 +27,14 @@ void getLastVersion() {
     }
 }
 
-void initUpdater() {
+void upgradeInit() {
+
+    myNotAsincActions->add(
+        do_UPGRADE, [&](void*) {
+           upgrade_firmware(); 
+        },
+        nullptr);
+
     if (isNetworkActive()) {
         getLastVersion();
         if (lastVersion.length()) {
@@ -76,12 +83,5 @@ void upgrade_firmware() {
         ESP.restart();
     } else {
         pm.error("on firmware");
-    }
-}
-
-void do_update() {
-    if (updateFlag) {
-        updateFlag = false;
-        upgrade_firmware();
     }
 }

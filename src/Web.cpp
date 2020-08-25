@@ -1,6 +1,7 @@
 #include "DeviceList.h"
 #include "Global.h"
 #include "Init.h"
+#include "Class/NotAsinc.h"
 
 static const char* MODULE = "Web";
 
@@ -26,6 +27,8 @@ void web_init() {
     });
 
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
+
+        //==============================presets===========================================================================================================
         uint8_t preset;
         if (parseRequestForPreset(request, preset)) {
             pm.info("activate #" + String(preset, DEC));
@@ -38,37 +41,30 @@ void web_init() {
             request->redirect("/?set.device");
         }
 
-        //==============================list of items=====================================================
-        if (request->hasArg("element")) {
-            String name = request->getParam("element")->value();
-            addElement(name);
-            getJsonListFromCsvFlag = true;
+        //==============================list of items====================================================================================================
+        if (request->hasArg("addItem")) {
+            String name = request->getParam("addItem")->value();
+            addItem(name);
             Device_init();
             request->redirect("/?setn.device");
         }
 
-        if (request->hasArg("cleanconf")) {
-            delAllElement();
-            removeFile("items/elements.json");
+        if (request->hasArg("delAllItems")) {
+            delAllItems();
             Device_init();
             request->redirect("/?setn.device");
         }
 
-        if (request->hasArg("save")) {
+        if (request->hasArg("saveItems")) {
             Device_init();
-            getJsonListFromCsvFlag = true;
             request->redirect("/?setn.device");
         }
 
-
-
-
-        //--------------------------------------------------------------------------------
         if (request->hasArg("devinit")) {
             Device_init();
             request->send(200);
         }
-        //--------------------------------------------------------------------------------
+       
         if (request->hasArg("scen")) {
             bool value = request->getParam("scen")->value().toInt();
             jsonWriteBool(configSetupJson, "scen", value);
@@ -76,12 +72,12 @@ void web_init() {
             loadScenario();
             request->send(200);
         }
-        //--------------------------------------------------------------------------------
+       
         if (request->hasArg("sceninit")) {
             loadScenario();
             request->send(200);
         }
-        //--------------------------------------------------------------------------------
+        
 #ifdef LOGGING_ENABLED
         if (request->hasArg("cleanlog")) {
             clean_log_date();
@@ -295,7 +291,7 @@ void web_init() {
     * Upgrade
     */
     server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest* request) {
-        updateFlag = true;
+        myNotAsincActions->make(do_UPGRADE);;
         request->send(200, "text/html");
     });
 }
