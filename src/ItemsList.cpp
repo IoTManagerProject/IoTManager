@@ -1,14 +1,14 @@
 #include "ItemsList.h"
+#include "Utils\StringUtils.h"
 
 static const char* firstLine PROGMEM = "Тип элемента;Id;Виджет;Имя вкладки;Имя виджета;Позиция виджета";
 
 void addItem(String name) {
     String item = readFile("items/" + name + ".txt", 1024);
-
+    name = deleteToMarkerLast(name, "-");
     item.replace("id", name + String(getNewElementNumber("id.txt")));
     item.replace("order", String(getNewElementNumber("order.txt")));
     item.replace("pin", "pin[" + String(getFreePin()) + "]");
-
     item.replace("\r\n", "");
     item.replace("\r", "");
     item.replace("\n", "");

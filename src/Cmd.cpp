@@ -31,9 +31,12 @@ void cmd_init() {
     sCmd.addCommand("button-out", buttonOut);
     sCmd.addCommand("pwm-out", pwmOut);
     sCmd.addCommand("button-in", buttonIn);
+
     sCmd.addCommand("input-digit", inputDigit);
     sCmd.addCommand("input-time", inputTime);
     sCmd.addCommand("output-text", textOut);
+
+    
 
 
 
