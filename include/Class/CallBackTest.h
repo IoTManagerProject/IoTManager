@@ -23,4 +23,4 @@ class CallBackTest {
     void setCallback(AsyncActionCb cb);
     void setCallback(AsyncParamActionCb pcb);
 };
-extern CallBackTest* CB;
+//extern CallBackTest* CB;

@@ -19,8 +19,8 @@ extern void inputDigitSet();
 extern void inputTime();
 extern void inputTimeSet();
 
-extern void text();
-extern void textSet();
+extern void textOut();
+extern void textOutSet();
 
 extern void handle_time_init();
 extern void stepper();

@@ -66,10 +66,11 @@ class LineParsing {
                 }
             }
         }
+
         _page.replace("#", " ");
-        _descr.replace("#", " ");
-        _page.replace(".", " ");
-        _descr.replace(".", " ");
+
+        _descr.replace("#", " ");   
+
         createWidgetClass(_descr, _page, _order, _file, _key);
     }
 
@@ -124,8 +125,6 @@ class LineParsing {
         if (!loadWidgetClass(filename, buf)) {
             return;
         }
-        descr.replace("#", " ");
-        page.replace("#", " ");
 
         jsonWriteStr(buf, "page", page);
         jsonWriteStr(buf, "order", order);

@@ -1,0 +1,1 @@
+button-out;id;toggle;Кнопки;Освещение;order;st[0]

@@ -37,7 +37,7 @@ void CallBackTest::setCallback(AsyncActionCb cb) {
 void CallBackTest::setCallback(AsyncParamActionCb pcb) {
     _pcb = pcb;
 }
-CallBackTest* CB;
+//CallBackTest* CB;
 
 //CB->setCallback([]() {
 //    Serial.println("123");

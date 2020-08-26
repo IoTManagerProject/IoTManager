@@ -5,6 +5,7 @@
 #include "Class/LineParsing.h"
 #include "Class/Pwm.h"
 #include "Class/Switch.h"
+#include "Class/OutputModule.h"
 //-----------------------------
 #include "Class/NotAsinc.h"
 #include "Global.h"
@@ -32,9 +33,8 @@ void cmd_init() {
     sCmd.addCommand("button-in", buttonIn);
     sCmd.addCommand("input-digit", inputDigit);
     sCmd.addCommand("input-time", inputTime);
+    sCmd.addCommand("output-text", textOut);
 
-    sCmd.addCommand("text", text);
-    sCmd.addCommand("textSet", textSet);
 
 
 
@@ -235,29 +235,45 @@ void handle_time_init() {
 //===============================================Модуль вывода текста============================================
 //output-text;id;anydata;Вывод;Сигнализация;order;st[Обнаружено.движение]
 //===============================================================================================================
-void text() {
-    String number = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String page_number = sCmd.next();
-
-    createWidget(widget_name, page_name, page_number, "anydata", "text" + number);
+void textOut() {
+    myText = new OutputModule();
+    myText->update();
+    String key = myText->gkey();
+    sCmd.addCommand(key.c_str(), textOutSet);
+    myText->OutputModuleStateSetDefault();
+    myText->clear();
 }
 
-void textSet() {
-    String number = sCmd.next();
-    String text = sCmd.next();
-    text.replace("_", " ");
-
-    if (text.indexOf("-time") >= 0) {
-        text.replace("-time", "");
-        text.replace("#", " ");
-        text = text + " " + timeNow->getDateTimeDotFormated();
-    }
-
-    jsonWriteStr(configLiveJson, "text" + number, text);
-    MqttClient::publishStatus("text" + number, text);
+void textOutSet() {
+    String key = sCmd.order();
+    String state = sCmd.next();
+    myText->OutputModuleChange(key, state);
 }
+
+
+//void text() {
+//    String number = sCmd.next();
+//    String widget_name = sCmd.next();
+//    String page_name = sCmd.next();
+//    String page_number = sCmd.next();
+//
+//    createWidget(widget_name, page_name, page_number, "anydata", "text" + number);
+//}
+//
+//void textSet() {
+//    String number = sCmd.next();
+//    String text = sCmd.next();
+//    text.replace("_", " ");
+//
+//    if (text.indexOf("-time") >= 0) {
+//        text.replace("-time", "");
+//        text.replace("#", " ");
+//        text = text + " " + timeNow->getDateTimeDotFormated();
+//    }
+//
+//    jsonWriteStr(configLiveJson, "text" + number, text);
+//    MqttClient::publishStatus("text" + number, text);
+//}
 //=====================================================================================================================================
 //=========================================Модуль шагового мотора======================================================================
 #ifdef STEPPER_ENABLED
