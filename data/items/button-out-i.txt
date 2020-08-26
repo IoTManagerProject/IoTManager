@@ -1,1 +1,1 @@
-button-out;id;toggle;Кнопки;Освещение;order;pin[12];inv[1];st[1]
+button-out;id;toggle;Кнопки;Освещение;order;pin;inv[1];st[1]

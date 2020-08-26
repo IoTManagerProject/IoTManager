@@ -2,6 +2,8 @@
 
 #include "Utils/TimeUtils.h"
 #include "Utils/PrintMessage.h"
+#include "Global.h"
+#include "Clock.h"
 
 #ifdef ESP8266
 #include "sntp.h"
@@ -69,7 +71,7 @@ class Clock {
 
     void startSync() {
         if (!_configured) {
-            pm.info("sync to: " + _ntp + " timezone: " + String(_timezone));
+            //pm.info("sync to: " + _ntp + " timezone: " + String(_timezone));
             setupSntp();
             _configured = true;
             // лучше не ждать, проверим в следующий раз
@@ -77,9 +79,9 @@ class Clock {
         }
         _hasSynced = hasTimeSynced();
         if (_hasSynced) {
-            pm.info("synced " + getDateDotFormated() + " " + getTime());
+            //pm.info("synced " + getDateDotFormated() + " " + getTime());
         } else {
-            pm.error("failed to obtain");
+            //pm.error("failed to obtain");
         }
     }
 

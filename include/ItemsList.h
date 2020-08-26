@@ -5,4 +5,5 @@
 
 extern void addItem(String name);
 extern void delAllItems();
-extern int getNewElementNumber(String file);
+extern uint8_t getNewElementNumber(String file);
+extern uint8_t getFreePin();

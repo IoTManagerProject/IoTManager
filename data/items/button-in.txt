@@ -1,1 +1,1 @@
-button-in;id;toggle;Кнопки;Освещение;order;pin[2];db[20]
+button-in;id;toggle;Кнопки;Освещение;order;pin;db[20]

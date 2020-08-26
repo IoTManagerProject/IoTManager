@@ -1,4 +1,5 @@
-#include "DeviceList.h"
+#include "Web.h"
+#include "ItemsList.h"
 #include "Global.h"
 #include "Init.h"
 #include "Class/NotAsinc.h"
@@ -93,17 +94,17 @@ void web_init() {
             loadScenario();
             request->send(200);
         }
-        //--------------------------------------------------------------------------------
+      
         if (request->hasArg("updatelist")) {
             removeFile("/dev.csv");
             addFileLn("dev.csv", "device id;device name;ip address");
             request->redirect("/?set.udp");
         }
-        //--------------------------------------------------------------------------------
+        
         if (request->hasArg("updatepage")) {
             request->redirect("/?set.udp");
         }
-        //--------------------------------------------------------------------------------
+       
         if (request->hasArg("devname")) {
             jsonWriteStr(configSetupJson, "name", request->getParam("devname")->value());
             saveConfig();
@@ -115,34 +116,37 @@ void web_init() {
             saveConfig();
             request->send(200);
         }
+
         if (request->hasArg("routerpass")) {
             jsonWriteStr(configSetupJson, "routerpass", request->getParam("routerpass")->value());
             saveConfig();
             request->send(200);
         }
-        //--------------------------------------------------------------------------------
+       
         if (request->hasArg("apssid")) {
             jsonWriteStr(configSetupJson, "apssid", request->getParam("apssid")->value());
             saveConfig();
             request->send(200, "text/text", "OK");
         }
+
         if (request->hasArg("appass")) {
             jsonWriteStr(configSetupJson, "appass", request->getParam("appass")->value());
             saveConfig();
             request->send(200);
         }
-        //--------------------------------------------------------------------------------
+       
         if (request->hasArg("weblogin")) {
             jsonWriteStr(configSetupJson, "weblogin", request->getParam("weblogin")->value());
             saveConfig();
             request->send(200);
         }
+
         if (request->hasArg("webpass")) {
             jsonWriteStr(configSetupJson, "webpass", request->getParam("webpass")->value());
             saveConfig();
             request->send(200);
         }
-        //--------------------------------------------------------------------------------
+        
         if (request->hasArg("timezone")) {
             String timezoneStr = request->getParam("timezone")->value();
             jsonWriteStr(configSetupJson, "timezone", timezoneStr);
@@ -150,6 +154,7 @@ void web_init() {
             timeNow->setTimezone(timezoneStr.toInt());
             request->send(200);
         }
+
         if (request->hasArg("ntp")) {
             String ntpStr = request->getParam("ntp")->value();
             jsonWriteStr(configSetupJson, "ntp", ntpStr);
@@ -157,7 +162,7 @@ void web_init() {
             timeNow->setNtpPool(ntpStr);
             request->send(200);
         }
-        //--------------------------------------------------------------------------------
+        
         if (request->hasArg("blink")) {
             bool value = request->getParam("blink")->value().toInt();
             jsonWriteBool(configSetupJson, "blink", value);
@@ -196,13 +201,12 @@ void web_init() {
             myNotAsincActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
-        //--------------------------------------------------------------------------------
+      
         if (request->hasArg("mqttsend")) {
             myNotAsincActions->make(do_MQTTUDP);
             request->send(200);
         }
 
-        //--------------------------------------------------------------------------------
         if (request->hasArg("mqttcheck")) {
             String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
 
@@ -295,4 +299,10 @@ void web_init() {
         myNotAsincActions->make(do_UPGRADE);;
         request->send(200, "text/html");
     });
+}
+
+void setConfigParam(const char* param, const String& value) {
+    pm.info("set " + String(param) + ": " + value);
+    jsonWriteStr(configSetupJson, param, value);
+    saveConfig();
 }

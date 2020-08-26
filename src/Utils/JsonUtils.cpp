@@ -1,4 +1,6 @@
 #include "Utils\JsonUtils.h"
+#include "Utils/FileUtils.h"
+#include "Global.h"
 
 #include <ArduinoJson.h>
 
@@ -49,4 +51,8 @@ String jsonWriteFloat(String& json, String name, float value) {
     json = "";
     root.printTo(json);
     return json;
+}
+
+void saveConfig() {
+    writeFile(String("config.json"), configSetupJson);
 }

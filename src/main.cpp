@@ -3,9 +3,9 @@
 #include "Class/NotAsinc.h"
 #include "Class/Switch.h"
 #include "Cmd.h"
-#include "DeviceList.h"
+#include "ItemsList.h"
 #include "Global.h"
-#include "HttpServer.h"
+#include "Utils\WebUtils.h"
 #include "Init.h"
 #include "Utils/Timings.h"
 
@@ -106,76 +106,15 @@ void loop() {
 
 
 
-String getURL(const String& urls) {
-    String res = "";
-    HTTPClient http;
-    http.begin(urls);
-    int httpCode = http.GET();
-    if (httpCode == HTTP_CODE_OK) {
-        res = http.getString();
-    } else {
-        res = "error";
-    }
-    http.end();
-    return res;
-}
 
-void setChipId() {
-    chipId = getChipId();
-    pm.info("id: " + chipId);
-}
 
-void saveConfig() {
-    writeFile(String("config.json"), configSetupJson);
-}
 
-void setConfigParam(const char* param, const String& value) {
-    pm.info("set " + String(param) + ": " + value);
-    jsonWriteStr(configSetupJson, param, value);
-    saveConfig();
-}
 
-#ifdef ESP8266
-void setLedStatus(LedStatus_t status) {
-    pinMode(LED_PIN, OUTPUT);
-    switch (status) {
-        case LED_OFF:
-            noTone(LED_PIN);
-            digitalWrite(LED_PIN, HIGH);
-            break;
-        case LED_ON:
-            noTone(LED_PIN);
-            digitalWrite(LED_PIN, LOW);
-            break;
-        case LED_SLOW:
-            tone(LED_PIN, 1);
-            break;
-        case LED_FAST:
-            tone(LED_PIN, 20);
-            break;
-        default:
-            break;
-    }
-}
-#else
-void setLedStatus(LedStatus_t status) {
-    pinMode(LED_PIN, OUTPUT);
-    switch (status) {
-        case LED_OFF:
-            digitalWrite(LED_PIN, HIGH);
-            break;
-        case LED_ON:
-            digitalWrite(LED_PIN, LOW);
-            break;
-        case LED_SLOW:
-            break;
-        case LED_FAST:
-            break;
-        default:
-            break;
-    }
-}
-#endif
+
+
+
+
+
 
 void clock_init() {
     timeNow = new Clock();

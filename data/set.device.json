@@ -43,7 +43,7 @@
         },
         {
             "type": "h4",
-            "title": "LittleFS version: 2.3.5"
+            "title": "LittleFS version: 2.4.0"
         },
         {
             "type": "hr"
@@ -56,7 +56,7 @@
             "title": {
                 "#": "Выберите элемент из списка<span class=\"caret\"></span>",
                 "/set?addItem=button-out": "1.Кнопка управляющая пином",
-                "/set?addItem=pwm-out": "2.Широтно импульсная подуляция",
+                "/set?addItem=pwm-out": "2.Широтно импульсная модуляция(pwm)",
                 "/set?addItem=button-in": "3.Физическая кнопка",
                 "/set?addItem=input-digit": "4.Окно ввода цифровых значений",
                 "/set?addItem=input-time": "5.Окно ввода времени"
@@ -75,7 +75,7 @@
                 "text",
                 "text"
             ],
-            "state": "conf.csv",
+            "state": "s.conf.csv",
             "style": "width:100%;",
             "action": "/set?saveItems",
             "class": "btn btn-block btn-default"
@@ -102,7 +102,7 @@
         },
         {
             "type": "file",
-            "state": "dev_scen.txt",
+            "state": "s.scen.txt",
             "style": "width:100%;height:350px",
             "title": "Сохранить",
             "action": "/set?sceninit",

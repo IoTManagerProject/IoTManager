@@ -1,39 +1,57 @@
-#include "DeviceList.h"
+#include "ItemsList.h"
 
 static const char* firstLine PROGMEM = "Тип элемента;Id;Виджет;Имя вкладки;Имя виджета;Позиция виджета";
 
 void addItem(String name) {
     String item = readFile("items/" + name + ".txt", 1024);
-    item.replace("id", "id" + String(getNewElementNumber("id.txt")));
+
+    item.replace("id", name + String(getNewElementNumber("id.txt")));
     item.replace("order", String(getNewElementNumber("order.txt")));
+    item.replace("pin", "pin[" + String(getFreePin()) + "]");
+
     item.replace("\r\n", "");
     item.replace("\r", "");
     item.replace("\n", "");
-    addFile("conf.csv", "\n" + item);
+    addFile(DEVICE_CONFIG_FILE, "\n" + item);
 }
 
 void delAllItems() {
-    removeFile("conf.csv");
-    addFile("conf.csv", String(firstLine));
+    removeFile(DEVICE_CONFIG_FILE);
+    addFile(DEVICE_CONFIG_FILE, String(firstLine));
     removeFile("id.txt");
     removeFile("order.txt");
+    removeFile("pins.txt");
 }
 
-int getNewElementNumber(String file) {
-    int number = readFile(file, 100).toInt();
+uint8_t getNewElementNumber(String file) {
+    uint8_t number = readFile(file, 100).toInt();
     number++;
     removeFile(file);
     addFile(file, String(number));
     return number;
 }
 
-
+uint8_t getFreePin() {
+    #ifdef ESP8266
+    uint8_t pins[] = {0, 12, 13, 14, 15, 16, 1, 2, 3, 4, 5};
+    #endif
+    #ifdef ESP32
+    uint8_t pins[] = {0, 12, 13, 14, 15, 16, 1, 2, 3, 4, 5};
+    #endif
+    uint8_t array_sz = sizeof(pins) / sizeof(pins[0]);
+    uint8_t i = getNewElementNumber("pins.txt");
+    if (i < array_sz) {
+        return pins[i];
+    } else {
+        return 0;
+    }
+}
 
 //void do_getJsonListFromCsv() {
 //    if (getJsonListFromCsvFlag) {
 //        getJsonListFromCsvFlag = false;
 //        removeFile("items/items.json");
-//        addFile("items/items.json", getJsonListFromCsv("conf.csv", 1));
+//        addFile("items/items.json", getJsonListFromCsv(DEVICE_CONFIG_FILE, 1));
 //    }
 //}
 //
