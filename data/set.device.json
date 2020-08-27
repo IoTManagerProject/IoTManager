@@ -61,7 +61,8 @@
                 "/set?addItem=button-in": "4.Физическая кнопка",
                 "/set?addItem=input-digit": "5.Окно ввода цифровых значений",
                 "/set?addItem=input-time": "6.Окно ввода времени",
-                "/set?addItem=output-text": "7.Окно вывода любого текста, предупреждения, цифры"
+                "/set?addItem=output-text": "7.Окно вывода любого текста, предупреждения, цифры",
+                "/set?addItem=analog-adc": "8.Аналоговый сенсор"
             }
         },
         {

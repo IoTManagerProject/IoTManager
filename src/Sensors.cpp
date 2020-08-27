@@ -1,3 +1,5 @@
+#include "Class/SensorAnalog.h"
+#include "Cmd.h"
 #include "Global.h"
 
 GMedian<10, int> medianFilter;
@@ -17,66 +19,160 @@ const String comfortStr(ComfortState value);
 
 void bmp280T_reading();
 
-void sensors_init() {
+void sensorsInit() {
     ts.add(
-        SENSORS, 1000, [&](void *) {
-            static int counter;
-            counter++;
-
-#ifdef LEVEL_ENABLED
-            if (sensors_reading_map[0] == 1)
-                ultrasonic_reading();
-#endif
-
-            if (counter > 10) {
-                counter = 0;
-
-#ifdef ANALOG_ENABLED
-                if (sensors_reading_map[1] == 1)
-                    analog_reading1();
-                if (sensors_reading_map[2] == 1)
-                    analog_reading2();
-#endif
-
-#ifdef DALLAS_ENABLED
-                if (sensors_reading_map[3] == 1)
-                    dallas_reading();
-#endif
-
-#ifdef DHT_ENABLED
-                if (sensors_reading_map[4] == 1)
-                    dhtT_reading();
-                if (sensors_reading_map[5] == 1)
-                    dhtH_reading();
-                if (sensors_reading_map[6] == 1)
-                    dhtP_reading();
-                if (sensors_reading_map[7] == 1)
-                    dhtC_reading();
-                if (sensors_reading_map[8] == 1)
-                    dhtD_reading();
-#endif
-
-#ifdef BMP_ENABLED
-                if (sensors_reading_map[9] == 1)
-                    bmp280T_reading();
-                if (sensors_reading_map[10] == 1)
-                    bmp280P_reading();
-#endif
-
-#ifdef BME_ENABLED
-                if (sensors_reading_map[11] == 1)
-                    bme280T_reading();
-                if (sensors_reading_map[12] == 1)
-                    bme280P_reading();
-                if (sensors_reading_map[13] == 1)
-                    bme280H_reading();
-                if (sensors_reading_map[14] == 1)
-                    bme280A_reading();
-#endif
+        SENSORS, 10000, [&](void *) {
+            String buf = sensorReadingMap;
+            while (buf.length()) {
+                String tmp = selectToMarker(buf, ",");
+                sCmd.readStr(tmp);
+                buf = deleteBeforeDelimiter(buf, ",");
             }
         },
         nullptr, true);
 }
+
+//            static int counter;
+//            counter++;
+//
+//#ifdef LEVEL_ENABLED
+//            if (sensors_reading_map[0] == 1)
+//                ultrasonic_reading();
+//#endif
+//
+//            if (counter > 10) {
+//                counter = 0;
+//
+//#ifdef ANALOG_ENABLED
+//                if (sensors_reading_map[1] == 1)
+//                    //analog_reading1();
+//                    if (sensors_reading_map[2] == 1)
+//                //analog_reading2();
+//#endif
+//
+//#ifdef DALLAS_ENABLED
+//                        if (sensors_reading_map[3] == 1)
+//                            dallas_reading();
+//#endif
+//
+//#ifdef DHT_ENABLED
+//                if (sensors_reading_map[4] == 1)
+//                    dhtT_reading();
+//                if (sensors_reading_map[5] == 1)
+//                    dhtH_reading();
+//                if (sensors_reading_map[6] == 1)
+//                    dhtP_reading();
+//                if (sensors_reading_map[7] == 1)
+//                    dhtC_reading();
+//                if (sensors_reading_map[8] == 1)
+//                    dhtD_reading();
+//#endif
+//
+//#ifdef BMP_ENABLED
+//                if (sensors_reading_map[9] == 1)
+//                    bmp280T_reading();
+//                if (sensors_reading_map[10] == 1)
+//                    bmp280P_reading();
+//#endif
+//
+//#ifdef BME_ENABLED
+//                if (sensors_reading_map[11] == 1)
+//                    bme280T_reading();
+//                if (sensors_reading_map[12] == 1)
+//                    bme280P_reading();
+//                if (sensors_reading_map[13] == 1)
+//                    bme280H_reading();
+//                if (sensors_reading_map[14] == 1)
+//                    bme280A_reading();
+//#endif
+//            }
+
+//==============================================Модуль аналогового сенсора===========================================================================================
+//analog-adc;id;anydata;Сенсоры;Аналоговый;order;pin[0];map[1,100,1,100];c[0]
+//===================================================================================================================================================================
+#ifdef ANALOG_ENABLED
+void analogAdc() {
+    mySensorAnalog = new SensorAnalog();
+    mySensorAnalog->update();
+    String key = mySensorAnalog->gkey();
+    String pin = mySensorAnalog->gpin();
+    sCmd.addCommand(key.c_str(), analogReading);
+    sensorReadingMap += key + ",";
+    jsonWriteStr(configOptionJson, key + "_pin", pin);
+    mySensorAnalog->clear();
+}
+
+void analogReading() {
+    String key = sCmd.order();
+    String pin = jsonReadStr(configOptionJson, key + "_pin");
+    mySensorAnalog->SensorAnalogRead(key, pin);
+}
+
+//analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
+//void analog() {
+//    String value_name = sCmd.next();
+//    String pin = sCmd.next();
+//    String widget_name = sCmd.next();
+//    String page_name = sCmd.next();
+//    String type = sCmd.next();
+//    String analog_start = sCmd.next();
+//    String analog_end = sCmd.next();
+//    String analog_start_out = sCmd.next();
+//    String analog_end_out = sCmd.next();
+//    String page_number = sCmd.next();
+//    analog_value_names_list += value_name + ",";
+//    enter_to_analog_counter++;
+//    jsonWriteStr(configOptionJson, value_name + "_st", analog_start);
+//    jsonWriteStr(configOptionJson, value_name + "_end", analog_end);
+//    jsonWriteStr(configOptionJson, value_name + "_st_out", analog_start_out);
+//    jsonWriteStr(configOptionJson, value_name + "_end_out", analog_end_out);
+//    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+//    if (enter_to_analog_counter == 1) {
+//        sensors_reading_map[1] = 1;
+//    }
+//    if (enter_to_analog_counter == 2) {
+//        sensors_reading_map[2] = 1;
+//    }
+//}
+//
+//void analog_reading1() {
+//    String value_name = selectFromMarkerToMarker(analog_value_names_list, ",", 0);
+//#ifdef ESP32
+//    int analog_in = analogRead(34);
+//#endif
+//#ifdef ESP8266
+//    int analog_in = analogRead(A0);
+//#endif
+//    int analog = map(analog_in,
+//                     jsonReadInt(configOptionJson, value_name + "_st"),
+//                     jsonReadInt(configOptionJson, value_name + "_end"),
+//                     jsonReadInt(configOptionJson, value_name + "_st_out"),
+//                     jsonReadInt(configOptionJson, value_name + "_end_out"));
+//    jsonWriteInt(configLiveJson, value_name, analog);
+//    eventGen(value_name, "");
+//    MqttClient::publishStatus(value_name, String(analog));
+//    Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
+//}
+//
+//void analog_reading2() {
+//    String value_name = selectFromMarkerToMarker(analog_value_names_list, ",", 1);
+//#ifdef ESP32
+//    int analog_in = analogRead(35);
+//#endif
+//#ifdef ESP8266
+//    int analog_in = analogRead(A0);
+//#endif
+//    int analog = map(analog_in,
+//                     jsonReadInt(configOptionJson, value_name + "_st"),
+//                     jsonReadInt(configOptionJson, value_name + "_end"),
+//                     jsonReadInt(configOptionJson, value_name + "_st_out"),
+//                     jsonReadInt(configOptionJson, value_name + "_end_out"));
+//    jsonWriteInt(configLiveJson, value_name, analog);
+//    eventGen(value_name, "");
+//    MqttClient::publishStatus(value_name, String(analog));
+//    Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
+//}
+#endif
 
 //=========================================================================================================================================
 //=========================================Модуль измерения уровня в баке==================================================================
@@ -161,74 +257,6 @@ void ultrasonic_reading() {
 }
 #endif
 //=========================================================================================================================================
-//=========================================Модуль аналогового сенсора======================================================================
-#ifdef ANALOG_ENABLED
-//analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
-void analog() {
-    String value_name = sCmd.next();
-    String pin = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String analog_start = sCmd.next();
-    String analog_end = sCmd.next();
-    String analog_start_out = sCmd.next();
-    String analog_end_out = sCmd.next();
-    String page_number = sCmd.next();
-    analog_value_names_list += value_name + ",";
-    enter_to_analog_counter++;
-    jsonWriteStr(configOptionJson, value_name + "_st", analog_start);
-    jsonWriteStr(configOptionJson, value_name + "_end", analog_end);
-    jsonWriteStr(configOptionJson, value_name + "_st_out", analog_start_out);
-    jsonWriteStr(configOptionJson, value_name + "_end_out", analog_end_out);
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
-    if (enter_to_analog_counter == 1) {
-        sensors_reading_map[1] = 1;
-    }
-    if (enter_to_analog_counter == 2) {
-        sensors_reading_map[2] = 1;
-    }
-}
-
-void analog_reading1() {
-    String value_name = selectFromMarkerToMarker(analog_value_names_list, ",", 0);
-#ifdef ESP32
-    int analog_in = analogRead(34);
-#endif
-#ifdef ESP8266
-    int analog_in = analogRead(A0);
-#endif
-    int analog = map(analog_in,
-                     jsonReadInt(configOptionJson, value_name + "_st"),
-                     jsonReadInt(configOptionJson, value_name + "_end"),
-                     jsonReadInt(configOptionJson, value_name + "_st_out"),
-                     jsonReadInt(configOptionJson, value_name + "_end_out"));
-    jsonWriteInt(configLiveJson, value_name, analog);
-    eventGen(value_name, "");
-    MqttClient::publishStatus(value_name, String(analog));
-    Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
-}
-
-void analog_reading2() {
-    String value_name = selectFromMarkerToMarker(analog_value_names_list, ",", 1);
-#ifdef ESP32
-    int analog_in = analogRead(35);
-#endif
-#ifdef ESP8266
-    int analog_in = analogRead(A0);
-#endif
-    int analog = map(analog_in,
-                     jsonReadInt(configOptionJson, value_name + "_st"),
-                     jsonReadInt(configOptionJson, value_name + "_end"),
-                     jsonReadInt(configOptionJson, value_name + "_st_out"),
-                     jsonReadInt(configOptionJson, value_name + "_end_out"));
-    jsonWriteInt(configLiveJson, value_name, analog);
-    eventGen(value_name, "");
-    MqttClient::publishStatus(value_name, String(analog));
-    Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
-}
-#endif
-//=========================================================================================================================================
 //=========================================Модуль температурного сенсора ds18b20===========================================================
 #ifdef DALLAS_ENABLED
 //dallas temp1 2 1 Температура Датчики anydata 1
@@ -242,7 +270,7 @@ void dallas() {
     String page_name = sCmd.next();
     String type = sCmd.next();
     String page_number = sCmd.next();
-    oneWire = new OneWire((uint8_t) pin.toInt());
+    oneWire = new OneWire((uint8_t)pin.toInt());
     sensors.setOneWire(oneWire);
     sensors.begin();
     sensors.setResolution(12);
@@ -256,7 +284,7 @@ void dallas_reading() {
     byte num = sensors.getDS18Count();
     String dallas_value_name_tmp_buf = dallas_value_name;
     sensors.requestTemperatures();
-    for (byte i = 0; i < num; i++) {     
+    for (byte i = 0; i < num; i++) {
         temp = sensors.getTempCByIndex(i);
         String buf = selectToMarker(dallas_value_name_tmp_buf, ";");
         dallas_value_name_tmp_buf = deleteBeforeDelimiter(dallas_value_name_tmp_buf, ";");

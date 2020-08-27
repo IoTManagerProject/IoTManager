@@ -3,9 +3,9 @@
 #include "Class/Button.h"
 #include "Class/Input.h"
 #include "Class/LineParsing.h"
+#include "Class/OutputModule.h"
 #include "Class/Pwm.h"
 #include "Class/Switch.h"
-#include "Class/OutputModule.h"
 //-----------------------------
 #include "Class/NotAsinc.h"
 #include "Global.h"
@@ -36,7 +36,12 @@ void cmd_init() {
     sCmd.addCommand("input-time", inputTime);
     sCmd.addCommand("output-text", textOut);
 
-    
+#ifdef ANALOG_ENABLED
+    sCmd.addCommand("analog-adc", analogAdc);
+#endif
+
+
+
 
 
 
@@ -45,11 +50,6 @@ void cmd_init() {
     sCmd.addCommand("timerStart", timerStart_);
     sCmd.addCommand("timerStop", timerStop_);
 
-    
-
-#ifdef ANALOG_ENABLED
-    sCmd.addCommand("analog", analog);
-#endif
 #ifdef LEVEL_ENABLED
     sCmd.addCommand("levelPr", levelPr);
     sCmd.addCommand("ultrasonicCm", ultrasonicCm);
@@ -252,7 +252,6 @@ void textOutSet() {
     String state = sCmd.next();
     myText->OutputModuleChange(key, state);
 }
-
 
 //void text() {
 //    String number = sCmd.next();
@@ -490,8 +489,8 @@ void fileExecute(const String &filename) {
     csvExecute(cmdStr);
 }
 
-void csvExecute(String &cmdStr) { 
-    cmdStr.replace(";"," ");
+void csvExecute(String &cmdStr) {
+    cmdStr.replace(";", " ");
     cmdStr += "\r\n";
     cmdStr.replace("\r\n", "\n");
     cmdStr.replace("\r", "\n");
@@ -499,12 +498,12 @@ void csvExecute(String &cmdStr) {
     while (cmdStr.length()) {
         String buf = selectToMarker(cmdStr, "\n");
         count++;
-        if (count > 1)sCmd.readStr(buf);
+        if (count > 1) sCmd.readStr(buf);
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
     }
 }
 
-void spaceExecute(String &cmdStr) { 
+void spaceExecute(String &cmdStr) {
     cmdStr += "\r\n";
     cmdStr.replace("\r\n", "\n");
     cmdStr.replace("\r", "\n");

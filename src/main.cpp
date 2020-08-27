@@ -42,7 +42,7 @@ void setup() {
     cmd_init();
 
     pm.info("Sensors");
-    sensors_init();
+    sensorsInit();
 
     pm.info("Init");
     all_init();

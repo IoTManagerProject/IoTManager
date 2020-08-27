@@ -23,31 +23,36 @@ void all_init() {
 }
 
 void Device_init() {
-    logging_value_names_list = "";
-    enter_to_logging_counter = LOG1 - 1;
 
+     sensorReadingMap = "";
+
+
+
+
+
+    logging_value_names_list = "";
+
+
+
+
+
+    enter_to_logging_counter = LOG1 - 1;
     analog_value_names_list = "";
     enter_to_analog_counter = 0;
-
     dallas_value_name = "";
     enter_to_dallas_counter = 0;
-
     levelPr_value_name = "";
     ultrasonicCm_value_name = "";
-
     dhtT_value_name = "";
     dhtH_value_name = "";
-
     bmp280T_value_name = "";
     bmp280P_value_name = "";
-
     bme280T_value_name = "";
     bme280P_value_name = "";
     bme280H_value_name = "";
     bme280A_value_name = "";
 
     int array_sz = sizeof(sensors_reading_map) / sizeof(sensors_reading_map[0]);
-
     for (int i = 0; i < array_sz; i++) {
         sensors_reading_map[i] = 0;
     }

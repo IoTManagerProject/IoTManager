@@ -71,10 +71,12 @@ extern Bounce* buttons;
 
 extern boolean just_load;
 
+// Json
 extern String configSetupJson;   //все настройки
 extern String configLiveJson;    //все данные с датчиков (связан с mqtt)
 extern String configOptionJson;  //для трансфера
 
+// Mqtt
 extern String chipId;
 extern String prex;
 extern String all_widgets;
@@ -83,6 +85,12 @@ extern String order_loop;
 
 extern String itemsFile;
 extern String itemsLine;
+
+// Sensors
+extern String sensorReadingMap;
+
+
+
 
 extern String analog_value_names_list;
 extern int enter_to_analog_counter;
@@ -165,45 +173,7 @@ extern void setLedStatus(LedStatus_t);
 extern void eventGen(String event_name, String number);
 extern String add_set(String param_name);
 
-//Sensors
-extern void sensors_init();
 
-extern void levelPr();
-extern void ultrasonicCm();
-extern void ultrasonic_reading();
-
-extern void analog();
-extern void analog_reading1();
-extern void analog_reading2();
-extern void dallas_reading();
-extern void dhtT_reading();
-
-extern void dallas();
-
-extern void bmp280T();
-extern void bmp280P();
-extern void bmp280T_reading();
-extern void bmp280P_reading();
-
-extern void bme280T();
-extern void bme280P();
-extern void bme280H();
-extern void bme280A();
-
-extern void bme280T_reading();
-extern void bme280P_reading();
-extern void bme280H_reading();
-extern void bme280A_reading();
-
-extern void dhtT();
-extern void dhtH();
-extern void dhtP();
-extern void dhtC();
-extern void dhtD();
-extern void dhtH_reading();
-extern void dhtP_reading();
-extern void dhtC_reading();
-extern void dhtD_reading();
 
 //Timers
 extern void Timer_countdown_init();
