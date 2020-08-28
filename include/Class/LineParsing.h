@@ -3,6 +3,7 @@
 #include <Arduino.h>
 
 #include "Global.h"
+#include "Utils/JsonUtils.h"
 
 class LineParsing {
    protected:
@@ -49,7 +50,7 @@ class LineParsing {
             if (i == 5) _order = sCmd.next();
         }
 
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i < 10; i++) {
             String arg = sCmd.next();
             if (arg != "") {
                 if (arg.indexOf("pin[") != -1) {
@@ -64,15 +65,23 @@ class LineParsing {
                 if (arg.indexOf("db[") != -1) {
                     _db = extractInner(arg);
                 }
+                if (arg.indexOf("map[") != -1) {
+                    _map = extractInner(arg);
+                }
+                if (arg.indexOf("c[") != -1) {
+                    _c = extractInner(arg);
+                }
             }
         }
 
         _page.replace("#", " ");
 
-        _descr.replace("#", " ");   
+        _descr.replace("#", " ");
 
         createWidgetClass(_descr, _page, _order, _file, _key);
     }
+
+    //jsonWriteStr(configOptionJson, _key + "_pin", _pin);
 
     String gkey() {
         return _key;
@@ -90,13 +99,19 @@ class LineParsing {
         return _order;
     }
     String gpin() {
-        return _pin;
+        return _pin;  //
     }
     String ginv() {
-        return _inv;
+        return _inv;  //
     }
     String gstate() {
         return _state;
+    }
+    String gmap() {
+        return _map;
+    }
+    String gc() {
+        return _c;
     }
 
     void clear() {
@@ -150,4 +165,13 @@ class LineParsing {
     const String getWidgetFileClass(const String& name) {
         return "/widgets/" + name + ".json";
     }
+
+    //String jsonWriteStr1(String& json, String name, String value) {
+    //    DynamicJsonBuffer jsonBuffer;
+    //    JsonObject& root = jsonBuffer.parseObject(json);
+    //    root[name] = value;
+    //    json = "";
+    //    root.printTo(json);
+    //    return json;
+    //}
 };

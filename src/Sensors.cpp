@@ -99,12 +99,14 @@ void analogAdc() {
     sCmd.addCommand(key.c_str(), analogReading);
     sensorReadingMap += key + ",";
     jsonWriteStr(configOptionJson, key + "_pin", pin);
+    jsonWriteStr(configOptionJson, key + "_map", mySensorAnalog->gmap());
     mySensorAnalog->clear();
 }
 
 void analogReading() {
     String key = sCmd.order();
     String pin = jsonReadStr(configOptionJson, key + "_pin");
+    
     mySensorAnalog->SensorAnalogRead(key, pin);
 }
 
