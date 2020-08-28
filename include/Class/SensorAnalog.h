@@ -1,7 +1,5 @@
 #pragma once
-
 #include <Arduino.h>
-
 #include "Class/LineParsing.h"
 #include "Class/SensorConverting.h"
 #include "Global.h"
@@ -23,16 +21,14 @@ class SensorAnalog : public SensorConverting {
         pinInt = pinInt;
         value = analogRead(A0);
 #endif
-        //float valueFl = this->mapping(value);
-        //      valueFl = this->correction(valueFl);
-
         value = this->mapping(key, value);
+        float valueFl = this->correction(key, value);
 
         eventGen(key, "");
-        jsonWriteFloat(configLiveJson, key, value);
-        MqttClient::publishStatus(key, String(value));
+        jsonWriteStr(configLiveJson, key, String(valueFl));
+        MqttClient::publishStatus(key, String(valueFl));
 
-        Serial.println("[I] sensor '" + key + "' data: " + String(value));
+        Serial.println("[I] sensor '" + key + "' data: " + String(valueFl));
         return value;
     }
 };

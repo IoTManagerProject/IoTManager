@@ -1,1 +1,1 @@
-analog-adc;id;anydata;Сенсоры;Аналоговый;order;pin-adc;map[1,100,1,100];c[0]
+analog-adc;id;anydata;Сенсоры;Аналоговый;order;pin-adc;map[1,1024,1,1024];c[1]

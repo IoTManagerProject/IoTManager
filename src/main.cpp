@@ -8,6 +8,7 @@
 #include "Utils\WebUtils.h"
 #include "Init.h"
 #include "Utils/Timings.h"
+#include <SSDP.h>
 
 void not_async_actions();
 
@@ -69,6 +70,9 @@ void setup() {
     pm.info("Broadcast UDP");
     udpInit();
 #endif
+
+    pm.info("Ssdp Init");
+    SsdpInit();
 
     ts.add(
         TEST, 1000 * 60, [&](void*) {

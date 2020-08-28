@@ -24,6 +24,9 @@ extern void textOutSet();
 extern void analogAdc();
 extern void analogReading(); 
 
+extern void ultrasonicCm();
+extern void ultrasonicReading();
+
 
 
 

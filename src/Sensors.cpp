@@ -21,7 +21,7 @@ void bmp280T_reading();
 
 void sensorsInit() {
     ts.add(
-        SENSORS, 10000, [&](void *) {
+        SENSORS, 15000, [&](void *) {
             String buf = sensorReadingMap;
             while (buf.length()) {
                 String tmp = selectToMarker(buf, ",");
@@ -32,65 +32,10 @@ void sensorsInit() {
         nullptr, true);
 }
 
-//            static int counter;
-//            counter++;
-//
-//#ifdef LEVEL_ENABLED
-//            if (sensors_reading_map[0] == 1)
-//                ultrasonic_reading();
-//#endif
-//
-//            if (counter > 10) {
-//                counter = 0;
-//
-//#ifdef ANALOG_ENABLED
-//                if (sensors_reading_map[1] == 1)
-//                    //analog_reading1();
-//                    if (sensors_reading_map[2] == 1)
-//                //analog_reading2();
-//#endif
-//
-//#ifdef DALLAS_ENABLED
-//                        if (sensors_reading_map[3] == 1)
-//                            dallas_reading();
-//#endif
-//
-//#ifdef DHT_ENABLED
-//                if (sensors_reading_map[4] == 1)
-//                    dhtT_reading();
-//                if (sensors_reading_map[5] == 1)
-//                    dhtH_reading();
-//                if (sensors_reading_map[6] == 1)
-//                    dhtP_reading();
-//                if (sensors_reading_map[7] == 1)
-//                    dhtC_reading();
-//                if (sensors_reading_map[8] == 1)
-//                    dhtD_reading();
-//#endif
-//
-//#ifdef BMP_ENABLED
-//                if (sensors_reading_map[9] == 1)
-//                    bmp280T_reading();
-//                if (sensors_reading_map[10] == 1)
-//                    bmp280P_reading();
-//#endif
-//
-//#ifdef BME_ENABLED
-//                if (sensors_reading_map[11] == 1)
-//                    bme280T_reading();
-//                if (sensors_reading_map[12] == 1)
-//                    bme280P_reading();
-//                if (sensors_reading_map[13] == 1)
-//                    bme280H_reading();
-//                if (sensors_reading_map[14] == 1)
-//                    bme280A_reading();
-//#endif
-//            }
-
-//==============================================Модуль аналогового сенсора===========================================================================================
-//analog-adc;id;anydata;Сенсоры;Аналоговый;order;pin[0];map[1,100,1,100];c[0]
-//===================================================================================================================================================================
 #ifdef ANALOG_ENABLED
+//==============================================Модуль аналогового сенсора===========================================================================================
+//analog-adc;id;anydata;Сенсоры;Аналоговый;order;pin-adc;map[1,1024,1,100];c[1]
+//===================================================================================================================================================================
 void analogAdc() {
     mySensorAnalog = new SensorAnalog();
     mySensorAnalog->update();
@@ -100,162 +45,107 @@ void analogAdc() {
     sensorReadingMap += key + ",";
     jsonWriteStr(configOptionJson, key + "_pin", pin);
     jsonWriteStr(configOptionJson, key + "_map", mySensorAnalog->gmap());
+    jsonWriteStr(configOptionJson, key + "_с", mySensorAnalog->gc());
     mySensorAnalog->clear();
 }
 
 void analogReading() {
     String key = sCmd.order();
     String pin = jsonReadStr(configOptionJson, key + "_pin");
-    
     mySensorAnalog->SensorAnalogRead(key, pin);
 }
+#endif
 
-//analog adc 0 Аналоговый#вход,#% Датчики any-data 1 1023 1 100 1
-//void analog() {
+#ifdef LEVEL_ENABLED
+//=========================================Модуль ультрозвукового дальномера==================================================================
+//ultrasonic-cm;id;anydata;Сенсоры;Расстояние;order;pin;map[1,100,1,100];c[1]
+//=========================================================================================================================================
+void ultrasonicCm() {
+
+
+}
+
+void ultrasonicReading() {
+
+    
+}
+
+void levelPr() {
 //    String value_name = sCmd.next();
-//    String pin = sCmd.next();
+//    String trig = sCmd.next();
+//    String echo = sCmd.next();
 //    String widget_name = sCmd.next();
 //    String page_name = sCmd.next();
 //    String type = sCmd.next();
-//    String analog_start = sCmd.next();
-//    String analog_end = sCmd.next();
-//    String analog_start_out = sCmd.next();
-//    String analog_end_out = sCmd.next();
+//    String empty_level = sCmd.next();
+//    String full_level = sCmd.next();
 //    String page_number = sCmd.next();
-//    analog_value_names_list += value_name + ",";
-//    enter_to_analog_counter++;
-//    jsonWriteStr(configOptionJson, value_name + "_st", analog_start);
-//    jsonWriteStr(configOptionJson, value_name + "_end", analog_end);
-//    jsonWriteStr(configOptionJson, value_name + "_st_out", analog_start_out);
-//    jsonWriteStr(configOptionJson, value_name + "_end_out", analog_end_out);
+//    levelPr_value_name = value_name;
+//    jsonWriteStr(configOptionJson, "e_lev", empty_level);
+//    jsonWriteStr(configOptionJson, "f_lev", full_level);
+//    jsonWriteStr(configOptionJson, "trig", trig);
+//    jsonWriteStr(configOptionJson, "echo", echo);
+//    pinMode(trig.toInt(), OUTPUT);
+//    pinMode(echo.toInt(), INPUT);
 //    createWidgetByType(widget_name, page_name, page_number, type, value_name);
-//    if (enter_to_analog_counter == 1) {
-//        sensors_reading_map[1] = 1;
-//    }
-//    if (enter_to_analog_counter == 2) {
-//        sensors_reading_map[2] = 1;
-//    }
+//    sensors_reading_map[0] = 1;
+}
+////ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
+//void ultrasonicCm() {
+//    String value_name = sCmd.next();
+//    String trig = sCmd.next();
+//    String echo = sCmd.next();
+//    String widget_name = sCmd.next();
+//    String page_name = sCmd.next();
+//    String type = sCmd.next();
+//    String empty_level = sCmd.next();
+//    String full_level = sCmd.next();
+//    String page_number = sCmd.next();
+//    ultrasonicCm_value_name = value_name;
+//    jsonWriteStr(configOptionJson, "trig", trig);
+//    jsonWriteStr(configOptionJson, "echo", echo);
+//    pinMode(trig.toInt(), OUTPUT);
+//    pinMode(echo.toInt(), INPUT);
+//    createWidgetByType(widget_name, page_name, page_number, type, value_name);
+//    sensors_reading_map[0] = 1;
 //}
 //
-//void analog_reading1() {
-//    String value_name = selectFromMarkerToMarker(analog_value_names_list, ",", 0);
-//#ifdef ESP32
-//    int analog_in = analogRead(34);
-//#endif
-//#ifdef ESP8266
-//    int analog_in = analogRead(A0);
-//#endif
-//    int analog = map(analog_in,
-//                     jsonReadInt(configOptionJson, value_name + "_st"),
-//                     jsonReadInt(configOptionJson, value_name + "_end"),
-//                     jsonReadInt(configOptionJson, value_name + "_st_out"),
-//                     jsonReadInt(configOptionJson, value_name + "_end_out"));
-//    jsonWriteInt(configLiveJson, value_name, analog);
-//    eventGen(value_name, "");
-//    MqttClient::publishStatus(value_name, String(analog));
-//    Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
-//}
-//
-//void analog_reading2() {
-//    String value_name = selectFromMarkerToMarker(analog_value_names_list, ",", 1);
-//#ifdef ESP32
-//    int analog_in = analogRead(35);
-//#endif
-//#ifdef ESP8266
-//    int analog_in = analogRead(A0);
-//#endif
-//    int analog = map(analog_in,
-//                     jsonReadInt(configOptionJson, value_name + "_st"),
-//                     jsonReadInt(configOptionJson, value_name + "_end"),
-//                     jsonReadInt(configOptionJson, value_name + "_st_out"),
-//                     jsonReadInt(configOptionJson, value_name + "_end_out"));
-//    jsonWriteInt(configLiveJson, value_name, analog);
-//    eventGen(value_name, "");
-//    MqttClient::publishStatus(value_name, String(analog));
-//    Serial.println("[I] sensor '" + value_name + "' data: " + String(analog));
-//}
-#endif
-
-//=========================================================================================================================================
-//=========================================Модуль измерения уровня в баке==================================================================
-#ifdef LEVEL_ENABLED
-//levelPr p 14 12 Вода#в#баке,#% Датчики fillgauge 125 20 1
-void levelPr() {
-    String value_name = sCmd.next();
-    String trig = sCmd.next();
-    String echo = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String empty_level = sCmd.next();
-    String full_level = sCmd.next();
-    String page_number = sCmd.next();
-    levelPr_value_name = value_name;
-    jsonWriteStr(configOptionJson, "e_lev", empty_level);
-    jsonWriteStr(configOptionJson, "f_lev", full_level);
-    jsonWriteStr(configOptionJson, "trig", trig);
-    jsonWriteStr(configOptionJson, "echo", echo);
-    pinMode(trig.toInt(), OUTPUT);
-    pinMode(echo.toInt(), INPUT);
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
-    sensors_reading_map[0] = 1;
-}
-//ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
-void ultrasonicCm() {
-    String value_name = sCmd.next();
-    String trig = sCmd.next();
-    String echo = sCmd.next();
-    String widget_name = sCmd.next();
-    String page_name = sCmd.next();
-    String type = sCmd.next();
-    String empty_level = sCmd.next();
-    String full_level = sCmd.next();
-    String page_number = sCmd.next();
-    ultrasonicCm_value_name = value_name;
-    jsonWriteStr(configOptionJson, "trig", trig);
-    jsonWriteStr(configOptionJson, "echo", echo);
-    pinMode(trig.toInt(), OUTPUT);
-    pinMode(echo.toInt(), INPUT);
-    createWidgetByType(widget_name, page_name, page_number, type, value_name);
-    sensors_reading_map[0] = 1;
-}
-
 void ultrasonic_reading() {
-    long duration_;
-    int distance_cm;
-    int level;
-    static int counter;
-    int trig = jsonReadInt(configOptionJson, "trig");
-    int echo = jsonReadInt(configOptionJson, "echo");
-    digitalWrite(trig, LOW);
-    delayMicroseconds(2);
-    digitalWrite(trig, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(trig, LOW);
-    duration_ = pulseIn(echo, HIGH, 30000);  // 3000 µs = 50cm // 30000 µs = 5 m
-    distance_cm = duration_ / 29 / 2;
-    distance_cm = medianFilter.filtered(distance_cm);  //отсечение промахов медианным фильтром
-    counter++;
-    if (counter > TANK_LEVEL_SAMPLES) {
-        counter = 0;
-        level = map(distance_cm,
-                    jsonReadInt(configOptionJson, "e_lev"),
-                    jsonReadInt(configOptionJson, "f_lev"), 0, 100);
-
-        jsonWriteInt(configLiveJson, levelPr_value_name, level);
-        eventGen(levelPr_value_name, "");
-
-        MqttClient::publishStatus(levelPr_value_name, String(level));
-
-        Serial.println("[I] sensor '" + levelPr_value_name + "' data: " + String(level));
-
-        jsonWriteInt(configLiveJson, ultrasonicCm_value_name, distance_cm);
-        eventGen(ultrasonicCm_value_name, "");
-
-        MqttClient::publishStatus(ultrasonicCm_value_name, String(distance_cm));
-
-        Serial.println("[I] sensor '" + ultrasonicCm_value_name + "' data: " + String(distance_cm));
-    }
+//    long duration_;
+//    int distance_cm;
+//    int level;
+//    static int counter;
+//    int trig = jsonReadInt(configOptionJson, "trig");
+//    int echo = jsonReadInt(configOptionJson, "echo");
+//    digitalWrite(trig, LOW);
+//    delayMicroseconds(2);
+//    digitalWrite(trig, HIGH);
+//    delayMicroseconds(10);
+//    digitalWrite(trig, LOW);
+//    duration_ = pulseIn(echo, HIGH, 30000);  // 3000 µs = 50cm // 30000 µs = 5 m
+//    distance_cm = duration_ / 29 / 2;
+//    distance_cm = medianFilter.filtered(distance_cm);  //отсечение промахов медианным фильтром
+//    counter++;
+//    if (counter > TANK_LEVEL_SAMPLES) {
+//        counter = 0;
+//        level = map(distance_cm,
+//                    jsonReadInt(configOptionJson, "e_lev"),
+//                    jsonReadInt(configOptionJson, "f_lev"), 0, 100);
+//
+//        jsonWriteInt(configLiveJson, levelPr_value_name, level);
+//        eventGen(levelPr_value_name, "");
+//
+//        MqttClient::publishStatus(levelPr_value_name, String(level));
+//
+//        Serial.println("[I] sensor '" + levelPr_value_name + "' data: " + String(level));
+//
+//        jsonWriteInt(configLiveJson, ultrasonicCm_value_name, distance_cm);
+//        eventGen(ultrasonicCm_value_name, "");
+//
+//        MqttClient::publishStatus(ultrasonicCm_value_name, String(distance_cm));
+//
+//        Serial.println("[I] sensor '" + ultrasonicCm_value_name + "' data: " + String(distance_cm));
+//    }
 }
 #endif
 //=========================================================================================================================================
