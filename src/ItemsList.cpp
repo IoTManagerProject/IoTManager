@@ -1,4 +1,5 @@
 #include "ItemsList.h"
+
 #include "Utils\StringUtils.h"
 
 static const char* firstLine PROGMEM = "Тип элемента;Id;Виджет;Имя вкладки;Имя виджета;Позиция виджета";
@@ -8,7 +9,11 @@ void addItem(String name) {
     name = deleteToMarkerLast(name, "-");
     item.replace("id", name + String(getNewElementNumber("id.txt")));
     item.replace("order", String(getNewElementNumber("order.txt")));
-    item.replace("pin", "pin[" + String(getFreePin()) + "]");
+    if (item.indexOf("pin-adc") != -1) {
+        item.replace("pin-adc", "pin[" + String(getFreePinAnalog()) + "]");
+    } else if (item.indexOf("pin") != -1) {
+        item.replace("pin", "pin[" + String(getFreePinAll()) + "]");
+    }
     item.replace("\r\n", "");
     item.replace("\r", "");
     item.replace("\n", "");
@@ -31,13 +36,13 @@ uint8_t getNewElementNumber(String file) {
     return number;
 }
 
-uint8_t getFreePin() {
-    #ifdef ESP8266
+uint8_t getFreePinAll() {
+#ifdef ESP8266
     uint8_t pins[] = {0, 12, 13, 14, 15, 16, 1, 2, 3, 4, 5};
-    #endif
-    #ifdef ESP32
+#endif
+#ifdef ESP32
     uint8_t pins[] = {0, 12, 13, 14, 15, 16, 1, 2, 3, 4, 5};
-    #endif
+#endif
     uint8_t array_sz = sizeof(pins) / sizeof(pins[0]);
     uint8_t i = getNewElementNumber("pins.txt");
     if (i < array_sz) {
@@ -45,6 +50,12 @@ uint8_t getFreePin() {
     } else {
         return 0;
     }
+}
+
+uint8_t getFreePinAnalog() {
+#ifdef ESP8266
+    return 0;
+#endif
 }
 
 //void do_getJsonListFromCsv() {

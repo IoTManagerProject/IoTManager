@@ -3,9 +3,10 @@
 #include <Arduino.h>
 
 #include "Class/LineParsing.h"
+#include "Class/SensorConverting.h"
 #include "Global.h"
 
-class SensorAnalog : public LineParsing {
+class SensorAnalog : public LineParsing public SensorConverting {
    public:
     SensorAnalog() : LineParsing(){};
 
@@ -29,6 +30,8 @@ class SensorAnalog : public LineParsing {
         eventGen(key, "");
         jsonWriteInt(configLiveJson, key, value);
         MqttClient::publishStatus(key, String(value));
+
+        Serial.println("[I] sensor '" + key + "' data: " + String(value));
         return value;
     }
 };
