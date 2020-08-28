@@ -6,9 +6,11 @@
 #include "Class/SensorConverting.h"
 #include "Global.h"
 
-class SensorAnalog : public LineParsing public SensorConverting {
+class SensorAnalog : public LineParsing,
+                     public SensorConverting {
    public:
-    SensorAnalog() : LineParsing(){};
+    SensorAnalog() : LineParsing(),
+                     SensorConverting(){};
 
     void SensorAnalogInit() {
         //if (_pin != "") {
@@ -26,12 +28,15 @@ class SensorAnalog : public LineParsing public SensorConverting {
         pinInt = pinInt;
         value = analogRead(A0);
 #endif
+        float valueFl;
+        //float valueFl = this->mapping(value);
+        //      valueFl = this->correction(valueFl);
 
         eventGen(key, "");
-        jsonWriteInt(configLiveJson, key, value);
-        MqttClient::publishStatus(key, String(value));
+        jsonWriteFloat(configLiveJson, key, valueFl);
+        MqttClient::publishStatus(key, String(valueFl));
 
-        Serial.println("[I] sensor '" + key + "' data: " + String(value));
+        Serial.println("[I] sensor '" + key + "' data: " + String(valueFl));
         return value;
     }
 };
