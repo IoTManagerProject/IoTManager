@@ -1,15 +1,16 @@
 
+#include <SSDP.h>
+
 #include "Class/CallBackTest.h"
 #include "Class/NotAsinc.h"
-#include "Class/Switch.h"
 #include "Class/ScenarioClass.h"
+#include "Class/Switch.h"
 #include "Cmd.h"
-#include "ItemsList.h"
 #include "Global.h"
-#include "Utils\WebUtils.h"
 #include "Init.h"
+#include "ItemsList.h"
 #include "Utils/Timings.h"
-#include <SSDP.h>
+#include "Utils\WebUtils.h"
 
 void not_async_actions();
 
@@ -77,8 +78,10 @@ void setup() {
     SsdpInit();
 
     ts.add(
-        TEST, 1000 * 60, [&](void*) {
-            pm.info(printMemoryStatus());
+        TEST, 30000, [&](void*) {
+            //pm.info(printMemoryStatus());
+
+            //myScenario->loop();
         },
         nullptr, true);
 
@@ -106,22 +109,10 @@ void loop() {
     //loopScenario();
     loopCmd();
     loopSerial();
-    
+
     myNotAsincActions->loop();
     ts.update();
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 void clock_init() {
     timeNow = new Clock();
@@ -134,5 +125,3 @@ void clock_init() {
         },
         nullptr, true);
 }
-
-

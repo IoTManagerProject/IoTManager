@@ -131,12 +131,6 @@ void buttonOut() {
 void buttonOutSet() {
     String key = sCmd.order();
     String state = sCmd.next();
-
-    Serial.println("==");
-    Serial.println(key);
-    Serial.println(state);
-    Serial.println("==");
-
     String pin = jsonReadStr(configOptionJson, key + "_pin");
     String inv = jsonReadStr(configOptionJson, key + "_inv");
     if (inv == "") {
@@ -230,7 +224,7 @@ void handle_time_init() {
         TIME, 1000, [&](void *) {
             jsonWriteStr(configLiveJson, "time", timeNow->getTime());
             jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
-            eventGen("timenow", "");
+            //eventGen("timenow", "");
         },
         nullptr, true);
 }

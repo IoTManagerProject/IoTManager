@@ -35,20 +35,31 @@ class Scenario {
 
                  {};
 
-    void load(String& scenario) {
+    void load() {
         _scenarioTmp = scenario;
     }
+
+    //button-out1 = 1
+    //button-out2 1
+    //button-out3 1
+    //end
 
     void calculate() {
         _scenarioTmp += "\n";
         _scenarioTmp.replace("\r\n", "\n");
         _scenarioTmp.replace("\r", "\n");
 
-        _scenBlok = selectToMarker(_scenarioTmp, "end");
-        _condition = selectToMarker(_scenBlok, "\n");
-        _conditionParam = selectFromMarkerToMarker(_condition, " ", 0);
-        _conditionSign = selectFromMarkerToMarker(_condition, " ", 1);
-        _conditionValue = selectFromMarkerToMarker(_condition, " ", 2);
+        _scenBlok = selectToMarker(_scenarioTmp, "end\n");
+
+        _condition = selectToMarker(_scenBlok, "\n");  //button-out1 = 1
+
+        _conditionParam = selectFromMarkerToMarker(_condition, " ", 0);  //button-out1
+        _conditionSign = selectFromMarkerToMarker(_condition, " ", 1);   //=
+        _conditionValue = selectFromMarkerToMarker(_condition, " ", 2);  //1
+
+        if (!isDigitStr(_conditionValue)) _conditionValue = jsonReadStr(configLiveJson, _conditionValue);
+
+        _eventParam = selectToMarker(eventBuf, ",");
         _eventValue = jsonReadStr(configLiveJson, _conditionParam);
     }
 
@@ -61,48 +72,48 @@ class Scenario {
         eventBuf = deleteBeforeDelimiter(eventBuf, ",");
     }
 
-    bool checkIncommingEvent() {
+    bool isIncommingEventInScenario() {
         bool ret = false;
-        if (_conditionParam == _eventParam) ret = true;
+        if (_conditionParam == _eventParam) {
+            ret = true;
+            //Serial.println("true");
+        }
         return ret;
     }
 
-    bool compare() {
+    bool isConditionSatisfied() {
         boolean flag = false;
 
         if (_conditionSign == "=") {
-            flag = _eventParam == _conditionValue;
+            flag = _eventValue == _conditionValue;
         } else if (_conditionSign == "!=") {
-            flag = _eventParam != _conditionValue;
+            flag = _eventValue != _conditionValue;
         } else if (_conditionSign == "<") {
-            flag = _eventParam.toInt() < _conditionValue.toInt();
+            flag = _eventValue.toInt() < _conditionValue.toInt();
         } else if (_conditionSign == ">") {
-            flag = _eventParam.toInt() > _conditionValue.toInt();
+            flag = _eventValue.toInt() > _conditionValue.toInt();
         } else if (_conditionSign == ">=") {
-            flag = _eventParam.toInt() >= _conditionValue.toInt();
+            flag = _eventValue.toInt() >= _conditionValue.toInt();
         } else if (_conditionSign == "<=") {
-            flag = _eventParam.toInt() <= _conditionValue.toInt();
+            flag = _eventValue.toInt() <= _conditionValue.toInt();
         }
+
+        if (flag) Serial.println("[I] Scenario event: " + _condition);
 
         return flag;
     }
 
     void loop() {
-        this->load(scenario);  //после этого мы получили все сценарии
-        //Serial.println("loaded");
-
-        while (_scenarioTmp.length()) {
-            
-            this->calculate();  //получаем данные для первого блока
-
-            if (this->checkIncommingEvent()) {
-                if (this->compare()) {
+        this->load();  //после этого мы получили все сценарии
+        while (_scenarioTmp.length() > 1) {
+            this->calculate();                         //получаем данные для первого блока
+            if (this->isIncommingEventInScenario()) {  //если вошедшее событие есть в сценарии
+                if (this->isConditionSatisfied()) {    //если вошедшее событие выполняет условие сценария
                     _scenBlok = deleteBeforeDelimiter(_scenBlok, "\n");
+                    Serial.println("[>] Making: " + _scenBlok);
                     spaceExecute(_scenBlok);
-                    Serial.println(_scenBlok);
                 }
             }
-
             this->delOneScenBlock();  //удалим использованный блок
         }
         this->delOneEvent();
