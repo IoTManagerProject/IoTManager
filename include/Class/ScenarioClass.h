@@ -39,46 +39,37 @@ class Scenario {
         _scenarioTmp = scenario;
     }
 
-    //button-out1 = 1
-    //button-out2 1
-    //button-out3 1
-    //end
-
-    void calculate() {
-        _scenarioTmp += "\n";
-        _scenarioTmp.replace("\r\n", "\n");
-        _scenarioTmp.replace("\r", "\n");
-
+    void calculate1() {
         _scenBlok = selectToMarker(_scenarioTmp, "end\n");
-
-        _condition = selectToMarker(_scenBlok, "\n");  //button-out1 = 1
-
-        _conditionParam = selectFromMarkerToMarker(_condition, " ", 0);  //button-out1
-        _conditionSign = selectFromMarkerToMarker(_condition, " ", 1);   //=
-        _conditionValue = selectFromMarkerToMarker(_condition, " ", 2);  //1
-
-        if (!isDigitStr(_conditionValue)) _conditionValue = jsonReadStr(configLiveJson, _conditionValue);
-
+        _condition = selectToMarker(_scenBlok, "\n");
+        _conditionParam = selectFromMarkerToMarker(_condition, " ", 0);
         _eventParam = selectToMarker(eventBuf, ",");
-        _eventValue = jsonReadStr(configLiveJson, _conditionParam);
-    }
-
-    void delOneScenBlock() {
-        _scenarioTmp = deleteBeforeDelimiter(_scenarioTmp, "end\n");
-        //Serial.println(_scenarioTmp);
-    }
-
-    void delOneEvent() {
-        eventBuf = deleteBeforeDelimiter(eventBuf, ",");
     }
 
     bool isIncommingEventInScenario() {
         bool ret = false;
         if (_conditionParam == _eventParam) {
             ret = true;
-            //Serial.println("true");
         }
         return ret;
+    }
+
+    void calculate2() {
+        _scenarioTmp += "\n";
+        _scenarioTmp.replace("\r\n", "\n");
+        _scenarioTmp.replace("\r", "\n");
+        _conditionSign = selectFromMarkerToMarker(_condition, " ", 1);
+        _conditionValue = selectFromMarkerToMarker(_condition, " ", 2);
+        if (!isDigitStr(_conditionValue)) _conditionValue = jsonReadStr(configLiveJson, _conditionValue);
+        _eventValue = jsonReadStr(configLiveJson, _conditionParam);
+    }
+
+    void delOneScenBlock() {
+        _scenarioTmp = deleteBeforeDelimiter(_scenarioTmp, "end\n");
+    }
+
+    void delOneEvent() {
+        eventBuf = deleteBeforeDelimiter(eventBuf, ",");
     }
 
     bool isConditionSatisfied() {
@@ -106,11 +97,12 @@ class Scenario {
     void loop() {
         this->load();  //после этого мы получили все сценарии
         while (_scenarioTmp.length() > 1) {
-            this->calculate();                         //получаем данные для первого блока
+            this->calculate1();                        
             if (this->isIncommingEventInScenario()) {  //если вошедшее событие есть в сценарии
-                if (this->isConditionSatisfied()) {    //если вошедшее событие выполняет условие сценария
+                this->calculate2();
+                if (this->isConditionSatisfied()) {  //если вошедшее событие выполняет условие сценария
                     _scenBlok = deleteBeforeDelimiter(_scenBlok, "\n");
-                    Serial.println("[>] Making: " + _scenBlok);
+                    //Serial.println("   [>] Making: " + _scenBlok);
                     spaceExecute(_scenBlok);
                 }
             }
