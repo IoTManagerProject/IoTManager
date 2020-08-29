@@ -1,6 +1,11 @@
-//#include <ESP8266SSDP.h>
-#include <SSDP.h>
+#ifdef ESP8266
+        #include <ESP8266SSDP.h>
+#endif
+#ifdef ESP32
+        #include <ESP32SSDP.h>
+#endif
 
+#include <SSDP.h>
 #include "Global.h"
 
 void SsdpInit() {
@@ -33,9 +38,9 @@ void SsdpInit() {
         request->send(200, "text/xml", ssdpSend);
     });
     //Если версия  2.0.0 закаментируйте следующую строчку
-    //SSDP.setDeviceType("upnp:rootdevice");
-    //SSDP.setSchemaURL("description.xml");
-    //SSDP.begin();
+    SSDP.setDeviceType("upnp:rootdevice");
+    SSDP.setSchemaURL("description.xml");
+    SSDP.begin();
 }
 
 String xmlNode(String tags, String data) {
