@@ -78,10 +78,8 @@ void setup() {
     SsdpInit();
 
     ts.add(
-        TEST, 30000, [&](void*) {
-            //pm.info(printMemoryStatus());
-
-            //myScenario->loop();
+        TEST, 1000 * 60, [&](void*) {
+            pm.info(printMemoryStatus());
         },
         nullptr, true);
 

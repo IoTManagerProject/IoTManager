@@ -1,39 +1,30 @@
 #pragma once
 #include <Arduino.h>
-
 #include "Cmd.h"
 #include "Global.h"
 
 class Scenario {
    protected:
     String _scenarioTmp;
-
     String _condition;
     String _conditionParam;
     String _conditionSign;
     String _conditionValue;
-
     String _scenBlok;
-
     String _event;
     String _eventParam;
     String _eventValue;
 
    public:
     Scenario() : _scenarioTmp{""},
-
                  _condition{""},
                  _conditionParam{""},
                  _conditionSign{""},
                  _conditionValue{""},
-
                  _scenBlok{""},
-
                  _event{""},
                  _eventParam{""},
-                 _eventValue{""}
-
-                 {};
+                 _eventValue{""} {};
 
     void load() {
         _scenarioTmp = scenario;
@@ -95,9 +86,12 @@ class Scenario {
     }
 
     void loop() {
+        if (!this->isScenarioEnabled()) {
+            return;
+        }
         this->load();  //после этого мы получили все сценарии
         while (_scenarioTmp.length() > 1) {
-            this->calculate1();                        
+            this->calculate1();
             if (this->isIncommingEventInScenario()) {  //если вошедшее событие есть в сценарии
                 this->calculate2();
                 if (this->isConditionSatisfied()) {  //если вошедшее событие выполняет условие сценария
@@ -109,6 +103,10 @@ class Scenario {
             this->delOneScenBlock();  //удалим использованный блок
         }
         this->delOneEvent();
+    }
+
+    bool isScenarioEnabled() {
+        return jsonReadBool(configSetupJson, "scen") && eventBuf != "";
     }
 };
 extern Scenario* myScenario;
