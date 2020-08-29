@@ -148,15 +148,15 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
 
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
 
-        order_loop += key;
-        order_loop += " ";
-        order_loop += payloadStr;
-        order_loop += ",";
+        orderBuf += key;
+        orderBuf += " ";
+        orderBuf += payloadStr;
+        orderBuf += ",";
 
     } else if (topicStr.indexOf("order")) {
         payloadStr.replace("_", " ");
-        order_loop += payloadStr;
-        order_loop += ",";
+        orderBuf += payloadStr;
+        orderBuf += ",";
 
     } else if (topicStr.indexOf("update")) {
         if (payloadStr == "1") {

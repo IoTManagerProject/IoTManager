@@ -478,9 +478,9 @@ void firmwareVersion() {
 }
 
 void addCommandLoop(const String &cmdStr) {
-    order_loop += cmdStr;
+    orderBuf += cmdStr;
     if (!cmdStr.endsWith(",")) {
-        order_loop += ",";
+        orderBuf += ",";
     }
 }
 
@@ -515,11 +515,11 @@ void spaceExecute(String &cmdStr) {
 }
 
 void loopCmd() {
-    if (order_loop.length()) {
-        String tmp = selectToMarker(order_loop, ",");  //выделяем первую команду rel 5 1,
+    if (orderBuf.length()) {
+        String tmp = selectToMarker(orderBuf, ",");  //выделяем первую команду rel 5 1,
         pm.info("do: " + tmp);
         sCmd.readStr(tmp);                                    //выполняем
-        order_loop = deleteBeforeDelimiter(order_loop, ",");  //осекаем
+        orderBuf = deleteBeforeDelimiter(orderBuf, ",");  //осекаем
     }
 }
 

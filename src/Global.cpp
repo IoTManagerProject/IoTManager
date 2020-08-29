@@ -35,9 +35,14 @@ String configOptionJson = "{}";
 // Mqtt
 String chipId = "";
 String prex = "";
+
 String all_widgets = "";
+
 String scenario = "";
-String order_loop = "";
+
+//orders and events
+String orderBuf = "";
+String eventBuf = "";
 
 String itemsFile = "";
 String itemsLine = "";

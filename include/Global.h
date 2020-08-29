@@ -80,9 +80,14 @@ extern String configOptionJson;  //для трансфера
 // Mqtt
 extern String chipId;
 extern String prex;
+
 extern String all_widgets;
+
 extern String scenario;
-extern String order_loop;
+
+//orders and events
+extern String orderBuf;
+extern String eventBuf;
 
 extern String itemsFile;
 extern String itemsLine;

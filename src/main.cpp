@@ -2,6 +2,7 @@
 #include "Class/CallBackTest.h"
 #include "Class/NotAsinc.h"
 #include "Class/Switch.h"
+#include "Class/ScenarioClass.h"
 #include "Cmd.h"
 #include "ItemsList.h"
 #include "Global.h"
@@ -29,6 +30,7 @@ void setup() {
     setChipId();
 
     myNotAsincActions = new NotAsinc(do_LAST);
+    myScenario = new Scenario();
 
     pm.info("FS");
     fileSystemInit();
@@ -100,7 +102,8 @@ void loop() {
     timeNow->loop();
     MqttClient::loop();
     mySwitch->loop();
-    loopScenario();
+    myScenario->loop();
+    //loopScenario();
     loopCmd();
     loopSerial();
     
