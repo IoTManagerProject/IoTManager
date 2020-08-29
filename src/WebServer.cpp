@@ -15,10 +15,12 @@ void initWS();
 void init() {
     String login = jsonReadStr(configSetupJson, "weblogin");
     String pass = jsonReadStr(configSetupJson, "webpass");
+#ifdef FSEditor
 #ifdef ESP32
     server.addHandler(new FSEditor(LittleFS, login, pass));
 #else
     server.addHandler(new FSEditor(login, pass));
+#endif
 #endif
 
     server.serveStatic("/css/", LittleFS, "/css/").setCacheControl("max-age=600");

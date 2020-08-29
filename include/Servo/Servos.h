@@ -1,6 +1,8 @@
 #pragma once
+#ifdef SERVO_ENABLED
 
 #include <Arduino.h>
+#include <ESP32Servo.h>
 #include <Servo.h>
 
 struct Servo_t {
@@ -23,3 +25,5 @@ class Servos {
 };
 
 extern Servos myServo;
+
+#endif

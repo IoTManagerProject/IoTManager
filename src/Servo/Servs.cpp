@@ -1,5 +1,5 @@
+#ifdef SERVO_ENABLED
 #include "Servo/Servos.h"
-
 Servos myServo;
 
 Servos::Servos(){};
@@ -38,3 +38,4 @@ Servo *Servos::get(uint8_t num) {
 size_t Servos::count() {
     return _items.size();
 }
+#endif

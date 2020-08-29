@@ -1,3 +1,4 @@
+#ifdef SSDP
 #ifdef ESP8266
         #include <ESP8266SSDP.h>
 #endif
@@ -53,3 +54,4 @@ String decToHex(uint32_t decValue, byte desiredStringLength) {
     while (hexString.length() < desiredStringLength) hexString = "0" + hexString;
     return hexString;
 }
+#endif

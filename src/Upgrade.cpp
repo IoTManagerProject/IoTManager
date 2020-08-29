@@ -59,7 +59,7 @@ void upgrade_firmware() {
     t_httpUpdate_return ret = ESPhttpUpdate.updateSpiffs(wifiClient, "http://91.204.228.124:1100/update/esp8266/esp32-esp8266_iot-manager_modules_firmware.spiffs.bin");
 #else
     httpUpdate.rebootOnUpdate(false);
-    t_httpUpdate_return ret = httpUpdate.updateSpiffs(client_for_upgrade, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.spiffs.bin");
+    t_httpUpdate_return ret = httpUpdate.updateSpiffs(wifiClient, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.spiffs.bin");
 #endif
     if (ret == HTTP_UPDATE_OK) {
         writeFile(String(DEVICE_SCENARIO_FILE), scanerioBackup);
@@ -78,7 +78,7 @@ void upgrade_firmware() {
 #ifdef ESP8266
     ret = ESPhttpUpdate.update(wifiClient, "http://91.204.228.124:1100/update/esp8266/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
 #else
-    ret = httpUpdate.update(client_for_upgrade, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
+    ret = httpUpdate.update(wifiClient, "http://91.204.228.124:1100/update/esp32/esp32-esp8266_iot-manager_modules_firmware.ino.bin");
 #endif
     if (ret == HTTP_UPDATE_OK) {
         pm.info("done! restart...");

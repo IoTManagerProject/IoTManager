@@ -20,7 +20,7 @@ void startSTAMode() {
 
     bool keepConnecting = true;
     uint8_t tries = 20;
-    sint8_t connRes;
+    int8_t connRes;
     do {
 #ifdef ESP8266
         connRes = WiFi.waitForConnectResult(1000);

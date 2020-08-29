@@ -1,5 +1,5 @@
 #pragma once
-
+#ifdef FSEditor
 #include <ESPAsyncWebServer.h>
 #include <FS.h>
 
@@ -26,3 +26,4 @@ class FSEditor : public AsyncWebHandler {
     virtual void handleUpload(AsyncWebServerRequest* request, const String& filename, size_t index, uint8_t* data, size_t len, bool final) override final;
     virtual bool isRequestHandlerTrivial() override final { return false; }
 };
+#endif

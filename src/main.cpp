@@ -1,5 +1,6 @@
 
 #include <SSDP.h>
+
 #include "Class/CallBackTest.h"
 #include "Class/NotAsinc.h"
 #include "Class/ScenarioClass.h"
@@ -72,9 +73,10 @@ void setup() {
     pm.info("Broadcast UDP");
     udpInit();
 #endif
-
+#ifdef SSDP
     pm.info("Ssdp Init");
     SsdpInit();
+#endif
 
     ts.add(
         TEST, 1000 * 60, [&](void*) {

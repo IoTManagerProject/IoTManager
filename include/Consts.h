@@ -46,11 +46,15 @@
 
 #define BME_ENABLED
 
+//#define FSEditor
+
+//#define SSDP
+
 /* 
 * Gears 
 */
 #define STEPPER_ENABLED
-#define SERVO_ENABLED
+//#define SERVO_ENABLED
 
 /* 
 * Other
