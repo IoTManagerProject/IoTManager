@@ -91,7 +91,7 @@ class Scenario {
         }
         this->load();  //после этого мы получили все сценарии
         while (_scenarioTmp.length() > 1) {
-            this->calculate1();
+            this->calculate1(); //расчет необходимый для ответа на следующий вопрос
             if (this->isIncommingEventInScenario()) {  //если вошедшее событие есть в сценарии
                 this->calculate2();
                 if (this->isConditionSatisfied()) {  //если вошедшее событие выполняет условие сценария
