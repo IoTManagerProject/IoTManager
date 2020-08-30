@@ -1,5 +1,6 @@
-#include "Global.h"
 #include "test.h"
+
+#include "Global.h"
 
 void setupTest() {
     //пример выделения подстрок
@@ -7,9 +8,7 @@ void setupTest() {
     int buf_len = buf.length() + 1;
     char char_array[buf_len];
     buf.toCharArray(char_array, buf_len);
-
     char* token = strtok(char_array, "-");
-    
     while (token != NULL) {
         printf("%s\n", token);
         token = strtok(NULL, "-");
@@ -24,5 +23,12 @@ void setupTest() {
 }
 
 void loopTest() {
-    
 }
+
+//char stringToCharArray(int& i, String in) {
+//    int in_len = in.length() + 1;
+//    i = in_len;
+//    char char_array[in_len];
+//    in.toCharArray(char_array, in_len);
+//    return char_array[in_len];
+//}
