@@ -1,0 +1,6 @@
+{
+  "widget" : "input",
+  "size"   : "small",
+  "color"  : "orange",
+  "type"   : "date"
+}

@@ -1,0 +1,5 @@
+{
+  "widget" : "input", 
+  "color"  : "blue",
+  "type"   : "number"
+}

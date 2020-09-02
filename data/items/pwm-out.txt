@@ -1,0 +1,1 @@
+pwm-out;id;range;Ползунки;Яркость;order;pin;st[500]

@@ -1,0 +1,9 @@
+bme280T temp1 0x76 Температура#bmp280 Датчики anydata 1
+bme280P pres1 0x76 Давление#bmp280 Датчики anydata 2
+bme280H hum1 0x76 Влажность#bmp280 Датчики anydata 3
+bme280A altit1 0x76 Высота#bmp280 Датчики anydata 4
+logging temp1 1 100 Температура Датчики 5
+logging press1 1 100 Давление Датчики 6
+logging hum1 1 100 Влажность Датчики 7
+
+//Чтение и логгирование датчика bme280. Датчик подключается к шине i2c (esp8266 - gpio 5, 4)

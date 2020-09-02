@@ -1,0 +1,32 @@
+***
+![](https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/blob/master/pictures/1.png?raw=true)
+
+###  1.  Скачать архив из [релизов](https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/releases)  или из закрепленного сообщения группы телеграм с последней версией прошивки
+
+***
+![](https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/blob/master/pictures/1.png?raw=true)
+
+
+###  2.  Для ESP8266 c 4 и больше мб памяти (все сделать как на скриншотах)
+
+![](https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/blob/master/pictures/esp8266_1.png)
+
+![](https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/blob/master/pictures/esp8266_2.png)
+
+***
+![](https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/blob/master/pictures/1.png?raw=true)
+
+###  2.  Для ESP8266 c 1 мб памяти (все сделать как на скриншотах)
+
+![](https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/blob/master/pictures/esp8266_1mb_1.png)
+
+![](https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/blob/master/pictures/esp8266_1mb_2.png)
+
+***
+![](https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/blob/master/pictures/1.png?raw=true)
+
+###  2.  Для ESP32 (все сделать как на скриншотах)
+
+![](https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/blob/master/pictures/esp32_1.png)
+
+![](https://github.com/DmitryBorisenko33/esp32-esp8266_iot-manager_modules_firmware/blob/master/pictures/esp32_2.png)

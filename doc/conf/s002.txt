@@ -1,0 +1,6 @@
+timenow = time1
+buttonSet 1 1
+end
+timenow = time2
+buttonSet 1 0
+end

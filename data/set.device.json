@@ -1,0 +1,143 @@
+{
+    "configs": [
+        "/config.setup.json",
+        "/config.option.json",
+        "/config.live.json",
+        "/lang/lang.ru.json"
+    ],
+    "class": "col-sm-offset-1 col-sm-10",
+    "content": [
+        {
+            "type": "h5",
+            "title": "{{name}}",
+            "class": "alert-default"
+        },
+        {
+            "type": "link",
+            "title": "{{ButMainPage}}",
+            "action": "/",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "h4",
+            "title": "Device ID: {{chipID}}"
+        },
+        {
+            "type": "h4",
+            "title": "IP address: {{ip}}"
+        },
+        {
+            "type": "h4",
+            "title": "Time: {{time}}"
+        },
+        {
+            "type": "h4",
+            "title": "Uptime: {{uptime}}"
+        },
+        {
+            "type": "h4",
+            "title": "Build version: {{firmware_version}}"
+        },
+        {
+            "type": "h4",
+            "title": "LittleFS version: 2.4.0"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "dropdown",
+            "name": "help-url",
+            "class": "btn btn-default",
+            "style": "display:inline",
+            "title": {
+                "#": "Выберите элемент из списка<span class=\"caret\"></span>",
+                "/set?addItem=button-out-p": "1.Кнопка управляющая пином",
+                "/set?addItem=button-out-np": "2.Кнопка не привязанная к пину",
+                "/set?addItem=pwm-out": "3.Широтно импульсная модуляция(pwm)",
+                "/set?addItem=button-in": "4.Физическая кнопка",
+                "/set?addItem=input-digit": "5.Окно ввода цифровых значений",
+                "/set?addItem=input-time": "6.Окно ввода времени",
+                "/set?addItem=output-text": "7.Окно вывода любого текста, предупреждения, цифры",
+                "/set?addItem=analog-adc": "8.Аналоговый сенсор"
+            }
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "csv",
+            "title": [
+                "html",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text"
+            ],
+            "state": "s.conf.csv",
+            "style": "width:100%;",
+            "action": "/set?saveItems",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "link",
+            "title": "Удалить все",
+            "action": "/set?delAllItems",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "h2",
+            "title": "Сценарии"
+        },
+        {
+            "type": "checkbox",
+            "name": "scen",
+            "title": "Включить сценарии",
+            "action": "/set?scen=[[scen]]",
+            "state": "{{scen}}"
+        },
+        {
+            "type": "file",
+            "state": "s.scen.txt",
+            "style": "width:100%;height:350px",
+            "title": "Сохранить",
+            "action": "/set?sceninit",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "link",
+            "title": "Инструкция к системе автоматизации",
+            "action": "https://github.com/IoTManagerProject/IoTManager/wiki",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "link",
+            "title": "Очистить логи сенсоров",
+            "action": "/set?cleanlog",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "h3",
+            "name": "my-block",
+            "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+            "class": "hidden"
+        },
+        {
+            "type": "button",
+            "title": "Обновить прошивку устройства",
+            "action": "/check",
+            "response": "[[my-block]]",
+            "class": "btn btn-block btn-default"
+        }
+    ]
+}

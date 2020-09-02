@@ -1,0 +1,22 @@
+{
+    "name": "IoTmanager",
+    "chipID": "",
+    "apssid": "IoTmanager",
+    "appass": "",
+    "routerssid": "VOLODYA",
+    "routerpass": "BELCHENKO",
+    "timezone": 2,
+    "ntp": "pool.ntp.org",
+    "mqttServer": "91.204.228.124",
+    "mqttPort": 1883,
+    "mqttPrefix": "/iotTeam",
+    "mqttUser": "test",
+    "mqttPass": "test",
+    "scen": "1",
+    "pushingboxid": "v7C133E426B0C69E",
+    "weblogin": "admin",
+    "webpass": "admin",
+    "udponoff": "1",
+    "blink": "1",
+    "oneWirePin": "2"
+}
