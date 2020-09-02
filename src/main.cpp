@@ -1,6 +1,10 @@
 
 #include <SSDP.h>
+<<<<<<< HEAD
 #include "test.h"
+=======
+
+>>>>>>> parent of 01248f4... esp32
 #include "Class/CallBackTest.h"
 #include "Class/NotAsinc.h"
 #include "Class/ScenarioClass.h"

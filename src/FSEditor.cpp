@@ -1,5 +1,5 @@
-#ifdef FSEditor
 #include "FSEditor.h"
+
 #ifdef ESP32
 #include "LITTLEFS.h"
 #define LittleFS LITTLEFS
@@ -324,4 +324,3 @@ void FSEditor::handleUpload(AsyncWebServerRequest *request, const String &filena
         }
     }
 }
-#endif
