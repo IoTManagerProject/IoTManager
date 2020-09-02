@@ -73,8 +73,8 @@ void setup() {
     udpInit();
 #endif
 
-    //pm.info("Ssdp Init");
-    //SsdpInit();
+    pm.info("Ssdp Init");
+    SsdpInit();
 
     ts.add(
         TEST, 1000 * 60, [&](void*) {
