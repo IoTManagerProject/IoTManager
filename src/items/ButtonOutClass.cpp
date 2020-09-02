@@ -1,21 +1,22 @@
 #include "items/itemsGlobal.h"
-#include "Class/Button.h"
+#include "items/ButtonOutClass.h"
 //==========================================Модуль кнопок===================================================
 //button-out light toggle Кнопки Свет 1 pin[12] inv[1] st[1]
 //==========================================================================================================
+ButtonOutClass* myButtonOut;
 void buttonOut() {
-    myButton = new Button1();
-    myButton->update();
-    String key = myButton->gkey();
-    String pin = myButton->gpin();
-    String inv = myButton->ginv();
+    myButtonOut = new ButtonOutClass();
+    myButtonOut->update();
+    String key = myButtonOut->gkey();
+    String pin = myButtonOut->gpin();
+    String inv = myButtonOut->ginv();
     sCmd.addCommand(key.c_str(), buttonOutSet);
     jsonWriteStr(configOptionJson, key + "_pin", pin);
     jsonWriteStr(configOptionJson, key + "_inv", inv);
-    myButton->pinModeSet();
-    myButton->pinStateSetDefault();
-    myButton->pinStateSetInvDefault();
-    myButton->clear();
+    myButtonOut->pinModeSet();
+    myButtonOut->pinStateSetDefault();
+    myButtonOut->pinStateSetInvDefault();
+    myButtonOut->clear();
 }
 
 void buttonOutSet() {
@@ -24,8 +25,8 @@ void buttonOutSet() {
     String pin = jsonReadStr(configOptionJson, key + "_pin");
     String inv = jsonReadStr(configOptionJson, key + "_inv");
     if (inv == "") {
-        myButton->pinChange(key, pin, state, true);
+        myButtonOut->pinChange(key, pin, state, true);
     } else {
-        myButton->pinChange(key, pin, state, false);
+        myButtonOut->pinChange(key, pin, state, false);
     }
 }

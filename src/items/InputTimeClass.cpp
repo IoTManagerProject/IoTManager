@@ -1,21 +1,22 @@
 #include "items/itemsGlobal.h"
-#include "Class/Input.h"
+#include "items/InputClass.h"
 //==========================================Модуль ввода времени============================================
 //input-time time1 inputTime Ввод Введите.время 4 st[10-00-00]
 //==========================================================================================================
+InputClass* myInputTime;
 void inputTime() {
-    myInput = new Input();
-    myInput->update();
-    String key = myInput->gkey();
+    myInputTime = new InputClass();
+    myInputTime->update();
+    String key = myInputTime->gkey();
     sCmd.addCommand(key.c_str(), inputTimeSet);
-    myInput->inputSetDefaultStr();
-    myInput->clear();
+    myInputTime->inputSetDefaultStr();
+    myInputTime->clear();
 }
 
 void inputTimeSet() {
     String key = sCmd.order();
     String state = sCmd.next();
-    myInput->inputSetStr(key, state);
+    myInputTime->inputSetStr(key, state);
 }
 
 void handle_time_init() {

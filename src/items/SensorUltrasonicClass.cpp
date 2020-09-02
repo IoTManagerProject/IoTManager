@@ -1,20 +1,35 @@
 #include "items/itemsGlobal.h"
-#include "Class/SensorAnalog.h"
-#ifdef LEVEL_ENABLED
+#include "items/SensorUltrasonicClass.h"
+//#ifdef LEVEL_ENABLED
 //=========================================Модуль ультрозвукового дальномера==================================================================
-//ultrasonic-cm;id;anydata;Сенсоры;Расстояние;order;pin;map[1,100,1,100];c[1]
+//ultrasonic-cm;id;anydata;Сенсоры;Расстояние;order;pin[12,13];map[1,100,1,100];c[1]
 //=========================================================================================================================================
 void ultrasonicCm() {
-
-
+    mySensorUltrasonic = new SensorUltrasonic();
+    mySensorUltrasonic->update();
+    String key = mySensorUltrasonic->gkey();
+    String pin = mySensorUltrasonic->gpin();
+    String trig = selectFromMarkerToMarker(pin, ",", 0);
+    String echo = selectFromMarkerToMarker(pin, ",", 1);
+    sCmd.addCommand(key.c_str(), ultrasonicReading);
+    sensorReadingMap += key + ",";
+    jsonWriteStr(configOptionJson, key + "_trig", trig);
+    jsonWriteStr(configOptionJson, key + "_echo", echo);
+    jsonWriteStr(configOptionJson, key + "_map", mySensorUltrasonic->gmap());
+    jsonWriteStr(configOptionJson, key + "_с", mySensorUltrasonic->gc());
+    mySensorUltrasonic->clear();
 }
 
 void ultrasonicReading() {
-
-    
+    String key = sCmd.order();
+    String trig = jsonReadStr(configOptionJson, key + "_trig");
+    String echo = jsonReadStr(configOptionJson, key + "_echo");
+    String pin = trig + "," + echo;
+    mySensorUltrasonic->SensorUltrasonicRead(key, pin);
 }
+//#endif
 
-void levelPr() {
+//void levelPr() {
 //    String value_name = sCmd.next();
 //    String trig = sCmd.next();
 //    String echo = sCmd.next();
@@ -33,7 +48,7 @@ void levelPr() {
 //    pinMode(echo.toInt(), INPUT);
 //    createWidgetByType(widget_name, page_name, page_number, type, value_name);
 //    sensors_reading_map[0] = 1;
-}
+//}
 ////ultrasonicCm cm 14 12 Дистанция,#см Датчики fillgauge 1
 //void ultrasonicCm() {
 //    String value_name = sCmd.next();
@@ -54,20 +69,13 @@ void levelPr() {
 //    sensors_reading_map[0] = 1;
 //}
 //
-void ultrasonic_reading() {
+//void ultrasonic_reading() {
 //    long duration_;
 //    int distance_cm;
 //    int level;
 //    static int counter;
 //    int trig = jsonReadInt(configOptionJson, "trig");
 //    int echo = jsonReadInt(configOptionJson, "echo");
-//    digitalWrite(trig, LOW);
-//    delayMicroseconds(2);
-//    digitalWrite(trig, HIGH);
-//    delayMicroseconds(10);
-//    digitalWrite(trig, LOW);
-//    duration_ = pulseIn(echo, HIGH, 30000);  // 3000 µs = 50cm // 30000 µs = 5 m
-//    distance_cm = duration_ / 29 / 2;
 //    distance_cm = medianFilter.filtered(distance_cm);  //отсечение промахов медианным фильтром
 //    counter++;
 //    if (counter > TANK_LEVEL_SAMPLES) {
@@ -90,5 +98,5 @@ void ultrasonic_reading() {
 //
 //        Serial.println("[I] sensor '" + ultrasonicCm_value_name + "' data: " + String(distance_cm));
 //    }
-}
-#endif
+//}
+//

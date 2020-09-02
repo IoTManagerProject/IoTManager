@@ -1,11 +1,12 @@
 #include "items/itemsGlobal.h"
-#include "Class/SensorAnalog.h"
+#include "items/SensorAnalogClass.h"
 #ifdef ANALOG_ENABLED
 //==============================================Модуль аналогового сенсора===========================================================================================
 //analog-adc;id;anydata;Сенсоры;Аналоговый;order;pin-adc;map[1,1024,1,100];c[1]
 //===================================================================================================================================================================
+SensorAnalogClass* mySensorAnalog;
 void analogAdc() {
-    mySensorAnalog = new SensorAnalog();
+    mySensorAnalog = new SensorAnalogClass();
     mySensorAnalog->update();
     String key = mySensorAnalog->gkey();
     String pin = mySensorAnalog->gpin();

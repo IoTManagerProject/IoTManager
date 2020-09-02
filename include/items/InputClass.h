@@ -1,13 +1,11 @@
 #pragma once
-
 #include <Arduino.h>
-
 #include "Class/LineParsing.h"
 #include "Global.h"
 
-class Input : public LineParsing {
+class InputClass : public LineParsing {
    public:
-    Input() : LineParsing(){};
+    InputClass() : LineParsing(){};
 
     void inputSetDefaultFloat() {
         inputSetFloat(_key, _state);
@@ -30,4 +28,4 @@ class Input : public LineParsing {
     }
 };
 
-extern Input* myInput;
+extern InputClass* myInput;

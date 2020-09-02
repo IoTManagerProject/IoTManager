@@ -1,24 +1,25 @@
 #include "items/itemsGlobal.h"
-#include "Class/Pwm.h"
+#include "items/PwmOutClass.h"
 //==========================================Модуль управления ШИМ===================================================
 //pwm-out volume range Кнопки Свет 1 pin[12] st[500]
 //==================================================================================================================
+PwmOutClass* myPwmOut;
 void pwmOut() {
-    myPwm = new Pwm();
-    myPwm->update();
-    String key = myPwm->gkey();
-    String pin = myPwm->gpin();
-    String inv = myPwm->ginv();
+    myPwmOut = new PwmOutClass();
+    myPwmOut->update();
+    String key = myPwmOut->gkey();
+    String pin = myPwmOut->gpin();
+    String inv = myPwmOut->ginv();
     sCmd.addCommand(key.c_str(), pwmOutSet);
     jsonWriteStr(configOptionJson, key + "_pin", pin);
-    myPwm->pwmModeSet();
-    myPwm->pwmStateSetDefault();
-    myPwm->clear();
+    myPwmOut->pwmModeSet();
+    myPwmOut->pwmStateSetDefault();
+    myPwmOut->clear();
 }
 
 void pwmOutSet() {
     String key = sCmd.order();
     String state = sCmd.next();
     String pin = jsonReadStr(configOptionJson, key + "_pin");
-    myPwm->pwmChange(key, pin, state);
+    myPwmOut->pwmChange(key, pin, state);
 }

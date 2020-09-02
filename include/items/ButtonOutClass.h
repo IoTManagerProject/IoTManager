@@ -1,12 +1,11 @@
 #pragma once
-
 #include <Arduino.h>
 #include "Class/LineParsing.h"
 #include "Global.h"
 
-class Button1 : public LineParsing {
+class ButtonOutClass : public LineParsing {
    public:
-    Button1() : LineParsing(){};
+    ButtonOutClass() : LineParsing(){};
 
     void pinModeSet() {
         if (_pin != "") {
@@ -40,4 +39,4 @@ class Button1 : public LineParsing {
     }
 };
 
-extern Button1* myButton;
+extern ButtonOutClass* myButtonOut;

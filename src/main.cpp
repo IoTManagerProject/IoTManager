@@ -3,7 +3,7 @@
 #include "Class/CallBackTest.h"
 #include "Class/NotAsinc.h"
 #include "Class/ScenarioClass.h"
-#include "Class/Switch.h"
+#include "items/ButtonInClass.h"
 #include "Cmd.h"
 #include "Global.h"
 #include "Init.h"
@@ -101,7 +101,7 @@ void loop() {
 #endif
     timeNow->loop();
     MqttClient::loop();
-    mySwitch->loop();
+    myButtonIn->loop();
     myScenario->loop();
     //loopScenario();
     loopCmd();

@@ -1,17 +1,15 @@
 #pragma once
-
 #include <Arduino.h>
-
 #include "Class/LineParsing.h"
 #include "Global.h"
 
-class Switch : public LineParsing {
+class ButtonInClass : public LineParsing {
    protected:
     int numberEntering = 0;
     int state = _state.toInt();
 
    public:
-    Switch() : LineParsing(){};
+    ButtonInClass() : LineParsing(){};
 
     void init() {
         if (_pin != "") {
@@ -53,4 +51,4 @@ class Switch : public LineParsing {
     }
 };
 
-extern Switch* mySwitch;
+extern ButtonInClass* myButtonIn;

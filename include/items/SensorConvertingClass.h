@@ -5,9 +5,9 @@
 #include "Class/LineParsing.h"
 #include "Global.h"
 
-class SensorConverting : public LineParsing {
+class SensorConvertingClass : public LineParsing {
    public:
-    SensorConverting() : LineParsing(){};
+    SensorConvertingClass() : LineParsing(){};
 
     int mapping(String key, int input) {
         String map_ = jsonReadStr(configOptionJson, key + "_map");

@@ -1,4 +1,3 @@
-#include "Class/SensorAnalog.h"
 #include "Cmd.h"
 #include "Global.h"
 

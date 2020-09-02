@@ -1,13 +1,11 @@
 #pragma once
-
 #include <Arduino.h>
-
 #include "Class/LineParsing.h"
 #include "Global.h"
 
-class Pwm : public LineParsing {
+class PwmOutClass : public LineParsing {
    public:
-    Pwm() : LineParsing(){};
+    PwmOutClass() : LineParsing(){};
 
     void pwmModeSet() {
         if (_pin != "") {
@@ -30,4 +28,4 @@ class Pwm : public LineParsing {
     }
 };
 
-extern Pwm* myPwm;
+extern PwmOutClass* myPwmOut;

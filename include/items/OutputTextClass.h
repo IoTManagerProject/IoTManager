@@ -1,12 +1,11 @@
 #pragma once
-
 #include <Arduino.h>
 #include "Class/LineParsing.h"
 #include "Global.h"
 
-class OutputModule : public LineParsing {
+class OutputTextClass : public LineParsing {
    public:
-    OutputModule() : LineParsing(){};
+    OutputTextClass() : LineParsing(){};
 
     void OutputModuleStateSetDefault() {
         if (_state != "") { 
@@ -21,4 +20,4 @@ class OutputModule : public LineParsing {
         MqttClient::publishStatus(key, state);
     }
 };
-extern OutputModule* myText;
+extern OutputTextClass* myOutputText;
