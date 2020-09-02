@@ -1,12 +1,14 @@
 #pragma once
-extern void cmd_init();
+
 #include <Arduino.h>
+
+extern void cmd_init();
 
 extern void sensorsInit();
 
-extern void levelPr();
-extern void ultrasonicCm();
-extern void ultrasonic_reading();
+//extern void levelPr();
+//extern void ultrasonicCm();
+//extern void ultrasonic_reading();
 
 extern void analog_reading1();
 extern void analog_reading2();

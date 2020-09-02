@@ -1,7 +1,5 @@
 #include "Cmd.h"
-
 #include "items/itemsGlobal.h"
-//#include "Class/LineParsing.h"
 #include "Class/NotAsinc.h"
 #include "Global.h"
 #include "Module/Terminal.h"
@@ -31,9 +29,8 @@ void cmd_init() {
     sCmd.addCommand("input-time", inputTime);
     sCmd.addCommand("output-text", textOut);
 
-#ifdef ANALOG_ENABLED
     sCmd.addCommand("analog-adc", analogAdc);
-#endif
+    sCmd.addCommand("ultrasonicCm", ultrasonicCm);
 
 
 
@@ -44,11 +41,6 @@ void cmd_init() {
 
     sCmd.addCommand("timerStart", timerStart_);
     sCmd.addCommand("timerStop", timerStop_);
-
-#ifdef LEVEL_ENABLED
-    sCmd.addCommand("levelPr", levelPr);
-    sCmd.addCommand("ultrasonicCm", ultrasonicCm);
-#endif
 #ifdef DALLAS_ENABLED
     sCmd.addCommand("dallas", dallas);
 #endif
