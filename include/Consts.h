@@ -46,7 +46,7 @@
 
 #define BME_ENABLED
 
-//#define FSEditor
+#define FSEditor
 
 //#define SSDP
 
