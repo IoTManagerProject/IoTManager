@@ -33,13 +33,12 @@ class Scenario {
     void calculate1() {
         _scenBlok = selectToMarker(_scenarioTmp, "end\n");
         _condition = selectToMarker(_scenBlok, "\n");
-        _conditionParam = selectFromMarkerToMarker(_condition, " ", 0);
         _eventParam = selectToMarker(eventBuf, ",");
     }
 
     bool isIncommingEventInScenario() {
         bool ret = false;
-        if (_conditionParam == _eventParam) {
+        if (_condition.indexOf(_eventParam) != -1) {
             ret = true;
         }
         return ret;
@@ -49,6 +48,8 @@ class Scenario {
         _scenarioTmp += "\n";
         _scenarioTmp.replace("\r\n", "\n");
         _scenarioTmp.replace("\r", "\n");
+
+        _conditionParam = selectFromMarkerToMarker(_condition, " ", 0);
         _conditionSign = selectFromMarkerToMarker(_condition, " ", 1);
         _conditionValue = selectFromMarkerToMarker(_condition, " ", 2);
         if (!isDigitStr(_conditionValue)) _conditionValue = jsonReadStr(configLiveJson, _conditionValue);
@@ -91,7 +92,7 @@ class Scenario {
         }
         this->load();  //после этого мы получили все сценарии
         while (_scenarioTmp.length() > 1) {
-            this->calculate1();
+            this->calculate1(); //расчет необходимый для ответа на следующий вопрос
             if (this->isIncommingEventInScenario()) {  //если вошедшее событие есть в сценарии
                 this->calculate2();
                 if (this->isConditionSatisfied()) {  //если вошедшее событие выполняет условие сценария
