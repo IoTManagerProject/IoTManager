@@ -1,7 +1,0 @@
-serialBegin 9600 12 13
-button 1 na Управляется#из#arduino Serial 0 1
-button 2 na Отправить#в#arduino Serial 0 2
-text 1 Текст#из#arduino Serial 3
-
-//12 13 это пины uart к которым вы можете подключить arduino. Скетч для arduino выложен в группу.
-//команда serialWrite ard-on отправит в arduino текст ard-on
