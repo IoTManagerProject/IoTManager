@@ -1,46 +1,12 @@
 #pragma once
-#include <Arduino.h>
-
 extern void cmd_init();
-
-extern void buttonOut();
-extern void buttonOutSet();
-
-extern void pwmOut();
-extern void pwmOutSet();
-
-extern void buttonIn();
-extern void buttonInSet();
-
-extern void inputDigit();
-extern void inputDigitSet();
-
-extern void inputTime();
-extern void inputTimeSet();
-
-extern void textOut();
-extern void textOutSet();
-
-extern void analogAdc();
-extern void analogReading(); 
-
-extern void ultrasonicCm();
-extern void ultrasonicReading();
-
-
-
-
-
-
-
-
+#include <Arduino.h>
 
 extern void sensorsInit();
 
 extern void levelPr();
 extern void ultrasonicCm();
 extern void ultrasonic_reading();
-
 
 extern void analog_reading1();
 extern void analog_reading2();
@@ -82,7 +48,6 @@ extern void servoSet();
 extern void serialBegin();
 extern void serialWrite();
 extern void logging();
-
 
 extern void button();
 extern void timeSet();

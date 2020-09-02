@@ -1,12 +1,7 @@
 #include "Cmd.h"
 
-#include "Class/Button.h"
-#include "Class/Input.h"
-#include "Class/LineParsing.h"
-#include "Class/OutputModule.h"
-#include "Class/Pwm.h"
-#include "Class/Switch.h"
-//-----------------------------
+#include "items/itemsGlobal.h"
+//#include "Class/LineParsing.h"
 #include "Class/NotAsinc.h"
 #include "Global.h"
 #include "Module/Terminal.h"
@@ -110,142 +105,16 @@ void cmd_init() {
     handle_time_init();
 }
 
-//==========================================Модуль кнопок===================================================
-//button-out light toggle Кнопки Свет 1 pin[12] inv[1] st[1]
-//==========================================================================================================
-void buttonOut() {
-    myButton = new Button1();
-    myButton->update();
-    String key = myButton->gkey();
-    String pin = myButton->gpin();
-    String inv = myButton->ginv();
-    sCmd.addCommand(key.c_str(), buttonOutSet);
-    jsonWriteStr(configOptionJson, key + "_pin", pin);
-    jsonWriteStr(configOptionJson, key + "_inv", inv);
-    myButton->pinModeSet();
-    myButton->pinStateSetDefault();
-    myButton->pinStateSetInvDefault();
-    myButton->clear();
-}
 
-void buttonOutSet() {
-    String key = sCmd.order();
-    String state = sCmd.next();
-    String pin = jsonReadStr(configOptionJson, key + "_pin");
-    String inv = jsonReadStr(configOptionJson, key + "_inv");
-    if (inv == "") {
-        myButton->pinChange(key, pin, state, true);
-    } else {
-        myButton->pinChange(key, pin, state, false);
-    }
-}
 
-//==========================================Модуль управления ШИМ===================================================
-//pwm-out volume range Кнопки Свет 1 pin[12] st[500]
-//==================================================================================================================
-void pwmOut() {
-    myPwm = new Pwm();
-    myPwm->update();
-    String key = myPwm->gkey();
-    String pin = myPwm->gpin();
-    String inv = myPwm->ginv();
-    sCmd.addCommand(key.c_str(), pwmOutSet);
-    jsonWriteStr(configOptionJson, key + "_pin", pin);
-    myPwm->pwmModeSet();
-    myPwm->pwmStateSetDefault();
-    myPwm->clear();
-}
 
-void pwmOutSet() {
-    String key = sCmd.order();
-    String state = sCmd.next();
-    String pin = jsonReadStr(configOptionJson, key + "_pin");
-    myPwm->pwmChange(key, pin, state);
-}
 
-//==========================================Модуль физических кнопок========================================
-//button-in switch1 toggle Кнопки Свет 1 pin[2] db[20]
-//==========================================================================================================
-void buttonIn() {
-    mySwitch = new Switch();
-    mySwitch->update();
-    String key = mySwitch->gkey();
-    String pin = mySwitch->gpin();
-    sCmd.addCommand(key.c_str(), buttonInSet);
-    mySwitch->init();
-    mySwitch->switchStateSetDefault();
-    mySwitch->clear();
-}
 
-void buttonInSet() {
-    String key = sCmd.order();
-    String state = sCmd.next();
-    mySwitch->switchChangeVirtual(key, state);
-}
 
-//==========================================Модуль ввода цифровых значений==================================
-//input-digit digit1 inputDigit Ввод Введите.цифру 4 st[60]
-//==========================================================================================================
-void inputDigit() {
-    myInput = new Input();
-    myInput->update();
-    String key = myInput->gkey();
-    sCmd.addCommand(key.c_str(), inputDigitSet);
-    myInput->inputSetDefaultFloat();
-    myInput->clear();
-}
 
-void inputDigitSet() {
-    String key = sCmd.order();
-    String state = sCmd.next();
-    myInput->inputSetFloat(key, state);
-}
 
-//==========================================Модуль ввода времени============================================
-//input-time time1 inputTime Ввод Введите.время 4 st[10-00-00]
-//==========================================================================================================
-void inputTime() {
-    myInput = new Input();
-    myInput->update();
-    String key = myInput->gkey();
-    sCmd.addCommand(key.c_str(), inputTimeSet);
-    myInput->inputSetDefaultStr();
-    myInput->clear();
-}
 
-void inputTimeSet() {
-    String key = sCmd.order();
-    String state = sCmd.next();
-    myInput->inputSetStr(key, state);
-}
 
-void handle_time_init() {
-    ts.add(
-        TIME, 1000, [&](void *) {
-            jsonWriteStr(configLiveJson, "time", timeNow->getTime());
-            jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
-            //eventGen("timenow", "");
-        },
-        nullptr, true);
-}
-
-//===============================================Модуль вывода текста============================================
-//output-text;id;anydata;Вывод;Сигнализация;order;st[Обнаружено.движение]
-//===============================================================================================================
-void textOut() {
-    myText = new OutputModule();
-    myText->update();
-    String key = myText->gkey();
-    sCmd.addCommand(key.c_str(), textOutSet);
-    myText->OutputModuleStateSetDefault();
-    myText->clear();
-}
-
-void textOutSet() {
-    String key = sCmd.order();
-    String state = sCmd.next();
-    myText->OutputModuleChange(key, state);
-}
 
 //void text() {
 //    String number = sCmd.next();
