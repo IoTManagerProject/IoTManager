@@ -39,4 +39,4 @@ class ButtonOutClass : public LineParsing {
     }
 };
 
-extern ButtonOutClass* myButtonOut;
+extern ButtonOutClass myButtonOut;

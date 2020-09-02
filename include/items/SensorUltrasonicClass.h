@@ -31,4 +31,4 @@ class SensorUltrasonic : public SensorConvertingClass {
         return value;
     }
 };
-extern SensorUltrasonic* mySensorUltrasonic;
+extern SensorUltrasonic mySensorUltrasonic;

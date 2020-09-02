@@ -28,4 +28,4 @@ class InputClass : public LineParsing {
     }
 };
 
-extern InputClass* myInput;
+extern InputClass myInput;

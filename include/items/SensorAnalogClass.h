@@ -29,4 +29,4 @@ class SensorAnalogClass : public SensorConvertingClass {
         return value;
     }
 };
-extern SensorAnalogClass* mySensorAnalog;
+extern SensorAnalogClass mySensorAnalog;

@@ -4,21 +4,20 @@
 //=========================================Модуль ультрозвукового дальномера==================================================================
 //ultrasonic-cm;id;anydata;Сенсоры;Расстояние;order;pin[12,13];map[1,100,1,100];c[1]
 //=========================================================================================================================================
-SensorUltrasonic* mySensorUltrasonic;
+SensorUltrasonic mySensorUltrasonic;
 void ultrasonicCm() {
-    mySensorUltrasonic = new SensorUltrasonic();
-    mySensorUltrasonic->update();
-    String key = mySensorUltrasonic->gkey();
-    String pin = mySensorUltrasonic->gpin();
+    mySensorUltrasonic.update();
+    String key = mySensorUltrasonic.gkey();
+    String pin = mySensorUltrasonic.gpin();
     String trig = selectFromMarkerToMarker(pin, ",", 0);
     String echo = selectFromMarkerToMarker(pin, ",", 1);
     sCmd.addCommand(key.c_str(), ultrasonicReading);
     sensorReadingMap += key + ",";
     jsonWriteStr(configOptionJson, key + "_trig", trig);
     jsonWriteStr(configOptionJson, key + "_echo", echo);
-    jsonWriteStr(configOptionJson, key + "_map", mySensorUltrasonic->gmap());
-    jsonWriteStr(configOptionJson, key + "_с", mySensorUltrasonic->gc());
-    mySensorUltrasonic->clear();
+    jsonWriteStr(configOptionJson, key + "_map", mySensorUltrasonic.gmap());
+    jsonWriteStr(configOptionJson, key + "_с", mySensorUltrasonic.gc());
+    mySensorUltrasonic.clear();
 }
 
 void ultrasonicReading() {
@@ -26,7 +25,7 @@ void ultrasonicReading() {
     String trig = jsonReadStr(configOptionJson, key + "_trig");
     String echo = jsonReadStr(configOptionJson, key + "_echo");
     String pin = trig + "," + echo;
-    mySensorUltrasonic->SensorUltrasonicRead(key, pin);
+    mySensorUltrasonic.SensorUltrasonicRead(key, pin);
 }
 //#endif
 

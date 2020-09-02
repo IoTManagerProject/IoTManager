@@ -3,20 +3,19 @@
 //==========================================Модуль ввода времени============================================
 //input-time time1 inputTime Ввод Введите.время 4 st[10-00-00]
 //==========================================================================================================
-InputClass* myInputTime;
+InputClass myInputTime;
 void inputTime() {
-    myInputTime = new InputClass();
-    myInputTime->update();
-    String key = myInputTime->gkey();
+    myInputTime.update();
+    String key = myInputTime.gkey();
     sCmd.addCommand(key.c_str(), inputTimeSet);
-    myInputTime->inputSetDefaultStr();
-    myInputTime->clear();
+    myInputTime.inputSetDefaultStr();
+    myInputTime.clear();
 }
 
 void inputTimeSet() {
     String key = sCmd.order();
     String state = sCmd.next();
-    myInputTime->inputSetStr(key, state);
+    myInputTime.inputSetStr(key, state);
 }
 
 void handle_time_init() {

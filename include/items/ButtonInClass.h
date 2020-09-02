@@ -51,4 +51,4 @@ class ButtonInClass : public LineParsing {
     }
 };
 
-extern ButtonInClass* myButtonIn;
+extern ButtonInClass myButtonIn;

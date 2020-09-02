@@ -20,4 +20,4 @@ class OutputTextClass : public LineParsing {
         MqttClient::publishStatus(key, state);
     }
 };
-extern OutputTextClass* myOutputText;
+extern OutputTextClass myOutputText;

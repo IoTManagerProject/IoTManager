@@ -28,4 +28,4 @@ class PwmOutClass : public LineParsing {
     }
 };
 
-extern PwmOutClass* myPwmOut;
+extern PwmOutClass myPwmOut;
