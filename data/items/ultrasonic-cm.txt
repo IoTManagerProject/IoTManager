@@ -1,1 +1,1 @@
-ultrasonic-cm;id;anydata;Сенсоры;Расстояние;order;pin[12,13];map[1,100,1,100];c[1]
+ultrasonic-cm;id;anydata;Сенсоры;Расстояние;order;cin;map[0,500,0,100];c[1]

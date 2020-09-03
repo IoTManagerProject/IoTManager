@@ -30,7 +30,7 @@ void cmd_init() {
     sCmd.addCommand("output-text", textOut);
 
     sCmd.addCommand("analog-adc", analogAdc);
-    sCmd.addCommand("ultrasonicCm", ultrasonicCm);
+    sCmd.addCommand("ultrasonic-cm", ultrasonicCm);
     sCmd.addCommand("dallas-temp", dallasTemp);
 
 
@@ -41,9 +41,7 @@ void cmd_init() {
 
     sCmd.addCommand("timerStart", timerStart_);
     sCmd.addCommand("timerStop", timerStop_);
-#ifdef DALLAS_ENABLED
-    sCmd.addCommand("dallas", dallas);
-#endif
+
 #ifdef DHT_ENABLED
     sCmd.addCommand("dhtT", dhtT);
     sCmd.addCommand("dhtH", dhtH);

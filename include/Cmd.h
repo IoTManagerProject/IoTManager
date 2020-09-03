@@ -15,7 +15,7 @@ extern void analog_reading2();
 extern void dallas_reading();
 extern void dhtT_reading();
 
-extern void dallas();
+//extern void dallas();
 
 extern void bmp280T();
 extern void bmp280P();

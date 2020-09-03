@@ -1,6 +1,5 @@
 #pragma once
 #include <Arduino.h>
-
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "items/SensorConvertingClass.h"

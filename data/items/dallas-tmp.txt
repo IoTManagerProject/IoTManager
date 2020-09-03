@@ -1,1 +1,1 @@
-dallas-temp;id;anydata;Сенсоры;Температура;order;pin;c[1]
+dallas-temp;id;anydata;Сенсоры;Температура;order;sal;c[1]

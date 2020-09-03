@@ -9,11 +9,16 @@ void addItem(String name) {
     name = deleteToMarkerLast(name, "-");
     item.replace("id", name + String(getNewElementNumber("id.txt")));
     item.replace("order", String(getNewElementNumber("order.txt")));
-    if (item.indexOf("pin-adc") != -1) {
-        item.replace("pin-adc", "pin[" + String(getFreePinAnalog()) + "]");
-    } else if (item.indexOf("pin") != -1) {
+    if (item.indexOf("pin") != -1) {  //all cases
         item.replace("pin", "pin[" + String(getFreePinAll()) + "]");
+    } else if (item.indexOf("gol") != -1) {  //analog
+        item.replace("gol", "pin[" + String(getFreePinAnalog()) + "]");
+    } else if (item.indexOf("cin") != -1) {  //ultrasonic
+        item.replace("cin", "pin[" + String(getFreePinAll()) + "," + String(getFreePinAll()) + "]");
+    } else if (item.indexOf("sal") != -1) {  //dallas
+        item.replace("sal", "pin[2]");
     }
+
     item.replace("\r\n", "");
     item.replace("\r", "");
     item.replace("\n", "");

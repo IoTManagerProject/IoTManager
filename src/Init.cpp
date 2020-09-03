@@ -25,17 +25,13 @@ void all_init() {
 void Device_init() {
 
      sensorReadingMap = "";
+     dallasEnterCounter = -1;
 
 
 
 
 
     logging_value_names_list = "";
-
-
-
-
-
     enter_to_logging_counter = LOG1 - 1;
     //analog_value_names_list = "";
     //enter_to_analog_counter = 0;

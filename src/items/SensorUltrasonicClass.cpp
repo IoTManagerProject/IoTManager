@@ -8,7 +8,6 @@ SensorUltrasonic mySensorUltrasonic;
 void ultrasonicCm() {
     mySensorUltrasonic.update();
     String key = mySensorUltrasonic.gkey();
-    String pin = mySensorUltrasonic.gpin();
     sCmd.addCommand(key.c_str(), ultrasonicReading);
     mySensorUltrasonic.init();
     mySensorUltrasonic.clear();
