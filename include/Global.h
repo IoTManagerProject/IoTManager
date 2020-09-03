@@ -1,14 +1,11 @@
 #pragma once
-
-/*
-* Libraries
-*/
+//===================Libraries===================================================================================================================================================
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
 #include "ESP32.h"
 #include "ESP8266.h"
-//
+
 #include "Consts.h"
 #include "Errors.h"
 #include "GyverFilters.h"
@@ -22,8 +19,6 @@
 #include "Utils\SysUtils.h"
 #include "Utils\PrintMessage.h"
 #include "Utils\WiFiUtils.h"
-
-//=========ПОДКЛЮЧЕНИЕ ОБЩИХ БИБЛИОТЕК===============
 
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>
@@ -45,31 +40,18 @@ extern AsyncWebSocket ws;
 #endif
 
 extern Clock* timeNow;
-
 extern TickerScheduler ts;
-
-
-
 extern WiFiClient espClient;
-
 extern PubSubClient mqtt;
-
 extern StringCommand sCmd;
-
 extern AsyncWebServer server;
-
 extern DallasTemperature sensors;
-
 extern OneWire *oneWire;
-
 extern boolean but[NUM_BUTTONS];
-
 extern Bounce* buttons;
 
-/*
-* Global vars
-*/
 
+//Global vars
 extern boolean just_load;
 
 // Json
@@ -80,82 +62,34 @@ extern String configOptionJson;  //для трансфера
 // Mqtt
 extern String chipId;
 extern String prex;
-
 extern String all_widgets;
-
 extern String scenario;
 
 //orders and events
 extern String orderBuf;
 extern String eventBuf;
-
 extern String itemsFile;
 extern String itemsLine;
 
 // Sensors
 extern String sensorReadingMap;
-
-
-
-
-extern String analog_value_names_list;
-extern int enter_to_analog_counter;
-
-extern String dallas_value_name;
-extern int enter_to_dallas_counter;
-
-extern String levelPr_value_name;
-extern String ultrasonicCm_value_name;
-
-extern String dhtT_value_name;
-extern String dhtH_value_name;
-
-extern String bmp280T_value_name;
-extern String bmp280P_value_name;
-
-extern String bme280T_value_name;
-extern String bme280P_value_name;
-extern String bme280H_value_name;
-extern String bme280A_value_name;
+extern int8_t dallasEnterCounter;
 
 extern String logging_value_names_list;
 extern int enter_to_logging_counter;
-
 extern int scenario_line_status[40];
-
 extern String lastVersion;
 
-extern boolean checkUpdatesFlag;
-extern boolean updateFlag;
-extern boolean mqttParamsChanged;
-extern boolean udp_data_parse;
-extern boolean mqtt_send_settings_to_udp;
-extern boolean delElementFlag;
-extern boolean getJsonListFromCsvFlag;
 
-extern String csvFile;
-extern int colum;
-
-/*
-* Запрос на скарнирование шины
-*/
+//Запрос на скарнирование шины
 extern boolean busScanFlag;
-/*
-* Запрос на сканирование шины, указание какую
-*/
-extern BusScanner_t busToScan;
 
+//Запрос на сканирование шины, указание какую
+extern BusScanner_t busToScan;
 extern boolean fsCheckFlag;
 
-extern int sensors_reading_map[15];
 
-/*
-* Global functions
-*/
-
-
-
-
+//Global functions
 // Logging
 extern void logging();
 extern void deleteOldDate(String filename, size_t max_lines, String date_to_add);

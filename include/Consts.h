@@ -7,6 +7,7 @@
 #define LED_PIN 2
 #define FLASH_4MB true
 
+
 #define MQTT_RECONNECT_INTERVAL 20000
 
 #define TELEMETRY_UPDATE_INTERVAL 7200000
@@ -29,6 +30,7 @@
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
 //#define UDP_ENABLED
+//#define SSDP
 
 /* 
 * Sensor 

@@ -1,4 +1,4 @@
-#include "items/itemsGlobal.h"
+#include "items/ItemsGlobal.h"
 #include "items/OutputTextClass.h"
 //===============================================Модуль вывода текста============================================
 //output-text;id;anydata;Вывод;Сигнализация;order;st[Обнаружено.движение]

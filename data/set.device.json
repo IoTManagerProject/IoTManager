@@ -62,7 +62,9 @@
                 "/set?addItem=input-digit": "5.Окно ввода цифровых значений",
                 "/set?addItem=input-time": "6.Окно ввода времени",
                 "/set?addItem=output-text": "7.Окно вывода любого текста, предупреждения, цифры",
-                "/set?addItem=analog-adc": "8.Аналоговый сенсор"
+                "/set?addItem=analog-adc": "8.Аналоговый датчик, чтение аналогового входа",
+                "/set?addItem=dallas-tmp": "9.Датчик температуры (ds18b20)",
+                "/set?addItem=ultrasonic-cm": "10.Ультрозвуковой датчик расстояния (JSN-SR04T, HC-SR04, HY-SRF05)"
             }
         },
         {

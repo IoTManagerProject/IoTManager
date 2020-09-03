@@ -2,16 +2,25 @@
 #include <Arduino.h>
 
 #include "Class/LineParsing.h"
-#include "items/SensorConvertingClass.h"
 #include "Global.h"
+#include "items/SensorConvertingClass.h"
 
 class SensorUltrasonic : public SensorConvertingClass {
    public:
     SensorUltrasonic() : SensorConvertingClass(){};
+    void init() {
+        sensorReadingMap += _key + ",";
+        String trig = selectFromMarkerToMarker(_pin, ",", 0);
+        String echo = selectFromMarkerToMarker(_pin, ",", 1);
+        jsonWriteStr(configOptionJson, _key + "_trig", trig);
+        jsonWriteStr(configOptionJson, _key + "_echo", echo);
+        jsonWriteStr(configOptionJson, _key + "_map", _map);
+        jsonWriteStr(configOptionJson, _key + "_с", _c);
+    }
 
-    int SensorUltrasonicRead(String key, String pin) {
-        int trig = selectFromMarkerToMarker(pin, ",", 0).toInt();
-        int echo = selectFromMarkerToMarker(pin, ",", 1).toInt();
+    void SensorUltrasonicRead(String key) {
+        int trig = jsonReadStr(configOptionJson, key + "_trig").toInt();
+        int echo = jsonReadStr(configOptionJson, key + "_echo").toInt();
         int value;
 
         digitalWrite(trig, LOW);
@@ -28,7 +37,6 @@ class SensorUltrasonic : public SensorConvertingClass {
         jsonWriteStr(configLiveJson, key, String(valueFl));
         MqttClient::publishStatus(key, String(valueFl));
         Serial.println("[I] sensor '" + key + "' data: " + String(valueFl));
-        return value;
     }
 };
 extern SensorUltrasonic mySensorUltrasonic;

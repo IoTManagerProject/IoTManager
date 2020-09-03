@@ -1,5 +1,5 @@
 #include "Cmd.h"
-#include "items/itemsGlobal.h"
+#include "items/ItemsGlobal.h"
 #include "Class/NotAsinc.h"
 #include "Global.h"
 #include "Module/Terminal.h"
@@ -31,7 +31,7 @@ void cmd_init() {
 
     sCmd.addCommand("analog-adc", analogAdc);
     sCmd.addCommand("ultrasonicCm", ultrasonicCm);
-
+    sCmd.addCommand("dallas-temp", dallasTemp);
 
 
 

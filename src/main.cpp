@@ -1,15 +1,16 @@
 
 #include <SSDP.h>
+
 #include "Class/CallBackTest.h"
 #include "Class/NotAsinc.h"
 #include "Class/ScenarioClass.h"
-#include "items/ButtonInClass.h"
 #include "Cmd.h"
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
 #include "Utils/Timings.h"
 #include "Utils\WebUtils.h"
+#include "items/ButtonInClass.h"
 
 void not_async_actions();
 
@@ -72,9 +73,10 @@ void setup() {
     pm.info("Broadcast UDP");
     udpInit();
 #endif
-
+#ifdef SSDP
     pm.info("Ssdp Init");
     SsdpInit();
+#endif
 
     ts.add(
         TEST, 1000 * 60, [&](void*) {

@@ -1,5 +1,6 @@
 #pragma once
 #include <Arduino.h>
+
 #include "Class/LineParsing.h"
 #include "Global.h"
 
@@ -7,28 +8,25 @@ class ButtonOutClass : public LineParsing {
    public:
     ButtonOutClass() : LineParsing(){};
 
-    void pinModeSet() {
+    void init() {
         if (_pin != "") {
             pinMode(_pin.toInt(), OUTPUT);
         }
+        jsonWriteStr(configOptionJson, _key + "_pin", _pin);
+        jsonWriteStr(configOptionJson, _key + "_inv", _inv);
     }
 
     void pinStateSetDefault() {
-        if (_inv == "" && _state != "") {
-            pinChange(_key, _pin, _state, true);
-        }
+        pinChange(_key, _state);
     }
 
-    void pinStateSetInvDefault() {
-        if (_inv != "" && _state != "") {
-            pinChange(_key, _pin, _state, false);
-        }
-    }
 
-    void pinChange(String key, String pin, String state, bool rev) {
+    void pinChange(String key, String state) {
+        String pin = jsonReadStr(configOptionJson, key + "_pin");
+        String inv = jsonReadStr(configOptionJson, key + "_inv");
         int pinInt = pin.toInt();
-        int stateInt;
-        if (rev) {
+
+        if (inv == "") {
             digitalWrite(pinInt, state.toInt());
         } else {
             digitalWrite(pinInt, !state.toInt());
