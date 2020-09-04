@@ -4,25 +4,25 @@
 #include "Global.h"
 #include "items/SensorConvertingClass.h"
 
-class SensorDallasClass : public SensorConvertingClass {
+class SensorDhtClass : public SensorConvertingClass {
    public:
-    SensorDallasClass() : SensorConvertingClass(){};
+    SensorDhtClass() : SensorConvertingClass(){};
 
-    void SensorDallasInit() {
-        oneWire = new OneWire((uint8_t)_pin.toInt());
-        sensors.setOneWire(oneWire);
-        sensors.begin();
-        sensors.setResolution(48);
+    void SensorDhtInit() {
+        //oneWire = new OneWire((uint8_t)_pin.toInt());
+        //sensors.setOneWire(oneWire);
+        //sensors.begin();
+        //sensors.setResolution(48);
 
         sensorReadingMap += _key + ",";
-        dallasEnterCounter++;
+        //dhtEnterCounter++;
 
-        jsonWriteInt(configOptionJson, _key + "_num", dallasEnterCounter);
+        //jsonWriteInt(configOptionJson, _key + "_num", dhtEnterCounter);
         jsonWriteStr(configOptionJson, _key + "_map", _map);
         jsonWriteStr(configOptionJson, _key + "_с", _c);
     }
 
-    void SensorDallasRead(String key) {
+    void SensorDhtRead(String key) {
         float value;
         byte num = sensors.getDS18Count();
         sensors.requestTemperatures();
@@ -42,4 +42,4 @@ class SensorDallasClass : public SensorConvertingClass {
         }
     }
 };
-extern SensorDallasClass mySensorDallas;
+extern SensorDhtClass mySensorDht;

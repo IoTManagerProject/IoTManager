@@ -20,7 +20,7 @@ void bmp280T_reading();
 
 void sensorsInit() {
     ts.add(
-        SENSORS, 15000, [&](void *) {
+        SENSORS, 10000, [&](void *) {
             String buf = sensorReadingMap;
             while (buf.length()) {
                 String tmp = selectToMarker(buf, ",");
