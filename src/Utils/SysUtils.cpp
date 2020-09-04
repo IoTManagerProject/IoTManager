@@ -1,6 +1,7 @@
 #include "Utils/SysUtils.h"
-#include "Utils/PrintMessage.h"
+
 #include "Global.h"
+#include "Utils/PrintMessage.h"
 
 static const char* MODULE = "Main";
 
@@ -76,45 +77,48 @@ const String getMacAddress() {
     return String(buf);
 }
 
-
 #ifdef ESP8266
 void setLedStatus(LedStatus_t status) {
-    pinMode(LED_PIN, OUTPUT);
-    switch (status) {
-        case LED_OFF:
-            noTone(LED_PIN);
-            digitalWrite(LED_PIN, HIGH);
-            break;
-        case LED_ON:
-            noTone(LED_PIN);
-            digitalWrite(LED_PIN, LOW);
-            break;
-        case LED_SLOW:
-            tone(LED_PIN, 1);
-            break;
-        case LED_FAST:
-            tone(LED_PIN, 20);
-            break;
-        default:
-            break;
+    if (jsonReadBool(configSetupJson, "blink") == 1) {
+        pinMode(LED_PIN, OUTPUT);
+        switch (status) {
+            case LED_OFF:
+                noTone(LED_PIN);
+                digitalWrite(LED_PIN, HIGH);
+                break;
+            case LED_ON:
+                noTone(LED_PIN);
+                digitalWrite(LED_PIN, LOW);
+                break;
+            case LED_SLOW:
+                tone(LED_PIN, 1);
+                break;
+            case LED_FAST:
+                tone(LED_PIN, 20);
+                break;
+            default:
+                break;
+        }
     }
 }
 #else
 void setLedStatus(LedStatus_t status) {
-    pinMode(LED_PIN, OUTPUT);
-    switch (status) {
-        case LED_OFF:
-            digitalWrite(LED_PIN, HIGH);
-            break;
-        case LED_ON:
-            digitalWrite(LED_PIN, LOW);
-            break;
-        case LED_SLOW:
-            break;
-        case LED_FAST:
-            break;
-        default:
-            break;
+    if (jsonReadBool(configSetupJson, "blink") == 1) {
+        pinMode(LED_PIN, OUTPUT);
+        switch (status) {
+            case LED_OFF:
+                digitalWrite(LED_PIN, HIGH);
+                break;
+            case LED_ON:
+                digitalWrite(LED_PIN, LOW);
+                break;
+            case LED_SLOW:
+                break;
+            case LED_FAST:
+                break;
+            default:
+                break;
+        }
     }
 }
 #endif

@@ -1,20 +1,33 @@
-#include "items/ItemsGlobal.h"
 #include "items/SensorDhtClass.h"
+
+#include "items/ItemsGlobal.h"
 //#ifdef SensorDhtEnabled
-//=========================================Модуль ультрозвукового дальномера==================================================================
-//dht-temp;id;anydata;Сенсоры;Температура;order;pin;c[1]
+//=========================================DHT Sensor==================================================================
+//dht-temp;id;anydata;Сенсоры;Температура;order;pin;type[dht11];c[1]
+//dht-hum;id;anydata;Сенсоры;Влажность;order;pin;type[dht11];c[1]
 //=========================================================================================================================================
 SensorDhtClass mySensorDht;
-void DhtTemp() {
+void dhtTemp() {
     mySensorDht.update();
     String key = mySensorDht.gkey();
-    sCmd.addCommand(key.c_str(), dhtReading);
+    sCmd.addCommand(key.c_str(), dhtReadingTemp);
     mySensorDht.SensorDhtInit();
     mySensorDht.clear();
 }
-
-void dhtReading() {
+void dhtReadingTemp() {
     String key = sCmd.order();
-    mySensorDht.SensorDhtRead(key);
+    mySensorDht.SensorDhtReadTemp(key);
+}
+
+void dhtHum() {
+    mySensorDht.update();
+    String key = mySensorDht.gkey();
+    sCmd.addCommand(key.c_str(), dhtReadingHum);
+    mySensorDht.SensorDhtInit();
+    mySensorDht.clear();
+}
+void dhtReadingHum() {
+    String key = sCmd.order();
+    mySensorDht.SensorDhtReadHum(key);
 }
 //#endif

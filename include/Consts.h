@@ -30,7 +30,7 @@
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
 //#define UDP_ENABLED
-//#define SSDP
+#define SSDP
 
 /* 
 * Sensor 

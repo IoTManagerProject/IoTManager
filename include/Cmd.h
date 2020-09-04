@@ -32,15 +32,15 @@ extern void bme280P_reading();
 extern void bme280H_reading();
 extern void bme280A_reading();
 
-extern void dhtT();
-extern void dhtH();
-extern void dhtP();
-extern void dhtC();
-extern void dhtD();
-extern void dhtH_reading();
-extern void dhtP_reading();
-extern void dhtC_reading();
-extern void dhtD_reading();
+//extern void dhtT();
+//extern void dhtH();
+//extern void dhtP();
+//extern void dhtC();
+//extern void dhtD();
+//extern void dhtH_reading();
+//extern void dhtP_reading();
+//extern void dhtC_reading();
+//extern void dhtD_reading();
 
 extern void handle_time_init();
 extern void stepper();

@@ -56,15 +56,19 @@
             "title": {
                 "#": "Выберите элемент из списка<span class=\"caret\"></span>",
                 "/set?addItem=button-out-p": "1.Кнопка управляющая пином",
-                "/set?addItem=button-out-np": "2.Кнопка не привязанная к пину",
-                "/set?addItem=pwm-out": "3.Широтно импульсная модуляция(pwm)",
-                "/set?addItem=button-in": "4.Физическая кнопка",
+                "/set?addItem=button-out-np": "2.Кнопка не привязанная к пину (виртуальная)",
+                "/set?addItem=pwm-out": "3.Широтно импульсная модуляция (pwm)",
+                "/set?addItem=button-in": "4.Физическая кнопка (чтение состояния пина)",
                 "/set?addItem=input-digit": "5.Окно ввода цифровых значений",
                 "/set?addItem=input-time": "6.Окно ввода времени",
                 "/set?addItem=output-text": "7.Окно вывода любого текста, предупреждения, цифры",
                 "/set?addItem=analog-adc": "8.Аналоговый датчик, чтение аналогового входа",
-                "/set?addItem=dallas-tmp": "9.Датчик температуры (ds18b20)",
-                "/set?addItem=ultrasonic-cm": "10.Ультрозвуковой датчик расстояния (JSN-SR04T, HC-SR04, HY-SRF05)"
+                "/set?addItem=dallas-temp": "9.Датчик температуры (ds18b20)",
+                "/set?addItem=ultrasonic-cm": "10.Ультрозвуковой датчик расстояния (JSN-SR04T, HC-SR04, HY-SRF05)",
+                "/set?addItem=dht11-temp": "11.Датчик температуры (DHT11)",
+                "/set?addItem=dht11-hum": "12.Датчик влажности (DHT11)",
+                "/set?addItem=dht22-temp": "13.Датчик температуры (DHT22, DHT33, DHT44, AM2302, RHT03)",
+                "/set?addItem=dht22-hum": "14.Датчик влажности (DHT22, DHT33, DHT44, AM2302, RHT03)"
             }
         },
         {

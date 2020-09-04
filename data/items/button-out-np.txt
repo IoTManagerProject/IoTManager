@@ -1,1 +1,1 @@
-button-out;id;toggle;Кнопки;Освещение;order;st[0]
+button-out;id;toggleSunMoon;Кнопки;Освещение;order;st[0]

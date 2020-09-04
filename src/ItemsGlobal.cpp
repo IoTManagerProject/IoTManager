@@ -33,6 +33,9 @@ void cmd_init() {
     sCmd.addCommand("ultrasonic-cm", ultrasonicCm);
     sCmd.addCommand("dallas-temp", dallasTemp);
 
+    sCmd.addCommand("dht-temp", dhtTemp);
+    sCmd.addCommand("dht-hum", dhtHum);
+
 
 
 
@@ -42,13 +45,13 @@ void cmd_init() {
     sCmd.addCommand("timerStart", timerStart_);
     sCmd.addCommand("timerStop", timerStop_);
 
-#ifdef DHT_ENABLED
-    sCmd.addCommand("dhtT", dhtT);
-    sCmd.addCommand("dhtH", dhtH);
-    sCmd.addCommand("dhtPerception", dhtP);
-    sCmd.addCommand("dhtComfort", dhtC);
-    sCmd.addCommand("dhtDewpoint", dhtD);
-#endif
+//#ifdef DHT_ENABLED
+//    sCmd.addCommand("dhtT", dhtT);
+//    sCmd.addCommand("dhtH", dhtH);
+//    sCmd.addCommand("dhtPerception", dhtP);
+//    sCmd.addCommand("dhtComfort", dhtC);
+//    sCmd.addCommand("dhtDewpoint", dhtD);
+//#endif
 
 #ifdef BMP_ENABLED
     sCmd.addCommand("bmp280T", bmp280T);

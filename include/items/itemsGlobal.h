@@ -26,3 +26,8 @@ extern void ultrasonicReading();
 
 extern void dallasTemp();
 extern void dallasReading();
+
+extern void dhtTemp();
+extern void dhtReadingTemp();
+extern void dhtHum();
+extern void dhtReadingHum();
