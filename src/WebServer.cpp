@@ -1,5 +1,5 @@
 #include "HttpServer.h"
-
+#include "BufferExecute.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
 #include "FSEditor.h"
@@ -61,7 +61,7 @@ void init() {
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
         String cmdStr = request->getParam("command")->value();
         pm.info("do: " + cmdStr);
-        addCommandLoop(cmdStr);
+        loopCmdAdd(cmdStr);
         request->send(200, "text/html", "OK");
     });
 

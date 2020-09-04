@@ -98,7 +98,7 @@ class Scenario {
                 if (this->isConditionSatisfied()) {  //если вошедшее событие выполняет условие сценария
                     _scenBlok = deleteBeforeDelimiter(_scenBlok, "\n");
                     //Serial.println("   [>] Making: " + _scenBlok);
-                    spaceExecute(_scenBlok);
+                    spaceCmdExecute(_scenBlok);
                 }
             }
             this->delOneScenBlock();  //удалим использованный блок

@@ -1,4 +1,4 @@
-#include "items/ItemsGlobal.h"
+#include "ItemsCmd.h"
 #include "items/SensorUltrasonicClass.h"
 //#ifdef SensorUltrasonicEnabled
 //=========================================Модуль ультрозвукового дальномера==================================================================

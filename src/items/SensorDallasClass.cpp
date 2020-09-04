@@ -1,4 +1,4 @@
-#include "items/ItemsGlobal.h"
+#include "ItemsCmd.h"
 #include "items/SensorDallasClass.h"
 //#ifdef SensorDallasEnabled
 //=========================================Модуль ультрозвукового дальномера==================================================================

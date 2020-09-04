@@ -64,7 +64,7 @@ void Device_init() {
 #endif
 
 
-    fileExecute(String(DEVICE_CONFIG_FILE));
+    fileCmdExecute(String(DEVICE_CONFIG_FILE));
     //outcoming_date();
 }
 //-------------------------------сценарии-----------------------------------------------------

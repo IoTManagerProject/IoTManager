@@ -1,4 +1,4 @@
-#include "items/ItemsGlobal.h"
+#include "ItemsCmd.h"
 #include "items/InputClass.h"
 //==========================================Модуль ввода цифровых значений==================================
 //input-digit digit1 inputDigit Ввод Введите.цифру 4 st[60]

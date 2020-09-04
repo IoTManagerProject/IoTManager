@@ -59,7 +59,7 @@ void loopScenario() {
                 if (flag) {
                     scenBlok = deleteBeforeDelimiter(scenBlok, "\n");  // удаляем строку самого сценария оставляя только команды
                     pm.info("do: " + scenBlok);
-                    spaceExecute(scenBlok);  // выполняем все команды
+                    spaceCmdExecute(scenBlok);  // выполняем все команды
                 }
             }
         }

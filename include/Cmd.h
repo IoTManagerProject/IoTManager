@@ -60,6 +60,6 @@ extern void firmwareVersion();
 extern void firmwareUpdate();
 extern void loadScenario();
 
-extern void fileExecute(const String& filename);
-extern void csvExecute(String& cmdStr);
-extern void spaceExecute(String& cmdStr);
+extern void fileCmdExecute(const String& filename);
+extern void csvCmdExecute(String& cmdStr);
+extern void spaceCmdExecute(String& cmdStr);

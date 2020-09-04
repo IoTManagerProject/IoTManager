@@ -1,4 +1,4 @@
-#include "items/ItemsGlobal.h"
+#include "ItemsCmd.h"
 #include "items/SensorAnalogClass.h"
 #ifdef ANALOG_ENABLED
 //==============================================Модуль аналогового сенсора===========================================================================================

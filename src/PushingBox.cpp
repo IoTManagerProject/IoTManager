@@ -46,11 +46,11 @@ void pushControl() {
 
         Serial.println("- sending data...");
 
-        client_push.print("POST /pushingbox HTTP/1.1\n");
-        client_push.print("Host: api.pushingbox.com\n");
-        client_push.print("Connection: close\n");
-        client_push.print("Content-Type: application/x-www-form-urlencoded\n");
-        client_push.print("Content-Length: ");
+        client_push.print(F("POST /pushingbox HTTP/1.1\n"));
+        client_push.print(F("Host: api.pushingbox.com\n"));
+        client_push.print(F("Connection: close\n"));
+        client_push.print(F("Content-Type: application/x-www-form-urlencoded\n"));
+        client_push.print(F("Content-Length: "));
         client_push.print(postStr.length());
         client_push.print("\n\n");
         client_push.print(postStr);

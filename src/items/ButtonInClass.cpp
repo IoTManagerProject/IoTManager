@@ -1,4 +1,4 @@
-#include "items/ItemsGlobal.h"
+#include "ItemsCmd.h"
 #include "items/ButtonInClass.h"
 //==========================================Модуль физических кнопок========================================
 //button-in switch1 toggle Кнопки Свет 1 pin[2] db[20]

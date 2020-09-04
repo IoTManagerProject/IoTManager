@@ -1,6 +1,6 @@
 
 #include <SSDP.h>
-
+#include "BufferExecute.h"
 #include "Class/CallBackTest.h"
 #include "Class/NotAsinc.h"
 #include "Class/ScenarioClass.h"
@@ -73,7 +73,7 @@ void setup() {
     pm.info("Broadcast UDP");
     udpInit();
 #endif
-#ifdef SSDP
+#ifdef SSDP_EN
     pm.info("Ssdp Init");
     SsdpInit();
 #endif
@@ -105,8 +105,8 @@ void loop() {
     MqttClient::loop();
     myButtonIn.loop();
     myScenario->loop();
-    loopCmd();
-    loopSerial();
+    loopCmdExecute();
+    //loopSerial();
 
     myNotAsincActions->loop();
     ts.update();
