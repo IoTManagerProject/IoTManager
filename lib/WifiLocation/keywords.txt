@@ -1,0 +1,24 @@
+#######################################
+# Syntax Coloring Map For WifiLocation
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+location_t	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+WifiLocation	KEYWORD2
+getGeoFromWiFi	KEYWORD2
+getSurroundingWiFiJson	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+googleApisHost	LITERAL1
+googleApiUrl	LITERAL1

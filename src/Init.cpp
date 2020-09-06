@@ -83,42 +83,34 @@ void uptime_init() {
         nullptr, true);
 }
 
-void telemetry_init() {
-    if (TELEMETRY_UPDATE_INTERVAL) {
-        ts.add(
-            STATISTICS, TELEMETRY_UPDATE_INTERVAL, [&](void*) {
-                handle_statistics();
-            },
-            nullptr, true);
-    }
-}
+
 
 void handle_uptime() {
     jsonWriteStr(configSetupJson, "uptime", timeNow->getUptime());
 }
 
-void handle_statistics() {
-    if (isNetworkActive()) {
-        String urls = "http://backup.privet.lv/visitors/?";
-        //-----------------------------------------------------------------
-        urls += WiFi.macAddress().c_str();
-        urls += "&";
-        //-----------------------------------------------------------------
-#ifdef ESP8266
-        urls += "iot-manager_esp8266";
-#endif
-#ifdef ESP32
-        urls += "iot-manager_esp32";
-#endif
-        urls += "&";
-#ifdef ESP8266
-        urls += ESP.getResetReason();
-#endif
-#ifdef ESP32
-        urls += "Power on";
-#endif
-        urls += "&";
-        urls += String(FIRMWARE_VERSION);
-        String stat = getURL(urls);
-    }
-}
+//void handle_statistics() {
+//    if (isNetworkActive()) {
+//        String urls = "http://backup.privet.lv/visitors/?";
+//        //-----------------------------------------------------------------
+//        urls += WiFi.macAddress().c_str();
+//        urls += "&";
+//        //-----------------------------------------------------------------
+//#ifdef ESP8266
+//        urls += "iot-manager_esp8266";
+//#endif
+//#ifdef ESP32
+//        urls += "iot-manager_esp32";
+//#endif
+//        urls += "&";
+//#ifdef ESP8266
+//        urls += ESP.getResetReason();
+//#endif
+//#ifdef ESP32
+//        urls += "Power on";
+//#endif
+//        urls += "&";
+//        urls += String(FIRMWARE_VERSION);
+//        String stat = getURL(urls);
+//    }
+//}

@@ -1,9 +1,11 @@
 
 #include <SSDP.h>
+
 #include "BufferExecute.h"
 #include "Class/CallBackTest.h"
 #include "Class/NotAsinc.h"
 #include "Class/ScenarioClass.h"
+#include "Utils/statUtils.h"
 #include "Cmd.h"
 #include "Global.h"
 #include "Init.h"
@@ -57,9 +59,6 @@ void setup() {
     pm.info("Uptime");
     uptime_init();
 
-    pm.info("telemetry");
-    telemetry_init();
-
     pm.info("Updater");
     upgradeInit();
 
@@ -68,6 +67,8 @@ void setup() {
 
     pm.info("WebAdmin");
     web_init();
+
+    initSt();
 
 #ifdef UDP_ENABLED
     pm.info("Broadcast UDP");
@@ -85,7 +86,7 @@ void setup() {
         nullptr, true);
 
     just_load = false;
-    initialized = true;
+    initialized = true;                                                                                                          //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
 }
 
 void loop() {

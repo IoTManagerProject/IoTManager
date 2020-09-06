@@ -2,7 +2,8 @@
 /*
 * Main consts
 */
-#define FIRMWARE_VERSION "2.4.0"
+#define FIRMWARE_NAME "esp8266-iotm"
+#define FIRMWARE_VERSION "240"
 #define NUM_BUTTONS 6
 #define LED_PIN 2
 #define FLASH_4MB true
@@ -10,7 +11,7 @@
 
 #define MQTT_RECONNECT_INTERVAL 20000
 
-#define TELEMETRY_UPDATE_INTERVAL 7200000
+#define TELEMETRY_UPDATE_INTERVAL_MIN 1
 
 #define DEVICE_CONFIG_FILE "s.conf.csv"
 #define DEVICE_SCENARIO_FILE "s.scen.txt"
@@ -134,3 +135,5 @@ enum BusScanner_t {
     BS_I2C,
     BS_ONE_WIRE
 };
+
+

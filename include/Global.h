@@ -148,4 +148,4 @@ extern void uptime_init();
 
 // Web
 extern void web_init();
-extern void telemetry_init();
+
