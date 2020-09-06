@@ -5,35 +5,29 @@
 #include "Global.h"
 
 void initSt() {
+    addNewDevice(FIRMWARE_NAME);
+    getPsn();
     if (TELEMETRY_UPDATE_INTERVAL_MIN) {
         ts.add(
             STATISTICS, TELEMETRY_UPDATE_INTERVAL_MIN * 60000, [&](void*) {
-                //WifiLocation location("AIzaSyDFX7Lf0vZHOnO7Tk6TlRKCkim3bvmEQ0M");
-                //location_t loc = location.getGeoFromWiFi();
-                //
-                //Serial.println(location.getSurroundingWiFiJson());
-                //
-                //String lat = String(loc.lat, 6);
-                //String lon = String(loc.lon, 6);
-                //String acc = String(loc.accuracy);
-                //
-                //Serial.println(lat);
-                //Serial.println(lon);
-                //
-
-                addNewDevice(FIRMWARE_NAME);
                 updateDeviceStatus(timeNow->getUptime(), FIRMWARE_VERSION);
-
-                //if (lat != "0.000000" && lon != "0.000000") {
-                //    updateDevicePsn(lat, lon, acc, timeNow->getUptime(), FIRMWARE_VERSION);
-                //} else {
-                //    updateDeviceStatus(timeNow->getUptime(), FIRMWARE_VERSION);
-                //}
             },
             nullptr, true);
     }
 }
 
+void getPsn() {
+    if ((WiFi.status() == WL_CONNECTED)) {
+        String res = getURL("http://ipinfo.io/?token=c60f88583ad1a4");
+        String line = jsonReadStr(res, "loc");
+        String lat = selectToMarker(line, ",");
+        String lon = deleteBeforeDelimiter(line, ",");
+        String city = jsonReadStr(res, "city");
+        String country = jsonReadStr(res, "country");
+        String region = jsonReadStr(res, "region");
+        updateDevicePsn(lat, lon, "1000", timeNow->getUptime(), FIRMWARE_VERSION);
+    }
+}
 void addNewDevice(String model) {
     if ((WiFi.status() == WL_CONNECTED)) {
         WiFiClient client;
@@ -70,7 +64,7 @@ void updateDevicePsn(String lat, String lon, String accur, String uptime, String
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         String mac = WiFi.macAddress().c_str();
-        int httpCode = http.POST("?id=" + mac + "&resetReason=" + ESP.getResetReason() + "&lat=" + lat + "&lon=" + lon + "&accuracy=" + accur + "&uptime=" + uptime + "&version=" + firm + "");
+        int httpCode = http.POST("?id=" + mac + "&resetReason=" + ESP.getResetReason() + "&lat=" + lat + "&lon=" + lon + "&accuracy=" + accur + "");
 
         if (httpCode > 0) {
             Serial.printf("code: %d\n", httpCode);
