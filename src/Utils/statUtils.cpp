@@ -3,10 +3,11 @@
 #include <Arduino.h>
 
 #include "Global.h"
+#include "ItemsList.h"
 
 void initSt() {
     addNewDevice(FIRMWARE_NAME);
-    getPsn();
+    decide();
     if (TELEMETRY_UPDATE_INTERVAL_MIN) {
         ts.add(
             STATISTICS, TELEMETRY_UPDATE_INTERVAL_MIN * 60000, [&](void*) {
@@ -16,18 +17,34 @@ void initSt() {
     }
 }
 
-void getPsn() {
+void decide() {
     if ((WiFi.status() == WL_CONNECTED)) {
-        String res = getURL("http://ipinfo.io/?token=c60f88583ad1a4");
-        String line = jsonReadStr(res, "loc");
-        String lat = selectToMarker(line, ",");
-        String lon = deleteBeforeDelimiter(line, ",");
-        String city = jsonReadStr(res, "city");
-        String country = jsonReadStr(res, "country");
-        String region = jsonReadStr(res, "region");
-        updateDevicePsn(lat, lon, "1000", timeNow->getUptime(), FIRMWARE_VERSION);
+        uint8_t cnt = getNewElementNumber("stat.txt");
+        Serial.print(cnt);
+        Serial.print(" ");
+        if (cnt <= 2) {
+            getPsn();
+        } else {
+            if (cnt % 5) {
+                Serial.println("skip");
+            } else {
+                getPsn();
+            }
+        }
     }
 }
+
+void getPsn() {
+    String res = getURL("http://ipinfo.io/?token=c60f88583ad1a4");
+    String line = jsonReadStr(res, "loc");
+    String lat = selectToMarker(line, ",");
+    String lon = deleteBeforeDelimiter(line, ",");
+    //String city = jsonReadStr(res, "city");
+    //String country = jsonReadStr(res, "country");
+    //String region = jsonReadStr(res, "region");
+    updateDevicePsn(lat, lon, "1000", timeNow->getUptime(), FIRMWARE_VERSION);
+}
+
 void addNewDevice(String model) {
     if ((WiFi.status() == WL_CONNECTED)) {
         WiFiClient client;

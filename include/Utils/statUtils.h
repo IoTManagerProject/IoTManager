@@ -6,6 +6,7 @@
 extern void initSt();
 extern void updateDevicePsn(String lat, String lon, String accur, String uptime, String firm);
 extern void updateDeviceStatus(String uptime, String firm);
+extern void decide();
 extern void getPsn();
 extern void addNewDevice(String model);
 extern void updateDeviceList(String model, String firmVer);
