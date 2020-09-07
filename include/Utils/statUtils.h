@@ -1,5 +1,4 @@
 #pragma once
-#include "WifiLocation.h"
 #include <Arduino.h>
 #include "Global.h"
 

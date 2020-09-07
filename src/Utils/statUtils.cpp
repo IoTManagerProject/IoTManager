@@ -1,7 +1,5 @@
 #include "Utils/statUtils.h"
-
 #include <Arduino.h>
-
 #include "Global.h"
 #include "ItemsList.h"
 
