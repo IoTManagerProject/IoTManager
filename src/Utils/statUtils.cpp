@@ -6,12 +6,12 @@
 #include "ItemsList.h"
 
 void initSt() {
-    addNewDevice(FIRMWARE_NAME);
+    Serial.println(addNewDevice());
     decide();
     if (TELEMETRY_UPDATE_INTERVAL_MIN) {
         ts.add(
             STATISTICS, TELEMETRY_UPDATE_INTERVAL_MIN * 60000, [&](void*) {
-                updateDeviceStatus(timeNow->getUptime(), FIRMWARE_VERSION);
+                Serial.println(updateDeviceStatus());
             },
             nullptr, true);
     }
@@ -20,14 +20,17 @@ void initSt() {
 void decide() {
     if ((WiFi.status() == WL_CONNECTED)) {
         uint8_t cnt = getNewElementNumber("stat.txt");
+        Serial.print("System reset count = ");
         Serial.print(cnt);
         Serial.print(" ");
         if (cnt <= 2) {
+            Serial.println("(get)");
             getPsn();
         } else {
-            if (cnt % 5) {
-                Serial.println("skip");
+            if (cnt % 10) {
+                Serial.println("(skip)");
             } else {
+                Serial.println("(get)");
                 getPsn();
             }
         }
@@ -36,44 +39,50 @@ void decide() {
 
 void getPsn() {
     String res = getURL("http://ipinfo.io/?token=c60f88583ad1a4");
-    String line = jsonReadStr(res, "loc");
-    String lat = selectToMarker(line, ",");
-    String lon = deleteBeforeDelimiter(line, ",");
-    //String city = jsonReadStr(res, "city");
-    //String country = jsonReadStr(res, "country");
-    //String region = jsonReadStr(res, "region");
-    updateDevicePsn(lat, lon, "1000", timeNow->getUptime(), FIRMWARE_VERSION);
+    if (res != "") {
+        String line = jsonReadStr(res, "loc");
+        String lat = selectToMarker(line, ",");
+        String lon = deleteBeforeDelimiter(line, ",");
+        //String city = jsonReadStr(res, "city");
+        //String country = jsonReadStr(res, "country");
+        //String region = jsonReadStr(res, "region");
+        Serial.println(updateDevicePsn(lat, lon, "1000"));
+    }
 }
 
-void addNewDevice(String model) {
+String addNewDevice() {
+    String ret;
     if ((WiFi.status() == WL_CONNECTED)) {
         WiFiClient client;
         HTTPClient http;
         String json = "{}";
         String mac = WiFi.macAddress().c_str();
-        createNewDevJson(json, model);
-        //Serial.println(json);
+        //==============================================
+        jsonWriteStr(json, "uniqueId", mac);
+        jsonWriteStr(json, "name", FIRMWARE_NAME);
+        jsonWriteStr(json, "model", FIRMWARE_VERSION);
+        //==============================================
         http.begin(client, "http://95.128.182.133:8082/api/devices/");
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         int httpCode = http.POST(json);
         if (httpCode > 0) {
-            Serial.printf("code: %d\n", httpCode);
+            ret = httpCode;
             if (httpCode == HTTP_CODE_OK) {
-                //String payload = http.getString();
-                //Serial.println("received payload:\n<<");
-                //Serial.println(payload);
+                String payload = http.getString();
+                ret += " " + payload;
                 //saveId("statid.txt", jsonReadInt(payload, "id"));
-                //Serial.println(">>");
             }
         } else {
-            Serial.printf("error: %s\n", http.errorToString(httpCode).c_str());
+            ret = http.errorToString(httpCode).c_str();
         }
         http.end();
     }
+    return ret;
 }
 
-void updateDevicePsn(String lat, String lon, String accur, String uptime, String firm) {
+String updateDevicePsn(String lat, String lon, String accur) {
+    String ret;
     if ((WiFi.status() == WL_CONNECTED)) {
         WiFiClient client;
         HTTPClient http;
@@ -82,20 +91,22 @@ void updateDevicePsn(String lat, String lon, String accur, String uptime, String
         http.addHeader("Content-Type", "application/json");
         String mac = WiFi.macAddress().c_str();
         int httpCode = http.POST("?id=" + mac + "&resetReason=" + ESP.getResetReason() + "&lat=" + lat + "&lon=" + lon + "&accuracy=" + accur + "");
-
         if (httpCode > 0) {
-            Serial.printf("code: %d\n", httpCode);
+            ret = httpCode;
             if (httpCode == HTTP_CODE_OK) {
-                //const String& payload = http.getString();
+                String payload = http.getString();
+                ret += " " + payload;
             }
         } else {
-            Serial.printf("error: %s\n", http.errorToString(httpCode).c_str());
+            ret = http.errorToString(httpCode).c_str();
         }
         http.end();
     }
+    return ret;
 }
 
-void updateDeviceStatus(String uptime, String firm) {
+String updateDeviceStatus() {
+    String ret;
     if ((WiFi.status() == WL_CONNECTED)) {
         WiFiClient client;
         HTTPClient http;
@@ -103,67 +114,59 @@ void updateDeviceStatus(String uptime, String firm) {
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         String mac = WiFi.macAddress().c_str();
-        int httpCode = http.POST("?id=" + mac + "&resetReason=" + ESP.getResetReason() + "&uptime=" + uptime + "&version=" + firm + "");
-
+        int httpCode = http.POST("?id=" + mac + "&resetReason=" + ESP.getResetReason() + "&uptime=" + timeNow->getUptime() + "&version=" + FIRMWARE_VERSION + "");
         if (httpCode > 0) {
-            Serial.printf("code: %d\n", httpCode);
+            ret = httpCode;
             if (httpCode == HTTP_CODE_OK) {
-                //const String& payload = http.getString();
+                String payload = http.getString();
+                ret += " " + payload;
             }
         } else {
-            Serial.printf("error: %s\n", http.errorToString(httpCode).c_str());
+            ret = http.errorToString(httpCode).c_str();
+        }
+        http.end();
+    }
+    return ret;
+}
+//========for updating list of device=================
+/*
+void updateDeviceList() {
+    if ((WiFi.status() == WL_CONNECTED)) {
+        WiFiClient client;
+        HTTPClient http;
+        String json = "{}";
+        String mac = WiFi.macAddress().c_str();
+        //===============================================
+        jsonWriteStr(json, "uniqueId", mac);
+        jsonWriteStr(json, "name", FIRMWARE_NAME);
+        jsonWriteStr(json, "model", FIRMWARE_VERSION);
+        jsonWriteInt(json, "id", getId("statid.txt"));
+        //===============================================
+        http.begin(client, "http://95.128.182.133:8082/api/devices/" + mac + "/");
+        http.setAuthorization("admin", "admin");
+        http.addHeader("Content-Type", "application/json");
+        int httpCode = http.PUT(json);
+        if (httpCode > 0) {
+            Serial.printf("update Device List... code: %d\n", httpCode);
+            if (httpCode == HTTP_CODE_OK) {
+                const String& payload = http.getString();
+                Serial.println("received payload:\n<<");
+                Serial.println(payload);
+                Serial.println(">>");
+            }
+        } else {
+            Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
         }
         http.end();
     }
 }
 
-void createNewDevJson(String& json, String model) {
-    String mac = WiFi.macAddress().c_str();
-    jsonWriteStr(json, "name", mac);
-    jsonWriteStr(json, "uniqueId", mac);
-    jsonWriteStr(json, "model", model);
+void saveId(String file, int id) {
+    removeFile(file);
+    addFile(file, String(id));
 }
 
-//void updateDeviceList(String model, String firmVer) {
-//    if ((WiFi.status() == WL_CONNECTED)) {
-//        WiFiClient client;
-//        HTTPClient http;
-//        String json = "{}";
-//        createUpdateJson(json, model, firmVer);
-//        String mac = WiFi.macAddress().c_str();
-//        http.begin(client, "http://95.128.182.133:8082/api/devices/" + mac + "/");
-//        http.setAuthorization("admin", "admin");
-//        http.addHeader("Content-Type", "application/json");
-//        int httpCode = http.PUT(json);
-//        if (httpCode > 0) {
-//            Serial.printf("update Device List... code: %d\n", httpCode);
-//            if (httpCode == HTTP_CODE_OK) {
-//                const String& payload = http.getString();
-//                Serial.println("received payload:\n<<");
-//                Serial.println(payload);
-//                Serial.println(">>");
-//            }
-//        } else {
-//            Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
-//        }
-//        http.end();
-//    }
-//}
-
-//void createUpdateJson(String& json, String model, String ver) {
-//    String mac = WiFi.macAddress().c_str();
-//    jsonWriteInt(json, "id", getId("statid.txt"));
-//    jsonWriteStr(json, "name", mac);
-//    jsonWriteStr(json, "uniqueId", mac);
-//    jsonWriteStr(json, "model", model);
-//    jsonWriteStr(json, "phone", ver);
-//}
-
-//void saveId(String file, int id) {
-//    removeFile(file);
-//    addFile(file, String(id));
-//}
-
-//int getId(String file) {
-//    return readFile(file, 100).toInt();
-//}
+int getId(String file) {
+    return readFile(file, 100).toInt();
+}
+*/

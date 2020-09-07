@@ -4,11 +4,12 @@
 #include "Global.h"
 
 extern void initSt();
-extern void updateDevicePsn(String lat, String lon, String accur, String uptime, String firm);
-extern void updateDeviceStatus(String uptime, String firm);
+extern String updateDevicePsn(String lat, String lon, String accur);
+extern String updateDeviceStatus();
+extern String addNewDevice();
+
 extern void decide();
 extern void getPsn();
-extern void addNewDevice(String model);
-extern void updateDeviceList(String model, String firmVer);
-extern void createNewDevJson(String& json, String model);
-//extern WifiLocation location();
+//extern void updateDeviceList();
+//extern void saveId(String file, int id);
+//extern int getId(String file);
