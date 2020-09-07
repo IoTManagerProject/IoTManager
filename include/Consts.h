@@ -2,13 +2,14 @@
 /*
 * Main consts
 */
-#define FIRMWARE_VERSION "2.3.5"
+#define FIRMWARE_VERSION "235"
+#define FIRMWARE_NAME "esp8266-iotm-old"
 #define NUM_BUTTONS 6
 #define LED_PIN 2
 #define FLASH_4MB true
 #define MQTT_RECONNECT_INTERVAL 20000
 // 1000 * 60 * 60 * 2
-#define TELEMETRY_UPDATE_INTERVAL 0
+#define TELEMETRY_UPDATE_INTERVAL_MIN 60
 
 #define DEVICE_CONFIG_FILE "dev_conf.txt"
 #define DEVICE_SCENARIO_FILE "dev_scen.txt"

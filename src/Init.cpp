@@ -82,15 +82,6 @@ void uptime_init() {
         nullptr, true);
 }
 
-void telemetry_init() {
-    if (TELEMETRY_UPDATE_INTERVAL) {
-        ts.add(
-            STATISTICS, TELEMETRY_UPDATE_INTERVAL, [&](void*) {
-                handle_statistics();
-            },
-            nullptr, true);
-    }
-}
 
 void handle_uptime() {
     jsonWriteStr(configSetupJson, "uptime", timeNow->getUptime());

@@ -1,5 +1,5 @@
 #include "Global.h"
-
+#include "Utils/statUtils.h"
 #include "HttpServer.h"
 #include "Bus/BusScannerFactory.h"
 #include "Utils/Timings.h"
@@ -46,11 +46,6 @@ void setup() {
     pm.info("Uptime");
     uptime_init();
 
-    if (!TELEMETRY_UPDATE_INTERVAL) {
-        pm.info("Telemetry: Disabled");
-    }
-    telemetry_init();
-
     pm.info("Updater");
     initUpdater();
 
@@ -59,6 +54,8 @@ void setup() {
 
     pm.info("WebAdmin");
     web_init();
+
+    initSt();
 
 #ifdef UDP_ENABLED
     pm.info("Broadcast UDP");
