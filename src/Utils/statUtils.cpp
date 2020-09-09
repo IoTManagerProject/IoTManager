@@ -1,5 +1,7 @@
 #include "Utils/statUtils.h"
+
 #include <Arduino.h>
+
 #include "Global.h"
 #include "ItemsList.h"
 
@@ -21,11 +23,11 @@ void decide() {
         Serial.print("System reset count = ");
         Serial.print(cnt);
         Serial.print(" ");
-        if (cnt <= 2) {
+        if (cnt <= 3) {
             Serial.println("(get)");
             getPsn();
         } else {
-            if (cnt % 10) {
+            if (cnt % 5) {
                 Serial.println("(skip)");
             } else {
                 Serial.println("(get)");
