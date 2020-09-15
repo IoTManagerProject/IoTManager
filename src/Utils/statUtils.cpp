@@ -1,19 +1,29 @@
-#include "Utils/statUtils.h"
+#include "Utils/StatUtils.h"
 
 #include <Arduino.h>
+#include <EEPROM.h>
 
 #include "Global.h"
 #include "ItemsList.h"
 
 void initSt() {
+    Serial.print("New device registation: ");
     Serial.println(addNewDevice());
     decide();
     if (TELEMETRY_UPDATE_INTERVAL_MIN) {
         ts.add(
             STATISTICS, TELEMETRY_UPDATE_INTERVAL_MIN * 60000, [&](void*) {
+                Serial.print("Device status: ");
                 Serial.println(updateDeviceStatus());
             },
             nullptr, true);
+
+        ts.add(
+            STATISTICS_WORK, TELEMETRY_UPDATE_INTERVAL_MIN * 60000, [&](void*) {
+                Serial.print("Work time: ");
+                Serial.println(updateWorkTime());
+            },
+            nullptr, false);
     }
 }
 
@@ -38,7 +48,7 @@ void decide() {
 }
 
 void getPsn() {
-    String res = getURL("http://ipinfo.io/?token=c60f88583ad1a4");
+    String res = getURL(F("http://ipinfo.io/?token=c60f88583ad1a4"));
     if (res != "") {
         String line = jsonReadStr(res, "loc");
         String lat = selectToMarker(line, ",");
@@ -62,7 +72,7 @@ String addNewDevice() {
         jsonWriteStr(json, "name", FIRMWARE_NAME);
         jsonWriteStr(json, "model", FIRMWARE_VERSION);
         //==============================================
-        http.begin(client, "http://95.128.182.133:8082/api/devices/");
+        http.begin(client, F("http://95.128.182.133:8082/api/devices/"));
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         int httpCode = http.POST(json);
@@ -86,7 +96,7 @@ String updateDevicePsn(String lat, String lon, String accur) {
     if ((WiFi.status() == WL_CONNECTED)) {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, "http://95.128.182.133:5055/");
+        http.begin(client, F("http://95.128.182.133:5055/"));
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         String mac = WiFi.macAddress().c_str();
@@ -110,11 +120,11 @@ String updateDeviceStatus() {
     if ((WiFi.status() == WL_CONNECTED)) {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, "http://95.128.182.133:5055/");
+        http.begin(client, F("http://95.128.182.133:5055/"));
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         String mac = WiFi.macAddress().c_str();
-        int httpCode = http.POST("?id=" + mac + "&resetReason=" + ESP.getResetReason() + "&uptime=" + timeNow->getUptime() + "&version=" + FIRMWARE_VERSION + "");
+        int httpCode = http.POST("?id=" + mac + "&resetReason=" + ESP.getResetReason() + "&uptime=" + timeNow->getUptime() + "&worktime=" + String(getWorkTime()) + "&version=" + FIRMWARE_VERSION + "");
         if (httpCode > 0) {
             ret = httpCode;
             if (httpCode == HTTP_CODE_OK) {
@@ -127,6 +137,65 @@ String updateDeviceStatus() {
         http.end();
     }
     return ret;
+}
+
+String updateWorkTime() {
+    String ret;
+    if ((WiFi.status() == WL_CONNECTED)) {
+        WiFiClient client;
+        HTTPClient http;
+        http.begin(client, F("http://95.128.182.133:5055/"));
+        http.setAuthorization("admin", "admin");
+        http.addHeader("Content-Type", "application/json");
+        String mac = WiFi.macAddress().c_str();
+        int httpCode = http.POST("?id=" + mac + "&worktime=" + String(plusOneHour()) + "");
+        if (httpCode > 0) {
+            ret = httpCode;
+            if (httpCode == HTTP_CODE_OK) {
+                String payload = http.getString();
+                ret += " " + payload;
+            }
+        } else {
+            ret = http.errorToString(httpCode).c_str();
+        }
+        http.end();
+    }
+    return ret;
+}
+
+int getWorkTime() {
+    static int hrs;
+    EEPROM.begin(512);
+    hrs = eeGetInt(0);
+    return hrs;
+}
+
+int plusOneHour() {
+    static int hrs;
+    EEPROM.begin(512);
+    hrs = eeGetInt(0);
+    hrs++;
+    eeWriteInt(0, hrs);
+    return hrs;
+}
+
+void eeWriteInt(int pos, int val) {
+    byte* p = (byte*)&val;
+    EEPROM.write(pos, *p);
+    EEPROM.write(pos + 1, *(p + 1));
+    EEPROM.write(pos + 2, *(p + 2));
+    EEPROM.write(pos + 3, *(p + 3));
+    EEPROM.commit();
+}
+
+int eeGetInt(int pos) {
+    int val;
+    byte* p = (byte*)&val;
+    *p = EEPROM.read(pos);
+    *(p + 1) = EEPROM.read(pos + 1);
+    *(p + 2) = EEPROM.read(pos + 2);
+    *(p + 3) = EEPROM.read(pos + 3);
+    return val;
 }
 //========for updating list of device=================
 /*

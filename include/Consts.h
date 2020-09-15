@@ -22,6 +22,7 @@
 #define TAG_ONE_WIRE "oneWire"
 #define TAG_I2C "i2c"
 #define TAG_ONE_WIRE_PIN "oneWirePin"
+ 
 
 /* 
 * Optional
@@ -89,6 +90,7 @@ enum TimerTask_t { WIFI_SCAN,
                    TIME,
                    TIME_SYNC,
                    STATISTICS,
+                   STATISTICS_WORK,
                    UPTIME,
                    UDP,
                    UDP_DB,

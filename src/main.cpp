@@ -5,7 +5,7 @@
 #include "Class/CallBackTest.h"
 #include "Class/NotAsinc.h"
 #include "Class/ScenarioClass.h"
-#include "Utils/statUtils.h"
+#include "Utils/StatUtils.h"
 #include "Cmd.h"
 #include "Global.h"
 #include "Init.h"
@@ -86,7 +86,7 @@ void setup() {
         nullptr, true);
 
     just_load = false;
-    initialized = true;                                                                                                          //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
+    initialized = true;                                                                                                    //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
 }
 
 void loop() {
