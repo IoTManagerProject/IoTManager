@@ -82,6 +82,7 @@ void setup() {
     ts.add(
         TEST, 1000 * 60, [&](void*) {
             pm.info(printMemoryStatus());
+            
         },
         nullptr, true);
 

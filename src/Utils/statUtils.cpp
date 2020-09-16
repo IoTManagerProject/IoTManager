@@ -7,30 +7,27 @@
 #include "ItemsList.h"
 
 void initSt() {
-    Serial.print("New device registation: ");
+    Serial.print("[I] [Stat] New device registation: ");
     Serial.println(addNewDevice());
     decide();
     if (TELEMETRY_UPDATE_INTERVAL_MIN) {
         ts.add(
             STATISTICS, TELEMETRY_UPDATE_INTERVAL_MIN * 60000, [&](void*) {
-                Serial.print("Device status: ");
+                static bool secondTime = false;
+                if (secondTime) plusOneHour();
+                secondTime = true;
+
+                Serial.print("[I] [Stat] Update device status: ");
                 Serial.println(updateDeviceStatus());
             },
             nullptr, true);
-
-        ts.add(
-            STATISTICS_WORK, TELEMETRY_UPDATE_INTERVAL_MIN * 60000, [&](void*) {
-                Serial.print("Work time: ");
-                Serial.println(updateWorkTime());
-            },
-            nullptr, false);
     }
 }
 
 void decide() {
     if ((WiFi.status() == WL_CONNECTED)) {
         uint8_t cnt = getNewElementNumber("stat.txt");
-        Serial.print("System reset count = ");
+        Serial.print("[I] [Stat] Total reset number: ");
         Serial.print(cnt);
         Serial.print(" ");
         if (cnt <= 3) {
@@ -56,6 +53,7 @@ void getPsn() {
         //String city = jsonReadStr(res, "city");
         //String country = jsonReadStr(res, "country");
         //String region = jsonReadStr(res, "region");
+        Serial.print("[I] [Stat] Update device psn: ");
         Serial.println(updateDevicePsn(lat, lon, "1000"));
     }
 }
@@ -100,7 +98,11 @@ String updateDevicePsn(String lat, String lon, String accur) {
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         String mac = WiFi.macAddress().c_str();
-        int httpCode = http.POST("?id=" + mac + "&resetReason=" + ESP.getResetReason() + "&lat=" + lat + "&lon=" + lon + "&accuracy=" + accur + "");
+        int httpCode = http.POST("?id=" + mac +
+                                 "&resetReason=" + ESP.getResetReason() +
+                                 "&lat=" + lat +
+                                 "&lon=" + lon +
+                                 "&accuracy=" + accur + "");
         if (httpCode > 0) {
             ret = httpCode;
             if (httpCode == HTTP_CODE_OK) {
@@ -124,7 +126,11 @@ String updateDeviceStatus() {
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         String mac = WiFi.macAddress().c_str();
-        int httpCode = http.POST("?id=" + mac + "&resetReason=" + ESP.getResetReason() + "&uptime=" + timeNow->getUptime() + "&worktime=" + String(getWorkTime()) + "&version=" + FIRMWARE_VERSION + "");
+        int httpCode = http.POST("?id=" + mac +
+                                 "&resetReason=" + ESP.getResetReason() +
+                                 "&uptime=" + timeNow->getUptime() +
+                                 "&uptimeTotal=" + getUptimeTotal() +
+                                 "&version=" + FIRMWARE_VERSION + "");
         if (httpCode > 0) {
             ret = httpCode;
             if (httpCode == HTTP_CODE_OK) {
@@ -139,35 +145,13 @@ String updateDeviceStatus() {
     return ret;
 }
 
-String updateWorkTime() {
-    String ret;
-    if ((WiFi.status() == WL_CONNECTED)) {
-        WiFiClient client;
-        HTTPClient http;
-        http.begin(client, F("http://95.128.182.133:5055/"));
-        http.setAuthorization("admin", "admin");
-        http.addHeader("Content-Type", "application/json");
-        String mac = WiFi.macAddress().c_str();
-        int httpCode = http.POST("?id=" + mac + "&worktime=" + String(plusOneHour()) + "");
-        if (httpCode > 0) {
-            ret = httpCode;
-            if (httpCode == HTTP_CODE_OK) {
-                String payload = http.getString();
-                ret += " " + payload;
-            }
-        } else {
-            ret = http.errorToString(httpCode).c_str();
-        }
-        http.end();
-    }
-    return ret;
-}
-
-int getWorkTime() {
+String getUptimeTotal() {
     static int hrs;
     EEPROM.begin(512);
     hrs = eeGetInt(0);
-    return hrs;
+    String hrsStr = prettySeconds(hrs * 60);
+    //Serial.println(hrsStr); 
+    return hrsStr;
 }
 
 int plusOneHour() {
@@ -195,7 +179,11 @@ int eeGetInt(int pos) {
     *(p + 1) = EEPROM.read(pos + 1);
     *(p + 2) = EEPROM.read(pos + 2);
     *(p + 3) = EEPROM.read(pos + 3);
-    return val;
+    if (val < 0) {
+        return 0;
+    } else {
+        return val;
+    }
 }
 //========for updating list of device=================
 /*
