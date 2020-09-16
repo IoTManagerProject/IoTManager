@@ -149,8 +149,8 @@ String getUptimeTotal() {
     static int hrs;
     EEPROM.begin(512);
     hrs = eeGetInt(0);
-    String hrsStr = prettySeconds(hrs * 60);
-    //Serial.println(hrsStr); 
+    String hrsStr = prettySeconds(hrs * 60 * 60);
+    //Serial.println(hrsStr);
     return hrsStr;
 }
 

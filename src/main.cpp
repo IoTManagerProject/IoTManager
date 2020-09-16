@@ -13,6 +13,7 @@
 #include "Utils/Timings.h"
 #include "Utils\WebUtils.h"
 #include "items/ButtonInClass.h"
+#include "RemoteOrdersUdp.h"
 
 void not_async_actions();
 
@@ -68,7 +69,11 @@ void setup() {
     pm.info("WebAdmin");
     web_init();
 
+    pm.info("InitSt");
     initSt();
+
+    pm.info("asyncUdpInit");
+    asyncUdpInit();
 
 #ifdef UDP_ENABLED
     pm.info("Broadcast UDP");
