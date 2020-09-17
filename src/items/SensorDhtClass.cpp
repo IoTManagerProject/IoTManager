@@ -19,6 +19,8 @@ void dhtReadingTemp() {
     mySensorDht.SensorDhtReadTemp(key);
 }
 
+
+
 void dhtHum() {
     mySensorDht.update();
     String key = mySensorDht.gkey();

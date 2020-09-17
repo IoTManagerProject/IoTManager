@@ -31,3 +31,10 @@ extern void dhtTemp();
 extern void dhtReadingTemp();
 extern void dhtHum();
 extern void dhtReadingHum();
+
+extern void bme280Temp();
+extern void bme280ReadingTemp();
+extern void bme280Hum();
+extern void bme280ReadingHum();
+extern void bme280Press();
+extern void bme280ReadingPress();

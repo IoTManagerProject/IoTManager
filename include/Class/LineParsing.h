@@ -76,6 +76,9 @@ class LineParsing {
                 if (arg.indexOf("type[") != -1) {
                     _type = extractInner(arg);
                 }
+                if (arg.indexOf("addr[") != -1) {
+                    _addr = extractInner(arg);
+                }
             }
         }
 
@@ -121,6 +124,10 @@ class LineParsing {
     String gtype() {
         return _type;
     }
+    String gaddr() {
+        return _addr;
+    }
+    
 
     void clear() {
         _key = "";
@@ -136,6 +143,7 @@ class LineParsing {
         _state = "";
         _db = "";
         _type = "";
+        _addr = "";
     }
 
     String extractInnerDigit(String str) {

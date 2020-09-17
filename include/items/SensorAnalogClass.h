@@ -1,15 +1,21 @@
 #pragma once
 #include <Arduino.h>
+
 #include "Class/LineParsing.h"
-#include "items/SensorConvertingClass.h"
 #include "Global.h"
+#include "items/SensorConvertingClass.h"
 
 class SensorAnalogClass : public SensorConvertingClass {
    public:
     SensorAnalogClass() : SensorConvertingClass(){};
 
+    void SensorAnalogInit() {
+        jsonWriteStr(configOptionJson, _key + "_pin", _pin);
+        jsonWriteStr(configOptionJson, _key + "_map", _map);
+        jsonWriteStr(configOptionJson, _key + "_с", _c);
+    }
+
     int SensorAnalogRead(String key, String pin) {
-            
         int pinInt = pin.toInt();
         int value;
 

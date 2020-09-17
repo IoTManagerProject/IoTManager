@@ -8,12 +8,9 @@ SensorAnalogClass mySensorAnalog;
 void analogAdc() {
     mySensorAnalog.update();
     String key = mySensorAnalog.gkey();
-    String pin = mySensorAnalog.gpin();
     sCmd.addCommand(key.c_str(), analogReading);
     sensorReadingMap += key + ",";
-    jsonWriteStr(configOptionJson, key + "_pin", pin);
-    jsonWriteStr(configOptionJson, key + "_map", mySensorAnalog.gmap());
-    jsonWriteStr(configOptionJson, key + "_с", mySensorAnalog.gc());
+    mySensorAnalog.SensorAnalogInit();
     mySensorAnalog.clear();
 }
 

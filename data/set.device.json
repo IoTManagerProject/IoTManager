@@ -68,7 +68,10 @@
                 "/set?addItem=dht11-temp": "11.Датчик температуры (DHT11)",
                 "/set?addItem=dht11-hum": "12.Датчик влажности (DHT11)",
                 "/set?addItem=dht22-temp": "13.Датчик температуры (DHT22, DHT33, DHT44, AM2302, RHT03)",
-                "/set?addItem=dht22-hum": "14.Датчик влажности (DHT22, DHT33, DHT44, AM2302, RHT03)"
+                "/set?addItem=dht22-hum": "14.Датчик влажности (DHT22, DHT33, DHT44, AM2302, RHT03)",
+                "/set?addItem=bme280-temp": "15.Датчик температуры bme280",
+                "/set?addItem=bme280-hum": "16.Датчик влажности bme280",
+                "/set?addItem=bme280-press": "17.Датчик давления bme280"
             }
         },
         {

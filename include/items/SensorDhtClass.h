@@ -4,6 +4,7 @@
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "items/SensorConvertingClass.h"
+
 DHTesp dht;
 class SensorDhtClass : public SensorConvertingClass {
    public:

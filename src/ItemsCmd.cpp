@@ -35,7 +35,10 @@ void cmd_init() {
 
     sCmd.addCommand("dht-temp", dhtTemp);
     sCmd.addCommand("dht-hum", dhtHum);
-    
+
+    sCmd.addCommand("bme280-temp", bme280Temp);
+    sCmd.addCommand("bme280-hum", bme280Hum);
+    sCmd.addCommand("bme280-press", bme280Press);
 
     handle_time_init();
 }
