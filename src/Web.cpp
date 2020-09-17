@@ -32,7 +32,7 @@ void web_init() {
         //==============================presets===========================================================================================================
         //uint8_t preset;
         //if (parseRequestForPreset(request, preset)) {
-        //    SerialPrint("I","module","activate #" + String(preset, DEC));
+        //    SerialPrint("I","Web","activate #" + String(preset, DEC));
         //    String configFile = DEVICE_CONFIG_FILE;
         //    String scenarioFile = DEVICE_SCENARIO_FILE;
         //    copyFile(getConfigFile(preset, CT_CONFIG), configFile);
@@ -262,7 +262,7 @@ void web_init() {
     */
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         myNotAsincActions->make(do_GETLASTVERSION);
-        SerialPrint("I","module","firmware version: " + lastVersion);
+        SerialPrint("I","Web","firmware version: " + lastVersion);
 
         if (!FLASH_4MB) {
             lastVersion = "less";
@@ -302,7 +302,7 @@ void web_init() {
 }
 
 void setConfigParam(const char* param, const String& value) {
-    SerialPrint("I","module","set " + String(param) + ": " + value);
+    SerialPrint("I","Web","set " + String(param) + ": " + value);
     jsonWriteStr(configSetupJson, param, value);
     saveConfig();
 }

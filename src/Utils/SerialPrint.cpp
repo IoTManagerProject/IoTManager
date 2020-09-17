@@ -2,7 +2,8 @@
 
 #include "Global.h"
 
-
 void SerialPrint(String errorLevel, String module, String msg) {
-    Serial.println(prettyMillis(millis()) + " [" + errorLevel + "] [" + module + "] " + msg);
+    //if (module == "Stat") {
+        Serial.println(prettyMillis(millis()) + " [" + errorLevel + "] [" + module + "] " + msg);
+    //}
 }

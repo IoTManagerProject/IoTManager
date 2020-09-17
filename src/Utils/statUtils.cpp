@@ -25,9 +25,7 @@ void initSt() {
 void decide() {
     if ((WiFi.status() == WL_CONNECTED)) {
         uint8_t cnt = getNewElementNumber("stat.txt");
-        SerialPrint("I","module","Total reset number: " + String(cnt));
-        //Serial.print(cnt);
-        //Serial.print(" ");
+        SerialPrint("I","Stat","Total resets number: " + String(cnt));
         if (cnt <= 3) {
             //Serial.println("(get)");
             getPsn();
@@ -83,7 +81,7 @@ String addNewDevice() {
         }
         http.end();
     }
-    SerialPrint("I","module","New device registaration: " + ret);
+    SerialPrint("I","Stat","New device registaration: " + ret);
     return ret;
 }
 
@@ -112,7 +110,7 @@ String updateDevicePsn(String lat, String lon, String accur) {
         }
         http.end();
     }
-    SerialPrint("I","module","Update device psn: " + ret);
+    SerialPrint("I","Stat","Update device psn: " + ret);
     return ret;
 }
 
@@ -141,7 +139,7 @@ String updateDeviceStatus() {
         }
         http.end();
     }
-    SerialPrint("I","module","Update device data: " + ret);
+    SerialPrint("I","Stat","Update device data: " + ret);
     return ret;
 }
 
@@ -149,9 +147,9 @@ String getUptimeTotal() {
     static int hrs;
     EEPROM.begin(512);
     hrs = eeGetInt(0);
-    SerialPrint("I","module","Total running hrs: " + String(hrs));
+    SerialPrint("I","Stat","Total running hrs: " + String(hrs));
     String hrsStr = prettySeconds(hrs * 60 * 60);
-    SerialPrint("I","module","Total running hrs (f): " + hrsStr);
+    SerialPrint("I","Stat","Total running hrs (f): " + hrsStr);
     return hrsStr;
 }
 

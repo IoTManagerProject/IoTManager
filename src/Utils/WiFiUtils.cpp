@@ -4,7 +4,7 @@
 
 void startSTAMode() {
     setLedStatus(LED_SLOW);
-    SerialPrint("I","module","STA Mode");
+    SerialPrint("I","WIFI","STA Mode");
 
     String ssid = jsonReadStr(configSetupJson, "routerssid");
     String passwd = jsonReadStr(configSetupJson, "routerpass");
@@ -14,7 +14,7 @@ void startSTAMode() {
         WiFi.begin();
     } else {
         if (WiFi.begin(ssid.c_str(), passwd.c_str()) == WL_CONNECT_FAILED) {
-            SerialPrint("[E]","module","failed on start");
+            SerialPrint("[E]","WIFI","failed on start");
         }
     }
 
@@ -29,17 +29,17 @@ void startSTAMode() {
 #endif
         switch (connRes) {
             case WL_NO_SSID_AVAIL: {
-                SerialPrint("[E]","module","no network");
+                SerialPrint("[E]","WIFI","no network");
                 keepConnecting = false;
             } break;
             case WL_CONNECTED: {
                 String hostIpStr = WiFi.localIP().toString();
-                SerialPrint("I","module","http://" + hostIpStr);
+                SerialPrint("I","WIFI","http://" + hostIpStr);
                 jsonWriteStr(configSetupJson, "ip", hostIpStr);
                 keepConnecting = false;
             } break;
             case WL_CONNECT_FAILED: {
-                SerialPrint("[E]","module","check credentials");
+                SerialPrint("[E]","WIFI","check credentials");
                 jsonWriteInt(configOptionJson, "pass_status", 1);
                 keepConnecting = false;
             } break;
@@ -52,14 +52,14 @@ void startSTAMode() {
         MqttClient::init();
         setLedStatus(LED_OFF);
     } else {
-        SerialPrint("[E]","module","failed: " + String(connRes, DEC));
+        SerialPrint("[E]","WIFI","failed: " + String(connRes, DEC));
         startAPMode();
     };
 }
 
 bool startAPMode() {
     setLedStatus(LED_ON);
-    SerialPrint("I","module","AP Mode");
+    SerialPrint("I","WIFI","AP Mode");
 
     String ssid = jsonReadStr(configSetupJson, "apssid");
     String passwd = jsonReadStr(configSetupJson, "appass");
@@ -68,14 +68,14 @@ bool startAPMode() {
 
     WiFi.softAP(ssid.c_str(), passwd.c_str());
     String hostIpStr = WiFi.softAPIP().toString();
-    SerialPrint("I","module","Host IP: " + hostIpStr);
+    SerialPrint("I","WIFI","Host IP: " + hostIpStr);
     jsonWriteStr(configSetupJson, "ip", hostIpStr);
 
     ts.add(
         WIFI_SCAN, 10 * 1000,
         [&](void*) {
             String sta_ssid = jsonReadStr(configSetupJson, "routerssid");
-            SerialPrint("I","module","scanning for " + sta_ssid);
+            SerialPrint("I","WIFI","scanning for " + sta_ssid);
             if (scanWiFi(sta_ssid)) {
                 ts.remove(WIFI_SCAN);
                 startSTAMode();
@@ -89,25 +89,25 @@ bool startAPMode() {
 boolean scanWiFi(String ssid) {
     bool res = false;
     int8_t n = WiFi.scanComplete();
-    SerialPrint("I","module","scan result: " + String(n, DEC));
+    SerialPrint("I","WIFI","scan result: " + String(n, DEC));
     if (n == -2) {
         // не было запущено, запускаем
-        SerialPrint("I","module","start scanning");
+        SerialPrint("I","WIFI","start scanning");
         // async, show_hidden
         WiFi.scanNetworks(true, false);
     } else if (n == -1) {
         // все еще выполняется
-        SerialPrint("I","module","scanning in progress");
+        SerialPrint("I","WIFI","scanning in progress");
     } else if (n == 0) {
         // не найдена ни одна сеть
-        SerialPrint("I","module","no networks found");
+        SerialPrint("I","WIFI","no networks found");
         WiFi.scanNetworks(true, false);
     } else if (n > 0) {
         for (int8_t i = 0; i < n; i++) {
             if (WiFi.SSID(i) == ssid) {
                 res = true;
             }
-            SerialPrint("I","module",(res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
+            SerialPrint("I","WIFI",(res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
         }
     }
     return res;

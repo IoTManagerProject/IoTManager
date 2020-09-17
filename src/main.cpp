@@ -35,43 +35,43 @@ void setup() {
     myNotAsincActions = new NotAsinc(do_LAST);
     myScenario = new Scenario();
 
-    SerialPrint("I","module","FS");
+    SerialPrint("I","FS","FS");
     fileSystemInit();
 
-    SerialPrint("I","module","Config");
+    SerialPrint("I","Conf","Config");
     loadConfig();
 
-    SerialPrint("I","module","Clock");
+    SerialPrint("I","Time","Clock");
     clock_init();
 
-    SerialPrint("I","module","Commands");
+    SerialPrint("I","CMD","Commands");
     cmd_init();
 
-    SerialPrint("I","module","Sensors");
+    SerialPrint("I","Sensors","Sensors");
     sensorsInit();
 
-    SerialPrint("I","module","Init");
+    SerialPrint("I","Init","Init");
     all_init();
 
-    SerialPrint("I","module","Network");
+    SerialPrint("I","WIFI","Network");
     startSTAMode();
 
-    SerialPrint("I","module","Uptime");
+    SerialPrint("I","Uptime","Uptime");
     uptime_init();
 
-    SerialPrint("I","module","Updater");
+    SerialPrint("I","Update","Updater");
     upgradeInit();
 
-    SerialPrint("I","module","HttpServer");
+    SerialPrint("I","HTTP","HttpServer");
     HttpServer::init();
 
-    SerialPrint("I","module","WebAdmin");
+    SerialPrint("I","Web","WebAdmin");
     web_init();
 
-    SerialPrint("I","module","InitSt");
+    SerialPrint("I","Stat","InitSt");
     initSt();
 
-    SerialPrint("I","module","asyncUdpInit");
+    SerialPrint("I","UDP","asyncUdpInit");
     asyncUdpInit();
 
 #ifdef UDP_ENABLED
@@ -79,7 +79,7 @@ void setup() {
     udpInit();
 #endif
 #ifdef SSDP_EN
-    SerialPrint("I","module","Ssdp Init");
+    SerialPrint("I","SSDP","Ssdp Init");
     SsdpInit();
 #endif
 

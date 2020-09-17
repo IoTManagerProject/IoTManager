@@ -35,7 +35,7 @@ void init() {
             if (isNetworkActive()) {
                 if (mqtt.connected()) {
                     if (!connected) {
-                        SerialPrint("I","module","OK");
+                        SerialPrint("I","MQTT","OK");
                         setLedStatus(LED_OFF);
                         connected = true;
                     }
@@ -45,7 +45,7 @@ void init() {
                 }
             } else {
                 if (connected) {
-                    SerialPrint("[E]","module","connection lost");
+                    SerialPrint("[E]","MQTT","connection lost");
                     connected = false;
                 }
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
@@ -57,7 +57,7 @@ void init() {
 }
 
 void disconnect() {
-    SerialPrint("I","module","disconnect");
+    SerialPrint("I","MQTT","disconnect");
     mqtt.disconnect();
 }
 
@@ -74,7 +74,7 @@ void loop() {
 }
 
 void subscribe() {
-    SerialPrint("I","module","subscribe");
+    SerialPrint("I","MQTT","subscribe");
     mqtt.subscribe(mqttPrefix.c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/order").c_str());
@@ -84,11 +84,11 @@ void subscribe() {
 }
 
 boolean connect() {
-    SerialPrint("I","module","connect");
+    SerialPrint("I","MQTT","connect");
 
     String addr = jsonReadStr(configSetupJson, "mqttServer");
     if (!addr) {
-        SerialPrint("[E]","module","no broker address");
+        SerialPrint("[E]","MQTT","no broker address");
         return false;
     }
 
@@ -100,20 +100,20 @@ boolean connect() {
     mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
     mqttRootDevice = mqttPrefix + "/" + chipId;
 
-    SerialPrint("I","module","broker " + addr + ":" + String(port, DEC));
-    SerialPrint("I","module","topic " + mqttRootDevice);
+    SerialPrint("I","MQTT","broker " + addr + ":" + String(port, DEC));
+    SerialPrint("I","MQTT","topic " + mqttRootDevice);
 
     setLedStatus(LED_FAST);
     mqtt.setServer(addr.c_str(), port);
     bool res = false;
     if (!mqtt.connected()) {
         if (mqtt.connect(chipId.c_str(), user.c_str(), pass.c_str())) {
-            SerialPrint("I","module","connected");
+            SerialPrint("I","MQTT","connected");
             setLedStatus(LED_OFF);
             subscribe();
             res = true;
         } else {
-            SerialPrint("[E]","module","could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
+            SerialPrint("[E]","MQTT","could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
             setLedStatus(LED_FAST);
         }
     }
@@ -123,7 +123,7 @@ boolean connect() {
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     String topicStr = String(topic);
 
-    SerialPrint("I","module",topicStr);
+    SerialPrint("I","MQTT",topicStr);
 
     String payloadStr;
 
@@ -132,10 +132,10 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         payloadStr += (char)payload[i];
     }
 
-    SerialPrint("I","module",payloadStr);
+    SerialPrint("I","MQTT",payloadStr);
 
     if (payloadStr.startsWith("HELLO")) {
-        SerialPrint("I","module","Full update");
+        SerialPrint("I","MQTT","Full update");
         publishWidgets();
         publishState();
 #ifdef LOGGING_ENABLED
@@ -184,7 +184,7 @@ boolean publish(const String& topic, const String& data) {
 boolean publishData(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic;
     if (!publish(path, data)) {
-        SerialPrint("[E]","module","on publish data");
+        SerialPrint("[E]","MQTT","on publish data");
         return false;
     }
     return true;
@@ -193,7 +193,7 @@ boolean publishData(const String& topic, const String& data) {
 boolean publishChart(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     if (!publish(path, data)) {
-        SerialPrint("[E]","module","on publish chart");
+        SerialPrint("[E]","MQTT","on publish chart");
         return false;
     }
     return true;
@@ -244,12 +244,12 @@ void publishWidgets() {
 void publishWidgets() {
     auto file = seekFile("layout.txt");
     if (!file) {
-        SerialPrint("[E]","module","no file layout.txt");
+        SerialPrint("[E]","MQTT","no file layout.txt");
         return;
     }
     while (file.available()) {
         String payload = file.readStringUntil('\n');
-        SerialPrint("I","module","widgets: " + payload);
+        SerialPrint("I","MQTT","widgets: " + payload);
         publishData("config", payload);
     }
     file.close();

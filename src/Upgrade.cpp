@@ -23,7 +23,7 @@ void upgradeInit() {
     if (isNetworkActive()) {
         getLastVersion();
         if (lastVersion.length()) {
-            SerialPrint("I","module","available: " + lastVersion);
+            SerialPrint("I","Update","available: " + lastVersion);
         }
     };
 }
