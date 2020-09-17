@@ -109,7 +109,6 @@ void web_init() {
         //    request->send(200);
         //}
 
-
         //==============================wifi settings=============================================
         if (request->hasArg("routerssid")) {
             jsonWriteStr(configSetupJson, "routerssid", request->getParam("routerssid")->value());
@@ -219,20 +218,20 @@ void web_init() {
             request->send(200, "text/html", payload);
         }
 
-//        //==============================push settings=============================================
-//#ifdef PUSH_ENABLED
-//        if (request->hasArg("pushingboxid")) {
-//            jsonWriteStr(configSetupJson, "pushingboxid", request->getParam("pushingboxid")->value());
-//            saveConfig();
-//            request->send(200);
-//        }
-//#endif
+        //        //==============================push settings=============================================
+        //#ifdef PUSH_ENABLED
+        //        if (request->hasArg("pushingboxid")) {
+        //            jsonWriteStr(configSetupJson, "pushingboxid", request->getParam("pushingboxid")->value());
+        //            saveConfig();
+        //            request->send(200);
+        //        }
+        //#endif
 
         //==============================utilities settings=============================================
         if (request->hasArg("i2c")) {
-            
+            myNotAsincActions->make(do_BUSSCAN);
             request->redirect("/?set.utilities");
-        } 
+        }
     });
 
     //==============================list of items=====================================================
@@ -285,7 +284,6 @@ void web_init() {
     */
     server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest* request) {
         myNotAsincActions->make(do_UPGRADE);
-        ;
         request->send(200, "text/html");
     });
 }
