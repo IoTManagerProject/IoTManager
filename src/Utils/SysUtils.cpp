@@ -24,7 +24,7 @@ const String getChipId() {
 
 void setChipId() {
     chipId = getChipId();
-    SerialPrint("I","module","id: " + chipId);
+    SerialPrint("I","System","id: " + chipId);
 }
 
 #ifdef ESP8266

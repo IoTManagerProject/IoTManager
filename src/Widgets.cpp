@@ -7,7 +7,7 @@ bool loadWidget(const String& filename, String& buf) {
     buf = readFile(getWidgetFile(filename), 2048);
     bool res = !(buf == "Failed" || buf == "Large");
     if (!res) {
-        SerialPrint("[E]","module","on load" + filename);
+        SerialPrint("[E]","Widgets","on load" + filename);
     }
     return res;
 }

@@ -272,6 +272,7 @@ void web_init() {
         } else if (lastVersion == -2) {
             msg = F("Устройство не подключено к роутеру!");
         }
+        
         // else if (lastVersion == "") {
         //msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
         //} else if (lastVersion == "less") {

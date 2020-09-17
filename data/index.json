@@ -25,12 +25,6 @@
     },
     {
       "type": "link",
-      "title": "Список других устройств в сети",
-      "action": "/?set.udp",
-      "class": "btn btn-block btn-default"
-    },
-    {
-      "type": "link",
       "title": "Конфигурация WIFI",
       "action": "/?set.wifi",
       "class": "btn btn-block btn-default"

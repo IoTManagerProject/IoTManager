@@ -9,7 +9,7 @@ const String filepath(const String& filename) {
 
 bool fileSystemInit() {
     if (!LittleFS.begin()) {
-        SerialPrint("[E]","module","init");
+        SerialPrint("[E]","Files","init");
         return false;
     }
     return true;
@@ -19,10 +19,10 @@ void removeFile(const String& filename) {
     String path = filepath(filename);
     if (LittleFS.exists(path)) {
         if (!LittleFS.remove(path)) {
-            SerialPrint("[E]","module","remove " + path);
+            SerialPrint("[E]","Files","remove " + path);
         }
     } else {
-        SerialPrint("I","module","not exist" + path);
+        SerialPrint("I","Files","not exist" + path);
     }
 }
 
@@ -30,7 +30,7 @@ File seekFile(const String& filename, size_t position) {
     String path = filepath(filename);
     auto file = LittleFS.open(path, "r");
     if (!file) {
-        SerialPrint("[E]","module","open " + path);
+        SerialPrint("[E]","Files","open " + path);
     }
     // поставим курсор в начало файла
     file.seek(position, SeekSet);
@@ -76,14 +76,14 @@ const String addFile(const String& filename, const String& str) {
 bool copyFile(const String& src, const String& dst, bool overwrite) {
     String srcPath = filepath(src);
     String dstPath = filepath(dst);
-    SerialPrint("I","module","copy " + srcPath + " to " + dstPath);
+    SerialPrint("I","Files","copy " + srcPath + " to " + dstPath);
     if (!LittleFS.exists(srcPath)) {
-        SerialPrint("[E]","module","not exist: " + srcPath);
+        SerialPrint("[E]","Files","not exist: " + srcPath);
         return false;
     }
     if (LittleFS.exists(dstPath)) {
         if (!overwrite) {
-            SerialPrint("[E]","module","already exist: " + dstPath);
+            SerialPrint("[E]","Files","already exist: " + dstPath);
             return false;
         }
         LittleFS.remove(dstPath);

@@ -45,7 +45,7 @@ void spaceCmdExecute(String &cmdStr) {
 void loopCmdExecute() {
     if (orderBuf.length()) {
         String tmp = selectToMarker(orderBuf, ",");  //выделяем первую команду rel 5 1,
-        SerialPrint("I","module","do: " + tmp);
+        SerialPrint("I","CMD","do: " + tmp);
         sCmd.readStr(tmp);                                    //выполняем
         orderBuf = deleteBeforeDelimiter(orderBuf, ",");  //осекаем
     }
