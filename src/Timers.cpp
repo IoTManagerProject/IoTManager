@@ -11,8 +11,8 @@ void Timer_countdown_init() {
                 int i = 0;
                 do {
                     String timer = selectFromMarkerToMarker(old_line, ",", i);
-                    Serial.print("timer no " + String(i) + ": ");
-                    Serial.println(timer);
+                    //Serial.print("timer no " + String(i) + ": ");
+                    //Serial.println(timer);
                     if (timer == "not found" || timer == "") return;
                     int number = selectToMarker(timer, ":").toInt();
                     int time = readTimer(number);

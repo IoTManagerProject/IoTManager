@@ -2,7 +2,7 @@
 #include "Global.h"
 #include "Class/ScenarioClass.h"
 
-static const char* MODULE = "Scen";
+
 
 boolean isScenarioEnabled() {
     return jsonReadBool(configSetupJson, "scen") && eventBuf != "";
@@ -58,7 +58,7 @@ void loopScenario() {
 
                 if (flag) {
                     scenBlok = deleteBeforeDelimiter(scenBlok, "\n");  // удаляем строку самого сценария оставляя только команды
-                    pm.info("do: " + scenBlok);
+                    SerialPrint("I","module","do: " + scenBlok);
                     spaceCmdExecute(scenBlok);  // выполняем все команды
                 }
             }

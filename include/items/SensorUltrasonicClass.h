@@ -35,7 +35,7 @@ class SensorUltrasonic : public SensorConvertingClass {
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, String(valueFl));
         MqttClient::publishStatus(key, String(valueFl));
-        Serial.println("[I] sensor '" + key + "' data: " + String(valueFl));
+        Serial.println("I sensor '" + key + "' data: " + String(valueFl));
     }
 };
 extern SensorUltrasonic mySensorUltrasonic;

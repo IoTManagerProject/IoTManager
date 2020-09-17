@@ -3,7 +3,7 @@
 #include "Module/Terminal.h"
 #include "Errors.h"
 
-static const char *MODULE = "Cmd";
+
 
 void loopCmdAdd(const String &cmdStr) {
     orderBuf += cmdStr;
@@ -45,7 +45,7 @@ void spaceCmdExecute(String &cmdStr) {
 void loopCmdExecute() {
     if (orderBuf.length()) {
         String tmp = selectToMarker(orderBuf, ",");  //выделяем первую команду rel 5 1,
-        pm.info("do: " + tmp);
+        SerialPrint("I","module","do: " + tmp);
         sCmd.readStr(tmp);                                    //выполняем
         orderBuf = deleteBeforeDelimiter(orderBuf, ",");  //осекаем
     }

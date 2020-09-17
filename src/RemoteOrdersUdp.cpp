@@ -35,9 +35,9 @@ void asyncUdpInit() {
             Serial.print(data);
             if (udpPacketValidation(data)) {
                 udpPacketParse(data);
-                Serial.println("', Packet valid");
+                //Serial.println("', Packet valid");
             } else {
-                Serial.println("', Packet invalid"); 
+                //Serial.println("', Packet invalid"); 
             }
 
             //reply to the client

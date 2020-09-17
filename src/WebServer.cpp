@@ -6,7 +6,7 @@
 
 namespace HttpServer {
 
-static const char *MODULE = "Http";
+
 /* Forward declaration */
 void initOta();
 void initMDNS();
@@ -29,17 +29,17 @@ void init() {
     server.serveStatic("/", LittleFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
 
     server.onNotFound([](AsyncWebServerRequest *request) {
-        pm.error("not found:\n" + getRequestInfo(request));
+        SerialPrint("[E]","module","not found:\n" + getRequestInfo(request));
         request->send(404);
     });
 
     server.onFileUpload([](AsyncWebServerRequest *request, const String &filename, size_t index, uint8_t *data, size_t len, bool final) {
         // TODO
         if (!index) {
-            pm.info("start upload " + filename);
+            SerialPrint("I","module","start upload " + filename);
         }
         if (final) {
-            pm.info("finish upload: " + prettyBytes(index + len));
+            SerialPrint("I","module","finish upload: " + prettyBytes(index + len));
         }
     });
 
@@ -60,7 +60,7 @@ void init() {
 
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
         String cmdStr = request->getParam("command")->value();
-        pm.info("do: " + cmdStr);
+        SerialPrint("I","module","do: " + cmdStr);
         loopCmdAdd(cmdStr);
         request->send(200, "text/html", "OK");
     });

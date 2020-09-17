@@ -4,7 +4,7 @@
 #include "Init.h"
 #include "Class/NotAsinc.h"
 
-static const char* MODULE = "Web";
+
 
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
@@ -32,7 +32,7 @@ void web_init() {
         //==============================presets===========================================================================================================
         //uint8_t preset;
         //if (parseRequestForPreset(request, preset)) {
-        //    pm.info("activate #" + String(preset, DEC));
+        //    SerialPrint("I","module","activate #" + String(preset, DEC));
         //    String configFile = DEVICE_CONFIG_FILE;
         //    String scenarioFile = DEVICE_SCENARIO_FILE;
         //    copyFile(getConfigFile(preset, CT_CONFIG), configFile);
@@ -262,7 +262,7 @@ void web_init() {
     */
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         myNotAsincActions->make(do_GETLASTVERSION);
-        pm.info("firmware version: " + lastVersion);
+        SerialPrint("I","module","firmware version: " + lastVersion);
 
         if (!FLASH_4MB) {
             lastVersion = "less";
@@ -302,7 +302,7 @@ void web_init() {
 }
 
 void setConfigParam(const char* param, const String& value) {
-    pm.info("set " + String(param) + ": " + value);
+    SerialPrint("I","module","set " + String(param) + ": " + value);
     jsonWriteStr(configSetupJson, param, value);
     saveConfig();
 }

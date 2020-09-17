@@ -1,6 +1,5 @@
 #include "Global.h"
 
-static const char* MODULE = "Widget";
 
 const String getWidgetFile(const String& name);
 
@@ -8,7 +7,7 @@ bool loadWidget(const String& filename, String& buf) {
     buf = readFile(getWidgetFile(filename), 2048);
     bool res = !(buf == "Failed" || buf == "Large");
     if (!res) {
-        pm.error("on load" + filename);
+        SerialPrint("[E]","module","on load" + filename);
     }
     return res;
 }

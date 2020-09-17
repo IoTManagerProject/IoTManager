@@ -43,7 +43,7 @@ class SensorDhtClass : public SensorConvertingClass {
                 eventGen(key, "");
                 jsonWriteStr(configLiveJson, key, String(valueFl));
                 MqttClient::publishStatus(key, String(valueFl));
-                Serial.println("[I] sensor '" + key + "' data: " + String(valueFl));
+                Serial.println("I sensor '" + key + "' data: " + String(valueFl));
             } else {
                 Serial.println("[E] sensor '" + key);
             }
@@ -67,7 +67,7 @@ class SensorDhtClass : public SensorConvertingClass {
                 eventGen(key, "");
                 jsonWriteStr(configLiveJson, key, String(valueFl));
                 MqttClient::publishStatus(key, String(valueFl));
-                Serial.println("[I] sensor '" + key + "' data: " + String(valueFl));
+                Serial.println("I sensor '" + key + "' data: " + String(valueFl));
             } else {
                 Serial.println("[E] sensor '" + key);
             }

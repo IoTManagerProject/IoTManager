@@ -81,7 +81,7 @@ class Scenario {
             flag = _eventValue.toInt() <= _conditionValue.toInt();
         }
 
-        if (flag) Serial.println("[I] Scenario event: " + _condition);
+        if (flag) Serial.println("I Scenario event: " + _condition);
 
         return flag;
     }

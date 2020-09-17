@@ -19,6 +19,7 @@
 #include "Utils\SysUtils.h"
 #include "Utils\PrintMessage.h"
 #include "Utils\WiFiUtils.h"
+#include "Utils\SerialPrint.h"
 
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>
@@ -32,6 +33,7 @@
 #include <Wire.h>
 #include <time.h>
 #include <ArduinoOTA.h>
+
 
 
 #ifdef WEBSOCKET_ENABLED

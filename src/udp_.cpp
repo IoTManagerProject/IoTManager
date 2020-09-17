@@ -3,7 +3,6 @@
 #include "udp_.h"
 #include "Global.h"
 
-static const char* MODULE = "Udp";
 
 #ifdef ESP8266
 IPAddress udp_multicastIP(255, 255, 255, 255);
@@ -49,7 +48,7 @@ void udpInit() {
     ts.add(
         UDP, udp_period, [&](void*) {
             if (jsonReadBool(configSetupJson, "udponoff") && isNetworkActive() && !udp_busy) {
-                pm.info("send info");
+                SerialPrint("I","module","send info");
                 String payload = "iotm;";
                 payload += chipId;
                 payload += ";";
@@ -85,7 +84,7 @@ void loopUdp() {
     char udp_packet[255];
     remote_ip = udp.remoteIP().toString();
 
-    pm.info(prettyBytes(packetSize) + " from " + remote_ip + ":" + udp.remotePort());
+    SerialPrint("I","module",prettyBytes(packetSize) + " from " + remote_ip + ":" + udp.remotePort());
 
     int len = udp.read(udp_packet, 255);
     if (len) {
@@ -120,7 +119,7 @@ void handleUdp_esp32() {
 
 void do_udp_data_parse() {
     if (received.indexOf("mqttServer") >= 0) {
-        pm.info("received setting");
+        SerialPrint("I","module","received setting");
         jsonWriteStr(configSetupJson, "mqttServer", jsonReadStr(received, "mqttServer"));
         jsonWriteInt(configSetupJson, "mqttPort", jsonReadInt(received, "mqttPort"));
         jsonWriteStr(configSetupJson, "mqttPrefix", jsonReadStr(received, "mqttPrefix"));
@@ -160,7 +159,7 @@ void send_mqtt_to_udp() {
 #ifdef ESP32
     udp.broadcast(mqtt_data.c_str());
 #endif
-    pm.info("sent info");
+    SerialPrint("I","module","sent info");
     udp_busy = false;
 }
 

@@ -3,7 +3,6 @@
 #include "Global.h"
 #include "Utils/PrintMessage.h"
 
-static const char* MODULE = "Main";
 
 const String getUniqueId(const char* name) {
     return String(name) + getMacAddress();
@@ -25,7 +24,7 @@ const String getChipId() {
 
 void setChipId() {
     chipId = getChipId();
-    pm.info("id: " + chipId);
+    SerialPrint("I","module","id: " + chipId);
 }
 
 #ifdef ESP8266

@@ -6,7 +6,7 @@
 #include "Global.h"
 #include "Init.h"
 
-static const char* MODULE = "Mqtt";
+
 
 namespace MqttClient {
 
@@ -35,7 +35,7 @@ void init() {
             if (isNetworkActive()) {
                 if (mqtt.connected()) {
                     if (!connected) {
-                        pm.info("OK");
+                        SerialPrint("I","module","OK");
                         setLedStatus(LED_OFF);
                         connected = true;
                     }
@@ -45,7 +45,7 @@ void init() {
                 }
             } else {
                 if (connected) {
-                    pm.error("connection lost");
+                    SerialPrint("[E]","module","connection lost");
                     connected = false;
                 }
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
@@ -57,7 +57,7 @@ void init() {
 }
 
 void disconnect() {
-    pm.info("disconnect");
+    SerialPrint("I","module","disconnect");
     mqtt.disconnect();
 }
 
@@ -74,7 +74,7 @@ void loop() {
 }
 
 void subscribe() {
-    pm.info("subscribe");
+    SerialPrint("I","module","subscribe");
     mqtt.subscribe(mqttPrefix.c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/order").c_str());
@@ -84,11 +84,11 @@ void subscribe() {
 }
 
 boolean connect() {
-    pm.info("connect");
+    SerialPrint("I","module","connect");
 
     String addr = jsonReadStr(configSetupJson, "mqttServer");
     if (!addr) {
-        pm.error("no broker address");
+        SerialPrint("[E]","module","no broker address");
         return false;
     }
 
@@ -100,20 +100,20 @@ boolean connect() {
     mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
     mqttRootDevice = mqttPrefix + "/" + chipId;
 
-    pm.info("broker " + addr + ":" + String(port, DEC));
-    pm.info("topic " + mqttRootDevice);
+    SerialPrint("I","module","broker " + addr + ":" + String(port, DEC));
+    SerialPrint("I","module","topic " + mqttRootDevice);
 
     setLedStatus(LED_FAST);
     mqtt.setServer(addr.c_str(), port);
     bool res = false;
     if (!mqtt.connected()) {
         if (mqtt.connect(chipId.c_str(), user.c_str(), pass.c_str())) {
-            pm.info("connected");
+            SerialPrint("I","module","connected");
             setLedStatus(LED_OFF);
             subscribe();
             res = true;
         } else {
-            pm.error("could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
+            SerialPrint("[E]","module","could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
             setLedStatus(LED_FAST);
         }
     }
@@ -123,7 +123,7 @@ boolean connect() {
 void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
     String topicStr = String(topic);
 
-    pm.info(topicStr);
+    SerialPrint("I","module",topicStr);
 
     String payloadStr;
 
@@ -132,10 +132,10 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
         payloadStr += (char)payload[i];
     }
 
-    pm.info(payloadStr);
+    SerialPrint("I","module",payloadStr);
 
     if (payloadStr.startsWith("HELLO")) {
-        pm.info("Full update");
+        SerialPrint("I","module","Full update");
         publishWidgets();
         publishState();
 #ifdef LOGGING_ENABLED
@@ -184,7 +184,7 @@ boolean publish(const String& topic, const String& data) {
 boolean publishData(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic;
     if (!publish(path, data)) {
-        pm.error("on publish data");
+        SerialPrint("[E]","module","on publish data");
         return false;
     }
     return true;
@@ -193,7 +193,7 @@ boolean publishData(const String& topic, const String& data) {
 boolean publishChart(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     if (!publish(path, data)) {
-        pm.error("on publish chart");
+        SerialPrint("[E]","module","on publish chart");
         return false;
     }
     return true;
@@ -235,7 +235,7 @@ void publishWidgets() {
             Serial.println("[V] " + line);
             psn_1 = psn_2 + 1;
         } while (psn_2 + 2 < all_widgets.length());
-        getMemoryLoad("[I] after send all widgets");
+        getMemoryLoad("I after send all widgets");
     }
 }
 #endif
@@ -244,12 +244,12 @@ void publishWidgets() {
 void publishWidgets() {
     auto file = seekFile("layout.txt");
     if (!file) {
-        pm.error("no file layout.txt");
+        SerialPrint("[E]","module","no file layout.txt");
         return;
     }
     while (file.available()) {
         String payload = file.readStringUntil('\n');
-        pm.info("widgets: " + payload);
+        SerialPrint("I","module","widgets: " + payload);
         publishData("config", payload);
     }
     file.close();

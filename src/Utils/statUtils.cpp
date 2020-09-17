@@ -6,9 +6,9 @@
 #include "Global.h"
 #include "ItemsList.h"
 
+
 void initSt() {
-    Serial.print("[I] [Stat] New device registation: ");
-    Serial.println(addNewDevice());
+    addNewDevice();
     decide();
     if (TELEMETRY_UPDATE_INTERVAL_MIN) {
         ts.add(
@@ -16,9 +16,7 @@ void initSt() {
                 static bool secondTime = false;
                 if (secondTime) plusOneHour();
                 secondTime = true;
-
-                Serial.print("[I] [Stat] Update device status: ");
-                Serial.println(updateDeviceStatus());
+                updateDeviceStatus();
             },
             nullptr, true);
     }
@@ -27,17 +25,17 @@ void initSt() {
 void decide() {
     if ((WiFi.status() == WL_CONNECTED)) {
         uint8_t cnt = getNewElementNumber("stat.txt");
-        Serial.print("[I] [Stat] Total reset number: ");
-        Serial.print(cnt);
-        Serial.print(" ");
+        SerialPrint("I","module","Total reset number: " + String(cnt));
+        //Serial.print(cnt);
+        //Serial.print(" ");
         if (cnt <= 3) {
-            Serial.println("(get)");
+            //Serial.println("(get)");
             getPsn();
         } else {
             if (cnt % 5) {
-                Serial.println("(skip)");
+                //Serial.println("(skip)");
             } else {
-                Serial.println("(get)");
+                //Serial.println("(get)");
                 getPsn();
             }
         }
@@ -53,8 +51,7 @@ void getPsn() {
         //String city = jsonReadStr(res, "city");
         //String country = jsonReadStr(res, "country");
         //String region = jsonReadStr(res, "region");
-        Serial.print("[I] [Stat] Update device psn: ");
-        Serial.println(updateDevicePsn(lat, lon, "1000"));
+        updateDevicePsn(lat, lon, "1000");
     }
 }
 
@@ -86,6 +83,7 @@ String addNewDevice() {
         }
         http.end();
     }
+    SerialPrint("I","module","New device registaration: " + ret);
     return ret;
 }
 
@@ -114,6 +112,7 @@ String updateDevicePsn(String lat, String lon, String accur) {
         }
         http.end();
     }
+    SerialPrint("I","module","Update device psn: " + ret);
     return ret;
 }
 
@@ -142,6 +141,7 @@ String updateDeviceStatus() {
         }
         http.end();
     }
+    SerialPrint("I","module","Update device data: " + ret);
     return ret;
 }
 
@@ -149,8 +149,9 @@ String getUptimeTotal() {
     static int hrs;
     EEPROM.begin(512);
     hrs = eeGetInt(0);
+    SerialPrint("I","module","Total running hrs: " + String(hrs));
     String hrsStr = prettySeconds(hrs * 60 * 60);
-    //Serial.println(hrsStr);
+    SerialPrint("I","module","Total running hrs (f): " + hrsStr);
     return hrsStr;
 }
 

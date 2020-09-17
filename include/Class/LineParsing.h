@@ -43,7 +43,7 @@ class LineParsing {
 
     void update() {
         //String order = sCmd.order();
-        //pm.info("create '" + order + "'");
+        //SerialPrint("I","module","create '" + order + "'");
         for (int i = 1; i < 12; i++) {
             if (i == 1) _key = sCmd.next();
             if (i == 2) _file = sCmd.next();
@@ -166,7 +166,7 @@ class LineParsing {
         buf = readFile(getWidgetFileClass(filename), 2048);
         bool res = !(buf == "Failed" || buf == "Large");
         if (!res) {
-            //pm.error("on load" + filename);
+            //SerialPrint("[E]","module","on load" + filename);
         }
         return res;
     }

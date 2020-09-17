@@ -17,7 +17,6 @@
 
 void not_async_actions();
 
-static const char* MODULE = "Main";
 
 Timings metric;
 boolean initialized = false;
@@ -36,57 +35,57 @@ void setup() {
     myNotAsincActions = new NotAsinc(do_LAST);
     myScenario = new Scenario();
 
-    pm.info("FS");
+    SerialPrint("I","module","FS");
     fileSystemInit();
 
-    pm.info("Config");
+    SerialPrint("I","module","Config");
     loadConfig();
 
-    pm.info("Clock");
+    SerialPrint("I","module","Clock");
     clock_init();
 
-    pm.info("Commands");
+    SerialPrint("I","module","Commands");
     cmd_init();
 
-    pm.info("Sensors");
+    SerialPrint("I","module","Sensors");
     sensorsInit();
 
-    pm.info("Init");
+    SerialPrint("I","module","Init");
     all_init();
 
-    pm.info("Network");
+    SerialPrint("I","module","Network");
     startSTAMode();
 
-    pm.info("Uptime");
+    SerialPrint("I","module","Uptime");
     uptime_init();
 
-    pm.info("Updater");
+    SerialPrint("I","module","Updater");
     upgradeInit();
 
-    pm.info("HttpServer");
+    SerialPrint("I","module","HttpServer");
     HttpServer::init();
 
-    pm.info("WebAdmin");
+    SerialPrint("I","module","WebAdmin");
     web_init();
 
-    pm.info("InitSt");
+    SerialPrint("I","module","InitSt");
     initSt();
 
-    pm.info("asyncUdpInit");
+    SerialPrint("I","module","asyncUdpInit");
     asyncUdpInit();
 
 #ifdef UDP_ENABLED
-    pm.info("Broadcast UDP");
+    SerialPrint("I","module","Broadcast UDP");
     udpInit();
 #endif
 #ifdef SSDP_EN
-    pm.info("Ssdp Init");
+    SerialPrint("I","module","Ssdp Init");
     SsdpInit();
 #endif
 
     ts.add(
         TEST, 1000 * 60, [&](void*) {
-            pm.info(printMemoryStatus());
+            SerialPrint("I","module",printMemoryStatus());
             
         },
         nullptr, true);

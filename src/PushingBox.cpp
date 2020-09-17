@@ -23,15 +23,15 @@ void pushControl() {
     const char* logServer = "api.pushingbox.com";
     String deviceId = jsonReadStr(configSetupJson, "pushingbox_id");
 
-    Serial.println("- starting client");
+    //Serial.println("- starting client");
 
     WiFiClient client_push;
 
-    Serial.println("- connecting to pushing server: " + String(logServer));
+    //Serial.println("- connecting to pushing server: " + String(logServer));
     if (!client_push.connect(logServer, 80)) {
-        Serial.println("- not connected");
+        //Serial.println("- not connected");
     } else {
-        Serial.println("- succesfully connected");
+        //Serial.println("- succesfully connected");
 
         String postStr = "devid=";
         postStr += String(deviceId);
@@ -44,7 +44,7 @@ void pushControl() {
 
         postStr += "\r\n\r\n";
 
-        Serial.println("- sending data...");
+        //Serial.println("- sending data...");
 
         client_push.print(F("POST /pushingbox HTTP/1.1\n"));
         client_push.print(F("Host: api.pushingbox.com\n"));
@@ -56,5 +56,5 @@ void pushControl() {
         client_push.print(postStr);
     }
     client_push.stop();
-    Serial.println("- stopping the client");
+    //Serial.println("- stopping the client");
 }
