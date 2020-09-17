@@ -80,7 +80,7 @@ extern int8_t dallasEnterCounter;
 extern String logging_value_names_list;
 extern int enter_to_logging_counter;
 extern int scenario_line_status[40];
-extern String lastVersion;
+extern int lastVersion;
 
 
 //Запрос на скарнирование шины

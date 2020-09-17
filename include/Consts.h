@@ -3,11 +3,11 @@
 * Main consts
 */
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION "240"
+#define FIRMWARE_VERSION 240
+
 #define NUM_BUTTONS 6
 #define LED_PIN 2
 #define FLASH_4MB true
-
 
 #define MQTT_RECONNECT_INTERVAL 20000
 
@@ -22,7 +22,6 @@
 #define TAG_ONE_WIRE "oneWire"
 #define TAG_I2C "i2c"
 #define TAG_ONE_WIRE_PIN "oneWirePin"
- 
 
 /* 
 * Optional
@@ -41,7 +40,6 @@
 #define LEVEL_ENABLED
 
 #define ANALOG_ENABLED
-
 
 #define DALLAS_ENABLED
 #define DHT_ENABLED
@@ -97,15 +95,15 @@ enum TimerTask_t { WIFI_SCAN,
                    TEST };
 
 enum notAsincActions {
-   do_ZERO, 
-   do_UPGRADE,
-   do_GETLASTVERSION,
-   do_UDPDATAPARSE,
-   do_MQTTUDP,
-   do_BUSSCAN,
-   do_MQTTPARAMSCHANGED,
-   do_LAST,
-};                   
+    do_ZERO,
+    do_UPGRADE,
+    do_GETLASTVERSION,
+    do_UDPDATAPARSE,
+    do_MQTTUDP,
+    do_BUSSCAN,
+    do_MQTTPARAMSCHANGED,
+    do_LAST,
+};
 
 enum ErrorType_t {
     ET_NONE,
@@ -137,5 +135,3 @@ enum BusScanner_t {
     BS_I2C,
     BS_ONE_WIRE
 };
-
-

@@ -9,7 +9,7 @@ void loadConfig() {
     configSetupJson.replace("\r\n", "");
 
     jsonWriteStr(configSetupJson, "chipID", chipId);
-    jsonWriteStr(configSetupJson, "firmware_version", FIRMWARE_VERSION);
+    jsonWriteInt(configSetupJson, "firmware_version", FIRMWARE_VERSION);
 
     prex = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId;
 

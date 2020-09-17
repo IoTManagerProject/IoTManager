@@ -1,10 +1,9 @@
 #include "Web.h"
-#include "ItemsList.h"
+
+#include "Class/NotAsinc.h"
 #include "Global.h"
 #include "Init.h"
-#include "Class/NotAsinc.h"
-
-
+#include "ItemsList.h"
 
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
@@ -28,7 +27,6 @@ void web_init() {
     });
 
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
-
         //==============================presets===========================================================================================================
         //uint8_t preset;
         //if (parseRequestForPreset(request, preset)) {
@@ -66,7 +64,7 @@ void web_init() {
             Device_init();
             request->send(200);
         }
-       
+
         if (request->hasArg("scen")) {
             bool value = request->getParam("scen")->value().toInt();
             jsonWriteBool(configSetupJson, "scen", value);
@@ -74,12 +72,12 @@ void web_init() {
             loadScenario();
             request->send(200);
         }
-       
+
         if (request->hasArg("sceninit")) {
             loadScenario();
             request->send(200);
         }
-        
+
 #ifdef LOGGING_ENABLED
         if (request->hasArg("cleanlog")) {
             clean_log_date();
@@ -94,17 +92,17 @@ void web_init() {
             loadScenario();
             request->send(200);
         }
-      
+
         if (request->hasArg("updatelist")) {
             removeFile("/dev.csv");
             addFileLn("dev.csv", "device id;device name;ip address");
             request->redirect("/?set.udp");
         }
-        
+
         if (request->hasArg("updatepage")) {
             request->redirect("/?set.udp");
         }
-       
+
         if (request->hasArg("devname")) {
             jsonWriteStr(configSetupJson, "name", request->getParam("devname")->value());
             saveConfig();
@@ -122,7 +120,7 @@ void web_init() {
             saveConfig();
             request->send(200);
         }
-       
+
         if (request->hasArg("apssid")) {
             jsonWriteStr(configSetupJson, "apssid", request->getParam("apssid")->value());
             saveConfig();
@@ -134,7 +132,7 @@ void web_init() {
             saveConfig();
             request->send(200);
         }
-       
+
         if (request->hasArg("weblogin")) {
             jsonWriteStr(configSetupJson, "weblogin", request->getParam("weblogin")->value());
             saveConfig();
@@ -146,7 +144,7 @@ void web_init() {
             saveConfig();
             request->send(200);
         }
-        
+
         if (request->hasArg("timezone")) {
             String timezoneStr = request->getParam("timezone")->value();
             jsonWriteStr(configSetupJson, "timezone", timezoneStr);
@@ -162,7 +160,7 @@ void web_init() {
             timeNow->setNtpPool(ntpStr);
             request->send(200);
         }
-        
+
         if (request->hasArg("blink")) {
             bool value = request->getParam("blink")->value().toInt();
             jsonWriteBool(configSetupJson, "blink", value);
@@ -201,7 +199,7 @@ void web_init() {
             myNotAsincActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
-      
+
         if (request->hasArg("mqttsend")) {
             myNotAsincActions->make(do_MQTTUDP);
             request->send(200);
@@ -262,30 +260,26 @@ void web_init() {
     */
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         myNotAsincActions->make(do_GETLASTVERSION);
-        SerialPrint("I","Web","firmware version: " + lastVersion);
-
-        if (!FLASH_4MB) {
-            lastVersion = "less";
-        } else if (isNetworkActive()) {
-            lastVersion = "nowifi";
-        }
+        SerialPrint("I", "Update", "firmware version: " + String(lastVersion));
 
         String msg = "";
         if (lastVersion == FIRMWARE_VERSION) {
             msg = F("Актуальная версия прошивки уже установлена.");
-        } else if (lastVersion != FIRMWARE_VERSION) {
+        } else if (lastVersion > FIRMWARE_VERSION) {
             msg = F("Новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
-        } else if (lastVersion == "error") {
+        } else if (lastVersion == -1) {
             msg = F("Cервер не найден. Попробуйте повторить позже...");
-        } else if (lastVersion == "") {
-            msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
-        } else if (lastVersion == "less") {
-            msg = F("Обновление \"по воздуху\" не поддерживается!");
-        } else if (lastVersion == "nowifi") {
+        } else if (lastVersion == -2) {
             msg = F("Устройство не подключено к роутеру!");
-        } else if (lastVersion == "notsupported") {
-            msg = F("Обновление возможно только через usb!");
         }
+        // else if (lastVersion == "") {
+        //msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
+        //} else if (lastVersion == "less") {
+        //msg = F("Обновление \"по воздуху\" не поддерживается!");
+        //} else if (lastVersion == "notsupported") {
+        //   msg = F("Обновление возможно только через usb!");
+        //}
+
         String tmp = "{}";
         jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + msg);
         jsonWriteStr(tmp, "class", "pop-up");
@@ -296,13 +290,14 @@ void web_init() {
     * Upgrade
     */
     server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest* request) {
-        myNotAsincActions->make(do_UPGRADE);;
+        myNotAsincActions->make(do_UPGRADE);
+        ;
         request->send(200, "text/html");
     });
 }
 
 void setConfigParam(const char* param, const String& value) {
-    SerialPrint("I","Web","set " + String(param) + ": " + value);
+    SerialPrint("I", "Web", "set " + String(param) + ": " + value);
     jsonWriteStr(configSetupJson, param, value);
     saveConfig();
 }

@@ -47,7 +47,7 @@ int enter_to_logging_counter;
 
 // Scenario
 int scenario_line_status[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-String lastVersion = "";
+int lastVersion;
 BusScanner_t busToScan;
 
 boolean busScanFlag = false;
