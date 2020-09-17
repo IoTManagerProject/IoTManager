@@ -44,7 +44,7 @@ class SensorBme280Class : public SensorConvertingClass {
     void SensorBme280ReadPress(String key) {
         float value;
         value = bme.readPressure();
-        value = value / 1.333224;
+        value = value / 1.333224 / 100;
         float valueFl = this->correction(key, value);
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, String(valueFl));
