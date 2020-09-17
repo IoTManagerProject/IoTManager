@@ -30,6 +30,8 @@ class SensorModbusClass : public SensorConvertingClass {
         } else {
         }
 
+        value = reqisterValue;
+
         float valueFl = this->correction(key, value);
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, String(valueFl));

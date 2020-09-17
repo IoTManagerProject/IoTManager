@@ -1,0 +1,1 @@
+modbus;id;anydata;Modbus;Регистр;order;addr[1];regaddr[0];c[1]
