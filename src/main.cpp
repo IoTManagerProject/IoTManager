@@ -100,9 +100,6 @@ void loop() {
 #ifdef WS_enable
     ws.cleanupClients();
 #endif
-#ifdef UDP_ENABLED
-    loopUdp();
-#endif
     timeNow->loop();
     MqttClient::loop();
     myButtonIn.loop();

@@ -82,15 +82,6 @@ extern int enter_to_logging_counter;
 extern int scenario_line_status[40];
 extern int lastVersion;
 
-
-//Запрос на скарнирование шины
-extern boolean busScanFlag;
-
-//Запрос на сканирование шины, указание какую
-extern BusScanner_t busToScan;
-extern boolean fsCheckFlag;
-
-
 //Global functions
 // Logging
 extern void logging();

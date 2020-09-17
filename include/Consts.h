@@ -1,31 +1,25 @@
 #pragma once
-/*
-* Main consts
-*/
+
+//=================Firmeare=================
 #define FIRMWARE_NAME "esp8266-iotm"
 #define FIRMWARE_VERSION 240
-
-#define NUM_BUTTONS 6
-#define LED_PIN 2
 #define FLASH_4MB true
 
+//=================System===================
+#define NUM_BUTTONS 6
+#define LED_PIN 2
+
+//=================MQTT=====================
 #define MQTT_RECONNECT_INTERVAL 20000
 
+//===============Telemetry==================
 #define TELEMETRY_UPDATE_INTERVAL_MIN 60
 
+//=============Configuration================
 #define DEVICE_CONFIG_FILE "s.conf.csv"
 #define DEVICE_SCENARIO_FILE "s.scen.txt"
 
-#define DEFAULT_PRESET 100
-#define DEFAULT_SCENARIO 100
-
-#define TAG_ONE_WIRE "oneWire"
-#define TAG_I2C "i2c"
-#define TAG_ONE_WIRE_PIN "oneWirePin"
-
-/* 
-* Optional
-*/
+//=============System parts=================
 //#define OTA_UPDATES_ENABLED
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
@@ -33,33 +27,24 @@
 //#define UDP_ENABLED
 #define SSDP_EN
 
-/* 
-* Sensor 
-*/
+//=========Sensors enable/disable===========
 #define TANK_LEVEL_SAMPLES 10
 #define LEVEL_ENABLED
-
 #define ANALOG_ENABLED
-
 #define DALLAS_ENABLED
 #define DHT_ENABLED
-
 #define BMP_ENABLED
-
 #define BME_ENABLED
 
-/* 
-* Gears 
-*/
+//=========Gears enable/disable===========
 #define STEPPER_ENABLED
 #define SERVO_ENABLED
 
-/* 
-* Other
-*/
+//=========Other enable/disable===========
 #define LOGGING_ENABLED
 #define SERIAL_ENABLED
 #define PUSH_ENABLED
+
 
 struct Time_t {
     uint8_t second;
@@ -129,9 +114,4 @@ enum LedStatus_t {
 enum ConfigType_t {
     CT_CONFIG,
     CT_SCENARIO
-};
-
-enum BusScanner_t {
-    BS_I2C,
-    BS_ONE_WIRE
 };

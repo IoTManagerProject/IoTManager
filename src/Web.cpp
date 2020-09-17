@@ -85,29 +85,31 @@ void web_init() {
         }
 #endif
         //==============================udp settings=============================================
-        if (request->hasArg("udponoff")) {
-            bool value = request->getParam("udponoff")->value().toInt();
-            jsonWriteBool(configSetupJson, "udponoff", value);
-            saveConfig();
-            loadScenario();
-            request->send(200);
-        }
+        //if (request->hasArg("udponoff")) {
+        //    bool value = request->getParam("udponoff")->value().toInt();
+        //    jsonWriteBool(configSetupJson, "udponoff", value);
+        //    saveConfig();
+        //    loadScenario();
+        //    request->send(200);
+        //}
+        //
+        //if (request->hasArg("updatelist")) {
+        //    removeFile("/dev.csv");
+        //    addFileLn("dev.csv", "device id;device name;ip address");
+        //    request->redirect("/?set.udp");
+        //}
+        //
+        //if (request->hasArg("updatepage")) {
+        //    request->redirect("/?set.udp");
+        //}
+        //
+        //if (request->hasArg("devname")) {
+        //    jsonWriteStr(configSetupJson, "name", request->getParam("devname")->value());
+        //    saveConfig();
+        //    request->send(200);
+        //}
 
-        if (request->hasArg("updatelist")) {
-            removeFile("/dev.csv");
-            addFileLn("dev.csv", "device id;device name;ip address");
-            request->redirect("/?set.udp");
-        }
 
-        if (request->hasArg("updatepage")) {
-            request->redirect("/?set.udp");
-        }
-
-        if (request->hasArg("devname")) {
-            jsonWriteStr(configSetupJson, "name", request->getParam("devname")->value());
-            saveConfig();
-            request->send(200);
-        }
         //==============================wifi settings=============================================
         if (request->hasArg("routerssid")) {
             jsonWriteStr(configSetupJson, "routerssid", request->getParam("routerssid")->value());
@@ -167,7 +169,9 @@ void web_init() {
             saveConfig();
             request->send(200);
         }
+
         //==============================mqtt settings=============================================
+
         if (request->hasArg("mqttServer")) {
             jsonWriteStr(configSetupJson, "mqttServer", request->getParam("mqttServer")->value());
             saveConfig();
@@ -215,31 +219,20 @@ void web_init() {
             request->send(200, "text/html", payload);
         }
 
-        //==============================push settings=============================================
-#ifdef PUSH_ENABLED
-        if (request->hasArg("pushingboxid")) {
-            jsonWriteStr(configSetupJson, "pushingboxid", request->getParam("pushingboxid")->value());
-            saveConfig();
-            request->send(200);
-        }
-#endif
+//        //==============================push settings=============================================
+//#ifdef PUSH_ENABLED
+//        if (request->hasArg("pushingboxid")) {
+//            jsonWriteStr(configSetupJson, "pushingboxid", request->getParam("pushingboxid")->value());
+//            saveConfig();
+//            request->send(200);
+//        }
+//#endif
 
         //==============================utilities settings=============================================
-        if (request->hasArg(TAG_I2C)) {
-            busScanFlag = true;
-            busToScan = BS_I2C;
+        if (request->hasArg("i2c")) {
+            
             request->redirect("/?set.utilities");
-        } else if (request->hasArg(TAG_ONE_WIRE)) {
-            busScanFlag = true;
-            busToScan = BS_ONE_WIRE;
-            if (request->hasParam(TAG_ONE_WIRE_PIN)) {
-                setConfigParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value());
-            }
-            request->redirect("/?set.utilities");
-        } else if (request->hasArg(TAG_ONE_WIRE_PIN)) {
-            setConfigParam(TAG_ONE_WIRE_PIN, request->getParam(TAG_ONE_WIRE_PIN)->value());
-            request->send(200);
-        }
+        } 
     });
 
     //==============================list of items=====================================================
@@ -272,7 +265,7 @@ void web_init() {
         } else if (lastVersion == -2) {
             msg = F("Устройство не подключено к роутеру!");
         }
-        
+
         // else if (lastVersion == "") {
         //msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
         //} else if (lastVersion == "less") {
