@@ -11,9 +11,12 @@ extern void decide();
 extern void getPsn();
 
 extern String getUptimeTotal();
-extern int plusOneHour();
-extern void eeWriteInt(int pos, int val);
-extern int eeGetInt(int pos);
+extern uint8_t getNextNumber(String file);
+extern uint8_t getCurrentNumber(String file);
+
+//extern int plusOneHour();
+//extern void eeWriteInt(int pos, int val);
+//extern int eeGetInt(int pos);
 //extern void updateDeviceList();
 //extern void saveId(String file, int id);
 //extern int getId(String file);

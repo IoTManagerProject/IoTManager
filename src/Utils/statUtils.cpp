@@ -14,7 +14,7 @@ void initSt() {
         ts.add(
             STATISTICS, TELEMETRY_UPDATE_INTERVAL_MIN * 60000, [&](void*) {
                 static bool secondTime = false;
-                if (secondTime) plusOneHour();
+                if (secondTime) getNextNumber("totalhrs.txt");
                 secondTime = true;
                 updateDeviceStatus();
             },
@@ -24,7 +24,7 @@ void initSt() {
 
 void decide() {
     if ((WiFi.status() == WL_CONNECTED)) {
-        uint8_t cnt = getNewElementNumber("stat.txt");
+        uint8_t cnt = getNextNumber("stat.txt");
         SerialPrint("I","Stat","Total resets number: " + String(cnt));
         if (cnt <= 3) {
             //Serial.println("(get)");
@@ -127,7 +127,8 @@ String updateDeviceStatus() {
                                  "&resetReason=" + ESP.getResetReason() +
                                  "&uptime=" + timeNow->getUptime() +
                                  "&uptimeTotal=" + getUptimeTotal() +
-                                 "&version=" + FIRMWARE_VERSION + "");
+                                 "&version=" + FIRMWARE_VERSION + 
+                                 "&resetsTotal=" + String(getCurrentNumber("stat.txt")) + "");
         if (httpCode > 0) {
             ret = httpCode;
             if (httpCode == HTTP_CODE_OK) {
@@ -144,46 +145,66 @@ String updateDeviceStatus() {
 }
 
 String getUptimeTotal() {
-    static int hrs;
-    EEPROM.begin(512);
-    hrs = eeGetInt(0);
-    SerialPrint("I","Stat","Total running hrs: " + String(hrs));
+    uint8_t hrs = getCurrentNumber("totalhrs.txt");
     String hrsStr = prettySeconds(hrs * 60 * 60);
-    SerialPrint("I","Stat","Total running hrs (f): " + hrsStr);
+    SerialPrint("I","Stat","Total running time: " + hrsStr);
     return hrsStr;
 }
 
-int plusOneHour() {
-    static int hrs;
-    EEPROM.begin(512);
-    hrs = eeGetInt(0);
-    hrs++;
-    eeWriteInt(0, hrs);
-    return hrs;
+uint8_t getNextNumber(String file) {
+    uint8_t number = readFile(file, 100).toInt();
+    number++;
+    removeFile(file);
+    addFile(file, String(number));
+    return number;
 }
 
-void eeWriteInt(int pos, int val) {
-    byte* p = (byte*)&val;
-    EEPROM.write(pos, *p);
-    EEPROM.write(pos + 1, *(p + 1));
-    EEPROM.write(pos + 2, *(p + 2));
-    EEPROM.write(pos + 3, *(p + 3));
-    EEPROM.commit();
+uint8_t getCurrentNumber(String file) {
+    uint8_t number = readFile(file, 100).toInt();
+    return number;
 }
 
-int eeGetInt(int pos) {
-    int val;
-    byte* p = (byte*)&val;
-    *p = EEPROM.read(pos);
-    *(p + 1) = EEPROM.read(pos + 1);
-    *(p + 2) = EEPROM.read(pos + 2);
-    *(p + 3) = EEPROM.read(pos + 3);
-    if (val < 0) {
-        return 0;
-    } else {
-        return val;
-    }
-}
+
+//String getUptimeTotal() {
+//    static int hrs;
+//    EEPROM.begin(512);
+//    hrs = eeGetInt(0);
+//    SerialPrint("I","Stat","Total running hrs: " + String(hrs));
+//    String hrsStr = prettySeconds(hrs * 60 * 60);
+//    SerialPrint("I","Stat","Total running hrs (f): " + hrsStr);
+//    return hrsStr;
+//}
+//int plusOneHour() {
+//    static int hrs;
+//    EEPROM.begin(512);
+//    hrs = eeGetInt(0);
+//    hrs++;
+//    eeWriteInt(0, hrs);
+//    return hrs;
+//}
+//
+//void eeWriteInt(int pos, int val) {
+//    byte* p = (byte*)&val;
+//    EEPROM.write(pos, *p);
+//    EEPROM.write(pos + 1, *(p + 1));
+//    EEPROM.write(pos + 2, *(p + 2));
+//    EEPROM.write(pos + 3, *(p + 3));
+//    EEPROM.commit();
+//}
+//
+//int eeGetInt(int pos) {
+//    int val;
+//    byte* p = (byte*)&val;
+//    *p = EEPROM.read(pos);
+//    *(p + 1) = EEPROM.read(pos + 1);
+//    *(p + 2) = EEPROM.read(pos + 2);
+//    *(p + 3) = EEPROM.read(pos + 3);
+//    if (val < 0) {
+//        return 0;
+//    } else {
+//        return val;
+//    }
+//}
 //========for updating list of device=================
 /*
 void updateDeviceList() {

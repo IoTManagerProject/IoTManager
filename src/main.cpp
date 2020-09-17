@@ -85,7 +85,7 @@ void setup() {
 
     ts.add(
         TEST, 1000 * 60, [&](void*) {
-            SerialPrint("I","module",printMemoryStatus());
+            SerialPrint("I","System",printMemoryStatus());
             
         },
         nullptr, true);
