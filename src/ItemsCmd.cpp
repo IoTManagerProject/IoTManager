@@ -40,6 +40,9 @@ void cmd_init() {
     sCmd.addCommand("bme280-hum", bme280Hum);
     sCmd.addCommand("bme280-press", bme280Press);
 
+    sCmd.addCommand("bmp280-temp", bmp280Temp);
+    sCmd.addCommand("bmp280-press", bmp280Press);
+
     handle_time_init();
 }
 

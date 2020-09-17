@@ -71,7 +71,9 @@
                 "/set?addItem=dht22-hum": "14.Датчик влажности (DHT22, DHT33, DHT44, AM2302, RHT03)",
                 "/set?addItem=bme280-temp": "15.Датчик температуры bme280",
                 "/set?addItem=bme280-hum": "16.Датчик влажности bme280",
-                "/set?addItem=bme280-press": "17.Датчик давления bme280"
+                "/set?addItem=bme280-press": "17.Датчик давления bme280",
+                "/set?addItem=bmp280-temp": "18.Датчик температуры bmp280",
+                "/set?addItem=bmp280-press": "19.Датчик давления bmp280"
             }
         },
         {

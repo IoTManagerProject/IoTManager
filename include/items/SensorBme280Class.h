@@ -18,6 +18,7 @@ class SensorBme280Class : public SensorConvertingClass {
         bme.begin(hexStringToUint8(_addr));
         jsonWriteStr(configOptionJson, _key + "_map", _map);
         jsonWriteStr(configOptionJson, _key + "_с", _c);
+        sensorReadingMap += _key + ",";
     }
 
     void SensorBme280ReadTmp(String key) {
@@ -43,6 +44,7 @@ class SensorBme280Class : public SensorConvertingClass {
     void SensorBme280ReadPress(String key) {
         float value;
         value = bme.readPressure();
+        value = value / 1.333224;
         float valueFl = this->correction(key, value);
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, String(valueFl));

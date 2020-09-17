@@ -1,1 +1,1 @@
-bme280-press;id;anydata;Сенсоры;Давление;order;c[1]
+bme280-press;id;anydataPress;Сенсоры;Давление;order;addr[0x76];c[1]
