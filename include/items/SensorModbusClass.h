@@ -8,35 +8,37 @@
 #include "items/SensorConvertingClass.h"
 
 ModbusMaster modbus1;
-SoftwareSerial uart(10, 11);  // RX, TX
+SoftwareSerial uart(13, 12);  // RX, TX
 
 class SensorModbusClass : public SensorConvertingClass {
    public:
     SensorModbusClass() : SensorConvertingClass(){};
 
     void SensorModbusInit() {
+        uart.begin(9600);
         jsonWriteStr(configOptionJson, _key + "_map", _map);
         jsonWriteStr(configOptionJson, _key + "_с", _c);
-        sensorReadingMap += _key + ","; //" " + _addr + " " + _regaddr
+        sensorReadingMap += _key + " " + _addr + " " + _reg + ","; 
+        Serial.println(sensorReadingMap);
     }
 
     void SensorModbusRead(String key, uint8_t slaveAddress, uint16_t regAddress) {
-        float value;
+        int value;
 
         modbus1.begin(slaveAddress, uart);
         uint16_t reqisterValue = modbus1.readHoldingRegisters(regAddress, 1);
         if (getResultMsg(&modbus1, reqisterValue)) {
             reqisterValue = modbus1.getResponseBuffer(0);
+            value = reqisterValue;
         } else {
+           value = NULL;
         }
 
-        value = reqisterValue;
-
-        float valueFl = this->correction(key, value);
+        int valueFl = this->correction(key, value);
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, String(valueFl));
         MqttClient::publishStatus(key, String(valueFl));
-        Serial.println("I sensor '" + key + "' data: " + String(valueFl));
+        Serial.println("I sensor '" + key + "' data: " + String(valueFl) + ", Slave dev addr: " + String(slaveAddress) + ", Register: " + String(regAddress));
     }
 
     bool getResultMsg(ModbusMaster* modbus1, uint16_t result) {

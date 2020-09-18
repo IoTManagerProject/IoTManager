@@ -1,5 +1,6 @@
-#include "ItemsCmd.h"
 #include "items/SensorModbusClass.h"
+
+#include "ItemsCmd.h"
 //#ifdef SensorModbusEnabled
 //=========================================Модуль modbus===================================================================================
 //modbus;id;anydata;Сенсоры;Температура;order;addr[1];regaddr[0];c[1]
@@ -15,6 +16,8 @@ void modbus() {
 }
 void modbusReading() {
     String key = sCmd.order();
-    mySensorModbus.SensorModbusRead(key, 1, 0);
+    String addr = sCmd.next();
+    String regaddr = sCmd.next();
+    mySensorModbus.SensorModbusRead(key, addr.toInt(), regaddr.toInt());
 }
 //#endif

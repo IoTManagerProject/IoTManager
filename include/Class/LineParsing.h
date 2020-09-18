@@ -14,6 +14,7 @@ class LineParsing {
     String _order;
 
     String _addr;
+    String _reg;
     String _pin;
     String _map;
     String _c;
@@ -31,6 +32,7 @@ class LineParsing {
                     _descr{""},
                     _order{""},
                     _addr{""},
+                    _reg{""},
                     _pin{""},
                     _map{""},
                     _c{""},
@@ -78,6 +80,9 @@ class LineParsing {
                 }
                 if (arg.indexOf("addr[") != -1) {
                     _addr = extractInner(arg);
+                }
+                if (arg.indexOf("reg[") != -1) {
+                    _reg = extractInner(arg);
                 }
             }
         }
@@ -127,7 +132,9 @@ class LineParsing {
     String gaddr() {
         return _addr;
     }
-    
+    String gregaddr() {
+        return _reg;
+    }
 
     void clear() {
         _key = "";
@@ -136,6 +143,7 @@ class LineParsing {
         _descr = "";
         _order = "";
         _addr = "";
+        _reg = "";
         _pin = "";
         _map = "";
         _c = "";
@@ -143,7 +151,6 @@ class LineParsing {
         _state = "";
         _db = "";
         _type = "";
-        _addr = "";
     }
 
     String extractInnerDigit(String str) {
