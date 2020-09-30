@@ -43,7 +43,7 @@ void cmd_init() {
     sCmd.addCommand("bmp280-temp", bmp280Temp);
     sCmd.addCommand("bmp280-press", bmp280Press);
 
-    sCmd.addCommand("modbus", modbus);
+    //sCmd.addCommand("modbus", modbus);
 
     handle_time_init();
 }

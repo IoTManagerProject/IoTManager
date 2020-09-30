@@ -160,21 +160,23 @@ class LineParsing {
     }
 
     void createWidgetClass(String descr, String page, String order, String filename, String topic) {
-        String buf = "{}";
-        if (!loadWidgetClass(filename, buf)) {
-            return;
-        }
+        if (filename != "na") {
+            String buf = "{}";
+            if (!loadWidgetClass(filename, buf)) {
+                return;
+            }
 
-        jsonWriteStr(buf, "page", page);
-        jsonWriteStr(buf, "order", order);
-        jsonWriteStr(buf, "descr", descr);
-        jsonWriteStr(buf, "topic", prex + "/" + topic);
+            jsonWriteStr(buf, "page", page);
+            jsonWriteStr(buf, "order", order);
+            jsonWriteStr(buf, "descr", descr);
+            jsonWriteStr(buf, "topic", prex + "/" + topic);
 
 #ifdef LAYOUT_IN_RAM
-        all_widgets += widget + "\r\n";
+            all_widgets += widget + "\r\n";
 #else
-        addFileLn("layout.txt", buf);
+            addFileLn("layout.txt", buf);
 #endif
+        }
     }
 
     bool loadWidgetClass(const String& filename, String& buf) {

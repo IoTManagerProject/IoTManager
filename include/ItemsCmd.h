@@ -44,5 +44,5 @@ extern void bmp280ReadingTemp();
 extern void bmp280Press();
 extern void bmp280ReadingPress();
 
-extern void modbus();
-extern void modbusReading();
+//extern void modbus();
+//extern void modbusReading();

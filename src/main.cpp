@@ -13,7 +13,7 @@
 #include "Utils/Timings.h"
 #include "Utils\WebUtils.h"
 #include "items/ButtonInClass.h"
-#include "RemoteOrdersUdp.h"
+//#include "RemoteOrdersUdp.h"
 #include "Bus.h"
 
 void not_async_actions();
@@ -72,8 +72,8 @@ void setup() {
     SerialPrint("I","Stat","Stat Init");
     initSt();
 
-    SerialPrint("I","UDP","Udp Init");
-    asyncUdpInit();
+    //SerialPrint("I","UDP","Udp Init");
+    //asyncUdpInit();
 
     SerialPrint("I","Bus","Bus Init");
     busInit();
