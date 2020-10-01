@@ -209,7 +209,7 @@ void web_init() {
         }
 
         if (request->hasArg("mqttcheck")) {
-            String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + MqttClient::getStateStr();
+            String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" +  getStateStr();
 
             String payload = "{}";
             jsonWriteStr(payload, "title", buf);

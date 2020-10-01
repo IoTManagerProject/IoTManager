@@ -47,7 +47,7 @@ class ButtonInClass : public LineParsing {
     void switchChangeVirtual(String key, String state) {
         eventGen(key, "");
         jsonWriteInt(configLiveJson, key, state.toInt());
-        MqttClient::publishStatus(key, state);
+         publishStatus(key, state);
     }
 };
 

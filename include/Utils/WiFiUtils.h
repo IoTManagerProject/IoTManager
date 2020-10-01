@@ -4,9 +4,9 @@
 
 boolean isNetworkActive();
 
-void startSTAMode();
+void routerConnect();
 
 bool startAPMode();
 
-boolean scanWiFi(String ssid);
+boolean RouterFind(String ssid);
 

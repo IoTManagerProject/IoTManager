@@ -6,75 +6,58 @@
 #include "Global.h"
 #include "Init.h"
 
-
-
-namespace MqttClient {
-
-// Errors
-int wifi_lost_error = 0;
-int mqtt_lost_error = 0;
-bool connected = false;
-
-// Session params
 String mqttPrefix;
 String mqttRootDevice;
 
-void init() {
-
+void mqttInit() {
     myNotAsincActions->add(
         do_MQTTPARAMSCHANGED, [&](void*) {
-            reconnect();
+            mqttReconnect();
         },
         nullptr);
 
-    mqtt.setCallback(handleSubscribedUpdates);
+    mqtt.setCallback(mqttCallback);
 
     ts.add(
         WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL,
         [&](void*) {
-            if (isNetworkActive()) {
+            if (WiFi.status() == WL_CONNECTED) {
+                SerialPrint("I", "WIFI", "OK");
                 if (mqtt.connected()) {
-                    if (!connected) {
-                        SerialPrint("I","MQTT","OK");
-                        setLedStatus(LED_OFF);
-                        connected = true;
-                    }
+                    SerialPrint("I", "MQTT", "OK");
+                    setLedStatus(LED_OFF);
                 } else {
-                    connect();
-                    if (!just_load) mqtt_lost_error++;
+                    SerialPrint("E", "MQTT", "lost connection");
+                    mqttConnect();
                 }
             } else {
-                if (connected) {
-                    SerialPrint("[E]","MQTT","connection lost");
-                    connected = false;
-                }
+                SerialPrint("E", "WIFI", "Lost WiFi connection");
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
-                wifi_lost_error++;
                 startAPMode();
             }
         },
         nullptr, true);
 }
 
-void disconnect() {
-    SerialPrint("I","MQTT","disconnect");
+void mqttDisconnect() {
+    SerialPrint("I", "MQTT", "disconnect");
     mqtt.disconnect();
 }
 
-void reconnect() {
-    disconnect();
-    connect();
+void mqttReconnect() {
+    mqttDisconnect();
+    mqttConnect();
 }
 
-void loop() {
+void mqttLoop() {
     if (!isNetworkActive() || !mqtt.connected()) {
         return;
     }
     mqtt.loop();
 }
 
-void subscribe() {
-    SerialPrint("I","MQTT","subscribe");
+void mqttSubscribe() {
+    SerialPrint("I", "MQTT", "subscribe");
     mqtt.subscribe(mqttPrefix.c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/order").c_str());
@@ -83,59 +66,50 @@ void subscribe() {
     mqtt.subscribe((mqttRootDevice + "/devs").c_str());
 }
 
-boolean connect() {
-    SerialPrint("I","MQTT","connect");
-
+boolean mqttConnect() {
+    SerialPrint("I", "MQTT", "start connection");
     String addr = jsonReadStr(configSetupJson, "mqttServer");
     if (!addr) {
-        SerialPrint("[E]","MQTT","no broker address");
+        SerialPrint("E", "MQTT", "no broker address");
         return false;
     }
-
     int port = jsonReadInt(configSetupJson, "mqttPort");
     String user = jsonReadStr(configSetupJson, "mqttUser");
     String pass = jsonReadStr(configSetupJson, "mqttPass");
-
-    //Session params
     mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
     mqttRootDevice = mqttPrefix + "/" + chipId;
-
-    SerialPrint("I","MQTT","broker " + addr + ":" + String(port, DEC));
-    SerialPrint("I","MQTT","topic " + mqttRootDevice);
-
+    SerialPrint("I", "MQTT", "broker " + addr + ":" + String(port, DEC));
+    SerialPrint("I", "MQTT", "topic " + mqttRootDevice);
     setLedStatus(LED_FAST);
     mqtt.setServer(addr.c_str(), port);
     bool res = false;
     if (!mqtt.connected()) {
         if (mqtt.connect(chipId.c_str(), user.c_str(), pass.c_str())) {
-            SerialPrint("I","MQTT","connected");
+            SerialPrint("I", "MQTT", "connected");
             setLedStatus(LED_OFF);
-            subscribe();
+            mqttSubscribe();
             res = true;
         } else {
-            SerialPrint("[E]","MQTT","could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
+            SerialPrint("E", "MQTT", "could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
             setLedStatus(LED_FAST);
         }
     }
     return res;
 }
 
-void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
+void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     String topicStr = String(topic);
-
-    SerialPrint("I","MQTT",topicStr);
-
+    SerialPrint("I", "MQTT", topicStr);
     String payloadStr;
-
     payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
         payloadStr += (char)payload[i];
     }
 
-    SerialPrint("I","MQTT",payloadStr);
+    SerialPrint("I", "MQTT", payloadStr);
 
     if (payloadStr.startsWith("HELLO")) {
-        SerialPrint("I","MQTT","Full update");
+        SerialPrint("I", "MQTT", "Full update");
         publishWidgets();
         publishState();
 #ifdef LOGGING_ENABLED
@@ -143,7 +117,6 @@ void handleSubscribedUpdates(char* topic, uint8_t* payload, size_t length) {
 #endif
 
     } else if (topicStr.indexOf("control")) {
-        
         //iotTeam/12882830-1458415/light 1
 
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
@@ -184,7 +157,7 @@ boolean publish(const String& topic, const String& data) {
 boolean publishData(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic;
     if (!publish(path, data)) {
-        SerialPrint("[E]","MQTT","on publish data");
+        SerialPrint("[E]", "MQTT", "on publish data");
         return false;
     }
     return true;
@@ -193,7 +166,7 @@ boolean publishData(const String& topic, const String& data) {
 boolean publishChart(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     if (!publish(path, data)) {
-        SerialPrint("[E]","MQTT","on publish chart");
+        SerialPrint("[E]", "MQTT", "on publish chart");
         return false;
     }
     return true;
@@ -244,12 +217,12 @@ void publishWidgets() {
 void publishWidgets() {
     auto file = seekFile("layout.txt");
     if (!file) {
-        SerialPrint("[E]","MQTT","no file layout.txt");
+        SerialPrint("[E]", "MQTT", "no file layout.txt");
         return;
     }
     while (file.available()) {
         String payload = file.readStringUntil('\n');
-        SerialPrint("I","MQTT","widgets: " + payload);
+        SerialPrint("I", "MQTT", "widgets: " + payload);
         publishData("config", payload);
     }
     file.close();
@@ -319,5 +292,3 @@ const String getStateStr() {
             break;
     }
 }
-
-}  // namespace MqttClient

@@ -55,7 +55,7 @@ void setup() {
     all_init();
 
     SerialPrint("I","WIFI","Network Init");
-    startSTAMode();
+    routerConnect();
 
     SerialPrint("I","Uptime","Uptime Init");
     uptime_init();
@@ -105,7 +105,7 @@ void loop() {
     ws.cleanupClients();
 #endif
     timeNow->loop();
-    MqttClient::loop();
+    mqttLoop();
     myButtonIn.loop();
     myScenario->loop();
     loopCmdExecute();

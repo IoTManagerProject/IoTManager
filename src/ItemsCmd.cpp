@@ -122,7 +122,7 @@ void cmd_init() {
 //    }
 //
 //    jsonWriteStr(configLiveJson, "text" + number, text);
-//    MqttClient::publishStatus("text" + number, text);
+//     publishStatus("text" + number, text);
 //}
 //=====================================================================================================================================
 ////=========================================Модуль шагового мотора======================================================================
@@ -243,7 +243,7 @@ void cmd_init() {
 //
 //    eventGen("servo", number);
 //    jsonWriteInt(configLiveJson, "servo" + number, value);
-//    MqttClient::publishStatus("servo" + number, String(value, DEC));
+//     publishStatus("servo" + number, String(value, DEC));
 //}
 //#endif
 ////====================================================================================================================================================

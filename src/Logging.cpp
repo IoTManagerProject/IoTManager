@@ -137,7 +137,7 @@ void sendLogData(String file, String topic) {
         json_array = "{\"status\":[" + json_array + "]}";
         SerialPrint("I","module",json_array);
 
-        MqttClient::publishChart(topic, json_array);
+         publishChart(topic, json_array);
     }
 }
 

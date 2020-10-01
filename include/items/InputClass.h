@@ -18,13 +18,13 @@ class InputClass : public LineParsing {
     void inputSetFloat(String key, String state) {
         eventGen(key, "");
         jsonWriteFloat(configLiveJson, key, state.toFloat());
-        MqttClient::publishStatus(key, state);
+         publishStatus(key, state);
     }
 
     void inputSetStr(String key, String state) {
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, state);
-        MqttClient::publishStatus(key, state);
+         publishStatus(key, state);
     }
 };
 

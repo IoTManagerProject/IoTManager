@@ -36,7 +36,7 @@ class SensorDallasClass : public SensorConvertingClass {
                 float valueFl = this->correction(key, value);
                 eventGen(key, "");
                 jsonWriteStr(configLiveJson, key, String(valueFl));
-                MqttClient::publishStatus(key, String(valueFl));
+                 publishStatus(key, String(valueFl));
                 Serial.println("I sensor '" + key + "' data: " + String(valueFl));
             }
         }

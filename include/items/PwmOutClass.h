@@ -24,7 +24,7 @@ class PwmOutClass : public LineParsing {
         analogWrite(pinInt, state.toInt());
         eventGen(key, "");
         jsonWriteInt(configLiveJson, key, state.toInt());
-        MqttClient::publishStatus(key, state);
+         publishStatus(key, state);
     }
 };
 

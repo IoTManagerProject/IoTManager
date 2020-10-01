@@ -17,7 +17,7 @@ class OutputTextClass : public LineParsing {
         state.replace("#", " ");
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, state);
-        MqttClient::publishStatus(key, state);
+         publishStatus(key, state);
     }
 };
 extern OutputTextClass myOutputText;

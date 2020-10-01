@@ -48,7 +48,7 @@
 //    float value = 0;
 //    static int counter;
 //    if (dht.getStatus() != 0 && counter < 5) {
-//        //MqttClient::publishStatus(dhtT_value_name, String(dht.getStatusString()));
+//        // publishStatus(dhtT_value_name, String(dht.getStatusString()));
 //        counter++;
 //    } else {
 //        counter = 0;
@@ -56,7 +56,7 @@
 //        if (String(value) != "nan") {
 //            //eventGen(dhtT_value_name, "");
 //            //jsonWriteStr(configLiveJson, dhtT_value_name, String(value));
-//            //MqttClient::publishStatus(dhtT_value_name, String(value));
+//            // publishStatus(dhtT_value_name, String(value));
 //            //Serial.println("I sensor '" + dhtT_value_name + "' data: " + String(value));
 //        }
 //    }
@@ -86,7 +86,7 @@
 //    float value = 0;
 //    static int counter;
 //    if (dht.getStatus() != 0 && counter < 5) {
-//        //MqttClient::publishStatus(dhtH_value_name, String(dht.getStatusString()));
+//        // publishStatus(dhtH_value_name, String(dht.getStatusString()));
 //        counter++;
 //    } else {
 //        counter = 0;
@@ -94,7 +94,7 @@
 //        if (String(value) != "nan") {
 //            //eventGen(dhtH_value_name, "");
 //            //jsonWriteStr(configLiveJson, dhtH_value_name, String(value));
-//            //MqttClient::publishStatus(dhtH_value_name, String(value));
+//            // publishStatus(dhtH_value_name, String(value));
 //            //Serial.println("I sensor '" + dhtH_value_name + "' data: " + String(value));
 //        }
 //    }
@@ -112,13 +112,13 @@
 //void dhtP_reading() {
 //    byte value;
 //    if (dht.getStatus() != 0) {
-//        MqttClient::publishStatus("dhtPerception", String(dht.getStatusString()));
+//         publishStatus("dhtPerception", String(dht.getStatusString()));
 //    } else {
 //        //value = dht.computePerception(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
 //        String final_line = perceptionStr(value);
 //        jsonWriteStr(configLiveJson, "dhtPerception", final_line);
 //        eventGen("dhtPerception", "");
-//        MqttClient::publishStatus("dhtPerception", final_line);
+//         publishStatus("dhtPerception", final_line);
 //        if (mqtt.connected()) {
 //            Serial.println("I sensor 'dhtPerception' data: " + final_line);
 //        }
@@ -137,13 +137,13 @@
 //void dhtC_reading() {
 //    ComfortState cf;
 //    if (dht.getStatus() != 0) {
-//        MqttClient::publishStatus("dhtComfort", String(dht.getStatusString()));
+//         publishStatus("dhtComfort", String(dht.getStatusString()));
 //    } else {
 //        //dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
 //        String final_line = comfortStr(cf);
 //        jsonWriteStr(configLiveJson, "dhtComfort", final_line);
 //        eventGen("dhtComfort", "");
-//        MqttClient::publishStatus("dhtComfort", final_line);
+//         publishStatus("dhtComfort", final_line);
 //        Serial.println("I sensor 'dhtComfort' send date " + final_line);
 //    }
 //}
@@ -230,12 +230,12 @@
 //void dhtD_reading() {
 //    float value;
 //    if (dht.getStatus() != 0) {
-//        MqttClient::publishStatus("dhtDewpoint", String(dht.getStatusString()));
+//         publishStatus("dhtDewpoint", String(dht.getStatusString()));
 //    } else {
 //        //value = dht.computeDewPoint(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
 //        jsonWriteInt(configLiveJson, "dhtDewpoint", value);
 //        eventGen("dhtDewpoint", "");
-//        MqttClient::publishStatus("dhtDewpoint", String(value));
+//         publishStatus("dhtDewpoint", String(value));
 //        Serial.println("I sensor 'dhtDewpoint' data: " + String(value));
 //    }
 //}
@@ -271,7 +271,7 @@
 //    value = temp_event.temperature;
 //    //jsonWriteStr(configLiveJson, bmp280T_value_name, String(value));
 //    //eventGen(bmp280T_value_name, "");
-//    //MqttClient::publishStatus(bmp280T_value_name, String(value));
+//    // publishStatus(bmp280T_value_name, String(value));
 //    //Serial.println("I sensor '" + bmp280T_value_name + "' data: " + String(value));
 //}
 //
@@ -303,7 +303,7 @@
 //    value = value / 1.333224;
 //    //jsonWriteStr(configLiveJson, bmp280P_value_name, String(value));
 //    //eventGen(bmp280P_value_name, "");
-//    //MqttClient::publishStatus(bmp280P_value_name, String(value));
+//    // publishStatus(bmp280P_value_name, String(value));
 //    //Serial.println("I sensor '" + bmp280P_value_name + "' data: " + String(value));
 //}
 //
@@ -328,7 +328,7 @@
 //    value = bme.readTemperature();
 //    //jsonWriteStr(configLiveJson, bme280T_value_name, String(value));
 //    //eventGen(bme280T_value_name, "");
-//    //MqttClient::publishStatus(bme280T_value_name, String(value));
+//    // publishStatus(bme280T_value_name, String(value));
 //    //Serial.println("I sensor '" + bme280T_value_name + "' data: " + String(value));
 //}
 //
@@ -352,7 +352,7 @@
 //    value = value / 1.333224 / 100;
 //    //jsonWriteStr(configLiveJson, bme280P_value_name, String(value));
 //    //eventGen(bme280P_value_name, "");
-//    //MqttClient::publishStatus(bme280P_value_name, String(value));
+//    // publishStatus(bme280P_value_name, String(value));
 //    //Serial.println("I sensor '" + bme280P_value_name + "' data: " + String(value));
 //}
 //
@@ -375,7 +375,7 @@
 //    value = bme.readHumidity();
 //    //jsonWriteStr(configLiveJson, bme280H_value_name, String(value));
 //    //eventGen(bme280H_value_name, "");
-//    //MqttClient::publishStatus(bme280H_value_name, String(value));
+//    // publishStatus(bme280H_value_name, String(value));
 //    //Serial.println("I sensor '" + bme280H_value_name + "' data: " + String(value));
 //}
 //
@@ -399,7 +399,7 @@
 //
 //    //eventGen(bme280A_value_name, "");
 //
-//    //MqttClient::publishStatus(bme280A_value_name, String(value));
+//    // publishStatus(bme280A_value_name, String(value));
 //
 //    //Serial.println("I sensor '" + bme280A_value_name + "' data: " + String(value));
 //}

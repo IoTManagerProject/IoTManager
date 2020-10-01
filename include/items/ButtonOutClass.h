@@ -33,7 +33,7 @@ class ButtonOutClass : public LineParsing {
         }
         eventGen(key, "");
         jsonWriteInt(configLiveJson, key, state.toInt());
-        MqttClient::publishStatus(key, state);
+         publishStatus(key, state);
     }
 };
 
