@@ -40,12 +40,33 @@ void getLastVersion() {
 }
 
 void upgrade_firmware(int type) {
+    String scenario_ForUpdate;
+    String devconfig_ForUpdate;
+    String configSetup_ForUpdate;
+
+    scenario_ForUpdate = readFile(String(DEVICE_SCENARIO_FILE), 4000);
+    devconfig_ForUpdate = readFile(String(DEVICE_CONFIG_FILE), 4000);
+    configSetup_ForUpdate = configSetupJson;
+
     if (type == 1) {  //only build
         if (upgradeBuild()) restartEsp();
-    } else if (type == 2) {  //only spiffs
-        if (upgradeFS()) restartEsp();
-    } else if (type == 3) {  //spiffs and build
+    }
+
+    else if (type == 2) {  //only spiffs
         if (upgradeFS()) {
+            writeFile(String(DEVICE_SCENARIO_FILE), scenario_ForUpdate);
+            writeFile(String(DEVICE_CONFIG_FILE), devconfig_ForUpdate);
+            writeFile("config.json", configSetup_ForUpdate);
+            restartEsp();
+        }
+    }
+
+    else if (type == 3) {  //spiffs and build
+        if (upgradeFS()) {
+            writeFile(String(DEVICE_SCENARIO_FILE), scenario_ForUpdate);
+            writeFile(String(DEVICE_CONFIG_FILE), devconfig_ForUpdate);
+            writeFile("config.json", configSetup_ForUpdate);
+            saveConfig();
             if (upgradeBuild()) {
                 restartEsp();
             }
