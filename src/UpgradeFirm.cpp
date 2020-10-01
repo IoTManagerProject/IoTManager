@@ -27,7 +27,7 @@ void upgradeInit() {
 
 void getLastVersion() {
     if ((WiFi.status() == WL_CONNECTED)) {
-        String tmp = getURL(F("http://95.128.182.133/projects/iotmanager/esp8266/esp8266ver.txt"));
+        String tmp = getURL(F("http://95.128.182.133/projects/iotmanager/esp8266/esp8266ver/esp8266ver.txt"));
         if (tmp == "error") {
             lastVersion = -1;
         } else {
@@ -58,7 +58,7 @@ bool upgradeFS() {
     bool ret = false;
     Serial.println("Start upgrade LittleFS, please wait...");
     ESPhttpUpdate.rebootOnUpdate(false);
-    t_httpUpdate_return retFS = ESPhttpUpdate.updateSpiffs(wifiClient, F("http://95.128.182.133/projects/iotmanager/esp8266/littlefs.bin"));
+    t_httpUpdate_return retFS = ESPhttpUpdate.updateSpiffs(wifiClient, F("http://95.128.182.133/projects/iotmanager/esp8266/littlefs/littlefs.bin"));
     if (retFS == HTTP_UPDATE_OK) {  //если FS обновилась успешно
         SerialPrint("I", "Update", "LittleFS upgrade done!");
         ret = true;
@@ -71,7 +71,7 @@ bool upgradeBuild() {
     bool ret = false;
     Serial.println("Start upgrade BUILD, please wait...");
     ESPhttpUpdate.rebootOnUpdate(false);
-    t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, F("http://95.128.182.133/projects/iotmanager/esp8266/firmware.bin"));
+    t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, F("http://95.128.182.133/projects/iotmanager/esp8266/firmware/firmware.bin"));
     if (retBuild == HTTP_UPDATE_OK) {  //если BUILD обновился успешно
         SerialPrint("I", "Update", "BUILD upgrade done!");
         ret = true;

@@ -258,7 +258,7 @@ void web_init() {
         if (lastVersion == FIRMWARE_VERSION) {
             msg = F("Актуальная версия прошивки уже установлена.");
         } else if (lastVersion > FIRMWARE_VERSION) {
-            msg = F("Новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/'; }, 120000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
+            msg = F("Новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/?set.device'; }, 120000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
         } else if (lastVersion == -1) {
             msg = F("Cервер не найден. Попробуйте повторить позже...");
         } else if (lastVersion == -2) {
