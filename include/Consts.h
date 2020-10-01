@@ -2,7 +2,7 @@
 
 //=================Firmeare=================
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION 241
+#define FIRMWARE_VERSION 243
 #define FLASH_4MB true
 
 //=================System===================
