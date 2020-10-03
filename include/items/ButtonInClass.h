@@ -1,5 +1,6 @@
 #pragma once
 #include <Arduino.h>
+
 #include "Class/LineParsing.h"
 #include "Global.h"
 
@@ -26,11 +27,11 @@ class ButtonInClass : public LineParsing {
         if (but[switch_number]) {
             buttons[switch_number].update();
             if (buttons[switch_number].fell()) {
-            }
-            if (buttons[switch_number].rose()) {
                 String key = jsonReadStr(configOptionJson, "switch_num_" + String(switch_number));
                 state = !state;
                 switchChangeVirtual(key, String(state));
+            }
+            if (buttons[switch_number].rose()) {
             }
         }
         switch_number++;
@@ -38,6 +39,7 @@ class ButtonInClass : public LineParsing {
             switch_number = 0;
         }
     }
+
     void switchStateSetDefault() {
         if (_state != "") {
             switchChangeVirtual(_key, _state);
@@ -47,7 +49,7 @@ class ButtonInClass : public LineParsing {
     void switchChangeVirtual(String key, String state) {
         eventGen(key, "");
         jsonWriteInt(configLiveJson, key, state.toInt());
-         publishStatus(key, state);
+        publishStatus(key, state);
     }
 };
 

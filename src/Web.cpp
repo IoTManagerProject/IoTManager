@@ -14,32 +14,8 @@ bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
 }
 
 void web_init() {
-    // dnsServer.start(53, "*", WiFi.softAPIP());
-    // server.addHandler(new CaptiveRequestHandler(jsonReadStr(configSetupJson, "name").c_str())).setFilter(ON_AP_FILTER);
-
-    server.on("/restart", HTTP_GET, [](AsyncWebServerRequest* request) {
-        if (request->hasArg("device")) {
-            if (request->getParam("device")->value() == "ok") {
-                ESP.restart();
-            }
-            request->send(200);
-        };
-    });
-
+    
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
-        //==============================presets===========================================================================================================
-        //uint8_t preset;
-        //if (parseRequestForPreset(request, preset)) {
-        //    SerialPrint("I","Web","activate #" + String(preset, DEC));
-        //    String configFile = DEVICE_CONFIG_FILE;
-        //    String scenarioFile = DEVICE_SCENARIO_FILE;
-        //    copyFile(getConfigFile(preset, CT_CONFIG), configFile);
-        //    copyFile(getConfigFile(preset, CT_SCENARIO), scenarioFile);
-        //    Device_init();
-        //    loadScenario();
-        //    request->redirect("/?set.device");
-        //}
-
         //==============================set.device.json====================================================================================================
         if (request->hasArg("addItem")) {
             String name = request->getParam("addItem")->value();
@@ -84,32 +60,14 @@ void web_init() {
             request->send(200);
         }
 #endif
-        //==============================udp settings=============================================
-        //if (request->hasArg("udponoff")) {
-        //    bool value = request->getParam("udponoff")->value().toInt();
-        //    jsonWriteBool(configSetupJson, "udponoff", value);
-        //    saveConfig();
-        //    loadScenario();
-        //    request->send(200);
-        //}
-        //
-        //if (request->hasArg("updatelist")) {
-        //    removeFile("/dev.csv");
-        //    addFileLn("dev.csv", "device id;device name;ip address");
-        //    request->redirect("/?set.udp");
-        //}
-        //
-        //if (request->hasArg("updatepage")) {
-        //    request->redirect("/?set.udp");
-        //}
-        //
-        //if (request->hasArg("devname")) {
-        //    jsonWriteStr(configSetupJson, "name", request->getParam("devname")->value());
-        //    saveConfig();
-        //    request->send(200);
-        //}
 
         //==============================wifi settings=============================================
+        if (request->hasArg("devname")) {
+            jsonWriteStr(configSetupJson, "name", request->getParam("devname")->value());
+            saveConfig();
+            request->send(200);
+        }
+
         if (request->hasArg("routerssid")) {
             jsonWriteStr(configSetupJson, "routerssid", request->getParam("routerssid")->value());
             saveConfig();
@@ -169,6 +127,13 @@ void web_init() {
             request->send(200);
         }
 
+        if (request->hasArg("device")) {
+            if (request->getParam("device")->value() == "ok") {
+                ESP.restart();
+            }
+            request->send(200);
+        }
+
         //==============================mqtt settings=============================================
 
         if (request->hasArg("mqttServer")) {
@@ -209,7 +174,7 @@ void web_init() {
         }
 
         if (request->hasArg("mqttcheck")) {
-            String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" +  getStateStr();
+            String buf = "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + getStateStr();
 
             String payload = "{}";
             jsonWriteStr(payload, "title", buf);
