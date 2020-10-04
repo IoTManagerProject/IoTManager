@@ -28,10 +28,13 @@ class ButtonInClass : public LineParsing {
             buttons[switch_number].update();
             if (buttons[switch_number].fell()) {
                 String key = jsonReadStr(configOptionJson, "switch_num_" + String(switch_number));
-                state = !state;
+                state = 0;
                 switchChangeVirtual(key, String(state));
             }
             if (buttons[switch_number].rose()) {
+                String key = jsonReadStr(configOptionJson, "switch_num_" + String(switch_number));
+                state = 1;
+                switchChangeVirtual(key, String(state));
             }
         }
         switch_number++;
