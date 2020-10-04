@@ -2,7 +2,7 @@
 
 //=================Firmeare=================
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION 249
+#define FIRMWARE_VERSION 250
 #define FLASH_4MB true
 
 //=================System===================
@@ -25,7 +25,7 @@
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
 //#define UDP_ENABLED
-#define SSDP_EN
+//#define SSDP_EN
 
 //=========Sensors enable/disable===========
 #define TANK_LEVEL_SAMPLES 10
