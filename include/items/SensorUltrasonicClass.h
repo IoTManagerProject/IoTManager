@@ -1,5 +1,6 @@
 #pragma once
 #include <Arduino.h>
+
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "items/SensorConvertingClass.h"
@@ -11,6 +12,8 @@ class SensorUltrasonic : public SensorConvertingClass {
         sensorReadingMap += _key + ",";
         String trig = selectFromMarkerToMarker(_pin, ",", 0);
         String echo = selectFromMarkerToMarker(_pin, ",", 1);
+        pinMode(trig.toInt(), OUTPUT);
+        pinMode(echo.toInt(), INPUT);
         jsonWriteStr(configOptionJson, _key + "_trig", trig);
         jsonWriteStr(configOptionJson, _key + "_echo", echo);
         jsonWriteStr(configOptionJson, _key + "_map", _map);
@@ -34,7 +37,7 @@ class SensorUltrasonic : public SensorConvertingClass {
         float valueFl = this->correction(key, value);
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, String(valueFl));
-         publishStatus(key, String(valueFl));
+        publishStatus(key, String(valueFl));
         Serial.println("I sensor '" + key + "' data: " + String(valueFl));
     }
 };
