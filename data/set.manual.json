@@ -1,0 +1,30 @@
+{
+    "configs": [
+      "/config.setup.json",
+      "/config.option.json",
+      "/config.live.json",
+      "/lang/lang.ru.json"
+    ],
+    "class": "col-sm-offset-1 col-sm-10",
+    "content": [
+      {
+        "type": "h5",
+        "title": "{{name}}",
+        "class": "alert-default"
+      },
+      {
+        "type": "link",
+        "title": "{{ButMainPage}}",
+        "action": "/",
+        "class": "btn btn-block btn-default"
+      },
+      {
+        "type": "file",
+        "state": "s.conf.csv",
+        "style": "width:100%;height:350px",
+        "title": "Сохранить",
+        "action": "/set?saveItems",
+        "class": "btn btn-block btn-default"
+      }
+    ]
+  }
