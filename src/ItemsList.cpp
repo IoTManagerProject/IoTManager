@@ -1,23 +1,51 @@
 #include "ItemsList.h"
 
+#include "Class\NotAsinc.h"
+#include "Init.h"
 #include "Utils\StringUtils.h"
 
-static const char* firstLine PROGMEM = "Тип элемента;Id;Виджет;Имя вкладки;Имя виджета;Позиция виджета";
+static const char* firstLine PROGMEM = "Удалить;Тип элемента;Id;Виджет;Имя вкладки;Имя виджета;Позиция виджета";
+
+void itemsListInit() {
+    myNotAsincActions->add(
+        do_deviceInit, [&](void*) {
+            Device_init();
+        },
+        nullptr);
+
+    myNotAsincActions->add(
+        do_delChoosingItems, [&](void*) {
+            delChoosingItems();
+            Device_init();
+        },
+        nullptr);
+}
 
 void addItem(String name) {
     String item = readFile("items/" + name + ".txt", 1024);
-    name = deleteToMarkerLast(name, "-");
+
+    name = deleteToMarkerLast(name, ".");
+
     item.replace("id", name + "-" + String(getNewElementNumber("id.txt")));
     item.replace("order", String(getNewElementNumber("order.txt")));
+
     if (item.indexOf("pin") != -1) {  //all cases (random pins from available)
         item.replace("pin", "pin[" + String(getFreePinAll()) + "]");
-    } else if (item.indexOf("gol") != -1) {  //analog
+    } else
+
+        if (item.indexOf("gol") != -1) {  //analog
         item.replace("gol", "pin[" + String(getFreePinAnalog()) + "]");
-    } else if (item.indexOf("cin") != -1) {  //ultrasonic
+    } else
+
+        if (item.indexOf("cin") != -1) {  //ultrasonic
         item.replace("cin", "pin[" + String(getFreePinAll()) + "," + String(getFreePinAll()) + "]");
-    } else if (item.indexOf("sal") != -1) {  //dallas 
+    } else
+
+        if (item.indexOf("sal") != -1) {  //dallas
         item.replace("sal", "pin[2]");
-    } else if (item.indexOf("thd") != -1) {  //dht11/22
+    } else
+
+        if (item.indexOf("thd") != -1) {  //dht11/22
         item.replace("thd", "pin[2]");
     }
 
@@ -65,71 +93,28 @@ uint8_t getFreePinAnalog() {
 #endif
 }
 
-//void do_getJsonListFromCsv() {
-//    if (getJsonListFromCsvFlag) {
-//        getJsonListFromCsvFlag = false;
-//        removeFile("items/items.json");
-//        addFile("items/items.json", getJsonListFromCsv(DEVICE_CONFIG_FILE, 1));
-//    }
-//}
-//
-//String getJsonListFromCsv(String csvFile, int colum) {
-//    File configFile = LittleFS.open("/" + csvFile, "r");
-//    if (!configFile) {
-//        return "error";
-//    }
-//    configFile.seek(0, SeekSet);
-//
-//    String outJson = "{}";
-//
-//    int count = -1;
-//
-//    while (configFile.position() != configFile.size()) {
-//        count++;
-//        String item = configFile.readStringUntil('\n');
-//        if (count > 0) {
-//            String line = selectFromMarkerToMarker(item, ";", colum);
-//            jsonWriteStr(outJson, line, line);
-//        }
-//    }
-//    configFile.close();
-//    csvFile = "";
-//    return outJson;
-//}
-//
-//void do_delElement() {
-//    if (delElementFlag) {
-//        delElementFlag = false;
-//        delElement(itemsFile, itemsLine);
-//    }
-//}
-//
-//void delElement(String _itemsFile, String _itemsLine) {
-//    File configFile = LittleFS.open("/" + _itemsFile, "r");
-//    if (!configFile) {
-//        return;
-//    }
-//    configFile.seek(0, SeekSet);
-//    String finalConf;
-//    int count = -1;
-//    while (configFile.position() != configFile.size()) {
-//        count++;
-//        String item = configFile.readStringUntil('\n');
-//        Serial.print(_itemsLine);
-//        Serial.print(" ");
-//        Serial.println(count);
-//        if (count != _itemsLine.toInt()) {
-//            if (count == 0) {
-//                finalConf += item;
-//            } else {
-//                finalConf += "\n" + item;
-//            }
-//        }
-//    }
-//    removeFile(_itemsFile);
-//    addFile(_itemsFile, finalConf);
-//    Serial.println(finalConf);
-//    itemsFile = "";
-//    itemsLine = "";
-//    configFile.close();
-//}
+void delChoosingItems() {
+    File configFile = LittleFS.open("/" + String(DEVICE_CONFIG_FILE), "r");
+    if (!configFile) {
+        return;
+    }
+    configFile.seek(0, SeekSet);
+    String finalConf;
+    bool firstLine = true;
+    while (configFile.position() != configFile.size()) {
+        String item = configFile.readStringUntil('\n');
+        if (firstLine) {
+            finalConf += item;
+        } else {
+            int checkbox = selectToMarker(item, ";").toInt();
+            if (checkbox == 0) {
+                finalConf += "\n" + item;
+            }
+        }
+        firstLine = false;
+    }
+    removeFile(String(DEVICE_CONFIG_FILE));
+    addFile(String(DEVICE_CONFIG_FILE), finalConf);
+    Serial.println(finalConf);
+    configFile.close();
+}

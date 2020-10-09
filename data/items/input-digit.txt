@@ -1,1 +1,1 @@
-input-digit;id;inputDigit;Ввод;Введите#цифру;order;st[60]
+0;input-digit;id;inputDigit;Ввод;Введите#цифру;order;st[60]

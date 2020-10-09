@@ -18,6 +18,7 @@ void fileCmdExecute(const String &filename) {
 }
 
 void csvCmdExecute(String &cmdStr) {
+    
     cmdStr.replace(";", " ");
     cmdStr += "\r\n";
     cmdStr.replace("\r\n", "\n");
@@ -25,6 +26,7 @@ void csvCmdExecute(String &cmdStr) {
     int count = 0;
     while (cmdStr.length()) {
         String buf = selectToMarker(cmdStr, "\n");
+        buf = deleteBeforeDelimiter(buf, " "); //отсечка чекбокса
         count++;
         if (count > 1) sCmd.readStr(buf);
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");

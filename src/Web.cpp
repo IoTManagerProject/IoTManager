@@ -14,30 +14,34 @@ bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
 }
 
 void web_init() {
-    
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         //==============================set.device.json====================================================================================================
         if (request->hasArg("addItem")) {
             String name = request->getParam("addItem")->value();
             addItem(name);
-            //Device_init();
+            myNotAsincActions->make(do_deviceInit);
             request->redirect("/?set.device");
+        }
+
+        if (request->hasArg("delChoosingItems")) {
+            myNotAsincActions->make(do_delChoosingItems);
+            request->send(200);
         }
 
         if (request->hasArg("delAllItems")) {
             delAllItems();
-            Device_init();
+            myNotAsincActions->make(do_deviceInit);
             request->redirect("/?set.device");
         }
 
         if (request->hasArg("saveItems")) {
-            Device_init();
+            myNotAsincActions->make(do_deviceInit);
             request->redirect("/?set.device");
         }
 
         //==============================init====================================================================================================
         if (request->hasArg("devinit")) {
-            Device_init();
+            myNotAsincActions->make(do_deviceInit);
             request->send(200);
         }
 
@@ -130,6 +134,13 @@ void web_init() {
         if (request->hasArg("device")) {
             if (request->getParam("device")->value() == "ok") {
                 ESP.restart();
+            }
+            request->send(200);
+        }
+
+        if (request->hasArg("test")) {
+            if (request->getParam("test")->value() == "ok") {
+                Serial.println("test pass");
             }
             request->send(200);
         }

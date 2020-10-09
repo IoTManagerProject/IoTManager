@@ -43,7 +43,7 @@
         },
         {
             "type": "h4",
-            "title": "LittleFS version: 251"
+            "title": "LittleFS version: 252"
         },
         {
             "type": "hr"
@@ -55,10 +55,10 @@
             "style": "display:inline",
             "title": {
                 "#": "Выберите элемент из списка<span class=\"caret\"></span>",
-                "/set?addItem=button-out-p": "1.Кнопка управляющая пином",
-                "/set?addItem=button-out-np": "2.Кнопка не привязанная к пину (виртуальная)",
+                "/set?addItem=button-out.pin": "1.Кнопка управляющая пином",
+                "/set?addItem=button-out.npin": "2.Кнопка виртуальная",
+                "/set?addItem=button-in": "4.Кнопка физическая",
                 "/set?addItem=pwm-out": "3.Широтно импульсная модуляция (pwm)",
-                "/set?addItem=button-in": "4.Физическая кнопка (чтение состояния пина)",
                 "/set?addItem=input-digit": "5.Окно ввода цифровых значений",
                 "/set?addItem=input-time": "6.Окно ввода времени",
                 "/set?addItem=output-text": "7.Окно вывода любого текста, предупреждения, цифры",
@@ -83,6 +83,7 @@
         {
             "type": "csv",
             "title": [
+                "checkbox",
                 "html",
                 "text",
                 "text",
@@ -97,6 +98,12 @@
         },
         {
             "type": "hr"
+        },
+        {
+            "type": "link",
+            "title": "Удалить выбранные элементы",
+            "action": "javascript:{send_request(this,'/set?delChoosingItems');setTimeout(function(){location.href='/?set.device' ; }, 1000);}",
+            "class": "btn btn-block btn-default"
         },
         {
             "type": "link",

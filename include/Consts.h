@@ -2,7 +2,7 @@
 
 //=================Firmeare=================
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION 251
+#define FIRMWARE_VERSION 252
 #define FLASH_4MB true
 
 //=================System===================
@@ -87,6 +87,8 @@ enum notAsincActions {
     do_MQTTUDP,
     do_BUSSCAN,
     do_MQTTPARAMSCHANGED,
+    do_deviceInit,
+    do_delChoosingItems,
     do_LAST,
 };
 
