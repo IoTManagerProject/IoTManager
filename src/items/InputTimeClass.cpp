@@ -23,7 +23,7 @@ void handle_time_init() {
         TIME, 1000, [&](void *) {
             jsonWriteStr(configLiveJson, "time", timeNow->getTime());
             jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
-            //eventGen("timenow", "");
+            eventGen("timenow", "");
         },
         nullptr, true);
 }
