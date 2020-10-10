@@ -13,7 +13,7 @@ void loopCmdAdd(const String &cmdStr) {
 }
 
 void fileCmdExecute(const String &filename) {
-    String cmdStr = readFile(filename, 2048);
+    String cmdStr = readFile(filename, 4096);
     csvCmdExecute(cmdStr);
 }
 

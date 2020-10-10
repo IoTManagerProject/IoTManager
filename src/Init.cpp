@@ -27,12 +27,8 @@ void Device_init() {
      sensorReadingMap = "";
      dallasEnterCounter = -1;
 
-
-
-
-
-    logging_value_names_list = "";
-    enter_to_logging_counter = LOG1 - 1;
+    //logging_value_names_list = "";
+    //enter_to_logging_counter = LOG1 - 1;
     //analog_value_names_list = "";
     //enter_to_analog_counter = 0;
     //dallas_value_name = "";
@@ -47,15 +43,13 @@ void Device_init() {
     //bme280P_value_name = "";
     //bme280H_value_name = "";
     //bme280A_value_name = "";
-
     //int array_sz = sizeof(sensors_reading_map) / sizeof(sensors_reading_map[0]);
     //for (int i = 0; i < array_sz; i++) {
     //    sensors_reading_map[i] = 0;
     //}
-
-    for (int i = LOG1; i <= LOG5; i++) {
-        ts.remove(i);
-    }
+    //for (int i = LOG1; i <= LOG5; i++) {
+    //    ts.remove(i);
+    //}
 
 #ifdef LAYOUT_IN_RAM
     all_widgets = "";
