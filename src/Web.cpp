@@ -19,7 +19,6 @@ void web_init() {
         if (request->hasArg("addItem")) {
             String name = request->getParam("addItem")->value();
             addItem(name);
-            myNotAsincActions->make(do_deviceInit);
             request->redirect("/?set.device");
         }
 
@@ -30,17 +29,10 @@ void web_init() {
 
         if (request->hasArg("delAllItems")) {
             delAllItems();
-            myNotAsincActions->make(do_deviceInit);
             request->redirect("/?set.device");
         }
 
         if (request->hasArg("saveItems")) {
-            myNotAsincActions->make(do_deviceInit);
-            request->redirect("/?set.device");
-        }
-
-        //==============================init====================================================================================================
-        if (request->hasArg("devinit")) {
             myNotAsincActions->make(do_deviceInit);
             request->send(200);
         }

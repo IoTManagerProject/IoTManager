@@ -43,7 +43,7 @@
         },
         {
             "type": "h4",
-            "title": "LittleFS version: 254"
+            "title": "LittleFS version: 256"
         },
         {
             "type": "hr"
@@ -58,17 +58,17 @@
                 "/set?addItem=button-out.pin": "1.Кнопка управляющая пином",
                 "/set?addItem=button-out.npin": "2.Кнопка виртуальная",
                 "/set?addItem=button-in": "4.Кнопка физическая",
-                "/set?addItem=pwm-out": "3.Широтно импульсная модуляция (pwm)",
+                "/set?addItem=pwm-out": "3.Широтно импульсная модуляция pwm",
                 "/set?addItem=input-digit": "5.Окно ввода цифровых значений",
                 "/set?addItem=input-time": "6.Окно ввода времени",
                 "/set?addItem=output-text": "7.Окно вывода любого текста, предупреждения, цифры",
-                "/set?addItem=analog-adc": "8.Аналоговый датчик, чтение аналогового входа",
-                "/set?addItem=dallas-temp": "9.Датчик температуры (ds18b20)",
-                "/set?addItem=ultrasonic-cm": "10.Ультрозвуковой датчик расстояния (JSN-SR04T, HC-SR04, HY-SRF05)",
-                "/set?addItem=dht11-temp": "11.Датчик температуры (DHT11)",
-                "/set?addItem=dht11-hum": "12.Датчик влажности (DHT11)",
-                "/set?addItem=dht22-temp": "13.Датчик температуры (DHT22, DHT33, DHT44, AM2302, RHT03)",
-                "/set?addItem=dht22-hum": "14.Датчик влажности (DHT22, DHT33, DHT44, AM2302, RHT03)",
+                "/set?addItem=analog-adc": "8.Датчик аналоговый, чтение аналогового входа",
+                "/set?addItem=dallas-temp": "9.Датчик температуры ds18b20",
+                "/set?addItem=ultrasonic-cm": "10.Датчик расстояния ультрозвуковой JSN-SR04T, HC-SR04, HY-SRF05",
+                "/set?addItem=dht11-temp": "11.Датчик температуры DHT11",
+                "/set?addItem=dht11-hum": "12.Датчик влажности DHT11",
+                "/set?addItem=dht22-temp": "13.Датчик температуры DHT22, DHT33, DHT44, AM2302, RHT03",
+                "/set?addItem=dht22-hum": "14.Датчик влажности DHT22, DHT33, DHT44, AM2302, RHT03",
                 "/set?addItem=bme280-temp": "15.Датчик температуры bme280",
                 "/set?addItem=bme280-hum": "16.Датчик влажности bme280",
                 "/set?addItem=bme280-press": "17.Датчик давления bme280",

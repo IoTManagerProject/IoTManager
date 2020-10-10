@@ -16,7 +16,6 @@ void itemsListInit() {
     myNotAsincActions->add(
         do_delChoosingItems, [&](void*) {
             delChoosingItems();
-            Device_init();
         },
         nullptr);
 }
