@@ -1,6 +1,4 @@
 #include "Global.h"
-
-//
 #include <LITTLEFS.h>
 
 void sendLogData(String file, String topic);

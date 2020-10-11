@@ -43,7 +43,7 @@
         },
         {
             "type": "h4",
-            "title": "LittleFS version: 256"
+            "title": "LittleFS version: 257"
         },
         {
             "type": "hr"
@@ -128,6 +128,15 @@
             "style": "width:100%;height:350px",
             "title": "Сохранить",
             "action": "/set?sceninit",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "link",
+            "title": "Ручная настройка",
+            "action": "/?set.manual",
             "class": "btn btn-block btn-default"
         },
         {

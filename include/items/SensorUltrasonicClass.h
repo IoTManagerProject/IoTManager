@@ -4,6 +4,9 @@
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "items/SensorConvertingClass.h"
+#include "GyverFilters.h"
+
+GMedian<6, int> testFilter; 
 
 class SensorUltrasonic : public SensorConvertingClass {
    public:
@@ -32,6 +35,8 @@ class SensorUltrasonic : public SensorConvertingClass {
         digitalWrite(trig, LOW);
         long duration_ = pulseIn(echo, HIGH, 30000);  // 3000 µs = 50cm // 30000 µs = 5 m
         value = duration_ / 29 / 2;
+
+        value = testFilter.filtered(value);
 
         value = this->mapping(key, value);
         float valueFl = this->correction(key, value);
