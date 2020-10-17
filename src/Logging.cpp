@@ -1,11 +1,8 @@
 #include "Global.h"
-
-//
 #include <LITTLEFS.h>
 
 void sendLogData(String file, String topic);
 
-static const char* MODULE = "Log";
 
 #ifdef LOGGING_ENABLED
 //===============================================Логирование============================================================
@@ -30,7 +27,7 @@ void logging() {
             LOG1, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_1 = selectFromMarkerToMarker(logging_value_names_list, ",", 0);
                 deleteOldDate("log." + tmp_buf_1 + ".txt", jsonReadInt(configOptionJson, tmp_buf_1 + "_c"), jsonReadStr(configLiveJson, tmp_buf_1));
-                pm.info("logging for " + tmp_buf_1 + " done");
+                SerialPrint("I","module","logging for " + tmp_buf_1 + " done");
             },
             nullptr, false);
     }
@@ -39,7 +36,7 @@ void logging() {
             LOG2, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_2 = selectFromMarkerToMarker(logging_value_names_list, ",", 1);
                 deleteOldDate("log." + tmp_buf_2 + ".txt", jsonReadInt(configOptionJson, tmp_buf_2 + "_c"), jsonReadStr(configLiveJson, tmp_buf_2));
-                pm.info("logging for " + tmp_buf_2 + " done");
+                SerialPrint("I","module","logging for " + tmp_buf_2 + " done");
             },
             nullptr, false);
     }
@@ -48,7 +45,7 @@ void logging() {
             LOG3, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_3 = selectFromMarkerToMarker(logging_value_names_list, ",", 2);
                 deleteOldDate("log." + tmp_buf_3 + ".txt", jsonReadInt(configOptionJson, tmp_buf_3 + "_c"), jsonReadStr(configLiveJson, tmp_buf_3));
-                pm.info("logging for " + tmp_buf_3 + " done");
+                SerialPrint("I","module","logging for " + tmp_buf_3 + " done");
             },
             nullptr, false);
     }
@@ -57,7 +54,7 @@ void logging() {
             LOG4, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_4 = selectFromMarkerToMarker(logging_value_names_list, ",", 3);
                 deleteOldDate("log." + tmp_buf_4 + ".txt", jsonReadInt(configOptionJson, tmp_buf_4 + "_c"), jsonReadStr(configLiveJson, tmp_buf_4));
-                pm.info("logging for " + tmp_buf_4 + " done");
+                SerialPrint("I","module","logging for " + tmp_buf_4 + " done");
             },
             nullptr, false);
     }
@@ -66,7 +63,7 @@ void logging() {
             LOG5, period_min.toInt() * 1000 * 60, [&](void*) {
                 String tmp_buf_5 = selectFromMarkerToMarker(logging_value_names_list, ",", 4);
                 deleteOldDate("log." + tmp_buf_5 + ".txt", jsonReadInt(configOptionJson, tmp_buf_5 + "_c"), jsonReadStr(configLiveJson, tmp_buf_5));
-                pm.info("logging for " + tmp_buf_5 + " done");
+                SerialPrint("I","module","logging for " + tmp_buf_5 + " done");
             },
             nullptr, false);
     }
@@ -79,7 +76,7 @@ void deleteOldDate(const String filename, size_t max_lines_cnt, String payload) 
     String log_date = readFile(filename, 5120);
     size_t lines_cnt = itemsCount(log_date, "\r\n");
 
-    pm.info("log " + filename + " (" + String(lines_cnt, DEC) + ")");
+    SerialPrint("I","module","log " + filename + " (" + String(lines_cnt, DEC) + ")");
 
     if ((lines_cnt > max_lines_cnt + 1) || !lines_cnt) {
         removeFile(filename);
@@ -94,7 +91,7 @@ void deleteOldDate(const String filename, size_t max_lines_cnt, String payload) 
         }
     } else {
         if (timeNow->hasTimeSynced()) {
-            addFile(filename, timeNow->getTimeUnix() + " " + payload);
+            addFileLn(filename, timeNow->getTimeUnix() + " " + payload);
         }
     }
 }
@@ -136,9 +133,9 @@ void sendLogData(String file, String topic) {
         value = "";
         log_date = "";
         json_array = "{\"status\":[" + json_array + "]}";
-        pm.info(json_array);
+        SerialPrint("I","module",json_array);
 
-        MqttClient::publishChart(topic, json_array);
+         publishChart(topic, json_array);
     }
 }
 

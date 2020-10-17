@@ -1,6 +1,5 @@
 #include "Global.h"
 
-static const char* MODULE = "Widget";
 
 const String getWidgetFile(const String& name);
 
@@ -8,7 +7,7 @@ bool loadWidget(const String& filename, String& buf) {
     buf = readFile(getWidgetFile(filename), 2048);
     bool res = !(buf == "Failed" || buf == "Large");
     if (!res) {
-        pm.error("on load" + filename);
+        SerialPrint("[E]","Widgets","on load" + filename);
     }
     return res;
 }
@@ -29,7 +28,7 @@ void createWidget(String descr, String page, String order, String filename, Stri
 #ifdef LAYOUT_IN_RAM
     all_widgets += widget + "\r\n";
 #else
-    addFile("layout.txt", buf);
+    addFileLn("layout.txt", buf);
 #endif
 }
 
@@ -56,7 +55,7 @@ void createWidgetParam(String widget, String page, String pageNumber, String fil
 #ifdef LAYOUT_IN_RAM
     all_widgets += widget + "\r\n";
 #else
-    addFile("layout.txt", buf);
+    addFileLn("layout.txt", buf);
 #endif
 }
 
@@ -80,7 +79,7 @@ void createChart(String widget, String page, String pageNumber, String filename,
 #ifdef LAYOUT_IN_RAM
     all_widgets += widget + "\r\n";
 #else
-    addFile("layout.txt", buf);
+    addFileLn("layout.txt", buf);
 #endif
 }
 

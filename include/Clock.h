@@ -2,13 +2,15 @@
 
 #include "Utils/TimeUtils.h"
 #include "Utils/PrintMessage.h"
+#include "Global.h"
+#include "Clock.h"
 
 #ifdef ESP8266
 #include "sntp.h"
 #endif
 
 class Clock {
-    const char* MODULE = "Clock";
+
 
    private:
     Time_t _time_local;
@@ -69,7 +71,7 @@ class Clock {
 
     void startSync() {
         if (!_configured) {
-            pm.info("sync to: " + _ntp + " timezone: " + String(_timezone));
+            //SerialPrint("I","module","sync to: " + _ntp + " timezone: " + String(_timezone));
             setupSntp();
             _configured = true;
             // лучше не ждать, проверим в следующий раз
@@ -77,9 +79,9 @@ class Clock {
         }
         _hasSynced = hasTimeSynced();
         if (_hasSynced) {
-            pm.info("synced " + getDateDotFormated() + " " + getTime());
+            //SerialPrint("I","module","synced " + getDateDotFormated() + " " + getTime());
         } else {
-            pm.error("failed to obtain");
+            //SerialPrint("[E]","module","failed to obtain");
         }
     }
 

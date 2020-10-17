@@ -1,36 +1,33 @@
 #pragma once
-/*
-* Main consts
-*/
-#define FIRMWARE_VERSION "2.3.5"
+
+//=================Firmeare=================
+#define FIRMWARE_NAME "esp8266-iotm"
+#define FIRMWARE_VERSION 257
+#define FLASH_4MB true
+
+//=================System===================
 #define NUM_BUTTONS 6
 #define LED_PIN 2
-#define FLASH_4MB true
+
+//=================MQTT=====================
 #define MQTT_RECONNECT_INTERVAL 20000
 
-#define TELEMETRY_UPDATE_INTERVAL 7200000
+//===============Telemetry==================
+#define TELEMETRY_UPDATE_INTERVAL_MIN 60
 
-#define DEVICE_CONFIG_FILE "dev_conf.txt"
-#define DEVICE_SCENARIO_FILE "dev_scen.txt"
-#define DEFAULT_PRESET 100
-#define DEFAULT_SCENARIO 100
+//=============Configuration================
+#define DEVICE_CONFIG_FILE "s.conf.csv"
+#define DEVICE_SCENARIO_FILE "s.scen.txt"
 
-#define TAG_ONE_WIRE "oneWire"
-#define TAG_I2C "i2c"
-#define TAG_ONE_WIRE_PIN "oneWirePin"
-
-/* 
-* Optional
-*/
+//=============System parts=================
 //#define OTA_UPDATES_ENABLED
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
-#define UDP_ENABLED
+//#define UDP_ENABLED
+//#define SSDP_EN
 
-/* 
-* Sensor 
-*/
+//=========Sensors enable/disable===========
 #define TANK_LEVEL_SAMPLES 10
 #define LEVEL_ENABLED
 #define ANALOG_ENABLED
@@ -39,18 +36,15 @@
 #define BMP_ENABLED
 #define BME_ENABLED
 
-/* 
-* Gears 
-*/
+//=========Gears enable/disable===========
 #define STEPPER_ENABLED
 #define SERVO_ENABLED
 
-/* 
-* Other
-*/
+//=========Other enable/disable===========
 #define LOGGING_ENABLED
 #define SERIAL_ENABLED
 #define PUSH_ENABLED
+
 
 struct Time_t {
     uint8_t second;
@@ -79,10 +73,24 @@ enum TimerTask_t { WIFI_SCAN,
                    TIME,
                    TIME_SYNC,
                    STATISTICS,
+                   STATISTICS_WORK,
                    UPTIME,
                    UDP,
                    UDP_DB,
                    TEST };
+
+enum notAsincActions {
+    do_ZERO,
+    do_UPGRADE,
+    do_GETLASTVERSION,
+    do_UDPDATAPARSE,
+    do_MQTTUDP,
+    do_BUSSCAN,
+    do_MQTTPARAMSCHANGED,
+    do_deviceInit,
+    do_delChoosingItems,
+    do_LAST,
+};
 
 enum ErrorType_t {
     ET_NONE,
@@ -108,9 +116,4 @@ enum LedStatus_t {
 enum ConfigType_t {
     CT_CONFIG,
     CT_SCENARIO
-};
-
-enum BusScanner_t {
-    BS_I2C,
-    BS_ONE_WIRE
 };

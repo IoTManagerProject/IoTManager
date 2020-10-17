@@ -1,11 +1,12 @@
 #include "HttpServer.h"
-
+#include "BufferExecute.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
+#include "FSEditor.h"
 
 namespace HttpServer {
 
-static const char *MODULE = "Http";
+
 /* Forward declaration */
 void initOta();
 void initMDNS();
@@ -15,9 +16,9 @@ void init() {
     String login = jsonReadStr(configSetupJson, "weblogin");
     String pass = jsonReadStr(configSetupJson, "webpass");
 #ifdef ESP32
-    server.addHandler(new SPIFFSEditor(LittleFS, login, pass));
+    server.addHandler(new FSEditor(LittleFS, login, pass));
 #else
-    server.addHandler(new SPIFFSEditor(login, pass));
+    server.addHandler(new FSEditor(login, pass));
 #endif
 
     server.serveStatic("/css/", LittleFS, "/css/").setCacheControl("max-age=600");
@@ -28,17 +29,17 @@ void init() {
     server.serveStatic("/", LittleFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
 
     server.onNotFound([](AsyncWebServerRequest *request) {
-        pm.error("not found:\n" + getRequestInfo(request));
+        SerialPrint("[E]","WebServer","not found:\n" + getRequestInfo(request));
         request->send(404);
     });
 
     server.onFileUpload([](AsyncWebServerRequest *request, const String &filename, size_t index, uint8_t *data, size_t len, bool final) {
         // TODO
         if (!index) {
-            pm.info("start upload " + filename);
+            SerialPrint("I","WebServer","start upload " + filename);
         }
         if (final) {
-            pm.info("finish upload: " + prettyBytes(index + len));
+            SerialPrint("I","WebServer","finish upload: " + prettyBytes(index + len));
         }
     });
 
@@ -59,8 +60,8 @@ void init() {
 
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
         String cmdStr = request->getParam("command")->value();
-        pm.info("do: " + cmdStr);
-        addCommandLoop(cmdStr);
+        SerialPrint("I","WebServer","do: " + cmdStr);
+        loopCmdAdd(cmdStr);
         request->send(200, "text/html", "OK");
     });
 

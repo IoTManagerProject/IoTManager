@@ -1,14 +1,22 @@
+
+#include <SSDP.h>
+
+#include "BufferExecute.h"
+#include "Class/CallBackTest.h"
+#include "Class/NotAsinc.h"
+#include "Class/ScenarioClass.h"
+#include "Cmd.h"
 #include "Global.h"
 #include "Init.h"
-#include "Cmd.h"
-#include "HttpServer.h"
-#include "Bus/BusScannerFactory.h"
+#include "ItemsList.h"
+#include "Utils/StatUtils.h"
 #include "Utils/Timings.h"
-#include "Class/Switch.h"
+#include "Utils\WebUtils.h"
+#include "items/ButtonInClass.h"
+//#include "RemoteOrdersUdp.h"
+#include "Bus.h"
 
 void not_async_actions();
-
-static const char* MODULE = "Main";
 
 Timings metric;
 boolean initialized = false;
@@ -24,178 +32,89 @@ void setup() {
 
     setChipId();
 
-    pm.info("FS");
+    myNotAsincActions = new NotAsinc(do_LAST);
+    myScenario = new Scenario();
+
+    SerialPrint("I", "FS", "FS Init");
     fileSystemInit();
 
-    pm.info("Config");
+    SerialPrint("I", "Conf", "Config Init");
     loadConfig();
 
-    pm.info("Clock");
+    SerialPrint("I", "Time", "Clock Init");
     clock_init();
 
-    pm.info("Commands");
+    SerialPrint("I", "CMD", "Commands Init");
     cmd_init();
 
-    pm.info("Sensors");
-    sensors_init();
+    SerialPrint("I", "Sensors", "Sensors Init");
+    sensorsInit();
 
-    pm.info("Init");
+    SerialPrint("I", "Items", "Items Init");
+    itemsListInit();
+
+    SerialPrint("I", "Init", "Init Init");
     all_init();
 
-    pm.info("Network");
-    startSTAMode();
+    SerialPrint("I", "WIFI", "Network Init");
+    routerConnect();
 
-    pm.info("Uptime");
+    SerialPrint("I", "Uptime", "Uptime Init");
     uptime_init();
 
-    if (!TELEMETRY_UPDATE_INTERVAL) {
-        pm.info("Telemetry: Disabled");
-    }
-    telemetry_init();
+    SerialPrint("I", "Update", "Updater Init");
+    upgradeInit();
 
-    pm.info("Updater");
-    initUpdater();
-
-    pm.info("HttpServer");
+    SerialPrint("I", "HTTP", "HttpServer Init");
     HttpServer::init();
 
-    pm.info("WebAdmin");
+    SerialPrint("I", "Web", "WebAdmin Init");
     web_init();
 
-#ifdef UDP_ENABLED
-    pm.info("Broadcast UDP");
-    udp_init();
+    SerialPrint("I", "Stat", "Stat Init");
+    initSt();
+
+    //SerialPrint("I","UDP","Udp Init");
+    //asyncUdpInit();
+
+    SerialPrint("I", "Bus", "Bus Init");
+    busInit();
+
+#ifdef SSDP_EN
+    SerialPrint("I", "SSDP", "Ssdp Init");
+    SsdpInit();
 #endif
+
     ts.add(
         TEST, 1000 * 60, [&](void*) {
-            pm.info(printMemoryStatus());
+            SerialPrint("I", "System", printMemoryStatus());
         },
         nullptr, true);
 
     just_load = false;
-
-    initialized = true;
+    initialized = true;  //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
 }
 
 void loop() {
     if (!initialized) {
         return;
     }
-    timeNow->loop();
-
 #ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.handle();
 #endif
 #ifdef WS_enable
     ws.cleanupClients();
 #endif
-    not_async_actions();
+    timeNow->loop();
+    mqttLoop();
+    myButtonIn.loop();
+    myScenario->loop();
+    loopCmdExecute();
+    //loopSerial();
 
-    MqttClient::loop();
-
-    loopCmd();
-
-    mySwitch->loop();
-
-    loopScenario();
-
-#ifdef UDP_ENABLED
-    loopUdp();
-#endif
-
-    loopSerial();
-
+    myNotAsincActions->loop();
     ts.update();
 }
-
-void not_async_actions() {
-    if (mqttParamsChanged) {
-        MqttClient::reconnect();
-        mqttParamsChanged = false;
-    }
-
-    getLastVersion();
-
-    do_update();
-
-#ifdef UDP_ENABLED
-    do_udp_data_parse();
-    do_mqtt_send_settings_to_udp();
-#endif
-
-    do_scan_bus();
-}
-
-String getURL(const String& urls) {
-    String res = "";
-    HTTPClient http;
-    http.begin(urls);
-    int httpCode = http.GET();
-    if (httpCode == HTTP_CODE_OK) {
-        res = http.getString();
-    } else {
-        res = "error";
-    }
-    http.end();
-    return res;
-}
-
-void setChipId() {
-    chipId = getChipId();
-    pm.info("id: " + chipId);
-}
-
-void saveConfig() {
-    writeFile(String("config.json"), configSetupJson);
-}
-
-void setConfigParam(const char* param, const String& value) {
-    pm.info("set " + String(param) + ": " + value);
-    jsonWriteStr(configSetupJson, param, value);
-    saveConfig();
-}
-
-#ifdef ESP8266
-void setLedStatus(LedStatus_t status) {
-    pinMode(LED_PIN, OUTPUT);
-    switch (status) {
-        case LED_OFF:
-            noTone(LED_PIN);
-            digitalWrite(LED_PIN, HIGH);
-            break;
-        case LED_ON:
-            noTone(LED_PIN);
-            digitalWrite(LED_PIN, LOW);
-            break;
-        case LED_SLOW:
-            tone(LED_PIN, 1);
-            break;
-        case LED_FAST:
-            tone(LED_PIN, 20);
-            break;
-        default:
-            break;
-    }
-}
-#else
-void setLedStatus(LedStatus_t status) {
-    pinMode(LED_PIN, OUTPUT);
-    switch (status) {
-        case LED_OFF:
-            digitalWrite(LED_PIN, HIGH);
-            break;
-        case LED_ON:
-            digitalWrite(LED_PIN, LOW);
-            break;
-        case LED_SLOW:
-            break;
-        case LED_FAST:
-            break;
-        default:
-            break;
-    }
-}
-#endif
 
 void clock_init() {
     timeNow = new Clock();
@@ -207,14 +126,4 @@ void clock_init() {
             timeNow->hasSync();
         },
         nullptr, true);
-}
-
-void do_scan_bus() {
-    if (busScanFlag) {
-        String res = "";
-        BusScanner* scanner = BusScannerFactory::get(configSetupJson, busToScan, res);
-        scanner->scan();
-        jsonWriteStr(configLiveJson, String(scanner->tag()), res);
-        busScanFlag = false;
-    }
 }

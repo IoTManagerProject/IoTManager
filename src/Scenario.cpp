@@ -1,88 +1,81 @@
-#include "Global.h"
 #include "Cmd.h"
+#include "Global.h"
+#include "Class/ScenarioClass.h"
 
-static const char* MODULE = "Scen";
+
 
 boolean isScenarioEnabled() {
-    return jsonReadBool(configSetupJson, "scen") && jsonReadStr(configOptionJson, "scenario_status") != "";
+    return jsonReadBool(configSetupJson, "scen") && eventBuf != "";
 }
 
 void loopScenario() {
     if (!isScenarioEnabled()) {
         return;
     }
-    String str = scenario;
-    str += "\n";
-    str.replace("\r\n", "\n");
-    str.replace("\r", "\n");
+    String scenarioTmp = scenario;
+    scenarioTmp += "\n";
+    scenarioTmp.replace("\r\n", "\n");
+    scenarioTmp.replace("\r", "\n");
 
-    size_t i = 0;
-    while (str.length()) {
-        String block = selectToMarker(str, "end");
-        if (!block.length()) {
+    while (scenarioTmp.length()) {
+        String scenBlok = selectToMarker(scenarioTmp, "end");  //выделяем первый сценарий
+        if (!scenBlok.length()) {
             return;
         }
+
+        size_t i = 0;
         i++;
         if (scenario_line_status[i] == 1) {
-            //выделяем первую строку самого сценария  button1 = 1 (условие)
-            String condition = selectToMarker(block, "\n");
-            String param_name = selectFromMarkerToMarker(condition, " ", 0);
-            String order = jsonReadStr(configOptionJson, "scenario_status");  //читаем весь файл событий
-            String param = selectToMarker(order, ",");                        //читаем первое событие из файла событий
-            if (param_name == param) {                                        //если поступившее событие равно событию заданному buttonSet1 в файле начинаем его обработку
-                String sign = selectFromMarkerToMarker(condition, " ", 1);    //читаем знак  (=)
-                String value = selectFromMarkerToMarker(condition, " ", 2);   //читаем значение (1)
-                if (value.indexOf("digit") != -1) {
-                    //  value = add_set(value);
-                    value = jsonReadStr(configLiveJson, value);
-                }
-                if (value.indexOf("time") != -1) {
-                    //  value = add_set(value);
-                    value = jsonReadStr(configLiveJson, value);
-                }
-                // если условие выполнилось, тогда начинаем выполнять комнады
+            String condition = selectToMarker(scenBlok, "\n");  //выделяем условие
+
+            String conditionParam = selectFromMarkerToMarker(condition, " ", 0);  //выделяем параметр условия
+            String order = eventBuf;
+            String eventParam = selectToMarker(order, ",");  //выделяем параметр события
+
+            if (conditionParam == eventParam) {  //если поступившее событие равно событию заданному buttonSet1 в файле начинаем его обработку
+
+                String conditionSign = selectFromMarkerToMarker(condition, " ", 1);  //выделяем знак  (=)
+
+                String conditionValue = selectFromMarkerToMarker(condition, " ", 2);  //выделяем значение (1)
+
                 boolean flag = false;
-                String param = jsonReadStr(configLiveJson, param_name);
-                if (sign == "=") {
-                    flag = param == value;
-                } else if (sign == "!=") {
-                    flag = param != value;
-                } else if (sign == "<") {
-                    flag = param.toInt() < value.toInt();
-                } else if (sign == ">") {
-                    flag = param.toInt() > value.toInt();
-                } else if (sign == ">=") {
-                    flag = param.toInt() >= value.toInt();
-                } else if (sign == "<=") {
-                    flag = param.toInt() <= value.toInt();
+
+                String eventParam = jsonReadStr(configLiveJson, conditionParam);  //получаем значение этого параметра события из json
+
+                if (conditionSign == "=") {
+                    flag = eventParam == conditionValue;
+                } else if (conditionSign == "!=") {
+                    flag = eventParam != conditionValue;
+                } else if (conditionSign == "<") {
+                    flag = eventParam.toInt() < conditionValue.toInt();
+                } else if (conditionSign == ">") {
+                    flag = eventParam.toInt() > conditionValue.toInt();
+                } else if (conditionSign == ">=") {
+                    flag = eventParam.toInt() >= conditionValue.toInt();
+                } else if (conditionSign == "<=") {
+                    flag = eventParam.toInt() <= conditionValue.toInt();
                 }
 
                 if (flag) {
-                    // удаляем строку самого сценария оставляя только команды
-                    block = deleteBeforeDelimiter(block, "\n");
-                    pm.info("do: " + block);
-                    // выполняем все команды
-                    stringExecute(block);
+                    scenBlok = deleteBeforeDelimiter(scenBlok, "\n");  // удаляем строку самого сценария оставляя только команды
+                    SerialPrint("I","module","do: " + scenBlok);
+                    spaceCmdExecute(scenBlok);  // выполняем все команды
                 }
             }
         }
-        str = deleteBeforeDelimiter(str, "end\n");  //удаляем первый сценарий
-                                                    //-----------------------------------------------------------------------------------------------------------------------
+        scenarioTmp = deleteBeforeDelimiter(scenarioTmp, "end\n");  //удаляем первый сценарий
     }
-    String tmp2 = jsonReadStr(configOptionJson, "scenario_status");  //читаем файл событий
-    tmp2 = deleteBeforeDelimiter(tmp2, ",");                         //удаляем выполненное событие
-    jsonWriteStr(configOptionJson, "scenario_status", tmp2);         //записываем обновленный файл событий
+
+    String eventBufTmp = eventBuf;                          //читаем файл событий
+    eventBufTmp = deleteBeforeDelimiter(eventBufTmp, ",");  //удаляем выполненное событие
+    eventBuf = eventBufTmp;                                 //записываем обновленный файл событий
 }
 
-// событие: имя + Set + номер
-// button+Set+1
 void eventGen(String event_name, String number) {
     if (!jsonReadBool(configSetupJson, "scen")) {
         return;
     }
-    // генерирование события
-    String tmp = jsonReadStr(configOptionJson, "scenario_status");
-    jsonWriteStr(configOptionJson, "scenario_status", tmp + event_name + number + ",");
+    eventBuf = event_name + number + ",";
 }
 
 String add_set(String str) {
@@ -97,3 +90,8 @@ String add_set(String str) {
     }
     return str;
 }
+
+//button-out1 = 1
+//button-out2 1
+//button-out3 1
+//end

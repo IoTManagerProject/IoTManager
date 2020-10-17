@@ -8,4 +8,3 @@ extern void Device_init();
 extern void prsets_init();
 extern void handle_uptime();
 extern void handle_statistics();
-extern void telemetry_init();
