@@ -167,58 +167,73 @@ bool FSEditor::canHandle(AsyncWebServerRequest *request) {
     return false;
 }
 
+#ifdef ESP8266
+void FSEditor::getDirList(const String &path, String &output) {
+    auto dir = _fs.openDir(path.c_str());
+    while (dir.next()) {
+        String fname = dir.fileName();
+        if (!path.endsWith("/") && !fname.startsWith("/")) {
+            fname = "/" + fname;
+        }
+        fname = path + fname;
+        if (isExcluded(_fs, fname.c_str())) {
+            continue;
+        }
+        if (dir.isDirectory()) {
+            getDirList(fname, output);
+            continue;
+        }
+        if (output != "[") output += ',';
+        char buf[128];
+        sprintf(buf, "{\"type\":\"file\",\"name\":\"%s\",\"size\":%d}", fname.c_str(), dir.fileSize());
+        output += buf;
+    }
+}
+#else
+void FSEditor::getDirList(const String &path, String &output) {
+    auto dir = _fs.open(path, FILE_READ);
+    dir.rewindDirectory();
+    while (dir.openNextFile()) {
+        String fname = dir.name();
+        if (!path.endsWith("/") && !fname.startsWith("/")) {
+            fname = "/" + fname;
+        }
+        fname = path + fname;
+        if (isExcluded(_fs, fname.c_str())) {
+            continue;
+        }
+        if (dir.isDirectory()) {
+            getDirList(fname, output);
+            continue;
+        }
+        if (output != "[") output += ',';
+        char buf[128];
+        sprintf(buf, "{\"type\":\"file\",\"name\":\"%s\",\"size\":%d}", fname.c_str(), dir.size());
+        output += buf;
+    }
+}
+#endif
+
 void FSEditor::handleRequest(AsyncWebServerRequest *request) {
     if (_username.length() && _password.length() && !request->authenticate(_username.c_str(), _password.c_str()))
         return request->requestAuthentication();
 
     if (request->method() == HTTP_GET) {
         if (request->hasParam("list")) {
-            String path = request->getParam("list")->value();
-#ifdef ESP32
-            File dir = _fs.open(path);
-#else
-            fs::Dir dir = _fs.openDir(path);
-#endif
-            path = String();
-            String output = "[";
-#ifdef ESP32
-            File entry = dir.openNextFile();
-            while (entry) {
-#else
-            while (dir.next()) {
-                fs::File entry = dir.openFile("r");
-#endif
-                String fname = entry.fullName();
-                if (fname.charAt(0) != '/') fname = "/" + fname;
-
-                if (isExcluded(_fs, fname.c_str())) {
-#ifdef ESP32
-                    entry = dir.openNextFile();
-#endif
-                    continue;
-                }
-                if (output != "[") output += ',';
-                output += "{\"type\":\"";
-                output += "file";
-                output += "\",\"name\":\"";
-                output += String(fname);
-                output += "\",\"size\":";
-                output += String(entry.size());
-                output += "}";
-#ifdef ESP32
-                entry = dir.openNextFile();
-#else
-                entry.close();
-#endif
+            if (request->hasParam("list")) {
+                String path = request->getParam("list")->value();
+                String output = "[";
+                getDirList(path, output);
+                output += "]";
+                request->send(200, "application/json", output);
+                output = String();
             }
-#ifdef ESP32
-            dir.close();
-#endif
-            output += "]";
-            request->send(200, "application/json", output);
-            output = String();
         } else if (request->hasParam("edit") || request->hasParam("download")) {
+#ifdef ESP8266
             request->send(request->_tempFile, request->_tempFile.fullName(), String(), request->hasParam("download"));
+#else
+            request->send(request->_tempFile, request->_tempFile.name(), String(), request->hasParam("download"));
+#endif
         } else {
             const char *buildTime = __DATE__ " " __TIME__ " GMT";
             if (request->header("If-Modified-Since").equals(buildTime)) {
