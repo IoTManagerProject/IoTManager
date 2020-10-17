@@ -25,7 +25,7 @@
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
 //#define UDP_ENABLED
-//#define SSDP_EN
+#define SSDP_EN
 
 //=========Sensors enable/disable===========
 #define TANK_LEVEL_SAMPLES 10
@@ -44,7 +44,6 @@
 #define LOGGING_ENABLED
 #define SERIAL_ENABLED
 #define PUSH_ENABLED
-
 
 struct Time_t {
     uint8_t second;

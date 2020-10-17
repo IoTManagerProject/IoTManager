@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+#include "Consts.h"
+
 #ifdef SSDP_EN
 extern void SsdpInit();
 extern String xmlNode(String tags, String data);
