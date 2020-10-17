@@ -33,7 +33,7 @@ void SsdpInit() {
         ssdpDescription += xmlNode(F("modelURL"), F("https://github.com/IoTManagerProject/IoTManager/wiki"));
         ssdpDescription += xmlNode(F("manufacturer"), F("Borisenko Dmitry"));
         ssdpDescription += xmlNode(F("manufacturerURL"), F("https://github.com/IoTManagerProject/IoTManager"));
-        ssdpDescription += xmlNode(F("UDN"), "uuid:38323636-4558-4dda-9188-cda0e6" + decToHex(ESP.getChipId(), 6));
+        ssdpDescription += xmlNode(F("UDN"), "uuid:38323636-4558-4dda-9188-cda0e6" + decToHex(ESP_getChipId(), 6));
         ssdpDescription = xmlNode("device", ssdpDescription);
         ssdpHeder += ssdpDescription;
         ssdpSend += ssdpHeder;
