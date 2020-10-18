@@ -1,6 +1,6 @@
 #include "Web.h"
 
-#include "Class/NotAsinc.h"
+#include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
@@ -23,7 +23,7 @@ void web_init() {
         }
 
         if (request->hasArg("delChoosingItems")) {
-            myNotAsincActions->make(do_delChoosingItems);
+            myNotAsyncActions->make(do_delChoosingItems);
             request->send(200);
         }
 
@@ -33,7 +33,7 @@ void web_init() {
         }
 
         if (request->hasArg("saveItems")) {
-            myNotAsincActions->make(do_deviceInit);
+            myNotAsyncActions->make(do_deviceInit);
             request->send(200);
         }
 
@@ -142,37 +142,37 @@ void web_init() {
         if (request->hasArg("mqttServer")) {
             jsonWriteStr(configSetupJson, "mqttServer", request->getParam("mqttServer")->value());
             saveConfig();
-            myNotAsincActions->make(do_MQTTPARAMSCHANGED);
+            myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
         if (request->hasArg("mqttPort")) {
             int port = (request->getParam("mqttPort")->value()).toInt();
             jsonWriteInt(configSetupJson, "mqttPort", port);
             saveConfig();
-            myNotAsincActions->make(do_MQTTPARAMSCHANGED);
+            myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
         if (request->hasArg("mqttPrefix")) {
             jsonWriteStr(configSetupJson, "mqttPrefix", request->getParam("mqttPrefix")->value());
             saveConfig();
-            myNotAsincActions->make(do_MQTTPARAMSCHANGED);
+            myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
         if (request->hasArg("mqttUser")) {
             jsonWriteStr(configSetupJson, "mqttUser", request->getParam("mqttUser")->value());
             saveConfig();
-            myNotAsincActions->make(do_MQTTPARAMSCHANGED);
+            myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
         if (request->hasArg("mqttPass")) {
             jsonWriteStr(configSetupJson, "mqttPass", request->getParam("mqttPass")->value());
             saveConfig();
-            myNotAsincActions->make(do_MQTTPARAMSCHANGED);
+            myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
 
         if (request->hasArg("mqttsend")) {
-            myNotAsincActions->make(do_MQTTUDP);
+            myNotAsyncActions->make(do_MQTTUDP);
             request->send(200);
         }
 
@@ -197,7 +197,7 @@ void web_init() {
 
         //==============================utilities settings=============================================
         if (request->hasArg("i2c")) {
-            myNotAsincActions->make(do_BUSSCAN);
+            myNotAsyncActions->make(do_BUSSCAN);
             request->redirect("/?set.utilities");
         }
     });
@@ -219,7 +219,7 @@ void web_init() {
     * Check
     */
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
-        myNotAsincActions->make(do_GETLASTVERSION);
+        myNotAsyncActions->make(do_GETLASTVERSION);
         SerialPrint("I", "Update", "firmware version: " + String(lastVersion));
 
         String msg = "";
@@ -251,7 +251,7 @@ void web_init() {
     * Upgrade
     */
     server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest* request) {
-        myNotAsincActions->make(do_UPGRADE);
+        myNotAsyncActions->make(do_UPGRADE);
         request->send(200, "text/html");
     });
 }

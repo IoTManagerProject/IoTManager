@@ -13,13 +13,13 @@
 #include "Clock.h"
 
 #include "MqttClient.h"
-#include "Utils\FileUtils.h"
-#include "Utils\JsonUtils.h"
-#include "Utils\StringUtils.h"
-#include "Utils\SysUtils.h"
-#include "Utils\PrintMessage.h"
-#include "Utils\WiFiUtils.h"
-#include "Utils\SerialPrint.h"
+#include "Utils/FileUtils.h"
+#include "Utils/JsonUtils.h"
+#include "Utils/StringUtils.h"
+#include "Utils/SysUtils.h"
+#include "Utils/PrintMessage.h"
+#include "Utils/WiFiUtils.h"
+#include "Utils/SerialPrint.h"
 
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>

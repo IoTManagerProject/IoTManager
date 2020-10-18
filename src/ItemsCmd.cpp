@@ -1,7 +1,7 @@
 #include "ItemsCmd.h"
 
 #include "BufferExecute.h"
-#include "Class/NotAsinc.h"
+#include "Class/NotAsync.h"
 #include "Cmd.h"
 #include "Global.h"
 #include "Module/Terminal.h"
@@ -313,7 +313,7 @@ void cmd_init() {
 //}
 //
 //void firmwareUpdate() {
-//    myNotAsincActions->make(do_UPGRADE);
+//    myNotAsyncActions->make(do_UPGRADE);
 //}
 //
 //void firmwareVersion() {

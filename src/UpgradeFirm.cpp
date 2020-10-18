@@ -1,6 +1,6 @@
 #include "Upgrade.h"
 
-#include "Class/NotAsinc.h"
+#include "Class/NotAsync.h"
 #ifdef ESP8266
 #include "ESP8266.h"
 #else
@@ -10,13 +10,13 @@
 #include "Global.h"
 
 void upgradeInit() {
-    myNotAsincActions->add(
+    myNotAsyncActions->add(
         do_UPGRADE, [&](void*) {
             upgrade_firmware(3);
         },
         nullptr);
 
-    myNotAsincActions->add(
+    myNotAsyncActions->add(
         do_GETLASTVERSION, [&](void*) {
             getLastVersion();
         },

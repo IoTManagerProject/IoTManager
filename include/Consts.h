@@ -96,7 +96,7 @@ enum TimerTask_t { WIFI_SCAN,
                    UDP_DB,
                    TEST };
 
-enum notAsincActions {
+enum NotAsyncActions {
     do_ZERO,
     do_UPGRADE,
     do_GETLASTVERSION,

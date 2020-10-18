@@ -2,7 +2,7 @@
 
 #include <LittleFS.h>
 
-#include "Class/NotAsinc.h"
+#include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
 
@@ -10,7 +10,7 @@ String mqttPrefix;
 String mqttRootDevice;
 
 void mqttInit() {
-    myNotAsincActions->add(
+    myNotAsyncActions->add(
         do_MQTTPARAMSCHANGED, [&](void*) {
             mqttReconnect();
         },
@@ -133,7 +133,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
 
     } else if (topicStr.indexOf("update")) {
         if (payloadStr == "1") {
-            myNotAsincActions->make(do_UPGRADE);
+            myNotAsyncActions->make(do_UPGRADE);
         }
 
     } else if (topicStr.indexOf("devc")) {

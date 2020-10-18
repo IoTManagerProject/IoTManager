@@ -1,4 +1,4 @@
-#include "Utils\WebUtils.h"
+#include "Utils/WebUtils.h"
 #include "ESPAsyncWebServer.h"
 
 String getURL(const String& urls) {
@@ -14,8 +14,6 @@ String getURL(const String& urls) {
     http.end();
     return res;
 }
-
-
 
 
 
