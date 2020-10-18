@@ -2,6 +2,10 @@
 #include "FS.h"
 #include <LITTLEFS.h>
 
+#ifndef CONFIG_LITTLEFS_FOR_IDF_3_2
+ #include <time.h>
+#endif
+
 /* You only need to format LITTLEFS the first time you run a
    test or else use the LITTLEFS plugin to create a partition
    https://github.com/lorol/arduino-esp32littlefs-plugin */
@@ -25,15 +29,32 @@ void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
     while(file){
         if(file.isDirectory()){
             Serial.print("  DIR : ");
+
+#ifdef CONFIG_LITTLEFS_FOR_IDF_3_2
             Serial.println(file.name());
+#else
+            Serial.print(file.name());
+            time_t t= file.getLastWrite();
+            struct tm * tmstruct = localtime(&t);
+            Serial.printf("  LAST WRITE: %d-%02d-%02d %02d:%02d:%02d\n",(tmstruct->tm_year)+1900,( tmstruct->tm_mon)+1, tmstruct->tm_mday,tmstruct->tm_hour , tmstruct->tm_min, tmstruct->tm_sec);
+#endif
+
             if(levels){
                 listDir(fs, file.name(), levels -1);
             }
         } else {
             Serial.print("  FILE: ");
             Serial.print(file.name());
-            Serial.print("\tSIZE: ");
+            Serial.print("  SIZE: ");
+
+#ifdef CONFIG_LITTLEFS_FOR_IDF_3_2
             Serial.println(file.size());
+#else
+            Serial.print(file.size());
+            time_t t= file.getLastWrite();
+            struct tm * tmstruct = localtime(&t);
+            Serial.printf("  LAST WRITE: %d-%02d-%02d %02d:%02d:%02d\n",(tmstruct->tm_year)+1900,( tmstruct->tm_mon)+1, tmstruct->tm_mday,tmstruct->tm_hour , tmstruct->tm_min, tmstruct->tm_sec);
+#endif
         }
         file = root.openNextFile();
     }
@@ -243,18 +264,18 @@ void setup(){
         Serial.println("LITTLEFS Mount Failed");
         return;
     }
-    Serial.println( "SPIFFS-like write file to new path and delete it w/folders" );
-    writeFile2(LITTLEFS, "/new1/new2/new3/hello3.txt", "Hello3");
-    listDir(LITTLEFS, "/", 3);
-    deleteFile2(LITTLEFS, "/new1/new2/new3/hello3.txt");
     
-    listDir(LITTLEFS, "/", 3);
+    listDir(LITTLEFS, "/", 0);
 	createDir(LITTLEFS, "/mydir");
 	writeFile(LITTLEFS, "/mydir/hello2.txt", "Hello2");
-	listDir(LITTLEFS, "/", 1);
+  //writeFile(LITTLEFS, "/mydir/newdir2/newdir3/hello3.txt", "Hello3");
+    writeFile2(LITTLEFS, "/mydir/newdir2/newdir3/hello3.txt", "Hello3");
+	listDir(LITTLEFS, "/", 3);
 	deleteFile(LITTLEFS, "/mydir/hello2.txt");
+  //deleteFile(LITTLEFS, "/mydir/newdir2/newdir3/hello3.txt");
+    deleteFile2(LITTLEFS, "/mydir/newdir2/newdir3/hello3.txt");
 	removeDir(LITTLEFS, "/mydir");
-	listDir(LITTLEFS, "/", 1);
+	listDir(LITTLEFS, "/", 3);
     writeFile(LITTLEFS, "/hello.txt", "Hello ");
     appendFile(LITTLEFS, "/hello.txt", "World!\r\n");
     readFile(LITTLEFS, "/hello.txt");

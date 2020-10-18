@@ -3,7 +3,9 @@
 //
 // Firmware
 //
+
 #define FIRMWARE_NAME "esp8266-iotm"
+
 #define FIRMWARE_VERSION 258
 #define FLASH_4MB true
 
