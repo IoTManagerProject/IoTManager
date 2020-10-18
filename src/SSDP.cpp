@@ -1,15 +1,19 @@
-
 #include "SSDP.h"
 
 #include "Global.h"
 
-#ifdef SSDP_EN
+#ifdef SSDP_ENABLED
 #ifdef ESP8266
 #include <ESP8266SSDP.h>
 #endif
 #ifdef ESP32
 #include <ESP32SSDP.h>
 #endif
+
+String xmlNode(String tags, String data);
+
+String decToHex(uint32_t decValue, byte desiredStringLength);
+
 //39164
 //457684
 void SsdpInit() {

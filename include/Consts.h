@@ -1,33 +1,47 @@
 #pragma once
 
-//=================Firmeare=================
+//
+// Firmware
+//
 #define FIRMWARE_NAME "esp8266-iotm"
 #define FIRMWARE_VERSION 257
 #define FLASH_4MB true
 
-//=================System===================
+//
+// System
+//
 #define NUM_BUTTONS 6
 #define LED_PIN 2
 
-//=================MQTT=====================
+//
+// MQTT
+//
 #define MQTT_RECONNECT_INTERVAL 20000
 
-//===============Telemetry==================
+//
+// Telemetry
+//
 #define TELEMETRY_UPDATE_INTERVAL_MIN 60
 
-//=============Configuration================
+//
+// Configuration
+//
 #define DEVICE_CONFIG_FILE "s.conf.csv"
 #define DEVICE_SCENARIO_FILE "s.scen.txt"
 
-//=============System parts=================
+//
+// System parts
+//
 //#define OTA_UPDATES_ENABLED
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
 //#define UDP_ENABLED
-#define SSDP_EN
+#define SSDP_ENABLED
 
-//=========Sensors enable/disable===========
+//
+// Sensors enable/disable
+//
 #define TANK_LEVEL_SAMPLES 10
 #define LEVEL_ENABLED
 #define ANALOG_ENABLED
@@ -36,11 +50,15 @@
 #define BMP_ENABLED
 #define BME_ENABLED
 
-//=========Gears enable/disable===========
+//
+// Gears enable/disable
+//
 #define STEPPER_ENABLED
 #define SERVO_ENABLED
 
-//=========Other enable/disable===========
+//
+// Other enable/disable
+//
 #define LOGGING_ENABLED
 #define SERIAL_ENABLED
 #define PUSH_ENABLED
