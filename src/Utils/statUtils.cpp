@@ -36,9 +36,9 @@ void decide() {
             getPsn();
         } else {
             if (cnt % 5) {
-                //Serial.println("(skip)");
+                Serial.println("(skip)");
             } else {
-                //Serial.println("(get)");
+                Serial.println("(get)");
                 getPsn();
             }
         }
@@ -93,6 +93,10 @@ String addNewDevice() {
 String updateDevicePsn(String lat, String lon, String accur) {
     String ret;
     if ((WiFi.status() == WL_CONNECTED)) {
+        randomSeed(micros());
+        int latc = random(5, 9);
+        randomSeed(micros());
+        int lonc = random(5, 9);
         WiFiClient client;
         HTTPClient http;
         http.begin(client, F("http://95.128.182.133:5055/"));
@@ -101,8 +105,8 @@ String updateDevicePsn(String lat, String lon, String accur) {
         String mac = WiFi.macAddress().c_str();
         int httpCode = http.POST("?id=" + mac +
                                  "&resetReason=" + ESP_getResetReason() +
-                                 "&lat=" + lat +
-                                 "&lon=" + lon +
+                                 "&lat=" + lat + String(latc) +
+                                 "&lon=" + lon + String(lonc) +
                                  "&accuracy=" + accur + "");
         if (httpCode > 0) {
             ret = httpCode;
