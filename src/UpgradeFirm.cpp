@@ -92,7 +92,7 @@ bool upgradeFS() {
     t_httpUpdate_return retFS = ESPhttpUpdate.updateSpiffs(wifiClient, F("http://95.128.182.133/projects/iotmanager/esp8266/littlefs/littlefs.bin"));
 #else
     httpUpdate.rebootOnUpdate(false);
-    HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, F("http://95.128.182.133/projects/iotmanager/esp32/littlefs/littlefs.bin"));
+    HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, F("http://95.128.182.133/projects/iotmanager/esp32/littlefs/spiffs.bin"));
 #endif
     if (retFS == HTTP_UPDATE_OK) {  //если FS обновилась успешно
         SerialPrint("I", "Update", "LittleFS upgrade done!");
