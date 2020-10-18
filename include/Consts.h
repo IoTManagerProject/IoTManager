@@ -3,8 +3,12 @@
 //
 // Firmware
 //
-
+#ifdef ESP8266
 #define FIRMWARE_NAME "esp8266-iotm"
+#endif
+#ifdef ESP32
+#define FIRMWARE_NAME "esp32-iotm"
+#endif
 
 #define FIRMWARE_VERSION 258
 #define FLASH_4MB true
@@ -39,7 +43,7 @@
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
 //#define UDP_ENABLED
-//#define SSDP_ENABLED
+#define SSDP_ENABLED
 
 //
 // Sensors enable/disable

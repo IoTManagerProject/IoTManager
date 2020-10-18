@@ -80,10 +80,12 @@ void setup() {
     SerialPrint("I", "Bus", "Bus Init");
     busInit();
 
-#ifdef SSDP_EN
+#ifdef SSDP_ENABLED
     SerialPrint("I", "SSDP", "Ssdp Init");
     SsdpInit();
 #endif
+
+    //esp_log_level_set("esp_littlefs", ESP_LOG_NONE);
 
     ts.add(
         TEST, 1000 * 60, [&](void*) {
