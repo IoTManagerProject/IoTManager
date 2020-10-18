@@ -1,19 +1,19 @@
 #include "ItemsList.h"
 
-#include "Class\NotAsinc.h"
+#include "Class/NotAsync.h"
 #include "Init.h"
-#include "Utils\StringUtils.h"
+#include "Utils/StringUtils.h"
 
 static const char* firstLine PROGMEM = "Удалить;Тип элемента;Id;Виджет;Имя вкладки;Имя виджета;Позиция виджета";
 
 void itemsListInit() {
-    myNotAsincActions->add(
+    myNotAsyncActions->add(
         do_deviceInit, [&](void*) {
             Device_init();
         },
         nullptr);
 
-    myNotAsincActions->add(
+    myNotAsyncActions->add(
         do_delChoosingItems, [&](void*) {
             delChoosingItems();
         },

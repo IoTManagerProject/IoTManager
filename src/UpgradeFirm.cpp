@@ -1,17 +1,22 @@
-#include "UpgradeFirm.h"
+#include "Upgrade.h"
 
-#include "Class/NotAsinc.h"
+#include "Class/NotAsync.h"
+#ifdef ESP8266
 #include "ESP8266.h"
+#else
+#include <HTTPUpdate.h>
+#endif
+
 #include "Global.h"
 
 void upgradeInit() {
-    myNotAsincActions->add(
+    myNotAsyncActions->add(
         do_UPGRADE, [&](void*) {
             upgrade_firmware(3);
         },
         nullptr);
 
-    myNotAsincActions->add(
+    myNotAsyncActions->add(
         do_GETLASTVERSION, [&](void*) {
             getLastVersion();
         },
@@ -78,8 +83,13 @@ bool upgradeFS() {
     WiFiClient wifiClient;
     bool ret = false;
     Serial.println("Start upgrade LittleFS, please wait...");
+#ifdef ESP8266
     ESPhttpUpdate.rebootOnUpdate(false);
     t_httpUpdate_return retFS = ESPhttpUpdate.updateSpiffs(wifiClient, F("http://95.128.182.133/projects/iotmanager/esp8266/littlefs/littlefs.bin"));
+#else
+    httpUpdate.rebootOnUpdate(false);
+    HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, F("http://95.128.182.133/projects/iotmanager/esp8266/littlefs/littlefs.bin"));
+#endif
     if (retFS == HTTP_UPDATE_OK) {  //если FS обновилась успешно
         SerialPrint("I", "Update", "LittleFS upgrade done!");
         ret = true;
@@ -91,8 +101,15 @@ bool upgradeBuild() {
     WiFiClient wifiClient;
     bool ret = false;
     Serial.println("Start upgrade BUILD, please wait...");
+
+#ifdef ESP8266
     ESPhttpUpdate.rebootOnUpdate(false);
     t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, F("http://95.128.182.133/projects/iotmanager/esp8266/firmware/firmware.bin"));
+#else
+    httpUpdate.rebootOnUpdate(false);
+    HTTPUpdateResult retBuild = httpUpdate.update(wifiClient, F("http://95.128.182.133/projects/iotmanager/esp8266/firmware/firmware.bin"));
+#endif
+
     if (retBuild == HTTP_UPDATE_OK) {  //если BUILD обновился успешно
         SerialPrint("I", "Update", "BUILD upgrade done!");
         ret = true;

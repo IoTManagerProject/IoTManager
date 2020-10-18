@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-String getErrorLevelStr(ErrorLevel_t level);
+#include "Utils/StringUtils.h"
 
 class Error : public Printable {
    public:
@@ -37,7 +37,7 @@ class Error : public Printable {
 
     const String toString() const {
         char buf[128];
-        sprintf(buf, "[%s] %s", getErrorLevelStr(_level).c_str(), _message);
+        sprintf(buf, "[%c] %s", getErrorLevelStr(_level), _message);
         return String(buf);
     }
 

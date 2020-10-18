@@ -3,7 +3,7 @@
 
 #include "BufferExecute.h"
 #include "Class/CallBackTest.h"
-#include "Class/NotAsinc.h"
+#include "Class/NotAsync.h"
 #include "Class/ScenarioClass.h"
 #include "Cmd.h"
 #include "Global.h"
@@ -11,7 +11,7 @@
 #include "ItemsList.h"
 #include "Utils/StatUtils.h"
 #include "Utils/Timings.h"
-#include "Utils\WebUtils.h"
+#include "Utils/WebUtils.h"
 #include "items/ButtonInClass.h"
 //#include "RemoteOrdersUdp.h"
 #include "Bus.h"
@@ -32,7 +32,7 @@ void setup() {
 
     setChipId();
 
-    myNotAsincActions = new NotAsinc(do_LAST);
+    myNotAsyncActions = new NotAsync(do_LAST);
     myScenario = new Scenario();
 
     SerialPrint("I", "FS", "FS Init");
@@ -112,7 +112,7 @@ void loop() {
     loopCmdExecute();
     //loopSerial();
 
-    myNotAsincActions->loop();
+    myNotAsyncActions->loop();
     ts.update();
 }
 

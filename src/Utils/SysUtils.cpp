@@ -3,28 +3,39 @@
 #include "Global.h"
 #include "Utils/PrintMessage.h"
 
-
 const String getUniqueId(const char* name) {
     return String(name) + getMacAddress();
 }
 
-const String getChipId() {
-    String res;
+uint32_t ESP_getChipId(void) {
 #ifdef ESP32
-    char buf[32] = {0};
-    uint32_t mac = ESP.getEfuseMac();
-    sprintf(buf, "%0X", mac);
-    res = String(buf);
+    uint32_t id = 0;
+    for (uint32_t i = 0; i < 17; i = i + 8) {
+        id |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
+    }
+    return id;
+#else
+    return ESP.getChipId();
 #endif
-#ifdef ESP8266
-    res = String(ESP.getChipId()) + "-" + String(ESP.getFlashChipId());
+}
+
+uint32_t ESP_getFlashChipId(void) {
+#ifdef ESP32
+    // Нет аналогичной (без доп.кода) функций в 32
+    // надо использовать другой id - варианты есть
+    return ESP_getChipId();
+#else
+    return ESP.getFlashChipId();
 #endif
-    return res;
+}
+
+const String getChipId() {
+    return String(ESP_getChipId()) + "-" + String(ESP_getFlashChipId());
 }
 
 void setChipId() {
     chipId = getChipId();
-    SerialPrint("I","System","id: " + chipId);
+    SerialPrint("I", "System", "id: " + chipId);
 }
 
 #ifdef ESP8266

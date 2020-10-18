@@ -1,13 +1,19 @@
+#include "SSDP.h"
 
-#include <SSDP.h>
 #include "Global.h"
-#ifdef SSDP_EN
+
+#ifdef SSDP_ENABLED
 #ifdef ESP8266
-        #include <ESP8266SSDP.h>
+#include <ESP8266SSDP.h>
 #endif
 #ifdef ESP32
-        #include <ESP32SSDP.h>
+#include <ESP32SSDP.h>
 #endif
+
+String xmlNode(String tags, String data);
+
+String decToHex(uint32_t decValue, byte desiredStringLength);
+
 //39164
 //457684
 void SsdpInit() {
@@ -31,7 +37,7 @@ void SsdpInit() {
         ssdpDescription += xmlNode(F("modelURL"), F("https://github.com/IoTManagerProject/IoTManager/wiki"));
         ssdpDescription += xmlNode(F("manufacturer"), F("Borisenko Dmitry"));
         ssdpDescription += xmlNode(F("manufacturerURL"), F("https://github.com/IoTManagerProject/IoTManager"));
-        ssdpDescription += xmlNode(F("UDN"), "uuid:38323636-4558-4dda-9188-cda0e6" + decToHex(ESP.getChipId(), 6));
+        ssdpDescription += xmlNode(F("UDN"), "uuid:38323636-4558-4dda-9188-cda0e6" + decToHex(ESP_getChipId(), 6));
         ssdpDescription = xmlNode("device", ssdpDescription);
         ssdpHeder += ssdpDescription;
         ssdpSend += ssdpHeder;

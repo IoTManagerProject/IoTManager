@@ -1,9 +1,9 @@
 #include "Bus.h"
-#include "Class/NotAsinc.h"
+#include "Class/NotAsync.h"
 #include "Global.h"
 
 void busInit() {
-    myNotAsincActions->add(
+    myNotAsyncActions->add(
         do_BUSSCAN, [&](void*) {
             String tmp = i2c_scan();
             if (tmp == "error") {

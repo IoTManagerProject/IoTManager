@@ -1,4 +1,4 @@
-#include "Utils\StringUtils.h"
+#include "Utils/StringUtils.h"
 #include "Consts.h"
 
 String selectToMarkerLast(String str, String found) {
@@ -111,26 +111,16 @@ String prettyBytes(size_t size) {
         return String(size / 1024.0 / 1024.0 / 1024.0) + "GB";
 }
 
-static const char *str_info = "I";
-static const char *str_warn = "W";
-static const char *str_error = "E";
-static const char *str_unknown = "?";
-
-String getErrorLevelStr(ErrorLevel_t level) {
-    const char *ptr;
+const char getErrorLevelStr(uint8_t level) {
     switch (level) {
         case EL_INFO:
-            ptr = str_info;
-            break;
+            return 'I';
         case EL_WARNING:
-            ptr = str_warn;
-            break;
+            return 'W';
         case EL_ERROR:
-            ptr = str_error;
-            break;
+            return 'E';
         default:
-            ptr = str_unknown;
             break;
     }
-    return String(ptr);
+    return '?';
 }

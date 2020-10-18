@@ -1,8 +1,9 @@
 #pragma once
-#include "Global.h"
+
 #include <Arduino.h>
-#ifdef SSDP_EN
-extern void SsdpInit();
-extern String xmlNode(String tags, String data);
-extern String decToHex(uint32_t decValue, byte desiredStringLength);
+
+#include "Consts.h"
+
+#ifdef SSDP_ENABLED
+void SsdpInit();
 #endif
