@@ -10,7 +10,7 @@
 #define FIRMWARE_NAME "esp32-iotm"
 #endif
 
-#define FIRMWARE_VERSION 258
+#define FIRMWARE_VERSION 259
 #define FLASH_4MB true
 
 //
