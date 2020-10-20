@@ -28,8 +28,7 @@
       "type": "input",
       "title": "{{SetWiFiNameOfDev}}",
       "name": "devname-arg",
-      "state": "{{name}}",
-      "pattern": "[A-Za-z0-9]{6,12}"
+      "state": "{{name}}"
     },
     {
       "type": "button",
