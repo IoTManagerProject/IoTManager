@@ -57,7 +57,7 @@
 //            //eventGen(dhtT_value_name, "");
 //            //jsonWriteStr(configLiveJson, dhtT_value_name, String(value));
 //            // publishStatus(dhtT_value_name, String(value));
-//            //Serial.println("I sensor '" + dhtT_value_name + "' data: " + String(value));
+//            //SerialPrint("I", "Sensor", "'" + dhtT_value_name + "' data: " + String(value));
 //        }
 //    }
 //}
@@ -95,7 +95,7 @@
 //            //eventGen(dhtH_value_name, "");
 //            //jsonWriteStr(configLiveJson, dhtH_value_name, String(value));
 //            // publishStatus(dhtH_value_name, String(value));
-//            //Serial.println("I sensor '" + dhtH_value_name + "' data: " + String(value));
+//            //SerialPrint("I", "Sensor", "'" + dhtH_value_name + "' data: " + String(value));
 //        }
 //    }
 //}
@@ -120,7 +120,7 @@
 //        eventGen("dhtPerception", "");
 //         publishStatus("dhtPerception", final_line);
 //        if (mqtt.connected()) {
-//            Serial.println("I sensor 'dhtPerception' data: " + final_line);
+//            SerialPrint("I", "Sensor", "'dhtPerception' data: " + final_line);
 //        }
 //    }
 //}
@@ -144,7 +144,7 @@
 //        jsonWriteStr(configLiveJson, "dhtComfort", final_line);
 //        eventGen("dhtComfort", "");
 //         publishStatus("dhtComfort", final_line);
-//        Serial.println("I sensor 'dhtComfort' send date " + final_line);
+//        SerialPrint("I", "Sensor", "'dhtComfort' send date " + final_line);
 //    }
 //}
 //
@@ -236,7 +236,7 @@
 //        jsonWriteInt(configLiveJson, "dhtDewpoint", value);
 //        eventGen("dhtDewpoint", "");
 //         publishStatus("dhtDewpoint", String(value));
-//        Serial.println("I sensor 'dhtDewpoint' data: " + String(value));
+//        SerialPrint("I", "Sensor", "'dhtDewpoint' data: " + String(value));
 //    }
 //}
 //#endif
@@ -272,7 +272,7 @@
 //    //jsonWriteStr(configLiveJson, bmp280T_value_name, String(value));
 //    //eventGen(bmp280T_value_name, "");
 //    // publishStatus(bmp280T_value_name, String(value));
-//    //Serial.println("I sensor '" + bmp280T_value_name + "' data: " + String(value));
+//    //SerialPrint("I", "Sensor", "'" + bmp280T_value_name + "' data: " + String(value));
 //}
 //
 ////bmp280P press1 0x76 Давление#bmp280 Датчики any-data 2
@@ -304,7 +304,7 @@
 //    //jsonWriteStr(configLiveJson, bmp280P_value_name, String(value));
 //    //eventGen(bmp280P_value_name, "");
 //    // publishStatus(bmp280P_value_name, String(value));
-//    //Serial.println("I sensor '" + bmp280P_value_name + "' data: " + String(value));
+//    //SerialPrint("I", "Sensor", "'" + bmp280P_value_name + "' data: " + String(value));
 //}
 //
 ////=========================================================================================================================================
@@ -329,7 +329,7 @@
 //    //jsonWriteStr(configLiveJson, bme280T_value_name, String(value));
 //    //eventGen(bme280T_value_name, "");
 //    // publishStatus(bme280T_value_name, String(value));
-//    //Serial.println("I sensor '" + bme280T_value_name + "' data: " + String(value));
+//    //SerialPrint("I", "Sensor", "'" + bme280T_value_name + "' data: " + String(value));
 //}
 //
 ////bme280P pres1 0x76 Давление#bmp280 Датчики any-data 1
@@ -353,7 +353,7 @@
 //    //jsonWriteStr(configLiveJson, bme280P_value_name, String(value));
 //    //eventGen(bme280P_value_name, "");
 //    // publishStatus(bme280P_value_name, String(value));
-//    //Serial.println("I sensor '" + bme280P_value_name + "' data: " + String(value));
+//    //SerialPrint("I", "Sensor", "'" + bme280P_value_name + "' data: " + String(value));
 //}
 //
 ////bme280H hum1 0x76 Влажность#bmp280 Датчики any-data 1
@@ -376,7 +376,7 @@
 //    //jsonWriteStr(configLiveJson, bme280H_value_name, String(value));
 //    //eventGen(bme280H_value_name, "");
 //    // publishStatus(bme280H_value_name, String(value));
-//    //Serial.println("I sensor '" + bme280H_value_name + "' data: " + String(value));
+//    //SerialPrint("I", "Sensor", "'" + bme280H_value_name + "' data: " + String(value));
 //}
 //
 ////bme280A altit1 0x76 Высота#bmp280 Датчики any-data 1
@@ -401,5 +401,5 @@
 //
 //    // publishStatus(bme280A_value_name, String(value));
 //
-//    //Serial.println("I sensor '" + bme280A_value_name + "' data: " + String(value));
+//    //SerialPrint("I", "Sensor", "'" + bme280A_value_name + "' data: " + String(value));
 //}

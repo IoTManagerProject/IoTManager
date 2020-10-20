@@ -17,7 +17,7 @@ class SensorDhtClass : public SensorConvertingClass {
         if (_type == "dht22") {
             dht.setup(_pin.toInt(), DHTesp::DHT22);
         }
-        sensorReadingMap += _key + ",";
+        sensorReadingMap10sec += _key + ",";
 
         //to do если надо будет читать несколько dht
         //dhtEnterCounter++;
@@ -44,7 +44,7 @@ class SensorDhtClass : public SensorConvertingClass {
                 eventGen(key, "");
                 jsonWriteStr(configLiveJson, key, String(valueFl));
                  publishStatus(key, String(valueFl));
-                Serial.println("I sensor '" + key + "' data: " + String(valueFl));
+                SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));
             } else {
                 Serial.println("[E] sensor '" + key);
             }
@@ -68,7 +68,7 @@ class SensorDhtClass : public SensorConvertingClass {
                 eventGen(key, "");
                 jsonWriteStr(configLiveJson, key, String(valueFl));
                  publishStatus(key, String(valueFl));
-                Serial.println("I sensor '" + key + "' data: " + String(valueFl));
+                SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));
             } else {
                 Serial.println("[E] sensor '" + key);
             }

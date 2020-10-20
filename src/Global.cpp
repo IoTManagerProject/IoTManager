@@ -39,7 +39,8 @@ String itemsLine = "";
 
 // Sensors
 int8_t dallasEnterCounter = -1;
-String sensorReadingMap;
+String sensorReadingMap10sec;
+String sensorReadingMap60sec;
 
 // Logging
 String logging_value_names_list;

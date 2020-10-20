@@ -25,7 +25,7 @@ void upgradeInit() {
     if (isNetworkActive()) {
         getLastVersion();
         if (lastVersion > 0) {
-            SerialPrint("I", "Update", "available version: " + lastVersion);
+            SerialPrint("I", "Update", "available version: " + String(lastVersion));
         }
     };
 }

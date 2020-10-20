@@ -7,7 +7,6 @@
 #include "ESP8266.h"
 
 #include "Consts.h"
-#include "Errors.h"
 #include "GyverFilters.h"
 #include "Upgrade.h"
 #include "Clock.h"
@@ -74,7 +73,8 @@ extern String itemsFile;
 extern String itemsLine;
 
 // Sensors
-extern String sensorReadingMap;
+extern String sensorReadingMap10sec;
+extern String sensorReadingMap60sec;
 extern int8_t dallasEnterCounter;
 
 extern String logging_value_names_list;

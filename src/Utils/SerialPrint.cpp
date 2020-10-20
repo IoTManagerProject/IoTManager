@@ -3,7 +3,7 @@
 #include "Global.h"
 
 void SerialPrint(String errorLevel, String module, String msg) {
-    //if (module == "Stat" || module == "Update") {
+    //if (module == "Stat") {
         Serial.println(prettyMillis(millis()) + " [" + errorLevel + "] [" + module + "] " + msg);
     //}
 }

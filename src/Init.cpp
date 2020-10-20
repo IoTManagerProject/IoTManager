@@ -24,7 +24,7 @@ void all_init() {
 
 void Device_init() {
 
-     sensorReadingMap = "";
+     sensorReadingMap10sec = "";
      dallasEnterCounter = -1;
 
     //logging_value_names_list = "";

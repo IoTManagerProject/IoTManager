@@ -1,7 +1,6 @@
 #include "ItemsCmd.h"
 #include "items/InputClass.h"
 //==========================================Модуль ввода времени============================================
-//input-time time1 inputTime Ввод Введите.время 4 st[10-00-00]
 //==========================================================================================================
 InputClass myInputTime;
 void inputTime() {
@@ -21,8 +20,9 @@ void inputTimeSet() {
 void handle_time_init() {
     ts.add(
         TIME, 1000, [&](void *) {
-            jsonWriteStr(configLiveJson, "time", timeNow->getTime());
-            jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
+            //jsonWriteStr(configLiveJson, "time", timeNow->getTime());
+            //jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
+            jsonWriteStr(configLiveJson, "timenow", timeNow->getTime());
             eventGen("timenow", "");
         },
         nullptr, true);

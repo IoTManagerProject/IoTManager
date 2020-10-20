@@ -85,7 +85,8 @@ struct Time_t {
 
 enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,
-                   SENSORS,
+                   SENSORS10SEC,
+                   SENSORS60SEC,
                    STEPPER1,
                    STEPPER2,
                    LOG1,

@@ -3,7 +3,6 @@
 #include "Arduino.h"
 #include "Utils/StringUtils.h"
 #include "Utils/TimeUtils.h"
-#include "Errors.h"
 #include "Global.h"
 
 #define pm PrintMessage(MODULE)

@@ -12,7 +12,7 @@ class SensorUltrasonic : public SensorConvertingClass {
    public:
     SensorUltrasonic() : SensorConvertingClass(){};
     void init() {
-        sensorReadingMap += _key + ",";
+        sensorReadingMap10sec += _key + ",";
         String trig = selectFromMarkerToMarker(_pin, ",", 0);
         String echo = selectFromMarkerToMarker(_pin, ",", 1);
         pinMode(trig.toInt(), OUTPUT);
@@ -43,7 +43,7 @@ class SensorUltrasonic : public SensorConvertingClass {
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, String(valueFl));
         publishStatus(key, String(valueFl));
-        Serial.println("I sensor '" + key + "' data: " + String(valueFl));
+        SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));
     }
 };
 extern SensorUltrasonic mySensorUltrasonic;
