@@ -5,7 +5,7 @@
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
-    configSetupJson.replace(" ", "");
+    //configSetupJson.replace(" ", "");
     configSetupJson.replace("\r\n", "");
 
     jsonWriteStr(configSetupJson, "chipID", chipId);
