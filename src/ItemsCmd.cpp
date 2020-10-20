@@ -45,6 +45,8 @@ void cmd_init() {
 
     //sCmd.addCommand("modbus", modbus);
 
+    sCmd.addCommand("uptime", sysUptime);
+
     handle_time_init();
 }
 

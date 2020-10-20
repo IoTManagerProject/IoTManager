@@ -91,6 +91,8 @@ class LineParsing {
 
         _descr.replace("#", " ");
 
+        _descr.replace("%ver%", String(FIRMWARE_VERSION));
+
         createWidgetClass(_descr, _page, _order, _file, _key);
     }
 
@@ -201,3 +203,5 @@ class LineParsing {
     //    return json;
     //}
 };
+
+extern LineParsing myLineParsing;

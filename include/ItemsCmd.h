@@ -46,3 +46,6 @@ extern void bmp280ReadingPress();
 
 //extern void modbus();
 //extern void modbusReading();
+
+extern void sysUptime();
+extern void uptimeReading();
