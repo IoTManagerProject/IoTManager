@@ -63,8 +63,8 @@ void sensorsInit() {
         nullptr, true);
 
     ts.add(
-        SENSORS60SEC, 60000, [&](void *) {
-            String buf = sensorReadingMap60sec;
+        SENSORS30SEC, 30000, [&](void *) {
+            String buf = sensorReadingMap30sec;
             while (buf.length()) {
                 String tmp = selectToMarker(buf, ",");
                 sCmd.readStr(tmp);
@@ -74,8 +74,3 @@ void sensorsInit() {
         nullptr, true);
 }
 
-//void loopSerial() {
-//    if (term) {
-//        term->loop();
-//    }
-//}

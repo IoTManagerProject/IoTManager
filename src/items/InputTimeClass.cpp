@@ -20,8 +20,6 @@ void inputTimeSet() {
 void handle_time_init() {
     ts.add(
         TIME, 1000, [&](void *) {
-            //jsonWriteStr(configLiveJson, "time", timeNow->getTime());
-            //jsonWriteStr(configLiveJson, "timenow", timeNow->getTimeJson());
             jsonWriteStr(configLiveJson, "timenow", timeNow->getTime());
             eventGen("timenow", "");
         },

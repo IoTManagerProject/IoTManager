@@ -4,7 +4,7 @@
 AsyncWebSocket ws;
 //AsyncEventSource events;
 #endif
-Clock* timeNow;
+
 TickerScheduler ts(TEST + 1);
 WiFiClient espClient;
 PubSubClient mqtt(espClient);
@@ -40,7 +40,7 @@ String itemsLine = "";
 // Sensors
 int8_t dallasEnterCounter = -1;
 String sensorReadingMap10sec;
-String sensorReadingMap60sec;
+String sensorReadingMap30sec;
 
 // Logging
 String logging_value_names_list;

@@ -7,7 +7,7 @@ void sysUptime() {
     myLineParsing.update();
     String key = myLineParsing.gkey();
     sCmd.addCommand(key.c_str(), uptimeReading);
-    sensorReadingMap60sec += key + ",";
+    sensorReadingMap30sec += key + ",";
     myLineParsing.clear();
 }
 

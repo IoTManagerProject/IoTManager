@@ -1,27 +1,10 @@
 #pragma once
 //===================Libraries===================================================================================================================================================
-#include <Arduino.h>
-#include <ArduinoJson.h>
-
-#include "ESP32.h"
-#include "ESP8266.h"
-
-#include "Consts.h"
-#include "GyverFilters.h"
-#include "Upgrade.h"
-#include "Clock.h"
-
-#include "MqttClient.h"
-#include "Utils/FileUtils.h"
-#include "Utils/JsonUtils.h"
-#include "Utils/StringUtils.h"
-#include "Utils/SysUtils.h"
-#include "Utils/PrintMessage.h"
-#include "Utils/WiFiUtils.h"
-#include "Utils/SerialPrint.h"
-
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <ArduinoOTA.h>
 #include <Bounce2.h>
 #include <DHTesp.h>
 #include <DallasTemperature.h>
@@ -31,26 +14,36 @@
 #include <TickerScheduler.h>
 #include <Wire.h>
 #include <time.h>
-#include <ArduinoOTA.h>
 
-
+#include "Clock.h"
+#include "Consts.h"
+#include "ESP32.h"
+#include "ESP8266.h"
+#include "GyverFilters.h"
+#include "MqttClient.h"
+#include "Upgrade.h"
+#include "Utils/FileUtils.h"
+#include "Utils/JsonUtils.h"
+#include "Utils/SerialPrint.h"
+#include "Utils/StringUtils.h"
+#include "Utils/SysUtils.h"
+#include "Utils/WiFiUtils.h"
 
 #ifdef WEBSOCKET_ENABLED
 extern AsyncWebSocket ws;
 //extern AsyncEventSource events;
 #endif
 
-extern Clock* timeNow;
+
 extern TickerScheduler ts;
 extern WiFiClient espClient;
 extern PubSubClient mqtt;
 extern StringCommand sCmd;
 extern AsyncWebServer server;
 extern DallasTemperature sensors;
-extern OneWire *oneWire;
+extern OneWire* oneWire;
 extern boolean but[NUM_BUTTONS];
 extern Bounce* buttons;
-
 
 //Global vars
 extern boolean just_load;
@@ -74,7 +67,7 @@ extern String itemsLine;
 
 // Sensors
 extern String sensorReadingMap10sec;
-extern String sensorReadingMap60sec;
+extern String sensorReadingMap30sec;
 extern int8_t dallasEnterCounter;
 
 extern String logging_value_names_list;
@@ -98,15 +91,12 @@ extern String getURL(const String& urls);
 extern void do_fscheck();
 extern void doBusScan();
 extern void servo_();
-extern void clock_init();
 
 extern void setLedStatus(LedStatus_t);
 
 //Scenario
 extern void eventGen(String event_name, String number);
 extern String add_set(String param_name);
-
-
 
 //Timers
 extern void Timer_countdown_init();
@@ -132,8 +122,6 @@ extern void pushControl();
 //extern void do_udp_data_parse();
 //extern void do_mqtt_send_settings_to_udp();
 
-
-
 extern void do_update();
 
 // Init
@@ -141,4 +129,3 @@ extern void uptime_init();
 
 // Web
 extern void web_init();
-

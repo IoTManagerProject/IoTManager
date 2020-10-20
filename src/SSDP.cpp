@@ -14,8 +14,6 @@ String xmlNode(String tags, String data);
 
 String decToHex(uint32_t decValue, byte desiredStringLength);
 
-//39164
-//457684
 void SsdpInit() {
     server.on("/description.xml", HTTP_GET, [](AsyncWebServerRequest* request) {
         String ssdpSend = F("<root xmlns=\"urn:schemas-upnp-org:device-1-0\">");
