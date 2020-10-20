@@ -5,7 +5,7 @@
 //
 #ifdef ESP8266
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION 260
+#define FIRMWARE_VERSION 261
 #endif
 #ifdef ESP32
 #define FIRMWARE_NAME "esp32-iotm"

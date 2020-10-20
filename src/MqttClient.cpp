@@ -117,8 +117,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
 #endif
 
     } else if (topicStr.indexOf("control")) {
-        //iotTeam/12882830-1458415/light 1
-
+      
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
 
         orderBuf += key;
@@ -135,14 +134,6 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         if (payloadStr == "1") {
             myNotAsyncActions->make(do_UPGRADE);
         }
-
-    } else if (topicStr.indexOf("devc")) {
-        writeFile(String(DEVICE_CONFIG_FILE), payloadStr);
-        Device_init();
-
-    } else if (topicStr.indexOf("devs")) {
-        writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
-        loadScenario();
     }
 }
 
