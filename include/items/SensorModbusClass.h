@@ -18,8 +18,8 @@
 //        uart.begin(9600);
 //        jsonWriteStr(configOptionJson, _key + "_map", _map);
 //        jsonWriteStr(configOptionJson, _key + "_с", _c);
-//        sensorReadingMap += _key + " " + _addr + " " + _reg + ","; 
-//        Serial.println(sensorReadingMap);
+//        sensorReadingMap10sec += _key + " " + _addr + " " + _reg + ","; 
+//        Serial.println(sensorReadingMap10sec);
 //    }
 //
 //    void SensorModbusRead(String key, uint8_t slaveAddress, uint16_t regAddress) {
@@ -38,7 +38,7 @@
 //        eventGen(key, "");
 //        jsonWriteStr(configLiveJson, key, String(valueFl));
 //         publishStatus(key, String(valueFl));
-//        Serial.println("I sensor '" + key + "' data: " + String(valueFl) + ", Slave dev addr: " + String(slaveAddress) + ", Register: " + String(regAddress));
+//        SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl) + ", Slave dev addr: " + String(slaveAddress) + ", Register: " + String(regAddress));
 //    }
 //
 //    bool getResultMsg(ModbusMaster* modbus1, uint16_t result) {

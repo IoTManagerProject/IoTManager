@@ -5,7 +5,7 @@
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
-    configSetupJson.replace(" ", "");
+    //configSetupJson.replace(" ", "");
     configSetupJson.replace("\r\n", "");
 
     jsonWriteStr(configSetupJson, "chipID", chipId);
@@ -24,7 +24,7 @@ void all_init() {
 
 void Device_init() {
 
-     sensorReadingMap = "";
+     sensorReadingMap10sec = "";
      dallasEnterCounter = -1;
 
     //logging_value_names_list = "";

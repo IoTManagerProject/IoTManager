@@ -117,8 +117,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
 #endif
 
     } else if (topicStr.indexOf("control")) {
-        //iotTeam/12882830-1458415/light 1
-
+      
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
 
         orderBuf += key;
@@ -135,14 +134,6 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         if (payloadStr == "1") {
             myNotAsyncActions->make(do_UPGRADE);
         }
-
-    } else if (topicStr.indexOf("devc")) {
-        writeFile(String(DEVICE_CONFIG_FILE), payloadStr);
-        Device_init();
-
-    } else if (topicStr.indexOf("devs")) {
-        writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
-        loadScenario();
     }
 }
 
@@ -231,9 +222,6 @@ void publishWidgets() {
 
 void publishState() {
     // берет строку json и ключи превращает в топики а значения колючей в них посылает
-    // {"name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"}
-    // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1"
-    // "name":"MODULES","lang":"","ip":"192.168.43.60","DS":"34.00","rel1":"1","rel2":"1",
     String str = configLiveJson;
     str.replace("{", "");
     str.replace("}", "");
@@ -242,13 +230,13 @@ void publishState() {
     while (str.length()) {
         String tmp = selectToMarker(str, ",");
 
-        String topic = selectToMarker(tmp, ":");
+        String topic = selectToMarker(tmp, "\":");
         topic.replace("\"", "");
 
-        String state = selectToMarkerLast(tmp, ":");
+        String state = selectToMarkerLast(tmp, "\":");
         state.replace("\"", "");
 
-        if ((topic != "time") && (topic != "name") && (topic != "lang") && (topic != "ip") && (topic.indexOf("_in") < 0)) {
+        if (topic != "timenow") {
             publishStatus(topic, state);
         }
         str = deleteBeforeDelimiter(str, ",");

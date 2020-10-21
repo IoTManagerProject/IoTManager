@@ -18,7 +18,7 @@ class SensorBme280Class : public SensorConvertingClass {
         bme.begin(hexStringToUint8(_addr));
         jsonWriteStr(configOptionJson, _key + "_map", _map);
         jsonWriteStr(configOptionJson, _key + "_с", _c);
-        sensorReadingMap += _key + ",";
+        sensorReadingMap10sec += _key + ",";
     }
 
     void SensorBme280ReadTmp(String key) {
@@ -28,7 +28,7 @@ class SensorBme280Class : public SensorConvertingClass {
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, String(valueFl));
          publishStatus(key, String(valueFl));
-        Serial.println("I sensor '" + key + "' data: " + String(valueFl));
+        SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));
     }
 
     void SensorBme280ReadHum(String key) {
@@ -38,7 +38,7 @@ class SensorBme280Class : public SensorConvertingClass {
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, String(valueFl));
          publishStatus(key, String(valueFl));
-        Serial.println("I sensor '" + key + "' data: " + String(valueFl));
+        SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));
     }
 
     void SensorBme280ReadPress(String key) {
@@ -49,7 +49,7 @@ class SensorBme280Class : public SensorConvertingClass {
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, String(valueFl));
          publishStatus(key, String(valueFl));
-        Serial.println("I sensor '" + key + "' data: " + String(valueFl));
+        SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));
     }
 };
 extern SensorBme280Class mySensorBme280;

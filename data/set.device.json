@@ -31,7 +31,7 @@
         },
         {
             "type": "h4",
-            "title": "Time: {{time}}"
+            "title": "Time: {{timenow}}"
         },
         {
             "type": "h4",
@@ -43,7 +43,7 @@
         },
         {
             "type": "h4",
-            "title": "LittleFS version: 260"
+            "title": "LittleFS version: 261"
         },
         {
             "type": "hr"

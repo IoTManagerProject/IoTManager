@@ -1,9 +1,7 @@
 #include "BufferExecute.h"
+
 #include "Global.h"
 #include "Module/Terminal.h"
-#include "Errors.h"
-
-
 
 void loopCmdAdd(const String &cmdStr) {
     orderBuf += cmdStr;
@@ -18,7 +16,6 @@ void fileCmdExecute(const String &filename) {
 }
 
 void csvCmdExecute(String &cmdStr) {
-    
     cmdStr.replace(";", " ");
     cmdStr += "\r\n";
     cmdStr.replace("\r\n", "\n");
@@ -26,7 +23,7 @@ void csvCmdExecute(String &cmdStr) {
     int count = 0;
     while (cmdStr.length()) {
         String buf = selectToMarker(cmdStr, "\n");
-        buf = deleteBeforeDelimiter(buf, " "); //отсечка чекбокса
+        buf = deleteBeforeDelimiter(buf, " ");  //отсечка чекбокса
         count++;
         if (count > 1) sCmd.readStr(buf);
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
@@ -47,16 +44,27 @@ void spaceCmdExecute(String &cmdStr) {
 void loopCmdExecute() {
     if (orderBuf.length()) {
         String tmp = selectToMarker(orderBuf, ",");  //выделяем первую команду rel 5 1,
-        SerialPrint("I","CMD","do: " + tmp);
-        sCmd.readStr(tmp);                                    //выполняем
+        SerialPrint("I", "CMD", "do: " + tmp);
+        sCmd.readStr(tmp);                                //выполняем
         orderBuf = deleteBeforeDelimiter(orderBuf, ",");  //осекаем
     }
 }
 
 void sensorsInit() {
     ts.add(
-        SENSORS, 10000, [&](void *) {
-            String buf = sensorReadingMap;
+        SENSORS10SEC, 10000, [&](void *) {
+            String buf = sensorReadingMap10sec;
+            while (buf.length()) {
+                String tmp = selectToMarker(buf, ",");
+                sCmd.readStr(tmp);
+                buf = deleteBeforeDelimiter(buf, ",");
+            }
+        },
+        nullptr, true);
+
+    ts.add(
+        SENSORS30SEC, 30000, [&](void *) {
+            String buf = sensorReadingMap30sec;
             while (buf.length()) {
                 String tmp = selectToMarker(buf, ",");
                 sCmd.readStr(tmp);
@@ -66,8 +74,3 @@ void sensorsInit() {
         nullptr, true);
 }
 
-//void loopSerial() {
-//    if (term) {
-//        term->loop();
-//    }
-//}

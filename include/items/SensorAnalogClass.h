@@ -29,7 +29,7 @@ class SensorAnalogClass : public SensorConvertingClass {
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, String(valueFl));
         publishStatus(key, String(valueFl));
-        Serial.println("I sensor '" + key + "' data: " + String(valueFl));
+        SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));
         return value;
     }
 };

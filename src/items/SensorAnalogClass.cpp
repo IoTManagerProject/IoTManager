@@ -8,7 +8,7 @@ void analogAdc() {
     mySensorAnalog.update();
     String key = mySensorAnalog.gkey();
     sCmd.addCommand(key.c_str(), analogReading);
-    sensorReadingMap += key + ",";
+    sensorReadingMap10sec += key + ",";
     mySensorAnalog.SensorAnalogInit();
     mySensorAnalog.clear();
 }

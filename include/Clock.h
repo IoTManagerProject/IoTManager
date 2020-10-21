@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Utils/TimeUtils.h"
-#include "Utils/PrintMessage.h"
-#include "Global.h"
 #include "Clock.h"
+#include "Global.h"
+#include "Utils/TimeUtils.h"
+#include "Utils\SerialPrint.h"
+
+extern void clock_init();
 
 #ifdef ESP8266
 #include "sntp.h"
 #endif
 
 class Clock {
-
-
    private:
     Time_t _time_local;
     Time_t _time_utc;
@@ -39,7 +39,6 @@ class Clock {
         if (drift > 1) {
             // Обработать ситуации c дрифтом времени на значительные величины
         }
-        // TODO сохранять время на флеше
 
         _unixtime = now;
 
@@ -71,27 +70,26 @@ class Clock {
 
     void startSync() {
         if (!_configured) {
-            //SerialPrint("I","module","sync to: " + _ntp + " timezone: " + String(_timezone));
+            SerialPrint("I", "NTP", "sync to: " + _ntp + " timezone: " + String(_timezone));
             setupSntp();
             _configured = true;
-            // лучше не ждать, проверим в следующий раз
             return;
         }
         _hasSynced = hasTimeSynced();
         if (_hasSynced) {
-            //SerialPrint("I","module","synced " + getDateDotFormated() + " " + getTime());
+            SerialPrint("I", "NTP", "synced " + getDateDotFormated() + " " + getTime());
         } else {
-            //SerialPrint("[E]","module","failed to obtain");
+            SerialPrint("E", "NTP", "failed to obtain time");
         }
     }
 
     void setupSntp() {
-#ifdef ESP2866
+#ifdef ESP8266
         sntp_setservername(0, _ntp.c_str());
         sntp_setservername(1, "ru.pool.ntp.org");
         sntp_setservername(2, "pool.ntp.org");
         sntp_stop();
-        sntp_set_timezone(0);  // UTC time
+        sntp_set_timezone(0);  
         sntp_init();
 #else
         configTime(0, 0, _ntp.c_str(), "ru.pool.ntp.org", "pool.ntp.org");
@@ -165,3 +163,4 @@ class Clock {
         return prettyMillis(_uptime);
     }
 };
+extern Clock* timeNow;

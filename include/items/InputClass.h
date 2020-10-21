@@ -24,7 +24,7 @@ class InputClass : public LineParsing {
     void inputSetStr(String key, String state) {
         eventGen(key, "");
         jsonWriteStr(configLiveJson, key, state);
-         publishStatus(key, state);
+        publishStatus(key, state);
     }
 };
 

@@ -1,1 +1,1 @@
-0;uptime;id;anydataTime;Системные;Uptime#(ver#%ver%);order
+0;uptime;id;anydataTime;Системные;%name%#uptime;order

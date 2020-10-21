@@ -92,6 +92,7 @@ class LineParsing {
         _descr.replace("#", " ");
 
         _descr.replace("%ver%", String(FIRMWARE_VERSION));
+        _descr.replace("%name%", jsonReadStr(configSetupJson, F("name")));
 
         createWidgetClass(_descr, _page, _order, _file, _key);
     }

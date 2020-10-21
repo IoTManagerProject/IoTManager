@@ -1,7 +1,8 @@
 {
-  "widget" : "select",
-  "size"   : "small",
-  "fill"   : "outline",
-  "options" : "["Zero item", "First item", "Second item"]",
-  "status" : 2
+  "widget": "select",
+  "options": [
+    "Выключен",
+    "Включен"
+  ],
+  "status": 0
 }
