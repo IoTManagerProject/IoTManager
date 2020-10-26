@@ -13,6 +13,7 @@
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
 #include "items/ButtonInClass.h"
+#include "items/LoggingClass.h"
 //#include "RemoteOrdersUdp.h"
 #include "Bus.h"
 
@@ -95,6 +96,9 @@ void setup() {
 
     just_load = false;
     initialized = true;  //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
+    
+    myLogging = new LoggingClass[1](5000, 200, "array");
+    //myLogging = new LoggingClass(5000, 200, "test");
 }
 
 void loop() {
@@ -116,4 +120,6 @@ void loop() {
 
     myNotAsyncActions->loop();
     ts.update();
+
+    myLogging->loop();
 }
