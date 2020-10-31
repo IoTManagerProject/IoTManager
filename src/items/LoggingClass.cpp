@@ -1,7 +1,13 @@
 #include "items/LoggingClass.h"
 
+#include <Arduino.h>
+
+#include "Class/LineParsing.h"
+#include "Global.h"
+#include "ItemsCmd.h"
+
 LoggingClass::LoggingClass(unsigned long period, unsigned int maxPoints, String key) {
-    _period = period;
+    _period = period * 1000;
     _maxPoints = maxPoints;
     _key = key;
 }
@@ -17,7 +23,6 @@ void LoggingClass::loop() {
     }
 }
 
-
 void LoggingClass::addNewDelOldData(const String filename, size_t maxPoints, String payload) {
     String logData = readFile(filename, 5120);
     size_t lines_cnt = itemsCount(logData, "\r\n");
@@ -28,18 +33,33 @@ void LoggingClass::addNewDelOldData(const String filename, size_t maxPoints, Str
         removeFile(filename);
         lines_cnt = 0;
     }
-
-    if (lines_cnt > maxPoints) {
-        logData = deleteBeforeDelimiter(logData, "\r\n");
-        if (timeNow->hasTimeSynced()) {
-            logData += timeNow->getTimeUnix() + " " + payload + "\r\n";
-            writeFile(filename, logData);
-        }
-    } else {
-        if (timeNow->hasTimeSynced()) {
-            addFileLn(filename, timeNow->getTimeUnix() + " " + payload);
+    
+    if (payload != "") {
+        if (lines_cnt > maxPoints) {
+            logData = deleteBeforeDelimiter(logData, "\r\n");
+            if (timeNow->hasTimeSynced()) {
+                logData += timeNow->getTimeUnix() + " " + payload + "\r\n";
+                writeFile(filename, logData);
+            }
+        } else {
+            if (timeNow->hasTimeSynced()) {
+                addFileLn(filename, timeNow->getTimeUnix() + " " + payload);
+            }
         }
     }
 }
 
 MyLoggingVector* myLogging = nullptr;
+
+void logging() {
+    myLineParsing.update();
+    String value = myLineParsing.gvalue();
+    String interv = myLineParsing.gint();
+    String maxcnt = myLineParsing.gmaxcnt();
+    myLineParsing.clear();
+
+    static bool firstTime = true;
+    if (firstTime) myLogging = new MyLoggingVector();
+    firstTime = false;
+    myLogging->push_back(LoggingClass(interv.toInt(), maxcnt.toInt(), value));
+}

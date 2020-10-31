@@ -12,7 +12,6 @@ class LineParsing {
     String _page;
     String _descr;
     String _order;
-
     String _addr;
     String _reg;
     String _pin;
@@ -22,6 +21,9 @@ class LineParsing {
     String _state;
     String _db;
     String _type;
+    String _int;
+    String _cnt;
+    String _val;
 
    public:
     LineParsing() :
@@ -39,7 +41,10 @@ class LineParsing {
                     _inv{""},
                     _state{""},
                     _db{""},
-                    _type{""}
+                    _type{""},
+                    _int{""},
+                    _cnt{""},
+                    _val{""}
 
                     {};
 
@@ -84,6 +89,15 @@ class LineParsing {
                 if (arg.indexOf("reg[") != -1) {
                     _reg = extractInner(arg);
                 }
+                if (arg.indexOf("int[") != -1) {
+                    _int = extractInner(arg);
+                }
+                if (arg.indexOf("cnt[") != -1) {
+                    _cnt = extractInner(arg);
+                }
+                if (arg.indexOf("val[") != -1) {
+                    _val = extractInner(arg);
+                }
             }
         }
 
@@ -115,10 +129,10 @@ class LineParsing {
         return _order;
     }
     String gpin() {
-        return _pin;  //
+        return _pin;
     }
     String ginv() {
-        return _inv;  //
+        return _inv;
     }
     String gstate() {
         return _state;
@@ -138,6 +152,15 @@ class LineParsing {
     String gregaddr() {
         return _reg;
     }
+    String gint() {
+        return _int;
+    }
+    String gmaxcnt() {
+        return _cnt;
+    }
+    String gvalue() {
+        return _val;
+    }
 
     void clear() {
         _key = "";
@@ -154,6 +177,9 @@ class LineParsing {
         _state = "";
         _db = "";
         _type = "";
+        _int = "";
+        _cnt = "";
+        _val = "";
     }
 
     String extractInnerDigit(String str) {

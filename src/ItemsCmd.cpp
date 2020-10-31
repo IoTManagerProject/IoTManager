@@ -47,6 +47,8 @@ void cmd_init() {
 
     sCmd.addCommand("uptime", sysUptime);
 
+    sCmd.addCommand("logging", logging);
+
     handle_time_init();
 }
 

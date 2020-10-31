@@ -1,0 +1,1 @@
+0;logging;id;chart;Графики;История;order;val[any];int[60];cnt[100]

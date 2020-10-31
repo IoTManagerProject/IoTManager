@@ -49,3 +49,5 @@ extern void bmp280ReadingPress();
 
 extern void sysUptime();
 extern void uptimeReading();
+
+extern void logging();

@@ -200,6 +200,14 @@ void web_init() {
             myNotAsyncActions->make(do_BUSSCAN);
             request->redirect("/?set.utilities");
         }
+
+        //==============================developer settings=============================================
+        if (request->hasArg("serverip")) {
+            jsonWriteStr(configSetupJson, "serverip", request->getParam("serverip")->value());
+            saveConfig();
+            serverIP = jsonReadStr(configSetupJson, "serverip");
+            request->send(200);
+        }
     });
 
     //==============================list of items=====================================================

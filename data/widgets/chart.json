@@ -1,5 +1,4 @@
 {
   "widget": "chart",
-  "series": "Temperature, °C",
   "dateFormat": "HH:mm"
 }

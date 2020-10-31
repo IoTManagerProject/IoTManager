@@ -7,7 +7,7 @@ void sendLogData(String file, String topic);
 #ifdef LOGGING_ENABLED
 //===============================================Логирование============================================================
 //logging temp1 1 10 Температура Датчики 2
-void logging() {
+/*void logging2() {
     String value_name = sCmd.next();
     String period_min = sCmd.next();
     String maxCount = sCmd.next();
@@ -67,12 +67,12 @@ void logging() {
             },
             nullptr, false);
     }
-}
+}*/
 
 /*
 * Удаление стрых данных и запись новых
 */
-void deleteOldDate(const String filename, size_t max_lines_cnt, String payload) {
+/*void deleteOldDate(const String filename, size_t max_lines_cnt, String payload) {
     String log_date = readFile(filename, 5120);
     size_t lines_cnt = itemsCount(log_date, "\r\n");
 
@@ -94,7 +94,7 @@ void deleteOldDate(const String filename, size_t max_lines_cnt, String payload) 
             addFileLn(filename, timeNow->getTimeUnix() + " " + payload);
         }
     }
-}
+}*/
 
 //=========================================Выбор какие данные отправлять==================================================================
 void choose_log_date_and_send() {

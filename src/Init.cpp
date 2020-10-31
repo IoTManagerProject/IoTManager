@@ -14,6 +14,8 @@ void loadConfig() {
     prex = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId;
 
     Serial.println(configSetupJson);
+
+    serverIP = jsonReadStr(configSetupJson, "serverip");
 }
 
 void all_init() {

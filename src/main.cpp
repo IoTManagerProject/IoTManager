@@ -14,7 +14,7 @@
 #include "Utils/WebUtils.h"
 #include "items/ButtonInClass.h"
 #include "items/LoggingClass.h"
-//#include "RemoteOrdersUdp.h"
+#include "RemoteOrdersUdp.h"
 #include "Bus.h"
 
 void not_async_actions();
@@ -74,9 +74,11 @@ void setup() {
 
     SerialPrint("I", "Stat", "Stat Init");
     initSt();
-
-    //SerialPrint("I","UDP","Udp Init");
-    //asyncUdpInit();
+    
+    #ifdef UDP_ENABLED
+    SerialPrint("I","UDP","Udp Init");
+    asyncUdpInit();
+    #endif
 
     SerialPrint("I", "Bus", "Bus Init");
     busInit();
@@ -97,8 +99,8 @@ void setup() {
     just_load = false;
     initialized = true;  //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
 
-    myLogging = new MyLoggingVector();
-    myLogging->push_back(LoggingClass(30000, 10, "analog-adc-1"));
+    //myLogging = new MyLoggingVector();
+    //myLogging->push_back(LoggingClass(30000, 10, "analog-adc-1"));
     //myLogging->push_back(LoggingClass(10000, 1, "10 sec"));
 }
 

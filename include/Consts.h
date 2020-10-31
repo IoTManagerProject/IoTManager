@@ -44,7 +44,7 @@
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
-//#define UDP_ENABLED
+#define UDP_ENABLED
 #define SSDP_ENABLED
 
 //
@@ -88,13 +88,6 @@ enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,
                    SENSORS10SEC,
                    SENSORS30SEC,
-                   STEPPER1,
-                   STEPPER2,
-                   LOG1,
-                   LOG2,
-                   LOG3,
-                   LOG4,
-                   LOG5,
                    TIMER_COUNTDOWN,
                    TIME,
                    TIME_SYNC,

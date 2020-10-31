@@ -75,7 +75,8 @@
                 "/set?addItem=bmp280-temp": "18.Датчик температуры bmp280",
                 "/set?addItem=bmp280-press": "19.Датчик давления bmp280",
                 "/set?addItem=modbus": "20.Прочитать регистр modbus устройства",
-                "/set?addItem=uptime": "a.Отобразить время работы устройства"
+                "/set?addItem=logging": "a.Логгирование и вывод в график любой величины",
+                "/set?addItem=uptime": "b.Отобразить время работы устройства"
             }
         },
         
@@ -99,6 +100,9 @@
             "class": "btn btn-block btn-default"
         },
         {
+            "type": "hr"
+        },
+        {
             "type": "link",
             "title": "Удалить выбранные элементы",
             "action": "javascript:{send_request(this,'/set?delChoosingItems');setTimeout(function(){location.href='/?set.device' ; }, 1000);}",
@@ -112,7 +116,7 @@
         },
         {
             "type": "text",
-            "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>После любого изменения таблицы элементов, включая удаление/добавление строк, необходимо нажать кнопку <b>Save</b></p></font></div>"
+            "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>После любого изменения таблицы элементов, включая удаление/добавление строк, необходимо нажать кнопку <b>Сохранить таблицу</b></p></font></div>"
         },
         {
             "type": "h2",
