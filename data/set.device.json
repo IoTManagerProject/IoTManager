@@ -78,6 +78,7 @@
                 "/set?addItem=uptime": "a.Отобразить время работы устройства"
             }
         },
+        
         {
             "type": "hr"
         },
@@ -98,9 +99,6 @@
             "class": "btn btn-block btn-default"
         },
         {
-            "type": "hr"
-        },
-        {
             "type": "link",
             "title": "Удалить выбранные элементы",
             "action": "javascript:{send_request(this,'/set?delChoosingItems');setTimeout(function(){location.href='/?set.device' ; }, 1000);}",
@@ -111,6 +109,10 @@
             "title": "Удалить все",
             "action": "/set?delAllItems",
             "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "text",
+            "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>После любого изменения таблицы элементов, включая удаление/добавление строк, необходимо нажать кнопку <b>Save</b></p></font></div>"
         },
         {
             "type": "h2",

@@ -21,5 +21,4 @@ void LoggingClass::writeDate() {
     SerialPrint("I", "Logging", _key);
 }
 
-std::vector<LoggingClass*> myLogging;
-//LoggingClass* myLogging;
+MyLoggingVector* myLogging= nullptr;

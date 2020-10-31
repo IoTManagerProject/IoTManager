@@ -96,9 +96,12 @@ void setup() {
 
     just_load = false;
     initialized = true;  //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
-    
-    myLogging = new LoggingClass[1](5000, 200, "array");
-    //myLogging = new LoggingClass(5000, 200, "test");
+
+    myLogging = new MyLoggingVector();
+    myLogging->push_back(LoggingClass(5000, 1, "5 sec"));
+    myLogging->push_back(LoggingClass(10000, 1, "10 sec"));
+
+    //myLogging->push_back(new LoggingClass());
 }
 
 void loop() {
@@ -121,5 +124,6 @@ void loop() {
     myNotAsyncActions->loop();
     ts.update();
 
-    myLogging->loop();
+    myLogging->at(0).loop();
+    myLogging->at(1).loop();
 }

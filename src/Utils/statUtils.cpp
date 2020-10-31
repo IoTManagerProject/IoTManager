@@ -70,7 +70,7 @@ String addNewDevice() {
         jsonWriteStr(json, "name", FIRMWARE_NAME);
         jsonWriteInt(json, "model", FIRMWARE_VERSION);
         //==============================================
-        http.begin(client, F("http://95.128.182.133:8082/api/devices/"));
+        http.begin(client,  serverIP + F(":8082/api/devices/"));
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         int httpCode = http.POST(json);
@@ -103,7 +103,7 @@ String updateDevicePsn(String lat, String lon, String accur) {
         lonfl = lonfl + lonc;
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, F("http://95.128.182.133:5055/"));
+        http.begin(client,  serverIP + F(":5055/"));
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         String mac = WiFi.macAddress().c_str();
@@ -132,7 +132,7 @@ String updateDeviceStatus() {
     if ((WiFi.status() == WL_CONNECTED)) {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, F("http://95.128.182.133:5055/"));
+        http.begin(client,  serverIP + F(":5055/"));
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         String mac = WiFi.macAddress().c_str();
@@ -278,7 +278,7 @@ void updateDeviceList() {
         jsonWriteStr(json, "model", FIRMWARE_VERSION);
         jsonWriteInt(json, "id", getId("statid.txt"));
         //===============================================
-        http.begin(client, "http://95.128.182.133:8082/api/devices/" + mac + "/");
+        http.begin(client, "http://") + serverIP + F(":8082/api/devices/" + mac + "/");
         http.setAuthorization("admin", "admin");
         http.addHeader("Content-Type", "application/json");
         int httpCode = http.PUT(json);

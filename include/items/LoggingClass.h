@@ -3,6 +3,10 @@
 
 #include "Global.h"
 
+class LoggingClass;
+
+typedef std::vector<LoggingClass> MyLoggingVector;
+
 class LoggingClass {
    public:
     LoggingClass(unsigned long period, unsigned int maxPoints, String key);
@@ -12,15 +16,13 @@ class LoggingClass {
     void writeDate();
 
    private:
+    unsigned long currentMillis;
+    unsigned long prevMillis;
+    unsigned long difference;
 
-   unsigned long currentMillis;
-   unsigned long prevMillis;
-   unsigned long difference;
-
-   unsigned long _period;
-   unsigned int _maxPoints;
-   String _key;
+    unsigned long _period;
+    unsigned int _maxPoints;
+    String _key;
 };
 
-extern std::vector<LoggingClass*> myLogging;
-//extern LoggingClass* myLogging;
+extern MyLoggingVector* myLogging;

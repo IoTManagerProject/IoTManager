@@ -46,6 +46,9 @@ String sensorReadingMap30sec;
 String logging_value_names_list;
 int enter_to_logging_counter;
 
+// Upgrade
+String serverIP = "http://206.189.49.244";
+
 // Scenario
 int scenario_line_status[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 int lastVersion;

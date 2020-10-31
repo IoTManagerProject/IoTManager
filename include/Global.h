@@ -129,3 +129,6 @@ extern void uptime_init();
 
 // Web
 extern void web_init();
+
+// Upgrade
+extern String serverIP; 
