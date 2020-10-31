@@ -10,7 +10,7 @@ LoggingClass::~LoggingClass() {}
 
 void LoggingClass::loop() {
     currentMillis = millis();
-    difference = currentMillis - prevMillis;
+    unsigned long difference = currentMillis - prevMillis;
     if (difference >= _period) {
         prevMillis = millis();
         writeDate();
