@@ -98,10 +98,8 @@ void setup() {
     initialized = true;  //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
 
     myLogging = new MyLoggingVector();
-    myLogging->push_back(LoggingClass(5000, 1, "5 sec"));
-    myLogging->push_back(LoggingClass(10000, 1, "10 sec"));
-
-    //myLogging->push_back(new LoggingClass());
+    myLogging->push_back(LoggingClass(30000, 10, "analog-adc-1"));
+    //myLogging->push_back(LoggingClass(10000, 1, "10 sec"));
 }
 
 void loop() {
@@ -124,6 +122,9 @@ void loop() {
     myNotAsyncActions->loop();
     ts.update();
 
-    myLogging->at(0).loop();
-    myLogging->at(1).loop();
+    if (myLogging != nullptr) {
+        for (unsigned int i = 0; i < myLogging->size(); i++) {
+            myLogging->at(i).loop();
+        }
+    }
 }
