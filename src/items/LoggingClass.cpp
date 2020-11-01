@@ -54,13 +54,13 @@ MyLoggingVector* myLogging = nullptr;
 
 void logging() {
     myLineParsing.update();
-    String loggingValueKey = myLineParsing.gvalue();
+    String loggingValueKey = myLineParsing.gval();
     String key = myLineParsing.gkey();
     String interv = myLineParsing.gint();
-    String maxcnt = myLineParsing.gmaxcnt();
+    String maxcnt = myLineParsing.gcnt();
     myLineParsing.clear();
 
-    logging_value_names_list += key + ",";
+    loggingKeyList += key + ",";
 
     static bool firstTime = true;
     if (firstTime) myLogging = new MyLoggingVector();
@@ -69,7 +69,7 @@ void logging() {
 }
 
 void choose_log_date_and_send() {
-    String all_line = logging_value_names_list;
+    String all_line = loggingKeyList;
     while (all_line.length() != 0) {
         String tmp = selectToMarker(all_line, ",");
         sendLogData("logs/" + tmp + ".txt", tmp);

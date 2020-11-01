@@ -9,21 +9,23 @@ typedef std::vector<ImpulsOutClass> MyImpulsOutVector;
 
 class ImpulsOutClass {
    public:
-    ImpulsOutClass(unsigned long impulsPeriod, unsigned int impulsCount, unsigned int impulsPin);
+    ImpulsOutClass(unsigned int impulsPin);
     ~ImpulsOutClass();
 
     void loop();
-    void activate();
+    void execute(unsigned long impulsPeriod, unsigned int impulsCount);
 
    private:
     unsigned long currentMillis;
     unsigned long prevMillis;
 
-    unsigned long _impulsPeriod;
-    unsigned int _impulsCount;
-    unsigned int _impulsCountBuf;
-    unsigned int _impulsPin;
+    unsigned long _impulsPeriod = 0;
+    unsigned int _impulsCount = 0;
+    unsigned int _impulsCountBuf = 0;
+    unsigned int _impulsPin = 0;
 
 };
 
 extern MyImpulsOutVector* myImpulsOut;
+
+extern void impulsExecute();

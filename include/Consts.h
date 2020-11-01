@@ -3,7 +3,7 @@
 //===========Firmware=============================================================================================================================================
 #ifdef ESP8266
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION 262
+#define FIRMWARE_VERSION 263
 #endif
 #ifdef ESP32
 #define FIRMWARE_NAME "esp32-iotm"
@@ -31,7 +31,7 @@
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
-//#define UDP_ENABLED
+#define UDP_ENABLED
 //#define SSDP_ENABLED
 
 //=========Sensors enable/disable=================================================================================================================================

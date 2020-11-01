@@ -155,10 +155,10 @@ class LineParsing {
     String gint() {
         return _int;
     }
-    String gmaxcnt() {
+    String gcnt() {
         return _cnt;
     }
-    String gvalue() {
+    String gval() {
         return _val;
     }
 

@@ -1,21 +1,21 @@
 #include "items/ImpulsOutClass.h"
 
 #include <Arduino.h>
-
+#include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "ItemsCmd.h"
 
-ImpulsOutClass::ImpulsOutClass(unsigned long impulsPeriod, unsigned int impulsCount, unsigned int impulsPin) {
-    _impulsPeriod = impulsPeriod;
-    _impulsCount = impulsCount * 2;
+ImpulsOutClass::ImpulsOutClass(unsigned int impulsPin) {
     _impulsPin = impulsPin;
     pinMode(impulsPin, OUTPUT);
 }
 
 ImpulsOutClass::~ImpulsOutClass() {}
 
-void ImpulsOutClass::activate() {
+void ImpulsOutClass::execute(unsigned long impulsPeriod, unsigned int impulsCount) {
+    _impulsPeriod = impulsPeriod;
+    _impulsCount = impulsCount * 2;
     _impulsCountBuf = _impulsCount;
 }
 
@@ -38,18 +38,34 @@ void ImpulsOutClass::loop() {
 
 MyImpulsOutVector* myImpulsOut = nullptr;
 
-//void impuls() {
-//    myLineParsing.update();
-//    String loggingValueKey = myLineParsing.gvalue();
-//    String key = myLineParsing.gkey();
-//    String interv = myLineParsing.gint();
-//    String maxcnt = myLineParsing.gmaxcnt();
-//    myLineParsing.clear();
-//
-//    logging_value_names_list += key + ",";
-//
-//    static bool firstTime = true;
-//    if (firstTime) myImpulsOut = new MyImpulsOutVector();
-//    firstTime = false;
-//    myImpulsOut->push_back(ImpulsOutClass(interv.toInt(), maxcnt.toInt(), loggingValueKey, key));
-//}
+void impuls() {
+    myLineParsing.update();
+    String key = myLineParsing.gkey();
+    String pin = myLineParsing.gpin();
+    myLineParsing.clear();
+
+    impulsEnterCounter++;
+    addKey(key, impulsEnterCounter);
+
+    static bool firstTime = true;
+    if (firstTime) myImpulsOut = new MyImpulsOutVector();
+    firstTime = false;
+    myImpulsOut->push_back(ImpulsOutClass(pin.toInt()));
+
+    sCmd.addCommand(key.c_str(), impulsExecute);
+}
+
+void impulsExecute() {
+    String key = sCmd.order();
+    String impulsPeriod = sCmd.next();
+    String impulsCount = sCmd.next();
+
+    int number = getKeyNum(key);
+    SerialPrint("I", "Impuls", key + " " + String(number));
+
+    if (myImpulsOut != nullptr) {
+        if (number != -1) {
+            myImpulsOut->at(number).execute(impulsPeriod.toInt(), impulsCount.toInt());
+        }
+    }
+}

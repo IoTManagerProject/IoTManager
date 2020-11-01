@@ -49,6 +49,8 @@ void cmd_init() {
 
     sCmd.addCommand("logging", logging);
 
+    sCmd.addCommand("impuls-out", impuls);
+
     handle_time_init();
 }
 

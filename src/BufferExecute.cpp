@@ -3,19 +3,19 @@
 #include "Global.h"
 #include "Module/Terminal.h"
 
-void loopCmdAdd(const String &cmdStr) {
+void loopCmdAdd(const String& cmdStr) {
     orderBuf += cmdStr;
     if (!cmdStr.endsWith(",")) {
         orderBuf += ",";
     }
 }
 
-void fileCmdExecute(const String &filename) {
+void fileCmdExecute(const String& filename) {
     String cmdStr = readFile(filename, 4096);
     csvCmdExecute(cmdStr);
 }
 
-void csvCmdExecute(String &cmdStr) {
+void csvCmdExecute(String& cmdStr) {
     cmdStr.replace(";", " ");
     cmdStr += "\r\n";
     cmdStr.replace("\r\n", "\n");
@@ -30,7 +30,7 @@ void csvCmdExecute(String &cmdStr) {
     }
 }
 
-void spaceCmdExecute(String &cmdStr) {
+void spaceCmdExecute(String& cmdStr) {
     cmdStr += "\r\n";
     cmdStr.replace("\r\n", "\n");
     cmdStr.replace("\r", "\n");
@@ -52,7 +52,7 @@ void loopCmdExecute() {
 
 void sensorsInit() {
     ts.add(
-        SENSORS10SEC, 10000, [&](void *) {
+        SENSORS10SEC, 10000, [&](void*) {
             String buf = sensorReadingMap10sec;
             while (buf.length()) {
                 String tmp = selectToMarker(buf, ",");
@@ -63,7 +63,7 @@ void sensorsInit() {
         nullptr, true);
 
     ts.add(
-        SENSORS30SEC, 30000, [&](void *) {
+        SENSORS30SEC, 30000, [&](void*) {
             String buf = sensorReadingMap30sec;
             while (buf.length()) {
                 String tmp = selectToMarker(buf, ",");
@@ -74,3 +74,21 @@ void sensorsInit() {
         nullptr, true);
 }
 
+void addKey(String& key, int number) {
+    impulsKeyList += key + " " + String(number) + ",";
+}
+
+int getKeyNum(String& key) {
+    String keyNumberTableBuf = impulsKeyList;
+    //SerialPrint("","",impulsKeyList);
+    int number = -1;
+    while (keyNumberTableBuf.length()) {
+        String tmp = selectToMarker(keyNumberTableBuf, ",");
+        String keyIncomming = selectToMarker(tmp, " ");
+        if (keyIncomming == key) {
+            number = selectToMarkerLast(tmp, " ").toInt();
+        }
+        keyNumberTableBuf = deleteBeforeDelimiter(keyNumberTableBuf, ",");
+    }
+    return number;
+}
