@@ -28,4 +28,3 @@ boolean isDigitStr(const String&);
 
 String prettyBytes(size_t size);
 
-const char getErrorLevelStr(uint8_t level);
