@@ -1,8 +1,6 @@
 #pragma once
 
-//
-// Firmware
-//
+//===========Firmware=============================================================================================================================================
 #ifdef ESP8266
 #define FIRMWARE_NAME "esp8266-iotm"
 #define FIRMWARE_VERSION 262
@@ -11,35 +9,24 @@
 #define FIRMWARE_NAME "esp32-iotm"
 #define FIRMWARE_VERSION 259
 #endif
-
 #define FLASH_4MB true
 
-//
-// System
-//
+//===========FSystem==============================================================================================================================================
 #define NUM_BUTTONS 6
 #define LED_PIN 2
 
-//
-// MQTT
-//
+//===========MQTT=================================================================================================================================================
 #define MQTT_RECONNECT_INTERVAL 20000
 
-//
-// Telemetry
-//
+//==========Telemetry=============================================================================================================================================
 #define TELEMETRY_UPDATE_INTERVAL_MIN 60
 
-
-//
-// Configuration
-//
+//=========Configuration==========================================================================================================================================
 #define DEVICE_CONFIG_FILE "s.conf.csv"
 #define DEVICE_SCENARIO_FILE "s.scen.txt"
 
-//
-// System parts
-//
+
+//=========System parts===========================================================================================================================================
 //#define OTA_UPDATES_ENABLED
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
@@ -47,9 +34,7 @@
 //#define UDP_ENABLED
 //#define SSDP_ENABLED
 
-//
-// Sensors enable/disable
-//
+//=========Sensors enable/disable=================================================================================================================================
 #define TANK_LEVEL_SAMPLES 10
 #define LEVEL_ENABLED
 #define ANALOG_ENABLED
@@ -58,15 +43,13 @@
 #define BMP_ENABLED
 #define BME_ENABLED
 
-//
-// Gears enable/disable
-//
+
+//=========Gears enable/disable===================================================================================================================================
 #define STEPPER_ENABLED
 #define SERVO_ENABLED
 
-//
-// Other enable/disable
-//
+
+//========Other enable/disable====================================================================================================================================
 #define LOGGING_ENABLED
 #define SERIAL_ENABLED
 #define PUSH_ENABLED
@@ -84,6 +67,7 @@ struct Time_t {
     unsigned long valid;
 };
 
+//================================================================================================================================================================
 enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,
                    SENSORS10SEC,

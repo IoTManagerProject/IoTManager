@@ -17,6 +17,8 @@
 #include "items/ButtonInClass.h"
 #include "items/LoggingClass.h"
 
+#include "items/ImpulsOutClass.h"
+
 void not_async_actions();
 
 Timings metric;
@@ -99,10 +101,12 @@ void setup() {
     just_load = false;
     initialized = true;  //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
 
-    
+    static bool firstTime = true;
+    if (firstTime) myImpulsOut = new MyImpulsOutVector();
+    firstTime = false;
+    myImpulsOut->push_back(ImpulsOutClass(500, 10, 13));
+    myImpulsOut->at(0).activate();
 }
-
-
 
 void loop() {
     if (!initialized) {
@@ -127,6 +131,12 @@ void loop() {
     if (myLogging != nullptr) {
         for (unsigned int i = 0; i < myLogging->size(); i++) {
             myLogging->at(i).loop();
+        }
+    }
+
+    if (myImpulsOut != nullptr) {
+        for (unsigned int i = 0; i < myImpulsOut->size(); i++) {
+            myImpulsOut->at(i).loop();
         }
     }
 }

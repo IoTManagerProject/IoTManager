@@ -1,9 +1,10 @@
 #include "Web.h"
-#include "items/LoggingClass.h"
+
 #include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
+#include "items/LoggingClass.h"
 
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
@@ -239,6 +240,8 @@ void web_init() {
             msg = F("Cервер не найден. Попробуйте повторить позже...");
         } else if (lastVersion == -2) {
             msg = F("Устройство не подключено к роутеру!");
+        } else if (lastVersion < FIRMWARE_VERSION) {
+            msg = F("Ошибка версии. Попробуйте повторить позже...");
         }
 
         // else if (lastVersion == "") {
