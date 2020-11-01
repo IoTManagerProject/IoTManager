@@ -2,6 +2,7 @@
 #include <SSDP.h>
 
 #include "BufferExecute.h"
+#include "Bus.h"
 #include "Class/CallBackTest.h"
 #include "Class/NotAsync.h"
 #include "Class/ScenarioClass.h"
@@ -9,13 +10,12 @@
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
+#include "RemoteOrdersUdp.h"
 #include "Utils/StatUtils.h"
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
 #include "items/ButtonInClass.h"
 #include "items/LoggingClass.h"
-#include "RemoteOrdersUdp.h"
-#include "Bus.h"
 
 void not_async_actions();
 
@@ -74,11 +74,11 @@ void setup() {
 
     SerialPrint("I", "Stat", "Stat Init");
     initSt();
-    
-    #ifdef UDP_ENABLED
-    SerialPrint("I","UDP","Udp Init");
+
+#ifdef UDP_ENABLED
+    SerialPrint("I", "UDP", "Udp Init");
     asyncUdpInit();
-    #endif
+#endif
 
     SerialPrint("I", "Bus", "Bus Init");
     busInit();
@@ -99,10 +99,10 @@ void setup() {
     just_load = false;
     initialized = true;  //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
 
-    //myLogging = new MyLoggingVector();
-    //myLogging->push_back(LoggingClass(30000, 10, "analog-adc-1"));
-    //myLogging->push_back(LoggingClass(10000, 1, "10 sec"));
+    
 }
+
+
 
 void loop() {
     if (!initialized) {

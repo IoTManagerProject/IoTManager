@@ -79,8 +79,8 @@ extern int lastVersion;
 // Logging
 extern void logging();
 extern void deleteOldDate(String filename, size_t max_lines, String date_to_add);
-extern void clean_log_date();
-extern void choose_log_date_and_send();
+
+
 
 // Main
 extern void setChipId();

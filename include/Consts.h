@@ -5,7 +5,7 @@
 //
 #ifdef ESP8266
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION 261
+#define FIRMWARE_VERSION 262
 #endif
 #ifdef ESP32
 #define FIRMWARE_NAME "esp32-iotm"
@@ -44,8 +44,8 @@
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
-#define UDP_ENABLED
-#define SSDP_ENABLED
+//#define UDP_ENABLED
+//#define SSDP_ENABLED
 
 //
 // Sensors enable/disable
@@ -109,20 +109,6 @@ enum NotAsyncActions {
     do_deviceInit,
     do_delChoosingItems,
     do_LAST,
-};
-
-enum ErrorType_t {
-    ET_NONE,
-    ET_FUNCTION,
-    ET_MODULE,
-    ET_SYSTEM
-};
-
-enum ErrorLevel_t {
-    EL_NONE,
-    EL_INFO,
-    EL_WARNING,
-    EL_ERROR
 };
 
 enum LedStatus_t {

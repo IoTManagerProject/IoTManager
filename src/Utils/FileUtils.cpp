@@ -20,10 +20,10 @@ void removeFile(const String& filename) {
     String path = filepath(filename);
     if (LittleFS.exists(path)) {
         if (!LittleFS.remove(path)) {
-            SerialPrint("[E]","Files","remove " + path);
+            SerialPrint("I","Files","remove " + path);
         }
     } else {
-        SerialPrint("I","Files","not exist" + path);
+        SerialPrint("E","Files","not exist" + path);
     }
 }
 

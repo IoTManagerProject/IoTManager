@@ -6,9 +6,10 @@
 #include "Global.h"
 #include "ItemsCmd.h"
 
-LoggingClass::LoggingClass(unsigned long period, unsigned int maxPoints, String key) {
+LoggingClass::LoggingClass(unsigned long period, unsigned int maxPoints, String loggingValueKey, String key) {
     _period = period * 1000;
     _maxPoints = maxPoints;
+    _loggingValueKey = loggingValueKey;
     _key = key;
 }
 
@@ -19,7 +20,7 @@ void LoggingClass::loop() {
     unsigned long difference = currentMillis - prevMillis;
     if (difference >= _period) {
         prevMillis = millis();
-        addNewDelOldData("log." + _key + ".txt", _maxPoints, jsonReadStr(configLiveJson, _key));
+        addNewDelOldData("logs/" + _key + ".txt", _maxPoints, jsonReadStr(configLiveJson, _loggingValueKey));
     }
 }
 
@@ -33,7 +34,7 @@ void LoggingClass::addNewDelOldData(const String filename, size_t maxPoints, Str
         removeFile(filename);
         lines_cnt = 0;
     }
-    
+
     if (payload != "") {
         if (lines_cnt > maxPoints) {
             logData = deleteBeforeDelimiter(logData, "\r\n");
@@ -53,13 +54,67 @@ MyLoggingVector* myLogging = nullptr;
 
 void logging() {
     myLineParsing.update();
-    String value = myLineParsing.gvalue();
+    String loggingValueKey = myLineParsing.gvalue();
+    String key = myLineParsing.gkey();
     String interv = myLineParsing.gint();
     String maxcnt = myLineParsing.gmaxcnt();
     myLineParsing.clear();
 
+    logging_value_names_list += key + ",";
+
     static bool firstTime = true;
     if (firstTime) myLogging = new MyLoggingVector();
     firstTime = false;
-    myLogging->push_back(LoggingClass(interv.toInt(), maxcnt.toInt(), value));
+    myLogging->push_back(LoggingClass(interv.toInt(), maxcnt.toInt(), loggingValueKey, key));
+}
+
+void choose_log_date_and_send() {
+    String all_line = logging_value_names_list;
+    while (all_line.length() != 0) {
+        String tmp = selectToMarker(all_line, ",");
+        sendLogData("logs/" + tmp + ".txt", tmp);
+        all_line = deleteBeforeDelimiter(all_line, ",");
+    }
+}
+
+void sendLogData(String file, String topic) {
+    String log_date = readFile(file, 5120);
+    if (log_date != "failed") {
+        log_date.replace("\r\n", "\n");
+        log_date.replace("\r", "\n");
+        String buf = "{}";
+        String json_array;
+        String unix_time;
+        String value;
+        while (log_date.length()) {
+            String tmp = selectToMarker(log_date, "\n");
+            log_date = deleteBeforeDelimiter(log_date, "\n");
+            unix_time = selectToMarker(tmp, " ");
+            jsonWriteInt(buf, "x", unix_time.toInt());
+            value = deleteBeforeDelimiter(tmp, " ");
+            jsonWriteFloat(buf, "y1", value.toFloat());
+            if (log_date.length() < 3) {
+                json_array += buf;
+            } else {
+                json_array += buf + ",";
+            }
+            buf = "{}";
+        }
+        unix_time = "";
+        value = "";
+        log_date = "";
+        json_array = "{\"status\":[" + json_array + "]}";
+        //SerialPrint("I", "module", json_array);
+
+        publishChart(topic, json_array);
+    }
+}
+
+void clean_log_date() {
+    auto dir = LittleFS.openDir("logs");
+    while (dir.next()) {
+        String fname = dir.fileName();
+        SerialPrint("I", "System", fname);
+        removeFile("logs/" + fname);
+    }
 }

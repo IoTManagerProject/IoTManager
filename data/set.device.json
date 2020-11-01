@@ -43,7 +43,7 @@
         },
         {
             "type": "h4",
-            "title": "LittleFS version: 261"
+            "title": "LittleFS version: 262"
         },
         {
             "type": "hr"
@@ -116,7 +116,7 @@
         },
         {
             "type": "text",
-            "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>После любого изменения таблицы элементов, включая удаление/добавление строк, необходимо нажать кнопку <b>Сохранить таблицу</b></p></font></div>"
+            "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>После любого изменения таблицы элементов, включая удаление/добавление строк, необходимо нажать кнопку <b>СОХРАНИТЬ ТАБЛИЦУ</b></p></font></div>"
         },
         {
             "type": "h2",
@@ -153,7 +153,7 @@
             "class": "btn btn-block btn-default"
         },
         {
-            "type": "link",
+            "type": "button",
             "title": "Очистить логи сенсоров",
             "action": "/set?cleanlog",
             "class": "btn btn-block btn-default"
