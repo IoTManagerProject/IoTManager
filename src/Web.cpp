@@ -1,5 +1,5 @@
 #include "Web.h"
-
+#include "items/LoggingClass.h"
 #include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
@@ -199,6 +199,14 @@ void web_init() {
         if (request->hasArg("i2c")) {
             myNotAsyncActions->make(do_BUSSCAN);
             request->redirect("/?set.utilities");
+        }
+
+        //==============================developer settings=============================================
+        if (request->hasArg("serverip")) {
+            jsonWriteStr(configSetupJson, "serverip", request->getParam("serverip")->value());
+            saveConfig();
+            serverIP = jsonReadStr(configSetupJson, "serverip");
+            request->send(200);
         }
     });
 

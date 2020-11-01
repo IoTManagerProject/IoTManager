@@ -5,7 +5,7 @@
 //
 #ifdef ESP8266
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION 261
+#define FIRMWARE_VERSION 262
 #endif
 #ifdef ESP32
 #define FIRMWARE_NAME "esp32-iotm"
@@ -30,6 +30,7 @@
 //
 #define TELEMETRY_UPDATE_INTERVAL_MIN 60
 
+
 //
 // Configuration
 //
@@ -44,7 +45,7 @@
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
 //#define UDP_ENABLED
-#define SSDP_ENABLED
+//#define SSDP_ENABLED
 
 //
 // Sensors enable/disable
@@ -87,13 +88,6 @@ enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,
                    SENSORS10SEC,
                    SENSORS30SEC,
-                   STEPPER1,
-                   STEPPER2,
-                   LOG1,
-                   LOG2,
-                   LOG3,
-                   LOG4,
-                   LOG5,
                    TIMER_COUNTDOWN,
                    TIME,
                    TIME_SYNC,
@@ -115,20 +109,6 @@ enum NotAsyncActions {
     do_deviceInit,
     do_delChoosingItems,
     do_LAST,
-};
-
-enum ErrorType_t {
-    ET_NONE,
-    ET_FUNCTION,
-    ET_MODULE,
-    ET_SYSTEM
-};
-
-enum ErrorLevel_t {
-    EL_NONE,
-    EL_INFO,
-    EL_WARNING,
-    EL_ERROR
 };
 
 enum LedStatus_t {

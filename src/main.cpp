@@ -2,6 +2,7 @@
 #include <SSDP.h>
 
 #include "BufferExecute.h"
+#include "Bus.h"
 #include "Class/CallBackTest.h"
 #include "Class/NotAsync.h"
 #include "Class/ScenarioClass.h"
@@ -9,12 +10,12 @@
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
+#include "RemoteOrdersUdp.h"
 #include "Utils/StatUtils.h"
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
 #include "items/ButtonInClass.h"
-//#include "RemoteOrdersUdp.h"
-#include "Bus.h"
+#include "items/LoggingClass.h"
 
 void not_async_actions();
 
@@ -74,8 +75,10 @@ void setup() {
     SerialPrint("I", "Stat", "Stat Init");
     initSt();
 
-    //SerialPrint("I","UDP","Udp Init");
-    //asyncUdpInit();
+#ifdef UDP_ENABLED
+    SerialPrint("I", "UDP", "Udp Init");
+    asyncUdpInit();
+#endif
 
     SerialPrint("I", "Bus", "Bus Init");
     busInit();
@@ -95,7 +98,11 @@ void setup() {
 
     just_load = false;
     initialized = true;  //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
+
+    
 }
+
+
 
 void loop() {
     if (!initialized) {
@@ -116,4 +123,10 @@ void loop() {
 
     myNotAsyncActions->loop();
     ts.update();
+
+    if (myLogging != nullptr) {
+        for (unsigned int i = 0; i < myLogging->size(); i++) {
+            myLogging->at(i).loop();
+        }
+    }
 }

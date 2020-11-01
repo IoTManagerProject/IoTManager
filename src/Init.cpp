@@ -1,7 +1,8 @@
-#include "Global.h"
 #include "Init.h"
-#include "Cmd.h"
 
+#include "Cmd.h"
+#include "Global.h"
+#include "items/LoggingClass.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -14,6 +15,8 @@ void loadConfig() {
     prex = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId;
 
     Serial.println(configSetupJson);
+
+    serverIP = jsonReadStr(configSetupJson, "serverip");
 }
 
 void all_init() {
@@ -23,11 +26,14 @@ void all_init() {
 }
 
 void Device_init() {
+    sensorReadingMap10sec = "";
+    dallasEnterCounter = -1;
+    if (myLogging != nullptr) {
+        myLogging->clear();
+    }
+    logging_value_names_list = "";
+    
 
-     sensorReadingMap10sec = "";
-     dallasEnterCounter = -1;
-
-    //logging_value_names_list = "";
     //enter_to_logging_counter = LOG1 - 1;
     //analog_value_names_list = "";
     //enter_to_analog_counter = 0;
@@ -57,7 +63,6 @@ void Device_init() {
     removeFile(String("layout.txt"));
 #endif
 
-
     fileCmdExecute(String(DEVICE_CONFIG_FILE));
     //outcoming_date();
 }
@@ -76,8 +81,6 @@ void uptime_init() {
         },
         nullptr, true);
 }
-
-
 
 void handle_uptime() {
     jsonWriteStr(configSetupJson, "uptime", timeNow->getUptime());

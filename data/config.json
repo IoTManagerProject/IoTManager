@@ -3,8 +3,8 @@
     "chipID": "",
     "apssid": "IoTmanager",
     "appass": "",
-    "routerssid": "rise",
-    "routerpass": "hostel3333",
+    "routerssid": "VOLODYA",
+    "routerpass": "BELCHENKO",
     "timezone": 2,
     "ntp": "pool.ntp.org",
     "mqttServer": "91.204.228.124",
@@ -18,5 +18,6 @@
     "webpass": "admin",
     "udponoff": "1",
     "blink": "0",
-    "oneWirePin": "2"
+    "oneWirePin": "2",
+    "serverip": "http://206.189.49.244"
 }

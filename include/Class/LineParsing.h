@@ -12,7 +12,6 @@ class LineParsing {
     String _page;
     String _descr;
     String _order;
-
     String _addr;
     String _reg;
     String _pin;
@@ -22,6 +21,9 @@ class LineParsing {
     String _state;
     String _db;
     String _type;
+    String _int;
+    String _cnt;
+    String _val;
 
    public:
     LineParsing() :
@@ -39,7 +41,10 @@ class LineParsing {
                     _inv{""},
                     _state{""},
                     _db{""},
-                    _type{""}
+                    _type{""},
+                    _int{""},
+                    _cnt{""},
+                    _val{""}
 
                     {};
 
@@ -84,6 +89,15 @@ class LineParsing {
                 if (arg.indexOf("reg[") != -1) {
                     _reg = extractInner(arg);
                 }
+                if (arg.indexOf("int[") != -1) {
+                    _int = extractInner(arg);
+                }
+                if (arg.indexOf("cnt[") != -1) {
+                    _cnt = extractInner(arg);
+                }
+                if (arg.indexOf("val[") != -1) {
+                    _val = extractInner(arg);
+                }
             }
         }
 
@@ -94,7 +108,7 @@ class LineParsing {
         _descr.replace("%ver%", String(FIRMWARE_VERSION));
         _descr.replace("%name%", jsonReadStr(configSetupJson, F("name")));
 
-        createWidgetClass(_descr, _page, _order, _file, _key);
+        createWidget(_descr, _page, _order, _file, _key);
     }
 
     //jsonWriteStr(configOptionJson, _key + "_pin", _pin);
@@ -115,10 +129,10 @@ class LineParsing {
         return _order;
     }
     String gpin() {
-        return _pin;  //
+        return _pin;
     }
     String ginv() {
-        return _inv;  //
+        return _inv;
     }
     String gstate() {
         return _state;
@@ -138,6 +152,15 @@ class LineParsing {
     String gregaddr() {
         return _reg;
     }
+    String gint() {
+        return _int;
+    }
+    String gmaxcnt() {
+        return _cnt;
+    }
+    String gvalue() {
+        return _val;
+    }
 
     void clear() {
         _key = "";
@@ -154,6 +177,9 @@ class LineParsing {
         _state = "";
         _db = "";
         _type = "";
+        _int = "";
+        _cnt = "";
+        _val = "";
     }
 
     String extractInnerDigit(String str) {
@@ -162,12 +188,14 @@ class LineParsing {
         return str.substring(p1 + 1, p2);
     }
 
-    void createWidgetClass(String descr, String page, String order, String filename, String topic) {
+    void createWidget(String descr, String page, String order, String filename, String topic) {
         if (filename != "na") {
             String buf = "{}";
-            if (!loadWidgetClass(filename, buf)) {
+            if (!loadWidget(filename, buf)) {
                 return;
             }
+
+            if(filename.indexOf("chart") != -1) jsonWriteStr(buf, "maxCount", _cnt);
 
             jsonWriteStr(buf, "page", page);
             jsonWriteStr(buf, "order", order);
@@ -182,8 +210,8 @@ class LineParsing {
         }
     }
 
-    bool loadWidgetClass(const String& filename, String& buf) {
-        buf = readFile(getWidgetFileClass(filename), 2048);
+    bool loadWidget(const String& filename, String& buf) {
+        buf = readFile(getWidgetFile(filename), 2048);
         bool res = !(buf == "Failed" || buf == "Large");
         if (!res) {
             //SerialPrint("[E]","module","on load" + filename);
@@ -191,18 +219,9 @@ class LineParsing {
         return res;
     }
 
-    const String getWidgetFileClass(const String& name) {
+    const String getWidgetFile(const String& name) {
         return "/widgets/" + name + ".json";
     }
-
-    //String jsonWriteStr1(String& json, String name, String value) {
-    //    DynamicJsonBuffer jsonBuffer;
-    //    JsonObject& root = jsonBuffer.parseObject(json);
-    //    root[name] = value;
-    //    json = "";
-    //    root.printTo(json);
-    //    return json;
-    //}
 };
 
 extern LineParsing myLineParsing;
