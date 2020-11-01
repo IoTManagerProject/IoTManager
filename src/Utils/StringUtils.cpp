@@ -111,16 +111,3 @@ String prettyBytes(size_t size) {
         return String(size / 1024.0 / 1024.0 / 1024.0) + "GB";
 }
 
-const char getErrorLevelStr(uint8_t level) {
-    switch (level) {
-        case EL_INFO:
-            return 'I';
-        case EL_WARNING:
-            return 'W';
-        case EL_ERROR:
-            return 'E';
-        default:
-            break;
-    }
-    return '?';
-}
