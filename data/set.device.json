@@ -50,7 +50,7 @@
         },
         {
             "type": "dropdown",
-            "name": "help-url",
+            "name": "help-url1",
             "class": "btn btn-default",
             "style": "display:inline",
             "title": {
@@ -80,7 +80,17 @@
                 "/set?addItem=uptime": "b.Отобразить время работы устройства"
             }
         },
-        
+        {
+            "type": "dropdown",
+            "name": "help-url2",
+            "class": "btn btn-default",
+            "style": "display:inline",
+            "title": {
+                "#": "Выберите пресет из списка<span class=\"caret\"></span>",
+                "/set?addPreset=termostat.c": "1.Термостат на основе ds18b20 (устройство держит заданный уровень температуры)",
+                "/set?addPreset=humstat.c": "2.Контроль влажности на основе DHT (устройство держит заданный уровень влажности)"
+            }
+        },
         {
             "type": "hr"
         },

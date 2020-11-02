@@ -23,6 +23,12 @@ void web_init() {
             request->redirect("/?set.device");
         }
 
+        if (request->hasArg("addPreset")) {
+            String name = request->getParam("addPreset")->value();
+            addPreset(name);
+            request->redirect("/?set.device");
+        }
+
         if (request->hasArg("delChoosingItems")) {
             myNotAsyncActions->make(do_delChoosingItems);
             request->send(200);

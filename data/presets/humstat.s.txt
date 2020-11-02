@@ -1,0 +1,6 @@
+hum > inputU
+button 0
+end
+hum < inputL
+button 1
+end

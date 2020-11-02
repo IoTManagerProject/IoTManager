@@ -40,8 +40,7 @@ extern WiFiClient espClient;
 extern PubSubClient mqtt;
 extern StringCommand sCmd;
 extern AsyncWebServer server;
-extern DallasTemperature sensors;
-extern OneWire* oneWire;
+
 extern boolean but[NUM_BUTTONS];
 extern Bounce* buttons;
 

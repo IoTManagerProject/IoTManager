@@ -4,6 +4,8 @@
 #include "Global.h"
 #include "items/SensorConvertingClass.h"
 
+extern DallasTemperature sensors;
+extern OneWire* oneWire;
 class SensorDallasClass : public SensorConvertingClass {
 public:
     SensorDallasClass() : SensorConvertingClass() {};
