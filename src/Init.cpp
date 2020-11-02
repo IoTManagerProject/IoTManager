@@ -3,6 +3,7 @@
 #include "Cmd.h"
 #include "Global.h"
 #include "items/LoggingClass.h"
+#include "items/ImpulsOutClass.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -26,18 +27,25 @@ void all_init() {
 }
 
 void Device_init() {
+
     sensorReadingMap10sec = "";
+
     dallasEnterCounter = -1;
+
+    //======clear logging params======
     if (myLogging != nullptr) {
         myLogging->clear();
     }
-
     loggingKeyList = "";
 
+    //======clear impuls params=======
+    if (myImpulsOut != nullptr) {
+        myImpulsOut->clear();
+    }
     impulsKeyList = "";
     impulsEnterCounter = -1;
 
-    
+
 #ifdef LAYOUT_IN_RAM
     all_widgets = "";
 #else

@@ -45,7 +45,7 @@ void impuls() {
     myLineParsing.clear();
 
     impulsEnterCounter++;
-    addKey(key, impulsEnterCounter);
+    addKey(key, impulsKeyList, impulsEnterCounter);
 
     static bool firstTime = true;
     if (firstTime) myImpulsOut = new MyImpulsOutVector();
@@ -60,8 +60,7 @@ void impulsExecute() {
     String impulsPeriod = sCmd.next();
     String impulsCount = sCmd.next();
 
-    int number = getKeyNum(key);
-    SerialPrint("I", "Impuls", key + " " + String(number));
+    int number = getKeyNum(key, impulsKeyList);
 
     if (myImpulsOut != nullptr) {
         if (number != -1) {

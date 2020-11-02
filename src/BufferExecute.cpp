@@ -74,13 +74,13 @@ void sensorsInit() {
         nullptr, true);
 }
 
-void addKey(String& key, int number) {
-    impulsKeyList += key + " " + String(number) + ",";
+void addKey(String& key, String& keyNumberTable, int number) {
+    keyNumberTable += key + " " + String(number) + ",";
 }
 
-int getKeyNum(String& key) {
-    String keyNumberTableBuf = impulsKeyList;
-    //SerialPrint("","",impulsKeyList);
+int getKeyNum(String& key, String& keyNumberTable) {
+    String keyNumberTableBuf = keyNumberTable;
+    //SerialPrint("","",keyNumberTable);
     int number = -1;
     while (keyNumberTableBuf.length()) {
         String tmp = selectToMarker(keyNumberTableBuf, ",");
