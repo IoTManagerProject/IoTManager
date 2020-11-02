@@ -72,14 +72,17 @@ class Scenario {
         } else if (_conditionSign == "!=") {
             flag = _eventValue != _conditionValue;
         } else if (_conditionSign == "<") {
-            flag = _eventValue.toInt() < _conditionValue.toInt();
+            flag = _eventValue.toFloat() < _conditionValue.toFloat();
         } else if (_conditionSign == ">") {
-            flag = _eventValue.toInt() > _conditionValue.toInt();
+            flag = _eventValue.toFloat() > _conditionValue.toFloat();
         } else if (_conditionSign == ">=") {
-            flag = _eventValue.toInt() >= _conditionValue.toInt();
+            flag = _eventValue.toFloat() >= _conditionValue.toFloat();
         } else if (_conditionSign == "<=") {
-            flag = _eventValue.toInt() <= _conditionValue.toInt();
+            flag = _eventValue.toFloat() <= _conditionValue.toFloat();
         }
+
+        Serial.println("event Value: " + _eventValue);
+        Serial.println("cond  Value: " + _conditionValue);
 
         if (flag) Serial.println("I Scenario event: " + _condition);
 
@@ -97,7 +100,7 @@ class Scenario {
                 this->calculate2();
                 if (this->isConditionSatisfied()) {  //если вошедшее событие выполняет условие сценария
                     _scenBlok = deleteBeforeDelimiter(_scenBlok, "\n");
-                    //Serial.println("   [>] Making: " + _scenBlok);
+                    Serial.println("   [>] Making: " + _scenBlok);
                     spaceCmdExecute(_scenBlok);
                 }
             }

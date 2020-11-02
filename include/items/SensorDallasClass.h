@@ -5,8 +5,8 @@
 #include "items/SensorConvertingClass.h"
 
 class SensorDallasClass : public SensorConvertingClass {
-   public:
-    SensorDallasClass() : SensorConvertingClass(){};
+public:
+    SensorDallasClass() : SensorConvertingClass() {};
 
     void SensorDallasInit() {
         oneWire = new OneWire((uint8_t)_pin.toInt());
@@ -36,7 +36,7 @@ class SensorDallasClass : public SensorConvertingClass {
                 float valueFl = this->correction(key, value);
                 eventGen(key, "");
                 jsonWriteStr(configLiveJson, key, String(valueFl));
-                 publishStatus(key, String(valueFl));
+                publishStatus(key, String(valueFl));
                 SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));
             }
         }
