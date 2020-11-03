@@ -40,8 +40,7 @@ extern WiFiClient espClient;
 extern PubSubClient mqtt;
 extern StringCommand sCmd;
 extern AsyncWebServer server;
-extern DallasTemperature sensors;
-extern OneWire* oneWire;
+
 extern boolean but[NUM_BUTTONS];
 extern Bounce* buttons;
 
@@ -65,22 +64,19 @@ extern String eventBuf;
 extern String itemsFile;
 extern String itemsLine;
 
+//key lists and numbers
+extern String impulsKeyList;
+extern int impulsEnterCounter;
+
 // Sensors
 extern String sensorReadingMap10sec;
 extern String sensorReadingMap30sec;
-extern int8_t dallasEnterCounter;
 
-extern String logging_value_names_list;
+
+extern String loggingKeyList;
 extern int enter_to_logging_counter;
 extern int scenario_line_status[40];
 extern int lastVersion;
-
-//Global functions
-// Logging
-extern void logging();
-extern void deleteOldDate(String filename, size_t max_lines, String date_to_add);
-
-
 
 // Main
 extern void setChipId();

@@ -1,0 +1,6 @@
+temp > inputU
+button 0
+end
+temp < inputL
+button 1
+end

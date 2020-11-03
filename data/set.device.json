@@ -43,14 +43,14 @@
         },
         {
             "type": "h4",
-            "title": "LittleFS version: 262"
+            "title": "LittleFS version: 264"
         },
         {
             "type": "hr"
         },
         {
             "type": "dropdown",
-            "name": "help-url",
+            "name": "help-url1",
             "class": "btn btn-default",
             "style": "display:inline",
             "title": {
@@ -74,12 +74,23 @@
                 "/set?addItem=bme280-press": "17.Датчик давления bme280",
                 "/set?addItem=bmp280-temp": "18.Датчик температуры bmp280",
                 "/set?addItem=bmp280-press": "19.Датчик давления bmp280",
-                "/set?addItem=modbus": "20.Прочитать регистр modbus устройства",
+                "/set?addItem=impuls-out": "20.Создать импульсы через заданный промежуток времени (управление шд)",
+                "/set?addItem=modbus": "21.Прочитать регистр modbus устройства",
                 "/set?addItem=logging": "a.Логгирование и вывод в график любой величины",
                 "/set?addItem=uptime": "b.Отобразить время работы устройства"
             }
         },
-        
+        {
+            "type": "dropdown",
+            "name": "help-url2",
+            "class": "btn btn-default",
+            "style": "display:inline",
+            "title": {
+                "#": "Выберите пресет из списка<span class=\"caret\"></span>",
+                "/set?addPreset=dal.c": "1.Термостат на основе ds18b20 (устройство держит заданный уровень температуры)",
+                "/set?addPreset=dht.c": "2.Контроль влажности на основе DHT (устройство держит заданный уровень влажности)"
+            }
+        },
         {
             "type": "hr"
         },
@@ -116,7 +127,7 @@
         },
         {
             "type": "text",
-            "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>После любого изменения таблицы элементов, включая удаление/добавление строк, необходимо нажать кнопку <b>СОХРАНИТЬ ТАБЛИЦУ</b></p></font></div>"
+            "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>После любого изменения таблицы элементов, включая удаление/добавление строк, необходимо нажать кнопку <b>СОХРАНИТЬ ТАБЛИЦУ</b>. Иногда, для корректной работы необходимо перезагрузить устройство после финального завершения его настройки</p></font></div>"
         },
         {
             "type": "h2",

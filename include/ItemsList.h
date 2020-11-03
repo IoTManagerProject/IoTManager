@@ -5,6 +5,7 @@
 
 extern void itemsListInit();
 extern void addItem(String name);
+extern void addPreset(String name);
 extern void delChoosingItems();
 extern void delAllItems();
 extern uint8_t getNewElementNumber(String file);

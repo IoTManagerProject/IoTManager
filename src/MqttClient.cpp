@@ -26,11 +26,13 @@ void mqttInit() {
                 if (mqtt.connected()) {
                     SerialPrint("I", "MQTT", "OK");
                     setLedStatus(LED_OFF);
-                } else {
+                }
+                else {
                     SerialPrint("E", "MQTT", "lost connection");
                     mqttConnect();
                 }
-            } else {
+            }
+            else {
                 SerialPrint("E", "WIFI", "Lost WiFi connection");
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
                 startAPMode();
@@ -89,7 +91,8 @@ boolean mqttConnect() {
             setLedStatus(LED_OFF);
             mqttSubscribe();
             res = true;
-        } else {
+        }
+        else {
             SerialPrint("E", "MQTT", "could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
             setLedStatus(LED_FAST);
         }
@@ -116,8 +119,9 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         choose_log_date_and_send();
 #endif
 
-    } else if (topicStr.indexOf("control")) {
-      
+    }
+    else if (topicStr.indexOf("control")) {
+
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
 
         orderBuf += key;
@@ -125,12 +129,14 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         orderBuf += payloadStr;
         orderBuf += ",";
 
-    } else if (topicStr.indexOf("order")) {
+    }
+    else if (topicStr.indexOf("order")) {
         payloadStr.replace("_", " ");
         orderBuf += payloadStr;
         orderBuf += ",";
 
-    } else if (topicStr.indexOf("update")) {
+    }
+    else if (topicStr.indexOf("update")) {
         if (payloadStr == "1") {
             myNotAsyncActions->make(do_UPGRADE);
         }
@@ -245,38 +251,38 @@ void publishState() {
 
 const String getStateStr() {
     switch (mqtt.state()) {
-        case -4:
-            return F("no respond");
-            break;
-        case -3:
-            return F("connection was broken");
-            break;
-        case -2:
-            return F("connection failed");
-            break;
-        case -1:
-            return F("client disconnected");
-            break;
-        case 0:
-            return F("client connected");
-            break;
-        case 1:
-            return F("doesn't support the requested version");
-            break;
-        case 2:
-            return F("rejected the client identifier");
-            break;
-        case 3:
-            return F("unable to accept the connection");
-            break;
-        case 4:
-            return F("wrong username/password");
-            break;
-        case 5:
-            return F("not authorized to connect");
-            break;
-        default:
-            return F("unspecified");
-            break;
+    case -4:
+        return F("no respond");
+        break;
+    case -3:
+        return F("connection was broken");
+        break;
+    case -2:
+        return F("connection failed");
+        break;
+    case -1:
+        return F("client disconnected");
+        break;
+    case 0:
+        return F("client connected");
+        break;
+    case 1:
+        return F("doesn't support the requested version");
+        break;
+    case 2:
+        return F("rejected the client identifier");
+        break;
+    case 3:
+        return F("unable to accept the connection");
+        break;
+    case 4:
+        return F("wrong username/password");
+        break;
+    case 5:
+        return F("not authorized to connect");
+        break;
+    default:
+        return F("unspecified");
+        break;
     }
 }

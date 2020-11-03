@@ -54,6 +54,17 @@ void addItem(String name) {
     addFile(DEVICE_CONFIG_FILE, "\n" + item);
 }
 
+void addPreset(String name) {
+    String preset = readFile("presets/" + name + ".txt", 4048);
+    addFile(DEVICE_CONFIG_FILE, "\n" + preset);
+
+    name.replace(".c",".s");
+
+    String scenario = readFile("presets/" + name + ".txt", 4048);
+    removeFile(DEVICE_SCENARIO_FILE);
+    addFile(DEVICE_SCENARIO_FILE, scenario);
+}
+
 void delAllItems() {
     removeFile(DEVICE_CONFIG_FILE);
     addFile(DEVICE_CONFIG_FILE, String(firstLine));

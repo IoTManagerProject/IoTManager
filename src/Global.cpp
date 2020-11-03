@@ -33,17 +33,20 @@ String scenario = "";
 //orders and events
 String orderBuf = "";
 String eventBuf = "";
-
 String itemsFile = "";
 String itemsLine = "";
 
+//key lists and numbers
+String impulsKeyList = "";
+int impulsEnterCounter = -1;
+
+
 // Sensors
-int8_t dallasEnterCounter = -1;
 String sensorReadingMap10sec;
 String sensorReadingMap30sec;
 
 // Logging
-String logging_value_names_list;
+String loggingKeyList;
 int enter_to_logging_counter;
 
 // Upgrade

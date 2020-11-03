@@ -51,3 +51,5 @@ extern void sysUptime();
 extern void uptimeReading();
 
 extern void logging();
+
+extern void impuls();

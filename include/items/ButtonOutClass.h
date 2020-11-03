@@ -5,8 +5,8 @@
 #include "Global.h"
 
 class ButtonOutClass : public LineParsing {
-   public:
-    ButtonOutClass() : LineParsing(){};
+public:
+    ButtonOutClass() : LineParsing() {};
 
     void init() {
         if (_pin != "") {
@@ -28,12 +28,13 @@ class ButtonOutClass : public LineParsing {
 
         if (inv == "") {
             digitalWrite(pinInt, state.toInt());
-        } else {
+        }
+        else {
             digitalWrite(pinInt, !state.toInt());
         }
         eventGen(key, "");
         jsonWriteInt(configLiveJson, key, state.toInt());
-         publishStatus(key, state);
+        publishStatus(key, state);
     }
 };
 

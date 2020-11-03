@@ -4,7 +4,7 @@
 #include "Global.h"
 
 class Scenario {
-   protected:
+protected:
     String _scenarioTmp;
     String _condition;
     String _conditionParam;
@@ -15,16 +15,16 @@ class Scenario {
     String _eventParam;
     String _eventValue;
 
-   public:
-    Scenario() : _scenarioTmp{""},
-                 _condition{""},
-                 _conditionParam{""},
-                 _conditionSign{""},
-                 _conditionValue{""},
-                 _scenBlok{""},
-                 _event{""},
-                 _eventParam{""},
-                 _eventValue{""} {};
+public:
+    Scenario() : _scenarioTmp{ "" },
+        _condition{ "" },
+        _conditionParam{ "" },
+        _conditionSign{ "" },
+        _conditionValue{ "" },
+        _scenBlok{ "" },
+        _event{ "" },
+        _eventParam{ "" },
+        _eventValue{ "" } {};
 
     void load() {
         _scenarioTmp = scenario;
@@ -69,19 +69,28 @@ class Scenario {
 
         if (_conditionSign == "=") {
             flag = _eventValue == _conditionValue;
-        } else if (_conditionSign == "!=") {
+        }
+        else if (_conditionSign == "!=") {
             flag = _eventValue != _conditionValue;
-        } else if (_conditionSign == "<") {
-            flag = _eventValue.toInt() < _conditionValue.toInt();
-        } else if (_conditionSign == ">") {
-            flag = _eventValue.toInt() > _conditionValue.toInt();
-        } else if (_conditionSign == ">=") {
-            flag = _eventValue.toInt() >= _conditionValue.toInt();
-        } else if (_conditionSign == "<=") {
-            flag = _eventValue.toInt() <= _conditionValue.toInt();
+        }
+        else if (_conditionSign == "<") {
+            flag = _eventValue.toFloat() < _conditionValue.toFloat();
+        }
+        else if (_conditionSign == ">") {
+            flag = _eventValue.toFloat() > _conditionValue.toFloat();
+        }
+        else if (_conditionSign == ">=") {
+            flag = _eventValue.toFloat() >= _conditionValue.toFloat();
+        }
+        else if (_conditionSign == "<=") {
+            flag = _eventValue.toFloat() <= _conditionValue.toFloat();
         }
 
-        if (flag) Serial.println("I Scenario event: " + _condition);
+        if (flag) {
+            //SerialPrint("I", "Scenario", "event value: " + _eventValue);
+            //SerialPrint("I", "Scenario", "condition  value: " + _conditionValue);
+            SerialPrint("I", "Scenario", "event: " + _condition);
+        }
 
         return flag;
     }
@@ -97,7 +106,12 @@ class Scenario {
                 this->calculate2();
                 if (this->isConditionSatisfied()) {  //если вошедшее событие выполняет условие сценария
                     _scenBlok = deleteBeforeDelimiter(_scenBlok, "\n");
-                    //Serial.println("   [>] Making: " + _scenBlok);
+                    String forPrint = _scenBlok;
+                    forPrint.replace("end", "");
+                    forPrint.replace("\r\n", "");
+                    forPrint.replace("\r", "");
+                    forPrint.replace("\n", "");
+                    SerialPrint("I", "Scenario", "making: " + forPrint);
                     spaceCmdExecute(_scenBlok);
                 }
             }
@@ -110,4 +124,5 @@ class Scenario {
         return jsonReadBool(configSetupJson, "scen") && eventBuf != "";
     }
 };
+
 extern Scenario* myScenario;

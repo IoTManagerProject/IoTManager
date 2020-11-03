@@ -1,8 +1,10 @@
 #include "Init.h"
-
+#include "BufferExecute.h"
 #include "Cmd.h"
 #include "Global.h"
 #include "items/LoggingClass.h"
+#include "items/ImpulsOutClass.h"
+#include "items/SensorDallas.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -26,36 +28,27 @@ void all_init() {
 }
 
 void Device_init() {
+
     sensorReadingMap10sec = "";
-    dallasEnterCounter = -1;
+
+    //======clear dallas params======
+    if (mySensorDallas2 != nullptr) {
+        mySensorDallas2->clear();
+    }
+
+    //======clear logging params======
     if (myLogging != nullptr) {
         myLogging->clear();
     }
-    logging_value_names_list = "";
-    
+    loggingKeyList = "";
 
-    //enter_to_logging_counter = LOG1 - 1;
-    //analog_value_names_list = "";
-    //enter_to_analog_counter = 0;
-    //dallas_value_name = "";
-    //enter_to_dallas_counter = 0;
-    //levelPr_value_name = "";
-    //ultrasonicCm_value_name = "";
-    //dhtT_value_name = "";
-    //dhtH_value_name = "";
-    //bmp280T_value_name = "";
-    //bmp280P_value_name = "";
-    //bme280T_value_name = "";
-    //bme280P_value_name = "";
-    //bme280H_value_name = "";
-    //bme280A_value_name = "";
-    //int array_sz = sizeof(sensors_reading_map) / sizeof(sensors_reading_map[0]);
-    //for (int i = 0; i < array_sz; i++) {
-    //    sensors_reading_map[i] = 0;
-    //}
-    //for (int i = LOG1; i <= LOG5; i++) {
-    //    ts.remove(i);
-    //}
+    //======clear impuls params=======
+    if (myImpulsOut != nullptr) {
+        myImpulsOut->clear();
+    }
+    impulsKeyList = "";
+    impulsEnterCounter = -1;
+
 
 #ifdef LAYOUT_IN_RAM
     all_widgets = "";
