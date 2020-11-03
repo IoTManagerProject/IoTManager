@@ -55,9 +55,7 @@ void addItem(String name) {
 }
 
 void addPreset(String name) {
-    Serial.println(name);
     String preset = readFile("presets/" + name + ".txt", 4048);
-    Serial.println(preset);
     addFile(DEVICE_CONFIG_FILE, "\n" + preset);
 
     name.replace(".c",".s");
