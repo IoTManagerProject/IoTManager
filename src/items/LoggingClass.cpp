@@ -42,7 +42,8 @@ void LoggingClass::addNewDelOldData(const String filename, size_t maxPoints, Str
                 logData += timeNow->getTimeUnix() + " " + payload + "\r\n";
                 writeFile(filename, logData);
             }
-        } else {
+        }
+        else {
             if (timeNow->hasTimeSynced()) {
                 addFileLn(filename, timeNow->getTimeUnix() + " " + payload);
             }
@@ -95,7 +96,8 @@ void sendLogData(String file, String topic) {
             jsonWriteFloat(buf, "y1", value.toFloat());
             if (log_date.length() < 3) {
                 json_array += buf;
-            } else {
+            }
+            else {
                 json_array += buf + ",";
             }
             buf = "{}";
@@ -111,10 +113,12 @@ void sendLogData(String file, String topic) {
 }
 
 void clean_log_date() {
+#ifdef ESP8266
     auto dir = LittleFS.openDir("logs");
     while (dir.next()) {
         String fname = dir.fileName();
         SerialPrint("I", "System", fname);
         removeFile("logs/" + fname);
     }
+#endif
 }
