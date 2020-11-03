@@ -4,11 +4,11 @@
 #include "ItemsCmd.h"
 #include <Arduino.h>
 
-SensorDallas::SensorDallas(unsigned long period, unsigned int pin, uint8_t deviceAddress, String key) {
-    _period = period * 1000;
+SensorDallas::SensorDallas(unsigned long interval, unsigned int pin, unsigned int index, String key) {
+    _interval = interval * 1000;
     _key = key;
     _pin = pin;
-    _deviceAddress = deviceAddress;
+    _index = index;
 
     oneWire = new OneWire((uint8_t)_pin);
     sensors.setOneWire(oneWire);
@@ -21,32 +21,34 @@ SensorDallas::~SensorDallas() {}
 void SensorDallas::loop() {
     currentMillis = millis();
     unsigned long difference = currentMillis - prevMillis;
-    if (difference >= _period) {
+    if (difference >= _interval) {
         prevMillis = millis();
-
+        readDallas();
     }
 }
 
-void readDallas() {
-
+void SensorDallas::readDallas() {
+    sensors.requestTemperaturesByIndex(_index);
+    float value = sensors.getTempCByIndex(_index);
+    eventGen(_key, "");
+    jsonWriteStr(configLiveJson, _key, String(value));
+    publishStatus(_key, String(value));
+    SerialPrint("I", "Sensor", "'" + _key + "' data: " + String(value));
 }
-
 
 MySensorDallasVector* mySensorDallas2 = nullptr;
 
-//void logging() {
-//    myLineParsing.update();
-//    String loggingValueKey = myLineParsing.gval();
-//    String key = myLineParsing.gkey();
-//    String interv = myLineParsing.gint();
-//    String maxcnt = myLineParsing.gcnt();
-//    myLineParsing.clear();
-//
-//    loggingKeyList += key + ",";
-//
-//    static bool firstTime = true;
-//    if (firstTime) myLogging = new MySensorDallasVector();
-//    firstTime = false;
-//    myLogging->push_back(SensorDallas(interv.toInt(), maxcnt.toInt(), loggingValueKey, key));
-//}
+void dallas() {
+    myLineParsing.update();
+    String interval = myLineParsing.gint();
+    String pin = myLineParsing.gpin();
+    String index = myLineParsing.gindex();
+    String key = myLineParsing.gkey();
+    myLineParsing.clear();
+
+    static bool firstTime = true;
+    if (firstTime) mySensorDallas2 = new MySensorDallasVector();
+    firstTime = false;
+    mySensorDallas2->push_back(SensorDallas(interval.toInt(), pin.toInt(), index.toInt(), key));
+}
 

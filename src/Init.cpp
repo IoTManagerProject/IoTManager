@@ -4,6 +4,7 @@
 #include "Global.h"
 #include "items/LoggingClass.h"
 #include "items/ImpulsOutClass.h"
+#include "items/SensorDallas.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -30,7 +31,10 @@ void Device_init() {
 
     sensorReadingMap10sec = "";
 
-    dallasEnterCounter = -1;
+    //======clear dallas params======
+    if (mySensorDallas2 != nullptr) {
+        mySensorDallas2->clear();
+    }
 
     //======clear logging params======
     if (myLogging != nullptr) {

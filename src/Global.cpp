@@ -42,7 +42,6 @@ int impulsEnterCounter = -1;
 
 
 // Sensors
-int8_t dallasEnterCounter = -1;
 String sensorReadingMap10sec;
 String sensorReadingMap30sec;
 

@@ -71,7 +71,7 @@ extern int impulsEnterCounter;
 // Sensors
 extern String sensorReadingMap10sec;
 extern String sensorReadingMap30sec;
-extern int8_t dallasEnterCounter;
+
 
 extern String loggingKeyList;
 extern int enter_to_logging_counter;

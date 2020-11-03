@@ -16,8 +16,8 @@
 #include "Utils/WebUtils.h"
 #include "items/ButtonInClass.h"
 #include "items/LoggingClass.h"
-
 #include "items/ImpulsOutClass.h"
+#include "items/SensorDallas.h"
 
 void not_async_actions();
 
@@ -101,11 +101,7 @@ void setup() {
     just_load = false;
     initialized = true;  //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
 
-    //static bool firstTime = true;
-    //if (firstTime) myImpulsOut = new MyImpulsOutVector();
-    //firstTime = false;
-    //myImpulsOut->push_back(ImpulsOutClass(500, 10, 13));
-    //myImpulsOut->at(0).execute();
+   
 }
 
 void loop() {
@@ -137,6 +133,12 @@ void loop() {
     if (myImpulsOut != nullptr) {
         for (unsigned int i = 0; i < myImpulsOut->size(); i++) {
             myImpulsOut->at(i).loop();
+        }
+    }
+
+    if (mySensorDallas2 != nullptr) {
+        for (unsigned int i = 0; i < mySensorDallas2->size(); i++) {
+            mySensorDallas2->at(i).loop();
         }
     }
 }

@@ -24,6 +24,7 @@ class LineParsing {
     String _int;
     String _cnt;
     String _val;
+    String _index;
 
    public:
     LineParsing() :
@@ -44,7 +45,8 @@ class LineParsing {
                     _type{""},
                     _int{""},
                     _cnt{""},
-                    _val{""}
+                    _val{""},
+                    _index{""}
 
                     {};
 
@@ -97,6 +99,9 @@ class LineParsing {
                 }
                 if (arg.indexOf("val[") != -1) {
                     _val = extractInner(arg);
+                }
+                if (arg.indexOf("index[") != -1) {
+                    _index = extractInner(arg);
                 }
             }
         }
@@ -161,6 +166,10 @@ class LineParsing {
     String gval() {
         return _val;
     }
+    String gindex() {
+        return _index;
+    }
+
 
     void clear() {
         _key = "";
@@ -180,6 +189,7 @@ class LineParsing {
         _int = "";
         _cnt = "";
         _val = "";
+        _index = "";
     }
 
     String extractInnerDigit(String str) {

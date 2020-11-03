@@ -10,26 +10,27 @@ class SensorDallas;
 typedef std::vector<SensorDallas> MySensorDallasVector;
 
 class SensorDallas {
-   public:
+public:
 
-    SensorDallas(unsigned long period,unsigned int pin, uint8_t deviceAddress, String key);
+    SensorDallas(unsigned long interval, unsigned int pin, unsigned int index, String key);
     ~SensorDallas();
 
     void loop();
+    void readDallas();
 
-   private:
+private:
 
     unsigned long currentMillis;
     unsigned long prevMillis;
-    unsigned long _period;
+    unsigned long _interval;
     String _key;
     unsigned int _pin;
-    uint8_t _deviceAddress;
-
-    void readDallas();
+    unsigned int _index;
 
 };
 
 extern MySensorDallasVector* mySensorDallas2;
+
+extern void dallas();
 
 

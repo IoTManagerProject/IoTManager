@@ -7,6 +7,8 @@
 #include "Module/Terminal.h"
 #include "Servo/Servos.h"
 
+#include "items/SensorDallas.h"
+
 Terminal *term = nullptr;
 
 boolean but[NUM_BUTTONS];
@@ -31,7 +33,7 @@ void cmd_init() {
 
     sCmd.addCommand("analog-adc", analogAdc);
     sCmd.addCommand("ultrasonic-cm", ultrasonicCm);
-    sCmd.addCommand("dallas-temp", dallasTemp);
+    sCmd.addCommand("dallas-temp", dallas);
 
     sCmd.addCommand("dht-temp", dhtTemp);
     sCmd.addCommand("dht-hum", dhtHum);
