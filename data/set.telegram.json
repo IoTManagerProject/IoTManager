@@ -20,15 +20,25 @@
       "type": "hr"
     },
     {
+      "type": "checkbox",
+      "name": "tel",
+      "title": "Включить телеграм",
+      "action": "/set?telegonof=[[tel]]",
+      "state": "{{telegonof}}"
+    },
+    {
+      "type": "hr"
+    },
+    {
       "type": "h4",
-      "style": "width:60%;float:left;",
+      "style": "width:40%;float:left;",
       "title": "Telegram API token:"
     },
     {
       "type": "input",
       "title": "",
       "name": "telegramApi-arg",
-      "style": "width:40%;float:right",
+      "style": "width:60%;float:right",
       "state": "{{telegramApi}}"
     },
     {
@@ -40,6 +50,10 @@
     },
     {
       "type": "hr"
+    },
+    {
+      "type": "text",
+      "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>После настройки telegram перезагрузите устройство что бы изменения вступили в силу</p></font></div>"
     }
   ]
 }

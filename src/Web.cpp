@@ -1,10 +1,10 @@
 #include "Web.h"
-
 #include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
 #include "items/LoggingClass.h"
+#include "Telegram.h"
 
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
@@ -196,7 +196,14 @@ void web_init() {
         //==============================push settings=============================================
         if (request->hasArg("telegramApi")) {
             jsonWriteStr(configSetupJson, "telegramApi", request->getParam("telegramApi")->value());
-
+            //telegramInit();
+            saveConfig();
+            request->send(200);
+        }
+        if (request->hasArg("telegonof")) {
+            bool value = request->getParam("telegonof")->value().toInt();
+            jsonWriteBool(configSetupJson, "telegonof", value);
+            //telegramInit();
             saveConfig();
             request->send(200);
         }

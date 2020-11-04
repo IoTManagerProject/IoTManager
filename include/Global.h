@@ -47,6 +47,7 @@ extern Bounce* buttons;
 
 //Global vars
 extern boolean just_load;
+extern boolean telegramInitBeen;
 
 // Json
 extern String configSetupJson;   //все настройки
