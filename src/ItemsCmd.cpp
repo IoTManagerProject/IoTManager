@@ -1,60 +1,60 @@
-#include "ItemsCmd.h"
+//#include "BufferExecute.h"
+//
+//#include "BufferExecute.h"
+//#include "Class/NotAsync.h"
+//#include "Cmd.h"
+//#include "Global.h"
+//#include "Module/Terminal.h"
+//#include "Servo/Servos.h"
+//
+//#include "items/SensorDallas.h"
+//
+//Terminal *term = nullptr;
+//
+//boolean but[NUM_BUTTONS];
+//Bounce *buttons = new Bounce[NUM_BUTTONS];
+//
+//#ifdef ESP8266
+//SoftwareSerial *mySerial = nullptr;
+//#else
+//HardwareSerial *mySerial = nullptr;
+//#endif
+//
+//void getData();
+//
+//void cmd_init() {
+    //sCmd.addCommand("button-out", buttonOut);
+    //sCmd.addCommand("pwm-out", pwmOut);
+    //sCmd.addCommand("button-in", buttonIn);
 
-#include "BufferExecute.h"
-#include "Class/NotAsync.h"
-#include "Cmd.h"
-#include "Global.h"
-#include "Module/Terminal.h"
-#include "Servo/Servos.h"
+    //sCmd.addCommand("input-digit", inputDigit);
+    //sCmd.addCommand("input-time", inputTime);
+    //sCmd.addCommand("output-text", textOut);
 
-#include "items/SensorDallas.h"
+    //sCmd.addCommand("analog-adc", analogAdc);
+    //sCmd.addCommand("ultrasonic-cm", ultrasonicCm);
+    //sCmd.addCommand("dallas-temp", dallas);
 
-Terminal *term = nullptr;
+    //sCmd.addCommand("dht-temp", dhtTemp);
+    //sCmd.addCommand("dht-hum", dhtHum);
 
-boolean but[NUM_BUTTONS];
-Bounce *buttons = new Bounce[NUM_BUTTONS];
+    //sCmd.addCommand("bme280-temp", bme280Temp);
+    //sCmd.addCommand("bme280-hum", bme280Hum);
+    //sCmd.addCommand("bme280-press", bme280Press);
 
-#ifdef ESP8266
-SoftwareSerial *mySerial = nullptr;
-#else
-HardwareSerial *mySerial = nullptr;
-#endif
-
-void getData();
-
-void cmd_init() {
-    sCmd.addCommand("button-out", buttonOut);
-    sCmd.addCommand("pwm-out", pwmOut);
-    sCmd.addCommand("button-in", buttonIn);
-
-    sCmd.addCommand("input-digit", inputDigit);
-    sCmd.addCommand("input-time", inputTime);
-    sCmd.addCommand("output-text", textOut);
-
-    sCmd.addCommand("analog-adc", analogAdc);
-    sCmd.addCommand("ultrasonic-cm", ultrasonicCm);
-    sCmd.addCommand("dallas-temp", dallas);
-
-    sCmd.addCommand("dht-temp", dhtTemp);
-    sCmd.addCommand("dht-hum", dhtHum);
-
-    sCmd.addCommand("bme280-temp", bme280Temp);
-    sCmd.addCommand("bme280-hum", bme280Hum);
-    sCmd.addCommand("bme280-press", bme280Press);
-
-    sCmd.addCommand("bmp280-temp", bmp280Temp);
-    sCmd.addCommand("bmp280-press", bmp280Press);
+    //sCmd.addCommand("bmp280-temp", bmp280Temp);
+    //sCmd.addCommand("bmp280-press", bmp280Press);
 
     //sCmd.addCommand("modbus", modbus);
 
-    sCmd.addCommand("uptime", sysUptime);
+    //sCmd.addCommand("uptime", sysUptime);
 
-    sCmd.addCommand("logging", logging);
+    //sCmd.addCommand("logging", logging);
 
-    sCmd.addCommand("impuls-out", impuls);
+    //sCmd.addCommand("impuls-out", impuls);
 
-    handle_time_init();
-}
+   
+//}
 
 //    sCmd.addCommand("timerStart", timerStart_);
 //    sCmd.addCommand("timerStop", timerStop_);

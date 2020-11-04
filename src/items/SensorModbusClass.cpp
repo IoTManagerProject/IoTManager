@@ -1,6 +1,6 @@
 //#include "items/SensorModbusClass.h"
 //
-//#include "ItemsCmd.h"
+//#include "BufferExecute.h"
 ////#ifdef SensorModbusEnabled
 ////=========================================Модуль modbus===================================================================================
 ////modbus;id;anydata;Сенсоры;Температура;order;addr[1];regaddr[0];c[1]

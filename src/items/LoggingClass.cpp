@@ -4,7 +4,7 @@
 
 #include "Class/LineParsing.h"
 #include "Global.h"
-#include "ItemsCmd.h"
+#include "BufferExecute.h"
 
 LoggingClass::LoggingClass(unsigned long period, unsigned int maxPoints, String loggingValueKey, String key) {
     _period = period * 1000;

@@ -4,7 +4,7 @@
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
-#include "ItemsCmd.h"
+#include "BufferExecute.h"
 
 ImpulsOutClass::ImpulsOutClass(unsigned int impulsPin) {
     _impulsPin = impulsPin;

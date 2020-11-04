@@ -4,6 +4,8 @@
 #include "Class/LineParsing.h"
 #include "Global.h"
 
+
+
 class ButtonInClass : public LineParsing {
    protected:
     int numberEntering = 0;

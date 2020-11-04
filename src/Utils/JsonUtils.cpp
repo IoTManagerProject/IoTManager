@@ -2,8 +2,6 @@
 #include "Utils/FileUtils.h"
 #include "Global.h"
 
-#include <ArduinoJson.h>
-
 String jsonReadStr(String& json, String name) {
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(json);

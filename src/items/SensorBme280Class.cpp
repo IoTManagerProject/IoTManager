@@ -1,6 +1,6 @@
 #include "items/SensorBme280Class.h"
 
-#include "ItemsCmd.h"
+#include "BufferExecute.h"
 //#ifdef SensorBme280Enabled
 //=========================================Модуль ультрозвукового дальномера==================================================================
 //bme280-temp;id;anydata;Сенсоры;Температура;order;c[1]

@@ -37,8 +37,8 @@
     },
     {
       "type": "link",
-      "title": "Конфигурация push",
-      "action": "/?set.push",
+      "title": "Конфигурация telegram",
+      "action": "/?set.telegram",
       "class": "btn btn-block btn-default"
     },
     {

@@ -22,30 +22,24 @@
     {
       "type": "h4",
       "style": "width:60%;float:left;",
-      "title": "Device id:"
+      "title": "Telegram API token:"
     },
     {
       "type": "input",
       "title": "",
-      "name": "push-arg",
+      "name": "telegramApi-arg",
       "style": "width:40%;float:right",
-      "state": "{{pushingboxid}}"
+      "state": "{{telegramApi}}"
     },
     {
       "type": "button",
       "title": "{{ButSave}}",
-      "action": "set?pushingboxid=[[push-arg]]",
+      "action": "set?telegramApi=[[telegramApi-arg]]",
       "class": "btn btn-block btn-default",
       "style": "width:100%;display:inline"
     },
     {
       "type": "hr"
-    },
-    {
-      "type": "link",
-      "title": "Перезагрузить устройство",
-      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
-      "class": "btn btn-block btn-danger"
     }
   ]
 }
