@@ -3,6 +3,7 @@
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>
 #include <Arduino.h>
+#include "CTBot.h"
 #include <ArduinoJson.h>
 #include <ArduinoOTA.h>
 #include <Bounce2.h>
@@ -46,6 +47,7 @@ extern Bounce* buttons;
 
 //Global vars
 extern boolean just_load;
+extern boolean telegramInitBeen;
 
 // Json
 extern String configSetupJson;   //все настройки

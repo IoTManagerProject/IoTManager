@@ -18,6 +18,7 @@ DallasTemperature sensors;
 */
 
 boolean just_load = true;
+boolean telegramInitBeen = false;
 
 // Json
 String configSetupJson = "{}";

@@ -1,10 +1,10 @@
 #include "Web.h"
-
 #include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
 #include "items/LoggingClass.h"
+#include "Telegram.h"
 
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
@@ -193,14 +193,20 @@ void web_init() {
             request->send(200, "text/html", payload);
         }
 
-        //        //==============================push settings=============================================
-        //#ifdef PUSH_ENABLED
-        //        if (request->hasArg("pushingboxid")) {
-        //            jsonWriteStr(configSetupJson, "pushingboxid", request->getParam("pushingboxid")->value());
-        //            saveConfig();
-        //            request->send(200);
-        //        }
-        //#endif
+        //==============================push settings=============================================
+        if (request->hasArg("telegramApi")) {
+            jsonWriteStr(configSetupJson, "telegramApi", request->getParam("telegramApi")->value());
+            //telegramInit();
+            saveConfig();
+            request->send(200);
+        }
+        if (request->hasArg("telegonof")) {
+            bool value = request->getParam("telegonof")->value().toInt();
+            jsonWriteBool(configSetupJson, "telegonof", value);
+            //telegramInit();
+            saveConfig();
+            request->send(200);
+        }
 
         //==============================utilities settings=============================================
         if (request->hasArg("i2c")) {
@@ -215,7 +221,7 @@ void web_init() {
             serverIP = jsonReadStr(configSetupJson, "serverip");
             request->send(200);
         }
-    });
+        });
 
     //==============================list of items=====================================================
     //server.on("/del", HTTP_GET, [](AsyncWebServerRequest* request) {
@@ -230,7 +236,7 @@ void web_init() {
     //    request->redirect("/?setn.device");
     //});
 
-    /* 
+    /*
     * Check
     */
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
@@ -240,13 +246,17 @@ void web_init() {
         String msg = "";
         if (lastVersion == FIRMWARE_VERSION) {
             msg = F("Актуальная версия прошивки уже установлена.");
-        } else if (lastVersion > FIRMWARE_VERSION) {
+        }
+        else if (lastVersion > FIRMWARE_VERSION) {
             msg = F("Новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/?set.device'; }, 90000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
-        } else if (lastVersion == -1) {
+        }
+        else if (lastVersion == -1) {
             msg = F("Cервер не найден. Попробуйте повторить позже...");
-        } else if (lastVersion == -2) {
+        }
+        else if (lastVersion == -2) {
             msg = F("Устройство не подключено к роутеру!");
-        } else if (lastVersion < FIRMWARE_VERSION) {
+        }
+        else if (lastVersion < FIRMWARE_VERSION) {
             msg = F("Ошибка версии. Попробуйте повторить позже...");
         }
 
@@ -262,15 +272,15 @@ void web_init() {
         jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + msg);
         jsonWriteStr(tmp, "class", "pop-up");
         request->send(200, "text/html", tmp);
-    });
+        });
 
-    /* 
+    /*
     * Upgrade
     */
     server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest* request) {
         myNotAsyncActions->make(do_UPGRADE);
         request->send(200, "text/html");
-    });
+        });
 }
 
 void setConfigParam(const char* param, const String& value) {

@@ -1,8 +1,12 @@
-#include "ItemsCmd.h"
+#include "BufferExecute.h"
 #include "items/ButtonInClass.h"
 //==========================================Модуль физических кнопок========================================
 //button-in switch1 toggle Кнопки Свет 1 pin[2] db[20]
 //==========================================================================================================
+
+boolean but[NUM_BUTTONS];
+Bounce *buttons = new Bounce[NUM_BUTTONS];
+
 ButtonInClass myButtonIn;
 void buttonIn() {
     myButtonIn.update();

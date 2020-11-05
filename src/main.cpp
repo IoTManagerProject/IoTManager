@@ -18,6 +18,7 @@
 #include "items/LoggingClass.h"
 #include "items/ImpulsOutClass.h"
 #include "items/SensorDallas.h"
+#include "Telegram.h"
 
 void not_async_actions();
 
@@ -38,44 +39,47 @@ void setup() {
     myNotAsyncActions = new NotAsync(do_LAST);
     myScenario = new Scenario();
 
-    SerialPrint("I", "FS", "FS Init");
     fileSystemInit();
+    SerialPrint("I", "FS", "FS Init");
 
-    SerialPrint("I", "Conf", "Config Init");
     loadConfig();
+    SerialPrint("I", "Conf", "Config Init");
 
-    SerialPrint("I", "Time", "Clock Init");
     clock_init();
+    SerialPrint("I", "Time", "Clock Init");
 
-    SerialPrint("I", "CMD", "Commands Init");
-    cmd_init();
+    handle_time_init();
+    SerialPrint("I", "Time", "Handle time init(");
 
-    SerialPrint("I", "Sensors", "Sensors Init");
     sensorsInit();
+    SerialPrint("I", "Sensors", "Sensors Init");
 
-    SerialPrint("I", "Items", "Items Init");
     itemsListInit();
+    SerialPrint("I", "Items", "Items Init");
 
-    SerialPrint("I", "Init", "Init Init");
     all_init();
+    SerialPrint("I", "Init", "Init Init");
 
-    SerialPrint("I", "WIFI", "Network Init");
     routerConnect();
+    SerialPrint("I", "WIFI", "Network Init");
 
-    SerialPrint("I", "Uptime", "Uptime Init");
+    telegramInit();
+    SerialPrint("I", "Telegram", "Telegram Init");
+
     uptime_init();
+    SerialPrint("I", "Uptime", "Uptime Init");
 
-    SerialPrint("I", "Update", "Updater Init");
     upgradeInit();
+    SerialPrint("I", "Update", "Updater Init");
 
-    SerialPrint("I", "HTTP", "HttpServer Init");
     HttpServer::init();
+    SerialPrint("I", "HTTP", "HttpServer Init");
 
-    SerialPrint("I", "Web", "WebAdmin Init");
     web_init();
+    SerialPrint("I", "Web", "WebAdmin Init");
 
-    SerialPrint("I", "Stat", "Stat Init");
     initSt();
+    SerialPrint("I", "Stat", "Stat Init");
 
 #ifdef UDP_ENABLED
     SerialPrint("I", "UDP", "Udp Init");
@@ -90,6 +94,8 @@ void setup() {
     SsdpInit();
 #endif
 
+
+
     //esp_log_level_set("esp_littlefs", ESP_LOG_NONE);
 
     ts.add(
@@ -99,9 +105,7 @@ void setup() {
         nullptr, true);
 
     just_load = false;
-    initialized = true;  //this second POST makes the data to be processed (you don't need to connect as "keep-alive" for that to work)
-
-   
+    initialized = true;  
 }
 
 void loop() {
@@ -123,6 +127,8 @@ void loop() {
 
     myNotAsyncActions->loop();
     ts.update();
+
+    handleTelegram();
 
     if (myLogging != nullptr) {
         for (unsigned int i = 0; i < myLogging->size(); i++) {

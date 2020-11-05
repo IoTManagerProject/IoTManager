@@ -1,6 +1,6 @@
 #include "items/SensorDhtClass.h"
 
-#include "ItemsCmd.h"
+#include "BufferExecute.h"
 //#ifdef SensorDhtEnabled
 //=========================================DHT Sensor==================================================================
 //dht-temp;id;anydata;Сенсоры;Температура;order;pin;type[dht11];c[1]

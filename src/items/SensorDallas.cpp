@@ -1,7 +1,7 @@
 #include "items/SensorDallas.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
-#include "ItemsCmd.h"
+#include "BufferExecute.h"
 #include <Arduino.h>
 
 SensorDallas::SensorDallas(unsigned long interval, unsigned int pin, unsigned int index, String key) {

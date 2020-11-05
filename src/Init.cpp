@@ -35,19 +35,18 @@ void Device_init() {
     if (mySensorDallas2 != nullptr) {
         mySensorDallas2->clear();
     }
-
     //======clear logging params======
     if (myLogging != nullptr) {
         myLogging->clear();
     }
     loggingKeyList = "";
-
     //======clear impuls params=======
     if (myImpulsOut != nullptr) {
         myImpulsOut->clear();
     }
     impulsKeyList = "";
     impulsEnterCounter = -1;
+    //================================
 
 
 #ifdef LAYOUT_IN_RAM

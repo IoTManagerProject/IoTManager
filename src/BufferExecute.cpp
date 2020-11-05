@@ -1,5 +1,5 @@
 #include "BufferExecute.h"
-
+#include "items/SensorDallas.h"
 #include "Global.h"
 #include "Module/Terminal.h"
 
@@ -23,9 +23,81 @@ void csvCmdExecute(String& cmdStr) {
     int count = 0;
     while (cmdStr.length()) {
         String buf = selectToMarker(cmdStr, "\n");
+
+
+
         buf = deleteBeforeDelimiter(buf, " ");  //отсечка чекбокса
+
         count++;
-        if (count > 1) sCmd.readStr(buf);
+        if (count > 1) {
+            SerialPrint("I", "Items", buf);
+            String order = selectToMarker(buf, " "); //отсечка самой команды
+
+            if (order == F("button-out")) {
+                sCmd.addCommand(order.c_str(), buttonOut);
+            }
+            else if (order == F("pwm-out")) {
+                sCmd.addCommand(order.c_str(), pwmOut);
+            }
+            else if (order == F("button-in")) {
+                sCmd.addCommand(order.c_str(), buttonIn);
+            }
+            else if (order == F("input-digit")) {
+                sCmd.addCommand(order.c_str(), inputDigit);
+            }
+            else if (order == F("input-time")) {
+                sCmd.addCommand(order.c_str(), inputTime);
+            }
+            else if (order == F("output-text")) {
+                sCmd.addCommand(order.c_str(), textOut);
+            }
+            else if (order == F("analog-adc")) {
+                sCmd.addCommand(order.c_str(), analogAdc);
+            }
+            else if (order == F("ultrasonic-cm")) {
+                sCmd.addCommand(order.c_str(), ultrasonicCm);
+            }
+            else if (order == F("dallas-temp")) {
+                sCmd.addCommand(order.c_str(), dallas);
+            }
+            else if (order == F("dht-temp")) {
+                sCmd.addCommand(order.c_str(), dhtTemp);
+            }
+            else if (order == F("dht-hum")) {
+                sCmd.addCommand(order.c_str(), dhtHum);
+            }
+            else if (order == F("bme280-temp")) {
+                sCmd.addCommand(order.c_str(), bme280Temp);
+            }
+            else if (order == F("bme280-hum")) {
+                sCmd.addCommand(order.c_str(), bme280Hum);
+            }
+            else if (order == F("bme280-press")) {
+                sCmd.addCommand(order.c_str(), bme280Press);
+            }
+            else if (order == F("bmp280-temp")) {
+                sCmd.addCommand(order.c_str(), bmp280Temp);
+            }
+            else if (order == F("bmp280-press")) {
+                sCmd.addCommand(order.c_str(), bmp280Press);
+            }
+            else if (order == F("modbus")) {
+                //sCmd.addCommand(order.c_str(), modbus);
+            }
+            else if (order == F("uptime")) {
+                sCmd.addCommand(order.c_str(), sysUptime);
+            }
+            else if (order == F("logging")) {
+                sCmd.addCommand(order.c_str(), logging);
+            }
+            else if (order == F("impuls-out")) {
+                sCmd.addCommand(order.c_str(), impuls);
+            }
+            
+
+
+            sCmd.readStr(buf);
+        }
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
     }
 }
@@ -80,7 +152,7 @@ void addKey(String& key, String& keyNumberTable, int number) {
 
 int getKeyNum(String& key, String& keyNumberTable) {
     String keyNumberTableBuf = keyNumberTable;
-    //SerialPrint("","",keyNumberTable);
+
     int number = -1;
     while (keyNumberTableBuf.length()) {
         String tmp = selectToMarker(keyNumberTableBuf, ",");
