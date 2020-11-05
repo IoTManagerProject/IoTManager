@@ -1,5 +1,5 @@
 #include "Telegram.h"
-#include "Global.h"
+
 
 CTBot* myBot{ nullptr };
 
@@ -29,24 +29,38 @@ void handleTelegram() {
             static unsigned long prevMillis;
             unsigned long currentMillis = millis();
             unsigned long difference = currentMillis - prevMillis;
-            if (difference >= 1000) {
+            if (difference >= 5000) {
                 prevMillis = millis();
                 if (myBot->getNewMessage(msg)) {
                     SerialPrint("->", "Telegram", "chat ID: " + String(msg.sender.id) + ", msg: " + String(msg.text));
                     jsonWriteInt(configSetupJson, "chatId", msg.sender.id);
                     saveConfig();
-                    orderBuf += String(msg.text) + ",";
-                    myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg.text);
-                    SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + String(msg.text));
+                    telegramMsgParse(String(msg.text));
                 }
             }
-        }    
+        }
+    }
+}
+
+void telegramMsgParse(String msg) {
+    SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + String(msg));
+    if (msg.indexOf("order") != -1) {
+        msg = deleteBeforeDelimiter(msg, " ");
+        orderBuf += String(msg) + ",";
+        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), "order done");
+    }
+    else if (msg.indexOf("get") != -1) {
+        msg = deleteBeforeDelimiter(msg, " ");
+        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), jsonReadStr(configLiveJson, msg));
+    }
+    else {
+        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), "wrong order, use 'get id' to get value, or 'order id value' to send order");
     }
 }
 
 void sendTelegramMsg() {
     String msg = sCmd.next();
-    msg.replace("#"," ");
+    msg.replace("#", " ");
     myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
     SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
 }

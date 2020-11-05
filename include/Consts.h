@@ -3,11 +3,11 @@
 //===========Firmware=============================================================================================================================================
 #ifdef ESP8266
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION 265
+#define FIRMWARE_VERSION 266
 #endif
 #ifdef ESP32
 #define FIRMWARE_NAME "esp32-iotm"
-#define FIRMWARE_VERSION 265
+#define FIRMWARE_VERSION 266
 #endif
 #define FLASH_4MB true
 
