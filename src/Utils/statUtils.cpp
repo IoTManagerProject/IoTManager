@@ -68,7 +68,7 @@ String addNewDevice() {
         //==============================================
         jsonWriteStr(json, "uniqueId", mac);
         jsonWriteStr(json, "name", FIRMWARE_NAME);
-        jsonWriteInt(json, "model", FIRMWARE_VERSION);
+        jsonWriteStr(json, "model", getChipId());
         //==============================================
         http.begin(client,  serverIP + F(":8082/api/devices/"));
         http.setAuthorization("admin", "admin");
@@ -141,7 +141,8 @@ String updateDeviceStatus() {
                                  "&uptime=" + timeNow->getUptime() +
                                  "&uptimeTotal=" + getUptimeTotal() +
                                  "&version=" + FIRMWARE_VERSION +
-                                 "&resetsTotal=" + String(getCurrentNumber("stat.txt")) + "");
+                                 "&resetsTotal=" + String(getCurrentNumber("stat.txt")) +
+                                 "&heap=" + String(ESP.getFreeHeap()) + "");
         if (httpCode > 0) {
             ret = httpCode;
             if (httpCode == HTTP_CODE_OK) {

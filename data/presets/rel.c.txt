@@ -1,0 +1,4 @@
+0;button-out;button1;toggle;Реле;Освещение;1;pin[12];st[0]
+0;button-out;button2;toggle;Реле;Освещение;2;pin[13];st[0]
+0;input-time;T1;inputTime;Реле;Введите#время#включения;3;st[10:00]
+0;input-time;T2;inputTime;Реле;Введите#время#выключения;4;st[11:00]

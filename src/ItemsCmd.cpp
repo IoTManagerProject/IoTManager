@@ -249,7 +249,7 @@
 //        servo->write(value);
 //    }
 //
-//    eventGen("servo", number);
+//    eventGen2("servo", number);
 //    jsonWriteInt(configLiveJson, "servo" + number, value);
 //     publishStatus("servo" + number, String(value, DEC));
 //}

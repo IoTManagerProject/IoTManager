@@ -22,7 +22,7 @@ class PwmOutClass : public LineParsing {
     void pwmChange(String key, String pin, String state) {
         int pinInt = pin.toInt();
         analogWrite(pinInt, state.toInt());
-        eventGen(key, "");
+        eventGen2(key, state);
         jsonWriteInt(configLiveJson, key, state.toInt());
          publishStatus(key, state);
     }

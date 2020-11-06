@@ -25,7 +25,7 @@ class SensorBme280Class : public SensorConvertingClass {
         float value;
         value = bme.readTemperature();
         float valueFl = this->correction(key, value);
-        eventGen(key, "");
+        eventGen2(key, String(valueFl));
         jsonWriteStr(configLiveJson, key, String(valueFl));
          publishStatus(key, String(valueFl));
         SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));
@@ -35,7 +35,7 @@ class SensorBme280Class : public SensorConvertingClass {
         float value;
         value = bme.readHumidity();
         float valueFl = this->correction(key, value);
-        eventGen(key, "");
+        eventGen2(key, String(valueFl));
         jsonWriteStr(configLiveJson, key, String(valueFl));
          publishStatus(key, String(valueFl));
         SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));
@@ -46,7 +46,7 @@ class SensorBme280Class : public SensorConvertingClass {
         value = bme.readPressure();
         value = value / 1.333224 / 100;
         float valueFl = this->correction(key, value);
-        eventGen(key, "");
+        eventGen2(key, String(valueFl));
         jsonWriteStr(configLiveJson, key, String(valueFl));
          publishStatus(key, String(valueFl));
         SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));

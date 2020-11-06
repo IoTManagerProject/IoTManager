@@ -93,7 +93,7 @@ extern void servo_();
 extern void setLedStatus(LedStatus_t);
 
 //Scenario
-extern void eventGen(String event_name, String number);
+extern void eventGen2(String eventName, String eventValue);
 extern String add_set(String param_name);
 
 //Timers

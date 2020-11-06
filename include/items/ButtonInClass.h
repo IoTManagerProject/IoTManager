@@ -52,7 +52,7 @@ class ButtonInClass : public LineParsing {
     }
 
     void switchChangeVirtual(String key, String state) {
-        eventGen(key, "");
+        eventGen2(key, state);
         jsonWriteInt(configLiveJson, key, state.toInt());
         publishStatus(key, state);
     }

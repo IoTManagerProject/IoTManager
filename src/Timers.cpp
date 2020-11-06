@@ -19,7 +19,7 @@ void Timer_countdown_init() {
                     if (time == 0) {
                         delTimer(String(number));
                         jsonWriteStr(configLiveJson, "timer" + String(number), "0");
-                        eventGen("timer", String(number));
+                        eventGen2("timer", String(number));
                     } else {
                         time--;
                         addTimer(String(number), String(time));

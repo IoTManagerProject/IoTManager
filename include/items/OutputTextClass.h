@@ -15,7 +15,7 @@ class OutputTextClass : public LineParsing {
 
     void OutputModuleChange(String key, String state) {
         state.replace("#", " ");
-        eventGen(key, "");
+        eventGen2(key, state);
         jsonWriteStr(configLiveJson, key, state);
          publishStatus(key, state);
     }

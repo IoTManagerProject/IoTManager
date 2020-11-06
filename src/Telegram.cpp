@@ -43,28 +43,70 @@ void handleTelegram() {
 }
 
 void telegramMsgParse(String msg) {
-    SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + String(msg));
-    if (msg.indexOf("order") != -1) {
-        msg = deleteBeforeDelimiter(msg, " ");
+    if (msg.indexOf("set") != -1) {
+        msg = deleteBeforeDelimiter(msg, "_");
+        msg.replace("_", " ");
         orderBuf += String(msg) + ",";
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), "order done");
+        SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + String(msg));
     }
     else if (msg.indexOf("get") != -1) {
-        msg = deleteBeforeDelimiter(msg, " ");
+        msg = deleteBeforeDelimiter(msg, "_");
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), jsonReadStr(configLiveJson, msg));
+        SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + String(msg));
+    }
+    else if (msg.indexOf("all") != -1) {
+        String list = returnListOfParams();
+        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), list);
+        SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + "\n" + list);
     }
     else {
-        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), "wrong order, use 'get id' to get value, or 'order id value' to send order");
+        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), "Wrong order, use /all to get all values, /get_id to get value, or /set_id_value to set value");
     }
 }
 
 void sendTelegramMsg() {
     String msg = sCmd.next();
+    String type = sCmd.next();
     msg.replace("#", " ");
-    myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
-    SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
+    if (type == "1") {
+        static String prevMsg;
+        if (prevMsg != msg) {
+            prevMsg = msg;
+            myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
+            SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
+        }
+    } else if (type == "2") {
+        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
+        SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
+    } 
 }
 
 bool isTelegramEnabled() {
     return jsonReadBool(configSetupJson, "telegonof");
+}
+
+
+String returnListOfParams() {
+    String cmdStr = readFile(DEVICE_CONFIG_FILE, 4096);
+    cmdStr += "\r\n";
+    cmdStr.replace("\r\n", "\n");
+    cmdStr.replace("\r", "\n");
+    int count = 0;
+    String out;
+    while (cmdStr.length()) {
+        String buf = selectToMarker(cmdStr, "\n");
+        count++;
+        if (count > 1) {
+            String id = selectFromMarkerToMarker(buf, ";", 2);
+            String value = jsonReadStr(configLiveJson, id);
+            String page = selectFromMarkerToMarker(buf, ";", 4);
+            page.replace("#", " ");
+            String name = selectFromMarkerToMarker(buf, ";", 5);
+            name.replace("#", " ");
+            out += page + " " + " " + name + " " + value + "\n";
+        }
+        cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
+    }
+    return out;
 }

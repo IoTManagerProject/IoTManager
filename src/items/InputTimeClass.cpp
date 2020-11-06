@@ -19,9 +19,14 @@ void inputTimeSet() {
 
 void handle_time_init() {
     ts.add(
-        TIME, 1000, [&](void *) {
-            jsonWriteStr(configLiveJson, "timenow", timeNow->getTime());
-            eventGen("timenow", "");
+        TIME, 1000, [&](void*) {
+            String timenow = timeNow->getTimeWOsec();
+            static String prevTime;
+            if (prevTime != timenow) {
+                prevTime = timenow;
+                jsonWriteStr(configLiveJson, "timenow", timenow);
+                eventGen2("timenow", timenow);
+            }
         },
         nullptr, true);
 }

@@ -32,7 +32,7 @@ public:
         else {
             digitalWrite(pinInt, !state.toInt());
         }
-        eventGen(key, "");
+        eventGen2(key, state);
         jsonWriteInt(configLiveJson, key, state.toInt());
         publishStatus(key, state);
     }

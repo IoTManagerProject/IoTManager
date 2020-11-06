@@ -16,13 +16,13 @@ class InputClass : public LineParsing {
     }
 
     void inputSetFloat(String key, String state) {
-        eventGen(key, "");
+        eventGen2(key, state);
         jsonWriteFloat(configLiveJson, key, state.toFloat());
          publishStatus(key, state);
     }
 
     void inputSetStr(String key, String state) {
-        eventGen(key, "");
+        eventGen2(key, state);
         jsonWriteStr(configLiveJson, key, state);
         publishStatus(key, state);
     }
