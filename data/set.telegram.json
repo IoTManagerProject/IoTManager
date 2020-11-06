@@ -54,6 +54,15 @@
     {
       "type": "text",
       "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>После настройки telegram перезагрузите устройство что бы изменения вступили в силу</p></font></div>"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "link",
+      "title": "Перезагрузить устройство",
+      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/set?device=ok');}",
+      "class": "btn btn-block btn-danger"
     }
   ]
 }

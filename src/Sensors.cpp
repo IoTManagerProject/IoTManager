@@ -54,7 +54,7 @@
 //        counter = 0;
 //        value = dht.getTemperature();
 //        if (String(value) != "nan") {
-//            //eventGen(dhtT_value_name, "");
+//            //eventGen2(dhtT_value_name, "");
 //            //jsonWriteStr(configLiveJson, dhtT_value_name, String(value));
 //            // publishStatus(dhtT_value_name, String(value));
 //            //SerialPrint("I", "Sensor", "'" + dhtT_value_name + "' data: " + String(value));
@@ -92,7 +92,7 @@
 //        counter = 0;
 //        value = dht.getHumidity();
 //        if (String(value) != "nan") {
-//            //eventGen(dhtH_value_name, "");
+//            //eventGen2(dhtH_value_name, "");
 //            //jsonWriteStr(configLiveJson, dhtH_value_name, String(value));
 //            // publishStatus(dhtH_value_name, String(value));
 //            //SerialPrint("I", "Sensor", "'" + dhtH_value_name + "' data: " + String(value));
@@ -117,7 +117,7 @@
 //        //value = dht.computePerception(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
 //        String final_line = perceptionStr(value);
 //        jsonWriteStr(configLiveJson, "dhtPerception", final_line);
-//        eventGen("dhtPerception", "");
+//        eventGen2("dhtPerception", "");
 //         publishStatus("dhtPerception", final_line);
 //        if (mqtt.connected()) {
 //            SerialPrint("I", "Sensor", "'dhtPerception' data: " + final_line);
@@ -142,7 +142,7 @@
 //        //dht.getComfortRatio(cf, jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
 //        String final_line = comfortStr(cf);
 //        jsonWriteStr(configLiveJson, "dhtComfort", final_line);
-//        eventGen("dhtComfort", "");
+//        eventGen2("dhtComfort", "");
 //         publishStatus("dhtComfort", final_line);
 //        SerialPrint("I", "Sensor", "'dhtComfort' send date " + final_line);
 //    }
@@ -234,7 +234,7 @@
 //    } else {
 //        //value = dht.computeDewPoint(jsonReadStr(configLiveJson, dhtT_value_name).toFloat(), jsonReadStr(configLiveJson, dhtH_value_name).toFloat(), false);
 //        jsonWriteInt(configLiveJson, "dhtDewpoint", value);
-//        eventGen("dhtDewpoint", "");
+//        eventGen2("dhtDewpoint", "");
 //         publishStatus("dhtDewpoint", String(value));
 //        SerialPrint("I", "Sensor", "'dhtDewpoint' data: " + String(value));
 //    }
@@ -270,7 +270,7 @@
 //    bmp_temp->getEvent(&temp_event);
 //    value = temp_event.temperature;
 //    //jsonWriteStr(configLiveJson, bmp280T_value_name, String(value));
-//    //eventGen(bmp280T_value_name, "");
+//    //eventGen2(bmp280T_value_name, "");
 //    // publishStatus(bmp280T_value_name, String(value));
 //    //SerialPrint("I", "Sensor", "'" + bmp280T_value_name + "' data: " + String(value));
 //}
@@ -302,7 +302,7 @@
 //    value = pressure_event.pressure;
 //    value = value / 1.333224;
 //    //jsonWriteStr(configLiveJson, bmp280P_value_name, String(value));
-//    //eventGen(bmp280P_value_name, "");
+//    //eventGen2(bmp280P_value_name, "");
 //    // publishStatus(bmp280P_value_name, String(value));
 //    //SerialPrint("I", "Sensor", "'" + bmp280P_value_name + "' data: " + String(value));
 //}
@@ -327,7 +327,7 @@
 //    float value = 0;
 //    value = bme.readTemperature();
 //    //jsonWriteStr(configLiveJson, bme280T_value_name, String(value));
-//    //eventGen(bme280T_value_name, "");
+//    //eventGen2(bme280T_value_name, "");
 //    // publishStatus(bme280T_value_name, String(value));
 //    //SerialPrint("I", "Sensor", "'" + bme280T_value_name + "' data: " + String(value));
 //}
@@ -351,7 +351,7 @@
 //    value = bme.readPressure();
 //    value = value / 1.333224 / 100;
 //    //jsonWriteStr(configLiveJson, bme280P_value_name, String(value));
-//    //eventGen(bme280P_value_name, "");
+//    //eventGen2(bme280P_value_name, "");
 //    // publishStatus(bme280P_value_name, String(value));
 //    //SerialPrint("I", "Sensor", "'" + bme280P_value_name + "' data: " + String(value));
 //}
@@ -374,7 +374,7 @@
 //    float value = 0;
 //    value = bme.readHumidity();
 //    //jsonWriteStr(configLiveJson, bme280H_value_name, String(value));
-//    //eventGen(bme280H_value_name, "");
+//    //eventGen2(bme280H_value_name, "");
 //    // publishStatus(bme280H_value_name, String(value));
 //    //SerialPrint("I", "Sensor", "'" + bme280H_value_name + "' data: " + String(value));
 //}
@@ -397,7 +397,7 @@
 //    float value = bme.readAltitude(1013.25);
 //    //jsonWriteStr(configLiveJson, bme280A_value_name, String(value, 2));
 //
-//    //eventGen(bme280A_value_name, "");
+//    //eventGen2(bme280A_value_name, "");
 //
 //    // publishStatus(bme280A_value_name, String(value));
 //

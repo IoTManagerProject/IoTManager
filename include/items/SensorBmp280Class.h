@@ -26,7 +26,7 @@ class SensorBmp280Class : public SensorConvertingClass {
         bmp_temp->getEvent(&temp_event);
         value = temp_event.temperature;
         float valueFl = this->correction(key, value);
-        eventGen(key, "");
+        eventGen2(key, String(valueFl));
         jsonWriteStr(configLiveJson, key, String(valueFl));
          publishStatus(key, String(valueFl));
         SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));
@@ -39,7 +39,7 @@ class SensorBmp280Class : public SensorConvertingClass {
         value = pressure_event.pressure;
         value = value / 1.333224;
         float valueFl = this->correction(key, value);
-        eventGen(key, "");
+        eventGen2(key, String(valueFl));
         jsonWriteStr(configLiveJson, key, String(valueFl));
          publishStatus(key, String(valueFl));
         SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));

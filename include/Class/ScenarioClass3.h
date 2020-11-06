@@ -15,19 +15,20 @@ public:
         allBlocks += "\n";
 
         String incommingEvent = selectToMarker(eventBuf, ",");
+        String incommingEventKey = selectToMarker(incommingEvent, " ");
+        String incommingEventValue = selectToMarkerLast(incommingEvent, " ");
 
         while (allBlocks.length() > 1) {
             String oneBlock = selectToMarker(allBlocks, "end\n");
             String condition = selectToMarker(oneBlock, "\n");
 
-            String setEvent = selectFromMarkerToMarker(condition, " ", 0);
-            String setEventSign = selectFromMarkerToMarker(condition, " ", 1);
-            String setEventValue = selectFromMarkerToMarker(condition, " ", 2);
-            if (!isDigitStr(setEventValue)) setEventValue = jsonReadStr(configLiveJson, setEventValue);
-            
-            String incommingEventValue = jsonReadStr(configLiveJson, incommingEvent);
+            String setEventKey = selectFromMarkerToMarker(condition, " ", 0);
 
-            if (incommingEvent == setEvent) {
+            if (incommingEventKey == setEventKey) {
+
+                String setEventSign = selectFromMarkerToMarker(condition, " ", 1);
+                String setEventValue = selectFromMarkerToMarker(condition, " ", 2);
+                if (!isDigitStr(setEventValue)) setEventValue = jsonReadStr(configLiveJson, setEventValue);
 
                 boolean flag = false;
 
@@ -56,7 +57,7 @@ public:
 
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
-                    SerialPrint("I", "Scenario", condition + " set:\n" + oneBlock);
+                    SerialPrint("I", "Scenario", condition + " \n" + oneBlock);
                     spaceCmdExecute(oneBlock);
                 }
             }

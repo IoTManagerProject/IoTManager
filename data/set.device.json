@@ -43,7 +43,7 @@
         },
         {
             "type": "h4",
-            "title": "LittleFS version: 266"
+            "title": "LittleFS version: 267"
         },
         {
             "type": "hr"
@@ -88,7 +88,8 @@
             "title": {
                 "#": "Выберите пресет из списка<span class=\"caret\"></span>",
                 "/set?addPreset=dal.c": "1.Термостат на основе ds18b20 с оповещением в телеграм",
-                "/set?addPreset=dht.c": "2.Контроль влажности на основе DHT с оповещением в телеграм"
+                "/set?addPreset=dht.c": "2.Контроль влажности на основе DHT с оповещением в телеграм",
+                "/set?addPreset=rel.c": "3.Включение выключение реле в заданное время"
             }
         },
         {
@@ -184,6 +185,15 @@
             "action": "/check",
             "response": "[[my-block]]",
             "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "link",
+            "title": "Перезагрузить устройство",
+            "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/set?device=ok');}",
+            "class": "btn btn-block btn-danger"
         }
     ]
 }

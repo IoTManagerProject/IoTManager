@@ -3,11 +3,11 @@
 //===========Firmware=============================================================================================================================================
 #ifdef ESP8266
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION 266
+#define FIRMWARE_VERSION 267
 #endif
 #ifdef ESP32
 #define FIRMWARE_NAME "esp32-iotm"
-#define FIRMWARE_VERSION 266
+#define FIRMWARE_VERSION 267
 #endif
 #define FLASH_4MB true
 
@@ -106,3 +106,7 @@ enum ConfigType_t {
     CT_CONFIG,
     CT_SCENARIO
 };
+
+//07.11.2020
+//RAM:   [=====     ]  46.8% (used 38376 bytes from 81920 bytes)     
+//Flash: [=====     ]  54.2% (used 566004 bytes from 1044464 bytes)

@@ -35,7 +35,7 @@
 //        }
 //
 //        int valueFl = this->correction(key, value);
-//        eventGen(key, "");
+//        eventGen2(key, String(valueFl));
 //        jsonWriteStr(configLiveJson, key, String(valueFl));
 //         publishStatus(key, String(valueFl));
 //        SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl) + ", Slave dev addr: " + String(slaveAddress) + ", Register: " + String(regAddress));

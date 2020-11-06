@@ -40,7 +40,7 @@ class SensorUltrasonic : public SensorConvertingClass {
 
         value = this->mapping(key, value);
         float valueFl = this->correction(key, value);
-        eventGen(key, "");
+        eventGen2(key, String(valueFl));
         jsonWriteStr(configLiveJson, key, String(valueFl));
         publishStatus(key, String(valueFl));
         SerialPrint("I", "Sensor", "'" + key + "' data: " + String(valueFl));

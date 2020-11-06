@@ -30,7 +30,7 @@ void SensorDallas::loop() {
 void SensorDallas::readDallas() {
     sensors.requestTemperaturesByIndex(_index);
     float value = sensors.getTempCByIndex(_index);
-    eventGen(_key, "");
+    eventGen2(_key, String(value));
     jsonWriteStr(configLiveJson, _key, String(value));
     publishStatus(_key, String(value));
     SerialPrint("I", "Sensor", "'" + _key + "' data: " + String(value));
