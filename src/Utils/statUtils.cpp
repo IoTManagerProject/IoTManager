@@ -68,7 +68,7 @@ String addNewDevice() {
         //==============================================
         jsonWriteStr(json, "uniqueId", mac);
         jsonWriteStr(json, "name", FIRMWARE_NAME);
-        jsonWriteInt(json, "model", FIRMWARE_VERSION);
+        jsonWriteStr(json, "model", getChipId());
         //==============================================
         http.begin(client,  serverIP + F(":8082/api/devices/"));
         http.setAuthorization("admin", "admin");

@@ -1,6 +1,8 @@
 temp > inputU
 button 0
+telegram нагрев#выключен 1
 end
 temp < inputL
 button 1
+telegram нагрев#включен 1
 end

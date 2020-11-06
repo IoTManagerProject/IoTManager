@@ -5,7 +5,7 @@
 #include "Bus.h"
 #include "Class/CallBackTest.h"
 #include "Class/NotAsync.h"
-#include "Class/ScenarioClass.h"
+#include "Class/ScenarioClass2.h"
 #include "Cmd.h"
 #include "Global.h"
 #include "Init.h"
