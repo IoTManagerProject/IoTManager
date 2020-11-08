@@ -6,22 +6,21 @@
 AsyncUDP asyncUdp;
 
 void asyncUdpInit() {
-    //if (asyncUdp.listen(1234)) {
-    if (asyncUdp.listenMulticast(IPAddress(239, 255, 255, 255), 1234)) {
+    if (asyncUdp.listenMulticast(IPAddress(239, 255, 255, 255), 4210)) {
         asyncUdp.onPacket([](AsyncUDPPacket packet) {
-            //Serial.print("UDP Packet Type: ");
-            //Serial.print(packet.isBroadcast() ? "Broadcast" : packet.isMulticast() ? "Multicast" : "Unicast");
-            //
-            //Serial.print(", From: ");
-            //Serial.print(packet.remoteIP());
-            //Serial.print(":");
-            //Serial.print(packet.remotePort());
-            //
-            //Serial.print(", To: ");
-            //Serial.print(packet.localIP());
-            //Serial.print(":");
-            //Serial.print(packet.localPort());
-            //
+            Serial.print("UDP Packet Type: ");
+            Serial.println(packet.isBroadcast() ? "Broadcast" : packet.isMulticast() ? "Multicast" : "Unicast");
+
+            Serial.print("From: ");
+            Serial.print(packet.remoteIP());
+            Serial.print(":");
+            Serial.println(packet.remotePort());
+
+            Serial.print("To: ");
+            Serial.print(packet.localIP());
+            Serial.print(":");
+            Serial.println(packet.localPort());
+
             //Serial.print(", Length: ");
             //Serial.print(packet.length());
             //
@@ -34,15 +33,33 @@ void asyncUdpInit() {
             if (udpPacketValidation(data)) {
                 udpPacketParse(data);
                 //Serial.println("', Packet valid");
-            } else {
+            }
+            else {
                 //Serial.println("', Packet invalid");
             }
 
             //reply to the client
 
-            packet.printf("Got %u bytes of data", packet.length());
+            String ip = WiFi.localIP().toString();
+            asyncUdp.broadcastTo(ip.c_str(), packet.remotePort());
+
+            //packet.printf(ip.c_str(), packet.length());
+
         });
     }
+
+    //ts.add(
+    //    UDP, 10000, [&](void*) {
+    //
+    //        //Serial.println("sended");
+    //
+    //        //asyncUdp.broadcastTo("Anyone here?", 5351);
+    //        //asyncUdp.broadcast("test");
+    //        //asyncUdp.print("Hello Server!");
+    //
+    //    },
+    //    nullptr, true);
+
 }
 
 String uint8tToString(uint8_t* data, size_t len) {
@@ -56,7 +73,8 @@ String uint8tToString(uint8_t* data, size_t len) {
 bool udpPacketValidation(String& data) {
     if (data.indexOf("iotm;") != -1 && data.indexOf(getChipId()) != -1) {
         return true;
-    } else {
+    }
+    else {
         return false;
     }
 }

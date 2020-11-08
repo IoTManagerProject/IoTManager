@@ -31,7 +31,7 @@
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
-//#define UDP_ENABLED
+#define UDP_ENABLED
 //#define SSDP_ENABLED
 
 //=========Sensors enable/disable=================================================================================================================================

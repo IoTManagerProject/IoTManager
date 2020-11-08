@@ -1,4 +1,5 @@
 {
   "widget": "chart",
-  "dateFormat": "HH:mm"
+  "dateFormat": "HH:mm",
+  "pointRadius": 0
 }
