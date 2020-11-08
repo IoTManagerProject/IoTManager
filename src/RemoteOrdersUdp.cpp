@@ -45,20 +45,19 @@ void asyncUdpInit() {
 
             //packet.printf(ip.c_str(), packet.length());
 
-        });
+            });
     }
 
-    //ts.add(
-    //    UDP, 10000, [&](void*) {
-    //
-    //        //Serial.println("sended");
-    //
-    //        //asyncUdp.broadcastTo("Anyone here?", 5351);
-    //        //asyncUdp.broadcast("test");
-    //        //asyncUdp.print("Hello Server!");
-    //
-    //    },
-    //    nullptr, true);
+    ts.add(
+        UDP, 10000, [&](void*) {
+
+            Serial.println("sended");
+            asyncUdp.broadcastTo("Anyone here?", 64130); 
+            //asyncUdp.broadcast("test");
+            //asyncUdp.print("Hello Server!");
+
+        },
+        nullptr, true);
 
 }
 
