@@ -25,6 +25,7 @@ void init() {
     server.serveStatic("/js/", LittleFS, "/js/").setCacheControl("max-age=600");
     server.serveStatic("/favicon.ico", LittleFS, "/favicon.ico").setCacheControl("max-age=600");
     server.serveStatic("/icon.jpeg", LittleFS, "/icon.jpeg").setCacheControl("max-age=600");
+    server.serveStatic("/edit", LittleFS, "/edit").setCacheControl("max-age=600");
 
     server.serveStatic("/", LittleFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
 

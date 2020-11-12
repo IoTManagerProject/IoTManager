@@ -3,7 +3,7 @@
 #include "Global.h"
 
 extern void initSt();
-extern String updateDevicePsn(String lat, String lon, String accur);
+extern String updateDevicePsn(String lat, String lon, String accur, String geo);
 extern String updateDeviceStatus();
 extern String addNewDevice();
 

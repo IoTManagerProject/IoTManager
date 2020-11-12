@@ -31,11 +31,10 @@
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
-#define UDP_ENABLED
+//#define UDP_ENABLED
 //#define SSDP_ENABLED
 
 //=========Sensors enable/disable=================================================================================================================================
-#define TANK_LEVEL_SAMPLES 10
 #define LEVEL_ENABLED
 #define ANALOG_ENABLED
 #define DALLAS_ENABLED
@@ -107,6 +106,6 @@ enum ConfigType_t {
     CT_SCENARIO
 };
 
-//07.11.2020
+//07.11.2020 (SSDP OFF, UDP OFF)
 //RAM:   [=====     ]  46.8% (used 38376 bytes from 81920 bytes)     
 //Flash: [=====     ]  54.2% (used 566004 bytes from 1044464 bytes)
