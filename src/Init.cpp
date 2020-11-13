@@ -2,8 +2,9 @@
 #include "BufferExecute.h"
 #include "Cmd.h"
 #include "Global.h"
-#include "items/LoggingClass.h"
+#include "items/Logging.h"
 #include "items/ImpulsOutClass.h"
+#include "items/ButtonOut.h"
 #include "items/SensorDallas.h"
 
 void loadConfig() {
@@ -44,9 +45,15 @@ void Device_init() {
     if (myImpulsOut != nullptr) {
         myImpulsOut->clear();
     }
-    impulsKeyList = "";
-    impulsEnterCounter = -1;
-    //================================
+    impuls_KeyList = "";
+    impuls_EnterCounter = -1;
+    //======clear buttonOut params=======
+    if (myButtonOut != nullptr) {
+        myButtonOut->clear();
+    }
+    buttonOut_KeyList = "";
+    buttonOut_EnterCounter = -1;
+    //===================================
 
 
 #ifdef LAYOUT_IN_RAM

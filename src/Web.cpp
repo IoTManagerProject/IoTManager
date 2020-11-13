@@ -3,7 +3,7 @@
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
-#include "items/LoggingClass.h"
+#include "items/Logging.h"
 #include "Telegram.h"
 
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {

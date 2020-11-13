@@ -9,9 +9,6 @@ extern void loopCmdExecute();
 extern void addKey(String& key, String& keyNumberTable, int number);
 extern int getKeyNum(String& key, String& keyNumberTable);
 
-extern void buttonOut();
-extern void buttonOutSet();
-
 extern void pwmOut();
 extern void pwmOutSet();
 

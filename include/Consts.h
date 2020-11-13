@@ -105,7 +105,11 @@ enum ConfigType_t {
     CT_CONFIG,
     CT_SCENARIO
 };
-
+//history
 //07.11.2020 (SSDP OFF, UDP OFF)
 //RAM:   [=====     ]  46.8% (used 38376 bytes from 81920 bytes)     
 //Flash: [=====     ]  54.2% (used 566004 bytes from 1044464 bytes)
+
+//13.11.2020 (SSDP OFF, UDP OFF) 
+//RAM:   [=====     ]  46.6% (used 38208 bytes from 81920 bytes)
+//Flash: [=====     ]  54.2% (used 566388 bytes from 1044464 bytes)

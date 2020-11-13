@@ -67,8 +67,13 @@ extern String itemsFile;
 extern String itemsLine;
 
 //key lists and numbers
-extern String impulsKeyList;
-extern int impulsEnterCounter;
+//=========================================
+extern String impuls_KeyList;
+extern int impuls_EnterCounter;
+//=========================================
+extern String buttonOut_KeyList;
+extern int buttonOut_EnterCounter;
+//=========================================
 
 // Sensors
 extern String sensorReadingMap10sec;

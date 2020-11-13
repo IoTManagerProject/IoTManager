@@ -1,4 +1,4 @@
-#include "items/LoggingClass.h"
+#include "items/Logging.h"
 
 #include <Arduino.h>
 

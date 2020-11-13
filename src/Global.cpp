@@ -38,9 +38,13 @@ String itemsFile = "";
 String itemsLine = "";
 
 //key lists and numbers
-String impulsKeyList = "";
-int impulsEnterCounter = -1;
-
+//=========================================
+String impuls_KeyList = "";
+int impuls_EnterCounter = -1;
+//=========================================
+String buttonOut_KeyList = "";
+int buttonOut_EnterCounter = -1;
+//=========================================
 
 // Sensors
 String sensorReadingMap10sec;

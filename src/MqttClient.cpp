@@ -1,7 +1,7 @@
 #include "MqttClient.h"
 
 #include <LittleFS.h>
-#include "items/LoggingClass.h"
+#include "items/Logging.h"
 #include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
@@ -62,10 +62,9 @@ void mqttSubscribe() {
     SerialPrint("I", "MQTT", "subscribe");
     mqtt.subscribe(mqttPrefix.c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
-    mqtt.subscribe((mqttRootDevice + "/order").c_str());
     mqtt.subscribe((mqttRootDevice + "/update").c_str());
-    mqtt.subscribe((mqttRootDevice + "/devc").c_str());
-    mqtt.subscribe((mqttRootDevice + "/devs").c_str());
+    //mqtt.subscribe((mqttRootDevice + "/order").c_str());
+    //mqtt.subscribe((mqttPrefix + "/event").c_str());
 }
 
 boolean mqttConnect() {
@@ -131,11 +130,16 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
 
     }
     else if (topicStr.indexOf("order")) {
-        payloadStr.replace("_", " ");
-        orderBuf += payloadStr;
-        orderBuf += ",";
+        //payloadStr.replace("_", " ");
+        //orderBuf += payloadStr;
+        //orderBuf += ",";
 
     }
+
+    //else if (topicStr.indexOf("event")) {
+    //    eventBuf += payloadStr;
+    //}
+
     else if (topicStr.indexOf("update")) {
         if (payloadStr == "1") {
             myNotAsyncActions->make(do_UPGRADE);

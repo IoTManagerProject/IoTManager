@@ -15,7 +15,7 @@
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
 #include "items/ButtonInClass.h"
-#include "items/LoggingClass.h"
+#include "items/Logging.h"
 #include "items/ImpulsOutClass.h"
 #include "items/SensorDallas.h"
 #include "Telegram.h"

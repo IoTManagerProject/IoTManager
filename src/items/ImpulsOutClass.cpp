@@ -44,8 +44,8 @@ void impuls() {
     String pin = myLineParsing.gpin();
     myLineParsing.clear();
 
-    impulsEnterCounter++;
-    addKey(key, impulsKeyList, impulsEnterCounter);
+    impuls_EnterCounter++;
+    addKey(key, impuls_KeyList, impuls_EnterCounter);
 
     static bool firstTime = true;
     if (firstTime) myImpulsOut = new MyImpulsOutVector();
@@ -60,7 +60,7 @@ void impulsExecute() {
     String impulsPeriod = sCmd.next();
     String impulsCount = sCmd.next();
 
-    int number = getKeyNum(key, impulsKeyList);
+    int number = getKeyNum(key, impuls_KeyList);
 
     if (myImpulsOut != nullptr) {
         if (number != -1) {
