@@ -155,6 +155,12 @@
             "type": "hr"
         },
         {
+            "type": "button",
+            "title": "Очистить графики и сбросить введенные данные",
+            "action": "/set?cleanlog",
+            "class": "btn btn-block btn-default"
+        },
+        {
             "type": "link",
             "title": "Ручная настройка",
             "action": "/?set.manual",
@@ -164,12 +170,6 @@
             "type": "link",
             "title": "Инструкция к системе автоматизации",
             "action": "https://github.com/IoTManagerProject/IoTManager/wiki",
-            "class": "btn btn-block btn-default"
-        },
-        {
-            "type": "button",
-            "title": "Очистить графики и сбросить введенные данные",
-            "action": "/set?cleanlog",
             "class": "btn btn-block btn-default"
         },
         {

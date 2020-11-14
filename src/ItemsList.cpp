@@ -68,6 +68,8 @@ void addPreset(String name) {
 void delAllItems() {
     removeFile(DEVICE_CONFIG_FILE);
     addFile(DEVICE_CONFIG_FILE, String(firstLine));
+    removeFile(DEVICE_SCENARIO_FILE);
+    addFile(DEVICE_SCENARIO_FILE, "//");
     removeFile("id.txt");
     removeFile("order.txt");
     removeFile("pins.txt");

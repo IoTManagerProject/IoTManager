@@ -45,11 +45,8 @@ void csvCmdExecute(String& cmdStr) {
             else if (order == F("button-in")) {
                 sCmd.addCommand(order.c_str(), buttonIn);
             }
-            else if (order == F("input-digit")) {
+            else if (order == F("input")) {
                 sCmd.addCommand(order.c_str(), input);
-            }
-            else if (order == F("input-time")) {
-                //sCmd.addCommand(order.c_str(), inputTime);
             }
             else if (order == F("output-text")) {
                 sCmd.addCommand(order.c_str(), textOut);

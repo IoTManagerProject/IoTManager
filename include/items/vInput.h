@@ -10,17 +10,15 @@ typedef std::vector<Input> MyInputVector;
 class Input {
    public:
 
-    Input(String key);
-
+    Input(String key, String widget);
     ~Input();
-
-    void execute(String state);
+    
+    void execute(String value);
 
    private:
 
     String _key;
 
-    void addNewDelOldData(const String filename, size_t maxPoints, String payload);
 };
 
 extern MyInputVector* myInput;

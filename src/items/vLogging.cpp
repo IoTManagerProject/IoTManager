@@ -112,7 +112,7 @@ void sendLogData(String file, String topic) {
     }
 }
 
-void clean_log_date() {
+void cleanLogAndData() {
 #ifdef ESP8266
     auto dir = LittleFS.openDir("logs");
     while (dir.next()) {
@@ -121,5 +121,6 @@ void clean_log_date() {
         removeFile("logs/" + fname);
     }
     removeFile("live.json");
+    configLiveJson = "";
 #endif
 }

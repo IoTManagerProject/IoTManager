@@ -1,5 +1,5 @@
 #include "Utils/TimeUtils.h"
-
+#include "Global.h"
 #include "Utils/StringUtils.h"
 
 static const uint8_t days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -210,4 +210,18 @@ void breakEpochToTime(unsigned long epoch, Time_t& tm) {
     tm.month = month + 1;        // jan is month 1
     tm.day_of_month = time + 1;  // day of month
     tm.valid = (epoch > MIN_DATETIME);
+}
+
+void handle_time_init() {
+    ts.add(
+        TIME, 1000, [&](void*) {
+            String timenow = timeNow->getTimeWOsec();
+            static String prevTime;
+            if (prevTime != timenow) {
+                prevTime = timenow;
+                jsonWriteStr(configLiveJson, "timenow", timenow);
+                eventGen2("timenow", timenow);
+            }
+        },
+        nullptr, true);
 }

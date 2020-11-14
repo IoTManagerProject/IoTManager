@@ -49,3 +49,5 @@ int getOffsetInMinutes(int timezone);
 * Разбивает время на составляющие
 */
 void breakEpochToTime(unsigned long epoch, Time_t& tm);
+
+void handle_time_init();

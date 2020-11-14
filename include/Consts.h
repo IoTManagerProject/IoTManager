@@ -114,3 +114,7 @@ enum ConfigType_t {
 //13.11.2020 (SSDP OFF, UDP OFF) 
 //RAM:   [=====     ]  46.6% (used 38208 bytes from 81920 bytes)
 //Flash: [=====     ]  54.2% (used 566388 bytes from 1044464 bytes)
+
+//15.11.2020 (SSDP OFF, UDP OFF) 
+//RAM:   [=====     ]  46.1% (used 37780 bytes from 81920 bytes)
+//Flash: [=====     ]  54.3% (used 566656 bytes from 1044464 bytes)

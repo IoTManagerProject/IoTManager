@@ -31,4 +31,4 @@ extern MyLoggingVector* myLogging;
 
 extern void choose_log_date_and_send();
 extern void sendLogData(String file, String topic);
-extern void clean_log_date();
+extern void cleanLogAndData();

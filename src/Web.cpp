@@ -59,7 +59,7 @@ void web_init() {
 
 #ifdef LOGGING_ENABLED
         if (request->hasArg("cleanlog")) {
-            clean_log_date();
+            cleanLogAndData();
             request->send(200);
         }
 #endif
