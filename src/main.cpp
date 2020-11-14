@@ -15,9 +15,9 @@
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
 #include "items/ButtonInClass.h"
-#include "items/Logging.h"
-#include "items/ImpulsOutClass.h"
-#include "items/SensorDallas.h"
+#include "items/vLogging.h"
+#include "items/vImpulsOut.h"
+#include "items/vSensorDallas.h"
 #include "Telegram.h"
 
 void not_async_actions();

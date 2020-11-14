@@ -45,6 +45,9 @@ int impuls_EnterCounter = -1;
 String buttonOut_KeyList = "";
 int buttonOut_EnterCounter = -1;
 //=========================================
+String input_KeyList = "";
+int input_EnterCounter = -1;
+//=========================================
 
 // Sensors
 String sensorReadingMap10sec;

@@ -2,15 +2,20 @@
 #include "BufferExecute.h"
 #include "Cmd.h"
 #include "Global.h"
-#include "items/Logging.h"
-#include "items/ImpulsOutClass.h"
-#include "items/ButtonOut.h"
-#include "items/SensorDallas.h"
+#include "items/vLogging.h"
+#include "items/vImpulsOut.h"
+#include "items/vButtonOut.h"
+#include "items/vSensorDallas.h"
+#include "items/vInput.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
-    //configSetupJson.replace(" ", "");
     configSetupJson.replace("\r\n", "");
+
+#ifdef SAVE_SETTINGS_TO_FLASH
+    configLiveJson = readFile("live.json", 4096);
+    configLiveJson.replace("\r\n", "");
+#endif
 
     jsonWriteStr(configSetupJson, "chipID", chipId);
     jsonWriteInt(configSetupJson, "firmware_version", FIRMWARE_VERSION);
@@ -53,6 +58,12 @@ void Device_init() {
     }
     buttonOut_KeyList = "";
     buttonOut_EnterCounter = -1;
+    //======clear input params=======
+    if (myInput != nullptr) {
+        myInput->clear();
+    }
+    input_KeyList = "";
+    input_EnterCounter = -1;
     //===================================
 
 

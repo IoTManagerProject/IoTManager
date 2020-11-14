@@ -54,3 +54,9 @@ String jsonWriteFloat(String& json, String name, float value) {
 void saveConfig() {
     writeFile(String("config.json"), configSetupJson);
 }
+
+void saveLive() {
+#ifdef SAVE_SETTINGS_TO_FLASH
+    writeFile(String("live.json"), configLiveJson);
+#endif
+}

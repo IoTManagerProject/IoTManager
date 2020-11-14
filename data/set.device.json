@@ -56,7 +56,8 @@
             "title": {
                 "#": "Выберите элемент из списка<span class=\"caret\"></span>",
                 "/set?addItem=button-out.pin": "1.Кнопка управляющая пином",
-                "/set?addItem=button-out.npin": "2.Кнопка виртуальная",
+                "/set?addItem=button-out.inv": "2.Кнопка управляющая пином (с инверсией)",
+                "/set?addItem=button-out.npin": "3.Кнопка виртуальная",
                 "/set?addItem=button-in": "4.Кнопка физическая",
                 "/set?addItem=pwm-out": "3.Широтно импульсная модуляция pwm",
                 "/set?addItem=input-digit": "5.Окно ввода цифровых значений",
@@ -167,7 +168,7 @@
         },
         {
             "type": "button",
-            "title": "Очистить логи сенсоров",
+            "title": "Очистить графики и сбросить введенные данные",
             "action": "/set?cleanlog",
             "class": "btn btn-block btn-default"
         },

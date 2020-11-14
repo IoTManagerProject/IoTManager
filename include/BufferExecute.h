@@ -15,7 +15,7 @@ extern void pwmOutSet();
 extern void buttonIn();
 extern void buttonInSet();
 
-extern void inputDigit();
+extern void input();
 extern void inputDigitSet();
 
 extern void inputTime();

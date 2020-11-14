@@ -14,7 +14,6 @@ class ButtonOut {
 
     ~ButtonOut();
 
-    void init();
     void execute(String state);
 
    private:

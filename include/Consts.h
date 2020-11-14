@@ -33,6 +33,7 @@
 //#define LAYOUT_IN_RAM
 //#define UDP_ENABLED
 //#define SSDP_ENABLED
+#define SAVE_SETTINGS_TO_FLASH
 
 //=========Sensors enable/disable=================================================================================================================================
 #define LEVEL_ENABLED

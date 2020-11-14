@@ -1,5 +1,5 @@
 0;dallas-temp;temp;anydataTemp;Термостат;Температура;1;pin[2];index[0];int[10]
 0;logging;log;chart;Термостат;История;2;val[temp];int[60];cnt[100]
-0;input-digit;inputU;inputDigit;Термостат;Верхний#порог;3;st[30]
-0;input-digit;inputL;inputDigit;Термостат;Нижний#порог;4;st[20]
-0;button-out;button;toggle;Термостат;Нагрев;5;pin[12];st[0]
+0;input;inputU;inputDigit;Термостат;Верхний#порог;3
+0;input;inputL;inputDigit;Термостат;Нижний#порог;4
+0;button-out;button;toggle;Термостат;Нагрев;5;pin[12]

@@ -7,7 +7,7 @@
 //#include "Module/Terminal.h"
 //#include "Servo/Servos.h"
 //
-//#include "items/SensorDallas.h"
+//#include "items/vSensorDallas.h"
 //
 //Terminal *term = nullptr;
 //
@@ -27,7 +27,7 @@
     //sCmd.addCommand("pwm-out", pwmOut);
     //sCmd.addCommand("button-in", buttonIn);
 
-    //sCmd.addCommand("input-digit", inputDigit);
+    //sCmd.addCommand("input-digit", input);
     //sCmd.addCommand("input-time", inputTime);
     //sCmd.addCommand("output-text", textOut);
 

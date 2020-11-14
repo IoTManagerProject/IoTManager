@@ -1,7 +1,7 @@
 #include "BufferExecute.h"
 //
-#include "items/SensorDallas.h"
-#include "items/ButtonOut.h"
+#include "items/vSensorDallas.h"
+#include "items/vButtonOut.h"
 //
 #include "Global.h"
 #include "Module/Terminal.h"
@@ -46,10 +46,10 @@ void csvCmdExecute(String& cmdStr) {
                 sCmd.addCommand(order.c_str(), buttonIn);
             }
             else if (order == F("input-digit")) {
-                sCmd.addCommand(order.c_str(), inputDigit);
+                sCmd.addCommand(order.c_str(), input);
             }
             else if (order == F("input-time")) {
-                sCmd.addCommand(order.c_str(), inputTime);
+                //sCmd.addCommand(order.c_str(), inputTime);
             }
             else if (order == F("output-text")) {
                 sCmd.addCommand(order.c_str(), textOut);

@@ -17,3 +17,5 @@ String jsonWriteFloat(String& json, String name, float value);
 String jsonWriteBool(String& json, String name, boolean value);
 
 void saveConfig();
+
+void saveLive();

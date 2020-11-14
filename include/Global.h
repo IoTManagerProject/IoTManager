@@ -74,6 +74,9 @@ extern int impuls_EnterCounter;
 extern String buttonOut_KeyList;
 extern int buttonOut_EnterCounter;
 //=========================================
+extern String input_KeyList;
+extern int input_EnterCounter;
+//=========================================
 
 // Sensors
 extern String sensorReadingMap10sec;

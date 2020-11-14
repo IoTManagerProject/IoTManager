@@ -1,4 +1,4 @@
-#include "items/Logging.h"
+#include "items/vLogging.h"
 
 #include <Arduino.h>
 
@@ -120,5 +120,6 @@ void clean_log_date() {
         SerialPrint("I", "System", fname);
         removeFile("logs/" + fname);
     }
+    removeFile("live.json");
 #endif
 }

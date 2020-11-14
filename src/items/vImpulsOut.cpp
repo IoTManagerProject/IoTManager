@@ -1,4 +1,4 @@
-#include "items/ImpulsOutClass.h"
+#include "items/vImpulsOut.h"
 
 #include <Arduino.h>
 #include "BufferExecute.h"
