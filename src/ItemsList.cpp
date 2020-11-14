@@ -63,6 +63,7 @@ void addPreset(String name) {
     String scenario = readFile("presets/" + name + ".txt", 4048);
     removeFile(DEVICE_SCENARIO_FILE);
     addFile(DEVICE_SCENARIO_FILE, scenario);
+    loadScenario();
 }
 
 void delAllItems() {
