@@ -1,9 +1,9 @@
 #include "BufferExecute.h"
+#include "Global.h"
 //
 #include "items/vSensorDallas.h"
 #include "items/vButtonOut.h"
-//
-#include "Global.h"
+
 
 
 void loopCmdAdd(const String& cmdStr) {
