@@ -4,7 +4,7 @@
 #include "items/vButtonOut.h"
 //
 #include "Global.h"
-#include "Module/Terminal.h"
+
 
 void loopCmdAdd(const String& cmdStr) {
     orderBuf += cmdStr;
@@ -26,8 +26,6 @@ void csvCmdExecute(String& cmdStr) {
     int count = 0;
     while (cmdStr.length()) {
         String buf = selectToMarker(cmdStr, "\n");
-
-
 
         buf = deleteBeforeDelimiter(buf, " ");  //отсечка чекбокса
 
@@ -94,8 +92,6 @@ void csvCmdExecute(String& cmdStr) {
                 sCmd.addCommand(order.c_str(), impuls);
             }
             
-
-
             sCmd.readStr(buf);
         }
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
