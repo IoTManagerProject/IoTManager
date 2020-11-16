@@ -5,10 +5,10 @@
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "BufferExecute.h"
-
+//this class save date to flash
 Input::Input(String key, String widget) {
     _key = key;
-    String value = jsonReadStr(configLiveJson, key);
+    String value = jsonReadStr(configStoreJson, key);
 
     if (value == "") {
         if (widget.indexOf("Digit") != -1) {
@@ -25,8 +25,8 @@ Input::~Input() {}
 
 void Input::execute(String value) {
     eventGen2(_key, value);
-    jsonWriteStr(configLiveJson, _key, value);
-    saveLive();
+    jsonWriteStr(configStoreJson, _key, value);
+    saveStore();
     publishStatus(_key, value);
 }
 

@@ -5,13 +5,13 @@
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "BufferExecute.h"
-
+//this class save date to flash
 ButtonOut::ButtonOut(unsigned int pin, boolean inv, String key) {
     _pin = pin;
     _inv = inv;
     _key = key;
     pinMode(_pin, OUTPUT);
-    int state = jsonReadInt(configLiveJson, key);
+    int state = jsonReadInt(configStoreJson, key);
     this->execute(String(state));
 }
 ButtonOut::~ButtonOut() {}
@@ -30,8 +30,8 @@ void ButtonOut::execute(String state) {
         }
     }
     eventGen2(_key, state);
-    jsonWriteInt(configLiveJson, _key, state.toInt());
-    saveLive();
+    jsonWriteInt(configStoreJson, _key, state.toInt());
+    saveStore();
     publishStatus(_key, state);
 }
 

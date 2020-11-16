@@ -12,10 +12,8 @@ void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
     configSetupJson.replace("\r\n", "");
 
-#ifdef SAVE_SETTINGS_TO_FLASH
-    configLiveJson = readFile("live.json", 4096);
-    configLiveJson.replace("\r\n", "");
-#endif
+    configStoreJson = readFile("store.json", 4096);
+    configStoreJson.replace("\r\n", "");
 
     jsonWriteStr(configSetupJson, "chipID", chipId);
     jsonWriteInt(configSetupJson, "firmware_version", FIRMWARE_VERSION);

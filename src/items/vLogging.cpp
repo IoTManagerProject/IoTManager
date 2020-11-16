@@ -120,7 +120,7 @@ void cleanLogAndData() {
         SerialPrint("I", "System", fname);
         removeFile("logs/" + fname);
     }
-    removeFile("live.json");
-    configLiveJson = "";
 #endif
+    removeFile("store.json");
+    configStoreJson = "";
 }

@@ -36,6 +36,7 @@ void web_init() {
 
         if (request->hasArg("delAllItems")) {
             delAllItems();
+            cleanLogAndData();
             request->redirect("/?set.device");
         }
 

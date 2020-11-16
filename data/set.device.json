@@ -160,7 +160,7 @@
         },
         {
             "type": "button",
-            "title": "Очистить графики и сбросить введенные данные",
+            "title": "Очистить графики и введенные данные",
             "action": "/set?cleanlog",
             "class": "btn btn-block btn-default"
         },

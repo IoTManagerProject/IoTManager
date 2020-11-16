@@ -23,6 +23,7 @@ boolean telegramInitBeen = false;
 // Json
 String configSetupJson = "{}";
 String configLiveJson = "{}";
+String configStoreJson = "{}";
 String configOptionJson = "{}";
 
 // Mqtt

@@ -49,6 +49,10 @@ void init() {
         request->send(200, "application/json", configLiveJson);
     });
 
+    server.on("/config.store.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", configStoreJson);
+    });
+
     // данные не являющиеся событиями
     server.on("/config.option.json", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send(200, "application/json", configOptionJson);

@@ -18,4 +18,4 @@ String jsonWriteBool(String& json, String name, boolean value);
 
 void saveConfig();
 
-void saveLive();
+void saveStore();

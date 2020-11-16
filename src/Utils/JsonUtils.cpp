@@ -55,8 +55,6 @@ void saveConfig() {
     writeFile(String("config.json"), configSetupJson);
 }
 
-void saveLive() {
-#ifdef SAVE_SETTINGS_TO_FLASH
-    writeFile(String("live.json"), configLiveJson);
-#endif
+void saveStore() {
+    writeFile(String("store.json"), configStoreJson);
 }

@@ -52,6 +52,7 @@ extern boolean telegramInitBeen;
 // Json
 extern String configSetupJson;   //все настройки
 extern String configLiveJson;    //все данные с датчиков (связан с mqtt)
+extern String configStoreJson;   //все данные которые должны сохраняться
 extern String configOptionJson;  //для трансфера
 
 // Mqtt

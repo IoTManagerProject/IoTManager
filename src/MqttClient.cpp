@@ -232,7 +232,7 @@ void publishWidgets() {
 
 void publishState() {
     // берет строку json и ключи превращает в топики а значения колючей в них посылает
-    String str = configLiveJson;
+    String str = configLiveJson + "," + configStoreJson;
     str.replace("{", "");
     str.replace("}", "");
     str += ",";
