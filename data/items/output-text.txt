@@ -1,1 +1,1 @@
-0;output-text;id;anydata;Вывод;Сигнализация;order
+0;inoutput;id;anydata;Вывод;Сигнализация;order

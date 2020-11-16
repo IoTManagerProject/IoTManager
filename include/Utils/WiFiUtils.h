@@ -10,5 +10,5 @@ bool startAPMode();
 
 boolean RouterFind(String ssid);
 
-String RSSIquality();
+uint8_t RSSIquality();
 

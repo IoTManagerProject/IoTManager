@@ -1,11 +1,10 @@
 #include "items/vButtonOut.h"
-
-#include <Arduino.h>
-
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "BufferExecute.h"
-//this class save date to flash
+
+#include <Arduino.h>
+//this class save data to flash
 ButtonOut::ButtonOut(unsigned int pin, boolean inv, String key) {
     _pin = pin;
     _inv = inv;

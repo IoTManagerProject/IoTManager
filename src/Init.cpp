@@ -6,7 +6,8 @@
 #include "items/vImpulsOut.h"
 #include "items/vButtonOut.h"
 #include "items/vSensorDallas.h"
-#include "items/vInput.h"
+#include "items/vInOutput.h"
+#include "items/vPwmOut.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -14,6 +15,9 @@ void loadConfig() {
 
     configStoreJson = readFile("store.json", 4096);
     configStoreJson.replace("\r\n", "");
+
+    jsonWriteStr(configSetupJson, "warning1", "");
+    jsonWriteStr(configSetupJson, "warning2", "");
 
     jsonWriteStr(configSetupJson, "chipID", chipId);
     jsonWriteInt(configSetupJson, "firmware_version", FIRMWARE_VERSION);
@@ -57,11 +61,17 @@ void Device_init() {
     buttonOut_KeyList = "";
     buttonOut_EnterCounter = -1;
     //======clear input params=======
-    if (myInput != nullptr) {
-        myInput->clear();
+    if (myInOutput != nullptr) {
+        myInOutput->clear();
     }
-    input_KeyList = "";
-    input_EnterCounter = -1;
+    inOutput_KeyList = "";
+    inOutput_EnterCounter = -1;
+    //======clear pwm params=======
+    if (myPwmOut != nullptr) {
+        myPwmOut->clear();
+    }
+    pwmOut_KeyList = "";
+    pwmOut_EnterCounter = -1;
     //===================================
 
 
@@ -94,28 +104,3 @@ void handle_uptime() {
     jsonWriteStr(configSetupJson, "uptime", timeNow->getUptime());
 }
 
-//void handle_statistics() {
-//    if (isNetworkActive()) {
-//        String urls = "http://backup.privet.lv/visitors/?";
-//        //-----------------------------------------------------------------
-//        urls += WiFi.macAddress().c_str();
-//        urls += "&";
-//        //-----------------------------------------------------------------
-//#ifdef ESP8266
-//        urls += "iot-manager_esp8266";
-//#endif
-//#ifdef ESP32
-//        urls += "iot-manager_esp32";
-//#endif
-//        urls += "&";
-//#ifdef ESP8266
-//        urls += ESP.getResetReason();
-//#endif
-//#ifdef ESP32
-//        urls += "Power on";
-//#endif
-//        urls += "&";
-//        urls += String(FIRMWARE_VERSION);
-//        String stat = getURL(urls);
-//    }
-//}

@@ -1,1 +1,1 @@
-0;input;id;inputTime;Ввод;Введите#время;order
+0;inoutput;id;inputTime;Ввод;Введите#время;order

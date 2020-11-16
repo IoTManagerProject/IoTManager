@@ -29,6 +29,7 @@ class LoggingClass {
 
 extern MyLoggingVector* myLogging;
 
+extern void logging();
 extern void choose_log_date_and_send();
 extern void sendLogData(String file, String topic);
 extern void cleanLogAndData();

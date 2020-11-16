@@ -22,7 +22,6 @@ class ButtonOut {
     boolean _inv;
     String _key;
 
-    void addNewDelOldData(const String filename, size_t maxPoints, String payload);
 };
 
 extern MyButtonOutVector* myButtonOut;

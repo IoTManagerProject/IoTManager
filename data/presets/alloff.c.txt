@@ -4,4 +4,4 @@
 0;button-out;button-out-4;toggle;Кнопки;Прихожая;4;pin[14]
 0;pwm-out;pwm-out-5;range;Кнопки;Яркость;5;pin[15]
 0;pwm-out;pwm-out-6;range;Кнопки;Яркость;6;pin[16]
-0;output-text;output-text-7;anydata;Кнопки;Статус;7
+0;inoutput;output-text-7;anydata;Кнопки;Статус;7

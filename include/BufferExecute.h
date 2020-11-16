@@ -9,20 +9,8 @@ extern void loopCmdExecute();
 extern void addKey(String& key, String& keyNumberTable, int number);
 extern int getKeyNum(String& key, String& keyNumberTable);
 
-extern void pwmOut();
-extern void pwmOutSet();
-
 extern void buttonIn();
 extern void buttonInSet();
-
-extern void input();
-extern void inputDigitSet();
-
-extern void inputTime();
-extern void inputTimeSet();
-
-extern void textOut();
-extern void textOutSet();
 
 extern void analogAdc();
 extern void analogReading(); 
@@ -55,7 +43,5 @@ extern void bmp280ReadingPress();
 
 extern void sysUptime();
 extern void uptimeReading();
-
-extern void logging();
 
 extern void impuls();

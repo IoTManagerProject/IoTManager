@@ -30,6 +30,7 @@ void web_init() {
         }
 
         if (request->hasArg("delChoosingItems")) {
+            jsonWriteStr(configSetupJson, "warning1", F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
             myNotAsyncActions->make(do_delChoosingItems);
             request->send(200);
         }
@@ -37,6 +38,7 @@ void web_init() {
         if (request->hasArg("delAllItems")) {
             delAllItems();
             cleanLogAndData();
+            jsonWriteStr(configSetupJson, "warning1", F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
             request->redirect("/?set.device");
         }
 

@@ -8,7 +8,9 @@ class Scenario {
 public:
 
     void loop() {
-
+        if (!jsonReadBool(configSetupJson, "scen")) {
+            return;
+        }
         String allBlocks = scenario;
         allBlocks.replace("\r\n", "\n");
         allBlocks.replace("\r", "\n");

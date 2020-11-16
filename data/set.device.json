@@ -23,15 +23,15 @@
         },
         {
             "type": "h4",
-            "title": "Device ID: {{chipID}}"
+            "title": "ID устройства: {{chipID}}"
         },
         {
             "type": "h4",
-            "title": "IP address: {{ip}}"
+            "title": "IP адрес: {{ip}}"
         },
         {
             "type": "h4",
-            "title": "Time: {{timenow}}"
+            "title": "Время: {{timenow}}"
         },
         {
             "type": "h4",
@@ -39,15 +39,26 @@
         },
         {
             "type": "h4",
-            "title": "WiFi Signal: {{signal}}"
+            "title": "Версия прошивки: {{firmware_version}}"
         },
         {
             "type": "h4",
-            "title": "Build version: {{firmware_version}}"
+            "title": "Версия файловой системы: 267"
         },
         {
             "type": "h4",
-            "title": "LittleFS version: 267"
+            "title": "{{signal}}"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "text",
+            "title": "{{warning1}}"
+        },
+        {
+            "type": "text",
+            "title": "{{warning2}}"
         },
         {
             "type": "hr"

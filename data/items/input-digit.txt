@@ -1,1 +1,1 @@
-0;input;id;inputDigit;Ввод;Введите#цифру;order
+0;inoutput;id;inputDigit;Ввод;Введите#цифру;order

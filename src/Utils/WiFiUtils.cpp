@@ -111,27 +111,27 @@ boolean isNetworkActive() {
     return WiFi.status() == WL_CONNECTED;
 }
 
-String RSSIquality() {
-    String res = "not connected";
+uint8_t RSSIquality() {
+    uint8_t res = 0;
     if (WiFi.status() == WL_CONNECTED) {
         int rssi = WiFi.RSSI();
         if (rssi >= -50) {
-            res = "Excellent";
+            res = 6; //"Excellent";
         }
         else if (rssi < -50 && rssi >= -60) {
-            res = "Very good";
+            res = 5; //"Very good";
         }
         else if (rssi < -60 && rssi >= -70) {
-            res = "Good";
+            res = 4; //"Good";
         }
         else if (rssi < -70 && rssi >= -80) {
-            res = "Low";
+            res = 3; //"Low";
         }
         else if (rssi < -80 && rssi > -100) {
-            res = "Very low";
+            res = 2; //"Very low";
         }
         else if (rssi <= -100) {
-            res = "No signal";
+            res = 1; //"No signal";
         }    
     } 
     return res;

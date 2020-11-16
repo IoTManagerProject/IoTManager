@@ -3,8 +3,9 @@
 //
 #include "items/vSensorDallas.h"
 #include "items/vButtonOut.h"
-
-
+#include "items/vPwmOut.h"
+#include "items/vInOutput.h"
+#include "items/vLogging.h"
 
 void loopCmdAdd(const String& cmdStr) {
     orderBuf += cmdStr;
@@ -43,11 +44,8 @@ void csvCmdExecute(String& cmdStr) {
             else if (order == F("button-in")) {
                 sCmd.addCommand(order.c_str(), buttonIn);
             }
-            else if (order == F("input")) {
-                sCmd.addCommand(order.c_str(), input);
-            }
-            else if (order == F("output-text")) {
-                sCmd.addCommand(order.c_str(), textOut);
+            else if (order == F("inoutput")) {
+                sCmd.addCommand(order.c_str(), inOutput);
             }
             else if (order == F("analog-adc")) {
                 sCmd.addCommand(order.c_str(), analogAdc);

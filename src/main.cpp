@@ -32,7 +32,7 @@ void setup() {
     Serial.begin(115200);
     Serial.flush();
     Serial.println();
-    Serial.println("--------------started----------------");
+    Serial.println(F("--------------started----------------"));
 
     setChipId();
 
@@ -40,57 +40,57 @@ void setup() {
     myScenario = new Scenario();
 
     fileSystemInit();
-    SerialPrint("I", "FS", "FS Init");
+    SerialPrint("I", F("FS"), F("FS Init"));
 
     loadConfig();
-    SerialPrint("I", "Conf", "Config Init");
+    SerialPrint("I", F("Conf"), F("Config Init"));
 
     clock_init();
-    SerialPrint("I", "Time", "Clock Init");
+    SerialPrint("I", F("Time"), F("Clock Init"));
 
     handle_time_init();
-    SerialPrint("I", "Time", "Handle time init(");
+    SerialPrint("I", F("Time"), F("Handle time init"));
 
     sensorsInit();
-    SerialPrint("I", "Sensors", "Sensors Init");
+    SerialPrint("I", F("Sensors"), F("Sensors Init"));
 
     itemsListInit();
-    SerialPrint("I", "Items", "Items Init");
+    SerialPrint("I", F("Items"), F("Items Init"));
 
     all_init();
-    SerialPrint("I", "Init", "Init Init");
+    SerialPrint("I", F("Init"), F("Init Init"));
 
     routerConnect();
-    SerialPrint("I", "WIFI", "Network Init");
+    SerialPrint("I", F("WIFI"), F("Network Init"));
 
     telegramInit();
-    SerialPrint("I", "Telegram", "Telegram Init");
+    SerialPrint("I", F("Telegram"), F("Telegram Init"));
 
     uptime_init();
-    SerialPrint("I", "Uptime", "Uptime Init");
+    SerialPrint("I", F("Uptime"), F("Uptime Init"));
 
     upgradeInit();
-    SerialPrint("I", "Update", "Updater Init");
+    SerialPrint("I", F("Update"), F("Updater Init"));
 
     HttpServer::init();
-    SerialPrint("I", "HTTP", "HttpServer Init");
+    SerialPrint("I", F("HTTP"), F("HttpServer Init"));
 
     web_init();
-    SerialPrint("I", "Web", "WebAdmin Init");
+    SerialPrint("I", F("Web"), F("WebAdmin Init"));
 
     initSt();
-    SerialPrint("I", "Stat", "Stat Init");
+    SerialPrint("I", F("Stat"), F("Stat Init"));
 
 #ifdef UDP_ENABLED
-    SerialPrint("I", "UDP", "Udp Init");
+    SerialPrint("I", F("UDP"), "Udp Init");
     asyncUdpInit();
 #endif
 
-    SerialPrint("I", "Bus", "Bus Init");
+    SerialPrint("I", F("Bus"), F("Bus Init"));
     busInit();
 
 #ifdef SSDP_ENABLED
-    SerialPrint("I", "SSDP", "Ssdp Init");
+    SerialPrint("I", F("SSDP"), F("Ssdp Init"));
     SsdpInit();
 #endif
 
@@ -99,7 +99,29 @@ void setup() {
     ts.add(
         TEST, 1000 * 60, [&](void*) {
             SerialPrint("I", "System", printMemoryStatus());
-            jsonWriteStr(configSetupJson, "signal", RSSIquality());
+            switch (RSSIquality()) {
+            case 0:
+                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>не подключено к роутеру</font>"));
+                break;
+            case 1:
+                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>нет сигнала</font>"));
+                break;
+            case 2:
+                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>очень низкий</font>"));
+                break;
+            case 3:
+                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='orange'>низкий</font>"));
+                break;
+            case 4:
+                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>хороший</font>"));
+                break;
+            case 5:
+                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>очень хороший</font>"));
+                break;
+            case 6:
+                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>отличный</font>"));
+                break;
+            }
         },
         nullptr, true);
 

@@ -1,4 +1,4 @@
-#include "items/vInput.h"
+#include "items/vInOutput.h"
 
 #include <Arduino.h>
 
@@ -6,7 +6,7 @@
 #include "Global.h"
 #include "BufferExecute.h"
 //this class save date to flash
-Input::Input(String key, String widget) {
+InOutput::InOutput(String key, String widget) {
     _key = key;
     String value = jsonReadStr(configStoreJson, key);
 
@@ -21,43 +21,43 @@ Input::Input(String key, String widget) {
 
     this->execute(value);
 }
-Input::~Input() {}
+InOutput::~InOutput() {}
 
-void Input::execute(String value) {
+void InOutput::execute(String value) {
     eventGen2(_key, value);
     jsonWriteStr(configStoreJson, _key, value);
     saveStore();
     publishStatus(_key, value);
 }
 
-MyInputVector* myInput = nullptr;
+MyInOutputVector* myInOutput = nullptr;
 
-void input() {
+void inOutput() {
     myLineParsing.update();
     String widget = myLineParsing.gfile();
     String key = myLineParsing.gkey();
     myLineParsing.clear();
 
-    input_EnterCounter++;
-    addKey(key, input_KeyList, input_EnterCounter);
+    inOutput_EnterCounter++;
+    addKey(key, inOutput_KeyList, inOutput_EnterCounter);
 
     static bool firstTime = true;
-    if (firstTime) myInput = new MyInputVector();
+    if (firstTime) myInOutput = new MyInOutputVector();
     firstTime = false;
-    myInput->push_back(Input(key, widget));
+    myInOutput->push_back(InOutput(key, widget));
 
-    sCmd.addCommand(key.c_str(), inputExecute);
+    sCmd.addCommand(key.c_str(), inOutputExecute);
 }
 
-void inputExecute() {
+void inOutputExecute() {
     String key = sCmd.order();
     String value = sCmd.next();
 
-    int number = getKeyNum(key, input_KeyList);
+    int number = getKeyNum(key, inOutput_KeyList);
 
-    if (myInput != nullptr) {
+    if (myInOutput != nullptr) {
         if (number != -1) {
-            myInput->at(number).execute(value);
+            myInOutput->at(number).execute(value);
         }
     }
 }
