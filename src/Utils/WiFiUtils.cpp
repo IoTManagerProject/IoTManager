@@ -11,8 +11,10 @@ void routerConnect() {
 
     if (_ssid == "" && _password == "") {
         WiFi.begin();
-    } else {
+    }
+    else {
         WiFi.begin(_ssid.c_str(), _password.c_str());
+        WiFi.setOutputPower(20.5);
         SerialPrint("I", "WIFI", "ssid: " + _ssid);
     }
 
@@ -29,7 +31,8 @@ void routerConnect() {
     if (WiFi.status() != WL_CONNECTED) {
         Serial.println("");
         startAPMode();
-    } else {
+    }
+    else {
         Serial.println("");
         SerialPrint("I", "WIFI", "http://" + WiFi.localIP().toString());
         jsonWriteStr(configSetupJson, "ip", WiFi.localIP().toString());
@@ -81,17 +84,17 @@ boolean RouterFind(String ssid) {
     if (n == -2) {  //Сканирование не было запущено, запускаем
         SerialPrint("I", "WIFI", "start scanning");
         WiFi.scanNetworks(true, false);  //async, show_hidden
-    } 
-    
+    }
+
     else if (n == -1) {  //Сканирование все еще выполняется
         SerialPrint("I", "WIFI", "scanning in progress");
-    } 
-    
+    }
+
     else if (n == 0) {  //ни одна сеть не найдена
         SerialPrint("I", "WIFI", "no networks found");
         WiFi.scanNetworks(true, false);
-    } 
-    
+    }
+
     else if (n > 0) {
         for (int8_t i = 0; i < n; i++) {
             if (WiFi.SSID(i) == ssid) {
@@ -107,3 +110,31 @@ boolean RouterFind(String ssid) {
 boolean isNetworkActive() {
     return WiFi.status() == WL_CONNECTED;
 }
+
+String RSSIquality() {
+    String res = "not connected";
+    if (WiFi.status() == WL_CONNECTED) {
+        int rssi = WiFi.RSSI();
+        if (rssi >= -50) {
+            res = "Excellent";
+        }
+        else if (rssi < -50 && rssi >= -60) {
+            res = "Very good";
+        }
+        else if (rssi < -60 && rssi >= -70) {
+            res = "Good";
+        }
+        else if (rssi < -70 && rssi >= -80) {
+            res = "Low";
+        }
+        else if (rssi < -80 && rssi > -100) {
+            res = "Very low";
+        }
+        else if (rssi <= -100) {
+            res = "No signal";
+        }    
+    } 
+    return res;
+}
+
+

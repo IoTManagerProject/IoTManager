@@ -94,18 +94,17 @@ void setup() {
     SsdpInit();
 #endif
 
-
-
     //esp_log_level_set("esp_littlefs", ESP_LOG_NONE);
 
     ts.add(
         TEST, 1000 * 60, [&](void*) {
             SerialPrint("I", "System", printMemoryStatus());
+            jsonWriteStr(configSetupJson, "signal", RSSIquality());
         },
         nullptr, true);
 
     just_load = false;
-    initialized = true;  
+    initialized = true;
 }
 
 void loop() {

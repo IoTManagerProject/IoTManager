@@ -39,6 +39,10 @@
         },
         {
             "type": "h4",
+            "title": "WiFi Signal: {{signal}}"
+        },
+        {
+            "type": "h4",
             "title": "Build version: {{firmware_version}}"
         },
         {
