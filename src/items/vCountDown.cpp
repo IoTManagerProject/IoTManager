@@ -17,24 +17,23 @@ void CountDownClass::execute(unsigned int countDownPeriod) {
 }
 
 void CountDownClass::loop() {
-    static unsigned long prevMillis1;
-    static unsigned long prevMillis2;
-    static int sec;
     if (_countDownPeriod > 0 && _start) {
         prevMillis1 = millis();
         _start = false;
-        sec = (_countDownPeriod / 1000) + 1;
+        sec = (_countDownPeriod / 1000);
     }
-    unsigned long currentMillis = millis();
-    unsigned long difference1 = currentMillis - prevMillis1;
-    unsigned long difference2 = currentMillis - prevMillis2;
+    currentMillis = millis();
+    difference1 = currentMillis - prevMillis1;
+    difference2 = currentMillis - prevMillis2;
     if (difference1 > _countDownPeriod && _countDownPeriod > 0) {
         _countDownPeriod = 0;
         eventGen2(_key, "0");
+        Serial.println(_key + " completed");
     }
     if (difference2 > 1000 && _countDownPeriod > 0) {
         prevMillis2 = millis();
-        Serial.println(sec--);
+        sec--;
+        Serial.println(_key + " " + String(sec));
         publishStatus(_key, String(sec));
     }
 }
@@ -48,6 +47,9 @@ void countDown() {
 
     countDown_EnterCounter++;
     addKey(key, countDown_KeyList, countDown_EnterCounter);
+
+    Serial.println(countDown_EnterCounter);
+    Serial.println(countDown_KeyList);
 
     static bool firstTime = true;
     if (firstTime) myCountDown = new MyCountDownVector();

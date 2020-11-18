@@ -16,8 +16,15 @@ public:
 
 private:
     unsigned long _countDownPeriod = 0;
-    String _key;
     bool _start = false;
+    String _key;
+
+    unsigned long currentMillis;
+    unsigned long prevMillis1;
+    unsigned long prevMillis2;
+    unsigned long difference1;
+    unsigned long difference2;
+    int sec;
 
 };
 
