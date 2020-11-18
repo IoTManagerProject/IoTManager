@@ -20,7 +20,7 @@ SensorDallas::~SensorDallas() {}
 
 void SensorDallas::loop() {
     currentMillis = millis();
-    unsigned long difference = currentMillis - prevMillis;
+    difference = currentMillis - prevMillis;
     if (difference >= _interval) {
         prevMillis = millis();
         readDallas();

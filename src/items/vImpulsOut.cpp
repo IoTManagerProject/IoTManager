@@ -20,7 +20,7 @@ void ImpulsOutClass::execute(unsigned long impulsPeriod, unsigned int impulsCoun
 
 void ImpulsOutClass::loop() {
     currentMillis = millis();
-    unsigned long difference = currentMillis - prevMillis;
+    difference = currentMillis - prevMillis;
     if (_impulsCountBuf > 0) {
         if (difference > _impulsPeriod) {
             _impulsCountBuf--;

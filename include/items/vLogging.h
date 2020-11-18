@@ -19,6 +19,7 @@ class LoggingClass {
 
     unsigned long currentMillis;
     unsigned long prevMillis;
+    unsigned long difference;
     unsigned long _period;
     unsigned int _maxPoints;
     String _loggingValueKey;

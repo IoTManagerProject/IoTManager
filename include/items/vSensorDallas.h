@@ -22,6 +22,7 @@ private:
 
     unsigned long currentMillis;
     unsigned long prevMillis;
+    unsigned long difference;
     unsigned long _interval;
     String _key;
     unsigned int _pin;

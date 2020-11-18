@@ -17,7 +17,7 @@ class ImpulsOutClass {
    private:
     unsigned long currentMillis;
     unsigned long prevMillis;
-
+    unsigned long difference;
     unsigned long _impulsPeriod = 0;
     unsigned int _impulsCount = 0;
     unsigned int _impulsCountBuf = 0;
