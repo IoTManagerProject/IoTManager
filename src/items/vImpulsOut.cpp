@@ -1,10 +1,9 @@
 #include "items/vImpulsOut.h"
-
-#include <Arduino.h>
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "BufferExecute.h"
+#include <Arduino.h>
 
 ImpulsOutClass::ImpulsOutClass(unsigned int impulsPin) {
     _impulsPin = impulsPin;

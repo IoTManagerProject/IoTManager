@@ -6,6 +6,8 @@
 #include "items/vPwmOut.h"
 #include "items/vInOutput.h"
 #include "items/vLogging.h"
+#include "items/vImpulsOut.h"
+#include "items/vCountDown.h"
 
 void loopCmdAdd(const String& cmdStr) {
     orderBuf += cmdStr;
@@ -88,6 +90,9 @@ void csvCmdExecute(String& cmdStr) {
             }
             else if (order == F("impuls-out")) {
                 sCmd.addCommand(order.c_str(), impuls);
+            }
+            else if (order == F("count-down")) {
+                sCmd.addCommand(order.c_str(), countDown);
             }
             
             sCmd.readStr(buf);

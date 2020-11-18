@@ -52,6 +52,9 @@ int inOutput_EnterCounter = -1;
 String pwmOut_KeyList = "";
 int pwmOut_EnterCounter = -1;
 //=========================================
+String countDown_KeyList = "";
+int countDown_EnterCounter = -1;
+//=========================================
 
 // Sensors
 String sensorReadingMap10sec;

@@ -1,6 +1,5 @@
 #pragma once
 #include <Arduino.h>
-
 #include "Global.h"
 
 class ImpulsOutClass;
@@ -28,4 +27,5 @@ class ImpulsOutClass {
 
 extern MyImpulsOutVector* myImpulsOut;
 
+extern void impuls();
 extern void impulsExecute();

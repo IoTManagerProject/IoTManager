@@ -81,6 +81,9 @@ extern int inOutput_EnterCounter;
 extern String pwmOut_KeyList;
 extern int pwmOut_EnterCounter;
 //=========================================
+extern String countDown_KeyList;
+extern int countDown_EnterCounter;
+//=========================================
 
 // Sensors
 extern String sensorReadingMap10sec;

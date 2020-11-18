@@ -18,6 +18,7 @@
 #include "items/vLogging.h"
 #include "items/vImpulsOut.h"
 #include "items/vSensorDallas.h"
+#include "items/vCountDown.h"
 #include "Telegram.h"
 
 void not_async_actions();
@@ -156,16 +157,19 @@ void loop() {
             myLogging->at(i).loop();
         }
     }
-
     if (myImpulsOut != nullptr) {
         for (unsigned int i = 0; i < myImpulsOut->size(); i++) {
             myImpulsOut->at(i).loop();
         }
     }
-
     if (mySensorDallas2 != nullptr) {
         for (unsigned int i = 0; i < mySensorDallas2->size(); i++) {
             mySensorDallas2->at(i).loop();
+        }
+    }
+    if (myCountDown != nullptr) {
+        for (unsigned int i = 0; i < myCountDown->size(); i++) {
+            myCountDown->at(i).loop();
         }
     }
 }

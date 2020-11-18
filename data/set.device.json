@@ -91,7 +91,8 @@
                 "/set?addItem=bmp280-temp": "18.Датчик температуры bmp280",
                 "/set?addItem=bmp280-press": "19.Датчик давления bmp280",
                 "/set?addItem=impuls-out": "20.Создать импульсы через заданный промежуток времени (управление шд)",
-                "/set?addItem=modbus": "21.Прочитать регистр modbus устройства",
+                "/set?addItem=count-down": "21.Таймер обратного отчета",
+                "/set?addItem=modbus": "22.Прочитать регистр modbus устройства",
                 "/set?addItem=logging": "a.Логгирование и вывод в график любой величины",
                 "/set?addItem=uptime": "b.Отобразить время работы устройства"
             }

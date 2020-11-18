@@ -8,6 +8,7 @@
 #include "items/vSensorDallas.h"
 #include "items/vInOutput.h"
 #include "items/vPwmOut.h"
+#include "items/vCountDown.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -72,6 +73,12 @@ void Device_init() {
     }
     pwmOut_KeyList = "";
     pwmOut_EnterCounter = -1;
+    //===================================
+    if (myCountDown != nullptr) {
+        myCountDown->clear();
+    }
+    countDown_KeyList = "";
+    countDown_EnterCounter = -1;
     //===================================
 
 
