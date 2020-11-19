@@ -20,7 +20,7 @@ void LoggingClass::loop() {
     difference = currentMillis - prevMillis;
     if (difference >= _period) {
         prevMillis = millis();
-        addNewDelOldData("logs/" + _key + ".txt", _maxPoints, jsonReadStr(configLiveJson, _loggingValueKey));
+        addNewDelOldData("logs/" + _key + ".txt", _maxPoints, getValue(_loggingValueKey)); //jsonReadStr(configLiveJson , _loggingValueKey));
     }
 }
 

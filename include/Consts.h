@@ -72,15 +72,12 @@ enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,
                    SENSORS10SEC,
                    SENSORS30SEC,
-                   TIMER_COUNTDOWN,
                    TIME,
                    TIME_SYNC,
                    STATISTICS,
-                   STATISTICS_WORK,
                    UPTIME,
                    UDP,
-                   UDP_DB,
-                   TEST };
+                   SYGNAL};
 
 enum NotAsyncActions {
     do_ZERO,

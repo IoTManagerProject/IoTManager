@@ -52,7 +52,7 @@ void telegramMsgParse(String msg) {
     }
     else if (msg.indexOf("get") != -1) {
         msg = deleteBeforeDelimiter(msg, "_");
-        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), jsonReadStr(configLiveJson, msg));
+        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), getValue(msg)); //jsonReadStr(configLiveJson , msg));
         SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + String(msg));
     }
     else if (msg.indexOf("all") != -1) {
@@ -99,7 +99,7 @@ String returnListOfParams() {
         count++;
         if (count > 1) {
             String id = selectFromMarkerToMarker(buf, ";", 2);
-            String value = jsonReadStr(configLiveJson, id);
+            String value = getValue(id); //jsonReadStr(configLiveJson , id);
             String page = selectFromMarkerToMarker(buf, ";", 4);
             page.replace("#", " ");
             String name = selectFromMarkerToMarker(buf, ";", 5);

@@ -98,7 +98,7 @@ void setup() {
     //esp_log_level_set("esp_littlefs", ESP_LOG_NONE);
 
     ts.add(
-        TEST, 1000 * 60, [&](void*) {
+        SYGNAL, 1000 * 60, [&](void*) {
             SerialPrint("I", "System", printMemoryStatus());
             switch (RSSIquality()) {
             case 0:
@@ -125,6 +125,8 @@ void setup() {
             }
         },
         nullptr, true);
+
+        
 
     just_load = false;
     initialized = true;

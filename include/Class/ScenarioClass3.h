@@ -30,7 +30,7 @@ public:
 
                 String setEventSign = selectFromMarkerToMarker(condition, " ", 1);
                 String setEventValue = selectFromMarkerToMarker(condition, " ", 2);
-                if (!isDigitStr(setEventValue)) setEventValue = jsonReadStr(configLiveJson, setEventValue);
+                if (!isDigitStr(setEventValue)) setEventValue = getValue(setEventValue); //jsonReadStr(configLiveJson , setEventValue);
 
                 boolean flag = false;
 

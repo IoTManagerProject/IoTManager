@@ -94,7 +94,7 @@ void csvCmdExecute(String& cmdStr) {
             else if (order == F("count-down")) {
                 sCmd.addCommand(order.c_str(), countDown);
             }
-            
+
             sCmd.readStr(buf);
         }
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
@@ -162,4 +162,21 @@ int getKeyNum(String& key, String& keyNumberTable) {
         keyNumberTableBuf = deleteBeforeDelimiter(keyNumberTableBuf, ",");
     }
     return number;
+}
+
+String getValue(String& key) {
+    String live = jsonReadStr(configLiveJson, key);
+    String store = jsonReadStr(configStoreJson, key);
+    if (live != nullptr) {
+        return live;
+    }
+    else if (store != nullptr) {
+        return store;
+    }
+    else if (store == nullptr && live == nullptr) {
+        return "no value";
+    }
+    else {
+        return "data error";
+    }
 }

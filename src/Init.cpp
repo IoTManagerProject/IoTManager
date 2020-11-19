@@ -33,7 +33,6 @@ void loadConfig() {
 void all_init() {
     Device_init();
     loadScenario();
-    Timer_countdown_init();
 }
 
 void Device_init() {
