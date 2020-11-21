@@ -31,9 +31,8 @@
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
-//#define UDP_ENABLED
+#define UDP_ENABLED
 //#define SSDP_ENABLED
-#define SAVE_SETTINGS_TO_FLASH
 
 //=========Sensors enable/disable=================================================================================================================================
 #define LEVEL_ENABLED
@@ -83,12 +82,11 @@ enum NotAsyncActions {
     do_ZERO,
     do_UPGRADE,
     do_GETLASTVERSION,
-    do_UDPDATAPARSE,
-    do_MQTTUDP,
     do_BUSSCAN,
     do_MQTTPARAMSCHANGED,
     do_deviceInit,
     do_delChoosingItems,
+    do_sendScenUDP,
     do_LAST,
 };
 

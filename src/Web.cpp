@@ -5,6 +5,7 @@
 #include "ItemsList.h"
 #include "items/vLogging.h"
 #include "Telegram.h"
+#include "RemoteOrdersUdp.h"
 
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
@@ -57,6 +58,19 @@ void web_init() {
 
         if (request->hasArg("sceninit")) {
             loadScenario();
+            request->send(200);
+        }
+
+        if (request->hasArg("onescen")) {
+            bool value = request->getParam("onescen")->value().toInt();
+            jsonWriteBool(configSetupJson, "onescen", value);
+            saveConfig();
+            asyncUdpInit();
+            request->send(200);
+        }
+
+        if (request->hasArg("scenudp")) {
+            myNotAsyncActions->make(do_sendScenUDP);
             request->send(200);
         }
 
@@ -182,7 +196,7 @@ void web_init() {
         }
 
         if (request->hasArg("mqttsend")) {
-            myNotAsyncActions->make(do_MQTTUDP);
+            //myNotAsyncActions->make(do_MQTTUDP);
             request->send(200);
         }
 

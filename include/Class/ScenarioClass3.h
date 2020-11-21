@@ -70,3 +70,5 @@ public:
 };
 
 extern Scenario* myScenario;
+
+extern void streamEventUDP(String event);

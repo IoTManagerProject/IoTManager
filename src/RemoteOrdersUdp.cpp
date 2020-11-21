@@ -1,26 +1,33 @@
 #include "RemoteOrdersUdp.h"
 #include <Arduino.h>
 #include "Global.h"
+#include "Class/NotAsync.h"
+#include "Init.h"
 
 #ifdef UDP_ENABLED
 AsyncUDP asyncUdp;
 
 void asyncUdpInit() {
+
+    if (!jsonReadBool(configSetupJson, "onescen")) {
+        return;
+    }
+
     if (asyncUdp.listenMulticast(IPAddress(239, 255, 255, 255), 4210)) {
         asyncUdp.onPacket([](AsyncUDPPacket packet) {
-            Serial.print("UDP Packet Type: ");
-            Serial.println(packet.isBroadcast() ? "Broadcast" : packet.isMulticast() ? "Multicast" : "Unicast");
 
-            Serial.print("From: ");
-            Serial.print(packet.remoteIP());
-            Serial.print(":");
-            Serial.println(packet.remotePort());
-
-            Serial.print("To: ");
-            Serial.print(packet.localIP());
-            Serial.print(":");
-            Serial.println(packet.localPort());
-
+            //Serial.print("UDP Packet Type: ");
+            //Serial.println(packet.isBroadcast() ? "Broadcast" : packet.isMulticast() ? "Multicast" : "Unicast");
+            //
+            //Serial.print("From: ");
+            //Serial.print(packet.remoteIP());
+            //Serial.print(":");
+            //Serial.println(packet.remotePort());
+            //
+            //Serial.print("To: ");
+            //Serial.print(packet.localIP());
+            //Serial.print(":");
+            //Serial.println(packet.localPort());
             //Serial.print(", Length: ");
             //Serial.print(packet.length());
             //
@@ -30,35 +37,65 @@ void asyncUdpInit() {
             String data = uint8tToString(packet.data(), packet.length());
             Serial.print("[i] [udp] Packet received: '");
             Serial.print(data);
+
             if (udpPacketValidation(data)) {
+                Serial.println("', packet valid");
                 udpPacketParse(data);
-                //Serial.println("', Packet valid");
-            }
-            else {
-                //Serial.println("', Packet invalid");
             }
 
+
+            //else {
+            //    //Serial.println("', Packet invalid");
+            //}
             //reply to the client
-
-            String ip = WiFi.localIP().toString();
-            asyncUdp.broadcastTo(ip.c_str(), packet.remotePort());
-
+            //String ip = WiFi.localIP().toString();
+            //asyncUdp.broadcastTo(ip.c_str(), packet.remotePort());
             //packet.printf(ip.c_str(), packet.length());
 
             });
     }
 
-    ts.add(
-        UDP, 10000, [&](void*) {
+    myNotAsyncActions->add(
+        do_sendScenUDP, [&](void*) {
 
-            Serial.println("sended");
-            asyncUdp.broadcastTo("Anyone here?", 64130); 
-            //asyncUdp.broadcast("test");
-            //asyncUdp.print("Hello Server!");
+            String scen = "iotm;scen:";
+            scen += readFile(String(DEVICE_SCENARIO_FILE), 2048);
+
+            asyncUdp.broadcastTo(scen.c_str(), 4210);
 
         },
-        nullptr, true);
+        nullptr);
 
+    //ts.add(
+    //UDP, 10000, [&](void*) {
+    //Serial.println("sended");
+    //asyncUdp.broadcastTo("iotm;Anyone here?", 4210); 
+    //asyncUdp.broadcast("test");
+    //asyncUdp.print("Hello Server!");
+    //},
+    //nullptr, true);
+
+}
+
+bool udpPacketValidation(String& data) {
+    if (data.indexOf("iotm;") != -1) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+void udpPacketParse(String& data) {
+    if (data.indexOf("scen:") != -1) {
+        data = deleteBeforeDelimiter(data, ":");
+        writeFile(String(DEVICE_SCENARIO_FILE), data);
+        loadScenario();
+    }
+    else if (data.indexOf("event:") != -1) {
+        data = deleteBeforeDelimiter(data, ":");
+        eventBuf += data;
+    }
 }
 
 String uint8tToString(uint8_t* data, size_t len) {
@@ -67,21 +104,5 @@ String uint8tToString(uint8_t* data, size_t len) {
         ret += (char)*data++;
     }
     return ret;
-}
-
-bool udpPacketValidation(String& data) {
-    if (data.indexOf("iotm;") != -1 && data.indexOf(getChipId()) != -1) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-//iotm;chipid;button-out-1_1
-void udpPacketParse(String& data) {
-    data = selectFromMarkerToMarker(data, ";", 2);
-    data.replace("_", " ");
-    orderBuf += data + ",";
 }
 #endif

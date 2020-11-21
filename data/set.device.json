@@ -171,6 +171,25 @@
             "type": "hr"
         },
         {
+            "type": "checkbox",
+            "name": "onescen",
+            "title": "Включить единые сценарии для всех устройств",
+            "action": "/set?onescen=[[onescen]]",
+            "state": "{{onescen}}"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "button",
+            "title": "Отправить сценарии всем устройствам в локальной сети",
+            "action": "/set?scenudp",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
             "type": "button",
             "title": "Очистить графики и введенные данные",
             "action": "/set?cleanlog",
