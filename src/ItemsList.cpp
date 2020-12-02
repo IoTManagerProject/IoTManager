@@ -23,9 +23,12 @@ void itemsListInit() {
 void addItem(String name) {
     String item = readFile("items/" + name + ".txt", 1024);
 
-    name = deleteToMarkerLast(name, ".");
+    name = selectToMarker(name, "-");
 
-    item.replace("id", name + "-" + String(getNewElementNumber("id.txt")));
+    randomSeed(micros());
+    unsigned int num = random(0, 1000);
+
+    item.replace("id", name + String(num)); // "-" + String(getNewElementNumber("id.txt")));
     item.replace("order", String(getNewElementNumber("order.txt")));
 
     if (item.indexOf("pin") != -1) {  //all cases (random pins from available)
