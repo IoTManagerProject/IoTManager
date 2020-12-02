@@ -9,7 +9,7 @@ AsyncUDP asyncUdp;
 
 void asyncUdpInit() {
 
-    if (!jsonReadBool(configSetupJson, "onescen")) {
+    if (!jsonReadBool(configSetupJson, "snaUdp")) {
         return;
     }
 

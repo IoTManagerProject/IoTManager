@@ -61,16 +61,32 @@ void web_init() {
             request->send(200);
         }
 
-        if (request->hasArg("onescen")) {
-            bool value = request->getParam("onescen")->value().toInt();
-            jsonWriteBool(configSetupJson, "onescen", value);
+        //if (request->hasArg("snaUdp")) {
+        //    bool value = request->getParam("snaUdp")->value().toInt();
+        //    jsonWriteBool(configSetupJson, "snaUdp", value);
+        //    saveConfig();
+        //    #ifdef UDP_ENABLED
+        //    asyncUdpInit();
+        //    #endif
+        //    request->send(200);
+        //}
+
+        //if (request->hasArg("scenUdp")) {
+        //    myNotAsyncActions->make(do_sendScenUDP);
+        //    request->send(200);
+        //}
+
+        if (request->hasArg("snaMqtt")) {
+            bool value = request->getParam("snaMqtt")->value().toInt();
+            jsonWriteBool(configSetupJson, "snaMqtt", value);
             saveConfig();
-            asyncUdpInit();
+            mqtt.subscribe((mqttPrefix + "/+/+/status").c_str());
+            mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
             request->send(200);
         }
 
-        if (request->hasArg("scenudp")) {
-            myNotAsyncActions->make(do_sendScenUDP);
+        if (request->hasArg("scenMqtt")) {
+            myNotAsyncActions->make(do_sendScenMQTT);
             request->send(200);
         }
 

@@ -17,6 +17,7 @@ boolean publishChart(const String& topic, const String& data);
 boolean publishControl(String id, String topic, String state);
 boolean publishChart_test(const String& topic, const String& data);
 boolean publishStatus(const String& topic, const String& data);
+boolean publishInfo(const String& topic, const String& data);
 
 void publishWidgets();
 void publishState();

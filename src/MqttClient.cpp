@@ -39,6 +39,13 @@ void mqttInit() {
             }
         },
         nullptr, true);
+
+    myNotAsyncActions->add(
+        do_sendScenMQTT, [&](void*) {
+            String scen = readFile(String(DEVICE_SCENARIO_FILE), 2048);
+            publishInfo("scen", scen);
+        },
+        nullptr);
 }
 
 void mqttDisconnect() {
@@ -63,8 +70,11 @@ void mqttSubscribe() {
     mqtt.subscribe(mqttPrefix.c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/update").c_str());
-    //mqtt.subscribe((mqttRootDevice + "/order").c_str());
-    //mqtt.subscribe((mqttPrefix + "/event").c_str());
+
+    if (jsonReadBool(configSetupJson, "snaMqtt")) {
+        mqtt.subscribe((mqttPrefix + "/+/+/status").c_str());
+        mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
+    }
 }
 
 boolean mqttConnect() {
@@ -101,14 +111,14 @@ boolean mqttConnect() {
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     String topicStr = String(topic);
-    SerialPrint("I", "MQTT", topicStr);
+    //SerialPrint("I", "=>MQTT", topicStr);
     String payloadStr;
     payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
         payloadStr += (char)payload[i];
     }
 
-    SerialPrint("I", "MQTT", payloadStr);
+    //SerialPrint("I", "=>MQTT", payloadStr);
 
     if (payloadStr.startsWith("HELLO")) {
         SerialPrint("I", "MQTT", "Full update");
@@ -119,7 +129,8 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
 #endif
 
     }
-    else if (topicStr.indexOf("control")) {
+
+    else if (topicStr.indexOf("control") != -1) {
 
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
 
@@ -128,23 +139,37 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         orderBuf += payloadStr;
         orderBuf += ",";
 
-    }
-    else if (topicStr.indexOf("order")) {
-        //payloadStr.replace("_", " ");
-        //orderBuf += payloadStr;
-        //orderBuf += ",";
-
+        SerialPrint("I", "=>MQTT", "Msg from iotmanager app: " + key + " " + payloadStr);
     }
 
-    //else if (topicStr.indexOf("event")) {
-    //    eventBuf += payloadStr;
-    //}
+    else if (topicStr.indexOf("status") != -1) {
+        if (!jsonReadBool(configSetupJson, "snaMqtt")) {
+            return;
+        }
+        if (topicStr.indexOf(chipId) == -1) {
+            String devId = selectFromMarkerToMarker(topicStr, "/", 2);
+            String key = selectFromMarkerToMarker(topicStr, "/", 3);
+            String value = jsonReadStr(payloadStr, "status");
 
-    else if (topicStr.indexOf("update")) {
-        if (payloadStr == "1") {
-            myNotAsyncActions->make(do_UPGRADE);
+            SerialPrint("I", "=>MQTT", "Msg from other device: '" + devId + "' " + key + " " + value);
+
+            eventGen2(key, value);
         }
     }
+
+    else if (topicStr.indexOf("info") != -1) {
+        if (topicStr.indexOf("scen") != -1) {
+            writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
+            loadScenario();   
+            SerialPrint("I", "=>MQTT", "Scenario received");     
+        }
+    }
+
+    //else if (topicStr.indexOf("update")) {
+    //    if (payloadStr == "1") {
+    //        myNotAsyncActions->make(do_UPGRADE);
+    //    }
+    //}
 }
 
 boolean publish(const String& topic, const String& data) {
@@ -188,6 +213,11 @@ boolean publishStatus(const String& topic, const String& data) {
     String json = "{}";
     jsonWriteStr(json, "status", data);
     return mqtt.publish(path.c_str(), json.c_str(), false);
+}
+
+boolean publishInfo(const String& topic, const String& data) {
+    String path = mqttRootDevice + "/" + topic + "/info";
+    return mqtt.publish(path.c_str(), data.c_str(), false);
 }
 
 #ifdef LAYOUT_IN_RAM

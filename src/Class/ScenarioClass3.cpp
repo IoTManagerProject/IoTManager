@@ -16,7 +16,7 @@ void eventGen2(String eventName, String eventValue) {
 void streamEventUDP(String event) {
     #ifdef UDP_ENABLED
 
-    if (!jsonReadBool(configSetupJson, "onescen")) {
+    if (!jsonReadBool(configSetupJson, "snaUdp")) {
         return;
     }
     

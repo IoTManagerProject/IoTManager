@@ -3,11 +3,11 @@
 //===========Firmware=============================================================================================================================================
 #ifdef ESP8266
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION 267
+#define FIRMWARE_VERSION 268
 #endif
 #ifdef ESP32
 #define FIRMWARE_NAME "esp32-iotm"
-#define FIRMWARE_VERSION 267
+#define FIRMWARE_VERSION 268
 #endif
 #define FLASH_4MB true
 
@@ -31,7 +31,7 @@
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
-#define UDP_ENABLED
+//#define UDP_ENABLED
 //#define SSDP_ENABLED
 
 //=========Sensors enable/disable=================================================================================================================================
@@ -87,6 +87,7 @@ enum NotAsyncActions {
     do_deviceInit,
     do_delChoosingItems,
     do_sendScenUDP,
+    do_sendScenMQTT,
     do_LAST,
 };
 

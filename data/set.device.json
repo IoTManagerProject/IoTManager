@@ -172,18 +172,18 @@
         },
         {
             "type": "checkbox",
-            "name": "onescen",
+            "name": "snaMqtt",
             "title": "Включить единые сценарии для всех устройств",
-            "action": "/set?onescen=[[onescen]]",
-            "state": "{{onescen}}"
+            "action": "/set?snaMqtt=[[snaMqtt]]",
+            "state": "{{snaMqtt}}"
         },
         {
             "type": "hr"
         },
         {
             "type": "button",
-            "title": "Отправить сценарии всем устройствам в локальной сети",
-            "action": "/set?scenudp",
+            "title": "Синхронизировать сценарии на всех устройствах",
+            "action": "/set?scenMqtt",
             "class": "btn btn-block btn-default"
         },
         {
