@@ -21,30 +21,49 @@
     },
     {
       "type": "checkbox",
-      "name": "tel",
+      "name": "telegonof",
       "title": "Включить телеграм",
-      "action": "/set?telegonof=[[tel]]",
+      "action": "/set?telegonof=[[telegonof]]",
       "state": "{{telegonof}}"
     },
     {
       "type": "hr"
     },
     {
+      "type": "checkbox",
+      "name": "teleginput",
+      "title": "Включить прием входящих сообщений",
+      "action": "/set?teleginput=[[teleginput]]",
+      "state": "{{teleginput}}"
+    },
+    {
+      "type": "hr"
+    },
+    {
       "type": "h4",
-      "style": "width:40%;float:left;",
-      "title": "Telegram API token:"
+      "title": "Telegram chat ID"
+    },
+    {
+      "type": "input",
+      "title": "",
+      "name": "chatId-arg",
+      "state": "{{chatId}}"
+    },
+   
+    {
+      "type": "h4",
+      "title": "Telegram API token"
     },
     {
       "type": "input",
       "title": "",
       "name": "telegramApi-arg",
-      "style": "width:60%;float:right",
       "state": "{{telegramApi}}"
     },
     {
       "type": "button",
       "title": "{{ButSave}}",
-      "action": "set?telegramApi=[[telegramApi-arg]]",
+      "action": "set?telegramApi=[[telegramApi-arg]]&chatId=[[chatId-arg]]",
       "class": "btn btn-block btn-default",
       "style": "width:100%;display:inline"
     },

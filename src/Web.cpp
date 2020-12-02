@@ -229,14 +229,23 @@ void web_init() {
         //==============================push settings=============================================
         if (request->hasArg("telegramApi")) {
             jsonWriteStr(configSetupJson, "telegramApi", request->getParam("telegramApi")->value());
-            //telegramInit();
+            saveConfig();
+            request->send(200);
+        }
+        if (request->hasArg("chatId")) {
+            jsonWriteStr(configSetupJson, "chatId", request->getParam("chatId")->value());
             saveConfig();
             request->send(200);
         }
         if (request->hasArg("telegonof")) {
             bool value = request->getParam("telegonof")->value().toInt();
             jsonWriteBool(configSetupJson, "telegonof", value);
-            //telegramInit();
+            saveConfig();
+            request->send(200);
+        }
+        if (request->hasArg("teleginput")) {
+            bool value = request->getParam("teleginput")->value().toInt();
+            jsonWriteBool(configSetupJson, "teleginput", value);
             saveConfig();
             request->send(200);
         }

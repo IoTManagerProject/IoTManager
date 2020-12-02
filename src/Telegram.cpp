@@ -25,17 +25,19 @@ void telegramInit() {
 void handleTelegram() {
     if (telegramInitBeen) {
         if (isTelegramEnabled()) {
-            TBMessage msg;
-            static unsigned long prevMillis;
-            unsigned long currentMillis = millis();
-            unsigned long difference = currentMillis - prevMillis;
-            if (difference >= 5000) {
-                prevMillis = millis();
-                if (myBot->getNewMessage(msg)) {
-                    SerialPrint("->", "Telegram", "chat ID: " + String(msg.sender.id) + ", msg: " + String(msg.text));
-                    jsonWriteInt(configSetupJson, "chatId", msg.sender.id);
-                    saveConfig();
-                    telegramMsgParse(String(msg.text));
+            if (isTelegramInputOn()) {
+                TBMessage msg;
+                static unsigned long prevMillis;
+                unsigned long currentMillis = millis();
+                unsigned long difference = currentMillis - prevMillis;
+                if (difference >= 10000) {
+                    prevMillis = millis();
+                    if (myBot->getNewMessage(msg)) {
+                        SerialPrint("->", "Telegram", "chat ID: " + String(msg.sender.id) + ", msg: " + String(msg.text));
+                        jsonWriteInt(configSetupJson, "chatId", msg.sender.id);
+                        saveConfig();
+                        telegramMsgParse(String(msg.text));
+                    }
                 }
             }
         }
@@ -76,14 +78,19 @@ void sendTelegramMsg() {
             myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
             SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
         }
-    } else if (type == "2") {
+    }
+    else if (type == "2") {
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
         SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
-    } 
+    }
 }
 
 bool isTelegramEnabled() {
     return jsonReadBool(configSetupJson, "telegonof");
+}
+
+bool isTelegramInputOn() {
+    return jsonReadBool(configSetupJson, "teleginput");
 }
 
 
