@@ -24,9 +24,9 @@ void uartHandle() {
         char inc;
         inc = myUART->read();
         incStr += inc;
-        if (inc == 0x0A) {
-            parse(incStr);
-            incStr = "";
+        if (inc == '\n') {
+        parse(incStr);
+        incStr = "";
         }
     }
 }

@@ -34,6 +34,59 @@
       "title": "Сканировать",
       "action": "/set?i2c",
       "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "h3",
+      "title": "UART"
+    },
+    {
+      "type": "checkbox",
+      "name": "uart",
+      "title": "Включить UART",
+      "action": "/set?uart=[[uart]]",
+      "state": "{{uart}}"
+    },
+    {
+      "type": "hr"
+    },
+    {
+      "type": "h4",
+      "title": "Скорость",
+      "style": "width:60%;float:left;"
+    },
+    {
+      "type": "input",
+      "title": "",
+      "name": "uartS-arg",
+      "state": "{{uartS}}",
+      "style": "width:40%;float:right"
+    },
+    {
+      "type": "h4",
+      "title": "Пин TX",
+      "style": "width:60%;float:left;"
+    },
+    {
+      "type": "input",
+      "title": "",
+      "name": "uartTX-arg",
+      "state": "{{uartTX}}",
+      "style": "width:40%;float:right"
+    },
+    {
+      "type": "h4",
+      "title": "Пин RX",
+      "style": "width:60%;float:left;"
+    },
+    {
+      "type": "input",
+      "title": "",
+      "name": "uartTX-arg",
+      "state": "{{uartRX}}",
+      "style": "width:40%;float:right"
     }
   ]
 }
