@@ -84,9 +84,16 @@
     {
       "type": "input",
       "title": "",
-      "name": "uartTX-arg",
+      "name": "uartRX-arg",
       "state": "{{uartRX}}",
       "style": "width:40%;float:right"
+    },
+    {
+      "type": "button",
+      "title": "{{ButSave}}",
+      "style": "width:100%;float:left;",
+      "action": "set?uartS=[[uartS-arg]]&uartTX=[[uartTX-arg]]&uartRX=[[uartRX-arg]]",
+      "class": "btn btn-block btn-default"
     }
   ]
 }

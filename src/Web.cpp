@@ -6,6 +6,7 @@
 #include "items/vLogging.h"
 #include "Telegram.h"
 #include "RemoteOrdersUdp.h"
+#include "SoftUART.h"
 
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
@@ -254,6 +255,31 @@ void web_init() {
         if (request->hasArg("i2c")) {
             myNotAsyncActions->make(do_BUSSCAN);
             request->redirect("/?set.utilities");
+        }
+        if (request->hasArg("uart")) {
+            bool value = request->getParam("uart")->value().toInt();
+            jsonWriteBool(configSetupJson, "uart", value);
+            saveConfig();
+            uartInit();
+            request->send(200);
+        }
+        if (request->hasArg("uartS")) {
+            jsonWriteStr(configSetupJson, "uartS", request->getParam("uartS")->value());
+            saveConfig();
+            uartInit();
+            request->send(200);
+        }
+        if (request->hasArg("uartTX")) {
+            jsonWriteStr(configSetupJson, "uartTX", request->getParam("uartTX")->value());
+            saveConfig();
+            uartInit();
+            request->send(200);
+        }
+        if (request->hasArg("uartRX")) {
+            jsonWriteStr(configSetupJson, "uartRX", request->getParam("uartRX")->value());
+            saveConfig();
+            uartInit();
+            request->send(200);
         }
 
         //==============================developer settings=============================================

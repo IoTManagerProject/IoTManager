@@ -21,6 +21,7 @@
 #include "items/vCountDown.h"
 #include "items/vSensorUltrasonic.h"
 #include "Telegram.h"
+#include "SoftUART.h"
 
 void not_async_actions();
 
@@ -91,6 +92,9 @@ void setup() {
     SerialPrint("I", F("Bus"), F("Bus Init"));
     busInit();
 
+    SerialPrint("I", F("UART"), F("UART Init"));
+    uartInit();
+
 #ifdef SSDP_ENABLED
     SerialPrint("I", F("SSDP"), F("Ssdp Init"));
     SsdpInit();
@@ -154,6 +158,8 @@ void loop() {
     ts.update();
 
     handleTelegram();
+
+    uartHandle();
 
     if (myLogging != nullptr) {
         for (unsigned int i = 0; i < myLogging->size(); i++) {
