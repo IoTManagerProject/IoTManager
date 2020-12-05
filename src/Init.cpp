@@ -6,6 +6,7 @@
 #include "items/vImpulsOut.h"
 #include "items/vButtonOut.h"
 #include "items/vSensorDallas.h"
+#include "items/vSensorUltrasonic.h"
 #include "items/vInOutput.h"
 #include "items/vPwmOut.h"
 #include "items/vCountDown.h"
@@ -42,6 +43,10 @@ void Device_init() {
     //======clear dallas params======
     if (mySensorDallas2 != nullptr) {
         mySensorDallas2->clear();
+    }
+    //======clear ultrasonic params======
+    if (mySensorUltrasonic != nullptr) {
+        mySensorUltrasonic->clear();
     }
     //======clear logging params======
     if (myLogging != nullptr) {

@@ -19,6 +19,7 @@
 #include "items/vImpulsOut.h"
 #include "items/vSensorDallas.h"
 #include "items/vCountDown.h"
+#include "items/vSensorUltrasonic.h"
 #include "Telegram.h"
 
 void not_async_actions();
@@ -167,6 +168,11 @@ void loop() {
     if (mySensorDallas2 != nullptr) {
         for (unsigned int i = 0; i < mySensorDallas2->size(); i++) {
             mySensorDallas2->at(i).loop();
+        }
+    }
+    if (mySensorUltrasonic != nullptr) {
+        for (unsigned int i = 0; i < mySensorUltrasonic->size(); i++) {
+            mySensorUltrasonic->at(i).loop();
         }
     }
     if (myCountDown != nullptr) {

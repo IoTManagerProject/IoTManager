@@ -15,8 +15,8 @@ extern void buttonInSet();
 extern void analogAdc();
 extern void analogReading(); 
 
-extern void ultrasonicCm();
-extern void ultrasonicReading();
+//extern void ultrasonicCm();
+//extern void ultrasonicReading();
 
 extern void dallasTemp();
 extern void dallasReading();

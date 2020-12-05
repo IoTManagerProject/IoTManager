@@ -2,6 +2,7 @@
 #include "Global.h"
 //
 #include "items/vSensorDallas.h"
+#include "items/vSensorUltrasonic.h"
 #include "items/vButtonOut.h"
 #include "items/vPwmOut.h"
 #include "items/vInOutput.h"
@@ -53,7 +54,7 @@ void csvCmdExecute(String& cmdStr) {
                 sCmd.addCommand(order.c_str(), analogAdc);
             }
             else if (order == F("ultrasonic-cm")) {
-                sCmd.addCommand(order.c_str(), ultrasonicCm);
+                sCmd.addCommand(order.c_str(), ultrasonic);
             }
             else if (order == F("dallas-temp")) {
                 sCmd.addCommand(order.c_str(), dallas);
