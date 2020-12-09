@@ -61,13 +61,17 @@ void countDown() {
 
 void countDownExecute() {
     String key = sCmd.order();
-    String countDownPeriod = sCmd.next();
-    
+    String value = sCmd.next();
+
+    if (!isDigitStr(value)) { //если значение - текст
+        value = getValue(value);
+    }
+
     int number = getKeyNum(key, countDown_KeyList);
 
     if (myCountDown != nullptr) {
         if (number != -1) {
-            myCountDown->at(number).execute(countDownPeriod.toInt());
+            myCountDown->at(number).execute(value.toInt());
         }
     }
 }
