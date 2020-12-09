@@ -1,0 +1,6 @@
+{
+  "widget" : "input", 
+  "color"  : "orange",
+  "type"   : "time",
+  "icon": "alarm-outline"
+}

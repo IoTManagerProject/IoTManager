@@ -55,14 +55,16 @@ int pwmOut_EnterCounter = -1;
 String countDown_KeyList = "";
 int countDown_EnterCounter = -1;
 //=========================================
+String logging_KeyList = "";
+int logging_EnterCounter = -1;
+//=========================================
 
 // Sensors
 String sensorReadingMap10sec;
 String sensorReadingMap30sec;
 
-// Logging
-String loggingKeyList;
-int enter_to_logging_counter;
+String itemName;
+String presetName;
 
 // Upgrade
 String serverIP;

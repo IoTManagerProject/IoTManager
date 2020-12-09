@@ -30,7 +30,28 @@ public:
 
                 String setEventSign = selectFromMarkerToMarker(condition, " ", 1);
                 String setEventValue = selectFromMarkerToMarker(condition, " ", 2);
-                if (!isDigitStr(setEventValue)) setEventValue = getValue(setEventValue); //jsonReadStr(configLiveJson , setEventValue);
+
+                if (!isDigitStr(setEventValue)) {
+                    if (setEventValue.indexOf("+-") != -1) {
+                        String setEventValueName = selectToMarker(setEventValue, "+-");
+                        String gisteresisValue = selectToMarkerLast(setEventValue, "+-");
+                        gisteresisValue.replace("+-", "");
+                        String value = getValue(setEventValueName);
+                        String upValue = String(value.toFloat() + gisteresisValue.toFloat());
+                        String lowValue = String(value.toFloat() - gisteresisValue.toFloat());
+
+                        if (setEventSign == ">") {
+                            setEventValue = upValue;
+                        }
+                        else if (setEventSign == "<") {
+                            setEventValue = lowValue;
+
+                        }
+                    } 
+                    else {
+                        setEventValue = getValue(setEventValue);
+                    }
+                }
 
                 boolean flag = false;
 

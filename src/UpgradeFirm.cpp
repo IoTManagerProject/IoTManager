@@ -42,11 +42,11 @@ void getLastVersion() {
 #endif
         if (tmp == "error") {
             lastVersion = -1;
-    }
+        }
         else {
             lastVersion = tmp.toInt();
         }
-}
+    }
     else {
         lastVersion = -2;
     }
@@ -102,7 +102,7 @@ bool upgradeFS() {
     if (retFS == HTTP_UPDATE_OK) {  //если FS обновилась успешно
         SerialPrint("I", "Update", "LittleFS upgrade done!");
         ret = true;
-}
+    }
     return ret;
 }
 
@@ -122,7 +122,7 @@ bool upgradeBuild() {
     if (retBuild == HTTP_UPDATE_OK) {  //если BUILD обновился успешно
         SerialPrint("I", "Update", "BUILD upgrade done!");
         ret = true;
-}
+    }
     return ret;
 }
 

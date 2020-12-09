@@ -14,6 +14,7 @@ class LoggingClass {
     ~LoggingClass();
 
     void loop();
+    void execute(String payload);
 
    private:
 
@@ -25,12 +26,13 @@ class LoggingClass {
     String _loggingValueKey;
     String _key;
 
-    void addNewDelOldData(const String filename, size_t maxPoints, String payload);
+    
 };
 
 extern MyLoggingVector* myLogging;
 
 extern void logging();
+extern void loggingExecute();
 extern void choose_log_date_and_send();
 extern void sendLogData(String file, String topic);
 extern void cleanLogAndData();

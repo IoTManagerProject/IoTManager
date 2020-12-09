@@ -85,14 +85,18 @@ extern int pwmOut_EnterCounter;
 extern String countDown_KeyList;
 extern int countDown_EnterCounter;
 //=========================================
+extern String logging_KeyList;
+extern int logging_EnterCounter;
+//=========================================
 
 // Sensors
 extern String sensorReadingMap10sec;
 extern String sensorReadingMap30sec;
 
+extern String itemName;
+extern String presetName;
 
-extern String loggingKeyList;
-extern int enter_to_logging_counter;
+
 extern int scenario_line_status[40];
 extern int lastVersion;
 

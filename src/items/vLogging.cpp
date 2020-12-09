@@ -16,27 +16,36 @@ LoggingClass::LoggingClass(unsigned long period, unsigned int maxPoints, String 
 LoggingClass::~LoggingClass() {}
 
 void LoggingClass::loop() {
-    currentMillis = millis();
-    difference = currentMillis - prevMillis;
-    if (difference >= _period) {
-        prevMillis = millis();
-        addNewDelOldData("logs/" + _key + ".txt", _maxPoints, getValue(_loggingValueKey)); //jsonReadStr(configLiveJson , _loggingValueKey));
+    if (_period > 0) {
+        currentMillis = millis();
+        difference = currentMillis - prevMillis;
+        if (difference >= _period) {
+            prevMillis = millis();
+            execute("");
+        }
     }
 }
 
-void LoggingClass::addNewDelOldData(const String filename, size_t maxPoints, String payload) {
+void LoggingClass::execute(String payload) {
+
+    if (_period > 0) {
+        payload = getValue(_loggingValueKey);
+    }
+
+    String filename = "logs/" + _key + ".txt";
     String logData = readFile(filename, 5120);
+
     size_t lines_cnt = itemsCount(logData, "\r\n");
 
     SerialPrint("I", "Logging", "http://" + WiFi.localIP().toString() + "/" + filename + " (" + String(lines_cnt, DEC) + ")");
 
-    if ((lines_cnt > maxPoints + 1) || !lines_cnt) {
+    if ((lines_cnt > _maxPoints + 1) || !lines_cnt) {
         removeFile(filename);
         lines_cnt = 0;
     }
 
     if (payload != "") {
-        if (lines_cnt > maxPoints) {
+        if (lines_cnt > _maxPoints) {
             logData = deleteBeforeDelimiter(logData, "\r\n");
             if (timeNow->hasTimeSynced()) {
                 logData += timeNow->getTimeUnix() + " " + payload + "\r\n";
@@ -61,16 +70,40 @@ void logging() {
     String maxcnt = myLineParsing.gcnt();
     myLineParsing.clear();
 
-    loggingKeyList += key + ",";
+    logging_KeyList += key + ",";
+
+    logging_EnterCounter++;
+    addKey(key, logging_KeyList, logging_EnterCounter);
 
     static bool firstTime = true;
     if (firstTime) myLogging = new MyLoggingVector();
     firstTime = false;
     myLogging->push_back(LoggingClass(interv.toInt(), maxcnt.toInt(), loggingValueKey, key));
+
+    sCmd.addCommand(key.c_str(), loggingExecute);
 }
 
+void loggingExecute() {
+    String key = sCmd.order();
+    String value = sCmd.next();
+
+    if (!isDigitStr(value)) { //если значение - текст
+        value = getValue(value);
+    }
+
+    int number = getKeyNum(key, logging_KeyList);
+
+    if (myLogging != nullptr) {
+        if (number != -1) {
+            myLogging->at(number).execute(value);
+        }
+    }
+}
+
+
+
 void choose_log_date_and_send() {
-    String all_line = loggingKeyList;
+    String all_line = logging_KeyList;
     while (all_line.length() != 0) {
         String tmp = selectToMarker(all_line, ",");
         sendLogData("logs/" + tmp + ".txt", tmp);

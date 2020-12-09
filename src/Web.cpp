@@ -20,14 +20,24 @@ void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         //==============================set.device.json====================================================================================================
         if (request->hasArg("addItem")) {
-            String name = request->getParam("addItem")->value();
-            addItem(name);
+#ifdef FLASH_SIZE_1MB
+            itemName = request->getParam("addItem")->value();
+            myNotAsyncActions->make(do_addItem);
+#endif     
+#ifndef FLASH_SIZE_1MB
+            addItem(request->getParam("addItem")->value());
+#endif
             request->redirect("/?set.device");
         }
 
         if (request->hasArg("addPreset")) {
-            String name = request->getParam("addPreset")->value();
-            addPreset(name);
+#ifdef FLASH_SIZE_1MB
+            presetName = request->getParam("addPreset")->value();
+            myNotAsyncActions->make(do_addPreset);
+#endif     
+#ifndef FLASH_SIZE_1MB
+            addPreset(request->getParam("addPreset")->value());
+#endif
             request->redirect("/?set.device");
         }
 

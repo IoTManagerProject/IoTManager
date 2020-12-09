@@ -52,7 +52,8 @@ void Device_init() {
     if (myLogging != nullptr) {
         myLogging->clear();
     }
-    loggingKeyList = "";
+    logging_KeyList = "";
+    logging_EnterCounter = -1;
     //======clear impuls params=======
     if (myImpulsOut != nullptr) {
         myImpulsOut->clear();

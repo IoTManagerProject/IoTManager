@@ -1,15 +1,14 @@
 #pragma once
 
 //===========Firmware=============================================================================================================================================
+#define FIRMWARE_VERSION 268
+//#define FLASH_SIZE_1MB
 #ifdef ESP8266
 #define FIRMWARE_NAME "esp8266-iotm"
-#define FIRMWARE_VERSION 268
 #endif
 #ifdef ESP32
 #define FIRMWARE_NAME "esp32-iotm"
-#define FIRMWARE_VERSION 268
 #endif
-#define FLASH_4MB true
 
 //===========FSystem==============================================================================================================================================
 #define NUM_BUTTONS 6
@@ -86,6 +85,8 @@ enum NotAsyncActions {
     do_MQTTPARAMSCHANGED,
     do_deviceInit,
     do_delChoosingItems,
+    do_addItem,
+    do_addPreset,
     do_sendScenUDP,
     do_sendScenMQTT,
     do_LAST,
@@ -118,3 +119,6 @@ enum ConfigType_t {
 //17.11.2020 (SSDP OFF, UDP OFF) 
 //RAM:   [=====     ]  45.7% (used 37476 bytes from 81920 bytes)
 //Flash: [=====     ]  54.5% (used 569296 bytes from 1044464 bytes)
+
+//RAM:   [=====     ]  45.6% (used 37336 bytes from 81920 bytes)
+//Flash: [======    ]  55.3% (used 577396 bytes from 1044464 bytes)
