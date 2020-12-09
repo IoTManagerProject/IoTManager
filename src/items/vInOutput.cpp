@@ -53,10 +53,13 @@ void inOutputExecute() {
     String key = sCmd.order();
     String value = sCmd.next();
 
-
     if (!isDigitStr(value)) { //если значение - текст
         if (value.indexOf(":") == -1) { //если этот текст не время
-            value = getValue(value);
+            String tmp = getValue(value);
+            if(tmp != "no value") {
+               value = tmp;
+               value.replace("#"," ");
+            }
         }
     }
 

@@ -5,27 +5,31 @@
 
 #include <Arduino.h>
 //this class save data to flash
-ButtonOut::ButtonOut(unsigned int pin, boolean inv, String key) {
+ButtonOut::ButtonOut(String pin, boolean inv, String key) {
     _pin = pin;
     _inv = inv;
     _key = key;
-    pinMode(_pin, OUTPUT);
+    if (_pin != "") {
+        pinMode(_pin.toInt(), OUTPUT);
+    }
     int state = jsonReadInt(configStoreJson, key);
     this->execute(String(state));
 }
 ButtonOut::~ButtonOut() {}
 
 void ButtonOut::execute(String state) {
-    if (state == "change") {
-       state = String(!digitalRead(_pin));
-       digitalWrite(_pin, state.toInt());
-    }
-    else {
-        if (_inv) {
-            digitalWrite(_pin, !state.toInt());
+    if (state != "" && _pin != "") {
+        if (state == "change") {
+            state = String(!digitalRead(_pin.toInt()));
+            digitalWrite(_pin.toInt(), state.toInt());
         }
         else {
-            digitalWrite(_pin, state.toInt());
+            if (_inv) {
+                digitalWrite(_pin.toInt(), !state.toInt());
+            }
+            else {
+                digitalWrite(_pin.toInt(), state.toInt());
+            }
         }
     }
     eventGen2(_key, state);
@@ -53,7 +57,7 @@ void buttonOut() {
     static bool firstTime = true;
     if (firstTime) myButtonOut = new MyButtonOutVector();
     firstTime = false;
-    myButtonOut->push_back(ButtonOut(pin.toInt(), invb, key));
+    myButtonOut->push_back(ButtonOut(pin, invb, key));
 
     sCmd.addCommand(key.c_str(), buttonOutExecute);
 }
