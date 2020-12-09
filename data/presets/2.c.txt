@@ -1,4 +1,4 @@
-0;dallas-temp;temp;anydataTemp;Термостат;Температура;1;pin[2];index[0];int[10]
+0;dallas-temp;temp;anydataTemp;Термостат;Температура;1;pin[2];index[0];int[60]
 0;logging;log;chart;Термостат;История;2;val[temp];int[10];cnt[100]
 0;inoutput;threshold;inputDigitTemp;Термостат;Заданная#температура;3
 0;button-out;heater;toggle;Термостат;Нагреватель;7;pin[12]
