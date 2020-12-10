@@ -311,7 +311,7 @@ void web_init() {
     //        itemsLine = request->getParam("line")->value();
     //    }
     //    delElementFlag = true;
-    //    Device_init();
+    //    deviceInit();
     //    request->redirect("/?setn.device");
     //});
 
@@ -360,6 +360,8 @@ void web_init() {
         myNotAsyncActions->make(do_UPGRADE);
         request->send(200, "text/html");
         });
+
+        SerialPrint("I", F("Web"), F("WebAdmin Init"));
 }
 
 void setConfigParam(const char* param, const String& value) {

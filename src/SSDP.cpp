@@ -47,6 +47,7 @@ void SsdpInit() {
     SSDP.setDeviceType(F("upnp:rootdevice"));
     SSDP.setSchemaURL(F("description.xml"));
     SSDP.begin();
+    SerialPrint("I", F("SSDP"), F("Ssdp Init"));
 }
 
 String xmlNode(String tags, String data) {

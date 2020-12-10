@@ -42,7 +42,7 @@ extern void bme280A_reading();
 //extern void dhtC_reading();
 //extern void dhtD_reading();
 
-extern void handle_time_init();
+extern void timeInit();
 extern void stepper();
 extern void stepperSet();
 extern void servo_();

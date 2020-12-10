@@ -10,9 +10,10 @@ const String filepath(const String& filename) {
 
 bool fileSystemInit() {
     if (!LittleFS.begin()) {
-        SerialPrint("[E]","Files","init");
+        SerialPrint("E", F("FS"), F("FS Init ERROR, may be FS was not flashed"));
         return false;
     }
+    SerialPrint("I", F("FS"), F("FS Init"));
     return true;
 }
 

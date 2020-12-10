@@ -2,8 +2,8 @@
 #include "Global.h"
 #include "Utils/StringUtils.h"
 
-static const uint8_t days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-static const char* week_days[7] = {"Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"};
+static const uint8_t days_in_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+static const char* week_days[7] = { "Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat" };
 
 // String getTimeUnix() {
 //     time_t t;
@@ -118,7 +118,8 @@ const String prettySeconds(unsigned long time_s) {
 
     if (days) {
         sprintf_P(buf, TIME_FORMAT_WITH_DAYS, days, hours, minutes, seconds);
-    } else {
+    }
+    else {
         sprintf_P(buf, TIME_FORMAT, hours, minutes, seconds);
     }
     return String(buf);
@@ -138,15 +139,18 @@ unsigned long millis_passed(unsigned long start, unsigned long finish) {
         unsigned long passed = finish - start;
         if (passed <= __LONG_MAX__) {
             result = static_cast<long>(passed);
-        } else {
+        }
+        else {
             result = static_cast<long>((__LONG_MAX__ - finish) + start + 1u);
         }
-    } else {
+    }
+    else {
         unsigned long passed = start - finish;
         if (passed <= __LONG_MAX__) {
             result = static_cast<long>(passed);
             result = -1 * result;
-        } else {
+        }
+        else {
             result = static_cast<long>((__LONG_MAX__ - start) + finish + 1u);
             result = -1 * result;
         }
@@ -194,16 +198,19 @@ void breakEpochToTime(unsigned long epoch, Time_t& tm) {
         if (1 == month) {  // february
             if (LEAP_YEAR(year)) {
                 month_length = 29;
-            } else {
+            }
+            else {
                 month_length = 28;
             }
-        } else {
+        }
+        else {
             month_length = days_in_month[month];
         }
 
         if (time >= month_length) {
             time -= month_length;
-        } else {
+        }
+        else {
             break;
         }
     }
@@ -212,7 +219,7 @@ void breakEpochToTime(unsigned long epoch, Time_t& tm) {
     tm.valid = (epoch > MIN_DATETIME);
 }
 
-void handle_time_init() {
+void timeInit() {
     ts.add(
         TIME, 1000, [&](void*) {
             String timenow = timeNow->getTimeWOsec();
@@ -224,4 +231,5 @@ void handle_time_init() {
             }
         },
         nullptr, true);
+    SerialPrint("I", F("Time"), F("Handle time init"));
 }

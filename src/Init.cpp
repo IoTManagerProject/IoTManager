@@ -26,17 +26,20 @@ void loadConfig() {
 
     prex = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId;
 
-    Serial.println(configSetupJson);
+    //Serial.println(configSetupJson);
 
     serverIP = jsonReadStr(configSetupJson, "serverip");
+
+    SerialPrint("I", F("Conf"), F("Config Json Init"));
 }
 
-void all_init() {
-    Device_init();
+void espInit() {
+    deviceInit();
     loadScenario();
+    SerialPrint("I", F("esp"), F("esp Init"));
 }
 
-void Device_init() {
+void deviceInit() {
 
     sensorReadingMap10sec = "";
 
@@ -110,6 +113,7 @@ void uptime_init() {
             handle_uptime();
         },
         nullptr, true);
+    SerialPrint("I", F("Uptime"), F("Uptime Init"));
 }
 
 void handle_uptime() {

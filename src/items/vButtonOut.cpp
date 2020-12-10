@@ -22,8 +22,10 @@ ButtonOut::~ButtonOut() {}
 void ButtonOut::execute(String state) {
     if (_type == "UART") {
         if (jsonReadBool(configSetupJson, "uart")) {
-            if (myUART != nullptr) {
-                myUART->print(_key + " " + state);
+            if (myUART) {
+                String msg = _key + " " + state;
+                myUART->print(msg);
+                SerialPrint("I", "<=UART", msg);
             }        
         }
     }

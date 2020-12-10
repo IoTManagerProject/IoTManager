@@ -1,7 +1,7 @@
 #pragma once
 
 //===========Firmware=============================================================================================================================================
-#define FIRMWARE_VERSION 268
+#define FIRMWARE_VERSION 270
 //#define FLASH_SIZE_1MB
 #ifdef ESP8266
 #define FIRMWARE_NAME "esp8266-iotm"

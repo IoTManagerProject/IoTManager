@@ -50,4 +50,4 @@ int getOffsetInMinutes(int timezone);
 */
 void breakEpochToTime(unsigned long epoch, Time_t& tm);
 
-void handle_time_init();
+void timeInit();

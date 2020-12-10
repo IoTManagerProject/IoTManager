@@ -5,7 +5,7 @@
 #include "Utils/TimeUtils.h"
 #include "Utils\SerialPrint.h"
 
-extern void clock_init();
+extern void clockInit();
 
 #ifdef ESP8266
 #include "sntp.h"

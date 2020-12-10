@@ -31,6 +31,7 @@ void upgradeInit() {
             }
         }
     };
+    SerialPrint("I", F("Update"), F("Updater Init"));
 }
 
 void getLastVersion() {

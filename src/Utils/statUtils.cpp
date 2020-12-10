@@ -25,6 +25,7 @@ void initSt() {
             },
             nullptr, true);
     }
+    SerialPrint("I", F("Stat"), F("Stat Init"));
 }
 
 void decide() {

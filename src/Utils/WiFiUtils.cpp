@@ -1,13 +1,16 @@
 #include "Utils/WiFiUtils.h"
 
 void routerConnect() {
+
+    WiFi.setAutoConnect(false);
+    WiFi.persistent(false);
+    
     setLedStatus(LED_SLOW);
     WiFi.mode(WIFI_STA);
     byte tries = 20;
 
     String _ssid = jsonReadStr(configSetupJson, "routerssid");
     String _password = jsonReadStr(configSetupJson, "routerpass");
-    //WiFi.persistent(false);
 
     if (_ssid == "" && _password == "") {
         WiFi.begin();
@@ -39,6 +42,7 @@ void routerConnect() {
         setLedStatus(LED_OFF);
         mqttInit();
     }
+    SerialPrint("I", F("WIFI"), F("Network Init"));
 }
 
 bool startAPMode() {

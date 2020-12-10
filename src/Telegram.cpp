@@ -19,6 +19,7 @@ void telegramInit() {
         else {
             SerialPrint("E", "Telegram", "Not connected");
         }
+        SerialPrint("I", F("Telegram"), F("Telegram Init"));
     }
 }
 

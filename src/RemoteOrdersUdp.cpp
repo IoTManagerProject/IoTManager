@@ -75,6 +75,8 @@ void asyncUdpInit() {
     //},
     //nullptr, true);
 
+     SerialPrint("I", F("UDP"), "Udp Init");
+
 }
 
 bool udpPacketValidation(String& data) {

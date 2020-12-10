@@ -144,6 +144,7 @@ void sensorsInit() {
             }
         },
         nullptr, true);
+    SerialPrint("I", F("Sensors"), F("Sensors Init"));
 }
 
 void addKey(String& key, String& keyNumberTable, int number) {

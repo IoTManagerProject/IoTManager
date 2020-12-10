@@ -20,10 +20,11 @@ void uartInit() {
         myUART->begin(4, 5);
 #endif
     }
+    SerialPrint("I", F("UART"), F("UART Init"));
 }
 
 void uartHandle() {
-    if (myUART != nullptr) {
+    if (myUART) {
         if (!jsonReadBool(configSetupJson, "uart")) {
             return;
         }
@@ -34,7 +35,7 @@ void uartHandle() {
             incStr += inc;
             if (inc == '\n') {
                 parse(incStr);
-                incStr = "";
+                incStr = "";               
             }
         }
     }
@@ -46,7 +47,7 @@ void parse(String& incStr) {
     incStr.replace("\n", "");
     if (incStr.indexOf("set") != -1) {
         incStr = deleteBeforeDelimiter(incStr, " ");
-        SerialPrint("I", "UART", incStr);
         orderBuf += incStr;
+        SerialPrint("I", "=>UART", incStr);
     }
 }

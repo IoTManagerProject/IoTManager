@@ -9,7 +9,7 @@ static const char* firstLine PROGMEM = "Удалить;Тип элемента;I
 void itemsListInit() {
     myNotAsyncActions->add(
         do_deviceInit, [&](void*) {
-            Device_init();
+            deviceInit();
         },
         nullptr);
 
@@ -33,6 +33,7 @@ void itemsListInit() {
         },
         nullptr);
 #endif
+    SerialPrint("I", F("Items"), F("Items Init"));
 }
 
 void addItem(String name) {

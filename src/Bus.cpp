@@ -10,12 +10,14 @@ void busInit() {
                 tmp = i2c_scan();
                 Serial.println(tmp);
                 jsonWriteStr(configLiveJson, "i2c", tmp);
-            } else {
+            }
+            else {
                 Serial.println(tmp);
                 jsonWriteStr(configLiveJson, "i2c", tmp);
             }
         },
         nullptr);
+    SerialPrint("I", F("Bus"), F("Bus Init"));
 }
 
 String i2c_scan() {
@@ -32,7 +34,8 @@ String i2c_scan() {
     }
     if (count == 0) {
         return "error";
-    } else {
+    }
+    else {
         return out;
     }
 }
