@@ -45,6 +45,9 @@ void setup() {
     fileSystemInit();
     SerialPrint("I", F("FS"), F("FS Init"));
 
+    SerialPrint("I", F("UART"), F("UART Init"));
+    uartInit();
+
     loadConfig();
     SerialPrint("I", F("Conf"), F("Config Init"));
 
@@ -92,8 +95,7 @@ void setup() {
     SerialPrint("I", F("Bus"), F("Bus Init"));
     busInit();
 
-    SerialPrint("I", F("UART"), F("UART Init"));
-    uartInit();
+    
 
 #ifdef SSDP_ENABLED
     SerialPrint("I", F("SSDP"), F("Ssdp Init"));

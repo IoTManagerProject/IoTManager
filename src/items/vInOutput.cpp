@@ -1,10 +1,10 @@
 #include "items/vInOutput.h"
-
 #include <Arduino.h>
-
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "BufferExecute.h"
+#include "Clock.h"
+
 //this class save date to flash
 InOutput::InOutput(String key, String widget) {
     _key = key;
@@ -12,7 +12,7 @@ InOutput::InOutput(String key, String widget) {
 
     if (value == "") {
         if (widget.indexOf("Digit") != -1) {
-            value = "52";
+            value = "25";
         }
         if (widget.indexOf("Time") != -1) {
             value = "12:00";
@@ -52,13 +52,18 @@ void inOutput() {
 void inOutputExecute() {
     String key = sCmd.order();
     String value = sCmd.next();
+    //String type = sCmd.next();
+
 
     if (!isDigitStr(value)) { //если значение - текст
         if (value.indexOf(":") == -1) { //если этот текст не время
-            String tmp = getValue(value);
-            if(tmp != "no value") {
-               value = tmp;
-               value.replace("#"," ");
+            String valueJson = getValue(value);
+            if (valueJson != "no value") {  //если это ключ переменной
+                value = valueJson;
+            }
+            else { //если это просто текст
+                value.replace("#", " ");
+                value.replace("%date%", timeNow->getDateTimeDotFormated());
             }
         }
     }

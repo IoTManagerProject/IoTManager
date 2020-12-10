@@ -23,26 +23,28 @@ void uartInit() {
 }
 
 void uartHandle() {
-    if (!jsonReadBool(configSetupJson, "uart")) {
-        return;
-    }
-    static String incStr;
-    if (myUART->available()) {
-        char inc;
-        inc = myUART->read();
-        incStr += inc;
-        if (inc == '\n') {
-            parse(incStr);
-            incStr = "";
+    if (myUART != nullptr) {
+        if (!jsonReadBool(configSetupJson, "uart")) {
+            return;
+        }
+        static String incStr;
+        if (myUART->available()) {
+            char inc;
+            inc = myUART->read();
+            incStr += inc;
+            if (inc == '\n') {
+                parse(incStr);
+                incStr = "";
+            }
         }
     }
 }
 
 void parse(String& incStr) {
+    incStr.replace("\r\n", "");
+    incStr.replace("\r", "");
+    incStr.replace("\n", "");
     if (incStr.indexOf("set") != -1) {
-        incStr.replace("\r\n", "");
-        incStr.replace("\r", "");
-        incStr.replace("\n", "");
         incStr = deleteBeforeDelimiter(incStr, " ");
         SerialPrint("I", "UART", incStr);
         orderBuf += incStr;

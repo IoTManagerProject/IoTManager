@@ -2,5 +2,6 @@
   "widget" : "input", 
   "color"  : "green",
   "type"   : "number",
+  "size"   : "small",
   "icon": "thermometer"
 }

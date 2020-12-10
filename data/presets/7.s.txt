@@ -1,0 +1,10 @@
+sensor = 1
+text обнаружено
+time %date%
+telegram text обнаружено#движение 1
+end
+reset = 1
+text не#обнаружено
+time %date%
+reset 0
+end

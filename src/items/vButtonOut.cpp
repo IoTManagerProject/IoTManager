@@ -2,13 +2,15 @@
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "BufferExecute.h"
+#include "SoftUART.h"
 
 #include <Arduino.h>
 //this class save data to flash
-ButtonOut::ButtonOut(String pin, boolean inv, String key) {
+ButtonOut::ButtonOut(String pin, boolean inv, String key, String type) {
     _pin = pin;
     _inv = inv;
     _key = key;
+    _type = type;
     if (_pin != "") {
         pinMode(_pin.toInt(), OUTPUT);
     }
@@ -18,6 +20,13 @@ ButtonOut::ButtonOut(String pin, boolean inv, String key) {
 ButtonOut::~ButtonOut() {}
 
 void ButtonOut::execute(String state) {
+    if (_type == "UART") {
+        if (jsonReadBool(configSetupJson, "uart")) {
+            if (myUART != nullptr) {
+                myUART->print(_key + " " + state);
+            }        
+        }
+    }
     if (state != "" && _pin != "") {
         if (state == "change") {
             state = String(!digitalRead(_pin.toInt()));
@@ -45,6 +54,7 @@ void buttonOut() {
     String key = myLineParsing.gkey();
     String pin = myLineParsing.gpin();
     String inv = myLineParsing.ginv();
+    String type = myLineParsing.gtype();
 
     bool invb = false;
     if (inv.toInt() == 1) invb = true;
@@ -57,7 +67,7 @@ void buttonOut() {
     static bool firstTime = true;
     if (firstTime) myButtonOut = new MyButtonOutVector();
     firstTime = false;
-    myButtonOut->push_back(ButtonOut(pin, invb, key));
+    myButtonOut->push_back(ButtonOut(pin, invb, key, type));
 
     sCmd.addCommand(key.c_str(), buttonOutExecute);
 }

@@ -10,7 +10,7 @@ typedef std::vector<ButtonOut> MyButtonOutVector;
 class ButtonOut {
    public:
 
-    ButtonOut(String pin, boolean inv, String key);
+    ButtonOut(String pin, boolean inv, String key, String type);
 
     ~ButtonOut();
 
@@ -21,6 +21,7 @@ class ButtonOut {
     String _pin;
     boolean _inv;
     String _key;
+    String _type;
 
 };
 
