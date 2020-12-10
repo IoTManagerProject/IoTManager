@@ -12,3 +12,5 @@ boolean RouterFind(String ssid);
 
 uint8_t RSSIquality();
 
+extern void wifiSignalInit();
+

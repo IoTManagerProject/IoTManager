@@ -90,33 +90,3 @@ const String getRequestInfo(AsyncWebServerRequest* request) {
     return res;
 }
 
-void wifiSignalInit() {
-    ts.add(
-        SYGNAL, 1000 * 60, [&](void*) {
-            SerialPrint("I", "System", printMemoryStatus());
-            switch (RSSIquality()) {
-            case 0:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>не подключено к роутеру</font>"));
-                break;
-            case 1:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>нет сигнала</font>"));
-                break;
-            case 2:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>очень низкий</font>"));
-                break;
-            case 3:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='orange'>низкий</font>"));
-                break;
-            case 4:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>хороший</font>"));
-                break;
-            case 5:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>очень хороший</font>"));
-                break;
-            case 6:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>отличный</font>"));
-                break;
-            }
-        },
-        nullptr, true);
-}

@@ -55,6 +55,7 @@ void setup() {
     web_init();
     initSt();
     busInit();
+    wifiSignalInit();
 #ifdef UDP_ENABLED
     asyncUdpInit();
 #endif
