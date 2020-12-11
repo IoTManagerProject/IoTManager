@@ -2,7 +2,7 @@
 
 //===========Firmware=============================================================================================================================================
 #define FIRMWARE_VERSION 272
-//#define FLASH_SIZE_1MB true
+#define FLASH_SIZE_1MB true
 #ifdef ESP8266
 #ifdef FLASH_SIZE_1MB
 #define FIRMWARE_NAME "esp8266-1mb"

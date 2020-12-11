@@ -1,4 +1,0 @@
-0;inoutput;text;anydataAlarm;Сигнализация;Движение:;1
-0;inoutput;time;anydataTime;Сигнализация;Время:;2
-0;button-in;sensor;na;na;na;3;pin[0];db[20]
-0;button-out;reset;toggle;Сигнализация;Сбросить;4

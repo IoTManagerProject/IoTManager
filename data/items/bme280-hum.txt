@@ -1,1 +1,0 @@
-0;bme280-hum;id;anydataHum;Сенсоры;Влажность;order;addr[0x76];c[1]
