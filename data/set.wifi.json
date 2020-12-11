@@ -175,9 +175,16 @@
       "type": "hr"
     },
     {
-      "type": "link",
+      "type": "h3",
+      "name": "reset-block",
+      "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+      "class": "hidden"
+    },
+    {
+      "type": "button",
       "title": "Перезагрузить устройство",
-      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/set?device=ok');}",
+      "action": "/set?reqReset",
+      "response": "[[reset-block]]",
       "class": "btn btn-block btn-danger"
     }
   ]

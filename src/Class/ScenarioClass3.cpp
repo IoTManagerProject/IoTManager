@@ -10,20 +10,21 @@ void eventGen2(String eventName, String eventValue) {
     String event = eventName + " " + eventValue + ",";
     eventBuf += event;
 
-    if (jsonReadBool(configSetupJson, "snaMqtt")) publishEvent(eventName, eventValue);
-    //streamEventUDP(event);
+    if (jsonReadBool(configSetupJson, "MqttOut")) {
+        publishEvent(eventName, eventValue);
+    }
 }
 
 void streamEventUDP(String event) {
-    #ifdef UDP_ENABLED
+#ifdef UDP_ENABLED
 
     if (!jsonReadBool(configSetupJson, "snaUdp")) {
         return;
     }
-    
+
     if (event.indexOf("timenow") == -1) {
         event = "iotm;event:" + event;
         asyncUdp.broadcastTo(event.c_str(), 4210);
     }
-    #endif
+#endif
 }

@@ -88,12 +88,19 @@ void web_init() {
         //    request->send(200);
         //}
 
-        if (request->hasArg("snaMqtt")) {
-            bool value = request->getParam("snaMqtt")->value().toInt();
-            jsonWriteBool(configSetupJson, "snaMqtt", value);
+        if (request->hasArg("MqttIn")) {
+            bool value = request->getParam("MqttIn")->value().toInt();
+            jsonWriteBool(configSetupJson, "MqttIn", value);
             saveConfig();
-            mqtt.subscribe((mqttPrefix + "/+/+/status").c_str());
+            mqtt.subscribe((mqttPrefix + "/+/+/event").c_str());
             mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
+            request->send(200);
+        }
+
+        if (request->hasArg("MqttOut")) {
+            bool value = request->getParam("MqttOut")->value().toInt();
+            jsonWriteBool(configSetupJson, "MqttOut", value);
+            saveConfig();
             request->send(200);
         }
 
@@ -175,10 +182,15 @@ void web_init() {
             request->send(200);
         }
 
-        if (request->hasArg("device")) {
-            if (request->getParam("device")->value() == "ok") {
-                ESP.restart();
-            }
+        if (request->hasArg("reqReset")) {
+            String tmp = "{}";
+            jsonWriteStr(tmp, "title", F("<button class=\"close\" onclick=\"toggle('reset-block')\">×</button>Вы действительно хотите перезагрузить устройство?<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/set?reset');setTimeout(function(){ location.href='/?set.device'; }, 15000);html('reset-block','<span class=loader></span>Идет перезагрузка устройства')\">Перезагрузить</a>"));
+            jsonWriteStr(tmp, "class", "pop-up");
+            request->send(200, "text/html", tmp);
+        }
+
+        if (request->hasArg("reset")) {
+            ESP.restart();
             request->send(200);
         }
 

@@ -43,7 +43,7 @@
         },
         {
             "type": "h4",
-            "title": "Версия файловой системы: 271"
+            "title": "Версия файловой системы: 272"
         },
         {
             "type": "h4",
@@ -179,10 +179,20 @@
         },
         {
             "type": "checkbox",
-            "name": "snaMqtt",
-            "title": "Включить единые сценарии для всех устройств",
-            "action": "/set?snaMqtt=[[snaMqtt]]",
-            "state": "{{snaMqtt}}"
+            "name": "MqttOut",
+            "title": "Передавать события другим устройствам",
+            "action": "/set?MqttOut=[[MqttOut]]",
+            "state": "{{MqttOut}}"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "checkbox",
+            "name": "MqttIn",
+            "title": "Принимать события с других устройств",
+            "action": "/set?MqttIn=[[MqttIn]]",
+            "state": "{{MqttIn}}"
         },
         {
             "type": "hr"
@@ -234,9 +244,16 @@
             "type": "hr"
         },
         {
-            "type": "link",
+            "type": "h3",
+            "name": "reset-block",
+            "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+            "class": "hidden"
+        },
+        {
+            "type": "button",
             "title": "Перезагрузить устройство",
-            "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/set?device=ok');}",
+            "action": "/set?reqReset",
+            "response": "[[reset-block]]",
             "class": "btn btn-block btn-danger"
         }
     ]

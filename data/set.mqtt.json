@@ -9,7 +9,6 @@
       "type": "h5",
       "title": "{{name}}",
       "class": "alert-default"
-      
     },
     {
       "type": "link",
@@ -20,7 +19,6 @@
     {
       "type": "hr"
     },
-   
     {
       "type": "h4",
       "title": "{{SetMQTTServerName}}",
@@ -87,7 +85,6 @@
       "style": "position:fixed;top:30%;left:50%;width:400px;margin-left:-200px;text-align:center;",
       "class": "hidden"
     },
-    
     {
       "type": "button",
       "title": "{{ButSave}}",
@@ -102,7 +99,6 @@
       "action": "set?mqttsend",
       "class": "btn btn-block btn-default"
     },
-    
     {
       "type": "button",
       "style": "width:100%;float:left;",
@@ -115,7 +111,6 @@
       "type": "text",
       "style": "width:100%;float:left;",
       "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetMQTTWarn1}}</p></font></div>"
-     
     },
     {
       "type": "text",
@@ -123,10 +118,19 @@
       "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>{{SetMQTTWarn2}}</p></font></div>"
     },
     {
-      "type": "link",
-      "style": "width:100%;float:left;",
+      "type": "hr"
+    },
+    {
+      "type": "h3",
+      "name": "reset-block",
+      "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+      "class": "hidden"
+    },
+    {
+      "type": "button",
       "title": "Перезагрузить устройство",
-      "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
+      "action": "/set?reqReset",
+      "response": "[[reset-block]]",
       "class": "btn btn-block btn-danger"
     }
   ]

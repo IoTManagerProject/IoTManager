@@ -71,7 +71,7 @@ void mqttSubscribe() {
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/update").c_str());
 
-    if (jsonReadBool(configSetupJson, "snaMqtt")) {
+    if (jsonReadBool(configSetupJson, "MqttIn")) {
         mqtt.subscribe((mqttPrefix + "/+/+/event").c_str());
         mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
     }
@@ -143,7 +143,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     }
 
     else if (topicStr.indexOf("event") != -1) {
-        if (!jsonReadBool(configSetupJson, "snaMqtt")) {
+        if (!jsonReadBool(configSetupJson, "MqttIn")) {
             return;
         }
         if (topicStr.indexOf(chipId) == -1) {
@@ -215,7 +215,7 @@ boolean publishStatus(const String& topic, const String& data) {
 
 boolean publishEvent(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/event";
-    return mqtt.publish(path.c_str(), data.c_str(), false);
+    return mqtt.publish(path.c_str(), data.c_str(), true);
 }
 
 boolean publishInfo(const String& topic, const String& data) {
