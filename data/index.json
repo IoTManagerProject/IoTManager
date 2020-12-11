@@ -13,11 +13,6 @@
       "class": "alert-default"
     },
     {
-			"type": "text",
-			"class": "alert alert-light",
-			"title": "<center><img src='/icon.jpeg' alt='IoT Manager'></center>"
-		},
-    {
       "type": "link",
       "title": "Конфигурация устройства",
       "action": "/?set.device",
