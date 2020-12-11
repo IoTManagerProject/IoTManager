@@ -10,7 +10,8 @@ void eventGen2(String eventName, String eventValue) {
     String event = eventName + " " + eventValue + ",";
     eventBuf += event;
 
-    streamEventUDP(event);
+    if (jsonReadBool(configSetupJson, "snaMqtt")) publishEvent(eventName, eventValue);
+    //streamEventUDP(event);
 }
 
 void streamEventUDP(String event) {

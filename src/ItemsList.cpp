@@ -41,7 +41,6 @@ void addItem(String name) {
     String url = serverIP + F("/projects/iotmanager/config/items/") + name + ".txt";
     String item = getURL(url);
     Serial.println(url);
-    Serial.println(item);
     if (item == "error") return;
 #endif
 #ifndef FLASH_SIZE_1MB
@@ -75,30 +74,31 @@ void addItem(String name) {
     item.replace("\r\n", "");
     item.replace("\r", "");
     item.replace("\n", "");
+
     addFile(DEVICE_CONFIG_FILE, "\n" + item);
+    Serial.println(item);
 }
 
 void addPreset(String name) {
 #ifdef FLASH_SIZE_1MB
-    String url2 = serverIP + F("/projects/iotmanager/config/presets/") + name + ".txt";
-    String preset = getURL(url2);
-    Serial.println(url2);
-    Serial.println(preset);
+    String url = serverIP + F("/projects/iotmanager/config/presets/") + name + ".txt";
+    String preset = getURL(url);
+    Serial.println(url);
     if (preset == "error") return;
 #endif
 #ifndef FLASH_SIZE_1MB
     String preset = readFile("presets/" + name + ".txt", 4048);
 #endif
-
+    
     addFile(DEVICE_CONFIG_FILE, "\n" + preset);
+    Serial.println(preset);
 
     name.replace(".c", ".s");
 
 #ifdef FLASH_SIZE_1MB
-    String url = serverIP + F("/projects/iotmanager/config/presets/") + name + ".txt";
+    url = serverIP + F("/projects/iotmanager/config/presets/") + name + ".txt";
     String scenario = getURL(url);
     Serial.println(url);
-    Serial.println(scenario);
     if (scenario == "error") return;
 #endif
 #ifndef FLASH_SIZE_1MB
@@ -106,8 +106,11 @@ void addPreset(String name) {
 #endif
 
     removeFile(DEVICE_SCENARIO_FILE);
+
+    
     addFile(DEVICE_SCENARIO_FILE, scenario);
     loadScenario();
+    Serial.println(scenario);
 }
 
 void delAllItems() {

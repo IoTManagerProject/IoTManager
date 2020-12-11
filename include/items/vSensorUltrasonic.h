@@ -8,8 +8,6 @@ class SensorUltrasonic;
 
 typedef std::vector<SensorUltrasonic> MySensorUltrasonicVector;
 
-
-
 class SensorUltrasonic : public SensorConvertingClass {
 public:
 

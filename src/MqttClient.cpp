@@ -72,7 +72,7 @@ void mqttSubscribe() {
     mqtt.subscribe((mqttRootDevice + "/update").c_str());
 
     if (jsonReadBool(configSetupJson, "snaMqtt")) {
-        mqtt.subscribe((mqttPrefix + "/+/+/status").c_str());
+        mqtt.subscribe((mqttPrefix + "/+/+/event").c_str());
         mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
     }
 }
@@ -142,26 +142,24 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         SerialPrint("I", "=>MQTT", "Msg from iotmanager app: " + key + " " + payloadStr);
     }
 
-    else if (topicStr.indexOf("status") != -1) {
+    else if (topicStr.indexOf("event") != -1) {
         if (!jsonReadBool(configSetupJson, "snaMqtt")) {
             return;
         }
         if (topicStr.indexOf(chipId) == -1) {
             String devId = selectFromMarkerToMarker(topicStr, "/", 2);
             String key = selectFromMarkerToMarker(topicStr, "/", 3);
-            String value = jsonReadStr(payloadStr, "status");
-
-            SerialPrint("I", "=>MQTT", "Msg from other device: '" + devId + "' " + key + " " + value);
-
-            eventGen2(key, value);
+            SerialPrint("I", "=>MQTT", "Received event from other device: '" + devId + "' " + key + " " + payloadStr);
+            String event = key + " " + payloadStr + ",";
+            eventBuf += event;
         }
     }
 
     else if (topicStr.indexOf("info") != -1) {
         if (topicStr.indexOf("scen") != -1) {
             writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
-            loadScenario();   
-            SerialPrint("I", "=>MQTT", "Scenario received");     
+            loadScenario();
+            SerialPrint("I", "=>MQTT", "Scenario received");
         }
     }
 
@@ -213,6 +211,11 @@ boolean publishStatus(const String& topic, const String& data) {
     String json = "{}";
     jsonWriteStr(json, "status", data);
     return mqtt.publish(path.c_str(), json.c_str(), false);
+}
+
+boolean publishEvent(const String& topic, const String& data) {
+    String path = mqttRootDevice + "/" + topic + "/event";
+    return mqtt.publish(path.c_str(), data.c_str(), false);
 }
 
 boolean publishInfo(const String& topic, const String& data) {

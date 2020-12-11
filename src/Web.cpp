@@ -323,6 +323,10 @@ void web_init() {
         SerialPrint("I", "Update", "firmware version: " + String(lastVersion));
 
         String msg = "";
+        //if (FLASH_SIZE_1MB) {
+        //    msg = F("Обновление невозможно, память устройства 1 мб");
+        //}
+        //else {
         if (lastVersion == FIRMWARE_VERSION) {
             msg = F("Актуальная версия прошивки уже установлена.");
         }
@@ -338,6 +342,7 @@ void web_init() {
         else if (lastVersion < FIRMWARE_VERSION) {
             msg = F("Ошибка версии. Попробуйте повторить позже...");
         }
+        //}
 
         // else if (lastVersion == "") {
         //msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
@@ -361,7 +366,7 @@ void web_init() {
         request->send(200, "text/html");
         });
 
-        SerialPrint("I", F("Web"), F("WebAdmin Init"));
+    SerialPrint("I", F("Web"), F("WebAdmin Init"));
 }
 
 void setConfigParam(const char* param, const String& value) {
