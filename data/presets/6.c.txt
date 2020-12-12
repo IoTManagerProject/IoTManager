@@ -1,0 +1,3 @@
+0;button-out;button;toggle;Таймер;Освещение;1;pin[12]
+0;count-down;count;anydata;Таймер;Обратный#отчет;2
+0;inoutput;input;inputDigit;Таймер;Введите#цифру;3

@@ -59,8 +59,8 @@ void upgrade_firmware(int type) {
     String devconfig_ForUpdate;
     String configSetup_ForUpdate;
 
-    scenario_ForUpdate = readFile(String(DEVICE_SCENARIO_FILE), 4000);
-    devconfig_ForUpdate = readFile(String(DEVICE_CONFIG_FILE), 4000);
+    scenario_ForUpdate = readFile(String(DEVICE_SCENARIO_FILE), 4096);
+    devconfig_ForUpdate = readFile(String(DEVICE_CONFIG_FILE), 4096);
     configSetup_ForUpdate = configSetupJson;
 
     if (type == 1) {  //only build

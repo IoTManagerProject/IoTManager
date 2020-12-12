@@ -1,0 +1,4 @@
+0;button-in;sensor;na;na;na;1;pin[0];db[20]
+0;button-out;light;toggle;Освещение;Освещение;2;pin[13]
+0;count-down;count;anydata;Освещение;Обратный#отчет;3
+0;inoutput;period;inputDigit;Освещение;Период#включения;4

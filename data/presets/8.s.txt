@@ -1,0 +1,7 @@
+sensor = 1
+light 1
+count period
+end
+count = 0
+light 0
+end

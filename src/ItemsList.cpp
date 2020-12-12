@@ -18,6 +18,7 @@ void itemsListInit() {
             delChoosingItems();
         },
         nullptr);
+        
 #ifdef FLASH_SIZE_1MB
     myNotAsyncActions->add(
         do_addItem, [&](void*) {
