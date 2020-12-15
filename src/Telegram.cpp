@@ -76,7 +76,9 @@ void sendTelegramMsg() {
         static String prevMsg;
         if (prevMsg != msg) {
             prevMsg = msg;
-            myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
+            if (msg != "na") {
+                myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
+            }
             SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
         }
     }

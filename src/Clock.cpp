@@ -12,5 +12,5 @@ void clockInit() {
             timeNow->hasSync();
         },
         nullptr, true);
-    SerialPrint("I", F("Time"), F("Clock Init"));
+    SerialPrint("I", F("NTP"), F("Clock Init"));
 }

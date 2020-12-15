@@ -228,8 +228,9 @@ void timeInit() {
                 prevTime = timenow;
                 jsonWriteStr(configLiveJson, "timenow", timenow);
                 eventGen2("timenow", timenow);
+                SerialPrint("I", F("NTP"), timenow);
             }
         },
         nullptr, true);
-    SerialPrint("I", F("Time"), F("Handle time init"));
+    SerialPrint("I", F("NTP"), F("Handle time init"));  
 }
