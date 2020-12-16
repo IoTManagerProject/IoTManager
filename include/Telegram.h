@@ -1,5 +1,6 @@
 #pragma once
-#ifdef telegram
+#include "Consts.h"
+#ifdef telegramEnable
 #include "Global.h"
 
 extern void sendTelegramMsg();

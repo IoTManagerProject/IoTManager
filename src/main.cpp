@@ -50,7 +50,7 @@ void setup() {
     itemsListInit();
     espInit();
     routerConnect();
-#ifdef telegram
+#ifdef telegramEnable
     telegramInit();
 #endif
     uptime_init();
@@ -95,7 +95,7 @@ void loop() {
     myNotAsyncActions->loop();
     ts.update();
 
-#ifdef telegram
+#ifdef telegramEnable
     handleTelegram();
 #endif
 

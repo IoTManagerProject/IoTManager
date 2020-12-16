@@ -3,7 +3,8 @@
 #include "Utils/StringUtils.h"
 
 static const uint8_t days_in_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-static const char* week_days[7] = { "Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat" };
+
+//static const char* week_days[7] = { "Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat" };
 
 // String getTimeUnix() {
 //     time_t t;

@@ -1,1 +1,0 @@
-0;inoutput;id;anydata;Вывод;Вывод#uart;order

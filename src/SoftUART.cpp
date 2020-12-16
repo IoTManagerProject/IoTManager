@@ -1,3 +1,4 @@
+#include "Consts.h"
 #ifdef uartEnable
 #include "SoftUART.h"
 #include "Global.h"

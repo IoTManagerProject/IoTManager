@@ -1,4 +1,5 @@
 #pragma once
+#include "Consts.h"
 #ifdef uartEnable
 #include "SoftwareSerial.h"
 

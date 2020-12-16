@@ -9,7 +9,6 @@
 #include "items/vLogging.h"
 #include "items/vImpulsOut.h"
 #include "items/vCountDown.h"
-#include "items/SensorModbusClass.h"
 
 void loopCmdAdd(const String& cmdStr) {
     orderBuf += cmdStr;
@@ -87,11 +86,6 @@ void csvCmdExecute(String& cmdStr) {
             }
             else if (order == F("bmp280-press")) {
                 sCmd.addCommand(order.c_str(), bmp280Press);
-            }
-#endif
-#ifdef SensorModbusEnabled
-            else if (order == F("modbus")) {
-                sCmd.addCommand(order.c_str(), modbus);
             }
 #endif
             else if (order == F("uptime")) {

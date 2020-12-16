@@ -1,11 +1,12 @@
-#ifdef telegram
+#include "Consts.h"
+#ifdef telegramEnable
 #include "Telegram.h"
 CTBot* myBot{ nullptr };
 
 void telegramInit() {
     if (isTelegramEnabled()) {
         telegramInitBeen = true;
-        sCmd.addCommand("telegram", sendTelegramMsg);
+        sCmd.addCommand("telegramEnable", sendTelegramMsg);
         String token = jsonReadStr(configSetupJson, "telegramApi");
         if (!myBot) {
             myBot = new CTBot();
