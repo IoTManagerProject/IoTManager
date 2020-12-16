@@ -1,1 +1,0 @@
-0;bme280-temp;id;anydataTemp;Сенсоры;Температура;order;addr[0x76];c[1]

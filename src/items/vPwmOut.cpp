@@ -1,9 +1,13 @@
+
+#include "Consts.h"
+#ifdef PwmOutEnable
 #include "items/vPwmOut.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "BufferExecute.h"
-
 #include <Arduino.h>
+
+
 //this class save data to flash
 PwmOut::PwmOut(unsigned int pin, String key) {
     _pin = pin;
@@ -53,3 +57,4 @@ void pwmOutExecute() {
         }
     }
 }
+#endif

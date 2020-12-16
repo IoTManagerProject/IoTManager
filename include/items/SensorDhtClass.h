@@ -1,6 +1,7 @@
 #pragma once
+#include "Consts.h"
+#ifdef SensorDhtEnabled
 #include <Arduino.h>
-
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "items/SensorConvertingClass.h"
@@ -76,3 +77,4 @@ class SensorDhtClass : public SensorConvertingClass {
     }
 };
 extern SensorDhtClass mySensorDht;
+#endif

@@ -41,14 +41,18 @@ void setup() {
     setChipId();
     fileSystemInit();
     loadConfig();
+#ifdef uartEnable
     uartInit();
+#endif
     clockInit();
     timeInit();
     sensorsInit(); //Will be remooved
     itemsListInit();
     espInit();
     routerConnect();
+#ifdef telegramEnable
     telegramInit();
+#endif
     uptime_init();
     upgradeInit();
     HttpServer::init();
@@ -91,9 +95,13 @@ void loop() {
     myNotAsyncActions->loop();
     ts.update();
 
+#ifdef telegramEnable
     handleTelegram();
+#endif
 
+#ifdef uartEnable
     uartHandle();
+#endif
 
     if (myLogging != nullptr) {
         for (unsigned int i = 0; i < myLogging->size(); i++) {

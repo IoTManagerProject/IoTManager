@@ -1,7 +1,7 @@
+#include "Consts.h"
+#ifdef SensorBme280Enabled
 #include "items/SensorBme280Class.h"
-
 #include "BufferExecute.h"
-//#ifdef SensorBme280Enabled
 //=========================================Модуль ультрозвукового дальномера==================================================================
 //bme280-temp;id;anydata;Сенсоры;Температура;order;c[1]
 //bme280-hum;id;anydata;Сенсоры;Температура;order;c[1]
@@ -44,4 +44,4 @@ void bme280ReadingPress() {
     String key = sCmd.order();
     mySensorBme280.SensorBme280ReadPress(key);
 }
-//#endif
+#endif

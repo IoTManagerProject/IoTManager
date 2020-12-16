@@ -1,5 +1,6 @@
 #pragma once
 //===================Libraries===================================================================================================================================================
+#include "Consts.h"
 #include <Adafruit_BME280.h>
 #include <Adafruit_BMP280.h>
 #include <Arduino.h>
@@ -15,14 +16,13 @@
 #include <TickerScheduler.h>
 #include <Wire.h>
 #include <time.h>
-
 #include "Clock.h"
-#include "Consts.h"
 #include "ESP32.h"
 #include "ESP8266.h"
 #include "GyverFilters.h"
 #include "MqttClient.h"
 #include "Upgrade.h"
+
 #include "Utils/FileUtils.h"
 #include "Utils/JsonUtils.h"
 #include "Utils/SerialPrint.h"

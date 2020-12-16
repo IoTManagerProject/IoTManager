@@ -20,24 +20,12 @@ void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         //==============================set.device.json====================================================================================================
         if (request->hasArg("addItem")) {
-#ifdef FLASH_SIZE_1MB
-            itemName = request->getParam("addItem")->value();
-            myNotAsyncActions->make(do_addItem);
-#endif     
-#ifndef FLASH_SIZE_1MB
             addItem(request->getParam("addItem")->value());
-#endif
             request->redirect("/?set.device");
         }
 
         if (request->hasArg("addPreset")) {
-#ifdef FLASH_SIZE_1MB
-            presetName = request->getParam("addPreset")->value();
-            myNotAsyncActions->make(do_addPreset);
-#endif     
-#ifndef FLASH_SIZE_1MB
             addPreset(request->getParam("addPreset")->value());
-#endif
             jsonWriteStr(configSetupJson, "warning1", F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
             request->redirect("/?set.device");
         }
@@ -109,12 +97,11 @@ void web_init() {
             request->send(200);
         }
 
-#ifdef LOGGING_ENABLED
+
         if (request->hasArg("cleanlog")) {
             cleanLogAndData();
             request->send(200);
         }
-#endif
 
         //==============================wifi settings=============================================
         if (request->hasArg("devname")) {
@@ -279,29 +266,37 @@ void web_init() {
             myNotAsyncActions->make(do_BUSSCAN);
             request->redirect("/?set.utilities");
         }
-        if (request->hasArg("uart")) {
-            bool value = request->getParam("uart")->value().toInt();
-            jsonWriteBool(configSetupJson, "uart", value);
+        if (request->hasArg("uartEnable")) {
+            bool value = request->getParam("uartEnable")->value().toInt();
+            jsonWriteBool(configSetupJson, "uartEnable", value);
             saveConfig();
+#ifdef uartEnable
             uartInit();
+#endif
             request->send(200);
         }
         if (request->hasArg("uartS")) {
             jsonWriteStr(configSetupJson, "uartS", request->getParam("uartS")->value());
             saveConfig();
+#ifdef uartEnable
             uartInit();
+#endif
             request->send(200);
         }
         if (request->hasArg("uartTX")) {
             jsonWriteStr(configSetupJson, "uartTX", request->getParam("uartTX")->value());
             saveConfig();
+#ifdef uartEnable
             uartInit();
+#endif
             request->send(200);
         }
         if (request->hasArg("uartRX")) {
             jsonWriteStr(configSetupJson, "uartRX", request->getParam("uartRX")->value());
             saveConfig();
+#ifdef uartEnable
             uartInit();
+#endif
             request->send(200);
         }
 
@@ -335,26 +330,31 @@ void web_init() {
         SerialPrint("I", "Update", "firmware version: " + String(lastVersion));
 
         String msg = "";
-        //if (FLASH_SIZE_1MB) {
-        //    msg = F("Обновление невозможно, память устройства 1 мб");
-        //}
-        //else {
-        if (lastVersion == FIRMWARE_VERSION) {
-            msg = F("Актуальная версия прошивки уже установлена.");
+#ifdef FLASH_SIZE_1MB
+        if (FLASH_SIZE_1MB) {
+            msg = F("Обновление невозможно, память устройства 1 мб");
         }
-        else if (lastVersion > FIRMWARE_VERSION) {
-            msg = F("Новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/?set.device'; }, 90000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
+        else {
+#endif
+
+            if (lastVersion == FIRMWARE_VERSION) {
+                msg = F("Актуальная версия прошивки уже установлена.");
+            }
+            else if (lastVersion > FIRMWARE_VERSION) {
+                msg = F("Новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/?set.device'; }, 90000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
+            }
+            else if (lastVersion == -1) {
+                msg = F("Cервер не найден. Попробуйте повторить позже...");
+            }
+            else if (lastVersion == -2) {
+                msg = F("Устройство не подключено к роутеру!");
+            }
+            else if (lastVersion < FIRMWARE_VERSION) {
+                msg = F("Ошибка версии. Попробуйте повторить позже...");
+            }
+#ifdef FLASH_SIZE_1MB
         }
-        else if (lastVersion == -1) {
-            msg = F("Cервер не найден. Попробуйте повторить позже...");
-        }
-        else if (lastVersion == -2) {
-            msg = F("Устройство не подключено к роутеру!");
-        }
-        else if (lastVersion < FIRMWARE_VERSION) {
-            msg = F("Ошибка версии. Попробуйте повторить позже...");
-        }
-        //}
+#endif
 
         // else if (lastVersion == "") {
         //msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");

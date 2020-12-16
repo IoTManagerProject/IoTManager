@@ -41,9 +41,11 @@ void csvCmdExecute(String& cmdStr) {
             if (order == F("button-out")) {
                 sCmd.addCommand(order.c_str(), buttonOut);
             }
+#ifdef PwmOutEnable
             else if (order == F("pwm-out")) {
                 sCmd.addCommand(order.c_str(), pwmOut);
             }
+#endif
             else if (order == F("button-in")) {
                 sCmd.addCommand(order.c_str(), buttonIn);
             }
@@ -59,12 +61,15 @@ void csvCmdExecute(String& cmdStr) {
             else if (order == F("dallas-temp")) {
                 sCmd.addCommand(order.c_str(), dallas);
             }
+#ifdef SensorDhtEnabled
             else if (order == F("dht-temp")) {
                 sCmd.addCommand(order.c_str(), dhtTemp);
             }
             else if (order == F("dht-hum")) {
                 sCmd.addCommand(order.c_str(), dhtHum);
             }
+#endif
+#ifdef SensorBme280Enabled
             else if (order == F("bme280-temp")) {
                 sCmd.addCommand(order.c_str(), bme280Temp);
             }
@@ -74,15 +79,15 @@ void csvCmdExecute(String& cmdStr) {
             else if (order == F("bme280-press")) {
                 sCmd.addCommand(order.c_str(), bme280Press);
             }
+#endif
+#ifdef SensorBmp280Enabled
             else if (order == F("bmp280-temp")) {
                 sCmd.addCommand(order.c_str(), bmp280Temp);
             }
             else if (order == F("bmp280-press")) {
                 sCmd.addCommand(order.c_str(), bmp280Press);
             }
-            else if (order == F("modbus")) {
-                //sCmd.addCommand(order.c_str(), modbus);
-            }
+#endif
             else if (order == F("uptime")) {
                 sCmd.addCommand(order.c_str(), sysUptime);
             }

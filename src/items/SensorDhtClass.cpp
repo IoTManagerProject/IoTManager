@@ -1,7 +1,7 @@
+#include "Consts.h"
+#ifdef SensorDhtEnabled
 #include "items/SensorDhtClass.h"
-
 #include "BufferExecute.h"
-//#ifdef SensorDhtEnabled
 //=========================================DHT Sensor==================================================================
 //dht-temp;id;anydata;Сенсоры;Температура;order;pin;type[dht11];c[1]
 //dht-hum;id;anydata;Сенсоры;Влажность;order;pin;type[dht11];c[1]
@@ -32,4 +32,4 @@ void dhtReadingHum() {
     String key = sCmd.order();
     mySensorDht.SensorDhtReadHum(key);
 }
-//#endif
+#endif

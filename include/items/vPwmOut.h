@@ -1,6 +1,7 @@
 #pragma once
+#include "Consts.h"
+#ifdef PwmOutEnable
 #include <Arduino.h>
-
 #include "Global.h"
 
 class PwmOut;
@@ -27,3 +28,4 @@ extern MyPwmOutVector* myPwmOut;
 
 extern void pwmOut();
 extern void pwmOutExecute();
+#endif

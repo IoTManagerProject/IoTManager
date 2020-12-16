@@ -1,6 +1,7 @@
 #pragma once
+#include "Consts.h"
+#ifdef SensorBme280Enabled
 #include <Arduino.h>
-
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "items/SensorConvertingClass.h"
@@ -53,3 +54,4 @@ class SensorBme280Class : public SensorConvertingClass {
     }
 };
 extern SensorBme280Class mySensorBme280;
+#endif

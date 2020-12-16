@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef uartEnable
 #include "SoftUART.h"
 #include "Global.h"
 
@@ -8,7 +10,7 @@ HardwareSerial* myUART = nullptr;
 #endif
 
 void uartInit() {
-    if (!jsonReadBool(configSetupJson, "uart")) {
+    if (!jsonReadBool(configSetupJson, "uartEnable")) {
         return;
     }
     if (!myUART) {
@@ -25,7 +27,7 @@ void uartInit() {
 
 void uartHandle() {
     if (myUART) {
-        if (!jsonReadBool(configSetupJson, "uart")) {
+        if (!jsonReadBool(configSetupJson, "uartEnable")) {
             return;
         }
         static String incStr;
@@ -51,3 +53,4 @@ void parse(String& incStr) {
         SerialPrint("I", "=>UART", incStr);
     }
 }
+#endif
