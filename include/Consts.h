@@ -42,36 +42,18 @@
 //#define SSDP_ENABLED
 
 //=========Sensors enable/disable=================================================================================================================================
-#define LEVEL_ENABLED
-#define ANALOG_ENABLED
-#define DALLAS_ENABLED
-#define DHT_ENABLED
-#define BMP_ENABLED
-#define BME_ENABLED
+#define SensorBme280Enabled
+#define SensorBmp280Enabled
+#define SensorDhtEnabled
+#define PwmOutEnable
+//#define SensorModbusEnabled
+
+//=========others=================================================================================================================================
+//#define telegram
+//#define uartEnable
 
 
-//=========Gears enable/disable===================================================================================================================================
-#define STEPPER_ENABLED
-#define SERVO_ENABLED
 
-
-//========Other enable/disable====================================================================================================================================
-#define LOGGING_ENABLED
-#define SERIAL_ENABLED
-#define PUSH_ENABLED
-
-struct Time_t {
-    uint8_t second;
-    uint8_t minute;
-    uint8_t hour;
-    uint8_t day_of_week;
-    uint8_t day_of_month;
-    uint8_t month;
-    uint16_t day_of_year;
-    uint16_t year;
-    unsigned long days;
-    unsigned long valid;
-};
 
 //================================================================================================================================================================
 enum TimerTask_t { WIFI_SCAN,

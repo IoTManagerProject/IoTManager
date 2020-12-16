@@ -124,10 +124,8 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         SerialPrint("I", "MQTT", "Full update");
         publishWidgets();
         publishState();
-#ifdef LOGGING_ENABLED
-        choose_log_date_and_send();
-#endif
 
+        choose_log_date_and_send();
     }
 
     else if (topicStr.indexOf("control") != -1) {

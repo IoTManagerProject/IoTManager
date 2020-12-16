@@ -1,9 +1,9 @@
-#ifdef modbus
 #pragma once
+#include "Consts.h"
+#ifdef SensorModbusEnabled
 #include <Arduino.h>
 #include <ModbusMaster.h>
 #include <SoftwareSerial.h>
-
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "items/SensorConvertingClass.h"
@@ -82,4 +82,8 @@ class SensorModbusClass : public SensorConvertingClass {
     }
 };
 extern SensorModbusClass mySensorModbus;
+
+extern void modbus();
+extern void modbusReading();
+
 #endif

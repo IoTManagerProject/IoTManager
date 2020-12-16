@@ -1,6 +1,5 @@
+#ifdef telegram
 #include "Telegram.h"
-
-
 CTBot* myBot{ nullptr };
 
 void telegramInit() {
@@ -120,3 +119,4 @@ String returnListOfParams() {
     }
     return out;
 }
+#endif

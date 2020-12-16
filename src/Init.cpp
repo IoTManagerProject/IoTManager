@@ -76,11 +76,13 @@ void deviceInit() {
     inOutput_KeyList = "";
     inOutput_EnterCounter = -1;
     //======clear pwm params=======
+    #ifdef PwmOutEnable
     if (myPwmOut != nullptr) {
         myPwmOut->clear();
     }
     pwmOut_KeyList = "";
     pwmOut_EnterCounter = -1;
+    #endif
     //===================================
     if (myCountDown != nullptr) {
         myCountDown->clear();

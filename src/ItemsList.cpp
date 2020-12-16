@@ -19,34 +19,13 @@ void itemsListInit() {
         },
         nullptr);
         
-#ifdef FLASH_SIZE_1MB
-    myNotAsyncActions->add(
-        do_addItem, [&](void*) {
-            addItem(itemName);
-            itemName = "";
-        },
-        nullptr);
 
-    myNotAsyncActions->add(
-        do_addPreset, [&](void*) {
-            addPreset(presetName);
-            presetName = "";
-        },
-        nullptr);
-#endif
     SerialPrint("I", F("Items"), F("Items Init"));
 }
 
 void addItem(String name) {
-#ifdef FLASH_SIZE_1MB
-    String url = serverIP + F("/projects/iotmanager/config/items/") + name + ".txt";
-    String item = getURL(url);
-    Serial.println(url);
-    if (item == "error") return;
-#endif
-#ifndef FLASH_SIZE_1MB
+
     String item = readFile("items/" + name + ".txt", 1024);
-#endif
 
     name = selectToMarker(name, "-");
 
@@ -81,34 +60,16 @@ void addItem(String name) {
 }
 
 void addPreset(String name) {
-#ifdef FLASH_SIZE_1MB
-    String url = serverIP + F("/projects/iotmanager/config/presets/") + name + ".txt";
-    String preset = getURL(url);
-    Serial.println(url);
-    if (preset == "error") return;
-#endif
-#ifndef FLASH_SIZE_1MB
     String preset = readFile("presets/" + name + ".txt", 4048);
-#endif
-    
     addFile(DEVICE_CONFIG_FILE, "\n" + preset);
     Serial.println(preset);
 
     name.replace(".c", ".s");
 
-#ifdef FLASH_SIZE_1MB
-    url = serverIP + F("/projects/iotmanager/config/presets/") + name + ".txt";
-    String scenario = getURL(url);
-    Serial.println(url);
-    if (scenario == "error") return;
-#endif
-#ifndef FLASH_SIZE_1MB
     String scenario = readFile("presets/" + name + ".txt", 4048);
-#endif
 
     removeFile(DEVICE_SCENARIO_FILE);
 
-    
     addFile(DEVICE_SCENARIO_FILE, scenario);
     loadScenario();
     Serial.println(scenario);

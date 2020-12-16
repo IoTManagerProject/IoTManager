@@ -11,6 +11,8 @@ extern void clockInit();
 #include "sntp.h"
 #endif
 
+
+
 class Clock {
    private:
     Time_t _time_local;
