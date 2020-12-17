@@ -1,0 +1,8 @@
+hum > inputU
+button 0
+telegram полив#выключен 1
+end
+hum < inputL
+button 1
+telegram полив#включен 1
+end

@@ -20,10 +20,8 @@
 20;0;bmp280-temp;id;anydataTemp;Сенсоры;Температура;order;addr[0x76];c[1]
 21;0;impuls-out;id;na;na;na;order;pin
 22;0;count-down;id;anydata;Таймер;Обратный#отчет;order
-23;0;modbus;id;anydata;Modbus;Регистр;order;addr[1];reg[0];c[1]
-24;0;button-out;id;toggle;Кнопки;Освещение;order;type[UART]
-25;0;inoutput;id;anydata;Вывод;Вывод#uart;order
-26;0;logging;id;chart;Графики;История;order;val[any];int[60];cnt[100]
-27;0;uptime;id;anydataTime;Системные;%name%#uptime;order
+23;0;inoutput;id;anydata;Вывод;Вывод#uart;order
+24;0;logging;id;chart;Графики;История;order;val[any];int[60];cnt[100]
+25;0;uptime;id;anydataTime;Системные;%name%#uptime;order
 
 

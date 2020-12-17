@@ -1,5 +1,6 @@
 #include "BufferExecute.h"
 #include "Global.h"
+#include "SoftUART.h"
 //
 #include "items/vSensorDallas.h"
 #include "items/vSensorUltrasonic.h"
@@ -11,9 +12,18 @@
 #include "items/vCountDown.h"
 
 void loopCmdAdd(const String& cmdStr) {
-    orderBuf += cmdStr;
-    if (!cmdStr.endsWith(",")) {
-        orderBuf += ",";
+    if (cmdStr.endsWith(",")) {
+        orderBuf += cmdStr;
+#ifdef uartEnable    
+        if (jsonReadBool(configSetupJson, "uart")) {
+            if (jsonReadBool(configSetupJson, "uartEvents")) {
+                if (myUART) {
+                    myUART->print(cmdStr);
+                    SerialPrint("I", "<=UART", cmdStr);
+                }
+            }
+        }
+#endif
     }
 }
 

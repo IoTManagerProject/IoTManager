@@ -1,6 +1,7 @@
 #include "Consts.h"
 #ifdef telegramEnable
 #include "Telegram.h"
+#include "BufferExecute.h"
 CTBot* myBot{ nullptr };
 
 void telegramInit() {
@@ -49,7 +50,7 @@ void telegramMsgParse(String msg) {
     if (msg.indexOf("set") != -1) {
         msg = deleteBeforeDelimiter(msg, "_");
         msg.replace("_", " ");
-        orderBuf += String(msg) + ",";
+        loopCmdAdd(String(msg) + ",");
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), "order done");
         SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + String(msg));
     }

@@ -1,0 +1,6 @@
+button = 1
+count input
+end
+count = 0
+button 0
+end
