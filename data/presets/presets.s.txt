@@ -1,0 +1,84 @@
+t1 > tUp1
+btn1 0
+telegram нагрев#выключен 1
+end
+t1 < tLow1
+btn1 1
+telegram нагрев#включен 1
+end*
+t2 > threshold+-2
+heater2 0
+end
+t2 < threshold+-2
+heater2 1
+end
+timenow = time21
+threshold threshold1
+end
+timenow = time22
+threshold threshold2
+end
+timenow = time23
+threshold threshold3
+end
+timenow = time24
+threshold threshold4
+end*
+h3 > hUp3
+hUp3 0
+telegram полив#выключен 1
+end
+h3 < hLow3
+hUp3 1
+telegram полив#включен 1
+end*
+timenow = time41
+btn41 1
+btn42 0
+end
+timenow = time42
+btn41 0
+btn42 1
+end*
+btn51 = 1
+btn52 1
+btn53 1
+btn54 1
+pwm51 200
+pwm52 800
+txt5 включено
+end
+btn51 = 0
+btn52 0
+btn53 0
+btn54 0
+pwm51 800
+pwm52 200
+txt5 выключено
+end*
+button = 1
+count input
+end
+count = 0
+button 0
+end*
+sensor = 1
+text обнаружено
+time %date%
+telegram text обнаружено#движение 1
+end
+reset = 1
+text не#обнаружено
+time %date%
+reset 0
+end*
+sensor = 1
+light 1
+count period
+end
+count = 0
+light 0
+end*
+switch = 1
+light change
+end*

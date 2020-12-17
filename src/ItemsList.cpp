@@ -18,62 +18,95 @@ void itemsListInit() {
             delChoosingItems();
         },
         nullptr);
-        
+
 
     SerialPrint("I", F("Items"), F("Items Init"));
 }
 
-void addItem(String name) {
+void addItem2(String param) {
+    int num = selectToMarker(param, "-").toInt();
+    File configFile = LittleFS.open("/items/items.txt", "r");
+    if (!configFile) {
+        return;
+    }
+    configFile.seek(0, SeekSet);
+    String seachingLine;
 
-    String item = readFile("items/" + name + ".txt", 1024);
+    while (configFile.position() != configFile.size()) {
+        String item = configFile.readStringUntil('\n');
+        int tmpNum = selectToMarker(item, ";").toInt();
+        if (tmpNum == num) {
+            seachingLine = item;
+            break;
+        }
+    }
+    configFile.close();
 
-    name = selectToMarker(name, "-");
-
+    String name = deleteBeforeDelimiter(param, "-");
     randomSeed(micros());
-    unsigned int num = random(0, 1000);
+    unsigned int rnd = random(0, 1000);
+    seachingLine.replace("id", name + String(rnd));
+    seachingLine.replace("order", String(getNewElementNumber("order.txt")));
 
-    item.replace("id", name + String(num));
-    item.replace("order", String(getNewElementNumber("order.txt")));
-
-    if (item.indexOf("pin") != -1) {  //all cases (random pins from available)
-        item.replace("pin", "pin[" + String(getFreePinAll()) + "]");
-    }
-    else if (item.indexOf("gol") != -1) {  //analog
-        item.replace("gol", "pin[" + String(getFreePinAnalog()) + "]");
-    }
-    else if (item.indexOf("cin") != -1) {  //ultrasonic
-        item.replace("cin", "pin[" + String(getFreePinAll()) + "," + String(getFreePinAll()) + "]");
-    }
-    else if (item.indexOf("sal") != -1) {  //dallas
-        item.replace("sal", "pin[2]");
-    }
-    else if (item.indexOf("thd") != -1) {  //dht11/22
-        item.replace("thd", "pin[2]");
+    if (seachingLine.indexOf("pin") != -1) {
+        seachingLine.replace("pin", "pin[" + String(getFreePinAll()) + "]");
     }
 
-    item.replace("\r\n", "");
-    item.replace("\r", "");
-    item.replace("\n", "");
-
-    addFile(DEVICE_CONFIG_FILE, "\n" + item);
-    Serial.println(item);
+    seachingLine = deleteBeforeDelimiter(seachingLine, ";");
+    seachingLine.replace("\r\n", "");
+    seachingLine.replace("\r", "");
+    seachingLine.replace("\n", "");
+    addFile(DEVICE_CONFIG_FILE, "\n" + seachingLine);
+    Serial.println(seachingLine);
 }
 
-void addPreset(String name) {
-    String preset = readFile("presets/" + name + ".txt", 4048);
-    addFile(DEVICE_CONFIG_FILE, "\n" + preset);
-    Serial.println(preset);
 
-    name.replace(".c", ".s");
+void addPreset2(int num) {
+    File configFile = LittleFS.open("/presets/presets.c.txt", "r");
+    if (!configFile) {
+        return;
+    }
+    configFile.seek(0, SeekSet);
+    String config;
+    int i1 = 0;
+    while (configFile.position() != configFile.size()) {
+        i1++;
+        String item = configFile.readStringUntil('*');
+        if (i1 == num) {
+            if (i1 == 1) {
+                config = "\n" + item;
+            }
+            else {
+                config = item;
+            }
+            break;
+        }
+    }
+    configFile.close();
+    addFile(DEVICE_CONFIG_FILE, config);
 
-    String scenario = readFile("presets/" + name + ".txt", 4048);
-
-    removeFile(DEVICE_SCENARIO_FILE);
-
-    addFile(DEVICE_SCENARIO_FILE, scenario);
-    loadScenario();
-    Serial.println(scenario);
+    File scenFile = LittleFS.open("/presets/presets.s.txt", "r");
+    if (!scenFile) {
+        return;
+    }
+    scenFile.seek(0, SeekSet);
+    String scen;
+    int i2 = 0;
+    while (scenFile.position() != scenFile.size()) {
+        i2++;
+        String item = scenFile.readStringUntil('*');
+        if (i2 == num) {
+            scen = item;
+            break;
+        }
+    }
+    scenFile.close();
+    if (readFile(String(DEVICE_SCENARIO_FILE), 2048) == "//") {
+        removeFile(DEVICE_SCENARIO_FILE);
+    }
+    addFile(DEVICE_SCENARIO_FILE, scen);
 }
+
 
 void delAllItems() {
     removeFile(DEVICE_CONFIG_FILE);

@@ -20,12 +20,12 @@ void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         //==============================set.device.json====================================================================================================
         if (request->hasArg("addItem")) {
-            addItem(request->getParam("addItem")->value());
+            addItem2(request->getParam("addItem")->value());
             request->redirect("/?set.device");
         }
 
         if (request->hasArg("addPreset")) {
-            addPreset(request->getParam("addPreset")->value());
+            addPreset2(request->getParam("addPreset")->value().toInt());
             jsonWriteStr(configSetupJson, "warning1", F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
             request->redirect("/?set.device");
         }

@@ -3,18 +3,6 @@
 //===========Firmware=============================================================================================================================================
 #define FIRMWARE_VERSION 272
 #define FLASH_SIZE_1MB true
-#ifdef ESP8266
-#ifdef FLASH_SIZE_1MB
-#define FIRMWARE_NAME "esp8266-1mb"
-#else
-#define FIRMWARE_NAME "esp8266"
-#endif
-
-#endif
-#ifdef ESP32
-#define FIRMWARE_NAME "esp32"
-#endif
-
 //===========FileSystem==============================================================================================================================================
 #define littlefs_on
 //==================================================================================================================================================================
@@ -46,7 +34,17 @@
 #define uartEnable
 
 
+#ifdef ESP8266
+#ifdef FLASH_SIZE_1MB
+#define FIRMWARE_NAME "esp8266-1mb"
+#else
+#define FIRMWARE_NAME "esp8266"
+#endif
+#endif
 
+#ifdef ESP32
+#define FIRMWARE_NAME "esp32"
+#endif
 
 //================================================================================================================================================================
 enum TimerTask_t { WIFI_SCAN,
