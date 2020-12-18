@@ -3,10 +3,10 @@
 
 void getFSInfo() {
     // Информация о ФС
-    size_t totalBytes; // всего
-    size_t usedBytes; // использовано
-    size_t maxOpenFiles; // лимит на открые файлы
-    size_t maxPathLength; // лимит на полное пути + имя файла
+    //size_t totalBytes; // всего
+    //size_t usedBytes; // использовано
+    //size_t maxOpenFiles; // лимит на открые файлы
+    //size_t maxPathLength; // лимит на полное пути + имя файла
 
     FSInfo buf;
     getInfo(buf);
