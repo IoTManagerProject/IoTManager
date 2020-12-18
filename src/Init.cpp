@@ -2,6 +2,7 @@
 #include "BufferExecute.h"
 #include "Cmd.h"
 #include "Global.h"
+#include "Class/LineParsing.h"
 #include "items/vLogging.h"
 #include "items/vImpulsOut.h"
 #include "items/vButtonOut.h"
@@ -20,6 +21,7 @@ void loadConfig() {
 
     jsonWriteStr(configSetupJson, "warning1", "");
     jsonWriteStr(configSetupJson, "warning2", "");
+    jsonWriteStr(configSetupJson, "warning3", "");
 
     jsonWriteStr(configSetupJson, "chipID", chipId);
     jsonWriteInt(configSetupJson, "firmware_version", FIRMWARE_VERSION);
@@ -76,13 +78,13 @@ void deviceInit() {
     inOutput_KeyList = "";
     inOutput_EnterCounter = -1;
     //======clear pwm params=======
-    #ifdef PwmOutEnable
+#ifdef PwmOutEnable
     if (myPwmOut != nullptr) {
         myPwmOut->clear();
     }
     pwmOut_KeyList = "";
     pwmOut_EnterCounter = -1;
-    #endif
+#endif
     //===================================
     if (myCountDown != nullptr) {
         myCountDown->clear();
@@ -97,8 +99,20 @@ void deviceInit() {
 #else
     removeFile(String("layout.txt"));
 #endif
+    
+    myLineParsing.clearErrors();
 
     fileCmdExecute(String(DEVICE_CONFIG_FILE));
+
+    int errors = myLineParsing.getPinErrors();
+
+    if (errors != 0) {
+        jsonWriteStr(configSetupJson, F("warning3"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Обнаружен неверный номер пина</p></font></div>"));
+    }
+    else {
+        jsonWriteStr(configSetupJson, F("warning3"), "");
+    }
+
     //outcoming_date();
 }
 //-------------------------------сценарии-----------------------------------------------------

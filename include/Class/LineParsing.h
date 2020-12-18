@@ -1,12 +1,12 @@
 #pragma once
 
 #include <Arduino.h>
-
+#include "ItemsList.h"
 #include "Global.h"
 #include "Utils/JsonUtils.h"
 
 class LineParsing {
-   protected:
+protected:
     String _key;
     String _file;
     String _page;
@@ -26,29 +26,33 @@ class LineParsing {
     String _val;
     String _index;
 
-   public:
+    int pinErrors;
+
+public:
     LineParsing() :
 
-                    _key{""},
-                    _file{""},
-                    _page{""},
-                    _descr{""},
-                    _order{""},
-                    _addr{""},
-                    _reg{""},
-                    _pin{""},
-                    _map{""},
-                    _c{""},
-                    _inv{""},
-                    _state{""},
-                    _db{""},
-                    _type{""},
-                    _int{""},
-                    _cnt{""},
-                    _val{""},
-                    _index{""}
+        _key{ "" },
+        _file{ "" },
+        _page{ "" },
+        _descr{ "" },
+        _order{ "" },
+        _addr{ "" },
+        _reg{ "" },
+        _pin{ "" },
+        _map{ "" },
+        _c{ "" },
+        _inv{ "" },
+        _state{ "" },
+        _db{ "" },
+        _type{ "" },
+        _int{ "" },
+        _cnt{ "" },
+        _val{ "" },
+        _index{ "" },
 
-                    {};
+        pinErrors{ 0 }
+
+    {};
 
     void update() {
         //String order = sCmd.order();
@@ -106,17 +110,19 @@ class LineParsing {
             }
         }
 
+        if (!isPinExist(_pin.toInt()) || !isDigitStr(_pin)) {
+            pinErrors++;
+            _pin = "";
+        }
+
         _page.replace("#", " ");
-
         _descr.replace("#", " ");
-
         _descr.replace("%ver%", String(FIRMWARE_VERSION));
         _descr.replace("%name%", jsonReadStr(configSetupJson, F("name")));
 
         createWidget(_descr, _page, _order, _file, _key);
     }
 
-    //jsonWriteStr(configOptionJson, _key + "_pin", _pin);
 
     String gkey() {
         return _key;
@@ -171,6 +177,15 @@ class LineParsing {
     }
 
 
+    int getPinErrors() {
+        return pinErrors;
+    }
+
+    void clearErrors() {
+        pinErrors = 0;
+    }
+
+
     void clear() {
         _key = "";
         _file = "";
@@ -205,7 +220,7 @@ class LineParsing {
                 return;
             }
 
-            if(filename.indexOf("chart") != -1) jsonWriteStr(buf, "maxCount", _cnt);
+            if (filename.indexOf("chart") != -1) jsonWriteStr(buf, "maxCount", _cnt);
 
             jsonWriteStr(buf, "page", page);
             jsonWriteStr(buf, "order", order);

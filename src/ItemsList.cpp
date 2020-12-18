@@ -143,6 +143,16 @@ uint8_t getFreePinAll() {
     }
 }
 
+bool isPinExist(unsigned int num) {
+    bool ret = false;
+    unsigned int pins[] = { 0, 1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 15, 16 };
+    uint8_t array_sz = sizeof(pins) / sizeof(pins[0]);
+    for (uint8_t i = 0; i < array_sz; i++) {
+        if (pins[i] == num) ret = true;
+    }
+    return ret;
+}
+
 uint8_t getFreePinAnalog() {
 #ifdef ESP8266
     return 0;

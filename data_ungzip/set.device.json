@@ -61,6 +61,10 @@
             "title": "{{warning2}}"
         },
         {
+            "type": "text",
+            "title": "{{warning3}}"
+        },
+        {
             "type": "hr"
         },
         {

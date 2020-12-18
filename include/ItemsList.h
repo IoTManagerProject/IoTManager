@@ -12,4 +12,5 @@ extern void delChoosingItems();
 extern void delAllItems();
 extern uint8_t getNewElementNumber(String file);
 extern uint8_t getFreePinAll();
+extern bool isPinExist(unsigned int num);
 extern uint8_t getFreePinAnalog();
