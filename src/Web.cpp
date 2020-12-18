@@ -171,33 +171,66 @@ void web_init() {
         }
 
         //==============================mqtt settings=============================================
-        if (request->hasArg("mqttServer")) {
-            jsonWriteStr(configSetupJson, "mqttServer", request->getParam("mqttServer")->value());
+        //primary
+        if (request->hasArg(F("mqttServer"))) {
+            jsonWriteStr(configSetupJson, F("mqttServer"), request->getParam(F("mqttServer"))->value());
             saveConfig();
             myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
-        if (request->hasArg("mqttPort")) {
-            int port = (request->getParam("mqttPort")->value()).toInt();
-            jsonWriteInt(configSetupJson, "mqttPort", port);
+        if (request->hasArg(F("mqttPort"))) {
+            int port = (request->getParam(F("mqttPort"))->value()).toInt();
+            jsonWriteInt(configSetupJson, F("mqttPort"), port);
             saveConfig();
             myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
-        if (request->hasArg("mqttPrefix")) {
-            jsonWriteStr(configSetupJson, "mqttPrefix", request->getParam("mqttPrefix")->value());
+        if (request->hasArg(F("mqttPrefix"))) {
+            jsonWriteStr(configSetupJson, F("mqttPrefix"), request->getParam(F("mqttPrefix"))->value());
             saveConfig();
             myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
-        if (request->hasArg("mqttUser")) {
-            jsonWriteStr(configSetupJson, "mqttUser", request->getParam("mqttUser")->value());
+        if (request->hasArg(F("mqttUser"))) {
+            jsonWriteStr(configSetupJson, F("mqttUser"), request->getParam(F("mqttUser"))->value());
             saveConfig();
             myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
-        if (request->hasArg("mqttPass")) {
-            jsonWriteStr(configSetupJson, "mqttPass", request->getParam("mqttPass")->value());
+        if (request->hasArg(F("mqttPass"))) {
+            jsonWriteStr(configSetupJson, F("mqttPass"), request->getParam(F("mqttPass"))->value());
+            saveConfig();
+            myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
+            request->send(200);
+        }
+        //secondary
+        if (request->hasArg(F("mqttServer2"))) {
+            jsonWriteStr(configSetupJson, F("mqttServer2"), request->getParam(F("mqttServer2"))->value());
+            saveConfig();
+            myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
+            request->send(200);
+        }
+        if (request->hasArg(F("mqttPort2"))) {
+            int port = (request->getParam(F("mqttPort2"))->value()).toInt();
+            jsonWriteInt(configSetupJson, F("mqttPort2"), port);
+            saveConfig();
+            myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
+            request->send(200);
+        }
+        if (request->hasArg(F("mqttPrefix2"))) {
+            jsonWriteStr(configSetupJson, F("mqttPrefix2"), request->getParam(F("mqttPrefix2"))->value());
+            saveConfig();
+            myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
+            request->send(200);
+        }
+        if (request->hasArg(F("mqttUser2"))) {
+            jsonWriteStr(configSetupJson, F("mqttUser2"), request->getParam(F("mqttUser2"))->value());
+            saveConfig();
+            myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
+            request->send(200);
+        }
+        if (request->hasArg(F("mqttPass2"))) {
+            jsonWriteStr(configSetupJson, F("mqttPass2"), request->getParam(F("mqttPass2"))->value());
             saveConfig();
             myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);

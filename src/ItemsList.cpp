@@ -48,8 +48,8 @@ void addItem2(String param) {
     seachingLine.replace("id", name + String(rnd));
     seachingLine.replace("order", String(getNewElementNumber("order.txt")));
 
-    if (seachingLine.indexOf("pin") != -1) {
-        seachingLine.replace("pin", "pin[" + String(getFreePinAll()) + "]");
+    if (seachingLine.indexOf("gpio") != -1) {
+        seachingLine.replace("gpio", "pin[" + String(getFreePinAll()) + "]");
     }
 
     seachingLine = deleteBeforeDelimiter(seachingLine, ";");

@@ -12,10 +12,15 @@
     "mqttPrefix": "/iotTest",
     "mqttUser": "rise",
     "mqttPass": "23ri22se32",
+    "mqttServer2": "",
+    "mqttPort2": 1883,
+    "mqttPrefix2": "/iotTest",
+    "mqttUser2": "",
+    "mqttPass2": "",
     "scen": "1",
     "telegramApi": "1416711569:AAEI0j83GmXqwzb_gnK1B0Am0gDwZoJt5xo",
     "telegonof": "0",
-    "teleginput":"0",
+    "teleginput": "0",
     "weblogin": "admin",
     "webpass": "admin",
     "MqttIn": "0",
@@ -24,7 +29,7 @@
     "oneWirePin": "2",
     "serverip": "http://206.189.49.244",
     "uart": "0",
-    "uartS":"9600",
-    "uartTX":"12",
-    "uartRX":"13"
+    "uartS": "9600",
+    "uartTX": "12",
+    "uartRX": "13"
 }
