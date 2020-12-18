@@ -10,7 +10,7 @@ WiFiClient espClient;
 PubSubClient mqtt(espClient);
 StringCommand sCmd;
 AsyncWebServer server(80);
-OneWire *oneWire;
+OneWire* oneWire;
 DallasTemperature sensors;
 
 /*
@@ -25,6 +25,7 @@ String configSetupJson = "{}";
 String configLiveJson = "{}";
 String configStoreJson = "{}";
 String configOptionJson = "{}";
+String telegramMsgJson = "{}";
 
 // Mqtt
 String chipId = "";
@@ -70,7 +71,7 @@ String presetName;
 String serverIP;
 
 // Scenario
-int scenario_line_status[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+int scenario_line_status[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 int lastVersion;
 
 boolean busScanFlag = false;

@@ -1,0 +1,18 @@
+temp > threshold+-2
+heater 0
+end
+temp < threshold+-2
+heater 1
+end
+timenow = time1
+threshold threshold1
+end
+timenow = time2
+threshold threshold2
+end
+timenow = time3
+threshold threshold3
+end
+timenow = time4
+threshold threshold4
+end

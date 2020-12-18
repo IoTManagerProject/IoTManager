@@ -20,17 +20,6 @@ ButtonOut::ButtonOut(String pin, boolean inv, String key, String type) {
 ButtonOut::~ButtonOut() {}
 
 void ButtonOut::execute(String state) {
-    if (_type == "UART") {
-        if (jsonReadBool(configSetupJson, "uartEnable")) {
-#ifdef uartEnable
-            if (myUART) {
-                String msg = _key + " " + state;
-                myUART->print(msg);
-                SerialPrint("I", "<=UART", msg);
-            }
-#endif    
-        }
-    }
     if (state != "" && _pin != "") {
         if (state == "change") {
             state = String(!digitalRead(_pin.toInt()));

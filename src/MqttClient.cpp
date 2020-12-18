@@ -1,5 +1,5 @@
 #include "MqttClient.h"
-
+#include "BufferExecute.h"
 #include <LittleFS.h>
 #include "items/vLogging.h"
 #include "Class/NotAsync.h"
@@ -169,10 +169,13 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
 
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
 
-        orderBuf += key;
-        orderBuf += " ";
-        orderBuf += payloadStr;
-        orderBuf += ",";
+        String order; 
+        order += key;
+        order += " ";
+        order += payloadStr;
+        order += ",";
+
+        loopCmdAdd(order);
 
         SerialPrint("I", "=>MQTT", "Msg from iotmanager app: " + key + " " + payloadStr);
     }

@@ -2,6 +2,7 @@
 #ifdef uartEnable
 #include "SoftUART.h"
 #include "Global.h"
+#include "BufferExecute.h"
 
 #ifdef ESP8266
 SoftwareSerial* myUART = nullptr;
@@ -10,7 +11,7 @@ HardwareSerial* myUART = nullptr;
 #endif
 
 void uartInit() {
-    if (!jsonReadBool(configSetupJson, "uartEnable")) {
+    if (!jsonReadBool(configSetupJson, "uart")) {
         return;
     }
     if (!myUART) {
@@ -27,7 +28,7 @@ void uartInit() {
 
 void uartHandle() {
     if (myUART) {
-        if (!jsonReadBool(configSetupJson, "uartEnable")) {
+        if (!jsonReadBool(configSetupJson, "uart")) {
             return;
         }
         static String incStr;
@@ -49,7 +50,7 @@ void parse(String& incStr) {
     incStr.replace("\n", "");
     if (incStr.indexOf("set") != -1) {
         incStr = deleteBeforeDelimiter(incStr, " ");
-        orderBuf += incStr;
+        loopCmdAdd(incStr);
         SerialPrint("I", "=>UART", incStr);
     }
 }

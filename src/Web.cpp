@@ -19,65 +19,54 @@ bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
 void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         //==============================set.device.json====================================================================================================
-        if (request->hasArg("addItem")) {
-            addItem(request->getParam("addItem")->value());
+        if (request->hasArg(F("addItem"))) {
+            addItem2(request->getParam("addItem")->value());
             request->redirect("/?set.device");
         }
 
-        if (request->hasArg("addPreset")) {
-            addPreset(request->getParam("addPreset")->value());
-            jsonWriteStr(configSetupJson, "warning1", F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
-            request->redirect("/?set.device");
+        if (request->hasArg(F("addPreset"))) {
+            addPreset2(request->getParam(F("addPreset"))->value().toInt());
+#ifdef FLASH_SIZE_1MB
+            jsonWriteStr(configSetupJson, F("warning1"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Присеты не доступны, модуль на 1mb</p></font></div>"));
+#else
+            jsonWriteStr(configSetupJson, F("warning1"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
+#endif
+            request->redirect(F("/?set.device"));
         }
 
-        if (request->hasArg("delChoosingItems")) {
-            jsonWriteStr(configSetupJson, "warning1", F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
+        if (request->hasArg(F("delChoosingItems"))) {
+            jsonWriteStr(configSetupJson, F("warning1"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
             myNotAsyncActions->make(do_delChoosingItems);
             request->send(200);
         }
 
-        if (request->hasArg("delAllItems")) {
+        if (request->hasArg(F("delAllItems"))) {
             delAllItems();
             cleanLogAndData();
-            jsonWriteStr(configSetupJson, "warning1", F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
-            request->redirect("/?set.device");
+            jsonWriteStr(configSetupJson, F("warning1"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
+            request->redirect(F("/?set.device"));
         }
 
-        if (request->hasArg("saveItems")) {
+        if (request->hasArg(F("saveItems"))) {
             myNotAsyncActions->make(do_deviceInit);
             request->send(200);
         }
 
-        if (request->hasArg("scen")) {
-            bool value = request->getParam("scen")->value().toInt();
-            jsonWriteBool(configSetupJson, "scen", value);
+        if (request->hasArg(F("scen"))) {
+            bool value = request->getParam(F("scen"))->value().toInt();
+            jsonWriteBool(configSetupJson, F("scen"), value);
             saveConfig();
             loadScenario();
             request->send(200);
         }
 
-        if (request->hasArg("sceninit")) {
+        if (request->hasArg(F("sceninit"))) {
             loadScenario();
             request->send(200);
         }
 
-        //if (request->hasArg("snaUdp")) {
-        //    bool value = request->getParam("snaUdp")->value().toInt();
-        //    jsonWriteBool(configSetupJson, "snaUdp", value);
-        //    saveConfig();
-        //    #ifdef UDP_ENABLED
-        //    asyncUdpInit();
-        //    #endif
-        //    request->send(200);
-        //}
-
-        //if (request->hasArg("scenUdp")) {
-        //    myNotAsyncActions->make(do_sendScenUDP);
-        //    request->send(200);
-        //}
-
-        if (request->hasArg("MqttIn")) {
-            bool value = request->getParam("MqttIn")->value().toInt();
+        if (request->hasArg(F("MqttIn"))) {
+            bool value = request->getParam(F("MqttIn"))->value().toInt();
             jsonWriteBool(configSetupJson, "MqttIn", value);
             saveConfig();
             mqtt.subscribe((mqttPrefix + "/+/+/event").c_str());
@@ -85,111 +74,103 @@ void web_init() {
             request->send(200);
         }
 
-        if (request->hasArg("MqttOut")) {
-            bool value = request->getParam("MqttOut")->value().toInt();
-            jsonWriteBool(configSetupJson, "MqttOut", value);
+        if (request->hasArg(F("MqttOut"))) {
+            bool value = request->getParam(F("MqttOut"))->value().toInt();
+            jsonWriteBool(configSetupJson, F("MqttOut"), value);
             saveConfig();
             request->send(200);
         }
 
-        if (request->hasArg("scenMqtt")) {
+        if (request->hasArg(F("scenMqtt"))) {
             myNotAsyncActions->make(do_sendScenMQTT);
             request->send(200);
         }
 
 
-        if (request->hasArg("cleanlog")) {
+        if (request->hasArg(F("cleanlog"))) {
             cleanLogAndData();
             request->send(200);
         }
 
         //==============================wifi settings=============================================
-        if (request->hasArg("devname")) {
-            jsonWriteStr(configSetupJson, "name", request->getParam("devname")->value());
+        if (request->hasArg(F("devname"))) {
+            jsonWriteStr(configSetupJson, F("name"), request->getParam(F("devname"))->value());
             saveConfig();
             request->send(200);
         }
 
-        if (request->hasArg("routerssid")) {
-            jsonWriteStr(configSetupJson, "routerssid", request->getParam("routerssid")->value());
+        if (request->hasArg(F("routerssid"))) {
+            jsonWriteStr(configSetupJson, F("routerssid"), request->getParam(F("routerssid"))->value());
             saveConfig();
             request->send(200);
         }
 
-        if (request->hasArg("routerpass")) {
-            jsonWriteStr(configSetupJson, "routerpass", request->getParam("routerpass")->value());
+        if (request->hasArg(F("routerpass"))) {
+            jsonWriteStr(configSetupJson, F("routerpass"), request->getParam(F("routerpass"))->value());
             saveConfig();
             request->send(200);
         }
 
-        if (request->hasArg("apssid")) {
-            jsonWriteStr(configSetupJson, "apssid", request->getParam("apssid")->value());
+        if (request->hasArg(F("apssid"))) {
+            jsonWriteStr(configSetupJson, F("apssid"), request->getParam(F("apssid"))->value());
             saveConfig();
             request->send(200, "text/text", "OK");
         }
 
-        if (request->hasArg("appass")) {
-            jsonWriteStr(configSetupJson, "appass", request->getParam("appass")->value());
+        if (request->hasArg(F("appass"))) {
+            jsonWriteStr(configSetupJson, F("appass"), request->getParam(F("appass"))->value());
             saveConfig();
             request->send(200);
         }
 
-        if (request->hasArg("weblogin")) {
-            jsonWriteStr(configSetupJson, "weblogin", request->getParam("weblogin")->value());
+        if (request->hasArg(F("weblogin"))) {
+            jsonWriteStr(configSetupJson, F("weblogin"), request->getParam(F("weblogin"))->value());
             saveConfig();
             request->send(200);
         }
 
-        if (request->hasArg("webpass")) {
-            jsonWriteStr(configSetupJson, "webpass", request->getParam("webpass")->value());
+        if (request->hasArg(F("webpass"))) {
+            jsonWriteStr(configSetupJson, F("webpass"), request->getParam(F("webpass"))->value());
             saveConfig();
             request->send(200);
         }
 
-        if (request->hasArg("timezone")) {
-            String timezoneStr = request->getParam("timezone")->value();
-            jsonWriteStr(configSetupJson, "timezone", timezoneStr);
+        if (request->hasArg(F("timezone"))) {
+            String timezoneStr = request->getParam(F("timezone"))->value();
+            jsonWriteStr(configSetupJson, F("timezone"), timezoneStr);
             saveConfig();
             timeNow->setTimezone(timezoneStr.toInt());
             request->send(200);
         }
 
-        if (request->hasArg("ntp")) {
-            String ntpStr = request->getParam("ntp")->value();
-            jsonWriteStr(configSetupJson, "ntp", ntpStr);
+        if (request->hasArg(F("ntp"))) {
+            String ntpStr = request->getParam(F("ntp"))->value();
+            jsonWriteStr(configSetupJson, F("ntp"), ntpStr);
             saveConfig();
             timeNow->setNtpPool(ntpStr);
             request->send(200);
         }
 
-        if (request->hasArg("blink")) {
-            bool value = request->getParam("blink")->value().toInt();
-            jsonWriteBool(configSetupJson, "blink", value);
+        if (request->hasArg(F("blink"))) {
+            bool value = request->getParam(F("blink"))->value().toInt();
+            jsonWriteBool(configSetupJson, F("blink"), value);
             saveConfig();
             request->send(200);
         }
 
-        if (request->hasArg("reqReset")) {
+        if (request->hasArg(F("reqReset"))) {
             String tmp = "{}";
             jsonWriteStr(tmp, "title", F("<button class=\"close\" onclick=\"toggle('reset-block')\">×</button>Вы действительно хотите перезагрузить устройство?<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/set?reset');setTimeout(function(){ location.href='/?set.device'; }, 15000);html('reset-block','<span class=loader></span>Идет перезагрузка устройства')\">Перезагрузить</a>"));
             jsonWriteStr(tmp, "class", "pop-up");
             request->send(200, "text/html", tmp);
         }
 
-        if (request->hasArg("reset")) {
+        if (request->hasArg(F("reset"))) {
             ESP.restart();
             request->send(200);
         }
 
-        if (request->hasArg("test")) {
-            if (request->getParam("test")->value() == "ok") {
-                Serial.println("test pass");
-            }
-            request->send(200);
-        }
-
         //==============================mqtt settings=============================================
-
         if (request->hasArg("mqttServer")) {
             jsonWriteStr(configSetupJson, "mqttServer", request->getParam("mqttServer")->value());
             saveConfig();
@@ -237,7 +218,7 @@ void web_init() {
             request->send(200, "text/html", payload);
         }
 
-        //==============================push settings=============================================
+        //==============================telegram settings=============================================
         if (request->hasArg("telegramApi")) {
             jsonWriteStr(configSetupJson, "telegramApi", request->getParam("telegramApi")->value());
             saveConfig();
@@ -266,13 +247,19 @@ void web_init() {
             myNotAsyncActions->make(do_BUSSCAN);
             request->redirect("/?set.utilities");
         }
-        if (request->hasArg("uartEnable")) {
-            bool value = request->getParam("uartEnable")->value().toInt();
-            jsonWriteBool(configSetupJson, "uartEnable", value);
+        if (request->hasArg("uart")) {
+            bool value = request->getParam("uart")->value().toInt();
+            jsonWriteBool(configSetupJson, "uart", value);
             saveConfig();
 #ifdef uartEnable
             uartInit();
 #endif
+            request->send(200);
+        }
+        if (request->hasArg("uartEvents")) {
+            bool value = request->getParam("uartEvents")->value().toInt();
+            jsonWriteBool(configSetupJson, "uartEvents", value);
+            saveConfig();
             request->send(200);
         }
         if (request->hasArg("uartS")) {
@@ -309,22 +296,7 @@ void web_init() {
         }
         });
 
-    //==============================list of items=====================================================
-    //server.on("/del", HTTP_GET, [](AsyncWebServerRequest* request) {
-    //    if (request->hasArg("file")) {
-    //        itemsFile = request->getParam("file")->value();
-    //    }
-    //    if (request->hasArg("line")) {
-    //        itemsLine = request->getParam("line")->value();
-    //    }
-    //    delElementFlag = true;
-    //    deviceInit();
-    //    request->redirect("/?setn.device");
-    //});
 
-    /*
-    * Check
-    */
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         myNotAsyncActions->make(do_GETLASTVERSION);
         SerialPrint("I", "Update", "firmware version: " + String(lastVersion));

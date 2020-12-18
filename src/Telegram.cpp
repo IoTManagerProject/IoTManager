@@ -1,6 +1,7 @@
 #include "Consts.h"
 #ifdef telegramEnable
 #include "Telegram.h"
+#include "BufferExecute.h"
 CTBot* myBot{ nullptr };
 
 void telegramInit() {
@@ -49,7 +50,7 @@ void telegramMsgParse(String msg) {
     if (msg.indexOf("set") != -1) {
         msg = deleteBeforeDelimiter(msg, "_");
         msg.replace("_", " ");
-        orderBuf += String(msg) + ",";
+        loopCmdAdd(String(msg) + ",");
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), "order done");
         SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + String(msg));
     }
@@ -69,22 +70,20 @@ void telegramMsgParse(String msg) {
 }
 
 void sendTelegramMsg() {
+    String id = sCmd.next();
     String msg = sCmd.next();
-    String type = sCmd.next();
     msg.replace("#", " ");
-    if (type == "1") {
-        static String prevMsg;
-        if (prevMsg != msg) {
-            prevMsg = msg;
-            if (msg != "na") {
-                myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
-            }
-            SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
-        }
-    }
-    else if (type == "2") {
+    if (id == "often") {
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
         SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
+    }
+    else {
+        String prevMsg = jsonReadStr(telegramMsgJson, id);
+        if (prevMsg != msg) {
+            jsonWriteStr(telegramMsgJson, id, msg);
+            myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
+            SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
+        }
     }
 }
 

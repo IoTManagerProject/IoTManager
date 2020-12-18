@@ -53,6 +53,16 @@
       "type": "hr"
     },
     {
+      "type": "checkbox",
+      "name": "uartEvents",
+      "title": "Включить отправку всех событий в UART",
+      "action": "/set?uartEvents=[[uartEvents]]",
+      "state": "{{uartEvents}}"
+    },
+    {
+      "type": "hr"
+    },
+    {
       "type": "h4",
       "title": "Скорость",
       "style": "width:60%;float:left;"

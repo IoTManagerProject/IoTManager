@@ -1,0 +1,1 @@
+0;analog-adc;id;fillgauge;Сенсоры;Аналоговый;order;gol;map[0,1024,0,100];c[1]

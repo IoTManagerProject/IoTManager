@@ -1,0 +1,2 @@
+0;button-out;light;toggle;Кнопки;Освещение;1;pin[13]
+0;button-in;switch;na;na;na;2;pin[0];db[20]
