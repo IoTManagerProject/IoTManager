@@ -26,12 +26,11 @@ void web_init() {
 
         if (request->hasArg(F("addPreset"))) {
             addPreset2(request->getParam(F("addPreset"))->value().toInt());
-            if (FLASH_SIZE_1MB) {
-                jsonWriteStr(configSetupJson, F("warning1"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Присеты не доступны, модуль на 1mb</p></font></div>"));
-            }
-            else {
-                jsonWriteStr(configSetupJson, F("warning1"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
-            }
+#ifdef FLASH_SIZE_1MB
+            jsonWriteStr(configSetupJson, F("warning1"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Присеты не доступны, модуль на 1mb</p></font></div>"));
+#else
+            jsonWriteStr(configSetupJson, F("warning1"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
+#endif
             request->redirect(F("/?set.device"));
         }
 
