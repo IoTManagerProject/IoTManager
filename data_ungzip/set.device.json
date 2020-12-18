@@ -50,6 +50,14 @@
             "title": "{{signal}}"
         },
         {
+            "type": "h4",
+            "title": "Осталось памяти: {{freeBytes}}"
+        },
+        {
+            "type": "h4",
+            "title": "Осталось памяти: {{freePer}} %"
+        },
+        {
             "type": "hr"
         },
         {

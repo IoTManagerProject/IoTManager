@@ -22,6 +22,7 @@
 #include "items/vSensorUltrasonic.h"
 #include "Telegram.h"
 #include "SoftUART.h"
+#include "FileSystem.h"
 
 void not_async_actions();
 
@@ -66,9 +67,8 @@ void setup() {
 #ifdef SSDP_ENABLED
     SsdpInit();
 #endif
-
+    getFSInfo();
     //esp_log_level_set("esp_littlefs", ESP_LOG_NONE);
-
     just_load = false;
     initialized = true;
 }
