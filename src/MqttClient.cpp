@@ -6,8 +6,25 @@
 #include "Global.h"
 #include "Init.h"
 
+enum MqttBroker {MQTT_PRIMARY, MQTT_RESERVE};
+MqttBroker activeBroker = MQTT_PRIMARY;
+
 String mqttPrefix;
 String mqttRootDevice;
+String mqttPass;
+String mqttServer;
+String mqttUser;
+uint16_t mqttPort{0};
+uint16_t reconnectionCounter{0};
+bool primaryExist = false;
+
+const String getParamName(const char* param, MqttBroker broker) {
+    return String("mqtt") + param + (broker == MQTT_RESERVE? "2": "");
+}
+
+bool checkBrokerParams(MqttBroker broker) {
+    return !jsonReadStr(configSetupJson, getParamName("Server", broker)).isEmpty();   
+}
 
 void mqttInit() {
     myNotAsyncActions->add(
@@ -29,6 +46,16 @@ void mqttInit() {
                 }
                 else {
                     SerialPrint("E", "MQTT", "lost connection");
+                    if (reconnectionCounter++ > 5) {
+                        if (activeBroker == MQTT_PRIMARY) {
+                            if (checkBrokerParams(MQTT_RESERVE)) {
+                                activeBroker = MQTT_RESERVE;                             
+                            }
+                        } else {
+                            activeBroker = MQTT_PRIMARY;
+                        }
+                        reconnectionCounter = 0;
+                    }
                     mqttConnect();
                 }
             }
@@ -77,25 +104,35 @@ void mqttSubscribe() {
     }
 }
 
-boolean mqttConnect() {
-    SerialPrint("I", "MQTT", "start connection");
-    String addr = jsonReadStr(configSetupJson, "mqttServer");
-    if (!addr) {
-        SerialPrint("E", "MQTT", "no broker address");
+bool readBrokerParams(MqttBroker broker) {
+    if(!checkBrokerParams(broker)) {
         return false;
     }
-    int port = jsonReadInt(configSetupJson, "mqttPort");
-    String user = jsonReadStr(configSetupJson, "mqttUser");
-    String pass = jsonReadStr(configSetupJson, "mqttPass");
+    mqttServer = jsonReadStr(configSetupJson, getParamName("Server", broker));
+    mqttPort = jsonReadInt(configSetupJson, getParamName("Port", broker));
+    mqttUser = jsonReadStr(configSetupJson, getParamName("User", broker));
+    mqttPass = jsonReadStr(configSetupJson, getParamName("Pass", broker));
+
+    return true;
+}
+
+boolean mqttConnect() {
+    SerialPrint("I", "MQTT", String("use ") + (activeBroker == MQTT_PRIMARY? "primary": "reserve"));    
+    if (!checkBrokerParams(activeBroker)) {
+        SerialPrint("E", "MQTT", "empty broker address");
+        return false;
+    }
+    readBrokerParams(activeBroker);
+    SerialPrint("I", "MQTT", "start connection");
     mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
     mqttRootDevice = mqttPrefix + "/" + chipId;
-    SerialPrint("I", "MQTT", "broker " + addr + ":" + String(port, DEC));
+    SerialPrint("I", "MQTT", "broker " + mqttServer + ":" + String(mqttPort, DEC));
     SerialPrint("I", "MQTT", "topic " + mqttRootDevice);
     setLedStatus(LED_FAST);
-    mqtt.setServer(addr.c_str(), port);
+    mqtt.setServer(mqttServer.c_str(), mqttPort);
     bool res = false;
     if (!mqtt.connected()) {
-        if (mqtt.connect(chipId.c_str(), user.c_str(), pass.c_str())) {
+        if (mqtt.connect(chipId.c_str(), mqttUser.c_str(), mqttPass.c_str())) {
             SerialPrint("I", "MQTT", "connected");
             setLedStatus(LED_OFF);
             mqttSubscribe();
