@@ -1,6 +1,5 @@
 #include "MqttClient.h"
 #include "BufferExecute.h"
-#include <LittleFS.h>
 #include "items/vLogging.h"
 #include "Class/NotAsync.h"
 #include "Global.h"
@@ -8,7 +7,8 @@
 
 enum MqttBroker { MQTT_PRIMARY,
                   MQTT_RESERVE };
-MqttBroker activeBroker = MQTT_PRIMARY;
+
+MqttBroker activeBroker = MQTT_PRIMARY; 
 
 String mqttPrefix;
 String mqttRootDevice;

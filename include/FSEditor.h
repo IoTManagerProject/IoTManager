@@ -1,9 +1,7 @@
 #pragma once
+
 #include <ESPAsyncWebServer.h>
-//#include <FS.h>
-#ifdef ESP8266
-#include <LittleFS.h>
-#endif
+#include "FileSystem.h"
 
 class FSEditor : public AsyncWebHandler {
    private:
@@ -20,7 +18,7 @@ class FSEditor : public AsyncWebHandler {
 #ifdef ESP32
     FSEditor(const fs::FS& fs, const String& username = String(), const String& password = String());
 #else
-    FSEditor(const String& username = String(), const String& password = String(), const fs::FS& fs = LittleFS);
+    FSEditor(const String& username = String(), const String& password = String(), const fs::FS& fs = FileFS);
 #endif
     virtual bool canHandle(AsyncWebServerRequest* request) override final;
     virtual void handleRequest(AsyncWebServerRequest* request) override final;

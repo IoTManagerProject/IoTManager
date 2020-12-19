@@ -5,7 +5,6 @@
 #include <ESP8266httpUpdate.h>
 #include "ESPAsyncTCP.h"
 #include "ESPAsyncWebServer.h"
-#include <LittleFS.h>
 #include <SPIFFSEditor.h>
 #include <Servo.h>
 #include <WiFiUdp.h>

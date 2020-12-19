@@ -1,5 +1,7 @@
 #include "Upgrade.h"
 
+#include "FileSystem.h"
+
 #include "Class/NotAsync.h"
 #ifdef ESP8266
 #include "ESP8266.h"
@@ -92,16 +94,16 @@ void upgrade_firmware(int type) {
 bool upgradeFS() {
     WiFiClient wifiClient;
     bool ret = false;
-    Serial.println("Start upgrade LittleFS, please wait...");
+    Serial.printf("Start upgrade %s, please wait...", FS_NAME);
 #ifdef ESP8266
     ESPhttpUpdate.rebootOnUpdate(false);
-    t_httpUpdate_return retFS = ESPhttpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp8266/littlefs/littlefs.bin"));
+    t_httpUpdate_return retFS = ESPhttpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp8266/") + FS_NAME + "/"+ FS_NAME+ ".bin");
 #else
     httpUpdate.rebootOnUpdate(false);
     HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp32/littlefs/spiffs.bin"));
 #endif
     if (retFS == HTTP_UPDATE_OK) {  //если FS обновилась успешно
-        SerialPrint("I", "Update", "LittleFS upgrade done!");
+        SerialPrint("I", "Update", "FS upgrade done!");
         ret = true;
     }
     return ret;

@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+#include "FileSystem.h"
+
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "BufferExecute.h"
@@ -146,8 +148,9 @@ void sendLogData(String file, String topic) {
 }
 
 void cleanLogAndData() {
+
 #ifdef ESP8266
-    auto dir = LittleFS.openDir("logs");
+    auto dir = FileFS.openDir("logs");
     while (dir.next()) {
         String fname = dir.fileName();
         SerialPrint("I", "System", fname);

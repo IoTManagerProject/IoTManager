@@ -1,7 +1,8 @@
+#include "FileSystem.h"
+
 #include "Utils/FileUtils.h"
 #include "Utils\SerialPrint.h"
 #include "Utils/StringUtils.h"
-
 
 
 const String filepath(const String& filename) {
@@ -9,7 +10,7 @@ const String filepath(const String& filename) {
 }
 
 bool fileSystemInit() {
-    if (!LittleFS.begin()) {
+    if (!FileFS.begin()) {
         SerialPrint("E", F("FS"), F("FS Init ERROR, may be FS was not flashed"));
         return false;
     }
@@ -19,8 +20,8 @@ bool fileSystemInit() {
 
 void removeFile(const String& filename) {
     String path = filepath(filename);
-    if (LittleFS.exists(path)) {
-        if (!LittleFS.remove(path)) {
+    if (FileFS.exists(path)) {
+        if (!FileFS.remove(path)) {
             SerialPrint("I","Files","remove " + path);
         }
     } else {
@@ -30,7 +31,7 @@ void removeFile(const String& filename) {
 
 File seekFile(const String& filename, size_t position) {
     String path = filepath(filename);
-    auto file = LittleFS.open(path, "r");
+    auto file = FileFS.open(path, "r");
     if (!file) {
         SerialPrint("[E]","Files","open " + path);
     }
@@ -42,7 +43,7 @@ File seekFile(const String& filename, size_t position) {
 const String readFileString(const String& filename, const String& to_find) {
     String path = filepath(filename);
     String res = "failed";
-    auto file = LittleFS.open(path, "r");
+    auto file = FileFS.open(path, "r");
     if (!file) {
         return "failed";
     }
@@ -55,7 +56,7 @@ const String readFileString(const String& filename, const String& to_find) {
 
 const String addFileLn(const String& filename, const String& str) {
     String path = filepath(filename);
-    auto file = LittleFS.open(path, "a");
+    auto file = FileFS.open(path, "a");
     if (!file) {
         return "failed";
     }
@@ -66,7 +67,7 @@ const String addFileLn(const String& filename, const String& str) {
 
 const String addFile(const String& filename, const String& str) {
     String path = filepath(filename);
-    auto file = LittleFS.open(path, "a");
+    auto file = FileFS.open(path, "a");
     if (!file) {
         return "failed";
     }
@@ -79,19 +80,19 @@ bool copyFile(const String& src, const String& dst, bool overwrite) {
     String srcPath = filepath(src);
     String dstPath = filepath(dst);
     SerialPrint("I","Files","copy " + srcPath + " to " + dstPath);
-    if (!LittleFS.exists(srcPath)) {
+    if (!FileFS.exists(srcPath)) {
         SerialPrint("[E]","Files","not exist: " + srcPath);
         return false;
     }
-    if (LittleFS.exists(dstPath)) {
+    if (FileFS.exists(dstPath)) {
         if (!overwrite) {
             SerialPrint("[E]","Files","already exist: " + dstPath);
             return false;
         }
-        LittleFS.remove(dstPath);
+        FileFS.remove(dstPath);
     }
-    auto srcFile = LittleFS.open(srcPath, "r");
-    auto dstFile = LittleFS.open(dstPath, "w");
+    auto srcFile = FileFS.open(srcPath, "r");
+    auto dstFile = FileFS.open(dstPath, "w");
 
     uint8_t buf[512];
     while (srcFile.available()) {
@@ -105,7 +106,7 @@ bool copyFile(const String& src, const String& dst, bool overwrite) {
 
 const String writeFile(const String& filename, const String& str) {
     String path = filepath(filename);
-    auto file = LittleFS.open(path, "w");
+    auto file = FileFS.open(path, "w");
     if (!file) {
         return "failed";
     }
@@ -116,7 +117,7 @@ const String writeFile(const String& filename, const String& str) {
 
 const String readFile(const String& filename, size_t max_size) {
     String path = filepath(filename);
-    auto file = LittleFS.open(path, "r");
+    auto file = FileFS.open(path, "r");
     if (!file) {
         return "failed";
     }
@@ -132,7 +133,7 @@ const String readFile(const String& filename, size_t max_size) {
 
 const String getFileSize(const String filename) {
     String filepath(filename);
-    auto file = LittleFS.open(filepath, "r");
+    auto file = FileFS.open(filepath, "r");
     if (!file) {
         return "failed";
     }
@@ -145,13 +146,13 @@ const String getFSSizeInfo() {
     String res;
 #ifdef ESP8266
     FSInfo info;
-    if (LittleFS.info(info)) {
+    if (FileFS.info(info)) {
         res = prettyBytes(info.usedBytes) + " of " + prettyBytes(info.totalBytes);
     } else {
         res = "error";
     }
 #else
-    res = prettyBytes(LittleFS.usedBytes()) + " of " + prettyBytes(LittleFS.totalBytes());
+    res = prettyBytes(FileFS.usedBytes()) + " of " + prettyBytes(FileFS.totalBytes());
 #endif
     return res;
 }

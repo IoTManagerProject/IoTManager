@@ -16,18 +16,18 @@ void init() {
     String login = jsonReadStr(configSetupJson, "weblogin");
     String pass = jsonReadStr(configSetupJson, "webpass");
 #ifdef ESP32
-    server.addHandler(new FSEditor(LittleFS, login, pass));
+    server.addHandler(new FSEditor(FileFS, login, pass));
 #else
     server.addHandler(new FSEditor(login, pass));
 #endif
 
-    server.serveStatic("/css/", LittleFS, "/css/").setCacheControl("max-age=600");
-    server.serveStatic("/js/", LittleFS, "/js/").setCacheControl("max-age=600");
-    server.serveStatic("/favicon.ico", LittleFS, "/favicon.ico").setCacheControl("max-age=600");
-    server.serveStatic("/icon.jpeg", LittleFS, "/icon.jpeg").setCacheControl("max-age=600");
-    server.serveStatic("/edit", LittleFS, "/edit").setCacheControl("max-age=600");
+    server.serveStatic("/css/", FileFS, "/css/").setCacheControl("max-age=600");
+    server.serveStatic("/js/", FileFS, "/js/").setCacheControl("max-age=600");
+    server.serveStatic("/favicon.ico", FileFS, "/favicon.ico").setCacheControl("max-age=600");
+    server.serveStatic("/icon.jpeg", FileFS, "/icon.jpeg").setCacheControl("max-age=600");
+    server.serveStatic("/edit", FileFS, "/edit").setCacheControl("max-age=600");
 
-    server.serveStatic("/", LittleFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
+    server.serveStatic("/", FileFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
 
     server.onNotFound([](AsyncWebServerRequest *request) {
         SerialPrint("[E]","WebServer","not found:\n" + getRequestInfo(request));
