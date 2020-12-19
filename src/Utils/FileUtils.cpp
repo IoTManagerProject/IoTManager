@@ -13,7 +13,7 @@ bool fileSystemInit() {
         SerialPrint("E", F("FS"), F("FS Init ERROR, may be FS was not flashed"));
         return false;
     }
-    SerialPrint("I", F("FS"), F("FS Init"));
+    SerialPrint("I", F("FS"), F("FS Init completed"));
     return true;
 }
 

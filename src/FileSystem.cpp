@@ -3,18 +3,32 @@
 
 void getFSInfo() {
     // Информация о ФС
-    //size_t totalBytes; // всего
-    //size_t usedBytes; // использовано
-    //size_t maxOpenFiles; // лимит на открые файлы
-    //size_t maxPathLength; // лимит на полное пути + имя файла
+
 
     FSInfo buf;
-    getInfo(buf);
-    size_t freeBytes = buf.totalBytes - buf.usedBytes;
-    float freePer = buf.usedBytes / buf.totalBytes * 100;
+    if (getInfo(buf)) {
+        SerialPrint("I", F("FS"), F("Get FS info completed"));
 
-    jsonWriteInt(configSetupJson, F("freeBytes"), freeBytes);
-    jsonWriteFloat(configSetupJson, F("freePer"), freePer);
+        size_t totalBytes = buf.totalBytes; // всего
+        size_t usedBytes = buf.usedBytes; // использовано
+        size_t maxOpenFiles = buf.maxOpenFiles; // лимит на открые файлы
+        size_t maxPathLength = buf.maxPathLength; // лимит на пути и имена файлов
+
+        size_t freeBytes = totalBytes - usedBytes;
+        float freePer = freeBytes * 100 / totalBytes;
+        
+        jsonWriteStr(configSetupJson, F("freeBytes"), String(freePer) + "% (" + String(freeBytes) + ")");
+
+        SerialPrint("I", F("FS"), "totalBytes=" + String(totalBytes));
+        SerialPrint("I", F("FS"), "usedBytes=" + String(usedBytes));
+        SerialPrint("I", F("FS"), "maxOpenFiles=" + String(maxOpenFiles));
+        SerialPrint("I", F("FS"), "maxPathLength=" + String(maxPathLength));
+        SerialPrint("I", F("FS"), "freeBytes=" + String(freeBytes));
+        SerialPrint("I", F("FS"), "freePer=" + String(freePer));
+    }
+    else {
+        SerialPrint("E", F("FS"), F("FS info error"));
+    }
 }
 
 bool getInfo(FSInfo& info) {
