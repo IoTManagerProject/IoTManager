@@ -6,7 +6,8 @@
 #include "Global.h"
 #include "Init.h"
 
-enum MqttBroker {MQTT_PRIMARY, MQTT_RESERVE};
+enum MqttBroker { MQTT_PRIMARY,
+                  MQTT_RESERVE };
 MqttBroker activeBroker = MQTT_PRIMARY;
 
 String mqttPrefix;
@@ -16,14 +17,14 @@ String mqttServer;
 String mqttUser;
 uint16_t mqttPort{0};
 uint16_t reconnectionCounter{0};
-bool primaryExist = false;
+uint16_t fallbackCounter{0};
 
 const String getParamName(const char* param, MqttBroker broker) {
-    return String("mqtt") + param + (broker == MQTT_RESERVE? "2": "");
+    return String("mqtt") + param + (broker == MQTT_RESERVE ? "2" : "");
 }
 
 bool checkBrokerParams(MqttBroker broker) {
-    return !jsonReadStr(configSetupJson, getParamName("Server", broker)).isEmpty();   
+    return !jsonReadStr(configSetupJson, getParamName("Server", broker)).isEmpty();
 }
 
 void mqttInit() {
@@ -41,15 +42,25 @@ void mqttInit() {
             if (WiFi.status() == WL_CONNECTED) {
                 SerialPrint("I", "WIFI", "OK");
                 if (mqtt.connected()) {
-                    SerialPrint("I", "MQTT", "OK");
-                    setLedStatus(LED_OFF);
-                }
-                else {
+                    if (activeBroker == MQTT_RESERVE) {
+                        // при 20 cекундных интервалах проверки, каждые 100 сек
+                        if (fallbackCounter++ > 5) {
+                            if (checkBrokerParams(MQTT_PRIMARY)) {
+                                activeBroker = MQTT_PRIMARY;
+                                fallbackCounter = 0;
+                                mqttReconnect();
+                            }
+                        }
+                    } else {
+                        SerialPrint("I", "MQTT", "OK");
+                        setLedStatus(LED_OFF);
+                    }
+                } else {
                     SerialPrint("E", "MQTT", "lost connection");
                     if (reconnectionCounter++ > 5) {
                         if (activeBroker == MQTT_PRIMARY) {
                             if (checkBrokerParams(MQTT_RESERVE)) {
-                                activeBroker = MQTT_RESERVE;                             
+                                activeBroker = MQTT_RESERVE;
                             }
                         } else {
                             activeBroker = MQTT_PRIMARY;
@@ -58,8 +69,7 @@ void mqttInit() {
                     }
                     mqttConnect();
                 }
-            }
-            else {
+            } else {
                 SerialPrint("E", "WIFI", "Lost WiFi connection");
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
                 startAPMode();
@@ -105,7 +115,7 @@ void mqttSubscribe() {
 }
 
 bool readBrokerParams(MqttBroker broker) {
-    if(!checkBrokerParams(broker)) {
+    if (!checkBrokerParams(broker)) {
         return false;
     }
     mqttServer = jsonReadStr(configSetupJson, getParamName("Server", broker));
@@ -117,7 +127,7 @@ bool readBrokerParams(MqttBroker broker) {
 }
 
 boolean mqttConnect() {
-    SerialPrint("I", "MQTT", String("use ") + (activeBroker == MQTT_PRIMARY? "primary": "reserve"));    
+    SerialPrint("I", "MQTT", String("use ") + (activeBroker == MQTT_PRIMARY ? "primary" : "reserve"));
     if (!checkBrokerParams(activeBroker)) {
         SerialPrint("E", "MQTT", "empty broker address");
         return false;
@@ -137,8 +147,7 @@ boolean mqttConnect() {
             setLedStatus(LED_OFF);
             mqttSubscribe();
             res = true;
-        }
-        else {
+        } else {
             SerialPrint("E", "MQTT", "could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
             setLedStatus(LED_FAST);
         }
@@ -166,10 +175,9 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     }
 
     else if (topicStr.indexOf("control") != -1) {
-
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
 
-        String order; 
+        String order;
         order += key;
         order += " ";
         order += payloadStr;
@@ -326,38 +334,38 @@ void publishState() {
 
 const String getStateStr() {
     switch (mqtt.state()) {
-    case -4:
-        return F("no respond");
-        break;
-    case -3:
-        return F("connection was broken");
-        break;
-    case -2:
-        return F("connection failed");
-        break;
-    case -1:
-        return F("client disconnected");
-        break;
-    case 0:
-        return F("client connected");
-        break;
-    case 1:
-        return F("doesn't support the requested version");
-        break;
-    case 2:
-        return F("rejected the client identifier");
-        break;
-    case 3:
-        return F("unable to accept the connection");
-        break;
-    case 4:
-        return F("wrong username/password");
-        break;
-    case 5:
-        return F("not authorized to connect");
-        break;
-    default:
-        return F("unspecified");
-        break;
+        case -4:
+            return F("no respond");
+            break;
+        case -3:
+            return F("connection was broken");
+            break;
+        case -2:
+            return F("connection failed");
+            break;
+        case -1:
+            return F("client disconnected");
+            break;
+        case 0:
+            return F("client connected");
+            break;
+        case 1:
+            return F("doesn't support the requested version");
+            break;
+        case 2:
+            return F("rejected the client identifier");
+            break;
+        case 3:
+            return F("unable to accept the connection");
+            break;
+        case 4:
+            return F("wrong username/password");
+            break;
+        case 5:
+            return F("not authorized to connect");
+            break;
+        default:
+            return F("unspecified");
+            break;
     }
 }
