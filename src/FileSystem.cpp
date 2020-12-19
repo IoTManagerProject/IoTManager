@@ -15,7 +15,7 @@ void getFSInfo() {
         size_t maxPathLength = buf.maxPathLength; // лимит на пути и имена файлов
 
         size_t freeBytes = totalBytes - usedBytes;
-        float freePer = freeBytes * 100 / totalBytes;
+        float freePer = ((float) freeBytes / totalBytes) * 100;
         
         jsonWriteStr(configSetupJson, F("freeBytes"), String(freePer) + "% (" + String(freeBytes) + ")");
 
