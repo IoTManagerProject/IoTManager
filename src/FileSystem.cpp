@@ -1,10 +1,7 @@
 #include "FileSystem.h"
 #include "Global.h"
-
+// Информация о ФС
 void getFSInfo() {
-    // Информация о ФС
-
-
     FSInfo buf;
     if (getInfo(buf)) {
         SerialPrint("I", F("FS"), F("Get FS info completed"));
@@ -17,7 +14,7 @@ void getFSInfo() {
         size_t freeBytes = totalBytes - usedBytes;
         float freePer = ((float) freeBytes / totalBytes) * 100;
         
-        jsonWriteStr(configSetupJson, F("freeBytes"), String(freePer) + "% (" + String(freeBytes) + ")");
+        jsonWriteStr(configSetupJson, F("freeBytes"), String(freePer) + "% (" + prettyBytes(freeBytes) + ")");
 
         SerialPrint("I", F("FS"), "totalBytes=" + String(totalBytes));
         SerialPrint("I", F("FS"), "usedBytes=" + String(usedBytes));

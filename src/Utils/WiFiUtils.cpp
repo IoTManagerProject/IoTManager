@@ -1,4 +1,5 @@
 #include "Utils/WiFiUtils.h"
+#include "FileSystem.h"
 
 void routerConnect() {
 
@@ -145,6 +146,7 @@ void wifiSignalInit() {
     ts.add(
         SYGNAL, 1000 * 60, [&](void*) {
             SerialPrint("I", "System", printMemoryStatus());
+            getFSInfo();
             switch (RSSIquality()) {
             case 0:
                 jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>не подключено к роутеру</font>"));
