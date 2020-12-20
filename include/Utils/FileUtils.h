@@ -1,14 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include "Consts.h"
-//#include "FS.h"
-#ifdef ESP32
-#include "LITTLEFS.h"
-#define LittleFS LITTLEFS
-#endif
-#ifdef ESP8266
-#include <LittleFS.h>
-#endif
+#include "FileSystem.h"
 
 /*
 * Инициализация ФС

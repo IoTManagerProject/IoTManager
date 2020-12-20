@@ -1,17 +1,10 @@
 #include "FSEditor.h"
 
-#ifdef ESP32
-#include "LITTLEFS.h"
-#define LittleFS LITTLEFS
-#endif
-#ifdef ESP8266
-#include <LittleFS.h>
-#endif
+#include "FileSystem.h"
 
 #define FS_MAXLENGTH_FILEPATH 32
 
 const char *excludeListFile = "/.exclude.files";
-
 typedef struct ExcludeListS {
     char *item;
     ExcludeListS *next;
@@ -239,7 +232,7 @@ void FSEditor::handleRequest(AsyncWebServerRequest *request) {
             if (request->header("If-Modified-Since").equals(buildTime)) {
                 request->send(304);
             } else {
-                AsyncWebServerResponse *response = request->beginResponse(LittleFS, "/edit.htm", "text/html");
+                AsyncWebServerResponse *response = request->beginResponse(FileFS, "/edit.htm", "text/html");
                 // response->addHeader("Content-Encoding", "gzip");
                 response->addHeader("Last-Modified", buildTime);
                 request->send(response);

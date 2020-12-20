@@ -6,6 +6,8 @@
 #define FILE_WRITE "w"
 #define FILE_APPEND "a"
 
+#include <FS.h>
+
 #if USE_LITTLEFS
 #include <LittleFS.h>
 extern FS LittleFS;

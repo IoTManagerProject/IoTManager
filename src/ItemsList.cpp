@@ -1,5 +1,6 @@
 #include "ItemsList.h"
 
+#include "FileSystem.h"
 #include "Class/NotAsync.h"
 #include "Init.h"
 #include "Utils/StringUtils.h"
@@ -25,7 +26,7 @@ void itemsListInit() {
 
 void addItem2(String param) {
     int num = selectToMarker(param, "-").toInt();
-    File configFile = LittleFS.open("/items/items.txt", "r");
+    File configFile = FileFS.open("/items/items.txt", "r");
     if (!configFile) {
         return;
     }
@@ -62,7 +63,7 @@ void addItem2(String param) {
 
 
 void addPreset2(int num) {
-    File configFile = LittleFS.open("/presets/presets.c.txt", "r");
+    File configFile = FileFS.open("/presets/presets.c.txt", "r");
     if (!configFile) {
         return;
     }
@@ -85,7 +86,7 @@ void addPreset2(int num) {
     configFile.close();
     addFile(DEVICE_CONFIG_FILE, config);
 
-    File scenFile = LittleFS.open("/presets/presets.s.txt", "r");
+    File scenFile = FileFS.open("/presets/presets.s.txt", "r");
     if (!scenFile) {
         return;
     }
@@ -160,7 +161,7 @@ uint8_t getFreePinAnalog() {
 }
 
 void delChoosingItems() {
-    File configFile = LittleFS.open("/" + String(DEVICE_CONFIG_FILE), "r");
+    File configFile = FileFS.open("/" + String(DEVICE_CONFIG_FILE), "r");
     if (!configFile) {
         return;
     }
