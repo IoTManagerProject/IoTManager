@@ -2,9 +2,9 @@
 
 //===========Firmware=============================================================================================================================================
 #define FIRMWARE_VERSION 273
-#define FLASH_SIZE_1MB true
+#define ESP8266_FLASH_SIZE_1MB false
 //===========FileSystem==============================================================================================================================================
-#define USE_LITTLEFS false
+#define USE_LITTLEFS true
 //==================================================================================================================================================================
 #define NUM_BUTTONS 6
 #define LED_PIN LED_BUILTIN
@@ -28,14 +28,12 @@
 #define SensorDhtEnabled
 #define PwmOutEnable
 //=========Features=================================================================================================================================
-#ifndef FLASH_SIZE_1MB
 #define telegramEnable
-#endif
 #define uartEnable
 
 
 #ifdef ESP8266
-#ifdef FLASH_SIZE_1MB
+#ifdef ESP8266_FLASH_SIZE_1MB
 #define FIRMWARE_NAME "esp8266-1mb"
 #else
 #define FIRMWARE_NAME "esp8266"

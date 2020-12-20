@@ -26,11 +26,9 @@ void web_init() {
 
         if (request->hasArg(F("addPreset"))) {
             addPreset2(request->getParam(F("addPreset"))->value().toInt());
-#ifdef FLASH_SIZE_1MB
-            jsonWriteStr(configSetupJson, F("warning1"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Присеты не доступны, модуль на 1mb</p></font></div>"));
-#else
+
             jsonWriteStr(configSetupJson, F("warning1"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
-#endif
+
             request->redirect(F("/?set.device"));
         }
 
@@ -335,13 +333,11 @@ void web_init() {
         SerialPrint("I", "Update", "firmware version: " + String(lastVersion));
 
         String msg = "";
-#ifdef FLASH_SIZE_1MB
-        if (FLASH_SIZE_1MB) {
+
+        if (ESP8266_FLASH_SIZE_1MB) {
             msg = F("Обновление невозможно, память устройства 1 мб");
         }
         else {
-#endif
-
             if (lastVersion == FIRMWARE_VERSION) {
                 msg = F("Актуальная версия прошивки уже установлена.");
             }
@@ -357,17 +353,7 @@ void web_init() {
             else if (lastVersion < FIRMWARE_VERSION) {
                 msg = F("Ошибка версии. Попробуйте повторить позже...");
             }
-#ifdef FLASH_SIZE_1MB
         }
-#endif
-
-        // else if (lastVersion == "") {
-        //msg = F("Нажмите на кнопку \"обновить прошивку\" повторно...");
-        //} else if (lastVersion == "less") {
-        //msg = F("Обновление \"по воздуху\" не поддерживается!");
-        //} else if (lastVersion == "notsupported") {
-        //   msg = F("Обновление возможно только через usb!");
-        //}
 
         String tmp = "{}";
         jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + msg);
