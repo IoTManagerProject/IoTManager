@@ -1,7 +1,7 @@
 #include "ItemsList.h"
 
-#include "FileSystem.h"
 #include "Class/NotAsync.h"
+#include "FileSystem.h"
 #include "Init.h"
 #include "Utils/StringUtils.h"
 
@@ -19,7 +19,6 @@ void itemsListInit() {
             delChoosingItems();
         },
         nullptr);
-
 
     SerialPrint("I", F("Items"), F("Items Init"));
 }
@@ -61,7 +60,6 @@ void addItem2(String param) {
     Serial.println(seachingLine);
 }
 
-
 void addPreset2(int num) {
     File configFile = FileFS.open("/presets/presets.c.txt", "r");
     if (!configFile) {
@@ -76,8 +74,7 @@ void addPreset2(int num) {
         if (i1 == num) {
             if (i1 == 1) {
                 config = "\n" + item;
-            }
-            else {
+            } else {
                 config = item;
             }
             break;
@@ -85,7 +82,7 @@ void addPreset2(int num) {
     }
     configFile.close();
     addFile(DEVICE_CONFIG_FILE, config);
-
+    //===========================================================================
     File scenFile = FileFS.open("/presets/presets.s.txt", "r");
     if (!scenFile) {
         return;
@@ -97,17 +94,23 @@ void addPreset2(int num) {
         i2++;
         String item = scenFile.readStringUntil('*');
         if (i2 == num) {
-            scen = item;
+            if (i1 == 1) {
+                scen = "\n" + item;
+            } else {
+                scen = item;
+            }
             break;
         }
     }
     scenFile.close();
     if (readFile(String(DEVICE_SCENARIO_FILE), 2048) == "//") {
         removeFile(DEVICE_SCENARIO_FILE);
+        scen = deleteBeforeDelimiter(scen, "\n");
+        addFile(DEVICE_SCENARIO_FILE, scen);
+    } else {
+        addFile(DEVICE_SCENARIO_FILE, scen);
     }
-    addFile(DEVICE_SCENARIO_FILE, scen);
 }
-
 
 void delAllItems() {
     removeFile(DEVICE_CONFIG_FILE);
@@ -129,24 +132,23 @@ uint8_t getNewElementNumber(String file) {
 
 uint8_t getFreePinAll() {
 #ifdef ESP8266
-    uint8_t pins[] = { 0, 12, 13, 14, 15, 16, 1, 2, 3, 4, 5 };
+    uint8_t pins[] = {0, 12, 13, 14, 15, 16, 1, 2, 3, 4, 5};
 #endif
 #ifdef ESP32
-    uint8_t pins[] = { 0, 12, 13, 14, 15, 16, 1, 2, 3, 4, 5 };
+    uint8_t pins[] = {0, 12, 13, 14, 15, 16, 1, 2, 3, 4, 5};
 #endif
     uint8_t array_sz = sizeof(pins) / sizeof(pins[0]);
     uint8_t i = getNewElementNumber("pins.txt");
     if (i < array_sz) {
         return pins[i];
-    }
-    else {
+    } else {
         return 0;
     }
 }
 
 bool isPinExist(unsigned int num) {
     bool ret = false;
-    unsigned int pins[] = { 0, 1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 15, 16 };
+    unsigned int pins[] = {0, 1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 15, 16};
     uint8_t array_sz = sizeof(pins) / sizeof(pins[0]);
     for (uint8_t i = 0; i < array_sz; i++) {
         if (pins[i] == num) ret = true;
@@ -172,8 +174,7 @@ void delChoosingItems() {
         String item = configFile.readStringUntil('\n');
         if (firstLine) {
             finalConf += item;
-        }
-        else {
+        } else {
             int checkbox = selectToMarker(item, ";").toInt();
             if (checkbox == 0) {
                 finalConf += "\n" + item;

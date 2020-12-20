@@ -106,7 +106,7 @@ void deviceInit() {
 
     int errors = myLineParsing.getPinErrors();
 
-    if (errors != 0) {
+    if (errors > 0) {
         jsonWriteStr(configSetupJson, F("warning3"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Обнаружен неверный номер пина</p></font></div>"));
     }
     else {

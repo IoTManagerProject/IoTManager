@@ -1,10 +1,10 @@
 t1 > tUp1
 btn1 0
-telegram нагрев#выключен 1
+telegram Гостинная нагрев#выключен
 end
 t1 < tLow1
 btn1 1
-telegram нагрев#включен 1
+telegram Гостинная нагрев#включен
 end*
 t2 > threshold+-2
 heater2 0
@@ -26,11 +26,11 @@ threshold threshold4
 end*
 h3 > hUp3
 hUp3 0
-telegram полив#выключен 1
+telegram Теплица полив#выключен
 end
 h3 < hLow3
 hUp3 1
-telegram полив#включен 1
+telegram Теплица полив#включен
 end*
 timenow = time41
 btn41 1
@@ -65,7 +65,7 @@ end*
 sensor = 1
 text обнаружено
 time %date%
-telegram text обнаружено#движение 1
+telegram often Обнаружено#движение
 end
 reset = 1
 text не#обнаружено

@@ -1,12 +1,13 @@
 #pragma once
 
 #include <Arduino.h>
-#include "ItemsList.h"
+
 #include "Global.h"
+#include "ItemsList.h"
 #include "Utils/JsonUtils.h"
 
 class LineParsing {
-protected:
+   protected:
     String _key;
     String _file;
     String _page;
@@ -28,31 +29,31 @@ protected:
 
     int pinErrors;
 
-public:
+   public:
     LineParsing() :
 
-        _key{ "" },
-        _file{ "" },
-        _page{ "" },
-        _descr{ "" },
-        _order{ "" },
-        _addr{ "" },
-        _reg{ "" },
-        _pin{ "" },
-        _map{ "" },
-        _c{ "" },
-        _inv{ "" },
-        _state{ "" },
-        _db{ "" },
-        _type{ "" },
-        _int{ "" },
-        _cnt{ "" },
-        _val{ "" },
-        _index{ "" },
+                    _key{""},
+                    _file{""},
+                    _page{""},
+                    _descr{""},
+                    _order{""},
+                    _addr{""},
+                    _reg{""},
+                    _pin{""},
+                    _map{""},
+                    _c{""},
+                    _inv{""},
+                    _state{""},
+                    _db{""},
+                    _type{""},
+                    _int{""},
+                    _cnt{""},
+                    _val{""},
+                    _index{""},
 
-        pinErrors{ 0 }
+                    pinErrors{0}
 
-    {};
+                    {};
 
     void update() {
         //String order = sCmd.order();
@@ -110,9 +111,12 @@ public:
             }
         }
 
-        if (!isPinExist(_pin.toInt()) || !isDigitStr(_pin)) {
-            pinErrors++;
-            _pin = "";
+        if (_pin != "") {
+            if (!isPinExist(_pin.toInt()) || !isDigitStr(_pin)) {
+                pinErrors++;
+                Serial.println("'" + _pin + "'");
+                _pin = "";
+            }
         }
 
         _page.replace("#", " ");
@@ -122,7 +126,6 @@ public:
 
         createWidget(_descr, _page, _order, _file, _key);
     }
-
 
     String gkey() {
         return _key;
@@ -176,7 +179,6 @@ public:
         return _index;
     }
 
-
     int getPinErrors() {
         return pinErrors;
     }
@@ -184,7 +186,6 @@ public:
     void clearErrors() {
         pinErrors = 0;
     }
-
 
     void clear() {
         _key = "";

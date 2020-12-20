@@ -22,6 +22,7 @@
 #include "Telegram.h"
 #include "SoftUART.h"
 #include "FileSystem.h"
+#include "Tests.h"
 
 void not_async_actions();
 
@@ -67,7 +68,9 @@ void setup() {
     SsdpInit();
 #endif
     getFSInfo();
-    //esp_log_level_set("esp_littlefs", ESP_LOG_NONE);
+
+   testsPerform();
+
     just_load = false;
     initialized = true;
 }

@@ -3,10 +3,10 @@
 0;inoutput;tUp1;inputDigit;Термостат1;Верхний#порог;3
 0;inoutput;tLow1;inputDigit;Термостат1;Нижний#порог;4
 0;button-out;btn1;toggle;Термостат1;Нагрев;5;pin[12]*
-0;dallas-temp;t2;anydataTemp;Термостат2;Температура;1;pin[2];index[0];int[60]
+0;dallas-temp;t2;anydataTemp;Термостат2;Температура;1;pin[2];index[0];int[10]
 0;logging;log2;chart;Термостат2;История;2;val[t2];int[10];cnt[100]
 0;inoutput;threshold;inputDigitTemp;Термостат2;Заданная#температура;3
-0;button-out;heater2;toggle;Термостат2;Нагреватель;7;pin[12]
+0;button-out;heater2;toggle;Термостат2;Нагреватель;7;pin[5]
 0;inoutput;time21;inputTimeClock;Расписание2;Утренний#период;8
 0;inoutput;threshold1;inputDigitTemp;Расписание2;Температура;9
 0;inoutput;time22;inputTimeClock;Расписание2;Дневной#период;10

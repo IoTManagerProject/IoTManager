@@ -1,13 +1,13 @@
 #include "Consts.h"
 #ifdef telegramEnable
-#include "Telegram.h"
 #include "BufferExecute.h"
-CTBot* myBot{ nullptr };
+#include "Telegram.h"
+CTBot* myBot{nullptr};
 
 void telegramInit() {
     if (isTelegramEnabled()) {
         telegramInitBeen = true;
-        sCmd.addCommand("telegramEnable", sendTelegramMsg);
+        sCmd.addCommand("telegram", sendTelegramMsg);
         String token = jsonReadStr(configSetupJson, "telegramApi");
         if (!myBot) {
             myBot = new CTBot();
@@ -16,8 +16,7 @@ void telegramInit() {
         myBot->enableUTF8Encoding(true);
         if (myBot->testConnection()) {
             SerialPrint("I", "Telegram", "Connected");
-        }
-        else {
+        } else {
             SerialPrint("E", "Telegram", "Not connected");
         }
         SerialPrint("I", F("Telegram"), F("Telegram Init"));
@@ -53,36 +52,34 @@ void telegramMsgParse(String msg) {
         loopCmdAdd(String(msg) + ",");
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), "order done");
         SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + String(msg));
-    }
-    else if (msg.indexOf("get") != -1) {
+    } else if (msg.indexOf("get") != -1) {
         msg = deleteBeforeDelimiter(msg, "_");
-        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), getValue(msg)); //jsonReadStr(configLiveJson , msg));
+        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), getValue(msg));  //jsonReadStr(configLiveJson , msg));
         SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + String(msg));
-    }
-    else if (msg.indexOf("all") != -1) {
+    } else if (msg.indexOf("all") != -1) {
         String list = returnListOfParams();
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), list);
         SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + "\n" + list);
-    }
-    else {
+    } else {
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), F("Wrong order, use /all to get all values, /get_id to get value, or /set_id_value to set value"));
     }
 }
 
 void sendTelegramMsg() {
-    String id = sCmd.next();
+    String sabject = sCmd.next();
     String msg = sCmd.next();
-    msg.replace("#", " ");
-    if (id == "often") {
+    if (sabject == "often") {
+        msg.replace("#", " ");
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
         SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
-    }
-    else {
-        String prevMsg = jsonReadStr(telegramMsgJson, id);
+    } else {
+        String prevMsg = jsonReadStr(telegramMsgJson, sabject);
         if (prevMsg != msg) {
-            jsonWriteStr(telegramMsgJson, id, msg);
-            myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
-            SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
+            jsonWriteStr(telegramMsgJson, sabject, msg);
+            msg.replace("#", " ");
+            sabject.replace("#", " ");
+            myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), sabject + " " + msg);
+            SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + sabject + " " + msg);
         }
     }
 }
@@ -94,7 +91,6 @@ bool isTelegramEnabled() {
 bool isTelegramInputOn() {
     return jsonReadBool(configSetupJson, "teleginput");
 }
-
 
 String returnListOfParams() {
     String cmdStr = readFile(DEVICE_CONFIG_FILE, 4096);
@@ -108,7 +104,7 @@ String returnListOfParams() {
         count++;
         if (count > 1) {
             String id = selectFromMarkerToMarker(buf, ";", 2);
-            String value = getValue(id); //jsonReadStr(configLiveJson , id);
+            String value = getValue(id);  //jsonReadStr(configLiveJson , id);
             String page = selectFromMarkerToMarker(buf, ";", 4);
             page.replace("#", " ");
             String name = selectFromMarkerToMarker(buf, ";", 5);
