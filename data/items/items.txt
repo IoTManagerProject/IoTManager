@@ -6,7 +6,7 @@
 6;0;inoutput;id;inputDigit;Ввод;Введите#цифру;order
 7;0;inoutput;id;inputTime;Ввод;Введите#время;order
 8;0;inoutput;id;anydata;Вывод;Сигнализация;order
-9;0;analog-adc;id;fillgauge;Сенсоры;Аналоговый;order;gpio;map[0,1024,0,100];c[1]
+9;0;analog-adc;id;fillgauge;Сенсоры;Аналоговый;order;pin[0];map[0,1024,0,100];c[1];int[10]
 10;0;dallas-temp;id;anydataTemp;Сенсоры;Температура;order;pin[2];index[0];int[10]
 11;0;ultrasonic-cm;id;anydata;Сенсоры;Расстояние;order;pin[12,13];map[0,500,0,100];c[1];int[10]
 12;0;dht-hum;id;anydataHum;Сенсоры;Влажность;order;pin[2];type[dht11];c[1]
