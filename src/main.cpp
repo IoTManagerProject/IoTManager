@@ -25,6 +25,7 @@
 #include "items/vSensorAnalog.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorUltrasonic.h"
+#include "items/vSensorDht.h"
 
 void not_async_actions();
 
@@ -132,6 +133,12 @@ void loop() {
     if (mySensorAnalog != nullptr) {
         for (unsigned int i = 0; i < mySensorAnalog->size(); i++) {
             mySensorAnalog->at(i).loop();
+        }
+    }
+    if (mySensorDht != nullptr) {
+        for (unsigned int i = 0; i < mySensorDht->size(); i++) {
+            mySensorDht->at(i).loopTmp();
+            mySensorDht->at(i).loopHum();
         }
     }
 }

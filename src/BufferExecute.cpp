@@ -10,6 +10,8 @@
 #include "items/vLogging.h"
 #include "items/vImpulsOut.h"
 #include "items/vCountDown.h"
+#include "items/vSensorAnalog.h"
+#include "items/vSensorDht.h"
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
@@ -73,7 +75,7 @@ void csvCmdExecute(String& cmdStr) {
             }
 #ifdef SensorDhtEnabled
             else if (order == F("dht-temp")) {
-                sCmd.addCommand(order.c_str(), dhtTemp);
+                sCmd.addCommand(order.c_str(), dhtTmp);
             }
             else if (order == F("dht-hum")) {
                 sCmd.addCommand(order.c_str(), dhtHum);
@@ -84,7 +86,7 @@ void csvCmdExecute(String& cmdStr) {
                 sCmd.addCommand(order.c_str(), bme280Temp);
             }
             else if (order == F("bme280-hum")) {
-                sCmd.addCommand(order.c_str(), bme280Hum);
+                //sCmd.addCommand(order.c_str(), bme280Hum);
             }
             else if (order == F("bme280-press")) {
                 sCmd.addCommand(order.c_str(), bme280Press);

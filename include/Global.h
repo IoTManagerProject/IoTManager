@@ -8,7 +8,6 @@
 #include <ArduinoJson.h>
 #include <ArduinoOTA.h>
 #include <Bounce2.h>
-#include <DHTesp.h>
 #include <DallasTemperature.h>
 #include <OneWire.h>
 #include <PubSubClient.h>
@@ -88,6 +87,9 @@ extern int countDown_EnterCounter;
 //=========================================
 extern String logging_KeyList;
 extern int logging_EnterCounter;
+//=========================================
+extern int dhtTmp_EnterCounter;
+extern int dhtHum_EnterCounter;
 //=========================================
 
 // Sensors

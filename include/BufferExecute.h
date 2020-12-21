@@ -12,19 +12,7 @@ extern int getKeyNum(String& key, String& keyNumberTable);
 extern void buttonIn();
 extern void buttonInSet();
 
-extern void analogAdc();
-extern void analogReading(); 
 
-//extern void ultrasonicCm();
-//extern void ultrasonicReading();
-
-extern void dallasTemp();
-extern void dallasReading();
-
-extern void dhtTemp();
-extern void dhtReadingTemp();
-extern void dhtHum();
-extern void dhtReadingHum();
 
 extern void bme280Temp();
 extern void bme280ReadingTemp();

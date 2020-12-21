@@ -1,16 +1,17 @@
 #include "Init.h"
+
 #include "BufferExecute.h"
+#include "Class/LineParsing.h"
 #include "Cmd.h"
 #include "Global.h"
-#include "Class/LineParsing.h"
-#include "items/vLogging.h"
-#include "items/vImpulsOut.h"
 #include "items/vButtonOut.h"
+#include "items/vCountDown.h"
+#include "items/vImpulsOut.h"
+#include "items/vInOutput.h"
+#include "items/vLogging.h"
+#include "items/vPwmOut.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorUltrasonic.h"
-#include "items/vInOutput.h"
-#include "items/vPwmOut.h"
-#include "items/vCountDown.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -42,7 +43,6 @@ void espInit() {
 }
 
 void deviceInit() {
-
     sensorReadingMap10sec = "";
 
     //======clear dallas params======
@@ -92,14 +92,16 @@ void deviceInit() {
     countDown_KeyList = "";
     countDown_EnterCounter = -1;
     //===================================
-
+    dhtTmp_EnterCounter = -1;
+    dhtHum_EnterCounter = -1;
+    //=========================================
 
 #ifdef LAYOUT_IN_RAM
     all_widgets = "";
 #else
     removeFile(String("layout.txt"));
 #endif
-    
+
     myLineParsing.clearErrors();
 
     fileCmdExecute(String(DEVICE_CONFIG_FILE));
@@ -108,8 +110,7 @@ void deviceInit() {
 
     if (errors > 0) {
         jsonWriteStr(configSetupJson, F("warning3"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Обнаружен неверный номер пина</p></font></div>"));
-    }
-    else {
+    } else {
         jsonWriteStr(configSetupJson, F("warning3"), "");
     }
 
@@ -135,4 +136,3 @@ void uptime_init() {
 void handle_uptime() {
     jsonWriteStr(configSetupJson, "uptime", timeNow->getUptime());
 }
-

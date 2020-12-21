@@ -18,14 +18,14 @@ void getFSInfo() {
         
         jsonWriteStr(configSetupJson, F("freeBytes"), String(freePer) + "% (" + prettyBytes(freeBytes) + ")");
 
-        SerialPrint("I", F("FS"), "totalBytes=" + String(totalBytes));
-        SerialPrint("I", F("FS"), "usedBytes=" + String(usedBytes));
-        SerialPrint("I", F("FS"), "maxOpenFiles=" + String(maxOpenFiles));
-        SerialPrint("I", F("FS"), "blockSize=" + String(blockSize));
-        SerialPrint("I", F("FS"), "pageSize=" + String(pageSize));
-        SerialPrint("I", F("FS"), "maxPathLength=" + String(maxPathLength));
-        SerialPrint("I", F("FS"), "freeBytes=" + String(freeBytes));
-        SerialPrint("I", F("FS"), "freePer=" + String(freePer));
+        //SerialPrint("I", F("FS"), "totalBytes=" + String(totalBytes));
+        //SerialPrint("I", F("FS"), "usedBytes=" + String(usedBytes));
+        //SerialPrint("I", F("FS"), "maxOpenFiles=" + String(maxOpenFiles));
+        //SerialPrint("I", F("FS"), "blockSize=" + String(blockSize));
+        //SerialPrint("I", F("FS"), "pageSize=" + String(pageSize));
+        //SerialPrint("I", F("FS"), "maxPathLength=" + String(maxPathLength));
+        //SerialPrint("I", F("FS"), "freeBytes=" + String(freeBytes));
+        //SerialPrint("I", F("FS"), "freePer=" + String(freePer));
     }
     else {
         SerialPrint("E", F("FS"), F("FS info error"));
