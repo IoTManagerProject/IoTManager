@@ -86,7 +86,7 @@ void csvCmdExecute(String& cmdStr) {
                 sCmd.addCommand(order.c_str(), bme280Temp);
             }
             else if (order == F("bme280-hum")) {
-                //sCmd.addCommand(order.c_str(), bme280Hum);
+                sCmd.addCommand(order.c_str(), bme280Hum);
             }
             else if (order == F("bme280-press")) {
                 sCmd.addCommand(order.c_str(), bme280Press);

@@ -18,6 +18,7 @@ void SensorDht::tmpInit(const tmpParams& tmpSet) {
         dht = new DHTesp();
     }
     dht->setup(_tmpSet.pin, DHTesp::DHT11);
+    _tmpSet.interval = dht->getMinimumSamplingPeriod() + _tmpSet.interval;
 }
 
 void SensorDht::humInit(const humParams& humSet) {
@@ -26,6 +27,7 @@ void SensorDht::humInit(const humParams& humSet) {
         dht = new DHTesp();
     }
     dht->setup(_tmpSet.pin, DHTesp::DHT11);
+    _tmpSet.interval = dht->getMinimumSamplingPeriod() + _tmpSet.interval;
 }
 
 void SensorDht::loopTmp() {
@@ -49,10 +51,10 @@ void SensorDht::loopHum() {
 void SensorDht::readTmp() {
     float value;
     static int counter;
-    if (dht->getStatus() != 0 && counter < 5) {
-        counter++;
-        SerialPrint("E", "Sensor", "Disconnected");
-    } else {
+    //if (dht->getStatus() != 0 && counter < 5) {
+    //    counter++;
+    //    SerialPrint("E", "Sensor", "Disconnected " + String(counter) + " " + dht->getStatusString());
+    //} else {
         counter = 0;
         value = dht->getTemperature();
         if (String(value) != "nan") {
@@ -65,16 +67,16 @@ void SensorDht::readTmp() {
         } else {
             SerialPrint("E", "Sensor", "'" + _tmpSet.key + "' data: " + String(value));
         }
-    }
+    //}
 }
 
 void SensorDht::readHum() {
     float value;
     static int counter;
-    if (dht->getStatus() != 0 && counter < 5) {
-        counter++;
-        SerialPrint("E", "Sensor", "Disconnected");
-    } else {
+    //if (dht->getStatus() != 0 && counter < 5) {
+    //    counter++;
+    //    SerialPrint("E", "Sensor", "Disconnected " + String(counter) + " " + dht->getStatusString());
+    //} else {
         counter = 0;
         value = dht->getHumidity();
         if (String(value) != "nan") {
@@ -87,7 +89,7 @@ void SensorDht::readHum() {
         } else {
             SerialPrint("E", "Sensor", "'" + _humSet.key + "' data: " + String(value));
         }
-    }
+    //}
 }
 
 MySensorDhtVector* mySensorDht = nullptr;
