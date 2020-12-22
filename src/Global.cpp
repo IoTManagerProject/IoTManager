@@ -59,8 +59,7 @@ int countDown_EnterCounter = -1;
 String logging_KeyList = "";
 int logging_EnterCounter = -1;
 //=========================================
-int dhtTmp_EnterCounter = -1;
-int dhtHum_EnterCounter = -1;
+int dht_EnterCounter = -1;
 //=========================================
 
 // Sensors

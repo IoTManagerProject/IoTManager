@@ -4,7 +4,7 @@
 #include "Global.h"
 
 extern void itemsListInit();
-extern void addItem2(String param);
+extern void addItem2(int num);
 extern void addItem(String name);
 extern void addPreset(String name);
 extern void addPreset2(int num);

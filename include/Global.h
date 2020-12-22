@@ -88,8 +88,7 @@ extern int countDown_EnterCounter;
 extern String logging_KeyList;
 extern int logging_EnterCounter;
 //=========================================
-extern int dhtTmp_EnterCounter;
-extern int dhtHum_EnterCounter;
+extern int dht_EnterCounter;
 //=========================================
 
 // Sensors

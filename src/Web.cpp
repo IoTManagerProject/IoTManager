@@ -20,7 +20,7 @@ void web_init() {
     server.on("/set", HTTP_GET, [](AsyncWebServerRequest* request) {
         //==============================set.device.json====================================================================================================
         if (request->hasArg(F("addItem"))) {
-            addItem2(request->getParam("addItem")->value());
+            addItem2(request->getParam("addItem")->value().toInt());
             request->redirect("/?set.device");
         }
 

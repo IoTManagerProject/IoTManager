@@ -23,40 +23,43 @@ void itemsListInit() {
     SerialPrint("I", F("Items"), F("Items Init"));
 }
 
-void addItem2(String param) {
-    int num = selectToMarker(param, "-").toInt();
+void addItem2(int num) {
     File configFile = FileFS.open("/items/items.txt", "r");
     if (!configFile) {
         return;
     }
     configFile.seek(0, SeekSet);
     String seachingLine;
-
+    int i = 0;
     while (configFile.position() != configFile.size()) {
-        String item = configFile.readStringUntil('\n');
-        int tmpNum = selectToMarker(item, ";").toInt();
-        if (tmpNum == num) {
-            seachingLine = item;
+        i++;
+        String item = configFile.readStringUntil('*');
+        if (i == num) {
+            if (i == 1) {
+                seachingLine = "\n" + item;
+            } else {
+                seachingLine = item;
+            }
             break;
         }
     }
     configFile.close();
 
-    String name = deleteBeforeDelimiter(param, "-");
+    //while (seachingLine.length()) {
+    //String tmp = selectToMarker(seachingLine, "\n");
+
     randomSeed(micros());
     unsigned int rnd = random(0, 1000);
-    seachingLine.replace("id", name + String(rnd));
+    seachingLine.replace("id", String(rnd));
     seachingLine.replace("order", String(getNewElementNumber("order.txt")));
-
     if (seachingLine.indexOf("gpio") != -1) {
         seachingLine.replace("gpio", "pin[" + String(getFreePinAll()) + "]");
     }
+    
+    //seachingLine = deleteBeforeDelimiter(seachingLine, ",");
+    //}
 
-    seachingLine = deleteBeforeDelimiter(seachingLine, ";");
-    seachingLine.replace("\r\n", "");
-    seachingLine.replace("\r", "");
-    seachingLine.replace("\n", "");
-    addFile(DEVICE_CONFIG_FILE, "\n" + seachingLine);
+    addFile(DEVICE_CONFIG_FILE, seachingLine);
     Serial.println(seachingLine);
 }
 

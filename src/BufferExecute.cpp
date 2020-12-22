@@ -75,10 +75,10 @@ void csvCmdExecute(String& cmdStr) {
             }
 #ifdef SensorDhtEnabled
             else if (order == F("dht-temp")) {
-                sCmd.addCommand(order.c_str(), dhtTmp);
+                //sCmd.addCommand(order.c_str(), dhtTmp);
             }
             else if (order == F("dht-hum")) {
-                sCmd.addCommand(order.c_str(), dhtHum);
+                //sCmd.addCommand(order.c_str(), dhtHum);
             }
 #endif
 #ifdef SensorBme280Enabled

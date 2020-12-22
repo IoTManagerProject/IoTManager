@@ -135,10 +135,10 @@ void loop() {
             mySensorAnalog->at(i).loop();
         }
     }
-    if (mySensorDht != nullptr) {
-        for (unsigned int i = 0; i < mySensorDht->size(); i++) {
-            mySensorDht->at(i).loopTmp();
-            mySensorDht->at(i).loopHum();
-        }
-    }
+    //if (mySensorDht != nullptr) {
+    //    for (unsigned int i = 0; i < mySensorDht->size(); i++) {
+    //        mySensorDht->at(i).loopTmp();
+    //        mySensorDht->at(i).loopHum();
+    //    }
+    //}
 }
