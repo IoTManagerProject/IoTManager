@@ -13,7 +13,6 @@ typedef std::vector<SensorDht> MySensorDhtVector;
 
 struct params {
     String type;
-    String value;
     String key;
     unsigned long interval;
     unsigned int pin;
@@ -31,8 +30,9 @@ class SensorDht {
    private:
     params _paramsTmp;
     params _paramsHum;
-
-    unsigned long currentMillis;
+    
+    unsigned int interval;
+    
     unsigned long prevMillis;
     unsigned long difference;
 };
