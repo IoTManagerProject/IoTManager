@@ -45,9 +45,6 @@ void addItem2(int num) {
     }
     configFile.close();
 
-    //while (seachingLine.length()) {
-    //String tmp = selectToMarker(seachingLine, "\n");
-
     randomSeed(micros());
     unsigned int rnd = random(0, 1000);
     seachingLine.replace("id", String(rnd));
@@ -56,9 +53,6 @@ void addItem2(int num) {
         seachingLine.replace("gpio", "pin[" + String(getFreePinAll()) + "]");
     }
     
-    //seachingLine = deleteBeforeDelimiter(seachingLine, ",");
-    //}
-
     addFile(DEVICE_CONFIG_FILE, seachingLine);
     Serial.println(seachingLine);
 }
