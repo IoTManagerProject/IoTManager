@@ -31,13 +31,12 @@ class SensorDht {
     params _paramsTmp;
     params _paramsHum;
     
-    unsigned int interval;
-    
+    unsigned int _interval;
+
     unsigned long prevMillis;
     unsigned long difference;
 };
 
 extern MySensorDhtVector* mySensorDht;
 
-extern void dhtTmp();
-extern void dhtHum();
+extern void dhtSensor();

@@ -18,15 +18,15 @@ SensorDht::SensorDht(const params& paramsTmp, const params& paramsHum) {
 
     dht->setup(_paramsTmp.pin, DHTesp::DHT11);
 
-    interval = _paramsTmp.interval < _paramsHum.interval ? _paramsTmp.interval : _paramsHum.interval;
-    interval = interval + dht->getMinimumSamplingPeriod();
+    _interval = _paramsTmp.interval < _paramsHum.interval ? _paramsTmp.interval : _paramsHum.interval;
+    _interval = _interval + dht->getMinimumSamplingPeriod();
 }
 
 SensorDht::~SensorDht() {}
 
 void SensorDht::loop() {
     difference = millis() - prevMillis;
-    if (difference >= interval) {
+    if (difference >= _interval) {
         prevMillis = millis();
         readTmpHum();
     }
