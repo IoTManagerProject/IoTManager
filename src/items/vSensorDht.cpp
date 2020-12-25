@@ -16,8 +16,13 @@ SensorDht::SensorDht(const params& paramsTmp, const params& paramsHum) {
         dht = new DHTesp();
     }
 
-    dht->setup(_paramsTmp.pin, DHTesp::DHT11);
-
+    if (_paramsTmp.type == _paramsHum.type) {
+        if (_paramsTmp.type == "dht11") {
+            dht->setup(_paramsTmp.pin, DHTesp::DHT11);
+        } else if (_paramsTmp.type == "dht22") {
+            dht->setup(_paramsTmp.pin, DHTesp::DHT22);
+        }
+    }
     _interval = _paramsTmp.interval < _paramsHum.interval ? _paramsTmp.interval : _paramsHum.interval;
     _interval = _interval + dht->getMinimumSamplingPeriod();
 }
