@@ -1,4 +1,5 @@
 #include "Class/ScenarioClass3.h"
+
 #include "MqttClient.h"
 #include "RemoteOrdersUdp.h"
 Scenario* myScenario;
@@ -11,7 +12,9 @@ void eventGen2(String eventName, String eventValue) {
     eventBuf += event;
 
     if (jsonReadBool(configSetupJson, "MqttOut")) {
-        publishEvent(eventName, eventValue);
+        if (eventName != "timenow") {
+            publishEvent(eventName, eventValue);
+        }
     }
 }
 

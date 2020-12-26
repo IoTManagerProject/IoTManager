@@ -1,12 +1,13 @@
 #include "Web.h"
+
 #include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
-#include "items/vLogging.h"
-#include "Telegram.h"
 #include "RemoteOrdersUdp.h"
 #include "SoftUART.h"
+#include "Telegram.h"
+#include "items/vLogging.h"
 
 bool parseRequestForPreset(AsyncWebServerRequest* request, uint8_t& preset) {
     if (request->hasArg("preset")) {
@@ -83,7 +84,6 @@ void web_init() {
             myNotAsyncActions->make(do_sendScenMQTT);
             request->send(200);
         }
-
 
         if (request->hasArg(F("cleanlog"))) {
             cleanLogAndData();
@@ -325,8 +325,18 @@ void web_init() {
             serverIP = jsonReadStr(configSetupJson, "serverip");
             request->send(200);
         }
-        });
+         //set?order=button_1
+        if (request->hasArg("order")) {
+            String order = request->getParam("order")->value();
+            order.replace("_"," ");
+            orderBuf += order + ",";
+            request->send(200);
+        }
+    });
 
+    server.on("/order", HTTP_GET, [](AsyncWebServerRequest* request) {
+
+    });
 
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         myNotAsyncActions->make(do_GETLASTVERSION);
@@ -336,21 +346,16 @@ void web_init() {
 
         if (ESP8266_FLASH_SIZE_1MB) {
             msg = F("Обновление невозможно, память устройства 1 мб");
-        }
-        else {
+        } else {
             if (lastVersion == FIRMWARE_VERSION) {
                 msg = F("Актуальная версия прошивки уже установлена.");
-            }
-            else if (lastVersion > FIRMWARE_VERSION) {
+            } else if (lastVersion > FIRMWARE_VERSION) {
                 msg = F("Новая версия прошивки<a href=\"#\" class=\"btn btn-block btn-danger\" onclick=\"send_request(this, '/upgrade');setTimeout(function(){ location.href='/?set.device'; }, 90000);html('my-block','<span class=loader></span>Идет обновление прошивки, после обновления страница  перезагрузится автоматически...')\">Установить</a>");
-            }
-            else if (lastVersion == -1) {
+            } else if (lastVersion == -1) {
                 msg = F("Cервер не найден. Попробуйте повторить позже...");
-            }
-            else if (lastVersion == -2) {
+            } else if (lastVersion == -2) {
                 msg = F("Устройство не подключено к роутеру!");
-            }
-            else if (lastVersion < FIRMWARE_VERSION) {
+            } else if (lastVersion < FIRMWARE_VERSION) {
                 msg = F("Ошибка версии. Попробуйте повторить позже...");
             }
         }
@@ -359,7 +364,7 @@ void web_init() {
         jsonWriteStr(tmp, "title", "<button class=\"close\" onclick=\"toggle('my-block')\">×</button>" + msg);
         jsonWriteStr(tmp, "class", "pop-up");
         request->send(200, "text/html", tmp);
-        });
+    });
 
     /*
     * Upgrade
@@ -367,7 +372,7 @@ void web_init() {
     server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest* request) {
         myNotAsyncActions->make(do_UPGRADE);
         request->send(200, "text/html");
-        });
+    });
 
     SerialPrint("I", F("Web"), F("WebAdmin Init"));
 }

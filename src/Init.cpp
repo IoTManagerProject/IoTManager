@@ -43,7 +43,6 @@ void espInit() {
 }
 
 void deviceInit() {
-
     //======clear dallas params======
     if (mySensorDallas2 != nullptr) {
         mySensorDallas2->clear();
@@ -111,7 +110,6 @@ void deviceInit() {
     } else {
         jsonWriteStr(configSetupJson, F("warning3"), "");
     }
-
     //outcoming_date();
 }
 //-------------------------------сценарии-----------------------------------------------------

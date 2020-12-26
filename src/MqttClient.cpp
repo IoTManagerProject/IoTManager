@@ -1,14 +1,15 @@
 #include "MqttClient.h"
+
 #include "BufferExecute.h"
-#include "items/vLogging.h"
 #include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
+#include "items/vLogging.h"
 
 enum MqttBroker { MQTT_PRIMARY,
                   MQTT_RESERVE };
 
-MqttBroker activeBroker = MQTT_PRIMARY; 
+MqttBroker activeBroker = MQTT_PRIMARY;
 
 String mqttPrefix;
 String mqttRootDevice;
@@ -110,6 +111,7 @@ void mqttSubscribe() {
 
     if (jsonReadBool(configSetupJson, "MqttIn")) {
         mqtt.subscribe((mqttPrefix + "/+/+/event").c_str());
+        mqtt.subscribe((mqttPrefix + "/+/+/order").c_str());
         mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
     }
 }
@@ -201,6 +203,17 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         }
     }
 
+    else if (topicStr.indexOf("order") != -1) {
+        if (!jsonReadBool(configSetupJson, "MqttIn")) {
+            return;
+        }
+        String devId = selectFromMarkerToMarker(topicStr, "/", 2);
+        String key = selectFromMarkerToMarker(topicStr, "/", 3);
+        SerialPrint("I", "=>MQTT", "Received direct order " + key + " " + payloadStr);
+        String order = key + " " + payloadStr + ",";
+        orderBuf += order;
+    }
+
     else if (topicStr.indexOf("info") != -1) {
         if (topicStr.indexOf("scen") != -1) {
             writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
@@ -208,12 +221,6 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
             SerialPrint("I", "=>MQTT", "Scenario received");
         }
     }
-
-    //else if (topicStr.indexOf("update")) {
-    //    if (payloadStr == "1") {
-    //        myNotAsyncActions->make(do_UPGRADE);
-    //    }
-    //}
 }
 
 boolean publish(const String& topic, const String& data) {

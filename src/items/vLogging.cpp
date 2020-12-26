@@ -2,11 +2,10 @@
 
 #include <Arduino.h>
 
-#include "FileSystem.h"
-
-#include "Class/LineParsing.h"
-#include "Global.h"
 #include "BufferExecute.h"
+#include "Class/LineParsing.h"
+#include "FileSystem.h"
+#include "Global.h"
 
 LoggingClass::LoggingClass(unsigned long period, unsigned int maxPoints, String loggingValueKey, String key) {
     _period = period * 1000;
@@ -28,10 +27,25 @@ void LoggingClass::loop() {
     }
 }
 
-void LoggingClass::execute(String payload) {
+void LoggingClass::execute(String keyOrValue) {
+    String loggingValue = "";
 
-    if (_period > 0) {
-        payload = getValue(_loggingValueKey);
+    if (keyOrValue == "") {  //прилетело из лупа
+        if (getValue(_loggingValueKey) != "no value") {
+            loggingValue = getValue(_loggingValueKey);
+        } else {
+            SerialPrint("E", "Logging", "This value not found on this device");
+        }
+    } else {                           //прилетело из события
+        if (isDigitStr(keyOrValue)) {  //если это число
+            loggingValue = keyOrValue;
+        } else {  //если это ключ
+            if (getValue(_loggingValueKey) != "no value") {
+                loggingValue = getValue(keyOrValue);
+            } else {
+                SerialPrint("E", "Logging", "This value not found on this device");
+            }
+        }
     }
 
     String filename = "logs/" + _key + ".txt";
@@ -46,20 +60,24 @@ void LoggingClass::execute(String payload) {
         lines_cnt = 0;
     }
 
-    if (payload != "") {
-        if (lines_cnt > _maxPoints) {
+    if (loggingValue != "") {
+        if (lines_cnt > _maxPoints) {  //удаляем старую строку и добавляем новую
             logData = deleteBeforeDelimiter(logData, "\r\n");
             if (timeNow->hasTimeSynced()) {
-                logData += timeNow->getTimeUnix() + " " + payload + "\r\n";
+                logData += timeNow->getTimeUnix() + " " + loggingValue + "\r\n";
                 writeFile(filename, logData);
             }
-        }
-        else {
+        } else {  //просто добавляем новую строку
             if (timeNow->hasTimeSynced()) {
-                addFileLn(filename, timeNow->getTimeUnix() + " " + payload);
+                addFileLn(filename, timeNow->getTimeUnix() + " " + loggingValue);
             }
         }
     }
+    String buf = "{}";
+    jsonWriteInt(buf, "x", timeNow->getTimeUnix().toInt());
+    jsonWriteFloat(buf, "y1", loggingValue.toFloat());
+    buf = "{\"status\":[" + buf + "]}";
+    publishChart(_key, buf);
 }
 
 MyLoggingVector* myLogging = nullptr;
@@ -88,21 +106,13 @@ void logging() {
 void loggingExecute() {
     String key = sCmd.order();
     String value = sCmd.next();
-
-    if (!isDigitStr(value)) { //если значение - текст
-        value = getValue(value);
-    }
-
     int number = getKeyNum(key, logging_KeyList);
-
     if (myLogging != nullptr) {
         if (number != -1) {
             myLogging->at(number).execute(value);
         }
     }
 }
-
-
 
 void choose_log_date_and_send() {
     String all_line = logging_KeyList;
@@ -131,8 +141,7 @@ void sendLogData(String file, String topic) {
             jsonWriteFloat(buf, "y1", value.toFloat());
             if (log_date.length() < 3) {
                 json_array += buf;
-            }
-            else {
+            } else {
                 json_array += buf + ",";
             }
             buf = "{}";
@@ -148,7 +157,6 @@ void sendLogData(String file, String topic) {
 }
 
 void cleanLogAndData() {
-
 #ifdef ESP8266
     auto dir = FileFS.openDir("logs");
     while (dir.next()) {

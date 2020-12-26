@@ -1,12 +1,11 @@
 #pragma once
 #include <Arduino.h>
+
 #include "Cmd.h"
 #include "Global.h"
 
 class Scenario {
-
-public:
-
+   public:
     void loop() {
         if (!jsonReadBool(configSetupJson, "scen")) {
             return;
@@ -27,7 +26,6 @@ public:
             String setEventKey = selectFromMarkerToMarker(condition, " ", 0);
 
             if (incommingEventKey == setEventKey) {
-
                 String setEventSign = selectFromMarkerToMarker(condition, " ", 1);
                 String setEventValue = selectFromMarkerToMarker(condition, " ", 2);
 
@@ -42,13 +40,10 @@ public:
 
                         if (setEventSign == ">") {
                             setEventValue = upValue;
-                        }
-                        else if (setEventSign == "<") {
+                        } else if (setEventSign == "<") {
                             setEventValue = lowValue;
-
                         }
-                    } 
-                    else {
+                    } else {
                         setEventValue = getValue(setEventValue);
                     }
                 }
@@ -57,20 +52,15 @@ public:
 
                 if (setEventSign == "=") {
                     flag = incommingEventValue == setEventValue;
-                }
-                else if (setEventSign == "!=") {
+                } else if (setEventSign == "!=") {
                     flag = incommingEventValue != setEventValue;
-                }
-                else if (setEventSign == "<") {
+                } else if (setEventSign == "<") {
                     flag = incommingEventValue.toFloat() < setEventValue.toFloat();
-                }
-                else if (setEventSign == ">") {
+                } else if (setEventSign == ">") {
                     flag = incommingEventValue.toFloat() > setEventValue.toFloat();
-                }
-                else if (setEventSign == ">=") {
+                } else if (setEventSign == ">=") {
                     flag = incommingEventValue.toFloat() >= setEventValue.toFloat();
-                }
-                else if (setEventSign == "<=") {
+                } else if (setEventSign == "<=") {
                     flag = incommingEventValue.toFloat() <= setEventValue.toFloat();
                 }
 
