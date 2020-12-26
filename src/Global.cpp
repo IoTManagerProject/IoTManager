@@ -62,9 +62,6 @@ int logging_EnterCounter = -1;
 int dht_EnterCounter = -1;
 //=========================================
 
-// Sensors
-String sensorReadingMap10sec;
-String sensorReadingMap30sec;
 
 String itemName;
 String presetName;

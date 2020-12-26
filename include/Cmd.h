@@ -4,7 +4,6 @@
 
 extern void cmd_init();
 
-extern void sensorsInit();
 
 //extern void levelPr();
 //extern void ultrasonicCm();

@@ -26,6 +26,8 @@
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorUltrasonic.h"
+#include "items/vSensorBme280.h"
+#include "items/vSensorBmp280.h"
 
 void not_async_actions();
 
@@ -50,7 +52,6 @@ void setup() {
 #endif
     clockInit();
     timeInit();
-    sensorsInit();  //Will be remooved
     itemsListInit();
     espInit();
     routerConnect();
@@ -138,6 +139,16 @@ void loop() {
     if (mySensorDht != nullptr) {
         for (unsigned int i = 0; i < mySensorDht->size(); i++) {
             mySensorDht->at(i).loop();
+        }
+    }
+    if (mySensorBme280 != nullptr) {
+        for (unsigned int i = 0; i < mySensorBme280->size(); i++) {
+            mySensorBme280->at(i).loop();
+        }
+    }
+    if (mySensorBmp280 != nullptr) {
+        for (unsigned int i = 0; i < mySensorBmp280->size(); i++) {
+            mySensorBmp280->at(i).loop();
         }
     }
 }

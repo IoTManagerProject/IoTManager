@@ -8,9 +8,9 @@
 
 DHTesp* dht = nullptr;
 
-SensorDht::SensorDht(const params& paramsTmp, const params& paramsHum) {
-    _paramsTmp = params(paramsTmp);
-    _paramsHum = params(paramsHum);
+SensorDht::SensorDht(const paramsDht& paramsTmp, const paramsDht& paramsHum) {
+    _paramsTmp = paramsDht(paramsTmp);
+    _paramsHum = paramsDht(paramsHum);
 
     if (!dht) {
         dht = new DHTesp();
@@ -23,26 +23,23 @@ SensorDht::SensorDht(const params& paramsTmp, const params& paramsHum) {
             dht->setup(_paramsTmp.pin, DHTesp::DHT22);
         }
     }
-    _interval = _paramsTmp.interval < _paramsHum.interval ? _paramsTmp.interval : _paramsHum.interval;
-    _interval = _interval + dht->getMinimumSamplingPeriod();
+   
+    _paramsHum.interval = _paramsHum.interval + dht->getMinimumSamplingPeriod();
 }
 
 SensorDht::~SensorDht() {}
 
 void SensorDht::loop() {
     difference = millis() - prevMillis;
-    if (difference >= _interval) {
+    if (difference >= _paramsHum.interval) {
         prevMillis = millis();
         readTmpHum();
     }
 }
 
 void SensorDht::readTmpHum() {
-    float tmp;
-    float hum;
-
-    tmp = dht->getTemperature();
-    hum = dht->getHumidity();
+    float tmp = dht->getTemperature();
+    float hum = dht->getHumidity();
 
     if (String(tmp) != "nan" && String(hum) != "nan") {
         tmp = tmp * _paramsTmp.c;
@@ -77,8 +74,8 @@ void dhtSensor() {
     static int enterCnt = -1;
     enterCnt++;
 
-    static params paramsTmp;
-    static params paramsHum;
+    static paramsDht paramsTmp;
+    static paramsDht paramsHum;
 
     if (enterCnt == 0) {
         paramsTmp.type = type;

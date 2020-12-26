@@ -1,14 +1,13 @@
 #pragma once
 #include "Global.h"
 #include <Arduino.h>
-#include "items/SensorConvertingClass.h"
 #include "GyverFilters.h"
 
 class SensorUltrasonic;
 
 typedef std::vector<SensorUltrasonic> MySensorUltrasonicVector;
 
-class SensorUltrasonic : public SensorConvertingClass {
+class SensorUltrasonic {
 public:
 
     SensorUltrasonic(String key, unsigned long interval, unsigned int trig, unsigned int echo, int map1, int map2, int map3, int map4, float c);

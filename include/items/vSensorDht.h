@@ -11,7 +11,7 @@ class SensorDht;
 
 typedef std::vector<SensorDht> MySensorDhtVector;
 
-struct params {
+struct paramsDht {
     String type;
     String key;
     unsigned long interval;
@@ -21,18 +21,16 @@ struct params {
 
 class SensorDht {
    public:
-    SensorDht(const params& paramsTmp, const params& paramsHum);
+    SensorDht(const paramsDht& paramsTmp, const paramsDht& paramsHum);
     ~SensorDht();
 
     void loop();
     void readTmpHum();
 
    private:
-    params _paramsTmp;
-    params _paramsHum;
+    paramsDht _paramsTmp;
+    paramsDht _paramsHum;
     
-    unsigned int _interval;
-
     unsigned long prevMillis;
     unsigned long difference;
 };

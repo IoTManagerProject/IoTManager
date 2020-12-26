@@ -47,8 +47,6 @@
 //================================================================================================================================================================
 enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,
-                   SENSORS10SEC,
-                   SENSORS30SEC,
                    TIME,
                    TIME_SYNC,
                    STATISTICS,

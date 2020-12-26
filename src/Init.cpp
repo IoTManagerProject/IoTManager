@@ -43,7 +43,6 @@ void espInit() {
 }
 
 void deviceInit() {
-    sensorReadingMap10sec = "";
 
     //======clear dallas params======
     if (mySensorDallas2 != nullptr) {
