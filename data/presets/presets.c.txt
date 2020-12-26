@@ -17,7 +17,7 @@
 0;inoutput;threshold4;inputDigitTemp;Расписание2;Температура;15*
 0;dht;t3;anydataTemp;Теплица3;Температура;1;c[1]
 0;dht;h3;anydataHum;Теплица3;Влажность;2;c[1];pin[2];type[dht11];int[10]
-0;logging;log3;chart;Теплица3;История;3;val[hum];int[60];cnt[100]
+0;logging;log3;chart;Теплица3;История;3;val[h3];int[60];cnt[100]
 0;inoutput;hUp3;inputDigit;Теплица3;Верхний#порог;4
 0;inoutput;hLow3;inputDigit;Теплица3;Нижний#порог;5
 0;button-out;hUp3;toggle;Теплица3;Полив;6;pin[12]*
