@@ -9,10 +9,10 @@
 0;analog-adc;adcid;fillgauge;Сенсоры;Аналоговый;order;pin[0];map[0,1024,0,100];c[1];int[10]*
 0;dallas-temp;tmpid;anydataTemp;Сенсоры;Температура;order;pin[2];index[0];int[10]*
 0;ultrasonic-cm;cmid;anydata;Сенсоры;Расстояние;order;pin[12,13];map[0,500,0,100];c[1];int[10]*
-0;dht;tmpid;anydataTemp;Сенсоры;Температура;1;pin[2];type[dht11];c[1]
-0;dht;humid;anydataHum;Сенсоры;Влажность;2;pin[2];type[dht11];c[1];int[10]*
-0;dht;tmpid;anydataTemp;Сенсоры;Температура;1;pin[2];type[dht22];c[1]
-0;dht;humid;anydataHum;Сенсоры;Влажность;2;pin[2];type[dht22];c[1];int[10]*
+0;dht;tmpid;anydataTemp;Сенсоры;Температура;1;c[1]
+0;dht;humid;anydataHum;Сенсоры;Влажность;2;c[1];pin[2];type[dht11];int[10]*
+0;dht;tmpid;anydataTemp;Сенсоры;Температура;1;c[1]
+0;dht;humid;anydataHum;Сенсоры;Влажность;2;c[1];pin[2];type[dht22];int[10]*
 0;bme280;tmpid;anydataTemp;Сенсоры;Температура;1;c[1]
 0;bme280;humid;anydataHum;Сенсоры;Влажность;2;c[1]
 0;bme280;prsid;anydataPress;Сенсоры;Давление;3;c[1];addr[0x76];int[10]*

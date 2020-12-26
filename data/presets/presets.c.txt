@@ -15,11 +15,12 @@
 0;inoutput;threshold3;inputDigitTemp;Расписание2;Температура;13
 0;inoutput;time24;inputTimeClock;Расписание2;Ночной#период;14
 0;inoutput;threshold4;inputDigitTemp;Расписание2;Температура;15*
-0;dht-hum;h3;anydataHum;Теплица3;Влажность;1;pin[2];type[dht11];c[1]
-0;logging;log3;chart;Теплица3;История;2;val[hum];int[60];cnt[100]
-0;inoutput;hUp3;inputDigit;Теплица3;Верхний#порог;3
-0;inoutput;hLow3;inputDigit;Теплица3;Нижний#порог;4
-0;button-out;hUp3;toggle;Теплица3;Полив;5;pin[12]*
+0;dht;t3;anydataTemp;Теплица3;Температура;1;c[1]
+0;dht;h3;anydataHum;Теплица3;Влажность;2;c[1];pin[2];type[dht11];int[10]
+0;logging;log3;chart;Теплица3;История;3;val[hum];int[60];cnt[100]
+0;inoutput;hUp3;inputDigit;Теплица3;Верхний#порог;4
+0;inoutput;hLow3;inputDigit;Теплица3;Нижний#порог;5
+0;button-out;hUp3;toggle;Теплица3;Полив;6;pin[12]*
 0;button-out;btn41;toggle;Реле4;Освещение;1;pin[12]
 0;button-out;btn42;toggle;Реле4;Освещение;2;pin[13]
 0;inoutput;time41;inputTime;Реле4;Введите#время#включения;3
