@@ -36,8 +36,8 @@ void LoggingClass::execute(String keyOrValue) {
         } else {
             SerialPrint("E", "Logging", "This value not found on this device");
         }
-    } else {                           //прилетело из события
-        if (isDigitStr(keyOrValue)) {  //если это число
+    } else {    //прилетело из события
+        if (isDigitStr(keyOrValue) || keyOrValue.indexOf(".") != -1) {  //если это число или дробное число
             loggingValue = keyOrValue;
         } else {  //если это ключ
             if (getValue(_loggingValueKey) != "no value") {
