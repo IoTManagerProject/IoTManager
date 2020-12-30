@@ -1,18 +1,31 @@
 #pragma once
 
-//===========Firmware=============================================================================================================================================
 #define FIRMWARE_VERSION 274
-#define USE_OTA false
-//===========FileSystem==============================================================================================================================================
+
+#ifdef esp8266_4mb
+#define FIRMWARE_NAME "esp8266_4mb"
 #define USE_LITTLEFS true
-//==================================================================================================================================================================
-#define NUM_BUTTONS 6
+#define USE_OTA true
 #define LED_PIN 2
-//===========MQTT=================================================================================================================================================
+#endif
+
+#ifdef esp8266_1mb
+#define FIRMWARE_NAME "esp8266_1mb"
+#define USE_LITTLEFS false
+#define USE_OTA false
+#define LED_PIN 2
+#endif
+
+#ifdef esp32_4mb
+#define FIRMWARE_NAME "esp32_4mb"
+#define USE_LITTLEFS false
+#define USE_OTA true
+#define LED_PIN 22
+#endif
+
+#define NUM_BUTTONS 6
 #define MQTT_RECONNECT_INTERVAL 20000
-//==========Telemetry=============================================================================================================================================
 #define TELEMETRY_UPDATE_INTERVAL_MIN 60
-//=========Configuration==========================================================================================================================================
 #define DEVICE_CONFIG_FILE "s.conf.csv"
 #define DEVICE_SCENARIO_FILE "s.scen.txt"
 //=========System parts===========================================================================================================================================
@@ -22,28 +35,16 @@
 //#define LAYOUT_IN_RAM
 //#define UDP_ENABLED
 //#define SSDP_ENABLED
-//=========Sensors enable/disable=================================================================================================================================
 #define SensorBme280Enabled
 #define SensorBmp280Enabled
 #define SensorDhtEnabled
 #define PwmOutEnable
-//=========Features=================================================================================================================================
 #define telegramEnable
 #define uartEnable
-
-#ifdef ESP8266
-#ifdef USE_OTA
-#define FIRMWARE_NAME "esp8266-1mb"
-#else
-#define FIRMWARE_NAME "esp8266"
-#endif
-#endif
-
-#ifdef ESP32
-#define FIRMWARE_NAME "esp32"
-#endif
-
 //================================================================================================================================================================
+
+
+
 enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,
                    TIME,
@@ -79,6 +80,27 @@ enum ConfigType_t {
     CT_CONFIG,
     CT_SCENARIO
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //history
 //07.11.2020 (SSDP OFF, UDP OFF)
 //RAM:   [=====     ]  46.8% (used 38376 bytes from 81920 bytes)
