@@ -1,11 +1,11 @@
 #include "Utils/WiFiUtils.h"
+
 #include "FileSystem.h"
 
 void routerConnect() {
-
     WiFi.setAutoConnect(false);
     WiFi.persistent(false);
-    
+
     setLedStatus(LED_SLOW);
     WiFi.mode(WIFI_STA);
     byte tries = 20;
@@ -15,10 +15,13 @@ void routerConnect() {
 
     if (_ssid == "" && _password == "") {
         WiFi.begin();
-    }
-    else {
+    } else {
         WiFi.begin(_ssid.c_str(), _password.c_str());
+#ifdef ESP32
+        WiFi.setTxPower(WIFI_POWER_19_5dBm);
+#else
         WiFi.setOutputPower(20.5);
+#endif
         SerialPrint("I", "WIFI", "ssid: " + _ssid);
     }
 
@@ -35,8 +38,7 @@ void routerConnect() {
     if (WiFi.status() != WL_CONNECTED) {
         Serial.println("");
         startAPMode();
-    }
-    else {
+    } else {
         Serial.println("");
         SerialPrint("I", "WIFI", "http://" + WiFi.localIP().toString());
         jsonWriteStr(configSetupJson, "ip", WiFi.localIP().toString());
@@ -80,7 +82,6 @@ bool startAPMode() {
     return true;
 }
 
-
 boolean RouterFind(String ssid) {
     bool res = false;
     int n = WiFi.scanComplete();
@@ -121,24 +122,19 @@ uint8_t RSSIquality() {
     if (WiFi.status() == WL_CONNECTED) {
         int rssi = WiFi.RSSI();
         if (rssi >= -50) {
-            res = 6; //"Excellent";
+            res = 6;  //"Excellent";
+        } else if (rssi < -50 && rssi >= -60) {
+            res = 5;  //"Very good";
+        } else if (rssi < -60 && rssi >= -70) {
+            res = 4;  //"Good";
+        } else if (rssi < -70 && rssi >= -80) {
+            res = 3;  //"Low";
+        } else if (rssi < -80 && rssi > -100) {
+            res = 2;  //"Very low";
+        } else if (rssi <= -100) {
+            res = 1;  //"No signal";
         }
-        else if (rssi < -50 && rssi >= -60) {
-            res = 5; //"Very good";
-        }
-        else if (rssi < -60 && rssi >= -70) {
-            res = 4; //"Good";
-        }
-        else if (rssi < -70 && rssi >= -80) {
-            res = 3; //"Low";
-        }
-        else if (rssi < -80 && rssi > -100) {
-            res = 2; //"Very low";
-        }
-        else if (rssi <= -100) {
-            res = 1; //"No signal";
-        }    
-    } 
+    }
     return res;
 }
 
@@ -146,33 +142,32 @@ void wifiSignalInit() {
     ts.add(
         SYGNAL, 1000 * 60, [&](void*) {
             SerialPrint("I", "System", printMemoryStatus());
+#ifdef ESP8266
             getFSInfo();
+#endif
             switch (RSSIquality()) {
-            case 0:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>не подключено к роутеру</font>"));
-                break;
-            case 1:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>нет сигнала</font>"));
-                break;
-            case 2:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>очень низкий</font>"));
-                break;
-            case 3:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='orange'>низкий</font>"));
-                break;
-            case 4:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>хороший</font>"));
-                break;
-            case 5:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>очень хороший</font>"));
-                break;
-            case 6:
-                jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>отличный</font>"));
-                break;
+                case 0:
+                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>не подключено к роутеру</font>"));
+                    break;
+                case 1:
+                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>нет сигнала</font>"));
+                    break;
+                case 2:
+                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>очень низкий</font>"));
+                    break;
+                case 3:
+                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='orange'>низкий</font>"));
+                    break;
+                case 4:
+                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>хороший</font>"));
+                    break;
+                case 5:
+                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>очень хороший</font>"));
+                    break;
+                case 6:
+                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>отличный</font>"));
+                    break;
             }
         },
         nullptr, true);
 }
-
-
-

@@ -31,8 +31,7 @@ void SensorAnalog::loop() {
 void SensorAnalog::readAnalog() {
     int value;
 #ifdef ESP32
-    int pinInt = pin.toInt();
-    value = analogRead(pinInt);
+    value = analogRead(_adcPin);
 #endif
 #ifdef ESP8266
     value = analogRead(A0);

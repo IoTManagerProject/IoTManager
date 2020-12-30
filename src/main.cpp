@@ -23,11 +23,11 @@
 #include "items/vImpulsOut.h"
 #include "items/vLogging.h"
 #include "items/vSensorAnalog.h"
+#include "items/vSensorBme280.h"
+#include "items/vSensorBmp280.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorUltrasonic.h"
-#include "items/vSensorBme280.h"
-#include "items/vSensorBmp280.h"
 
 void not_async_actions();
 
@@ -71,7 +71,9 @@ void setup() {
 #ifdef SSDP_ENABLED
     SsdpInit();
 #endif
+#ifdef ESP8266
     getFSInfo();
+#endif
 
     testsPerform();
 
