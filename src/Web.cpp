@@ -344,7 +344,7 @@ void web_init() {
 
         String msg = "";
 
-        if (ESP8266_FLASH_SIZE_1MB) {
+        if (USE_OTA) {
             msg = F("Обновление невозможно, память устройства 1 мб");
         } else {
             if (lastVersion == FIRMWARE_VERSION) {

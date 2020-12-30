@@ -2,15 +2,12 @@
 
 //===========Firmware=============================================================================================================================================
 #define FIRMWARE_VERSION 274
-#define ESP8266_FLASH_SIZE_1MB false
+#define USE_OTA false
 //===========FileSystem==============================================================================================================================================
 #define USE_LITTLEFS true
 //==================================================================================================================================================================
 #define NUM_BUTTONS 6
-#ifndef LED_BUILTIN 
-#define LED_BUILTIN 2
-#endif
-#define LED_PIN LED_BUILTIN
+#define LED_PIN 2
 //===========MQTT=================================================================================================================================================
 #define MQTT_RECONNECT_INTERVAL 20000
 //==========Telemetry=============================================================================================================================================
@@ -34,9 +31,8 @@
 #define telegramEnable
 #define uartEnable
 
-
 #ifdef ESP8266
-#ifdef ESP8266_FLASH_SIZE_1MB
+#ifdef USE_OTA
 #define FIRMWARE_NAME "esp8266-1mb"
 #else
 #define FIRMWARE_NAME "esp8266"
@@ -55,7 +51,7 @@ enum TimerTask_t { WIFI_SCAN,
                    STATISTICS,
                    UPTIME,
                    UDP,
-                   SYGNAL};
+                   SYGNAL };
 
 enum NotAsyncActions {
     do_ZERO,
@@ -85,26 +81,25 @@ enum ConfigType_t {
 };
 //history
 //07.11.2020 (SSDP OFF, UDP OFF)
-//RAM:   [=====     ]  46.8% (used 38376 bytes from 81920 bytes)     
+//RAM:   [=====     ]  46.8% (used 38376 bytes from 81920 bytes)
 //Flash: [=====     ]  54.2% (used 566004 bytes from 1044464 bytes)
 
-//13.11.2020 (SSDP OFF, UDP OFF) 
+//13.11.2020 (SSDP OFF, UDP OFF)
 //RAM:   [=====     ]  46.6% (used 38208 bytes from 81920 bytes)
 //Flash: [=====     ]  54.2% (used 566388 bytes from 1044464 bytes)
 
-//15.11.2020 (SSDP OFF, UDP OFF) 
+//15.11.2020 (SSDP OFF, UDP OFF)
 //RAM:   [=====     ]  46.1% (used 37780 bytes from 81920 bytes)
 //Flash: [=====     ]  54.3% (used 566656 bytes from 1044464 bytes)
 
-//17.11.2020 (SSDP OFF, UDP OFF) 
+//17.11.2020 (SSDP OFF, UDP OFF)
 //RAM:   [=====     ]  45.7% (used 37476 bytes from 81920 bytes)
 //Flash: [=====     ]  54.5% (used 569296 bytes from 1044464 bytes)
 
 //RAM:   [=====     ]  45.6% (used 37336 bytes from 81920 bytes)
 //Flash: [======    ]  55.3% (used 577396 bytes from 1044464 bytes)
 
-
-//eventBuf - буфер событий которые проверяются в сценариях, 
+//eventBuf - буфер событий которые проверяются в сценариях,
 //и если событие удовлетворяет какому нибудь условию то выполняются указанные команды
 
 //orderBuf - буфер команд которые выполняются сейчас же
