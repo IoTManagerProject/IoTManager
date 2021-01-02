@@ -36,8 +36,8 @@ void LoggingClass::execute(String keyOrValue) {
         } else {
             SerialPrint("E", "Logging", "This value not found on this device");
         }
-    } else {                                                            //прилетело из события
-        if (isDigitStr(keyOrValue) || keyOrValue.indexOf(".") != -1) {  //если это число или дробное число
+    } else {                                   //прилетело из события
+        if (isDigitDotCommaStr(keyOrValue)) {  //если это число или дробное число
             loggingValue = keyOrValue;
         } else {  //если это ключ
             if (getValue(_loggingValueKey) != "no value") {
@@ -49,21 +49,22 @@ void LoggingClass::execute(String keyOrValue) {
     }
 
     String filename = "logs/" + _key + ".txt";
-    
+
     size_t cnt = countLines(filename);
     size_t sz = getFileSize(filename);
 
-    SerialPrint("I", "Logging", "http://" + WiFi.localIP().toString() + "/" + filename + " lines " + String(cnt, DEC) + ", size " + String(sz) + ", heap " + ESP.getFreeHeap());
+    SerialPrint("I", "Logging", "http://" + WiFi.localIP().toString() + "/" + filename + " lines " + String(cnt, DEC) + ", size " + String(sz));
 
     if ((cnt > _maxPoints + 1) || cnt == -1) {
-        removeFile(filename); 
+        removeFile(filename);
         SerialPrint("E", "Logging", "file been remooved: " + filename + " " + String(cnt) + ">" + String(_maxPoints));
         cnt = 0;
     }
 
     if (loggingValue != "") {
-        if (cnt > _maxPoints) {  //удаляем старую строку и добавляем новую
-            String logData = readFile(filename, 10240);
+        if (cnt > _maxPoints) {                          //удаляем старую строку и добавляем новую
+            String logData = readFile(filename, 20480);  //10240
+            SerialPrint("I", "Logging", "Free heap " + ESP.getFreeHeap());
             if (logData == "large") {
                 SerialPrint("E", "Logging", "File is very large");
             }
@@ -132,39 +133,6 @@ void choose_log_date_and_send() {
     }
 }
 
-void sendLogData2(String file, String topic) {
-    String log_date = readFile(file, 5120);
-    if (log_date != "failed") {
-        log_date.replace("\r\n", "\n");
-        log_date.replace("\r", "\n");
-        String buf = "{}";
-        String json_array;
-        String unix_time;
-        String value;
-        while (log_date.length()) {
-            String tmp = selectToMarker(log_date, "\n");
-            log_date = deleteBeforeDelimiter(log_date, "\n");
-            unix_time = selectToMarker(tmp, " ");
-            jsonWriteInt(buf, "x", unix_time.toInt());
-            value = deleteBeforeDelimiter(tmp, " ");
-            jsonWriteFloat(buf, "y1", value.toFloat());
-            if (log_date.length() < 3) {
-                json_array += buf;
-            } else {
-                json_array += buf + ",";
-            }
-            buf = "{}";
-        }
-        unix_time = "";
-        value = "";
-        log_date = "";
-        json_array = "{\"status\":[" + json_array + "]}";
-        //SerialPrint("I", "module", json_array);
-
-        publishChart(topic, json_array);
-    }
-}
-
 void sendLogData(String file, String topic) {
     File configFile = FileFS.open(file, "r");
     if (!configFile) {
@@ -189,12 +157,15 @@ void sendLogData(String file, String topic) {
         if (unix_time != "" || value != "") {
             json_array += buf + ",";
         }
-        if (i >= 100) {
-            json_array = "{\"status\":[" + json_array + "]}";
-            json_array.replace("},]}", "}]}");
-            publishChart(topic, json_array);
-            json_array = "";
-            i = 0;
+        int grafmax = jsonReadInt(configSetupJson, "grafmax");
+        if (grafmax != 0) {
+            if (i >= grafmax) {
+                json_array = "{\"status\":[" + json_array + "]}";
+                json_array.replace("},]}", "}]}");
+                publishChart(topic, json_array);
+                json_array = "";
+                i = 0;
+            }
         }
     } while (psn < sz);
 

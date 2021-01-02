@@ -44,6 +44,12 @@
     },
     {
       "type": "link",
+      "title": "Настройки разработчика",
+      "action": "/?set.dev",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "link",
       "title": "Скачать приложение IoT Manager для android",
       "action": "https://play.google.com/store/apps/details?id=ru.esp8266.iotmanager",
       "class": "btn btn-block btn-default"

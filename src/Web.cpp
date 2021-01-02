@@ -325,11 +325,18 @@ void web_init() {
             serverIP = jsonReadStr(configSetupJson, "serverip");
             request->send(200);
         }
-         //set?order=button_1
+        //set?order=button_1
         if (request->hasArg("order")) {
             String order = request->getParam("order")->value();
-            order.replace("_"," ");
+            order.replace("_", " ");
             orderBuf += order + ",";
+            request->send(200);
+        }
+
+        if (request->hasArg("grafmax")) {
+            int value = request->getParam("grafmax")->value().toInt();
+            jsonWriteInt(configSetupJson, "grafmax", value);
+            saveConfig();
             request->send(200);
         }
     });
@@ -345,8 +352,6 @@ void web_init() {
         String msg = "";
 
         if (USE_OTA) {
-            msg = F("Обновление невозможно, память устройства 1 мб");
-        } else {
             if (lastVersion == FIRMWARE_VERSION) {
                 msg = F("Актуальная версия прошивки уже установлена.");
             } else if (lastVersion > FIRMWARE_VERSION) {
@@ -358,6 +363,8 @@ void web_init() {
             } else if (lastVersion < FIRMWARE_VERSION) {
                 msg = F("Ошибка версии. Попробуйте повторить позже...");
             }
+        } else {
+            msg = F("Обновление невозможно, память устройства 1 мб");
         }
 
         String tmp = "{}";

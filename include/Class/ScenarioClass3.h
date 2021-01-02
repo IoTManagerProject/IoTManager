@@ -29,7 +29,7 @@ class Scenario {
                 String setEventSign = selectFromMarkerToMarker(condition, " ", 1);
                 String setEventValue = selectFromMarkerToMarker(condition, " ", 2);
 
-                if (!isDigitStr(setEventValue)) {
+                if (!isDigitDotCommaStr(setEventValue)) {
                     if (setEventValue.indexOf("+-") != -1) {
                         String setEventValueName = selectToMarker(setEventValue, "+-");
                         String gisteresisValue = selectToMarkerLast(setEventValue, "+-");

@@ -41,6 +41,25 @@
       },
       {
         "type": "h3",
+        "title": "Количество точек графика выгружаемое за раз"
+      },
+      {
+        "type": "input",
+        "title": "ip address",
+        "name": "graf-arg",
+        "state": "{{grafmax}}"
+      },
+      {
+        "type": "button",
+        "title": "{{ButSave}}",
+        "action": "set?grafmax=[[graf-arg]]",
+        "class": "btn btn-block btn-default"
+      },
+      {
+        "type": "hr"
+      },
+      {
+        "type": "h3",
         "name": "reset-block",
         "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
         "class": "hidden"
