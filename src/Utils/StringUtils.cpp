@@ -76,7 +76,7 @@ uint16_t hexStringToUint16(String hex) {
     }
 }
 
-size_t itemsCount2(String& str, const String& separator) {
+size_t itemsCount2(String str, const String& separator) {
     // если строки поиск нет сразу выход
     if (str.indexOf(separator) == -1) {
         return 0;
