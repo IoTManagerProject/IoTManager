@@ -114,6 +114,16 @@ boolean isDigitStr(const String& str) {
     return str.length();
 }
 
+boolean isDigitDotCommaStr(const String& str) {
+    for (size_t i = 0; i < str.length(); i++) {
+        char latter = str.charAt(i);
+        if (!isDigit(latter) && latter != '.' && latter != '-') {
+            return false;
+        }
+    }
+    return true;
+}
+
 String prettyBytes(size_t size) {
     if (size < 1024)
         return String(size) + "b";
