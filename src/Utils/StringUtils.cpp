@@ -1,4 +1,5 @@
 #include "Utils/StringUtils.h"
+
 #include "Consts.h"
 
 String selectToMarkerLast(String str, String found) {
@@ -75,7 +76,7 @@ uint16_t hexStringToUint16(String hex) {
     }
 }
 
-size_t itemsCount(String str, const String& separator) {
+size_t itemsCount2(String& str, const String& separator) {
     // если строки поиск нет сразу выход
     if (str.indexOf(separator) == -1) {
         return 0;
@@ -88,6 +89,19 @@ size_t itemsCount(String str, const String& separator) {
         str = deleteBeforeDelimiter(str, separator);
         cnt++;
     }
+    return cnt;
+}
+
+size_t itemsCount(String& str, const char* delim) {
+    size_t cnt = 0;
+    char* cstr = new char[str.length() + 1];
+    strcpy(cstr, str.c_str());
+    char* token;
+    while ((token = strtok_r(cstr, delim, &cstr))) {
+        cnt++;
+        //printf("%s\n", token);
+    }
+    delete[] cstr;
     return cnt;
 }
 
@@ -110,6 +124,3 @@ String prettyBytes(size_t size) {
     else
         return String(size / 1024.0 / 1024.0 / 1024.0) + "GB";
 }
-
-
-

@@ -1,9 +1,8 @@
-#include "FileSystem.h"
-
 #include "Utils/FileUtils.h"
-#include "Utils\SerialPrint.h"
-#include "Utils/StringUtils.h"
 
+#include "FileSystem.h"
+#include "Utils/StringUtils.h"
+#include "Utils\SerialPrint.h"
 
 const String filepath(const String& filename) {
     return filename.startsWith("/") ? filename : "/" + filename;
@@ -22,10 +21,10 @@ void removeFile(const String& filename) {
     String path = filepath(filename);
     if (FileFS.exists(path)) {
         if (!FileFS.remove(path)) {
-            SerialPrint("I","Files","remove " + path);
+            SerialPrint("I", "Files", "remove " + path);
         }
     } else {
-        SerialPrint("E","Files","not exist" + path);
+        SerialPrint("E", "Files", "not exist" + path);
     }
 }
 
@@ -33,7 +32,7 @@ File seekFile(const String& filename, size_t position) {
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
     if (!file) {
-        SerialPrint("[E]","Files","open " + path);
+        SerialPrint("[E]", "Files", "open " + path);
     }
     // поставим курсор в начало файла
     file.seek(position, SeekSet);
@@ -79,14 +78,14 @@ const String addFile(const String& filename, const String& str) {
 bool copyFile(const String& src, const String& dst, bool overwrite) {
     String srcPath = filepath(src);
     String dstPath = filepath(dst);
-    SerialPrint("I","Files","copy " + srcPath + " to " + dstPath);
+    SerialPrint("I", "Files", "copy " + srcPath + " to " + dstPath);
     if (!FileFS.exists(srcPath)) {
-        SerialPrint("[E]","Files","not exist: " + srcPath);
+        SerialPrint("[E]", "Files", "not exist: " + srcPath);
         return false;
     }
     if (FileFS.exists(dstPath)) {
         if (!overwrite) {
-            SerialPrint("[E]","Files","already exist: " + dstPath);
+            SerialPrint("[E]", "Files", "already exist: " + dstPath);
             return false;
         }
         FileFS.remove(dstPath);
@@ -122,6 +121,22 @@ const String readFile(const String& filename, size_t max_size) {
         return "failed";
     }
     size_t size = file.size();
+    if (size > max_size) {
+        file.close();
+        return "large";
+    }
+    String temp = file.readString();
+    file.close();
+    return temp;
+}
+
+const String readFileSz(const String& filename, size_t max_size, size_t& size) {
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "r");
+    if (!file) {
+        return "failed";
+    }
+    size = file.size();
     if (size > max_size) {
         file.close();
         return "large";

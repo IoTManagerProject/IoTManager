@@ -14,7 +14,7 @@ class LoggingClass {
     ~LoggingClass();
 
     void loop();
-    void execute(String payload);
+    void execute(String keyOrValue);
 
    private:
 
@@ -35,4 +35,5 @@ extern void logging();
 extern void loggingExecute();
 extern void choose_log_date_and_send();
 extern void sendLogData(String file, String topic);
+extern void sendLogData2(String file, String topic);
 extern void cleanLogAndData();

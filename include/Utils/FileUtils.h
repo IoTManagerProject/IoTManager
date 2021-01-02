@@ -1,5 +1,6 @@
 #pragma once
 #include <Arduino.h>
+
 #include "Consts.h"
 #include "FileSystem.h"
 
@@ -43,6 +44,11 @@ const String writeFile(const String& filename, const String& str);
 *  Чтение файла в строку
 */
 const String readFile(const String& filename, size_t max_size);
+
+/*
+*  Чтение файла в строку с записью его размера
+*/
+const String readFileSz(const String& filename, size_t max_size, size_t& size);
 
 /*
 *  Размер файла

@@ -22,7 +22,9 @@ String deleteToMarkerLast(String str, String found);
 
 String selectFromMarkerToMarker(String str, String found, int number);
 
-size_t itemsCount(String str, const String& separator);
+size_t itemsCount2(String& str, const String& separator);
+
+size_t itemsCount(String& str, const char* delim);
 
 boolean isDigitStr(const String&);
 
