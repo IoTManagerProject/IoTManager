@@ -46,14 +46,14 @@ const String writeFile(const String& filename, const String& str);
 const String readFile(const String& filename, size_t max_size);
 
 /*
-*  Чтение файла в строку с записью его размера
+*  Посчитать
 */
-const String readFileSz(const String& filename, size_t max_size, size_t& size);
+size_t countLines(const String filename);
 
 /*
 *  Размер файла
 */
-const String getFileSize(const String& filename);
+size_t getFileSize(const String filename);
 
 bool copyFile(const String& src, const String& dst, bool overwrite = true);
 

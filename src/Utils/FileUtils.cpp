@@ -130,31 +130,35 @@ const String readFile(const String& filename, size_t max_size) {
     return temp;
 }
 
-const String readFileSz(const String& filename, size_t max_size, size_t& size) {
+size_t countLines(const String filename) {
+    size_t cnt = -1;
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
     if (!file) {
-        return "failed";
+        return cnt;
     }
-    size = file.size();
-    if (size > max_size) {
-        file.close();
-        return "large";
-    }
-    String temp = file.readString();
+    file.seek(0, SeekSet);
+    size_t size = file.size();
+    size_t psn;
+    do {
+        cnt++;
+        file.readStringUntil('\n');
+        psn = file.position();
+    } while (psn < size);
     file.close();
-    return temp;
+    return cnt;
 }
 
-const String getFileSize(const String filename) {
+size_t getFileSize(const String filename) {
+    size_t size = -1;
     String filepath(filename);
     auto file = FileFS.open(filepath, "r");
     if (!file) {
-        return "failed";
+        return size;
     }
-    size_t size = file.size();
+    size = file.size();
     file.close();
-    return String(size);
+    return size;
 }
 
 const String getFSSizeInfo() {

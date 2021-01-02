@@ -49,27 +49,24 @@ void LoggingClass::execute(String keyOrValue) {
     }
 
     String filename = "logs/" + _key + ".txt";
+    
+    size_t cnt = countLines(filename);
+    size_t sz = getFileSize(filename);
 
-    size_t sz = 0;
+    SerialPrint("I", "Logging", "http://" + WiFi.localIP().toString() + "/" + filename + " lines " + String(cnt, DEC) + ", size " + String(sz) + ", heap " + ESP.getFreeHeap());
 
-    String logData = readFileSz(filename, 10240, sz);
-
-    size_t lines_cnt = itemsCount2(logData, "\r\n");
-
-    SerialPrint("I", "Logging", "http://" + WiFi.localIP().toString() + "/" + filename + " lines " + String(lines_cnt, DEC) + ", size " + String(sz) + ", heap " + ESP.getFreeHeap());
-
-    if (logData == "large") {
-        SerialPrint("E", "Logging", "File is very large");
-    }
-
-    if ((lines_cnt > _maxPoints + 1) || !lines_cnt) {
-        removeFile(filename);
-        lines_cnt = 0;
-        SerialPrint("E", "Logging", "file been remooved: " + filename + " " + String(lines_cnt) + ">" + String(_maxPoints));
+    if ((cnt > _maxPoints + 1) || cnt == -1) {
+        removeFile(filename); 
+        SerialPrint("E", "Logging", "file been remooved: " + filename + " " + String(cnt) + ">" + String(_maxPoints));
+        cnt = 0;
     }
 
     if (loggingValue != "") {
-        if (lines_cnt > _maxPoints) {  //удаляем старую строку и добавляем новую
+        if (cnt > _maxPoints) {  //удаляем старую строку и добавляем новую
+            String logData = readFile(filename, 10240);
+            if (logData == "large") {
+                SerialPrint("E", "Logging", "File is very large");
+            }
             //for (int i = 0; i < 5; i++) {
             logData = deleteBeforeDelimiter(logData, "\r\n");
             //}
