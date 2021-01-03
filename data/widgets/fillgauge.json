@@ -1,0 +1,7 @@
+{
+    "widget": "fillgauge",
+    "circleColor": "#00FFFF",
+    "textColor": "#FFFFFF",
+    "waveTextColor": "#000000",
+    "waveColor": "#00FFFF"
+}

@@ -1,0 +1,64 @@
+{
+  "configs": [
+    "/config.live.json",
+    "/config.setup.json",
+    "/lang/lang.ru.json"
+  ],
+  "title": "Главная",
+  "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+  "content": [
+    {
+      "type": "h5",
+      "title": "{{name}}",
+      "class": "alert-default"
+    },
+    {
+      "type": "link",
+      "title": "Конфигурация устройства",
+      "action": "/?set.device",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "link",
+      "title": "Конфигурация WIFI",
+      "action": "/?set.wifi",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "link",
+      "title": "Конфигурация MQTT",
+      "action": "/?set.mqtt",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "link",
+      "title": "Конфигурация telegram",
+      "action": "/?set.telegram",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "link",
+      "title": "Утилиты",
+      "action": "/?set.utilities",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "link",
+      "title": "Настройки разработчика",
+      "action": "/?set.dev",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "link",
+      "title": "Скачать приложение IoT Manager для android",
+      "action": "https://play.google.com/store/apps/details?id=ru.esp8266.iotmanager",
+      "class": "btn btn-block btn-default"
+    },
+    {
+      "type": "link",
+      "title": "Скачать приложение IoT Manager для iphone",
+      "action": "https://apps.apple.com/ru/app/iot-manager/id1155934877",
+      "class": "btn btn-block btn-default"
+    }
+  ]
+}
