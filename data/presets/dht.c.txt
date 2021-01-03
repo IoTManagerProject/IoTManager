@@ -1,5 +1,0 @@
-0;dht-hum;hum;anydataHum;Теплица;Влажность;1;pin[2];type[dht11];c[1]
-0;logging;log;chart;Теплица;История;2;val[hum];int[60];cnt[100]
-0;input-digit;inputU;inputDigit;Теплица;Верхний#порог;3;st[45]
-0;input-digit;inputL;inputDigit;Теплица;Нижний#порог;4;st[35]
-0;button-out;button;toggle;Теплица;Полив;5;pin[12];st[0]
