@@ -5,8 +5,6 @@
 #include "Global.h"
 #include "GyverFilters.h"
 
-extern DHTesp* dht;
-
 class SensorDht;
 
 typedef std::vector<SensorDht> MySensorDhtVector;
@@ -24,13 +22,15 @@ class SensorDht {
     SensorDht(const paramsDht& paramsTmp, const paramsDht& paramsHum);
     ~SensorDht();
 
+    DHTesp* dht;
+
     void loop();
     void readTmpHum();
 
    private:
     paramsDht _paramsTmp;
     paramsDht _paramsHum;
-    
+
     unsigned long prevMillis;
     unsigned long difference;
 };

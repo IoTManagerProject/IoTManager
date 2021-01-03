@@ -6,15 +6,11 @@
 #include "Class/LineParsing.h"
 #include "Global.h"
 
-DHTesp* dht = nullptr;
-
 SensorDht::SensorDht(const paramsDht& paramsTmp, const paramsDht& paramsHum) {
     _paramsTmp = paramsDht(paramsTmp);
     _paramsHum = paramsDht(paramsHum);
 
-    if (!dht) {
-        dht = new DHTesp();
-    }
+    dht = new DHTesp();
 
     if (_paramsHum.type == "dht11") {
         dht->setup(_paramsHum.pin, DHTesp::DHT11);
@@ -92,5 +88,7 @@ void dhtSensor() {
         if (firstTime) mySensorDht = new MySensorDhtVector();
         firstTime = false;
         mySensorDht->push_back(SensorDht(paramsTmp, paramsHum));
+
+        enterCnt = -1;
     }
 }
