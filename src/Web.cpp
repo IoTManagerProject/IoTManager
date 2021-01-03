@@ -255,6 +255,12 @@ void web_init() {
             saveConfig();
             request->send(200);
         }
+        if (request->hasArg("autos")) {
+            bool value = request->getParam("autos")->value().toInt();
+            jsonWriteBool(configSetupJson, "autos", value);
+            saveConfig();
+            request->send(200);
+        }
         if (request->hasArg("chatId")) {
             jsonWriteStr(configSetupJson, "chatId", request->getParam("chatId")->value());
             saveConfig();

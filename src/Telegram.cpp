@@ -35,8 +35,10 @@ void handleTelegram() {
                     prevMillis = millis();
                     if (myBot->getNewMessage(msg)) {
                         SerialPrint("->", "Telegram", "chat ID: " + String(msg.sender.id) + ", msg: " + String(msg.text));
-                        jsonWriteInt(configSetupJson, "chatId", msg.sender.id);
-                        saveConfig();
+                        if (jsonReadBool(configSetupJson, "autos")) {
+                            jsonWriteInt(configSetupJson, "chatId", msg.sender.id);
+                            saveConfig();
+                        }
                         telegramMsgParse(String(msg.text));
                     }
                 }
@@ -61,6 +63,7 @@ void telegramMsgParse(String msg) {
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), list);
         SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + "\n" + list);
     } else {
+        myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), "ID: " + chipId + ", Name: " + jsonReadStr(configSetupJson, F("name")));
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), F("Wrong order, use /all to get all values, /get_id to get value, or /set_id_value to set value"));
     }
 }

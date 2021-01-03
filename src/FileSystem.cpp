@@ -10,7 +10,7 @@ bool getInfo(FSInfo& info) {
 void getFSInfo() {
     FSInfo buf;
     if (getInfo(buf)) {
-        SerialPrint("I", F("FS"), F("Get FS info completed"));
+        //SerialPrint("I", F("FS"), F("Get FS info completed"));
 
         size_t totalBytes = buf.totalBytes;      // всего
         size_t usedBytes = buf.usedBytes;        // использовано

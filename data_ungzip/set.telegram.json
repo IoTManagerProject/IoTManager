@@ -40,6 +40,16 @@
       "type": "hr"
     },
     {
+      "type": "checkbox",
+      "name": "autos",
+      "title": "Автоматически брать chat ID из входящих сообщений",
+      "action": "/set?autos=[[autos]]",
+      "state": "{{autos}}"
+    },
+    {
+      "type": "hr"
+    },
+    {
       "type": "h4",
       "title": "Telegram chat ID"
     },

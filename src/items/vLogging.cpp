@@ -62,15 +62,15 @@ void LoggingClass::execute(String keyOrValue) {
     }
 
     if (loggingValue != "") {
-        if (cnt >= _maxPoints) {                          //удаляем старую строку и добавляем новую
+        if (cnt >= _maxPoints) {                         //удаляем старую строку и добавляем новую
             String logData = readFile(filename, 20480);  //10240
             SerialPrint("I", "Logging", "Free heap " + String(ESP.getFreeHeap()));
             if (logData == "large") {
                 SerialPrint("E", "Logging", "File is very large");
             }
-            //for (int i = 0; i < 5; i++) {
+
             logData = deleteBeforeDelimiter(logData, "\r\n");
-            //}
+
             if (timeNow->hasTimeSynced()) {
                 logData += timeNow->getTimeUnix() + " " + loggingValue + "\r\n";
 
