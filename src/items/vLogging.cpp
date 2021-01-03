@@ -55,16 +55,16 @@ void LoggingClass::execute(String keyOrValue) {
 
     SerialPrint("I", "Logging", "http://" + WiFi.localIP().toString() + "/" + filename + " lines " + String(cnt, DEC) + ", size " + String(sz));
 
-    if ((cnt > _maxPoints + 1) || cnt == -1) {
+    if ((cnt > _maxPoints + 1)) {
         removeFile(filename);
         SerialPrint("E", "Logging", "file been remooved: " + filename + " " + String(cnt) + ">" + String(_maxPoints));
         cnt = 0;
     }
 
     if (loggingValue != "") {
-        if (cnt > _maxPoints) {                          //удаляем старую строку и добавляем новую
+        if (cnt >= _maxPoints) {                          //удаляем старую строку и добавляем новую
             String logData = readFile(filename, 20480);  //10240
-            SerialPrint("I", "Logging", "Free heap " + ESP.getFreeHeap());
+            SerialPrint("I", "Logging", "Free heap " + String(ESP.getFreeHeap()));
             if (logData == "large") {
                 SerialPrint("E", "Logging", "File is very large");
             }
