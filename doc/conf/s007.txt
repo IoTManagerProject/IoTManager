@@ -1,4 +1,0 @@
-switch1 = 1
-mqtt 3233662-1589485 buttonChange_1
-mqtt 2233662-1589486 buttonChange_1
-end
