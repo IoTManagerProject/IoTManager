@@ -1,7 +1,0 @@
-dallas temp1 2 1 Температура Датчики anydata 1
-dallas temp2 2 2 Температура Датчики anydata 2
-logging temp1 1 100 Температура Датчики 3
-logging temp2 1 100 Температура Датчики 4
-
-//2 - номер пина датчика
-//варианты отображения: anydata, progress-round, progress-line, fillgauge
