@@ -14,22 +14,6 @@ extern void buttonInSet();
 
 
 
-extern void bme280Temp();
-extern void bme280ReadingTemp();
-extern void bme280Hum();
-extern void bme280ReadingHum();
-extern void bme280Press();
-extern void bme280ReadingPress();
 
-extern void bmp280Temp();
-extern void bmp280ReadingTemp();
-extern void bmp280Press();
-extern void bmp280ReadingPress();
-
-//extern void modbus();
-//extern void modbusReading();
-
-extern void sysUptime();
-extern void uptimeReading();
 
 
