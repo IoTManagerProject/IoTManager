@@ -1,3 +1,4 @@
+#include "items/sysUptime.h"
 #include "Class/LineParsing.h"
 #include "BufferExecute.h"
 #include "Global.h"
@@ -7,7 +8,6 @@ void sysUptime() {
     myLineParsing.update();
     String key = myLineParsing.gkey();
     sCmd.addCommand(key.c_str(), uptimeReading);
-    //ensorReadingMap30sec += key + ",";
     myLineParsing.clear();
 }
 

@@ -2,6 +2,7 @@
 #include "Global.h"
 #include "SoftUART.h"
 //
+#include "items/sysUptime.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vButtonOut.h"
