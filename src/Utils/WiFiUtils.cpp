@@ -1,5 +1,4 @@
 #include "Utils/WiFiUtils.h"
-#include "items/sysUptime.h"
 #include "FileSystem.h"
 
 void routerConnect() {
@@ -141,7 +140,6 @@ uint8_t RSSIquality() {
 void wifiSignalInit() {
     ts.add(
         SYGNAL, 1000 * 60, [&](void*) {
-            //uptimeReading();
             SerialPrint("I", "System", printMemoryStatus());
 #ifdef ESP8266
             getFSInfo();

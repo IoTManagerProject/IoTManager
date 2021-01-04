@@ -2,7 +2,7 @@
 #include "Global.h"
 #include "SoftUART.h"
 //
-#include "items/sysUptime.h"
+#include "items/vSensorUptime.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vButtonOut.h"
@@ -92,7 +92,7 @@ void csvCmdExecute(String& cmdStr) {
             }
 #endif
             else if (order == F("uptime")) {
-                sCmd.addCommand(order.c_str(), sysUptime);
+                sCmd.addCommand(order.c_str(), uptimeSensor);
             }
             else if (order == F("logging")) {
                 sCmd.addCommand(order.c_str(), logging);
