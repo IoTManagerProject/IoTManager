@@ -1,8 +1,6 @@
-#include "Upgrade.h"
-
-#include "FileSystem.h"
-
 #include "Class/NotAsync.h"
+#include "FileSystem.h"
+#include "Upgrade.h"
 #ifdef ESP8266
 #include "ESP8266.h"
 #else
@@ -45,12 +43,10 @@ void getLastVersion() {
 #endif
         if (tmp == "error") {
             lastVersion = -1;
-        }
-        else {
+        } else {
             lastVersion = tmp.toInt();
         }
-    }
-    else {
+    } else {
         lastVersion = -2;
     }
     jsonWriteInt(configSetupJson, "last_version", lastVersion);
@@ -97,7 +93,7 @@ bool upgradeFS() {
     Serial.printf("Start upgrade %s, please wait...", FS_NAME);
 #ifdef ESP8266
     ESPhttpUpdate.rebootOnUpdate(false);
-    t_httpUpdate_return retFS = ESPhttpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp8266/") + FS_NAME + "/"+ FS_NAME+ ".bin");
+    t_httpUpdate_return retFS = ESPhttpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp8266/littlefs/littlefs.bin"));
 #else
     httpUpdate.rebootOnUpdate(false);
     HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp32/littlefs/spiffs.bin"));
