@@ -1,25 +1,27 @@
 #include "BufferExecute.h"
+
 #include "Global.h"
 #include "SoftUART.h"
 //
-#include "items/vSensorUptime.h"
-#include "items/vSensorDallas.h"
-#include "items/vSensorUltrasonic.h"
 #include "items/vButtonOut.h"
-#include "items/vPwmOut.h"
+#include "items/vCountDown.h"
+#include "items/vImpulsOut.h"
 #include "items/vInOutput.h"
 #include "items/vLogging.h"
-#include "items/vImpulsOut.h"
-#include "items/vCountDown.h"
+#include "items/vPwmOut.h"
 #include "items/vSensorAnalog.h"
-#include "items/vSensorDht.h"
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
+#include "items/vSensorDallas.h"
+#include "items/vSensorDht.h"
+#include "items/vSensorUltrasonic.h"
+#include "items/vSensorUptime.h"
+#include "items/vSensorCcs811.h"
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
         orderBuf += cmdStr;
-#ifdef uartEnable    
+#ifdef uartEnable
         if (jsonReadBool(configSetupJson, "uart")) {
             if (jsonReadBool(configSetupJson, "uartEvents")) {
                 if (myUART) {
@@ -51,7 +53,7 @@ void csvCmdExecute(String& cmdStr) {
         count++;
         if (count > 1) {
             SerialPrint("I", "Items", buf);
-            String order = selectToMarker(buf, " "); //отсечка самой команды
+            String order = selectToMarker(buf, " ");  //отсечка самой команды
 
             if (order == F("button-out")) {
                 sCmd.addCommand(order.c_str(), buttonOut);
@@ -63,17 +65,13 @@ void csvCmdExecute(String& cmdStr) {
 #endif
             else if (order == F("button-in")) {
                 sCmd.addCommand(order.c_str(), buttonIn);
-            }
-            else if (order == F("inoutput")) {
+            } else if (order == F("inoutput")) {
                 sCmd.addCommand(order.c_str(), inOutput);
-            }
-            else if (order == F("analog-adc")) {
+            } else if (order == F("analog-adc")) {
                 sCmd.addCommand(order.c_str(), analogAdc);
-            }
-            else if (order == F("ultrasonic-cm")) {
+            } else if (order == F("ultrasonic-cm")) {
                 sCmd.addCommand(order.c_str(), ultrasonic);
-            }
-            else if (order == F("dallas-temp")) {
+            } else if (order == F("dallas-temp")) {
                 sCmd.addCommand(order.c_str(), dallas);
             }
 #ifdef SensorDhtEnabled
@@ -86,21 +84,18 @@ void csvCmdExecute(String& cmdStr) {
                 sCmd.addCommand(order.c_str(), bme280Sensor);
             }
 #endif
-#ifdef SensorBmp280Enabled
+            else if (order == F("ccs811")) {
+                sCmd.addCommand(order.c_str(), ccs811Sensor);
+            }
             else if (order == F("bmp280")) {
                 sCmd.addCommand(order.c_str(), bmp280Sensor);
-            }
-#endif
-            else if (order == F("uptime")) {
+            } else if (order == F("uptime")) {
                 sCmd.addCommand(order.c_str(), uptimeSensor);
-            }
-            else if (order == F("logging")) {
+            } else if (order == F("logging")) {
                 sCmd.addCommand(order.c_str(), logging);
-            }
-            else if (order == F("impuls-out")) {
+            } else if (order == F("impuls-out")) {
                 sCmd.addCommand(order.c_str(), impuls);
-            }
-            else if (order == F("count-down")) {
+            } else if (order == F("count-down")) {
                 sCmd.addCommand(order.c_str(), countDown);
             }
 
@@ -154,14 +149,11 @@ String getValue(String& key) {
     String store = jsonReadStr(configStoreJson, key);
     if (live != nullptr) {
         return live;
-    }
-    else if (store != nullptr) {
+    } else if (store != nullptr) {
         return store;
-    }
-    else if (store == nullptr && live == nullptr) {
+    } else if (store == nullptr && live == nullptr) {
         return "no value";
-    }
-    else {
+    } else {
         return "data error";
     }
 }

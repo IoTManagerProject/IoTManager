@@ -29,6 +29,7 @@
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorUltrasonic.h"
+#include "items/vSensorCcs811.h"
 
 void not_async_actions();
 
@@ -154,9 +155,14 @@ void loop() {
             mySensorBmp280->at(i).loop();
         }
     }
-     if (mySensorUptime != nullptr) {
-        for (unsigned int i = 0; i < mySensorUptime->size(); i++) {
-            mySensorUptime->at(i).loop();
+    if (mySensorBmp280 != nullptr) {
+        for (unsigned int i = 0; i < mySensorBmp280->size(); i++) {
+            mySensorBmp280->at(i).loop();
+        }
+    }
+     if (mySensorCcs811 != nullptr) {
+        for (unsigned int i = 0; i < mySensorCcs811->size(); i++) {
+            mySensorCcs811->at(i).loop();
         }
     }
 }

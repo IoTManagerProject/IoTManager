@@ -6,9 +6,9 @@
 #include "Class/LineParsing.h"
 #include "Global.h"
 
-SensorCcs811::SensorCcs811(const paramsCcs811& paramsCo2, const paramsCcs811& paramsPpm) {
-    _paramsCo2 = paramsCcs811(paramsCo2);
+SensorCcs811::SensorCcs811(const paramsCcs811& paramsPpm, const paramsCcs811& paramsPpb) {
     _paramsPpm = paramsCcs811(paramsPpm);
+    _paramsPpb = paramsCcs811(paramsPpb);
 
     ccs811 = new Adafruit_CCS811();
 
@@ -19,7 +19,7 @@ SensorCcs811::~SensorCcs811() {}
 
 void SensorCcs811::loop() {
     difference = millis() - prevMillis;
-    if (difference >= _paramsPpm.interval) {
+    if (difference >= _paramsPpb.interval) {
         prevMillis = millis();
         read();
     }
@@ -33,18 +33,18 @@ void SensorCcs811::read() {
             co2 = ccs811->geteCO2();
             ppm = ccs811->getTVOC();
 
-            co2 = co2 * _paramsCo2.c;
-            ppm = ppm * _paramsPpm.c;
+            co2 = co2 * _paramsPpm.c;
+            ppm = ppm * _paramsPpb.c;
 
-            eventGen2(_paramsCo2.key, String(co2));
-            jsonWriteStr(configLiveJson, _paramsCo2.key, String(co2));
-            publishStatus(_paramsCo2.key, String(co2));
-            SerialPrint("I", "Sensor", "'" + _paramsCo2.key + "' data: " + String(co2));
+            eventGen2(_paramsPpm.key, String(co2));
+            jsonWriteStr(configLiveJson, _paramsPpm.key, String(co2));
+            publishStatus(_paramsPpm.key, String(co2));
+            SerialPrint("I", "Sensor", "'" + _paramsPpm.key + "' data: " + String(co2));
 
-            eventGen2(_paramsPpm.key, String(ppm));
-            jsonWriteStr(configLiveJson, _paramsPpm.key, String(ppm));
-            publishStatus(_paramsPpm.key, String(ppm));
-            SerialPrint("I", "Sensor", "'" + _paramsPpm.key + "' data: " + String(ppm));
+            eventGen2(_paramsPpb.key, String(ppm));
+            jsonWriteStr(configLiveJson, _paramsPpb.key, String(ppm));
+            publishStatus(_paramsPpb.key, String(ppm));
+            SerialPrint("I", "Sensor", "'" + _paramsPpb.key + "' data: " + String(ppm));
         } else {
             SerialPrint("E", "Sensor CCS", "Error");
         }
@@ -64,25 +64,25 @@ void ccs811Sensor() {
     static int enterCnt = -1;
     enterCnt++;
 
-    static paramsCcs811 paramsCo2;
     static paramsCcs811 paramsPpm;
+    static paramsCcs811 paramsPpb;
 
     if (enterCnt == 0) {
-        paramsCo2.key = key;
-        paramsCo2.interval = interval.toInt() * 1000;
-        paramsCo2.c = c.toFloat();
+        paramsPpm.key = key;
+        paramsPpm.interval = interval.toInt() * 1000;
+        paramsPpm.c = c.toFloat();
     }
 
     if (enterCnt == 1) {
-        paramsPpm.key = key;
-        paramsPpm.addr = addr;
-        paramsPpm.interval = interval.toInt() * 1000;
-        paramsPpm.c = c.toFloat();
+        paramsPpb.key = key;
+        paramsPpb.addr = addr;
+        paramsPpb.interval = interval.toInt() * 1000;
+        paramsPpb.c = c.toFloat();
 
         static bool firstTime = true;
         if (firstTime) mySensorCcs811 = new MySensorCcs811Vector();
         firstTime = false;
-        mySensorCcs811->push_back(SensorCcs811(paramsCo2, paramsPpm));
+        mySensorCcs811->push_back(SensorCcs811(paramsPpm, paramsPpb));
 
         enterCnt = -1;
     }
