@@ -52,7 +52,7 @@ void addItem2(int num) {
     if (seachingLine.indexOf("gpio") != -1) {
         seachingLine.replace("gpio", "pin[" + String(getFreePinAll()) + "]");
     }
-    
+
     addFile(DEVICE_CONFIG_FILE, seachingLine);
     Serial.println(seachingLine);
 }
@@ -132,7 +132,7 @@ uint8_t getFreePinAll() {
     uint8_t pins[] = {0, 12, 13, 14, 15, 16, 1, 2, 3, 4, 5};
 #endif
 #ifdef ESP32
-    uint8_t pins[] = {0, 12, 13, 14, 15, 16, 1, 2, 3, 4, 5};
+    uint8_t pins[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 25, 26, 27, 32, 33, 34, 35, 36, 39};
 #endif
     uint8_t array_sz = sizeof(pins) / sizeof(pins[0]);
     uint8_t i = getNewElementNumber("pins.txt");
@@ -145,7 +145,12 @@ uint8_t getFreePinAll() {
 
 bool isPinExist(unsigned int num) {
     bool ret = false;
+#ifdef ESP8266
     unsigned int pins[] = {0, 1, 2, 3, 4, 5, 9, 10, 12, 13, 14, 15, 16};
+#endif
+#ifdef ESP32
+    unsigned int pins[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 25, 26, 27, 32, 33, 34, 35, 36, 39};
+#endif
     uint8_t array_sz = sizeof(pins) / sizeof(pins[0]);
     for (uint8_t i = 0; i < array_sz; i++) {
         if (pins[i] == num) ret = true;

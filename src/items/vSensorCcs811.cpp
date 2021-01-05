@@ -12,7 +12,7 @@ SensorCcs811::SensorCcs811(const paramsCcs811& paramsPpm, const paramsCcs811& pa
 
     ccs811 = new Adafruit_CCS811();
 
-    if (!ccs811->begin()) SerialPrint("E", "Sensor CCS", "Wire not connected");
+    if (!ccs811->begin(hexStringToUint8(_paramsPpb.addr))) SerialPrint("E", "Sensor CCS", "Wire not connected");
 }
 
 SensorCcs811::~SensorCcs811() {}

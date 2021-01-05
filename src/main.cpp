@@ -19,17 +19,17 @@
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
 #include "items/ButtonInClass.h"
-#include "items/vSensorUptime.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
 #include "items/vLogging.h"
 #include "items/vSensorAnalog.h"
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
+#include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorUltrasonic.h"
-#include "items/vSensorCcs811.h"
+#include "items/vSensorUptime.h"
 
 void not_async_actions();
 
@@ -160,9 +160,14 @@ void loop() {
             mySensorBmp280->at(i).loop();
         }
     }
-     if (mySensorCcs811 != nullptr) {
+    if (mySensorCcs811 != nullptr) {
         for (unsigned int i = 0; i < mySensorCcs811->size(); i++) {
             mySensorCcs811->at(i).loop();
+        }
+    }
+    if (mySensorUptime != nullptr) {
+        for (unsigned int i = 0; i < mySensorUptime->size(); i++) {
+            mySensorUptime->at(i).loop();
         }
     }
 }

@@ -7,7 +7,7 @@
 SensorAnalog::SensorAnalog(String key, unsigned long interval, unsigned int adcPin, int map1, int map2, int map3, int map4, float c) {
     _interval = interval * 1000;
     _key = key;
-    _adcPin = _adcPin;
+    _adcPin = adcPin;
 
     _map1 = map1;
     _map2 = map2;
