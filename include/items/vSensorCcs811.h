@@ -18,7 +18,7 @@ struct paramsCcs811 {
 
 class SensorCcs811 {
    public:
-    SensorCcs811(const paramsCcs811& paramsCo2, const paramsCcs811& paramsPpm);
+    SensorCcs811(const paramsCcs811& paramsPpm, const paramsCcs811& paramsPpb);
     ~SensorCcs811();
 
     Adafruit_CCS811* ccs811;
@@ -27,8 +27,8 @@ class SensorCcs811 {
     void read();
 
    private:
-    paramsCcs811 _paramsCo2;
     paramsCcs811 _paramsPpm;
+    paramsCcs811 _paramsPpb;
 
     unsigned long prevMillis;
     unsigned long difference;
