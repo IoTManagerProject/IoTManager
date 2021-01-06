@@ -112,10 +112,18 @@ class LineParsing {
         }
 
         if (_pin != "") {
-            if (!isPinExist(_pin.toInt()) || !isDigitStr(_pin)) {
-                pinErrors++;
-                Serial.println("'" + _pin + "'");
-                _pin = "";
+            if (_pin.indexOf(",") == -1) {
+                if (!isPinExist(_pin.toInt()) || !isDigitStr(_pin)) {
+                    pinErrors++;
+                    _pin = "";
+                }
+            } else {
+                String pin1 = selectToMarker(_pin, ",");
+                String pin2 = deleteBeforeDelimiter(_pin, ",");
+                if (!isPinExist(pin1.toInt()) || !isDigitStr(pin1) || !isPinExist(pin2.toInt()) || !isDigitStr(pin2)) {
+                    pinErrors++;
+                    _pin = "";
+                }
             }
         }
 
