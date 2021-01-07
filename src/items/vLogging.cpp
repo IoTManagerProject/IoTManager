@@ -48,7 +48,7 @@ void LoggingClass::execute(String keyOrValue) {
         }
     }
 
-    String filename = "logs/" + _key + ".txt";
+    String filename = "/logs/" + _key + ".txt";
 
     size_t cnt = countLines(filename);
     size_t sz = getFileSize(filename);
@@ -128,7 +128,7 @@ void choose_log_date_and_send() {
     String all_line = logging_KeyList;
     while (all_line.length() != 0) {
         String tmp = selectToMarker(all_line, ",");
-        sendLogData("logs/" + tmp + ".txt", tmp);
+        sendLogData("/logs/" + tmp + ".txt", tmp);
         all_line = deleteBeforeDelimiter(all_line, ",");
     }
 }
