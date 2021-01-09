@@ -10,8 +10,14 @@
 #include "items/vInOutput.h"
 #include "items/vLogging.h"
 #include "items/vPwmOut.h"
+#include "items/vSensorAnalog.h"
+#include "items/vSensorBme280.h"
+#include "items/vSensorBmp280.h"
+#include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
+#include "items/vSensorDht.h"
 #include "items/vSensorUltrasonic.h"
+#include "items/vSensorUptime.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -29,8 +35,6 @@ void loadConfig() {
 
     prex = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId;
 
-    //Serial.println(configSetupJson);
-
     serverIP = jsonReadStr(configSetupJson, "serverip");
 
     SerialPrint("I", F("Conf"), F("Config Json Init"));
@@ -43,55 +47,7 @@ void espInit() {
 }
 
 void deviceInit() {
-    //======clear dallas params======
-    if (mySensorDallas2 != nullptr) {
-        mySensorDallas2->clear();
-    }
-    //======clear ultrasonic params======
-    if (mySensorUltrasonic != nullptr) {
-        mySensorUltrasonic->clear();
-    }
-    //======clear logging params======
-    if (myLogging != nullptr) {
-        myLogging->clear();
-    }
-    logging_KeyList = "";
-    logging_EnterCounter = -1;
-    //======clear impuls params=======
-    if (myImpulsOut != nullptr) {
-        myImpulsOut->clear();
-    }
-    impuls_KeyList = "";
-    impuls_EnterCounter = -1;
-    //======clear buttonOut params=======
-    if (myButtonOut != nullptr) {
-        myButtonOut->clear();
-    }
-    buttonOut_KeyList = "";
-    buttonOut_EnterCounter = -1;
-    //======clear input params=======
-    if (myInOutput != nullptr) {
-        myInOutput->clear();
-    }
-    inOutput_KeyList = "";
-    inOutput_EnterCounter = -1;
-    //======clear pwm params=======
-#ifdef PwmOutEnable
-    if (myPwmOut != nullptr) {
-        myPwmOut->clear();
-    }
-    pwmOut_KeyList = "";
-    pwmOut_EnterCounter = -1;
-#endif
-    //===================================
-    if (myCountDown != nullptr) {
-        myCountDown->clear();
-    }
-    countDown_KeyList = "";
-    countDown_EnterCounter = -1;
-    //===================================
-    dht_EnterCounter = -1;
-    //=========================================
+    clearVectors();
 
 #ifdef LAYOUT_IN_RAM
     all_widgets = "";
@@ -112,7 +68,6 @@ void deviceInit() {
     }
     //outcoming_date();
 }
-//-------------------------------сценарии-----------------------------------------------------
 
 void loadScenario() {
     if (jsonReadStr(configSetupJson, "scen") == "1") {
@@ -131,4 +86,76 @@ void uptime_init() {
 
 void handle_uptime() {
     jsonWriteStr(configSetupJson, "uptime", timeNow->getUptime());
+}
+
+void clearVectors() {
+    if (myLogging != nullptr) {
+        myLogging->clear();
+    }
+    logging_KeyList = "";
+    logging_EnterCounter = -1;
+
+    if (myImpulsOut != nullptr) {
+        myImpulsOut->clear();
+    }
+    impuls_KeyList = "";
+    impuls_EnterCounter = -1;
+
+    if (myCountDown != nullptr) {
+        myCountDown->clear();
+    }
+    countDown_KeyList = "";
+    countDown_EnterCounter = -1;
+
+    if (myButtonOut != nullptr) {
+        myButtonOut->clear();
+    }
+    buttonOut_KeyList = "";
+    buttonOut_EnterCounter = -1;
+
+    if (myInOutput != nullptr) {
+        myInOutput->clear();
+    }
+    inOutput_KeyList = "";
+    inOutput_EnterCounter = -1;
+
+    if (myPwmOut != nullptr) {
+        myPwmOut->clear();
+    }
+    pwmOut_KeyList = "";
+    pwmOut_EnterCounter = -1;
+
+    //==================================
+
+    if (mySensorDallas2 != nullptr) {
+        mySensorDallas2->clear();
+    }
+
+    if (mySensorUltrasonic != nullptr) {
+        mySensorUltrasonic->clear();
+    }
+
+    if (mySensorAnalog != nullptr) {
+        mySensorAnalog->clear();
+    }
+
+    if (mySensorDht != nullptr) {
+        mySensorDht->clear();
+    }
+
+    if (mySensorBme280 != nullptr) {
+        mySensorBme280->clear();
+    }
+
+    if (mySensorBmp280 != nullptr) {
+        mySensorBmp280->clear();
+    }
+
+    if (mySensorCcs811 != nullptr) {
+        mySensorCcs811->clear();
+    }
+
+    if (mySensorUptime != nullptr) {
+        mySensorUptime->clear();
+    }
 }

@@ -88,8 +88,6 @@ extern int countDown_EnterCounter;
 extern String logging_KeyList;
 extern int logging_EnterCounter;
 //=========================================
-extern int dht_EnterCounter;
-//=========================================
 
 
 
