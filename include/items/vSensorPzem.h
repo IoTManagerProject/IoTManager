@@ -5,6 +5,8 @@
 #include "PZEMSensor.h"
 #include "SoftUART.h"
 
+extern PZEMSensor* pzem;
+
 class SensorPzem;
 
 typedef std::vector<SensorPzem> MySensorPzemVector;
@@ -20,8 +22,6 @@ class SensorPzem {
    public:
     SensorPzem(const paramsPzem& paramsV, const paramsPzem& paramsA, const paramsPzem& paramsWatt, const paramsPzem& paramsWattHrs, const paramsPzem& paramsHz);
     ~SensorPzem();
-
-    PZEMSensor* pzem;
 
     void loop();
     void read();

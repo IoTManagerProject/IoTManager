@@ -12,11 +12,12 @@
 #include "items/vSensorAnalog.h"
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
+#include "items/vSensorCcs811.h"
+#include "items/vSensorPzem.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
-#include "items/vSensorCcs811.h"
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
@@ -51,19 +52,15 @@ void csvCmdExecute(String& cmdStr) {
         buf = deleteBeforeDelimiter(buf, " ");  //отсечка чекбокса
 
         count++;
+        
         if (count > 1) {
             SerialPrint("I", "Items", buf);
             String order = selectToMarker(buf, " ");  //отсечка самой команды
-
             if (order == F("button-out")) {
                 sCmd.addCommand(order.c_str(), buttonOut);
-            }
-#ifdef PwmOutEnable
-            else if (order == F("pwm-out")) {
+            } else if (order == F("pwm-out")) {
                 sCmd.addCommand(order.c_str(), pwmOut);
-            }
-#endif
-            else if (order == F("button-in")) {
+            } else if (order == F("button-in")) {
                 sCmd.addCommand(order.c_str(), buttonIn);
             } else if (order == F("inoutput")) {
                 sCmd.addCommand(order.c_str(), inOutput);
@@ -73,22 +70,16 @@ void csvCmdExecute(String& cmdStr) {
                 sCmd.addCommand(order.c_str(), ultrasonic);
             } else if (order == F("dallas-temp")) {
                 sCmd.addCommand(order.c_str(), dallas);
-            }
-#ifdef SensorDhtEnabled
-            else if (order == F("dht")) {
+            } else if (order == F("dht")) {
                 sCmd.addCommand(order.c_str(), dhtSensor);
-            }
-#endif
-#ifdef SensorBme280Enabled
-            else if (order == F("bme280")) {
+            } else if (order == F("bme280")) {
                 sCmd.addCommand(order.c_str(), bme280Sensor);
-            }
-#endif
-            else if (order == F("ccs811")) {
-                sCmd.addCommand(order.c_str(), ccs811Sensor);
-            }
-            else if (order == F("bmp280")) {
+            } else if (order == F("bmp280")) {
                 sCmd.addCommand(order.c_str(), bmp280Sensor);
+            } else if (order == F("ccs811")) {
+                sCmd.addCommand(order.c_str(), ccs811Sensor);
+            } else if (order == F("pzem")) {
+                sCmd.addCommand(order.c_str(), pzemSensor);
             } else if (order == F("uptime")) {
                 sCmd.addCommand(order.c_str(), uptimeSensor);
             } else if (order == F("logging")) {

@@ -18,6 +18,11 @@
 0;bme280;prsid;anydataPress;Сенсоры;Давление;3;c[1];addr[0x76];int[10]*
 0;bmp280;tmpid;anydataTemp;Сенсоры;Температура;1;c[1]
 0;bmp280;prsid;anydataPress;Сенсоры;Давление;3;c[1];addr[0x76];int[10]*
+0;pzem;Vid;anydataTime;Сенсоры;Напряжение;1;c[1]
+0;pzem;Aid;anydataTime;Сенсоры;Сила#тока;2;c[1]
+0;pzem;Wid;anydataTime;Сенсоры;Мощность;3;c[1]
+0;pzem;Whid;anydataTime;Сенсоры;Энергия;4;c[1]
+0;pzem;Hzid;anydataTime;Сенсоры;Частота;5;c[1];addr[0xF8];int[10]*
 0;ccs811;ppmid;anydataPpm;Сенсоры;Содержание#CO2;1;c[1]
 0;ccs811;ppbid;anydataPpb;Сенсоры;Содержание#орг#соед;2;c[1];addr[0x76];int[10]*
 0;impuls-out;impid;na;na;na;order;gpio*

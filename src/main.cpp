@@ -26,6 +26,7 @@
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
+#include "items/vSensorPzem.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorUltrasonic.h"
@@ -107,7 +108,7 @@ void loop() {
 #endif
 
 #ifdef uartEnable
-    uartHandle();
+    //uartHandle();
 #endif
 
     if (myLogging != nullptr) {
@@ -163,6 +164,11 @@ void loop() {
     if (mySensorCcs811 != nullptr) {
         for (unsigned int i = 0; i < mySensorCcs811->size(); i++) {
             mySensorCcs811->at(i).loop();
+        }
+    }
+    if (mySensorPzem != nullptr) {
+        for (unsigned int i = 0; i < mySensorPzem->size(); i++) {
+            mySensorPzem->at(i).loop();
         }
     }
     if (mySensorUptime != nullptr) {

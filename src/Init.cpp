@@ -13,6 +13,7 @@
 #include "items/vSensorAnalog.h"
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
+#include "items/vSensorPzem.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
@@ -153,6 +154,10 @@ void clearVectors() {
 
     if (mySensorCcs811 != nullptr) {
         mySensorCcs811->clear();
+    }
+
+    if (mySensorPzem != nullptr) {
+        mySensorPzem->clear();
     }
 
     if (mySensorUptime != nullptr) {

@@ -19,7 +19,7 @@ struct PZEM_Info {
 
 class PZEMSensor {
    public:
-    PZEMSensor(SoftwareSerial *serial, uint16_t addr = PZEM_DEFAULT_ADDR);
+    PZEMSensor(Stream *serial, uint16_t addr = PZEM_DEFAULT_ADDR);
 
     ~PZEMSensor();
     PZEM_Info* values();
