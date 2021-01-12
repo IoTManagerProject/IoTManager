@@ -5,8 +5,6 @@
 #include "Global.h"
 #include "SoftUART.h"
 
-PZEMSensor* pzem = nullptr;
-
 SensorPzem::SensorPzem(const paramsPzem& paramsV, const paramsPzem& paramsA, const paramsPzem& paramsWatt, const paramsPzem& paramsWattHrs, const paramsPzem& paramsHz) {
     _paramsV = paramsPzem(paramsV);
     _paramsA = paramsPzem(paramsA);
@@ -14,11 +12,7 @@ SensorPzem::SensorPzem(const paramsPzem& paramsV, const paramsPzem& paramsA, con
     _paramsWattHrs = paramsPzem(paramsWattHrs);
     _paramsHz = paramsPzem(paramsHz);
 
-    if (myUART) {
-        if (!pzem) {
-            pzem = new PZEMSensor(myUART, 0xF8);
-        }
-    }
+    pzem = new PZEMSensor(myUART, 0xF8);
 }
 
 SensorPzem::~SensorPzem() {}
@@ -33,7 +27,6 @@ void SensorPzem::loop() {
 
 void SensorPzem::read() {
     if (myUART) {
-        if (pzem) {
             float voltage = pzem->values()->voltage;
             float current = pzem->values()->current;
             float power = pzem->values()->power;
@@ -64,9 +57,6 @@ void SensorPzem::read() {
             jsonWriteStr(configLiveJson, _paramsHz.key, String(freq));
             publishStatus(_paramsHz.key, String(freq));
             SerialPrint("I", "Sensor", "'" + _paramsHz.key + "' data: " + String(freq));
-        } else {
-            SerialPrint("E", "Sensor PZEM", "Error, PZEM object not created");
-        }
     } else {
         SerialPrint("E", "Sensor PZEM", "Error, UART switched off");
     }
