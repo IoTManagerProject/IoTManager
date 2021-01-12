@@ -18,6 +18,7 @@ class LineParsing {
     String _pin;
     String _map;
     String _c;
+    String _k;
     String _inv;
     String _state;
     String _db;
@@ -42,6 +43,7 @@ class LineParsing {
                     _pin{""},
                     _map{""},
                     _c{""},
+                    _k{""},
                     _inv{""},
                     _state{""},
                     _db{""},
@@ -86,6 +88,9 @@ class LineParsing {
                 }
                 if (arg.indexOf("c[") != -1) {
                     _c = extractInner(arg);
+                }
+                if (arg.indexOf("k[") != -1) {
+                    _k = extractInner(arg);
                 }
                 if (arg.indexOf("type[") != -1) {
                     _type = extractInner(arg);
@@ -165,6 +170,9 @@ class LineParsing {
     String gc() {
         return _c;
     }
+    String gk() {
+        return _k;
+    }
     String gtype() {
         return _type;
     }
@@ -206,6 +214,7 @@ class LineParsing {
         _pin = "";
         _map = "";
         _c = "";
+        _k = "";
         _inv = "";
         _state = "";
         _db = "";

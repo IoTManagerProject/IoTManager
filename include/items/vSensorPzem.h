@@ -14,6 +14,7 @@ struct paramsPzem {
     String addr;
     unsigned long interval;
     float c;
+    float k;
 };
 
 class SensorPzem {
