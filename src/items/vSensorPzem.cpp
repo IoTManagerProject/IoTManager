@@ -124,7 +124,7 @@ void pzemSensor() {
             firstTime = false;
             mySensorPzem->push_back(SensorPzem(paramsV, paramsA, paramsWatt, paramsWattHrs, paramsHz));
 
-            enterCnt = 0;
+            enterCnt = -1;
         }
     } else {
         SerialPrint("E", "Sensor PZEM", "Error, UART switched off");
