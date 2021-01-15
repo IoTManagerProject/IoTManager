@@ -58,15 +58,18 @@
         },
         {
             "type": "text",
-            "title": "{{warning1}}"
+            "title": "{{warning1}}",
+            "class": "animated tdExpandIn"
         },
         {
             "type": "text",
-            "title": "{{warning2}}"
+            "title": "{{warning2}}",
+            "class": "animated tdExpandIn"
         },
         {
             "type": "text",
-            "title": "{{warning3}}"
+            "title": "{{warning3}}",
+            "class": "animated tdExpandIn"
         },
         {
             "type": "hr"
@@ -128,6 +131,14 @@
             "title": [
                 "checkbox",
                 "html",
+                "text",
+                "select:widgets.json",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text",
                 "text",
                 "text",
                 "text",

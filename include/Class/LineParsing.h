@@ -237,8 +237,9 @@ class LineParsing {
             if (!loadWidget(filename, buf)) {
                 return;
             }
-
-            if (filename.indexOf("chart") != -1) jsonWriteStr(buf, "maxCount", _cnt);
+            if (_cnt != "") {
+                if (filename.indexOf("chart") != -1) jsonWriteStr(buf, "maxCount", _cnt);
+            }
 
             jsonWriteStr(buf, "page", page);
             jsonWriteStr(buf, "order", order);

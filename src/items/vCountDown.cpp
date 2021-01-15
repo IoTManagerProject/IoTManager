@@ -1,9 +1,10 @@
 #include "items/vCountDown.h"
+
+#include <Arduino.h>
+
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
-#include "BufferExecute.h"
-#include <Arduino.h>
 
 CountDownClass::CountDownClass(String key) {
     _key = key;
@@ -63,7 +64,7 @@ void countDownExecute() {
     String key = sCmd.order();
     String value = sCmd.next();
 
-    if (!isDigitStr(value)) { //если значение - текст
+    if (!isDigitStr(value)) {  //если значение - текст
         value = getValue(value);
     }
 
