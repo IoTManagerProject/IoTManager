@@ -11,17 +11,17 @@ LoggingClass::LoggingClass(String interval, unsigned int maxPoints, String loggi
     _interval = interval;
 
     if (_interval.indexOf(":") != -1) {
-        _type = 3;
+        _type = 3;  //тип 3 логгирование в указанное время
         _intervalSec = 1000;
-        SerialPrint("I", "Logging", "at time moment (" + _interval + ")");
+        SerialPrint("I", "Logging", "at time (" + _interval + ")");
     } else {
         if (_interval.toInt() == 0) {
-            _type = 2;
-            SerialPrint("I", "Logging", "by external event");
+            _type = 2;  //тип 2 логгирование по событию
+            SerialPrint("I", "Logging", "by event");
         } else if (_interval.toInt() > 0) {
-            _type = 1;
+            _type = 1;  //тип 1 логгирование через период
             _intervalSec = _interval.toInt() * 1000;
-            SerialPrint("I", "Logging", "after period of time (" + _interval + ")");
+            SerialPrint("I", "Logging", "periodically (" + _interval + " sec)");
         }
     }
 
@@ -40,11 +40,11 @@ void LoggingClass::loop() {
         difference = currentMillis - prevMillis;
         if (difference >= _intervalSec) {
             prevMillis = millis();
-            if (_type == 1) {  //тип 1 логгирование через период
+            if (_type == 1) {
                 execute("");
-            } else if (_type == 2) {  //тип 2 логгирование по событию
-                //не нужны действия
-            } else if (_type == 3) {  //тип 3 логгирование в указанное время
+            } else if (_type == 2) {
+               
+            } else if (_type == 3) {
                 String timenow = timeNow->getTimeWOsec();
                 static String prevTime;
                 if (prevTime != timenow) {
@@ -62,7 +62,7 @@ void LoggingClass::execute(String keyOrValue) {
         if (getValue(_loggingValueKey) != "no value") {
             loggingValue = getValue(_loggingValueKey);
         } else {
-            SerialPrint("E", "Logging", "This value not found on this device");
+            SerialPrint("E", "Logging", "'" + _loggingValueKey + "' value not found on this device");
         }
     } else if (_type == 2) {                   //тип 2 логгирование по событию
         if (isDigitDotCommaStr(keyOrValue)) {  //если это число или дробное число
@@ -189,7 +189,7 @@ void sendLogData(String file, String topic) {
         psn = configFile.position();
         String line = configFile.readStringUntil('\n');
         unix_time = selectToMarker(line, " ");
-        jsonWriteStr(buf, "x", unix_time);
+        jsonWriteInt(buf, "x", unix_time.toInt());
         value = deleteBeforeDelimiter(line, " ");
         jsonWriteFloat(buf, "y1", value.toFloat());
         if (unix_time != "" || value != "") {
