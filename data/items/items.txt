@@ -29,4 +29,5 @@
 0;count-down;cntid;anydata;Таймер;Обратный#отчет;order*
 0;inoutput;txtid;anydata;Вывод;Вывод#uart;order*
 0;logging;crtid;chart;Графики;История;order;val[any];int[60];cnt[100]*
+0;logging;crtid;chart3;Графики;История;order;val[any];int[23:30];cnt[100]*
 0;uptime;uptid;anydataTime;Системные;%name%#uptime;order;int[60]*
