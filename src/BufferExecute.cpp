@@ -18,6 +18,7 @@
 #include "items/vSensorDht.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
+#include "items/test.h"
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
@@ -88,6 +89,8 @@ void csvCmdExecute(String& cmdStr) {
                 sCmd.addCommand(order.c_str(), impuls);
             } else if (order == F("count-down")) {
                 sCmd.addCommand(order.c_str(), countDown);
+            } else if (order == F("impuls-in")) {
+                sCmd.addCommand(order.c_str(), impulsInSensor);
             }
 
             sCmd.readStr(buf);

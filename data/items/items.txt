@@ -26,6 +26,7 @@
 0;ccs811;ppmid;anydataPpm;Сенсоры;Содержание#CO2;1;c[1]
 0;ccs811;ppbid;anydataPpb;Сенсоры;Содержание#орг#соед;2;c[1];addr[0x76];int[10]*
 0;impuls-out;impid;na;na;na;order;gpio*
+0;impuls-in;impid;anydata;Сенсоры;Количество#импульсов;order;pin[0];c[1];k[0]*
 0;count-down;cntid;anydata;Таймер;Обратный#отчет;order*
 0;inoutput;txtid;anydata;Вывод;Вывод#uart;order*
 0;logging;crtid;chart;Графики;История;order;val[any];int[60];cnt[100]*
