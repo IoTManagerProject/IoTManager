@@ -347,9 +347,16 @@ void web_init() {
         }
     });
 
-    server.on("/order", HTTP_GET, [](AsyncWebServerRequest* request) {
-
-    });
+    //server.on("/del", HTTP_GET, [](AsyncWebServerRequest* request) {
+    //    if (request->hasArg("file") && request->hasArg("line")) {
+    //        String fileName = request->getParam("file")->value();
+    //        Serial.println(fileName);
+    //        int line = request->getParam("line")->value().toInt();
+    //        Serial.println(line);
+    //        myNotAsyncActions->make(do_delChoosingItems);
+    //        request->redirect(F("/?set.device"));
+    //    }
+    //});
 
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         myNotAsyncActions->make(do_GETLASTVERSION);

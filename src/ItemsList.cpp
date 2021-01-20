@@ -189,3 +189,29 @@ void delChoosingItems() {
     Serial.println(finalConf);
     configFile.close();
 }
+
+//void delChoosingItemsByNum(int num) {
+//    File configFile = FileFS.open("/" + String(DEVICE_CONFIG_FILE), "r");
+//    if (!configFile) {
+//        return;
+//    }
+//    configFile.seek(0, SeekSet);
+//    String finalConf;
+//
+//    int i = -1;
+//    while (configFile.position() != configFile.size()) {
+//        i++;
+//        String item = configFile.readStringUntil('\n');
+//        if (i == 0) {
+//            finalConf += item;
+//        } else {
+//            if (i != num) {
+//                finalConf += "\n" + item;
+//            }
+//        }
+//    }
+//    removeFile(String(DEVICE_CONFIG_FILE));
+//    addFile(String(DEVICE_CONFIG_FILE), finalConf);
+//    Serial.println(finalConf);
+//    configFile.close();
+//}

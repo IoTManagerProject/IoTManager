@@ -1,8 +1,6 @@
 #include "BufferExecute.h"
-
 #include "Global.h"
 #include "SoftUART.h"
-//
 #include "items/vButtonOut.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
@@ -90,7 +88,7 @@ void csvCmdExecute(String& cmdStr) {
             } else if (order == F("count-down")) {
                 sCmd.addCommand(order.c_str(), countDown);
             } else if (order == F("impuls-in")) {
-                sCmd.addCommand(order.c_str(), impulsInSensor);
+                //sCmd.addCommand(order.c_str(), impulsInSensor);
             }
 
             sCmd.readStr(buf);
