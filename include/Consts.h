@@ -1,5 +1,6 @@
 #pragma once
 
+
 #define FIRMWARE_VERSION 280
 
 #ifdef esp8266_4mb
@@ -7,6 +8,14 @@
 #define USE_LITTLEFS true
 #define USE_OTA true
 #define LED_PIN 2
+#endif
+
+#ifdef esp8266_mysensors_4mb
+#define FIRMWARE_NAME "esp8266_mysensors_4mb"
+#define USE_LITTLEFS true
+#define USE_OTA true
+#define LED_PIN 2
+#define MYSENSORS
 #endif
 
 #ifdef esp8266_1mb
@@ -80,6 +89,7 @@ enum ConfigType_t {
     CT_CONFIG,
     CT_SCENARIO
 };
+
 
 
 
