@@ -26,9 +26,9 @@
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
-#include "items/vSensorPzem.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
+#include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 
@@ -108,7 +108,10 @@ void loop() {
 #endif
 
 #ifdef uartEnable
-    //uartHandle();
+    uartHandle();
+#endif
+#ifdef MYSENSORS
+    loopMySensorsExecute();
 #endif
 
     if (myLogging != nullptr) {

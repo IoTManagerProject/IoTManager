@@ -36,6 +36,7 @@ String scenario = "";
 //orders and events
 String orderBuf = "";
 String eventBuf = "";
+String mysensorBuf = "";
 String itemsFile = "";
 String itemsLine = "";
 

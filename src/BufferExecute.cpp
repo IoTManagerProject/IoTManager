@@ -1,6 +1,8 @@
 #include "BufferExecute.h"
+
 #include "Global.h"
 #include "SoftUART.h"
+#include "items/test.h"
 #include "items/vButtonOut.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
@@ -11,12 +13,11 @@
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
-#include "items/vSensorPzem.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
+#include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
-#include "items/test.h"
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
@@ -51,7 +52,7 @@ void csvCmdExecute(String& cmdStr) {
         buf = deleteBeforeDelimiter(buf, " ");  //отсечка чекбокса
 
         count++;
-        
+
         if (count > 1) {
             SerialPrint("I", "Items", buf);
             String order = selectToMarker(buf, " ");  //отсечка самой команды
@@ -147,5 +148,21 @@ String getValue(String& key) {
         return "no value";
     } else {
         return "data error";
+    }
+}
+
+void loopMySensorsExecute() {
+    if (mysensorBuf.length()) {
+        String tmp = selectToMarker(mysensorBuf, ";");
+
+        String key = selectToMarker(tmp, ",");
+        String value = deleteBeforeDelimiter(tmp, ",");
+
+        eventGen2(key, value);
+        jsonWriteStr(configLiveJson, key, value);
+        publishStatus(key, value);
+        SerialPrint("I", "MySensor", "'" + key + "' data: " + value);
+
+        mysensorBuf = deleteBeforeDelimiter(mysensorBuf, ";");
     }
 }

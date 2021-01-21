@@ -65,6 +65,7 @@ extern String scenario;
 //orders and events
 extern String orderBuf;
 extern String eventBuf;
+extern String mysensorBuf;
 extern String itemsFile;
 extern String itemsLine;
 
