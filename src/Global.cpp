@@ -48,8 +48,11 @@ int impuls_EnterCounter = -1;
 String buttonOut_KeyList = "";
 int buttonOut_EnterCounter = -1;
 //=========================================
-String inOutput_KeyList = "";
-int inOutput_EnterCounter = -1;
+String input_KeyList = "";
+int input_EnterCounter = -1;
+//=========================================
+String output_KeyList= "";
+int output_EnterCounter= -1;
 //=========================================
 String pwmOut_KeyList = "";
 int pwmOut_EnterCounter = -1;

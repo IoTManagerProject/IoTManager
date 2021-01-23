@@ -6,8 +6,9 @@
 #include "items/vButtonOut.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
-#include "items/vInOutput.h"
+#include "items/vInput.h"
 #include "items/vLogging.h"
+#include "items/vOutput.h"
 #include "items/vPwmOut.h"
 #include "items/vSensorAnalog.h"
 #include "items/vSensorBme280.h"
@@ -62,8 +63,10 @@ void csvCmdExecute(String& cmdStr) {
                 sCmd.addCommand(order.c_str(), pwmOut);
             } else if (order == F("button-in")) {
                 sCmd.addCommand(order.c_str(), buttonIn);
-            } else if (order == F("inoutput")) {
-                sCmd.addCommand(order.c_str(), inOutput);
+            } else if (order == F("input")) {
+                sCmd.addCommand(order.c_str(), input);
+            } else if (order == F("output")) {
+                sCmd.addCommand(order.c_str(), output);
             } else if (order == F("analog-adc")) {
                 sCmd.addCommand(order.c_str(), analogAdc);
             } else if (order == F("ultrasonic-cm")) {
@@ -155,14 +158,34 @@ void loopMySensorsExecute() {
     if (mysensorBuf.length()) {
         String tmp = selectToMarker(mysensorBuf, ";");
 
-        String key = selectToMarker(tmp, ",");
-        String value = deleteBeforeDelimiter(tmp, ",");
+        String type = selectFromMarkerToMarker(tmp, ",", 0);
+        String nodeId = selectFromMarkerToMarker(tmp, ",", 1);
+        String childSensorId = selectFromMarkerToMarker(tmp, ",", 2);
+        String value = selectFromMarkerToMarker(tmp, ",", 3);
 
-        eventGen2(key, value);
-        jsonWriteStr(configLiveJson, key, value);
-        publishStatus(key, value);
-        SerialPrint("I", "MySensor", "'" + key + "' data: " + value);
+        String key = nodeId + "-" + childSensorId;
+        static String infoJson = "{}";
 
+        if (childSensorId == "255") {  //это презентация
+
+            String prevValue = jsonReadStr(infoJson, nodeId);
+            prevValue += value + " ";
+            jsonWriteStr(infoJson, nodeId, prevValue);
+
+            //100;255;0;0;17;2.3.2 версия библиотеки
+            //100;255;3;0;6;255
+            //100;255;3;0;11;Passive node имя
+            //100;255;3;0;12;1.0
+
+            SerialPrint("I", "MySensor", "New device connected " + infoJson);
+        } else {  //это данные
+            if (value != "") {
+                eventGen2(key, value);
+                jsonWriteStr(configLiveJson, key, value);
+                publishStatus(key, value);
+                SerialPrint("I", "MySensor", "Payload Type:" + type + ", NodeId:" + nodeId + ", ChildId:" + childSensorId + ", Payload:" + value);
+            }
+        }
         mysensorBuf = deleteBeforeDelimiter(mysensorBuf, ";");
     }
 }

@@ -77,8 +77,11 @@ extern int impuls_EnterCounter;
 extern String buttonOut_KeyList;
 extern int buttonOut_EnterCounter;
 //=========================================
-extern String inOutput_KeyList;
-extern int inOutput_EnterCounter;
+extern String input_KeyList;
+extern int input_EnterCounter;
+//=========================================
+extern String output_KeyList;
+extern int output_EnterCounter;
 //=========================================
 extern String pwmOut_KeyList;
 extern int pwmOut_EnterCounter;

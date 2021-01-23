@@ -7,16 +7,17 @@
 #include "items/vButtonOut.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
-#include "items/vInOutput.h"
+#include "items/vInput.h"
 #include "items/vLogging.h"
+#include "items/vOutput.h"
 #include "items/vPwmOut.h"
 #include "items/vSensorAnalog.h"
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
-#include "items/vSensorPzem.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
+#include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 
@@ -24,7 +25,10 @@ void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
     configSetupJson.replace("\r\n", "");
 
-    configStoreJson = readFile("store.json", 4096);
+    String tmp = readFile("store.json", 4096);
+    if (tmp != "failed") {
+        configStoreJson = tmp;
+    }
     configStoreJson.replace("\r\n", "");
 
     jsonWriteStr(configSetupJson, "warning1", "");
@@ -114,11 +118,17 @@ void clearVectors() {
     buttonOut_KeyList = "";
     buttonOut_EnterCounter = -1;
 
-    if (myInOutput != nullptr) {
-        myInOutput->clear();
+    if (myInput != nullptr) {
+        myInput->clear();
     }
-    inOutput_KeyList = "";
-    inOutput_EnterCounter = -1;
+    input_KeyList = "";
+    input_EnterCounter = -1;
+
+    if (myOutput != nullptr) {
+        myOutput->clear();
+    }
+    output_KeyList = "";
+    output_EnterCounter = -1;
 
     if (myPwmOut != nullptr) {
         myPwmOut->clear();
