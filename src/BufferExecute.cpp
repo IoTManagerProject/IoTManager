@@ -178,6 +178,9 @@ void loopMySensorsExecute() {
                 eventGen2(key, value);
                 jsonWriteStr(configLiveJson, key, value);
                 publishStatus(key, value);
+                String time = timeNow->getTime();
+                jsonWriteStr(configTimeJson, key, time);
+                publishLastUpdateTime(key, time);
                 SerialPrint("I", "MySensor", "PayloadType:" + type + ", NodeId:" + nodeId + ", ChildId:" + childSensorId + ", Payload:" + value);
             }
         }

@@ -172,6 +172,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         SerialPrint("I", "MQTT", "Full update");
         publishWidgets();
         publishState();
+        publishTimes();
 
         choose_log_date_and_send();
     }
@@ -266,6 +267,13 @@ boolean publishStatus(const String& topic, const String& data) {
     return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
+boolean publishLastUpdateTime(const String& topic, const String& data) {
+    String path = mqttRootDevice + "/" + topic + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "info", data);
+    return mqtt.publish(path.c_str(), json.c_str(), false);
+}
+
 boolean publishEvent(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/event";
     return mqtt.publish(path.c_str(), data.c_str(), true);
@@ -349,6 +357,33 @@ void publishState() {
     }
 }
 
+void publishTimes() {
+    // берет строку json и ключи превращает в топики а значения колючей в них посылает
+    if (configTimeJson != "{}") {
+        String str = configTimeJson;
+
+        str.replace("{", "");
+        str.replace("}", "");
+        str.replace("\"", "");
+        str += ",";
+
+        Serial.println(str);
+
+        while (str.length() != 0) {
+            String tmp = selectToMarker(str, ",");
+
+            String topic = selectToMarker(tmp, ":");
+            String state = deleteBeforeDelimiter(tmp, ":");
+
+            Serial.println(topic + " " + state);
+
+            if (topic != "" && state != "") {
+                publishLastUpdateTime(topic, state);
+            }
+            str = deleteBeforeDelimiter(str, ",");
+        }
+    }
+}
 const String getStateStr() {
     switch (mqtt.state()) {
         case -4:

@@ -53,6 +53,7 @@ extern String configSetupJson;   //все настройки
 extern String configLiveJson;    //все данные с датчиков (связан с mqtt)
 extern String configStoreJson;   //все данные которые должны сохраняться
 extern String configOptionJson;  //для трансфера
+extern String configTimeJson;  
 extern String telegramMsgJson;
 extern String getValue(String& key);
 
