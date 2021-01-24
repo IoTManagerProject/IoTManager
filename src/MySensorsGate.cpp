@@ -1,43 +1,44 @@
 #include "MySensorsGate.h"
-
 #ifdef MYSENSORS
 
-MyMessage msg(CHILD_ID, V_TEXT);
-
 void receive(const MyMessage &message) {
-    String value;
-    switch (message.getPayloadType()) {
-        case 0:
-            value = message.getString();
-        case 1:
-            value = String(message.getByte());
-        case 2:
-            value = String(message.getInt());
-        case 3:
-            value = String(message.getUInt());
-        case 4:
-            value = String(message.getInt());
-        case 5:
-            value = String(message.getUInt());
-        case 6:
-            value = String(message.getBool());
-        case 7:
-            value = String(message.getFloat());
-    }
-    String msg = String(message.getPayloadType()) + "," +  //type
-                 String(message.getSender()) + "," +       //node-id
-                 String(message.getSensor()) + "," +       //child-sensor-id
-                 value + ";";                              //value
+    String inMsg = String(message.getPayloadType()) + "," +  //type
+                   String(message.getSender()) + "," +       //node-id
+                   String(message.getSensor()) + "," +       //child-sensor-id
+                   parseToString(message) + ";";             //value
 
-    mysensorBuf += msg;
+    mysensorBuf += inMsg;
+}
+
+String parseToString(const MyMessage &message) {
+    String value = "error";
+    switch (message.getPayloadType()) {
+        case 0:  //Payload type is string
+            value = message.getString();
+            return value;
+        case 1:  //Payload type is byte
+            value = String(message.getByte());
+            return value;
+        case 2:  //Payload type is INT16
+            value = String(message.getInt());
+            return value;
+        case 3:  //Payload type is UINT16
+            value = String(message.getUInt());
+            return value;
+        case 4:  //Payload type is INT32
+            value = String(message.getInt());
+            return value;
+        case 5:  //Payload type is UINT32
+            value = String(message.getUInt());
+            return value;
+        case 6:  //Payload type is binary
+            value = String(message.getBool());
+            return value;
+        case 7:  //Payload type is float32
+            value = String(message.getFloat());
+            return value;
+        default:
+            return value;
+    }
 }
 #endif
-
-//0  Payload type is string
-//1  Payload type is byte
-//2  Payload type is INT16
-//3  Payload type is UINT16
-//4  Payload type is INT32
-//5  Payload type is UINT32
-//6  Payload type is binary
-//7  Payload type is float32

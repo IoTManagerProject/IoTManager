@@ -172,18 +172,13 @@ void loopMySensorsExecute() {
             prevValue += value + " ";
             jsonWriteStr(infoJson, nodeId, prevValue);
 
-            //100;255;0;0;17;2.3.2 версия библиотеки
-            //100;255;3;0;6;255
-            //100;255;3;0;11;Passive node имя
-            //100;255;3;0;12;1.0
-
             SerialPrint("I", "MySensor", "New device connected " + infoJson);
         } else {  //это данные
             if (value != "") {
                 eventGen2(key, value);
                 jsonWriteStr(configLiveJson, key, value);
                 publishStatus(key, value);
-                SerialPrint("I", "MySensor", "Payload Type:" + type + ", NodeId:" + nodeId + ", ChildId:" + childSensorId + ", Payload:" + value);
+                SerialPrint("I", "MySensor", "PayloadType:" + type + ", NodeId:" + nodeId + ", ChildId:" + childSensorId + ", Payload:" + value);
             }
         }
         mysensorBuf = deleteBeforeDelimiter(mysensorBuf, ";");
