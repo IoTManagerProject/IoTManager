@@ -10,14 +10,6 @@
 #define LED_PIN 2
 #endif
 
-#ifdef esp8266_mysensors_4mb
-#define FIRMWARE_NAME "esp8266_mysensors_4mb"
-#define USE_LITTLEFS true
-#define USE_OTA true
-#define LED_PIN 2
-#define MYSENSORS
-#endif
-
 #ifdef esp8266_1mb
 #define FIRMWARE_NAME "esp8266_1mb"
 #define USE_LITTLEFS false
@@ -30,6 +22,14 @@
 #define USE_LITTLEFS false
 #define USE_OTA true
 #define LED_PIN 22
+#endif
+
+#ifdef esp8266_mysensors_4mb
+#define FIRMWARE_NAME "esp8266_mysensors_4mb"
+#define USE_LITTLEFS true
+#define USE_OTA true
+#define LED_PIN 2
+#define MYSENSORS
 #endif
 
 #ifdef esp32_mysensors_4mb
