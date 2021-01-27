@@ -167,12 +167,14 @@ void loopMySensorsExecute() {
         static String infoJson = "{}";
 
         if (childSensorId == "255") {  //это презентация
-
-            String prevValue = jsonReadStr(infoJson, nodeId);
-            prevValue += value + " ";
-            jsonWriteStr(infoJson, nodeId, prevValue);
-
-            SerialPrint("I", "MySensor", "New device connected " + infoJson);
+            static String prevNodeId = "";
+            if (prevNodeId == nodeId) {
+                String prevValue = jsonReadStr(infoJson, nodeId);
+                prevValue += value + " ";
+                jsonWriteStr(infoJson, nodeId, prevValue);
+            } else {
+                SerialPrint("I", "MySensor", "New device connected " + infoJson);
+            }
         } else {  //это данные
             if (value != "") {
                 eventGen2(key, value);
@@ -182,7 +184,7 @@ void loopMySensorsExecute() {
                 String time = timeNow->getTime();
                 jsonWriteStr(configTimeJson, key, time);
                 publishLastUpdateTime(key, time);
-                
+
                 SerialPrint("I", "MySensor", "PayloadType:" + type + ", NodeId:" + nodeId + ", ChildId:" + childSensorId + ", Payload:" + value);
             }
         }
