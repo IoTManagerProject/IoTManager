@@ -1,10 +1,15 @@
 #include "MySensorsGate.h"
 #ifdef MYSENSORS
 
+
+
 void receive(const MyMessage &message) {
-    String inMsg = String(message.getPayloadType()) + "," +  //type
-                   String(message.getSender()) + "," +       //node-id
+    String inMsg = String(message.getSender()) + "," +       //node-id
                    String(message.getSensor()) + "," +       //child-sensor-id
+                   String(message.getCommand()) + "," +      //command
+                   String(message.getRequestEcho()) + "," +  //ack
+                   String(message.getType()) + "," +         //type
+                   String(message.getPayloadType()) + "," +  //PayloadType
                    parseToString(message) + ";";             //value
 
     mysensorBuf += inMsg;

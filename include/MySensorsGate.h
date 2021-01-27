@@ -10,3 +10,4 @@
 extern void receive(const MyMessage &message);
 extern String parseToString(const MyMessage &message);
 #endif
+

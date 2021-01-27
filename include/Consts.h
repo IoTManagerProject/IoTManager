@@ -1,6 +1,5 @@
 #pragma once
 
-
 #define FIRMWARE_VERSION 280
 
 #ifdef esp8266_4mb
@@ -60,8 +59,6 @@
 #define uartEnable
 //================================================================================================================================================================
 
-
-
 enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,
                    TIME,
@@ -69,7 +66,8 @@ enum TimerTask_t { WIFI_SCAN,
                    STATISTICS,
                    UPTIME,
                    UDP,
-                   SYGNAL };
+                   SYGNAL,
+                   TIMES };
 
 enum NotAsyncActions {
     do_ZERO,
@@ -97,27 +95,6 @@ enum ConfigType_t {
     CT_CONFIG,
     CT_SCENARIO
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //history
 //07.11.2020 (SSDP OFF, UDP OFF)

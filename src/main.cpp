@@ -31,6 +31,7 @@
 #include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
+#include "deviceTimes.h"
 
 void not_async_actions();
 
@@ -77,7 +78,7 @@ void setup() {
 #ifdef ESP8266
     getFSInfo();
 #endif
-
+    myTimesInit();
     testsPerform();
 
     just_load = false;

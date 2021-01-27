@@ -158,36 +158,62 @@ void loopMySensorsExecute() {
     if (mysensorBuf.length()) {
         String tmp = selectToMarker(mysensorBuf, ";");
 
-        String type = selectFromMarkerToMarker(tmp, ",", 0);
-        String nodeId = selectFromMarkerToMarker(tmp, ",", 1);
-        String childSensorId = selectFromMarkerToMarker(tmp, ",", 2);
-        String value = selectFromMarkerToMarker(tmp, ",", 3);
+        String nodeId = selectFromMarkerToMarker(tmp, ",", 0);         //node-id
+        String childSensorId = selectFromMarkerToMarker(tmp, ",", 1);  //child-sensor-id
+        String _command = selectFromMarkerToMarker(tmp, ",", 2);       //command
+        String ack = selectFromMarkerToMarker(tmp, ",", 3);            //ack
+        String type = selectFromMarkerToMarker(tmp, ",", 4);           //PayloadType
+        String payloadType = selectFromMarkerToMarker(tmp, ",", 5);    //PayloadType
+        String value = selectFromMarkerToMarker(tmp, ",", 6);          //value
 
         String key = nodeId + "-" + childSensorId;
         static String infoJson = "{}";
 
         if (childSensorId == "255") {  //это презентация
-            static String prevNodeId = "";
-            if (prevNodeId == nodeId) {
-                String prevValue = jsonReadStr(infoJson, nodeId);
-                prevValue += value + " ";
-                jsonWriteStr(infoJson, nodeId, prevValue);
-            } else {
-                SerialPrint("I", "MySensor", "New device connected " + infoJson);
+            if (type == "11") {        //это название ноды
+                SerialPrint("I", "MySensor", "New device connected: " + value);
+            }
+            if (type == "12") {  //это версия ноды
+                SerialPrint("I", "MySensor", "Ver: " + value);
             }
         } else {  //это данные
             if (value != "") {
                 eventGen2(key, value);
                 jsonWriteStr(configLiveJson, key, value);
                 publishStatus(key, value);
-
-                String time = timeNow->getTime();
-                jsonWriteStr(configTimeJson, key, time);
-                publishLastUpdateTime(key, time);
-
-                SerialPrint("I", "MySensor", "PayloadType:" + type + ", NodeId:" + nodeId + ", ChildId:" + childSensorId + ", Payload:" + value);
+                jsonWriteStr(configTimesJson, key, "1");
+                publishLastUpdateTime(key, "1");
+                SerialPrint("I", "MySensor", "nID: " + nodeId + ", sID: " + childSensorId + ", c: " + _command + ", ack: " + ack + ", t: " + type + ", pt: " + payloadType + ", val: " + value);
             }
         }
+
         mysensorBuf = deleteBeforeDelimiter(mysensorBuf, ";");
+    }
+}
+
+//отличный пример разбора строки
+void test(char* inputString) {
+    char *str, *p;
+    uint8_t index = 0;
+    for (str = strtok_r(inputString, ";", &p);
+         str && index < 5;
+         str = strtok_r(NULL, ";", &p), index++) {
+        switch (index) {
+            case 0:
+                Serial.println(str);
+                break;
+            case 1:
+                Serial.println(str);
+                break;
+            case 2:
+                Serial.println(str);
+                break;
+            case 3:
+                Serial.println(str);
+                break;
+            case 4:
+                Serial.println(str);
+                break;
+        }
     }
 }

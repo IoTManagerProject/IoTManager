@@ -5,7 +5,7 @@ AsyncWebSocket ws;
 //AsyncEventSource events;
 #endif
 
-TickerScheduler ts(SYGNAL + 1);
+TickerScheduler ts(TIMES + 1);
 WiFiClient espClient;
 PubSubClient mqtt(espClient);
 StringCommand sCmd;
@@ -25,7 +25,7 @@ String configSetupJson = "{}";
 String configLiveJson = "{}";
 String configStoreJson = "{}";
 String configOptionJson = "{}";
-String configTimeJson = "{}";
+String configTimesJson = "{}";
 String telegramMsgJson = "{}";
 
 // Mqtt

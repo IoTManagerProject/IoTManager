@@ -359,8 +359,8 @@ void publishState() {
 
 void publishTimes() {
     // берет строку json и ключи превращает в топики а значения колючей в них посылает
-    if (configTimeJson != "{}") {
-        String str = configTimeJson;
+    if (configTimesJson != "{}") {
+        String str = configTimesJson;
 
         str.replace("{", "");
         str.replace("}", "");
