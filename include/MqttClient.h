@@ -19,6 +19,7 @@ boolean publishChart_test(const String& topic, const String& data);
 boolean publishStatus(const String& topic, const String& data);
 boolean publishEvent(const String& topic, const String& data);
 boolean publishInfo(const String& topic, const String& data);
+boolean publishAnyJsonKey(const String& topic, const String& data, const String& key);
 boolean publishLastUpdateTime(const String& topic, const String& data);
 
 

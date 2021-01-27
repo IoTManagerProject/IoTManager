@@ -21,6 +21,11 @@ void myTimesInit() {
                     if (key != "") {
                         jsonWriteStr(configTimesJson, key, String(state));
                         publishLastUpdateTime(key, String(state));
+                        if (state >= 60) {
+                            publishAnyJsonKey(key, "red", "color");
+                        } else {
+                            publishAnyJsonKey(key, "", "color");
+                        }
                     }
                     str = deleteBeforeDelimiter(str, ",");
                 }

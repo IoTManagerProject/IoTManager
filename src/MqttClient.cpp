@@ -274,6 +274,13 @@ boolean publishLastUpdateTime(const String& topic, const String& data) {
     return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
+boolean publishAnyJsonKey(const String& topic, const String& data, const String& key) {
+    String path = mqttRootDevice + "/" + topic + "/status";
+    String json = "{}";
+    jsonWriteStr(json, key, data);
+    return mqtt.publish(path.c_str(), json.c_str(), false);
+}
+
 boolean publishEvent(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/event";
     return mqtt.publish(path.c_str(), data.c_str(), true);
@@ -379,6 +386,11 @@ void publishTimes() {
 
             if (topic != "" && state != "") {
                 publishLastUpdateTime(topic, state);
+                if (state.toInt() >= 60) {
+                    publishAnyJsonKey(topic, "red", "color");
+                } else {
+                    publishAnyJsonKey(topic, "", "color");
+                }
             }
             str = deleteBeforeDelimiter(str, ",");
         }
