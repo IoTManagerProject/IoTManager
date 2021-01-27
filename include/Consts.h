@@ -32,6 +32,14 @@
 #define LED_PIN 22
 #endif
 
+#ifdef esp32_mysensors_4mb
+#define FIRMWARE_NAME "esp32_mysensors_4mb"
+#define USE_LITTLEFS false
+#define USE_OTA true
+#define LED_PIN 22
+#define MYSENSORS
+#endif
+
 #define NUM_BUTTONS 6
 #define MQTT_RECONNECT_INTERVAL 20000
 #define TELEMETRY_UPDATE_INTERVAL_MIN 60
