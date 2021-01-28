@@ -155,6 +155,7 @@ String getValue(String& key) {
 }
 
 void loopMySensorsExecute() {
+#ifdef MYSENSORS
     if (mysensorBuf.length()) {
         String tmp = selectToMarker(mysensorBuf, ";");
 
@@ -185,6 +186,7 @@ void loopMySensorsExecute() {
         }
         mysensorBuf = deleteBeforeDelimiter(mysensorBuf, ";");
     }
+#endif
 }
 
 //отличный пример разбора строки

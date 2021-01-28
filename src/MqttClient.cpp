@@ -346,15 +346,11 @@ void publishState() {
     str.replace("\"", "");
     str += ",";
 
-    Serial.println(str);
-
     while (str.length() != 0) {
         String tmp = selectToMarker(str, ",");
 
         String topic = selectToMarker(tmp, ":");
         String state = deleteBeforeDelimiter(tmp, ":");
-
-        Serial.println(topic + " " + state);
 
         if (topic != "" && state != "") {
             if (topic != "timenow") {
