@@ -32,12 +32,10 @@ void publishTimes() {
         str.replace("}", "");
         str.replace("\"", "");
         str += ",";
-        Serial.println(str);
         while (str.length() != 0) {
             String tmp = selectToMarker(str, ",");
             String key = selectToMarker(tmp, ":");
             String minutes = deleteBeforeDelimiter(tmp, ":");
-            Serial.println(key + " " + minutes);
             if (key != "" && minutes != "") {
                 publishNodeInfo(minutes.toInt(), key);
             }

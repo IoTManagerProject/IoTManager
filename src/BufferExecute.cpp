@@ -158,10 +158,10 @@ void loopMySensorsExecute() {
     if (mysensorBuf.length()) {
         String tmp = selectToMarker(mysensorBuf, ";");
 
-        String nodeId = selectFromMarkerToMarker(tmp, ",", 0);           //node-id          
-        String childSensorId = selectFromMarkerToMarker(tmp, ",", 1);    //child-sensor-id  
-        String type = selectFromMarkerToMarker(tmp, ",", 2);             //Type             
-        String value = selectFromMarkerToMarker(tmp, ",", 3);            //value            
+        String nodeId = selectFromMarkerToMarker(tmp, ",", 0);         //node-id
+        String childSensorId = selectFromMarkerToMarker(tmp, ",", 1);  //child-sensor-id
+        String type = selectFromMarkerToMarker(tmp, ",", 2);           //Type
+        String value = selectFromMarkerToMarker(tmp, ",", 3);          //value
 
         String key = nodeId + "-" + childSensorId;
         static String infoJson = "{}";
@@ -183,7 +183,6 @@ void loopMySensorsExecute() {
                 SerialPrint("I", "MySensor", "nID: " + nodeId + ", sID: " + childSensorId + ", t: " + type + ", val: " + value);
             }
         }
-
         mysensorBuf = deleteBeforeDelimiter(mysensorBuf, ";");
     }
 }
