@@ -158,13 +158,10 @@ void loopMySensorsExecute() {
     if (mysensorBuf.length()) {
         String tmp = selectToMarker(mysensorBuf, ";");
 
-        String nodeId = selectFromMarkerToMarker(tmp, ",", 0);         //node-id
-        String childSensorId = selectFromMarkerToMarker(tmp, ",", 1);  //child-sensor-id
-        String _command = selectFromMarkerToMarker(tmp, ",", 2);       //command
-        String ack = selectFromMarkerToMarker(tmp, ",", 3);            //ack
-        String type = selectFromMarkerToMarker(tmp, ",", 4);           //PayloadType
-        String payloadType = selectFromMarkerToMarker(tmp, ",", 5);    //PayloadType
-        String value = selectFromMarkerToMarker(tmp, ",", 6);          //value
+        String nodeId = selectFromMarkerToMarker(tmp, ",", 0);           //node-id          
+        String childSensorId = selectFromMarkerToMarker(tmp, ",", 1);    //child-sensor-id  
+        String type = selectFromMarkerToMarker(tmp, ",", 2);             //Type             
+        String value = selectFromMarkerToMarker(tmp, ",", 3);            //value            
 
         String key = nodeId + "-" + childSensorId;
         static String infoJson = "{}";
@@ -183,7 +180,7 @@ void loopMySensorsExecute() {
                 publishStatus(key, value);
                 jsonWriteStr(configTimesJson, key, "1");
                 publishLastUpdateTime(key, "1 min");
-                SerialPrint("I", "MySensor", "nID: " + nodeId + ", sID: " + childSensorId + ", c: " + _command + ", ack: " + ack + ", t: " + type + ", pt: " + payloadType + ", val: " + value);
+                SerialPrint("I", "MySensor", "nID: " + nodeId + ", sID: " + childSensorId + ", t: " + type + ", val: " + value);
             }
         }
 
