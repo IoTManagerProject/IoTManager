@@ -241,6 +241,10 @@ class LineParsing {
                 if (filename.indexOf("chart") != -1) jsonWriteStr(buf, "maxCount", _cnt);
             }
 
+#ifdef GATE_MODE
+            jsonWriteStr(buf, "info", " ");
+#endif
+
             jsonWriteStr(buf, "page", page);
             jsonWriteStr(buf, "order", order);
             jsonWriteStr(buf, "descr", descr);

@@ -5,6 +5,7 @@
 #include "Global.h"
 #include "Init.h"
 #include "items/vLogging.h"
+#include "NodeTimes.h"
 
 enum MqttBroker { MQTT_PRIMARY,
                   MQTT_RESERVE };
@@ -364,38 +365,7 @@ void publishState() {
     }
 }
 
-void publishTimes() {
-    // берет строку json и ключи превращает в топики а значения колючей в них посылает
-    if (configTimesJson != "{}") {
-        String str = configTimesJson;
 
-        str.replace("{", "");
-        str.replace("}", "");
-        str.replace("\"", "");
-        str += ",";
-
-        Serial.println(str);
-
-        while (str.length() != 0) {
-            String tmp = selectToMarker(str, ",");
-
-            String topic = selectToMarker(tmp, ":");
-            String state = deleteBeforeDelimiter(tmp, ":");
-
-            Serial.println(topic + " " + state);
-
-            if (topic != "" && state != "") {
-                publishLastUpdateTime(topic, state);
-                if (state.toInt() >= 60) {
-                    publishAnyJsonKey(topic, "red", "color");
-                } else {
-                    publishAnyJsonKey(topic, "", "color");
-                }
-            }
-            str = deleteBeforeDelimiter(str, ",");
-        }
-    }
-}
 const String getStateStr() {
     switch (mqtt.state()) {
         case -4:

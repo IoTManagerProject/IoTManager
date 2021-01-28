@@ -29,6 +29,9 @@
 #define USE_OTA true
 #define LED_PIN 2
 #define MYSENSORS
+#define NODE_RED_COLOR_TIMEOUT 120
+#define NODE_ORANGE_COLOR_TIMEOUT 60
+#define GATE_MODE  //выключает стандартное отображение времени обновления виджетов в приложении
 #endif
 
 #ifdef esp32_mysensors_4mb
@@ -37,6 +40,9 @@
 #define USE_OTA true
 #define LED_PIN 22
 #define MYSENSORS
+#define NODE_RED_COLOR_TIMEOUT 120
+#define NODE_ORANGE_COLOR_TIMEOUT 60
+#define GATE_MODE
 #endif
 
 #define NUM_BUTTONS 6

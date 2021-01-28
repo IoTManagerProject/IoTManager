@@ -25,7 +25,7 @@ boolean publishLastUpdateTime(const String& topic, const String& data);
 
 void publishWidgets();
 void publishState();
-void publishTimes();
+
 
 void  mqttCallback(char* topic, uint8_t* payload, size_t length);
 const String getStateStr();

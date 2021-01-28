@@ -19,6 +19,7 @@
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
 #include "items/ButtonInClass.h"
+#include "NodeTimes.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
 #include "items/vLogging.h"
@@ -31,7 +32,7 @@
 #include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
-#include "deviceTimes.h"
+
 
 void not_async_actions();
 
@@ -78,7 +79,7 @@ void setup() {
 #ifdef ESP8266
     getFSInfo();
 #endif
-    myTimesInit();
+    nodeTimesInit();
     testsPerform();
 
     just_load = false;
