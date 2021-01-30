@@ -83,22 +83,11 @@
 #endif
 
 #ifdef GATE_MODE
-#define EnableButtonIn
 #define EnableButtonOut
 #define EnableCountDown
-#define EnableImpulsOut
 #define EnableInput
 #define EnableLogging
 #define EnableOutput
-#define EnablePwmOut
-#define EnableSensorAnalog
-#define EnableSensorBme280
-#define EnableSensorBmp280
-#define EnableSensorCcs811
-#define EnableSensorDallas
-#define EnableSensorDht
-#define EnableSensorPzem
-#define EnableSensorUltrasonic
 #define EnableSensorUptime
 #define EnableTelegram
 #define EnableUart
