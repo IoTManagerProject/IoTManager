@@ -11,6 +11,7 @@ void nodeTimesInit() {
                 str += ",";
                 while (str.length() != 0) {
                     String tmp = selectToMarker(str, ",");
+
                     String key = selectToMarker(tmp, ":");
                     int minutes = deleteBeforeDelimiter(tmp, ":").toInt();
                     minutes++;
@@ -18,6 +19,7 @@ void nodeTimesInit() {
                         jsonWriteStr(configTimesJson, key, String(minutes));
                         publishNodeInfo(minutes, key);
                     }
+                    
                     str = deleteBeforeDelimiter(str, ",");
                 }
             }
