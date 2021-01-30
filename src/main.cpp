@@ -80,7 +80,7 @@ void setup() {
     getFSInfo();
 #endif
     nodeTimesInit();
-    testsPerform();
+    //testsPerform();
 
     just_load = false;
     initialized = true;

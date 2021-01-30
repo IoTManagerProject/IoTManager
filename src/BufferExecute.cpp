@@ -180,7 +180,7 @@ void loopMySensorsExecute() {
                 jsonWriteStr(configLiveJson, key, value);
                 publishStatus(key, value);
                 jsonWriteStr(configTimesJson, key, "1");
-                publishLastUpdateTime(key, "1 min");
+                publishLastUpdateTime(key, "0 min");
                 SerialPrint("I", "MySensor", "nID: " + nodeId + ", sID: " + childSensorId + ", t: " + type + ", val: " + value);
             }
         }
