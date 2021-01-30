@@ -95,83 +95,101 @@ void handle_uptime() {
 }
 
 void clearVectors() {
+#ifdef EnableLogging
     if (myLogging != nullptr) {
         myLogging->clear();
     }
     logging_KeyList = "";
     logging_EnterCounter = -1;
-
+#endif
+#ifdef EnableImpulsOut
     if (myImpulsOut != nullptr) {
         myImpulsOut->clear();
     }
     impuls_KeyList = "";
     impuls_EnterCounter = -1;
+#endif
 
+#ifdef EnableCountDown
     if (myCountDown != nullptr) {
         myCountDown->clear();
     }
     countDown_KeyList = "";
     countDown_EnterCounter = -1;
+#endif
 
+#ifdef EnableButtonOut
     if (myButtonOut != nullptr) {
         myButtonOut->clear();
     }
     buttonOut_KeyList = "";
     buttonOut_EnterCounter = -1;
-
+#endif
+#ifdef EnableInput
     if (myInput != nullptr) {
         myInput->clear();
     }
     input_KeyList = "";
     input_EnterCounter = -1;
-
+#endif
+#ifdef EnableOutput
     if (myOutput != nullptr) {
         myOutput->clear();
     }
     output_KeyList = "";
     output_EnterCounter = -1;
-
+#endif
+#ifdef EnablePwmOut
     if (myPwmOut != nullptr) {
         myPwmOut->clear();
     }
     pwmOut_KeyList = "";
     pwmOut_EnterCounter = -1;
-
+#endif
     //==================================
-
+#ifdef EnableSensorDallas
     if (mySensorDallas2 != nullptr) {
         mySensorDallas2->clear();
     }
-
+#endif
+#ifdef EnableSensorUltrasonic
     if (mySensorUltrasonic != nullptr) {
         mySensorUltrasonic->clear();
     }
-
+#endif
+#ifdef EnableSensorAnalog
     if (mySensorAnalog != nullptr) {
         mySensorAnalog->clear();
     }
-
+#endif
+#ifdef EnableSensorDht
     if (mySensorDht != nullptr) {
         mySensorDht->clear();
     }
-
+#endif
+#ifdef EnableSensorBme280
     if (mySensorBme280 != nullptr) {
         mySensorBme280->clear();
     }
-
+#endif
+#ifdef EnableSensorBmp280
     if (mySensorBmp280 != nullptr) {
         mySensorBmp280->clear();
     }
-
+#endif
+#ifdef EnableSensorCcs811
     if (mySensorCcs811 != nullptr) {
         mySensorCcs811->clear();
     }
-
+#endif
+#ifdef EnableSensorPzem
     if (mySensorPzem != nullptr) {
         mySensorPzem->clear();
     }
-
+#endif
+#ifdef EnableSensorUptime
     if (mySensorUptime != nullptr) {
         mySensorUptime->clear();
     }
+#endif
 }

@@ -1,10 +1,13 @@
+#include "Consts.h"
+#ifdef EnableButtonOut
 #include "items/vButtonOut.h"
-#include "Class/LineParsing.h"
-#include "Global.h"
-#include "BufferExecute.h"
-#include "SoftUART.h"
 
 #include <Arduino.h>
+
+#include "BufferExecute.h"
+#include "Class/LineParsing.h"
+#include "Global.h"
+#include "SoftUART.h"
 //this class save data to flash
 ButtonOut::ButtonOut(String pin, boolean inv, String key, String type) {
     _pin = pin;
@@ -24,12 +27,10 @@ void ButtonOut::execute(String state) {
         if (state == "change") {
             state = String(!digitalRead(_pin.toInt()));
             digitalWrite(_pin.toInt(), state.toInt());
-        }
-        else {
+        } else {
             if (_inv) {
                 digitalWrite(_pin.toInt(), !state.toInt());
-            }
-            else {
+            } else {
                 digitalWrite(_pin.toInt(), state.toInt());
             }
         }
@@ -77,4 +78,4 @@ void buttonOutExecute() {
         }
     }
 }
-
+#endif

@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableSensorUptime
 #include "items/vSensorUptime.h"
 
 #include <Arduino.h>
@@ -47,3 +49,4 @@ void uptimeSensor() {
     firstTime = false;
     mySensorUptime->push_back(SensorUptime(paramsUpt));
 }
+#endif

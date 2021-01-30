@@ -1,4 +1,6 @@
+#ifdef EnableInput
 #pragma once
+#include "Consts.h"
 #include <Arduino.h>
 
 #include "Global.h"
@@ -25,3 +27,4 @@ extern MyInputVector* myInput;
 
 extern void input();
 extern void inputExecute();
+#endif

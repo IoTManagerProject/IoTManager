@@ -41,7 +41,9 @@ void web_init() {
 
         if (request->hasArg(F("delAllItems"))) {
             delAllItems();
+#ifdef EnableLogging
             cleanLogAndData();
+#endif
             jsonWriteStr(configSetupJson, F("warning1"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Требуется перезагрузка</p></font></div>"));
             request->redirect(F("/?set.device"));
         }
@@ -86,7 +88,9 @@ void web_init() {
         }
 
         if (request->hasArg(F("cleanlog"))) {
+#ifdef EnableLogging
             cleanLogAndData();
+#endif
             request->send(200);
         }
 
@@ -288,7 +292,7 @@ void web_init() {
             bool value = request->getParam("uart")->value().toInt();
             jsonWriteBool(configSetupJson, "uart", value);
             saveConfig();
-#ifdef uartEnable
+#ifdef EnableUart
             uartInit();
 #endif
             request->send(200);
@@ -302,7 +306,7 @@ void web_init() {
         if (request->hasArg("uartS")) {
             jsonWriteStr(configSetupJson, "uartS", request->getParam("uartS")->value());
             saveConfig();
-#ifdef uartEnable
+#ifdef EnableUart
             uartInit();
 #endif
             request->send(200);
@@ -310,7 +314,7 @@ void web_init() {
         if (request->hasArg("uartTX")) {
             jsonWriteStr(configSetupJson, "uartTX", request->getParam("uartTX")->value());
             saveConfig();
-#ifdef uartEnable
+#ifdef EnableUart
             uartInit();
 #endif
             request->send(200);
@@ -318,7 +322,7 @@ void web_init() {
         if (request->hasArg("uartRX")) {
             jsonWriteStr(configSetupJson, "uartRX", request->getParam("uartRX")->value());
             saveConfig();
-#ifdef uartEnable
+#ifdef EnableUart
             uartInit();
 #endif
             request->send(200);

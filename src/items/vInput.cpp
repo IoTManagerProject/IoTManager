@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableInput
 #include "items/vInput.h"
 
 #include <Arduino.h>
@@ -75,3 +77,4 @@ void inputExecute() {
         }
     }
 }
+#endif

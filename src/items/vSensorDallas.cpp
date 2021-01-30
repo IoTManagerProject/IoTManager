@@ -1,8 +1,12 @@
+#include "Consts.h"
+#ifdef EnableSensorDallas
 #include "items/vSensorDallas.h"
+
+#include <Arduino.h>
+
+#include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
-#include "BufferExecute.h"
-#include <Arduino.h>
 
 SensorDallas::SensorDallas(unsigned long interval, unsigned int pin, unsigned int index, String key) {
     _interval = interval * 1000;
@@ -51,4 +55,4 @@ void dallas() {
     firstTime = false;
     mySensorDallas2->push_back(SensorDallas(interval.toInt(), pin.toInt(), index.toInt(), key));
 }
-
+#endif

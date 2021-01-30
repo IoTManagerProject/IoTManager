@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableButtonIn
 #include "BufferExecute.h"
 #include "items/ButtonInClass.h"
 //==========================================Модуль физических кнопок========================================
@@ -23,3 +25,4 @@ void buttonInSet() {
     String state = sCmd.next();
     myButtonIn.switchChangeVirtual(key, state);
 }
+#endif

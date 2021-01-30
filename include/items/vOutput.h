@@ -1,3 +1,4 @@
+#ifdef EnableOutput
 #pragma once
 #include <Arduino.h>
 
@@ -25,4 +26,5 @@ extern MyOutputVector* myOutput;
 
 extern void output();
 extern void outputExecute();
+#endif
 

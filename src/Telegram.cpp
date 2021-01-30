@@ -1,11 +1,11 @@
 #include "Consts.h"
-#ifdef telegramEnable
+#ifdef EnableTelegram
 #include "BufferExecute.h"
 #include "Telegram.h"
 CTBot* myBot{nullptr};
 
 void telegramInit() {
-    if (isTelegramEnabled()) {
+    if (isEnableTelegramd()) {
         telegramInitBeen = true;
         sCmd.addCommand("telegram", sendTelegramMsg);
         String token = jsonReadStr(configSetupJson, "telegramApi");
@@ -25,7 +25,7 @@ void telegramInit() {
 
 void handleTelegram() {
     if (telegramInitBeen) {
-        if (isTelegramEnabled()) {
+        if (isEnableTelegramd()) {
             if (isTelegramInputOn()) {
                 TBMessage msg;
                 static unsigned long prevMillis;
@@ -87,7 +87,7 @@ void sendTelegramMsg() {
     }
 }
 
-bool isTelegramEnabled() {
+bool isEnableTelegramd() {
     return jsonReadBool(configSetupJson, "telegonof");
 }
 

@@ -1,4 +1,6 @@
+#ifdef EnableLogging
 #pragma once
+#include "Consts.h"
 #include <Arduino.h>
 
 #include "Global.h"
@@ -39,3 +41,4 @@ extern void choose_log_date_and_send();
 extern void sendLogData(String file, String topic);
 extern void sendLogData2(String file, String topic);
 extern void cleanLogAndData();
+#endif

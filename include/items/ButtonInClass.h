@@ -1,10 +1,10 @@
+
+#ifdef EnableButtonIn
 #pragma once
 #include <Arduino.h>
 
 #include "Class/LineParsing.h"
 #include "Global.h"
-
-
 
 class ButtonInClass : public LineParsing {
    protected:
@@ -59,3 +59,4 @@ class ButtonInClass : public LineParsing {
 };
 
 extern ButtonInClass myButtonIn;
+#endif

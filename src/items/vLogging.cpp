@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableLogging
 #include "items/vLogging.h"
 
 #include <Arduino.h>
@@ -226,3 +228,4 @@ void cleanLogAndData() {
     removeFile("store.json");
     configStoreJson = "";
 }
+#endif

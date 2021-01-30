@@ -1,3 +1,4 @@
+#ifdef EnableImpulsOut
 #pragma once
 #include <Arduino.h>
 #include "Global.h"
@@ -29,3 +30,4 @@ extern MyImpulsOutVector* myImpulsOut;
 
 extern void impuls();
 extern void impulsExecute();
+#endif

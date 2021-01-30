@@ -1,6 +1,8 @@
+#ifdef EnableSensorAnalog
 #pragma once
-#include "Global.h"
 #include <Arduino.h>
+
+#include "Global.h"
 #include "GyverFilters.h"
 
 class SensorAnalog;
@@ -8,16 +10,14 @@ class SensorAnalog;
 typedef std::vector<SensorAnalog> MySensorAnalogVector;
 
 class SensorAnalog {
-public:
-
+   public:
     SensorAnalog(String key, unsigned long interval, unsigned int adcPin, int map1, int map2, int map3, int map4, float c);
     ~SensorAnalog();
 
     void loop();
     void readAnalog();
 
-private:
-
+   private:
     unsigned long currentMillis;
     unsigned long prevMillis;
     unsigned long difference;
@@ -33,9 +33,9 @@ private:
     int _map4;
 
     float _c;
-
 };
 
 extern MySensorAnalogVector* mySensorAnalog;
 
 extern void analogAdc();
+#endif

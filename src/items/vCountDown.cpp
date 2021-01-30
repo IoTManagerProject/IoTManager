@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableCountDown
 #include "items/vCountDown.h"
 
 #include <Arduino.h>
@@ -76,3 +78,4 @@ void countDownExecute() {
         }
     }
 }
+#endif

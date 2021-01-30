@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableSensorBme280
 #include "items/vSensorBme280.h"
 
 #include <Arduino.h>
@@ -98,3 +100,4 @@ void bme280Sensor() {
         mySensorBme280->push_back(SensorBme280(paramsTmp, paramsHum, paramsPrs));
     }
 }
+#endif

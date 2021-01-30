@@ -1,3 +1,4 @@
+#ifdef EnableSensorCcs811
 #pragma once
 #include <Arduino.h>
 
@@ -37,3 +38,4 @@ class SensorCcs811 {
 extern MySensorCcs811Vector* mySensorCcs811;
 
 extern void ccs811Sensor();
+#endif

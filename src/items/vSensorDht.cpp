@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableSensorDht
 #include "items/vSensorDht.h"
 
 #include <Arduino.h>
@@ -92,3 +94,4 @@ void dhtSensor() {
         enterCnt = -1;
     }
 }
+#endif

@@ -1,8 +1,12 @@
+#include "Consts.h"
+#ifdef EnableSensorUltrasonic
 #include "items/vSensorUltrasonic.h"
+
+#include <Arduino.h>
+
+#include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
-#include "BufferExecute.h"
-#include <Arduino.h>
 
 GMedian<5, int> testFilter;
 
@@ -35,7 +39,6 @@ void SensorUltrasonic::loop() {
 }
 
 void SensorUltrasonic::readUltrasonic() {
-
     static unsigned int counter;
     counter++;
 
@@ -58,7 +61,7 @@ void SensorUltrasonic::readUltrasonic() {
         eventGen2(_key, String(valueFloat));
         jsonWriteStr(configLiveJson, _key, String(valueFloat));
         publishStatus(_key, String(valueFloat));
-        SerialPrint("I", "Sensor", "'" + _key + "' data: " + String(valueFloat));    
+        SerialPrint("I", "Sensor", "'" + _key + "' data: " + String(valueFloat));
     }
 }
 
@@ -86,4 +89,4 @@ void ultrasonic() {
     firstTime = false;
     mySensorUltrasonic->push_back(SensorUltrasonic(key, interval.toInt(), trig, echo, map1, map2, map3, map4, c.toFloat()));
 }
-
+#endif

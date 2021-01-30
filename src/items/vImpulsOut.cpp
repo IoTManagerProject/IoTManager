@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableImpulsOut
 #include "items/vImpulsOut.h"
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
@@ -67,3 +69,5 @@ void impulsExecute() {
         }
     }
 }
+
+#endif

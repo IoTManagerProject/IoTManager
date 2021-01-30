@@ -1,5 +1,5 @@
 #include "Consts.h"
-#ifdef uartEnable
+#ifdef EnableUart
 #include "SoftUART.h"
 #include "Global.h"
 #include "BufferExecute.h"

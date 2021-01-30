@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableOutput
 #include "items/vOutput.h"
 
 #include <Arduino.h>
@@ -51,3 +53,4 @@ void outputExecute() {
         }
     }
 }
+#endif

@@ -4,8 +4,8 @@
 #include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
-#include "items/vLogging.h"
 #include "NodeTimes.h"
+#include "items/vLogging.h"
 
 enum MqttBroker { MQTT_PRIMARY,
                   MQTT_RESERVE };
@@ -174,8 +174,9 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         publishWidgets();
         publishState();
         publishTimes();
-
+#ifdef EnableLogging
         choose_log_date_and_send();
+#endif
     }
 
     else if (topicStr.indexOf("control") != -1) {
@@ -360,7 +361,6 @@ void publishState() {
         str = deleteBeforeDelimiter(str, ",");
     }
 }
-
 
 const String getStateStr() {
     switch (mqtt.state()) {

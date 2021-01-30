@@ -23,7 +23,7 @@
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
         orderBuf += cmdStr;
-#ifdef uartEnable
+#ifdef EnableUart
         if (jsonReadBool(configSetupJson, "uart")) {
             if (jsonReadBool(configSetupJson, "uartEvents")) {
                 if (myUART) {
@@ -58,41 +58,77 @@ void csvCmdExecute(String& cmdStr) {
             SerialPrint("I", "Items", buf);
             String order = selectToMarker(buf, " ");  //отсечка самой команды
             if (order == F("button-out")) {
+#ifdef EnableButtonOut
                 sCmd.addCommand(order.c_str(), buttonOut);
+#endif 
             } else if (order == F("pwm-out")) {
+#ifdef EnablePwmOut
                 sCmd.addCommand(order.c_str(), pwmOut);
+#endif
             } else if (order == F("button-in")) {
+#ifdef EnableButtonIn
                 sCmd.addCommand(order.c_str(), buttonIn);
+#endif
             } else if (order == F("input")) {
+#ifdef EnableInput
                 sCmd.addCommand(order.c_str(), input);
+#endif
             } else if (order == F("output")) {
+#ifdef EnableOutput
                 sCmd.addCommand(order.c_str(), output);
+#endif
             } else if (order == F("analog-adc")) {
+#ifdef EnableSensorAnalog
                 sCmd.addCommand(order.c_str(), analogAdc);
+#endif
             } else if (order == F("ultrasonic-cm")) {
+#ifdef EnableSensorUltrasonic
                 sCmd.addCommand(order.c_str(), ultrasonic);
+#endif
             } else if (order == F("dallas-temp")) {
+#ifdef EnableSensorDallas
                 sCmd.addCommand(order.c_str(), dallas);
+#endif
             } else if (order == F("dht")) {
+#ifdef EnableSensorDht
                 sCmd.addCommand(order.c_str(), dhtSensor);
+#endif
             } else if (order == F("bme280")) {
+#ifdef EnableSensorBme280
                 sCmd.addCommand(order.c_str(), bme280Sensor);
+#endif
             } else if (order == F("bmp280")) {
+#ifdef EnableSensorBmp280
                 sCmd.addCommand(order.c_str(), bmp280Sensor);
+#endif
             } else if (order == F("ccs811")) {
+#ifdef EnableSensorCcs811
                 sCmd.addCommand(order.c_str(), ccs811Sensor);
+#endif
             } else if (order == F("pzem")) {
+#ifdef EnableSensorPzem
                 sCmd.addCommand(order.c_str(), pzemSensor);
+#endif
             } else if (order == F("uptime")) {
+#ifdef  EnableSensorUptime
                 sCmd.addCommand(order.c_str(), uptimeSensor);
+#endif
             } else if (order == F("logging")) {
+#ifdef EnableLogging
                 sCmd.addCommand(order.c_str(), logging);
+#endif 
             } else if (order == F("impuls-out")) {
+#ifdef EnableImpulsOut
                 sCmd.addCommand(order.c_str(), impuls);
+#endif
             } else if (order == F("count-down")) {
+#ifdef EnableCountDown
                 sCmd.addCommand(order.c_str(), countDown);
+#endif
             } else if (order == F("impuls-in")) {
+#ifdef EnableImpulsIn
                 //sCmd.addCommand(order.c_str(), impulsInSensor);
+#endif
             }
 
             sCmd.readStr(buf);

@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableSensorPzem
 #include "items/vSensorPzem.h"
 
 #include "BufferExecute.h"
@@ -125,3 +127,4 @@ void pzemSensor() {
         SerialPrint("E", "Sensor PZEM", "Error, UART switched off");
     }
 }
+#endif

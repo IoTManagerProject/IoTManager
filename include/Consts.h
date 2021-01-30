@@ -7,6 +7,7 @@
 #define USE_LITTLEFS true
 #define USE_OTA true
 #define LED_PIN 2
+#define ESP_MODE
 #endif
 
 #ifdef esp8266_1mb
@@ -14,6 +15,7 @@
 #define USE_LITTLEFS false
 #define USE_OTA false
 #define LED_PIN 2
+#define ESP_MODE
 #endif
 
 #ifdef esp32_4mb
@@ -21,6 +23,7 @@
 #define USE_LITTLEFS false
 #define USE_OTA true
 #define LED_PIN 22
+#define ESP_MODE
 #endif
 
 #ifdef esp8266_mysensors_4mb
@@ -28,10 +31,10 @@
 #define USE_LITTLEFS true
 #define USE_OTA true
 #define LED_PIN 2
+#define GATE_MODE
 #define MYSENSORS
 #define NODE_RED_COLOR_TIMEOUT 120
 #define NODE_ORANGE_COLOR_TIMEOUT 60
-#define GATE_MODE  //выключает стандартное отображение времени обновления виджетов в приложении
 #endif
 
 #ifdef esp32_mysensors_4mb
@@ -39,10 +42,10 @@
 #define USE_LITTLEFS false
 #define USE_OTA true
 #define LED_PIN 22
+#define GATE_MODE
 #define MYSENSORS
 #define NODE_RED_COLOR_TIMEOUT 120
 #define NODE_ORANGE_COLOR_TIMEOUT 60
-#define GATE_MODE
 #endif
 
 #define NUM_BUTTONS 6
@@ -50,19 +53,57 @@
 #define TELEMETRY_UPDATE_INTERVAL_MIN 60
 #define DEVICE_CONFIG_FILE "s.conf.csv"
 #define DEVICE_SCENARIO_FILE "s.scen.txt"
-//=========System parts===========================================================================================================================================
 //#define OTA_UPDATES_ENABLED
 //#define MDNS_ENABLED
 //#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
 //#define UDP_ENABLED
 //#define SSDP_ENABLED
-#define SensorBme280Enabled
-#define SensorBmp280Enabled
-#define SensorDhtEnabled
-#define PwmOutEnable
-#define telegramEnable
-#define uartEnable
+
+#ifdef ESP_MODE
+#define EnableButtonIn
+#define EnableButtonOut
+#define EnableCountDown
+#define EnableImpulsOut
+#define EnableInput
+#define EnableLogging
+#define EnableOutput
+#define EnablePwmOut
+#define EnableSensorAnalog
+#define EnableSensorBme280
+#define EnableSensorBmp280
+#define EnableSensorCcs811
+#define EnableSensorDallas
+#define EnableSensorDht
+#define EnableSensorPzem
+#define EnableSensorUltrasonic
+#define EnableSensorUptime
+#define EnableTelegram
+#define EnableUart
+#endif
+
+#ifdef GATE_MODE
+#define EnableButtonIn
+#define EnableButtonOut
+#define EnableCountDown
+#define EnableImpulsOut
+#define EnableInput
+#define EnableLogging
+#define EnableOutput
+#define EnablePwmOut
+#define EnableSensorAnalog
+#define EnableSensorBme280
+#define EnableSensorBmp280
+#define EnableSensorCcs811
+#define EnableSensorDallas
+#define EnableSensorDht
+#define EnableSensorPzem
+#define EnableSensorUltrasonic
+#define EnableSensorUptime
+#define EnableTelegram
+#define EnableUart
+#endif
+
 //================================================================================================================================================================
 
 enum TimerTask_t { WIFI_SCAN,

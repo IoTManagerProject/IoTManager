@@ -1,3 +1,4 @@
+#ifdef EnableSensorPzem
 #pragma once
 #include <Arduino.h>
 
@@ -42,3 +43,4 @@ class SensorPzem {
 extern MySensorPzemVector* mySensorPzem;
 
 extern void pzemSensor();
+#endif
