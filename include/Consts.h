@@ -1,6 +1,6 @@
 #pragma once
 
-#define FIRMWARE_VERSION 281
+#define FIRMWARE_VERSION 282
 
 #ifdef esp8266_4mb
 #define FIRMWARE_NAME "esp8266_4mb"
