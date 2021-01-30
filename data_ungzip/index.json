@@ -45,7 +45,7 @@
     {
       "type": "link",
       "title": "Настройки разработчика",
-      "action": "/?set.dev",
+      "action": "/?set.developer",
       "class": "btn btn-block btn-default"
     },
     {
