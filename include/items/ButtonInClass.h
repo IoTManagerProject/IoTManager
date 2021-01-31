@@ -2,9 +2,12 @@
 #ifdef EnableButtonIn
 #pragma once
 #include <Arduino.h>
-
+#include <Bounce2.h>
 #include "Class/LineParsing.h"
 #include "Global.h"
+
+extern boolean but[NUM_BUTTONS];
+extern Bounce* buttons;
 
 class ButtonInClass : public LineParsing {
    protected:

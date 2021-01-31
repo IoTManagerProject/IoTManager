@@ -173,7 +173,9 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         SerialPrint("I", "MQTT", "Full update");
         publishWidgets();
         publishState();
+#ifdef GATE_MODE
         publishTimes();
+#endif
 #ifdef EnableLogging
         choose_log_date_and_send();
 #endif

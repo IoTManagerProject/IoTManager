@@ -5,9 +5,6 @@
 #include "CTBot.h"
 #include <ArduinoJson.h>
 #include <ArduinoOTA.h>
-#include <Bounce2.h>
-#include <DallasTemperature.h>
-#include <OneWire.h>
 #include <PubSubClient.h>
 #include <StringCommand.h>
 #include <TickerScheduler.h>
@@ -39,8 +36,7 @@ extern PubSubClient mqtt;
 extern StringCommand sCmd;
 extern AsyncWebServer server;
 
-extern boolean but[NUM_BUTTONS];
-extern Bounce* buttons;
+
 
 //Global vars
 extern boolean just_load;

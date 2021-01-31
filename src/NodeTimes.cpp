@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef GATE_MODE
 #include "NodeTimes.h"
 
 void nodeTimesInit() {
@@ -58,3 +60,4 @@ void publishNodeInfo(int minutes, String& key) {
         publishAnyJsonKey(key, "red", "color");
     }
 }
+#endif

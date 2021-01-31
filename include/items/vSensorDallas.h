@@ -1,8 +1,10 @@
 #ifdef EnableSensorDallas
 #pragma once
 #include <Arduino.h>
-
+#include <OneWire.h>
+#include <DallasTemperature.h>
 #include "Global.h"
+
 
 extern DallasTemperature sensors;
 extern OneWire* oneWire;

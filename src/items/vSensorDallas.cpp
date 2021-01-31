@@ -1,12 +1,14 @@
 #include "Consts.h"
 #ifdef EnableSensorDallas
 #include "items/vSensorDallas.h"
-
-#include <Arduino.h>
-
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
+
+#include <Arduino.h>
+
+OneWire* oneWire;
+DallasTemperature sensors;
 
 SensorDallas::SensorDallas(unsigned long interval, unsigned int pin, unsigned int index, String key) {
     _interval = interval * 1000;

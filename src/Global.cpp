@@ -10,8 +10,7 @@ WiFiClient espClient;
 PubSubClient mqtt(espClient);
 StringCommand sCmd;
 AsyncWebServer server(80);
-OneWire* oneWire;
-DallasTemperature sensors;
+
 
 /*
 * Global vars

@@ -1,6 +1,6 @@
 
-#include "Global.h"
 #include <SSDP.h>
+
 #include "BufferExecute.h"
 #include "Bus.h"
 #include "Class/CallBackTest.h"
@@ -8,6 +8,7 @@
 #include "Class/ScenarioClass3.h"
 #include "Cmd.h"
 #include "FileSystem.h"
+#include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
 #include "NodeTimes.h"
@@ -77,7 +78,9 @@ void setup() {
 #ifdef ESP8266
     getFSInfo();
 #endif
+#ifdef GATE_MODE
     nodeTimesInit();
+#endif
     //testsPerform();
 
     just_load = false;
