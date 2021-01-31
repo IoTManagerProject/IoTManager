@@ -1,28 +1,35 @@
 #include "Consts.h"
 #ifdef EnableButtonOut
-#include "items/vButtonOut.h"
-
 #include <Arduino.h>
 
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "SoftUART.h"
+#include "items/vButtonOut.h"
 //this class save data to flash
 ButtonOut::ButtonOut(String pin, boolean inv, String key, String type) {
     _pin = pin;
     _inv = inv;
     _key = key;
     _type = type;
+#ifdef ESP_MODE
     if (_pin != "") {
         pinMode(_pin.toInt(), OUTPUT);
     }
-    int state = jsonReadInt(configStoreJson, key);
-    this->execute(String(state));
+    int state = jsonReadInt(configStoreJson, key); //прочитали из памяти 
+    this->execute(String(state)); //установили это состояние
+#endif
+#ifdef GATE_MODE
+//TO DO запросили ноду о состоянии реле
+//установили в это состояние кнопку в приложении
+//если нода не ответила - кнопку сделать красным цветом
+#endif    
 }
 ButtonOut::~ButtonOut() {}
 
 void ButtonOut::execute(String state) {
+#ifdef ESP_MODE
     if (state != "" && _pin != "") {
         if (state == "change") {
             state = String(!digitalRead(_pin.toInt()));
@@ -35,6 +42,12 @@ void ButtonOut::execute(String state) {
             }
         }
     }
+#endif
+#ifdef GATE_MODE
+//отправили ноде команду на вкл выкл
+//получили обратную связь - переставили кнопку в приложении
+//не получили обратную связь - сделали кнопку красной
+#endif
     eventGen2(_key, state);
     jsonWriteInt(configStoreJson, _key, state.toInt());
     saveStore();

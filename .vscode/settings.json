@@ -9,5 +9,6 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "utility": "cpp"
-    }
+    },
+    "python.pythonPath": "C:\\Python39\\python.exe"
 }

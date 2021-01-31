@@ -1,0 +1,4 @@
+0;output;100-0;anydata;MySensors;Температура;order
+0;output;100-1;anydata;MySensors;Давление;order
+0;output;100-2;anydata;MySensors;Влажность;order
+0;input;dgt;inputDigit;MySensors;Введите#цифру;order*
