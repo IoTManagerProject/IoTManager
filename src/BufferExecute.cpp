@@ -60,7 +60,7 @@ void csvCmdExecute(String& cmdStr) {
             if (order == F("button-out")) {
 #ifdef EnableButtonOut
                 sCmd.addCommand(order.c_str(), buttonOut);
-#endif 
+#endif
             } else if (order == F("pwm-out")) {
 #ifdef EnablePwmOut
                 sCmd.addCommand(order.c_str(), pwmOut);
@@ -110,13 +110,13 @@ void csvCmdExecute(String& cmdStr) {
                 sCmd.addCommand(order.c_str(), pzemSensor);
 #endif
             } else if (order == F("uptime")) {
-#ifdef  EnableSensorUptime
+#ifdef EnableSensorUptime
                 sCmd.addCommand(order.c_str(), uptimeSensor);
 #endif
             } else if (order == F("logging")) {
 #ifdef EnableLogging
                 sCmd.addCommand(order.c_str(), logging);
-#endif 
+#endif
             } else if (order == F("impuls-out")) {
 #ifdef EnableImpulsOut
                 sCmd.addCommand(order.c_str(), impuls);
@@ -197,29 +197,41 @@ void loopMySensorsExecute() {
 
         String nodeId = selectFromMarkerToMarker(tmp, ",", 0);         //node-id
         String childSensorId = selectFromMarkerToMarker(tmp, ",", 1);  //child-sensor-id
-        String type = selectFromMarkerToMarker(tmp, ",", 2);           //Type
-        String value = selectFromMarkerToMarker(tmp, ",", 3);          //value
+        String type = selectFromMarkerToMarker(tmp, ",", 2);           //type
+        String command = selectFromMarkerToMarker(tmp, ",", 3);        //command
+        String value = selectFromMarkerToMarker(tmp, ",", 4);          //value
 
         String key = nodeId + "-" + childSensorId;
         static String infoJson = "{}";
 
-        if (childSensorId == "255") {  //это презентация
-            if (type == "11") {        //это название ноды
-                SerialPrint("I", "MySensor", "New device connected: " + value);
+        if (childSensorId == "255") {
+            if (command == "3") {    //это особое внутреннее сообщение
+                if (type == "11") {  //название ноды
+                    SerialPrint("I", "MySensor", "Node name: " + value);
+                }
+                if (type == "12") {  //версия ноды
+                    SerialPrint("I", "MySensor", "Node version: " + value);
+                }
             }
-            if (type == "12") {  //это версия ноды
-                SerialPrint("I", "MySensor", "Ver: " + value);
+        } else {
+            if (command == "0") {  //это презентация
+                SerialPrint("I", "MySensor", "New device presentation");
             }
-        } else {  //это данные
-            if (value != "") {
-                eventGen2(key, value);
-                jsonWriteStr(configLiveJson, key, value);
-                publishStatus(key, value);
-                jsonWriteStr(configTimesJson, key, "0");
-                publishLastUpdateTime(key, "0 min");
-                SerialPrint("I", "MySensor", "nID: " + nodeId + ", sID: " + childSensorId + ", t: " + type + ", val: " + value);
+            if (command == "1") {  //это данные
+                if (value != "") {
+                    eventGen2(key, value);
+                    jsonWriteStr(configLiveJson, key, value);
+                    publishStatus(key, value);
+                    jsonWriteStr(configTimesJson, key, "0");
+                    publishLastUpdateTime(key, "0 min");
+                    SerialPrint("I", "MySensor", "node: " + nodeId + ", sensor: " + childSensorId + ", command: " + command + ", type: " + type + ", val: " + value);
+                }
+            }
+            if (command == "2") {  //это запрос значения переменной
+                SerialPrint("I", "MySensor", "Request a variable value");
             }
         }
+
         mysensorBuf = deleteBeforeDelimiter(mysensorBuf, ";");
     }
 #endif

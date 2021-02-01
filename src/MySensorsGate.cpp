@@ -2,10 +2,11 @@
 #ifdef MYSENSORS
 
 void receive(const MyMessage &message) {
-    String inMsg = String(message.getSender()) + "," +       //node-id
-                   String(message.getSensor()) + "," +       //child-sensor-id
-                   String(message.getType()) + "," +         //type
-                   parseToString(message) + ";";             //value
+    String inMsg = String(message.getSender()) + "," +   //node-id
+                   String(message.getSensor()) + "," +   //child-sensor-id
+                   String(message.getType()) + "," +     //type
+                   String(message.getCommand()) + "," +  //command
+                   parseToString(message) + ";";         //value
 
     mysensorBuf += inMsg;
 }
