@@ -5,6 +5,7 @@
 #include "ItemsList.h"
 #include "Macro.h"
 #include "Utils/StringUtils.h"
+#include "MySensorsDataParse.h"
 
 void testsPerform() {
     Serial.println("====some tests section====");

@@ -1,10 +1,10 @@
-#include "MySensorsGate.h"
+#include "MySensorsDataRead.h"
 #ifdef MYSENSORS
 
 void receive(const MyMessage &message) {
     String inMsg = String(message.getSender()) + "," +   //node-id
                    String(message.getSensor()) + "," +   //child-sensor-id
-                   String(message.getType()) + "," +     //type
+                   String(message.getType()) + "," +     //type of var
                    String(message.getCommand()) + "," +  //command
                    parseToString(message) + ";";         //value
 

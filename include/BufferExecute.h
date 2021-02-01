@@ -11,9 +11,7 @@ extern int getKeyNum(String& key, String& keyNumberTable);
 
 extern void buttonIn();
 extern void buttonInSet();
-extern void loopMySensorsExecute();
 
-extern void test(char* inputString);
 
 
 
