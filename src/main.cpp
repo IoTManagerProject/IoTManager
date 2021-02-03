@@ -11,7 +11,6 @@
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
-#include "NodeTimes.h"
 #include "RemoteOrdersUdp.h"
 #include "SoftUART.h"
 #include "Telegram.h"
@@ -79,9 +78,6 @@ void setup() {
 #endif
 #ifdef ESP8266
     getFSInfo();
-#endif
-#ifdef GATE_MODE
-    nodeTimesInit();
 #endif
     //testsPerform();
 

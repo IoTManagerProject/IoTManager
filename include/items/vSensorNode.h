@@ -37,4 +37,5 @@ class SensorNode {
 extern MySensorNodeVector* mySensorNode;
 
 extern void nodeSensor();
+extern void publishTimes();
 #endif

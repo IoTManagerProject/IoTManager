@@ -5,7 +5,6 @@
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
-#include "NodeTimes.h"
 #include "items/vSensorNode.h"
 
 SensorNode::SensorNode(const paramsSensorNode& params) {
@@ -77,5 +76,28 @@ void nodeSensor() {
     if (firstTime) mySensorNode = new MySensorNodeVector();
     firstTime = false;
     mySensorNode->push_back(SensorNode(params));
+}
+
+void publishTimes() {
+    if (configTimesJson != "{}") {
+        String str = configTimesJson;
+        str.replace("{", "");
+        str.replace("}", "");
+        str.replace("\"", "");
+        str += ",";
+        while (str.length() != 0) {
+            String tmp = selectToMarker(str, ",");
+            String key = selectToMarker(tmp, ":");
+            String minutes = deleteBeforeDelimiter(tmp, ":");
+            if (key != "" && minutes != "") {
+                if (mySensorNode != nullptr) {
+                    for (unsigned int i = 0; i < mySensorNode->size(); i++) {
+                        mySensorNode->at(i).setColors(key);
+                    }
+                }
+            }
+            str = deleteBeforeDelimiter(str, ",");
+        }
+    }
 }
 #endif

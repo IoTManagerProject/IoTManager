@@ -33,8 +33,6 @@
 #define LED_PIN 2
 #define GATE_MODE
 #define MYSENSORS
-#define NODE_RED_COLOR_TIMEOUT 120
-#define NODE_ORANGE_COLOR_TIMEOUT 60
 #endif
 
 #ifdef esp32_mysensors_4mb
@@ -44,8 +42,6 @@
 #define LED_PIN 22
 #define GATE_MODE
 #define MYSENSORS
-#define NODE_RED_COLOR_TIMEOUT 120
-#define NODE_ORANGE_COLOR_TIMEOUT 60
 #endif
 
 #define NUM_BUTTONS 6

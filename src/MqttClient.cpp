@@ -4,8 +4,8 @@
 #include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
-#include "NodeTimes.h"
 #include "items/vLogging.h"
+#include "items/vSensorNode.h"
 
 enum MqttBroker { MQTT_PRIMARY,
                   MQTT_RESERVE };
