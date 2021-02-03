@@ -4,7 +4,7 @@
 0;input;tmid;inputTime;Ввод;Введите#время;order*
 0;output;txtid;anydata;Вывод;Сигнализация;order*
 0;count-down;cntid;anydata;Таймер;Обратный#отчет;order*
-0;output;100-0;anydata;MySensors;Температура;order*
+0;gate-sensor;100-0;anydata;MySensors;Температура;order;time1[30];time2[60];c[1];k[0]*
 0;logging;crtid;chart;Графики;История;order;val[any];int[60];cnt[100]*
 0;logging;crtid;chart3;Графики;История;order;val[any];int[23:30];cnt[100]*
 0;uptime;uptid;anydataTime;Системные;%name%#uptime;order;int[60]*

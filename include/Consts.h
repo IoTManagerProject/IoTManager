@@ -83,6 +83,7 @@
 #endif
 
 #ifdef GATE_MODE
+#define EnableSensorGate
 #define EnableButtonOut
 #define EnableCountDown
 #define EnableInput

@@ -19,6 +19,7 @@
 #include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
+#include "items/vSensorGate.h"
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
@@ -128,6 +129,10 @@ void csvCmdExecute(String& cmdStr) {
             } else if (order == F("impuls-in")) {
 #ifdef EnableImpulsIn
                 //sCmd.addCommand(order.c_str(), impulsInSensor);
+#endif
+            } else if (order == F("gate-sensor")) {
+#ifdef EnableSensorGate
+                sCmd.addCommand(order.c_str(), gateSensor);
 #endif
             }
 

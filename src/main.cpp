@@ -33,6 +33,7 @@
 #include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
+#include "items/vSensorGate.h"
 
 void not_async_actions();
 
@@ -200,6 +201,13 @@ void loop() {
     if (mySensorUptime != nullptr) {
         for (unsigned int i = 0; i < mySensorUptime->size(); i++) {
             mySensorUptime->at(i).loop();
+        }
+    }
+#endif
+#ifdef EnableSensorGate
+    if (mySensorGate != nullptr) {
+        for (unsigned int i = 0; i < mySensorGate->size(); i++) {
+            mySensorGate->at(i).loop();
         }
     }
 #endif
