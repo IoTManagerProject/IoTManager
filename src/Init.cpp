@@ -20,7 +20,7 @@
 #include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
-#include "items/vSensorGate.h"
+#include "items/vSensorNode.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -194,8 +194,8 @@ void clearVectors() {
     }
 #endif
 #ifdef EnableSensorGate
-    if (mySensorGate != nullptr) {
-        mySensorGate->clear();
+    if (mySensorNode != nullptr) {
+        mySensorNode->clear();
     }
 #endif
 }

@@ -1,14 +1,14 @@
-#ifdef EnableSensorGate
+#ifdef EnableSensorNode
 #pragma once
 #include <Arduino.h>
 
 #include "Global.h"
 
-class SensorGate;
+class SensorNode;
 
-typedef std::vector<SensorGate> MySensorGateVector;
+typedef std::vector<SensorNode> MySensorNodeVector;
 
-struct paramsSensorGate {
+struct paramsSensorNode {
     String orTimeOut;
     String rdTimeOut;
     String key;
@@ -16,10 +16,10 @@ struct paramsSensorGate {
     float k;
 };
 
-class SensorGate {
+class SensorNode {
    public:
-    SensorGate(const paramsSensorGate& params);
-    ~SensorGate();
+    SensorNode(const paramsSensorNode& params);
+    ~SensorNode();
 
     int minutes;
 
@@ -28,13 +28,13 @@ class SensorGate {
     void setColors(String incommingKey);
 
    private:
-    paramsSensorGate _params;
+    paramsSensorNode _params;
 
     unsigned long prevMillis;
     unsigned long difference;
 };
 
-extern MySensorGateVector* mySensorGate;
+extern MySensorNodeVector* mySensorNode;
 
-extern void gateSensor();
+extern void nodeSensor();
 #endif

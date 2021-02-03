@@ -1,7 +1,7 @@
 #include "Consts.h"
 #ifdef GATE_MODE
 #include "NodeTimes.h"
-#include "items/vSensorGate.h"
+#include "items/vSensorNode.h"
 
 void nodeTimesInit() {
     //   ts.add(
@@ -42,9 +42,9 @@ void publishTimes() {
             String key = selectToMarker(tmp, ":");
             String minutes = deleteBeforeDelimiter(tmp, ":");
             if (key != "" && minutes != "") {
-                if (mySensorGate != nullptr) {
-                    for (unsigned int i = 0; i < mySensorGate->size(); i++) {
-                        mySensorGate->at(i).setColors(key);
+                if (mySensorNode != nullptr) {
+                    for (unsigned int i = 0; i < mySensorNode->size(); i++) {
+                        mySensorNode->at(i).setColors(key);
                     }
                 }
             }

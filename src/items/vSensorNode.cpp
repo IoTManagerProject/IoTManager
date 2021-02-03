@@ -1,21 +1,21 @@
 #include "Consts.h"
-#ifdef EnableSensorGate
+#ifdef EnableSensorNode
 #include <Arduino.h>
 
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
 #include "NodeTimes.h"
-#include "items/vSensorGate.h"
+#include "items/vSensorNode.h"
 
-SensorGate::SensorGate(const paramsSensorGate& params) {
-    _params = paramsSensorGate(params);
+SensorNode::SensorNode(const paramsSensorNode& params) {
+    _params = paramsSensorNode(params);
     minutes = 0;
 }
 
-SensorGate::~SensorGate() {}
+SensorNode::~SensorNode() {}
 
-void SensorGate::loop() {
+void SensorNode::loop() {
     difference = millis() - prevMillis;
     if (difference >= 60000) {
         prevMillis = millis();
@@ -26,7 +26,7 @@ void SensorGate::loop() {
     }
 }
 
-void SensorGate::onChange(String newValue, String incommingKey) {
+void SensorNode::onChange(String newValue, String incommingKey) {
     if (_params.key == incommingKey) {
         minutes = 0;
         prevMillis = millis();
@@ -39,7 +39,7 @@ void SensorGate::onChange(String newValue, String incommingKey) {
     }
 }
 
-void SensorGate::setColors(String incommingKey) {
+void SensorNode::setColors(String incommingKey) {
     if (_params.key == incommingKey) {
         if (minutes < _params.orTimeOut.toInt()) {
             publishLastUpdateTime(incommingKey, String(minutes) + " min");
@@ -54,9 +54,9 @@ void SensorGate::setColors(String incommingKey) {
     }
 }
 
-MySensorGateVector* mySensorGate = nullptr;
+MySensorNodeVector* mySensorNode = nullptr;
 
-void gateSensor() {
+void nodeSensor() {
     myLineParsing.update();
     String orTimeOut = myLineParsing.gtime1();
     String rdTimeOut = myLineParsing.gtime2();
@@ -65,7 +65,7 @@ void gateSensor() {
     String k = myLineParsing.gk();
     myLineParsing.clear();
 
-    paramsSensorGate params;
+    paramsSensorNode params;
 
     params.orTimeOut = orTimeOut;
     params.rdTimeOut = rdTimeOut;
@@ -74,8 +74,8 @@ void gateSensor() {
     params.k = k.toFloat();
 
     static bool firstTime = true;
-    if (firstTime) mySensorGate = new MySensorGateVector();
+    if (firstTime) mySensorNode = new MySensorNodeVector();
     firstTime = false;
-    mySensorGate->push_back(SensorGate(params));
+    mySensorNode->push_back(SensorNode(params));
 }
 #endif

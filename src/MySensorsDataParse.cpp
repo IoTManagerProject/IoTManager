@@ -1,7 +1,7 @@
 #include "Consts.h"
 #ifdef MYSENSORS
 #include "MySensorsDataParse.h"
-#include "items/vSensorGate.h"
+#include "items/vSensorNode.h"
 
 //для того что бы выключить оригинальный лог нужно перейти в файл библиотеки MyGatewayTransportSerial.cpp
 //и заккоментировать строку 36 MY_SERIALDEVICE.print(protocolMyMessage2Serial(message));
@@ -34,9 +34,9 @@ void loopMySensorsExecute() {
             }
             if (command == "1") {  //это данные
                 if (value != "") {
-                    if (mySensorGate != nullptr) {
-                        for (unsigned int i = 0; i < mySensorGate->size(); i++) {
-                            mySensorGate->at(i).onChange(value, key); //вызываем поочередно все экземпляры, там где подойдет там и выполнится
+                    if (mySensorNode != nullptr) {
+                        for (unsigned int i = 0; i < mySensorNode->size(); i++) {
+                            mySensorNode->at(i).onChange(value, key); //вызываем поочередно все экземпляры, там где подойдет там и выполнится
                         }
                     }
                     SerialPrint("I", "MySensor", "node: " + nodeId + ", sensor: " + childSensorId + ", command: " + command + ", type: " + type + ", val: " + value);

@@ -19,7 +19,7 @@
 #include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
-#include "items/vSensorGate.h"
+#include "items/vSensorNode.h"
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
