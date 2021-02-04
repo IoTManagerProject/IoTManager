@@ -27,8 +27,8 @@ class LineParsing {
     String _cnt;
     String _val;
     String _index;
-    String _time1;
-    String _time2;
+    String _tm1;
+    String _tm2;
 
     int pinErrors;
 
@@ -54,8 +54,8 @@ class LineParsing {
                     _cnt{""},
                     _val{""},
                     _index{""},
-                    _time1{""},
-                    _time2{""},
+                    _tm1{""},
+                    _tm2{""},
 
                     pinErrors{0}
 
@@ -117,11 +117,11 @@ class LineParsing {
                 if (arg.indexOf("index[") != -1) {
                     _index = extractInner(arg);
                 }
-                if (arg.indexOf("time1[") != -1) {
-                    _time1 = extractInner(arg);
+                if (arg.indexOf("tm1[") != -1) {
+                    _tm1 = extractInner(arg);
                 }
-                if (arg.indexOf("time2[") != -1) {
-                    _time2 = extractInner(arg);
+                if (arg.indexOf("tm2[") != -1) {
+                    _tm2 = extractInner(arg);
                 }
             }
         }
@@ -204,11 +204,11 @@ class LineParsing {
     String gindex() {
         return _index;
     }
-    String gtime1() {
-        return _time1;
+    String gtm1() {
+        return _tm1;
     }
-    String gtime2() {
-        return _time2;
+    String gtm2() {
+        return _tm2;
     }
 
     int getPinErrors() {

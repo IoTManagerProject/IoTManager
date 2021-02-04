@@ -193,7 +193,7 @@ void clearVectors() {
         mySensorUptime->clear();
     }
 #endif
-#ifdef EnableSensorGate
+#ifdef EnableSensorNode
     if (mySensorNode != nullptr) {
         mySensorNode->clear();
     }

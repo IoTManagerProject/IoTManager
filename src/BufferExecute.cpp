@@ -130,9 +130,9 @@ void csvCmdExecute(String& cmdStr) {
 #ifdef EnableImpulsIn
                 //sCmd.addCommand(order.c_str(), impulsInSensor);
 #endif
-            } else if (order == F("gate-sensor")) {
-#ifdef EnableSensorGate
-                sCmd.addCommand(order.c_str(), gateSensor);
+            } else if (order == F("sensor-node")) {
+#ifdef EnableSensorNode
+                sCmd.addCommand(order.c_str(), nodeSensor);
 #endif
             }
 

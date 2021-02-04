@@ -200,7 +200,7 @@ void loop() {
         }
     }
 #endif
-#ifdef EnableSensorGate
+#ifdef EnableSensorNode
     if (mySensorNode != nullptr) {
         for (unsigned int i = 0; i < mySensorNode->size(); i++) {
             mySensorNode->at(i).loop();

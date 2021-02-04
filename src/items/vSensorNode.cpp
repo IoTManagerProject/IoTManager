@@ -4,12 +4,15 @@
 
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
+#include "Clock.h"
 #include "Global.h"
+#include "Utils/TimeUtils.h"
 #include "items/vSensorNode.h"
 
 SensorNode::SensorNode(const paramsSensorNode& params) {
     _params = paramsSensorNode(params);
     minutes = 0;
+    jsonWriteInt(configTimesJson, _params.key, minutes);
 }
 
 SensorNode::~SensorNode() {}
@@ -29,6 +32,10 @@ void SensorNode::onChange(String newValue, String incommingKey) {
     if (_params.key == incommingKey) {
         minutes = 0;
         prevMillis = millis();
+
+        newValue = String(newValue.toFloat() * _params.c);
+        newValue = String(newValue.toFloat() + _params.k);
+
         eventGen2(_params.key, newValue);
         jsonWriteStr(configLiveJson, _params.key, newValue);
         jsonWriteInt(configTimesJson, _params.key, minutes);
@@ -40,14 +47,18 @@ void SensorNode::onChange(String newValue, String incommingKey) {
 
 void SensorNode::setColors(String incommingKey) {
     if (_params.key == incommingKey) {
-        if (minutes < _params.orTimeOut.toInt()) {
+        if (minutes < _params.tm1.toInt()) {
             publishLastUpdateTime(incommingKey, String(minutes) + " min");
             publishAnyJsonKey(incommingKey, "", "color");
-        } else if (minutes >= _params.orTimeOut.toInt() && minutes < _params.rdTimeOut.toInt()) {
+        } else if (minutes >= _params.tm1.toInt() && minutes < _params.tm2.toInt()) {
             publishLastUpdateTime(incommingKey, String(minutes) + " min");
             publishAnyJsonKey(incommingKey, "orange", "color");
-        } else if (minutes >= _params.rdTimeOut.toInt()) {
-            publishLastUpdateTime(incommingKey, "offline");
+        } else if (minutes >= _params.tm2.toInt()) {
+            unsigned long unix = timeNow->getTimeUnix().toInt();
+            unix = unix - (minutes * 60);
+            Time_t lastTime;
+            breakEpochToTime(unix, lastTime);
+            publishLastUpdateTime(incommingKey, timeNow->getDateTimeDotFormated(lastTime));
             publishAnyJsonKey(incommingKey, "red", "color");
         }
     }
@@ -57,8 +68,8 @@ MySensorNodeVector* mySensorNode = nullptr;
 
 void nodeSensor() {
     myLineParsing.update();
-    String orTimeOut = myLineParsing.gtime1();
-    String rdTimeOut = myLineParsing.gtime2();
+    String tm1 = myLineParsing.gtm1();
+    String tm2 = myLineParsing.gtm2();
     String key = myLineParsing.gkey();
     String c = myLineParsing.gc();
     String k = myLineParsing.gk();
@@ -66,8 +77,8 @@ void nodeSensor() {
 
     paramsSensorNode params;
 
-    params.orTimeOut = orTimeOut;
-    params.rdTimeOut = rdTimeOut;
+    params.tm1 = tm1;
+    params.tm2 = tm2;
     params.key = key;
     params.c = c.toFloat();
     params.k = k.toFloat();

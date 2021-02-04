@@ -9,8 +9,8 @@ class SensorNode;
 typedef std::vector<SensorNode> MySensorNodeVector;
 
 struct paramsSensorNode {
-    String orTimeOut;
-    String rdTimeOut;
+    String tm1;
+    String tm2;
     String key;
     float c;
     float k;
@@ -30,7 +30,7 @@ class SensorNode {
    private:
     paramsSensorNode _params;
 
-    unsigned long prevMillis;
+    unsigned long prevMillis = 0;
     unsigned long difference;
 };
 
