@@ -21,14 +21,14 @@ class SensorNode {
     SensorNode(const paramsSensorNode& params);
     ~SensorNode();
 
-    int minutes;
-
     void loop();
     void onChange(String newValue, String incommingKey);
-    void setColors(String incommingKey);
+    void publish();
 
    private:
     paramsSensorNode _params;
+    long _minutesPassed;
+    String _updateTime;
 
     unsigned long prevMillis = 0;
     unsigned long difference;

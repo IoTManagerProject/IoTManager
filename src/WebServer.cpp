@@ -63,11 +63,6 @@ void init() {
         request->send(200, "application/json", configSetupJson);
     });
 
-    // для хранения времен выхода на связь
-    server.on("/config.times.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "application/json", configTimesJson);
-    });
-
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
         String cmdStr = request->getParam("command")->value();
         SerialPrint("I","WebServer","do: " + cmdStr);

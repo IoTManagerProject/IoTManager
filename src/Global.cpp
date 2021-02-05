@@ -24,7 +24,6 @@ String configSetupJson = "{}";
 String configLiveJson = "{}";
 String configStoreJson = "{}";
 String configOptionJson = "{}";
-String configTimesJson = "{}";
 String telegramMsgJson = "{}";
 
 // Mqtt

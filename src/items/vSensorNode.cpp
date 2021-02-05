@@ -11,8 +11,8 @@
 
 SensorNode::SensorNode(const paramsSensorNode& params) {
     _params = paramsSensorNode(params);
-    minutes = 0;
-    jsonWriteInt(configTimesJson, _params.key, minutes);
+    _updateTime = "";
+    _minutesPassed = 0;
 }
 
 SensorNode::~SensorNode() {}
@@ -21,16 +21,14 @@ void SensorNode::loop() {
     difference = millis() - prevMillis;
     if (difference >= 60000) {
         prevMillis = millis();
-        minutes = jsonReadInt(configTimesJson, _params.key);
-        minutes++;
-        jsonWriteInt(configTimesJson, _params.key, minutes);
-        this->setColors(_params.key);
+        _minutesPassed++;
+        this->publish();
     }
 }
 
 void SensorNode::onChange(String newValue, String incommingKey) {
     if (_params.key == incommingKey) {
-        minutes = 0;
+        _minutesPassed = 0;
         prevMillis = millis();
 
         newValue = String(newValue.toFloat() * _params.c);
@@ -38,29 +36,29 @@ void SensorNode::onChange(String newValue, String incommingKey) {
 
         eventGen2(_params.key, newValue);
         jsonWriteStr(configLiveJson, _params.key, newValue);
-        jsonWriteInt(configTimesJson, _params.key, minutes);
         publishStatus(_params.key, newValue);
-        this->setColors(_params.key);
+
+        _updateTime = timeNow->getDateTimeDotFormated();
+
+        this->publish();
         SerialPrint("I", "Sensor", "'" + _params.key + "' data: " + newValue);
     }
 }
 
-void SensorNode::setColors(String incommingKey) {
-    if (_params.key == incommingKey) {
-        if (minutes < _params.tm1.toInt()) {
-            publishLastUpdateTime(incommingKey, String(minutes) + " min");
-            publishAnyJsonKey(incommingKey, "", "color");
-        } else if (minutes >= _params.tm1.toInt() && minutes < _params.tm2.toInt()) {
-            publishLastUpdateTime(incommingKey, String(minutes) + " min");
-            publishAnyJsonKey(incommingKey, "orange", "color");
-        } else if (minutes >= _params.tm2.toInt()) {
-            unsigned long unix = timeNow->getTimeUnix().toInt();
-            unix = unix - (minutes * 60);
-            Time_t lastTime;
-            breakEpochToTime(unix, lastTime);
-            publishLastUpdateTime(incommingKey, timeNow->getDateTimeDotFormated(lastTime));
-            publishAnyJsonKey(incommingKey, "red", "color");
+void SensorNode::publish() {
+    if (_minutesPassed < _params.tm1.toInt()) {
+        publishLastUpdateTime(_params.key, String(_minutesPassed) + " min");
+        publishAnyJsonKey(_params.key, "", "color");
+    } else if (_minutesPassed >= _params.tm1.toInt() && _minutesPassed < _params.tm2.toInt()) {
+        publishLastUpdateTime(_params.key, String(_minutesPassed) + " min");
+        publishAnyJsonKey(_params.key, "orange", "color");
+    } else if (_minutesPassed >= _params.tm2.toInt()) {
+        if (_updateTime == "") {
+            publishLastUpdateTime(_params.key, "offline");
+        } else {
+            publishLastUpdateTime(_params.key, _updateTime);
         }
+        publishAnyJsonKey(_params.key, "red", "color");
     }
 }
 
@@ -90,24 +88,9 @@ void nodeSensor() {
 }
 
 void publishTimes() {
-    if (configTimesJson != "{}") {
-        String str = configTimesJson;
-        str.replace("{", "");
-        str.replace("}", "");
-        str.replace("\"", "");
-        str += ",";
-        while (str.length() != 0) {
-            String tmp = selectToMarker(str, ",");
-            String key = selectToMarker(tmp, ":");
-            String minutes = deleteBeforeDelimiter(tmp, ":");
-            if (key != "" && minutes != "") {
-                if (mySensorNode != nullptr) {
-                    for (unsigned int i = 0; i < mySensorNode->size(); i++) {
-                        mySensorNode->at(i).setColors(key);
-                    }
-                }
-            }
-            str = deleteBeforeDelimiter(str, ",");
+    if (mySensorNode != nullptr) {
+        for (unsigned int i = 0; i < mySensorNode->size(); i++) {
+            mySensorNode->at(i).publish();
         }
     }
 }
