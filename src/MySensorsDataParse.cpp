@@ -1,9 +1,9 @@
 #include "Consts.h"
 #ifdef MYSENSORS
+#include "Class/NotAsync.h"
 #include "ItemsList.h"
 #include "MySensorsDataParse.h"
 #include "items/vSensorNode.h"
-#include "Class/NotAsync.h"
 
 //для того что бы выключить оригинальный лог нужно перейти в файл библиотеки MyGatewayTransportSerial.cpp
 //и заккоментировать строку 36 MY_SERIALDEVICE.print(protocolMyMessage2Serial(message));
@@ -17,6 +17,8 @@ void loopMySensorsExecute() {
         String type = selectFromMarkerToMarker(tmp, ",", 2);           //type of var
         String command = selectFromMarkerToMarker(tmp, ",", 3);        //command
         String value = selectFromMarkerToMarker(tmp, ",", 4);          //value
+
+        static bool presentBeenStarted = false;
 
         String key = nodeId + "-" + childSensorId;
         static String infoJson = "{}";
@@ -32,6 +34,7 @@ void loopMySensorsExecute() {
             }
         } else {
             if (command == "0") {  //это презентация
+                presentBeenStarted = true;
                 int num;
                 String widget;
                 String descr;
@@ -40,7 +43,6 @@ void loopMySensorsExecute() {
                     if (!isItemAdded(key)) {
                         addItemAuto(num, key, widget, descr);
                         descr.replace("#", " ");
-                        //myNotAsyncActions->make(do_deviceInit);
                         SerialPrint("I", "MySensor", "Add new item: " + key + ": " + descr);
                     } else {
                         descr.replace("#", " ");
@@ -53,6 +55,11 @@ void loopMySensorsExecute() {
             }
             if (command == "1") {  //это данные
                 if (value != "") {
+                    if (presentBeenStarted) {
+                        presentBeenStarted = false;
+                        SerialPrint("I", "MySensor", "!!!Presentation of node: " + nodeId + " completed successfully!!!");
+                        myNotAsyncActions->make(do_deviceInit);
+                    }
                     if (mySensorNode != nullptr) {
                         for (unsigned int i = 0; i < mySensorNode->size(); i++) {
                             mySensorNode->at(i).onChange(value, key);  //вызываем поочередно все экземпляры, там где подойдет там и выполнится

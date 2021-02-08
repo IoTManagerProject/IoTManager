@@ -56,7 +56,7 @@ void csvCmdExecute(String& cmdStr) {
         count++;
 
         if (count > 1) {
-            SerialPrint("I", "Items", buf);
+            //SerialPrint("I", "Items", buf);
             String order = selectToMarker(buf, " ");  //отсечка самой команды
             if (order == F("button-out")) {
 #ifdef EnableButtonOut

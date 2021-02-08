@@ -88,7 +88,7 @@ void addItemAuto(int num, String key, String widget, String descr) {
 }
 
 bool isItemAdded(String key) {
-    File configFile = FileFS.open(DEVICE_CONFIG_FILE, "r");
+    File configFile = FileFS.open("/" + String(DEVICE_CONFIG_FILE), "r");
     if (!configFile) {
         return false;
     }
