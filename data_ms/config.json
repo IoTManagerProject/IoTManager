@@ -33,5 +33,6 @@
     "uartS": "9600",
     "uartTX": "12",
     "uartRX": "13",
-    "grafmax": "0"
+    "grafmax": "0",
+    "gateAuto": "0"
 }

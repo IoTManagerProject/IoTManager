@@ -3,6 +3,6 @@
 #pragma once
 #include "Global.h"
 extern void loopMySensorsExecute();
-extern String sensorType(int index);
+extern void sensorType(int index, int &num, String &widget, String &descr);
 extern void test(char* inputString);
 #endif

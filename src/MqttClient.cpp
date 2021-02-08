@@ -271,14 +271,7 @@ boolean publishStatus(const String& topic, const String& data) {
     return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
-boolean publishLastUpdateTime(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic + "/status";
-    String json = "{}";
-    jsonWriteStr(json, "info", data);
-    return mqtt.publish(path.c_str(), json.c_str(), false);
-}
-
-boolean publishAnyJsonKey(const String& topic, const String& data, const String& key) {
+boolean publishAnyJsonKey(const String& topic, const String& key, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     String json = "{}";
     jsonWriteStr(json, key, data);

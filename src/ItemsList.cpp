@@ -57,6 +57,55 @@ void addItem2(int num) {
     Serial.println(seachingLine);
 }
 
+void addItemAuto(int num, String key, String widget, String descr) {
+    File configFile = FileFS.open("/items/itemsAuto.txt", "r");
+    if (!configFile) {
+        return;
+    }
+    configFile.seek(0, SeekSet);
+    String seachingLine;
+    int i = 0;
+    while (configFile.position() != configFile.size()) {
+        i++;
+        String item = configFile.readStringUntil('*');
+        if (i == num) {
+            if (i == 1) {
+                seachingLine = "\n" + item;
+            } else {
+                seachingLine = item;
+            }
+            break;
+        }
+    }
+    configFile.close();
+
+    seachingLine.replace("id", key);
+    seachingLine.replace("file", widget);
+    seachingLine.replace("descr", descr);
+    seachingLine.replace("order", String(getNewElementNumber("order.txt")));
+
+    addFile(DEVICE_CONFIG_FILE, seachingLine);
+}
+
+bool isItemAdded(String key) {
+    File configFile = FileFS.open(DEVICE_CONFIG_FILE, "r");
+    if (!configFile) {
+        return false;
+    }
+    configFile.seek(0, SeekSet);
+    String seachingLine;
+    while (configFile.position() != configFile.size()) {
+        String item = configFile.readStringUntil('\n');
+        String foundKey = selectFromMarkerToMarker(item, ";", 2);
+        if (foundKey == key) {
+            configFile.close();
+            return true;
+        }
+    }
+    configFile.close();
+    return false;
+}
+
 void addPreset2(int num) {
     File configFile = FileFS.open("/presets/presets.c.txt", "r");
     if (!configFile) {

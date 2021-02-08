@@ -1,7 +1,9 @@
 #include "Consts.h"
 #ifdef MYSENSORS
+#include "ItemsList.h"
 #include "MySensorsDataParse.h"
 #include "items/vSensorNode.h"
+#include "Class/NotAsync.h"
 
 //для того что бы выключить оригинальный лог нужно перейти в файл библиотеки MyGatewayTransportSerial.cpp
 //и заккоментировать строку 36 MY_SERIALDEVICE.print(protocolMyMessage2Serial(message));
@@ -30,13 +32,30 @@ void loopMySensorsExecute() {
             }
         } else {
             if (command == "0") {  //это презентация
-                SerialPrint("I", "MySensor", "Presentation " + key + ": " + sensorType(type.toInt()));
+                int num;
+                String widget;
+                String descr;
+                sensorType(type.toInt(), num, widget, descr);
+                if (jsonReadBool(configSetupJson, "gateAuto")) {
+                    if (!isItemAdded(key)) {
+                        addItemAuto(num, key, widget, descr);
+                        descr.replace("#", " ");
+                        //myNotAsyncActions->make(do_deviceInit);
+                        SerialPrint("I", "MySensor", "Add new item: " + key + ": " + descr);
+                    } else {
+                        descr.replace("#", " ");
+                        SerialPrint("I", "MySensor", "Item already exist: " + key + ": " + descr);
+                    }
+                } else {
+                    descr.replace("#", " ");
+                    SerialPrint("I", "MySensor", "Presentation: " + key + ": " + descr);
+                }
             }
             if (command == "1") {  //это данные
                 if (value != "") {
                     if (mySensorNode != nullptr) {
                         for (unsigned int i = 0; i < mySensorNode->size(); i++) {
-                            mySensorNode->at(i).onChange(value, key); //вызываем поочередно все экземпляры, там где подойдет там и выполнится
+                            mySensorNode->at(i).onChange(value, key);  //вызываем поочередно все экземпляры, там где подойдет там и выполнится
                         }
                     }
                     SerialPrint("I", "MySensor", "node: " + nodeId + ", sensor: " + childSensorId + ", command: " + command + ", type: " + type + ", val: " + value);
@@ -51,137 +70,221 @@ void loopMySensorsExecute() {
     }
 }
 
-String sensorType(int index) {
+void sensorType(int index, int &num, String &widget, String &descr) {
     switch (index) {
         case 0:
-            return F("Door and window sensors");
+            descr = F("Door#and#window#sensors");
+            widget = F("alarm");
+            num = 1;
             break;
         case 1:
-            return F("Motion sensors");
+            descr = F("Motion#sensors");
+            widget = F("alarm");
+            num = 1;
             break;
         case 2:
-            return F("Smoke sensor");
+            descr = F("Smoke#sensor");
+            widget = F("fillgauge");
+            num = 1;
             break;
         case 3:
-            return F("Binary device (on/off)");
+            descr = F("Binary#device#(on/off)");
+            widget = F("toggleBtn");
+            num = 2;
             break;
         case 4:
-            return F("Dimmable device of some kind");
+            descr = F("Dimmable#device");
+            //to do
+            //widget = F("range");
+            //num = 2;
             break;
         case 5:
-            return F("Window covers or shades");
+            descr = F("Window#covers#or#shades");
+            //to do
+            //widget = F("range");
+            //num = 2;
             break;
         case 6:
-            return F("Temperature sensor");
+            descr = F("Temperature#sensor");
+            widget = F("anydataTemp");
+            num = 1;
             break;
         case 7:
-            return F("Humidity sensor");
+            descr = F("Humidity#sensor");
+            widget = F("anydataHum");
+            num = 1;
             break;
         case 8:
-            return F("Barometer sensor (Pressure)");
+            descr = F("Pressure#sensor");
+            widget = F("anydataPress");
+            num = 1;
             break;
         case 9:
-            return F("Wind sensor");
+            descr = F("Wind#sensor");
+            widget = F("anydataTime");
+            num = 1;
             break;
         case 10:
-            return F("Rain sensor");
+            descr = F("Rain#sensor");
+            widget = F("anydataTime");
+            num = 1;
             break;
         case 11:
-            return F("UV sensor");
+            descr = F("UV#sensor");
+            widget = F("anydataTime");
+            num = 1;
             break;
         case 12:
-            return F("Weight sensor for scales etc.");
+            descr = F("Weight#sensor");
+            widget = F("anydataTime");
+            num = 1;
             break;
         case 13:
-            return F("Power measuring device, like power meters");
+            descr = F("Power#measuring#device");
+            widget = F("anydataWtt");
+            num = 1;
             break;
         case 14:
-            return F("Heater device");
+            descr = F("Heater#device");
+            widget = F("anydataTemp");
+            num = 1;
             break;
         case 15:
-            return F("Distance sensor");
+            descr = F("Distance#sensor");
+            widget = F("anydata");
+            num = 1;
             break;
         case 16:
-            return F("Light sensor");
+            descr = F("Light#sensor");
+            widget = F("anydataTime");
+            num = 1;
             break;
         case 17:
-            return F("Arduino node device");
+            descr = F("Arduino#node#device");
+            widget = F("anydata");
+            num = 1;
             break;
         case 18:
-            return F("Arduino repeating node device");
+            descr = F("Arduino#repeating#node#device");
+            widget = F("anydata");
+            num = 1;
             break;
         case 19:
-            return F("Lock device");
+            descr = F("Lock#device");
+            widget = F("toggleBtn");
+            num = 2;
             break;
         case 20:
-            return F("Ir sender/receiver device");
+            descr = F("Ir#sender/receiver#device");
+            widget = F("toggleBtn");
+            num = 2;
             break;
         case 21:
-            return F("Water meter");
+            descr = F("Water#meter");
+            widget = F("anydata");
+            num = 1;
             break;
         case 22:
-            return F("Air quality sensor e.g. MQ-2");
+            descr = F("Air#quality#sensor");
+            widget = F("anydata");
+            num = 1;
             break;
         case 23:
-            return F("Use this for custom sensors where no other fits.");
+            descr = F("Custom#sensor");
+            widget = F("anydata");
+            num = 1;
             break;
         case 24:
-            return F("Dust level sensor");
+            descr = F("Dust#level#sensor");
+            widget = F("anydata");
+            num = 1;
             break;
         case 25:
-            return F("Scene controller device");
+            descr = F("Scene#controller#device");
+            widget = F("anydata");
+            num = 1;
             break;
         case 26:
-            return F("RGB light");
+            descr = F("RGB#light");
+            widget = F("anydata");
+            num = 1;
             break;
         case 27:
-            return F("RGBW light (with separate white component)");
+            descr = F("RGBW#light#(with#separate#white#component)");
+            widget = F("anydata");
+            num = 1;
             break;
         case 28:
-            return F("Color sensor");
+            descr = F("Color#sensor");
+            widget = F("anydata");
+            num = 1;
             break;
         case 29:
-            return F("Thermostat/HVAC device");
+            descr = F("Thermostat/HVAC#device");
+            widget = F("anydata");
+            num = 1;
             break;
         case 30:
-            return F("Multimeter device");
+            descr = F("Multimeter#device");
+            widget = F("anydataVlt");
+            num = 1;
             break;
         case 31:
-            return F("Sprinkler device");
+            descr = F("Sprinkler#device");
+            widget = F("anydata");
+            num = 1;
             break;
         case 32:
-            return F("Water leak sensor");
+            descr = F("Water#leak#sensor");
+            widget = F("alarm");
+            num = 1;
             break;
         case 33:
-            return F("Sound sensor");
+            descr = F("Sound#sensor");
+            widget = F("anydata");
+            num = 1;
             break;
         case 34:
-            return F("Vibration sensor");
+            descr = F("Vibration#sensor");
+            widget = F("anydata");
+            num = 1;
             break;
         case 35:
-            return F("Moisture sensor");
+            descr = F("Moisture#sensor");
+            widget = F("anydata");
+            num = 1;
             break;
         case 36:
-            return F("LCD text device");
+            descr = F("LCD#text#device");
+            widget = F("anydata");
+            num = 1;
             break;
         case 37:
-            return F("Gas meter");
+            descr = F("Gas#meter");
+            widget = F("anydata");
+            num = 1;
             break;
         case 38:
-            return F("GPS Sensor");
+            descr = F("GPS#Sensor");
+            widget = F("anydata");
+            num = 1;
             break;
         case 39:
-            return F("Water quality sensor");
+            descr = F("Water#quality#sensor");
+            widget = F("anydata");
+            num = 1;
             break;
         default:
-            return F("Unknown");
+            descr = F("Unknown");
+            widget = F("anydata");
+            num = 1;
             break;
     }
 }
 #endif
 
 //отличный пример разбора строки
-void test(char* inputString) {
+void test(char *inputString) {
     char *str, *p;
     uint8_t index = 0;
     for (str = strtok_r(inputString, ";", &p);

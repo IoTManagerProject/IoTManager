@@ -20,7 +20,7 @@ void Output::execute(String value) {
     eventGen2(_key, value);
     jsonWriteStr(configLiveJson, _key, value);
     publishStatus(_key, value);
-    publishLastUpdateTime(_key, timeNow->getTime());
+    //publishLastUpdateTime(_key, timeNow->getTime());
 }
 
 MyOutputVector* myOutput = nullptr;

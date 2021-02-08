@@ -41,24 +41,24 @@ void SensorNode::onChange(String newValue, String incommingKey) {
         _updateTime = timeNow->getDateTimeDotFormated();
 
         this->publish();
-        SerialPrint("I", "Sensor", "'" + _params.key + "' data: " + newValue);
+        //SerialPrint("I", "Sensor", "'" + _params.key + "' data: " + newValue);
     }
 }
 
 void SensorNode::publish() {
     if (_minutesPassed < _params.tm1.toInt()) {
-        publishLastUpdateTime(_params.key, String(_minutesPassed) + " min");
-        publishAnyJsonKey(_params.key, "", "color");
+        publishAnyJsonKey(_params.key, "info", String(_minutesPassed) + " min");
+        publishAnyJsonKey(_params.key, "color", "");
     } else if (_minutesPassed >= _params.tm1.toInt() && _minutesPassed < _params.tm2.toInt()) {
-        publishLastUpdateTime(_params.key, String(_minutesPassed) + " min");
-        publishAnyJsonKey(_params.key, "orange", "color");
+        publishAnyJsonKey(_params.key, "info", String(_minutesPassed) + " min");
+        publishAnyJsonKey(_params.key, "color", "orange");
     } else if (_minutesPassed >= _params.tm2.toInt()) {
         if (_updateTime == "") {
-            publishLastUpdateTime(_params.key, "offline");
+            publishAnyJsonKey(_params.key, "info", "offline");
         } else {
-            publishLastUpdateTime(_params.key, _updateTime);
+            publishAnyJsonKey(_params.key, "info", _updateTime);
         }
-        publishAnyJsonKey(_params.key, "red", "color");
+        publishAnyJsonKey(_params.key, "color", "red");
     }
 }
 

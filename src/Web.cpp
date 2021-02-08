@@ -349,6 +349,16 @@ void web_init() {
             saveConfig();
             request->send(200);
         }
+
+        //gate mode
+
+        if (request->hasArg("gateAuto")) {
+            bool value = request->getParam("gateAuto")->value().toInt();
+            jsonWriteBool(configSetupJson, "gateAuto", value);
+            saveConfig();
+            request->send(200);
+        }
+
     });
 
     //server.on("/del", HTTP_GET, [](AsyncWebServerRequest* request) {

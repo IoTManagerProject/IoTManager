@@ -5,7 +5,8 @@
 
 extern void itemsListInit();
 extern void addItem2(int num);
-extern void addItem(String name);
+extern void addItemAuto(int num, String key, String widget, String descr);
+extern bool isItemAdded(String key);
 extern void addPreset(String name);
 extern void addPreset2(int num);
 extern void delChoosingItems();
