@@ -284,28 +284,28 @@ void sensorType(int index, int &num, String &widget, String &descr) {
 #endif
 
 //отличный пример разбора строки
-void test(char *inputString) {
-    char *str, *p;
-    uint8_t index = 0;
-    for (str = strtok_r(inputString, ";", &p);
-         str && index < 5;
-         str = strtok_r(NULL, ";", &p), index++) {
-        switch (index) {
-            case 0:
-                Serial.println(str);
-                break;
-            case 1:
-                Serial.println(str);
-                break;
-            case 2:
-                Serial.println(str);
-                break;
-            case 3:
-                Serial.println(str);
-                break;
-            case 4:
-                Serial.println(str);
-                break;
-        }
-    }
-}
+//void test(char *inputString) {
+//    char *str, *p;
+//    uint8_t index = 0;
+//    for (str = strtok_r(inputString, ";", &p);
+//         str && index < 5;
+//         str = strtok_r(NULL, ";", &p), index++) {
+//        switch (index) {
+//            case 0:
+//                Serial.println(str);
+//                break;
+//            case 1:
+//                Serial.println(str);
+//                break;
+//            case 2:
+//                Serial.println(str);
+//                break;
+//            case 3:
+//                Serial.println(str);
+//                break;
+//            case 4:
+//                Serial.println(str);
+//                break;
+//        }
+//    }
+//}
