@@ -30,7 +30,7 @@ class SensorNode {
     long _minutesPassed;
     String _updateTime;
 
-    unsigned long prevMillis = 0;
+    unsigned long prevMillis;
     unsigned long difference;
 };
 
