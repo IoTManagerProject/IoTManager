@@ -73,6 +73,8 @@ void deviceInit() {
     } else {
         jsonWriteStr(configSetupJson, F("warning3"), "");
     }
+
+    savedFromWeb = false;
     //outcoming_date();
 }
 

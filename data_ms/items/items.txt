@@ -6,5 +6,5 @@
 0;count-down;cntid;anydata;Таймер;Обратный#отчет;order*
 0;sensor-node;100-0;anydataTemp;MySensors;Температура;order;tm1[30];tm2[60];c[1];k[0]*
 0;logging;crtid;chart;Графики;История;order;val[any];int[60];cnt[100]*
-0;logging;crtid;chart3;Графики;История;order;val[any];int[23:30];cnt[100]*
+0;logging;crtid;chart3;Графики;История;order;val[any];int[23:30];cnt[100];st[0]*
 0;uptime;uptid;anydataTime;Системные;%name%#uptime;order;int[60]*

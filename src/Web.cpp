@@ -50,6 +50,7 @@ void web_init() {
 
         if (request->hasArg(F("saveItems"))) {
             myNotAsyncActions->make(do_deviceInit);
+            savedFromWeb = true;
             request->send(200);
         }
 

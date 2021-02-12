@@ -1,20 +1,26 @@
 #include "Consts.h"
 #ifdef EnableLogging
-#include "items/vLogging.h"
-
 #include <Arduino.h>
 
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "FileSystem.h"
 #include "Global.h"
+#include "items/vLogging.h"
 
-LoggingClass::LoggingClass(String interval, unsigned int maxPoints, String loggingValueKey, String key) {
+LoggingClass::LoggingClass(String interval, unsigned int maxPoints, String loggingValueKey, String key, String startState, bool savedFromWeb) {
     _interval = interval;
+    _maxPoints = maxPoints;
+    _loggingValueKey = loggingValueKey;
+    _key = key;
 
     if (_interval.indexOf(":") != -1) {
         _type = 3;  //тип 3 логгирование в указанное время
         _intervalSec = 1000;
+        if (savedFromWeb) {  //если было сохранено из веб интерфейса
+            removeFile("/logs/prv" + _key + ".txt");
+            addFile("/logs/prv" + _key + ".txt", startState);
+        }
         SerialPrint("I", "Logging", "at time (" + _interval + ")");
     } else {
         if (_interval.toInt() == 0) {
@@ -28,10 +34,6 @@ LoggingClass::LoggingClass(String interval, unsigned int maxPoints, String loggi
     }
 
     if (_type == 0) SerialPrint("E", "Logging", "type undetermine");
-
-    _maxPoints = maxPoints;
-    _loggingValueKey = loggingValueKey;
-    _key = key;
 }
 
 LoggingClass::~LoggingClass() {}
@@ -45,7 +47,6 @@ void LoggingClass::loop() {
             if (_type == 1) {
                 execute("");
             } else if (_type == 2) {
-               
             } else if (_type == 3) {
                 String timenow = timeNow->getTimeWOsec();
                 static String prevTime;
@@ -78,11 +79,11 @@ void LoggingClass::execute(String keyOrValue) {
         }
     } else if (_type == 3) {  //тип 3 логгирование в указанное время
         if (getValue(_loggingValueKey) != "no value") {
-            float prevValue = readFile(_key + ".txt", 100).toFloat();
+            float prevValue = readFile("/logs/prv" + _key + ".txt", 100).toFloat();
             float currentValue = getValue(_loggingValueKey).toFloat();
             loggingValue = String(currentValue - prevValue);
-            removeFile(_key + ".txt");
-            addFile(_key + ".txt", String(currentValue));
+            removeFile("/logs/prv" + _key + ".txt");
+            addFile("/logs/prv" + _key + ".txt", String(currentValue));
         } else {
             SerialPrint("E", "Logging", "This value not found on this device");
         }
@@ -138,6 +139,7 @@ void logging() {
     String key = myLineParsing.gkey();
     String interval = myLineParsing.gint();
     String maxcnt = myLineParsing.gcnt();
+    String startState = myLineParsing.gstate();
     myLineParsing.clear();
 
     logging_KeyList += key + ",";
@@ -148,7 +150,7 @@ void logging() {
     static bool firstTime = true;
     if (firstTime) myLogging = new MyLoggingVector();
     firstTime = false;
-    myLogging->push_back(LoggingClass(interval, maxcnt.toInt(), loggingValueKey, key));
+    myLogging->push_back(LoggingClass(interval, maxcnt.toInt(), loggingValueKey, key, startState, savedFromWeb));
 
     sCmd.addCommand(key.c_str(), loggingExecute);
 }

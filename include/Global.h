@@ -41,6 +41,7 @@ extern AsyncWebServer server;
 //Global vars
 extern boolean just_load;
 extern boolean telegramInitBeen;
+extern boolean savedFromWeb;
 
 // Json
 extern String configSetupJson;   //все настройки

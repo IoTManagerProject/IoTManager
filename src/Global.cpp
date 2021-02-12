@@ -18,6 +18,7 @@ AsyncWebServer server(80);
 
 boolean just_load = true;
 boolean telegramInitBeen = false;
+boolean savedFromWeb = false;
 
 // Json
 String configSetupJson = "{}";
@@ -77,4 +78,6 @@ int lastVersion;
 boolean busScanFlag = false;
 boolean fsCheckFlag = false;
 boolean delElementFlag = false;
+
+
 

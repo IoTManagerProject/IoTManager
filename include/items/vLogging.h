@@ -12,7 +12,7 @@ typedef std::vector<LoggingClass> MyLoggingVector;
 class LoggingClass {
    public:
 
-    LoggingClass(String interval, unsigned int maxPoints, String loggingValueKey, String key);
+    LoggingClass(String interval, unsigned int maxPoints, String loggingValueKey, String key, String startState, bool savedFromWeb);
     ~LoggingClass();
 
     void loop();
