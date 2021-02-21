@@ -1,9 +1,6 @@
 0;button-out;btnid;toggleBtn;Кнопки;Освещение;order;gpio*
 0;button-out;btnid;toggleBtn;Кнопки;Освещение;order;gpio;inv[1]*
 0;button-out;btnid;toggleBtn;Кнопки;Освещение;order*
-reserved*
-0;button-out;100-0;toggleBtn;Кнопки;Освещение;order;type[ms]*
-reserved*
 0;button-in;btnid;toggleBtn;Кнопки;Освещение;order;gpio;db[20]*
 0;pwm-out;pwmid;range;Ползунки;Яркость;order;gpio*
 0;input;dgtid;inputDigit;Ввод;Введите#цифру;order*
@@ -28,17 +25,10 @@ reserved*
 0;pzem;Htzid;anydataHtz;Сенсоры;Частота;5;c[1];k[0];addr[0xF8];int[10]*
 0;ccs811;ppmid;anydataPpm;Сенсоры;Содержание#CO2;1;c[1]
 0;ccs811;ppbid;anydataPpb;Сенсоры;Содержание#орг#соед;2;c[1];addr[0x76];int[10]*
-reserved*
-reserved*
-reserved*
 0;impuls-out;impid;na;na;na;order;gpio*
 0;impuls-in;impid;anydata;Сенсоры;Количество#импульсов;order;pin[0];c[1];k[0]*
 0;count-down;cntid;anydata;Таймер;Обратный#отчет;order*
 0;output;txtid;anydata;Вывод;Температура;order*
-0;output;100-0;anydata;MySensors;Температура;order*
 0;logging;crtid;chart;Графики;История;order;val[any];int[60];cnt[100]*
 0;logging;crtid;chart3;Графики;История;order;val[any];int[23:30];cnt[100];st[0]*
-reserved*
-reserved*
-reserved*
 0;uptime;uptid;anydataTime;Системные;%name%#uptime;order;int[60]*
