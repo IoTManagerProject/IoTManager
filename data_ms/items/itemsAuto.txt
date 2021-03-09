@@ -1,0 +1,2 @@
+0;sensor-node;id;file;MySensors;descr;order;tm1[30];tm2[60];c[1];k[0]*
+0;button-out;id;toggleBtn;Кнопки;descr;order;type[ms]*

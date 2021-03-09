@@ -14,10 +14,10 @@ void getFSInfo() {
 
         size_t totalBytes = buf.totalBytes;      // всего
         size_t usedBytes = buf.usedBytes;        // использовано
-        size_t maxOpenFiles = buf.maxOpenFiles;  // лимит на открые файлы
-        size_t blockSize = buf.blockSize;
-        size_t pageSize = buf.pageSize;
-        size_t maxPathLength = buf.maxPathLength;  // лимит на пути и имена файлов
+        //size_t maxOpenFiles = buf.maxOpenFiles;  // лимит на открые файлы
+        //size_t blockSize = buf.blockSize;
+        //size_t pageSize = buf.pageSize;
+        //size_t maxPathLength = buf.maxPathLength;  // лимит на пути и имена файлов
 
         size_t freeBytes = totalBytes - usedBytes;
         float freePer = ((float)freeBytes / totalBytes) * 100;

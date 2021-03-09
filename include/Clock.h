@@ -135,6 +135,16 @@ class Clock {
     }
 
     /*
+    * Локальное дата время "дд.ММ.гг чч.мм.cc"
+    */
+    const String getDateTimeDotFormated(Time_t timeNow) {
+        char buf[32];
+        sprintf(buf, "%02d.%02d.%02d %02d:%02d:%02d", timeNow.day_of_month, timeNow.month, timeNow.year, timeNow.hour, timeNow.minute, timeNow.second);
+        return String(buf);
+    }
+
+
+    /*
     * Локальное время "чч:мм:cc"
     */
     const String getTime() {

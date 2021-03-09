@@ -1,6 +1,8 @@
+#ifdef EnableSensorUltrasonic
 #pragma once
-#include "Global.h"
 #include <Arduino.h>
+
+#include "Global.h"
 #include "GyverFilters.h"
 
 class SensorUltrasonic;
@@ -8,16 +10,14 @@ class SensorUltrasonic;
 typedef std::vector<SensorUltrasonic> MySensorUltrasonicVector;
 
 class SensorUltrasonic {
-public:
-
+   public:
     SensorUltrasonic(String key, unsigned long interval, unsigned int trig, unsigned int echo, int map1, int map2, int map3, int map4, float c);
     ~SensorUltrasonic();
 
     void loop();
     void readUltrasonic();
 
-private:
-
+   private:
     unsigned long currentMillis;
     unsigned long prevMillis;
     unsigned long difference;
@@ -34,11 +34,9 @@ private:
     int _map4;
 
     float _c;
-
 };
 
 extern MySensorUltrasonicVector* mySensorUltrasonic;
 
 extern void ultrasonic();
-
-
+#endif

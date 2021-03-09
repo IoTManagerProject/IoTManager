@@ -18,6 +18,7 @@
 #include "Utils/StatUtils.h"
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
+#include "MySensorsDataParse.h"
 #include "items/ButtonInClass.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
@@ -28,8 +29,10 @@
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
+#include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
+#include "items/vSensorNode.h"
 
 void not_async_actions();
 
@@ -49,7 +52,7 @@ void setup() {
     setChipId();
     fileSystemInit();
     loadConfig();
-#ifdef uartEnable
+#ifdef EnableUart
     uartInit();
 #endif
     clockInit();
@@ -57,7 +60,7 @@ void setup() {
     itemsListInit();
     espInit();
     routerConnect();
-#ifdef telegramEnable
+#ifdef EnableTelegram
     telegramInit();
 #endif
     uptime_init();
@@ -76,8 +79,7 @@ void setup() {
 #ifdef ESP8266
     getFSInfo();
 #endif
-
-    testsPerform();
+    //testsPerform();
 
     just_load = false;
     initialized = true;
@@ -95,79 +97,117 @@ void loop() {
 #endif
     timeNow->loop();
     mqttLoop();
-    myButtonIn.loop();
+
     myScenario->loop();
     loopCmdExecute();
 
     myNotAsyncActions->loop();
     ts.update();
 
-#ifdef telegramEnable
+#ifdef EnableTelegram
     handleTelegram();
 #endif
 
-#ifdef uartEnable
+#ifdef EnableUart
     uartHandle();
 #endif
+#ifdef MYSENSORS
+    loopMySensorsExecute();
+#endif
 
-    if (myLogging != nullptr) {
-        for (unsigned int i = 0; i < myLogging->size(); i++) {
-            myLogging->at(i).loop();
-        }
-    }
-    if (myImpulsOut != nullptr) {
-        for (unsigned int i = 0; i < myImpulsOut->size(); i++) {
-            myImpulsOut->at(i).loop();
-        }
-    }
-    if (mySensorDallas2 != nullptr) {
-        for (unsigned int i = 0; i < mySensorDallas2->size(); i++) {
-            mySensorDallas2->at(i).loop();
-        }
-    }
-    if (mySensorUltrasonic != nullptr) {
-        for (unsigned int i = 0; i < mySensorUltrasonic->size(); i++) {
-            mySensorUltrasonic->at(i).loop();
-        }
-    }
+#ifdef EnableCountDown
     if (myCountDown != nullptr) {
         for (unsigned int i = 0; i < myCountDown->size(); i++) {
             myCountDown->at(i).loop();
         }
     }
+#endif
+#ifdef EnableImpulsOut
+    if (myImpulsOut != nullptr) {
+        for (unsigned int i = 0; i < myImpulsOut->size(); i++) {
+            myImpulsOut->at(i).loop();
+        }
+    }
+#endif
+#ifdef EnableLogging
+    if (myLogging != nullptr) {
+        for (unsigned int i = 0; i < myLogging->size(); i++) {
+            myLogging->at(i).loop();
+        }
+    }
+#endif
+#ifdef EnableSensorDallas
+    if (mySensorDallas2 != nullptr) {
+        for (unsigned int i = 0; i < mySensorDallas2->size(); i++) {
+            mySensorDallas2->at(i).loop();
+        }
+    }
+#endif
+#ifdef EnableSensorUltrasonic
+    if (mySensorUltrasonic != nullptr) {
+        for (unsigned int i = 0; i < mySensorUltrasonic->size(); i++) {
+            mySensorUltrasonic->at(i).loop();
+        }
+    }
+#endif
+
+#ifdef EnableSensorAnalog
     if (mySensorAnalog != nullptr) {
         for (unsigned int i = 0; i < mySensorAnalog->size(); i++) {
             mySensorAnalog->at(i).loop();
         }
     }
+#endif
+#ifdef EnableSensorDht
     if (mySensorDht != nullptr) {
         for (unsigned int i = 0; i < mySensorDht->size(); i++) {
             mySensorDht->at(i).loop();
         }
     }
+#endif
+#ifdef EnableSensorBme280
     if (mySensorBme280 != nullptr) {
         for (unsigned int i = 0; i < mySensorBme280->size(); i++) {
             mySensorBme280->at(i).loop();
         }
     }
+#endif
+#ifdef EnableSensorBmp280
     if (mySensorBmp280 != nullptr) {
         for (unsigned int i = 0; i < mySensorBmp280->size(); i++) {
             mySensorBmp280->at(i).loop();
         }
     }
-    if (mySensorBmp280 != nullptr) {
-        for (unsigned int i = 0; i < mySensorBmp280->size(); i++) {
-            mySensorBmp280->at(i).loop();
-        }
-    }
+#endif
+#ifdef EnableSensorCcs811
     if (mySensorCcs811 != nullptr) {
         for (unsigned int i = 0; i < mySensorCcs811->size(); i++) {
             mySensorCcs811->at(i).loop();
         }
     }
+#endif
+#ifdef EnableSensorPzem
+    if (mySensorPzem != nullptr) {
+        for (unsigned int i = 0; i < mySensorPzem->size(); i++) {
+            mySensorPzem->at(i).loop();
+        }
+    }
+#endif
+#ifdef EnableSensorUptime
     if (mySensorUptime != nullptr) {
         for (unsigned int i = 0; i < mySensorUptime->size(); i++) {
             mySensorUptime->at(i).loop();
         }
     }
+#endif
+#ifdef EnableSensorNode
+    if (mySensorNode != nullptr) {
+        for (unsigned int i = 0; i < mySensorNode->size(); i++) {
+            mySensorNode->at(i).loop();
+        }
+    }
+#endif
+#ifdef EnableButtonIn
+    myButtonIn.loop();
+#endif
 }

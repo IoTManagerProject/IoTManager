@@ -1,4 +1,6 @@
+#ifdef EnableLogging
 #pragma once
+#include "Consts.h"
 #include <Arduino.h>
 
 #include "Global.h"
@@ -10,7 +12,7 @@ typedef std::vector<LoggingClass> MyLoggingVector;
 class LoggingClass {
    public:
 
-    LoggingClass(unsigned long period, unsigned int maxPoints, String loggingValueKey, String key);
+    LoggingClass(String interval, unsigned int maxPoints, String loggingValueKey, String key, String startState, bool savedFromWeb);
     ~LoggingClass();
 
     void loop();
@@ -21,7 +23,9 @@ class LoggingClass {
     unsigned long currentMillis;
     unsigned long prevMillis;
     unsigned long difference;
-    unsigned long _period;
+    String _interval;
+    unsigned int _intervalSec;
+    unsigned int _type = 0;
     unsigned int _maxPoints;
     String _loggingValueKey;
     String _key;
@@ -37,3 +41,4 @@ extern void choose_log_date_and_send();
 extern void sendLogData(String file, String topic);
 extern void sendLogData2(String file, String topic);
 extern void cleanLogAndData();
+#endif

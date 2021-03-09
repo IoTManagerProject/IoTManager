@@ -1,3 +1,4 @@
+#ifdef EnableSensorUptime
 #pragma once
 #include <Arduino.h>
 
@@ -31,3 +32,4 @@ class SensorUptime {
 extern MySensorUptimeVector* mySensorUptime;
 
 extern void uptimeSensor();
+#endif

@@ -18,6 +18,7 @@ class LineParsing {
     String _pin;
     String _map;
     String _c;
+    String _k;
     String _inv;
     String _state;
     String _db;
@@ -26,6 +27,8 @@ class LineParsing {
     String _cnt;
     String _val;
     String _index;
+    String _tm1;
+    String _tm2;
 
     int pinErrors;
 
@@ -42,6 +45,7 @@ class LineParsing {
                     _pin{""},
                     _map{""},
                     _c{""},
+                    _k{""},
                     _inv{""},
                     _state{""},
                     _db{""},
@@ -50,6 +54,8 @@ class LineParsing {
                     _cnt{""},
                     _val{""},
                     _index{""},
+                    _tm1{""},
+                    _tm2{""},
 
                     pinErrors{0}
 
@@ -87,6 +93,9 @@ class LineParsing {
                 if (arg.indexOf("c[") != -1) {
                     _c = extractInner(arg);
                 }
+                if (arg.indexOf("k[") != -1) {
+                    _k = extractInner(arg);
+                }
                 if (arg.indexOf("type[") != -1) {
                     _type = extractInner(arg);
                 }
@@ -107,6 +116,12 @@ class LineParsing {
                 }
                 if (arg.indexOf("index[") != -1) {
                     _index = extractInner(arg);
+                }
+                if (arg.indexOf("tm1[") != -1) {
+                    _tm1 = extractInner(arg);
+                }
+                if (arg.indexOf("tm2[") != -1) {
+                    _tm2 = extractInner(arg);
                 }
             }
         }
@@ -165,6 +180,9 @@ class LineParsing {
     String gc() {
         return _c;
     }
+    String gk() {
+        return _k;
+    }
     String gtype() {
         return _type;
     }
@@ -186,6 +204,12 @@ class LineParsing {
     String gindex() {
         return _index;
     }
+    String gtm1() {
+        return _tm1;
+    }
+    String gtm2() {
+        return _tm2;
+    }
 
     int getPinErrors() {
         return pinErrors;
@@ -206,6 +230,7 @@ class LineParsing {
         _pin = "";
         _map = "";
         _c = "";
+        _k = "";
         _inv = "";
         _state = "";
         _db = "";
@@ -228,8 +253,13 @@ class LineParsing {
             if (!loadWidget(filename, buf)) {
                 return;
             }
+            if (_cnt != "") {
+                if (filename.indexOf("chart") != -1) jsonWriteStr(buf, "maxCount", _cnt);
+            }
 
-            if (filename.indexOf("chart") != -1) jsonWriteStr(buf, "maxCount", _cnt);
+#ifdef GATE_MODE
+            jsonWriteStr(buf, "info", " ");
+#endif
 
             jsonWriteStr(buf, "page", page);
             jsonWriteStr(buf, "order", order);

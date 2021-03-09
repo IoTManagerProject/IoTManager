@@ -8,3 +8,4 @@ extern void deviceInit();
 extern void prsets_init();
 extern void handle_uptime();
 extern void handle_statistics();
+extern void clearVectors();

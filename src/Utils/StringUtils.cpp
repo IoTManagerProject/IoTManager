@@ -105,6 +105,12 @@ size_t itemsCount(String& str, const char* delim) {
     return cnt;
 }
 
+char* stringToChar(String& str) {
+    char* mychar = new char[str.length() + 1];
+    strcpy(mychar, str.c_str());
+    return mychar;
+}
+
 boolean isDigitStr(const String& str) {
     for (size_t i = 0; i < str.length(); i++) {
         if (!isDigit(str.charAt(i))) {

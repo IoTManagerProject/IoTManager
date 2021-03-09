@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableSensorAnalog
 #include "items/vSensorAnalog.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
@@ -67,4 +69,4 @@ void analogAdc() {
     firstTime = false;
     mySensorAnalog->push_back(SensorAnalog(key, interval.toInt(), pin.toInt(), map1, map2, map3, map4, c.toFloat()));
 }
-
+#endif

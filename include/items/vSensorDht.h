@@ -1,3 +1,4 @@
+#ifdef EnableSensorDht
 #pragma once
 #include <Arduino.h>
 #include <DHTesp.h>
@@ -38,3 +39,4 @@ class SensorDht {
 extern MySensorDhtVector* mySensorDht;
 
 extern void dhtSensor();
+#endif

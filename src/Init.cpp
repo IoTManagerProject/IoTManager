@@ -7,17 +7,29 @@
 #include "items/vButtonOut.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
-#include "items/vInOutput.h"
+#include "items/vInput.h"
 #include "items/vLogging.h"
+#include "items/vOutput.h"
 #include "items/vPwmOut.h"
+#include "items/vSensorAnalog.h"
+#include "items/vSensorBme280.h"
+#include "items/vSensorBmp280.h"
+#include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
+#include "items/vSensorDht.h"
+#include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
+#include "items/vSensorUptime.h"
+#include "items/vSensorNode.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
     configSetupJson.replace("\r\n", "");
 
-    configStoreJson = readFile("store.json", 4096);
+    String tmp = readFile("store.json", 4096);
+    if (tmp != "failed") {
+        configStoreJson = tmp;
+    }
     configStoreJson.replace("\r\n", "");
 
     jsonWriteStr(configSetupJson, "warning1", "");
@@ -26,10 +38,9 @@ void loadConfig() {
 
     jsonWriteStr(configSetupJson, "chipID", chipId);
     jsonWriteInt(configSetupJson, "firmware_version", FIRMWARE_VERSION);
+    jsonWriteStr(configSetupJson, "firmware_name", FIRMWARE_NAME);
 
     prex = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId;
-
-    //Serial.println(configSetupJson);
 
     serverIP = jsonReadStr(configSetupJson, "serverip");
 
@@ -43,55 +54,7 @@ void espInit() {
 }
 
 void deviceInit() {
-    //======clear dallas params======
-    if (mySensorDallas2 != nullptr) {
-        mySensorDallas2->clear();
-    }
-    //======clear ultrasonic params======
-    if (mySensorUltrasonic != nullptr) {
-        mySensorUltrasonic->clear();
-    }
-    //======clear logging params======
-    if (myLogging != nullptr) {
-        myLogging->clear();
-    }
-    logging_KeyList = "";
-    logging_EnterCounter = -1;
-    //======clear impuls params=======
-    if (myImpulsOut != nullptr) {
-        myImpulsOut->clear();
-    }
-    impuls_KeyList = "";
-    impuls_EnterCounter = -1;
-    //======clear buttonOut params=======
-    if (myButtonOut != nullptr) {
-        myButtonOut->clear();
-    }
-    buttonOut_KeyList = "";
-    buttonOut_EnterCounter = -1;
-    //======clear input params=======
-    if (myInOutput != nullptr) {
-        myInOutput->clear();
-    }
-    inOutput_KeyList = "";
-    inOutput_EnterCounter = -1;
-    //======clear pwm params=======
-#ifdef PwmOutEnable
-    if (myPwmOut != nullptr) {
-        myPwmOut->clear();
-    }
-    pwmOut_KeyList = "";
-    pwmOut_EnterCounter = -1;
-#endif
-    //===================================
-    if (myCountDown != nullptr) {
-        myCountDown->clear();
-    }
-    countDown_KeyList = "";
-    countDown_EnterCounter = -1;
-    //===================================
-    dht_EnterCounter = -1;
-    //=========================================
+    clearVectors();
 
 #ifdef LAYOUT_IN_RAM
     all_widgets = "";
@@ -110,9 +73,10 @@ void deviceInit() {
     } else {
         jsonWriteStr(configSetupJson, F("warning3"), "");
     }
+
+    savedFromWeb = false;
     //outcoming_date();
 }
-//-------------------------------сценарии-----------------------------------------------------
 
 void loadScenario() {
     if (jsonReadStr(configSetupJson, "scen") == "1") {
@@ -131,4 +95,109 @@ void uptime_init() {
 
 void handle_uptime() {
     jsonWriteStr(configSetupJson, "uptime", timeNow->getUptime());
+}
+
+void clearVectors() {
+#ifdef EnableLogging
+    if (myLogging != nullptr) {
+        myLogging->clear();
+    }
+    logging_KeyList = "";
+    logging_EnterCounter = -1;
+#endif
+#ifdef EnableImpulsOut
+    if (myImpulsOut != nullptr) {
+        myImpulsOut->clear();
+    }
+    impuls_KeyList = "";
+    impuls_EnterCounter = -1;
+#endif
+
+#ifdef EnableCountDown
+    if (myCountDown != nullptr) {
+        myCountDown->clear();
+    }
+    countDown_KeyList = "";
+    countDown_EnterCounter = -1;
+#endif
+
+#ifdef EnableButtonOut
+    if (myButtonOut != nullptr) {
+        myButtonOut->clear();
+    }
+    buttonOut_KeyList = "";
+    buttonOut_EnterCounter = -1;
+#endif
+#ifdef EnableInput
+    if (myInput != nullptr) {
+        myInput->clear();
+    }
+    input_KeyList = "";
+    input_EnterCounter = -1;
+#endif
+#ifdef EnableOutput
+    if (myOutput != nullptr) {
+        myOutput->clear();
+    }
+    output_KeyList = "";
+    output_EnterCounter = -1;
+#endif
+#ifdef EnablePwmOut
+    if (myPwmOut != nullptr) {
+        myPwmOut->clear();
+    }
+    pwmOut_KeyList = "";
+    pwmOut_EnterCounter = -1;
+#endif
+    //==================================
+#ifdef EnableSensorDallas
+    if (mySensorDallas2 != nullptr) {
+        mySensorDallas2->clear();
+    }
+#endif
+#ifdef EnableSensorUltrasonic
+    if (mySensorUltrasonic != nullptr) {
+        mySensorUltrasonic->clear();
+    }
+#endif
+#ifdef EnableSensorAnalog
+    if (mySensorAnalog != nullptr) {
+        mySensorAnalog->clear();
+    }
+#endif
+#ifdef EnableSensorDht
+    if (mySensorDht != nullptr) {
+        mySensorDht->clear();
+    }
+#endif
+#ifdef EnableSensorBme280
+    if (mySensorBme280 != nullptr) {
+        mySensorBme280->clear();
+    }
+#endif
+#ifdef EnableSensorBmp280
+    if (mySensorBmp280 != nullptr) {
+        mySensorBmp280->clear();
+    }
+#endif
+#ifdef EnableSensorCcs811
+    if (mySensorCcs811 != nullptr) {
+        mySensorCcs811->clear();
+    }
+#endif
+#ifdef EnableSensorPzem
+    if (mySensorPzem != nullptr) {
+        mySensorPzem->clear();
+    }
+#endif
+#ifdef EnableSensorUptime
+    if (mySensorUptime != nullptr) {
+        mySensorUptime->clear();
+    }
+#endif
+#ifdef EnableSensorNode
+    if (mySensorNode != nullptr) {
+        mySensorNode->clear();
+    }
+#endif
 }

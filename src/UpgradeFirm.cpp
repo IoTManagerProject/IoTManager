@@ -36,10 +36,18 @@ void upgradeInit() {
 
 void getLastVersion() {
     if ((WiFi.status() == WL_CONNECTED)) {
-#ifdef ESP8266
-        String tmp = getURL(serverIP + F("/projects/iotmanager/esp8266/esp8266ver/esp8266ver.txt"));
-#else
-        String tmp = getURL(serverIP + F("/projects/iotmanager/esp32/esp32ver/esp32ver.txt"));
+        String tmp;
+#ifdef esp8266_4mb
+        tmp = getURL(serverIP + F("/projects/iotmanager/esp8266/esp8266ver/esp8266ver.txt"));
+#endif        
+#ifdef esp32_4mb
+        tmp = getURL(serverIP + F("/projects/iotmanager/esp32/esp32ver/esp32ver.txt"));
+#endif
+#ifdef esp8266_mysensors_4mb
+        tmp = getURL(serverIP + F("/projects/iotmanager/esp8266ms/esp8266ver/esp8266ver.txt"));
+#endif        
+#ifdef esp32_mysensors_4mb
+        tmp = getURL(serverIP + F("/projects/iotmanager/esp32ms/esp32ver/esp32ver.txt"));
 #endif
         if (tmp == "error") {
             lastVersion = -1;
@@ -88,34 +96,55 @@ void upgrade_firmware(int type) {
 }
 
 bool upgradeFS() {
+#ifndef esp8266_1mb
     WiFiClient wifiClient;
     bool ret = false;
     Serial.printf("Start upgrade %s, please wait...", FS_NAME);
-#ifdef ESP8266
+#ifdef esp8266_4mb
     ESPhttpUpdate.rebootOnUpdate(false);
     t_httpUpdate_return retFS = ESPhttpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp8266/littlefs/littlefs.bin"));
-#else
+#endif
+#ifdef esp32_4mb
     httpUpdate.rebootOnUpdate(false);
     HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp32/littlefs/spiffs.bin"));
+#endif
+#ifdef esp8266_mysensors_4mb
+    ESPhttpUpdate.rebootOnUpdate(false);
+    t_httpUpdate_return retFS = ESPhttpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp8266ms/littlefs/littlefs.bin"));
+#endif
+#ifdef esp32_mysensors_4mb
+    httpUpdate.rebootOnUpdate(false);
+    HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp32ms/littlefs/spiffs.bin"));
 #endif
     if (retFS == HTTP_UPDATE_OK) {  //если FS обновилась успешно
         SerialPrint("I", "Update", "FS upgrade done!");
         ret = true;
     }
     return ret;
+#endif
 }
 
 bool upgradeBuild() {
+#ifndef esp8266_1mb
     WiFiClient wifiClient;
     bool ret = false;
     Serial.println("Start upgrade BUILD, please wait...");
 
-#ifdef ESP8266
+#ifdef esp8266_4mb
     ESPhttpUpdate.rebootOnUpdate(false);
     t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, serverIP + F("/projects/iotmanager/esp8266/firmware/firmware.bin"));
-#else
+#endif
+#ifdef esp32_4mb
     httpUpdate.rebootOnUpdate(false);
     HTTPUpdateResult retBuild = httpUpdate.update(wifiClient, serverIP + F("/projects/iotmanager/esp32/firmware/firmware.bin"));
+#endif
+#ifdef esp8266_mysensors_4mb
+    ESPhttpUpdate.rebootOnUpdate(false);
+    t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, serverIP + F("/projects/iotmanager/esp8266ms/firmware/firmware.bin"));
+#endif
+#ifdef esp32_mysensors_4mb
+    httpUpdate.rebootOnUpdate(false);
+    HTTPUpdateResult retBuild = httpUpdate.update(wifiClient, serverIP + F("/projects/iotmanager/esp32ms/firmware/firmware.bin"));
 #endif
 
     if (retBuild == HTTP_UPDATE_OK) {  //если BUILD обновился успешно
@@ -123,6 +152,7 @@ bool upgradeBuild() {
         ret = true;
     }
     return ret;
+#endif
 }
 
 void restartEsp() {

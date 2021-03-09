@@ -1,3 +1,5 @@
+#include "Consts.h"
+#ifdef EnableSensorCcs811
 #include "items/vSensorCcs811.h"
 
 #include <Arduino.h>
@@ -87,3 +89,4 @@ void ccs811Sensor() {
         enterCnt = -1;
     }
 }
+#endif

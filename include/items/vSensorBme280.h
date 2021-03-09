@@ -1,3 +1,4 @@
+#ifdef EnableSensorBme280
 #pragma once
 #include <Adafruit_BME280.h>
 #include <Arduino.h>
@@ -37,3 +38,4 @@ class SensorBme280 {
 extern MySensorBme280Vector* mySensorBme280;
 
 extern void bme280Sensor();
+#endif

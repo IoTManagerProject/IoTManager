@@ -1,6 +1,6 @@
 #pragma once
 #include "Consts.h"
-#ifdef uartEnable
+#ifdef EnableUart
 #include "SoftwareSerial.h"
 
 #ifdef ESP8266

@@ -5,6 +5,7 @@
 #include "Global.h"
 #include "Init.h"
 #include "items/vLogging.h"
+#include "items/vSensorNode.h"
 
 enum MqttBroker { MQTT_PRIMARY,
                   MQTT_RESERVE };
@@ -172,8 +173,12 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         SerialPrint("I", "MQTT", "Full update");
         publishWidgets();
         publishState();
-
+#ifdef GATE_MODE
+        publishTimes();
+#endif
+#ifdef EnableLogging
         choose_log_date_and_send();
+#endif
     }
 
     else if (topicStr.indexOf("control") != -1) {
@@ -266,6 +271,13 @@ boolean publishStatus(const String& topic, const String& data) {
     return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
+boolean publishAnyJsonKey(const String& topic, const String& key, const String& data) {
+    String path = mqttRootDevice + "/" + topic + "/status";
+    String json = "{}";
+    jsonWriteStr(json, key, data);
+    return mqtt.publish(path.c_str(), json.c_str(), false);
+}
+
 boolean publishEvent(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/event";
     return mqtt.publish(path.c_str(), data.c_str(), true);
@@ -318,22 +330,28 @@ void publishWidgets() {
 
 void publishState() {
     // берет строку json и ключи превращает в топики а значения колючей в них посылает
-    String str = configLiveJson + "," + configStoreJson;
+    String str;
+    if (configLiveJson != "{}") {
+        str += configLiveJson;
+    }
+    if (configStoreJson != "{}") {
+        str += "," + configStoreJson;
+    }
     str.replace("{", "");
     str.replace("}", "");
+    str.replace("\"", "");
     str += ",";
 
-    while (str.length()) {
+    while (str.length() != 0) {
         String tmp = selectToMarker(str, ",");
 
-        String topic = selectToMarker(tmp, "\":");
-        topic.replace("\"", "");
+        String topic = selectToMarker(tmp, ":");
+        String state = deleteBeforeDelimiter(tmp, ":");
 
-        String state = selectToMarkerLast(tmp, "\":");
-        state.replace("\"", "");
-
-        if (topic != "timenow") {
-            publishStatus(topic, state);
+        if (topic != "" && state != "") {
+            if (topic != "timenow") {
+                publishStatus(topic, state);
+            }
         }
         str = deleteBeforeDelimiter(str, ",");
     }

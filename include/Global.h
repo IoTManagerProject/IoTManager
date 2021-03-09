@@ -1,15 +1,10 @@
 #pragma once
 //===================Libraries===================================================================================================================================================
 #include "Consts.h"
-
-
 #include <Arduino.h>
 #include "CTBot.h"
 #include <ArduinoJson.h>
 #include <ArduinoOTA.h>
-#include <Bounce2.h>
-#include <DallasTemperature.h>
-#include <OneWire.h>
 #include <PubSubClient.h>
 #include <StringCommand.h>
 #include <TickerScheduler.h>
@@ -41,12 +36,12 @@ extern PubSubClient mqtt;
 extern StringCommand sCmd;
 extern AsyncWebServer server;
 
-extern boolean but[NUM_BUTTONS];
-extern Bounce* buttons;
+
 
 //Global vars
 extern boolean just_load;
 extern boolean telegramInitBeen;
+extern boolean savedFromWeb;
 
 // Json
 extern String configSetupJson;   //все настройки
@@ -65,6 +60,7 @@ extern String scenario;
 //orders and events
 extern String orderBuf;
 extern String eventBuf;
+extern String mysensorBuf;
 extern String itemsFile;
 extern String itemsLine;
 
@@ -76,8 +72,11 @@ extern int impuls_EnterCounter;
 extern String buttonOut_KeyList;
 extern int buttonOut_EnterCounter;
 //=========================================
-extern String inOutput_KeyList;
-extern int inOutput_EnterCounter;
+extern String input_KeyList;
+extern int input_EnterCounter;
+//=========================================
+extern String output_KeyList;
+extern int output_EnterCounter;
 //=========================================
 extern String pwmOut_KeyList;
 extern int pwmOut_EnterCounter;
@@ -87,8 +86,6 @@ extern int countDown_EnterCounter;
 //=========================================
 extern String logging_KeyList;
 extern int logging_EnterCounter;
-//=========================================
-extern int dht_EnterCounter;
 //=========================================
 
 
