@@ -9,7 +9,7 @@
     "ntp": "pool.ntp.org",
     "mqttServer": "91.204.228.124",
     "mqttPort": 1883,
-    "mqttPrefix": "/iotTest",
+    "mqttPrefix": "/iotTest3",
     "mqttUser": "rise",
     "mqttPass": "23ri22se32",
     "mqttServer2": "",
