@@ -62,10 +62,7 @@ void inputExecute() {
             String valueJson = getValue(value);
             if (valueJson != "no value") {  //если это ключ переменной
                 value = valueJson;
-            } else {  //если это просто текст
-                value.replace("#", " ");
-                value.replace("%date%", timeNow->getDateTimeDotFormated());
-            }
+            } 
         }
     }
 

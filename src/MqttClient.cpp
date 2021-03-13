@@ -280,7 +280,7 @@ boolean publishAnyJsonKey(const String& topic, const String& key, const String& 
 
 boolean publishEvent(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/event";
-    return mqtt.publish(path.c_str(), data.c_str(), true);
+    return mqtt.publish(path.c_str(), data.c_str(), false);
 }
 
 boolean publishInfo(const String& topic, const String& data) {

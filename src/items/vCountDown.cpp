@@ -1,12 +1,11 @@
 #include "Consts.h"
 #ifdef EnableCountDown
-#include "items/vCountDown.h"
-
 #include <Arduino.h>
 
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
+#include "items/vCountDown.h"
 
 CountDownClass::CountDownClass(String key) {
     _key = key;
@@ -21,23 +20,21 @@ void CountDownClass::execute(unsigned int countDownPeriod) {
 
 void CountDownClass::loop() {
     if (_countDownPeriod > 0 && _start) {
-        prevMillis1 = millis();
-        _start = false;
+        prevMillis = millis();
         sec = (_countDownPeriod / 1000);
+        _start = false;
     }
-    currentMillis = millis();
-    difference1 = currentMillis - prevMillis1;
-    difference2 = currentMillis - prevMillis2;
-    if (difference1 > _countDownPeriod && _countDownPeriod > 0) {
-        _countDownPeriod = 0;
-        eventGen2(_key, "0");
-        Serial.println(_key + " completed");
-    }
-    if (difference2 > 1000 && _countDownPeriod > 0) {
-        prevMillis2 = millis();
-        sec--;
+    difference = millis() - prevMillis;
+    if (difference > 1000 && _countDownPeriod > 0) {
+        prevMillis = millis();
         Serial.println(_key + " " + String(sec));
         publishStatus(_key, String(sec));
+        sec--;
+        if (sec < 0) {
+            _countDownPeriod = 0;
+            eventGen2(_key, "0");
+            Serial.println(_key + " completed");
+        }
     }
 }
 

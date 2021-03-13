@@ -21,12 +21,9 @@ class CountDownClass {
     unsigned long _countDownPeriod = 0;
     bool _start = false;
     String _key;
-
-    unsigned long currentMillis;
-    unsigned long prevMillis1;
-    unsigned long prevMillis2;
-    unsigned long difference1;
-    unsigned long difference2;
+    
+    unsigned long prevMillis;
+    unsigned long difference;
     int sec;
 };
 

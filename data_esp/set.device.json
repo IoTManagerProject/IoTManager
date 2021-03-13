@@ -1,0 +1,281 @@
+{
+    "configs": [
+        "/config.setup.json",
+        "/config.option.json",
+        "/config.live.json",
+        "/lang/lang.ru.json"
+    ],
+    "class": "col-sm-offset-1 col-sm-10",
+    "content": [
+        {
+            "type": "h5",
+            "title": "{{name}}",
+            "class": "alert-default"
+        },
+        {
+            "type": "link",
+            "title": "{{ButMainPage}}",
+            "action": "/",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "h4",
+            "title": "ID устройства: {{chipID}}"
+        },
+        {
+            "type": "h4",
+            "title": "IP адрес: {{ip}}"
+        },
+        {
+            "type": "h4",
+            "title": "Время: {{timenow}}"
+        },
+        {
+            "type": "h4",
+            "title": "Uptime: {{uptime}}"
+        },
+        {
+            "type": "h4",
+            "title": "Версия прошивки: {{firmware_version}}"
+        },
+        {
+            "type": "h4",
+            "title": "Версия файловой системы: 290"
+        },
+        {
+            "type": "h4",
+            "title": "{{signal}}"
+        },
+        {
+            "type": "h4",
+            "title": "Остаток памяти: {{freeBytes}}"
+        },
+        {
+            "type": "h4",
+            "title": "Название прошивки: {{firmware_name}}"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "text",
+            "title": "{{warning1}}",
+            "class": "animated tdExpandIn"
+        },
+        {
+            "type": "text",
+            "title": "{{warning2}}",
+            "class": "animated tdExpandIn"
+        },
+        {
+            "type": "text",
+            "title": "{{warning3}}",
+            "class": "animated tdExpandIn"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "dropdown",
+            "name": "help-url1",
+            "class": "btn btn-default",
+            "style": "display:inline",
+            "title": {
+                "#": "Выберите элемент из списка<span class=\"caret\"></span>",
+                "/set?addItem=1": "1.Кнопка управляющая пином",
+                "/set?addItem=2": "2.Кнопка управляющая пином (с инверсией)",
+                "/set?addItem=3": "3.Кнопка виртуальная (не привязанная к пину, для использования в сценариях)",
+                "/set?addItem=4": "4.Кнопка физическая, чтение состояния пина (подключается провдами к устройству)",
+                "/set?addItem=5": "5.Широтно импульсная модуляция pwm",
+                "/set?addItem=6": "6.Окно ввода цифровых значений",
+                "/set?addItem=7": "7.Окно ввода времени",
+                "/set?addItem=8": "8.Окно вывода любого текста, предупреждения, цифры",
+                "/set?addItem=9": "9.Датчик аналоговый, чтение аналогового входа",
+                "/set?addItem=10": "10.Датчик температуры ds18b20",
+                "/set?addItem=11": "11.Датчик расстояния ультрозвуковой JSN-SR04T, HC-SR04, HY-SRF05",
+                "/set?addItem=12": "12.Датчик температуры и влажности DHT11",
+                "/set?addItem=13": "13.Датчик температуры и влажности DHT22, DHT33, DHT44, AM2302, RHT03",
+                "/set?addItem=14": "14.Датчик температуры, влажности и давления bme280",
+                "/set?addItem=15": "15.Датчик температуры и давления bmp280",
+                "/set?addItem=16": "16.Датчик напряжения, силы тока, мощности, энергии и частоты PZEM-004T (счетчик электроэнергии)",
+                "/set?addItem=17": "17.Датчик качества воздуха ccs811",
+                "/set?addItem=18": "18.Создать импульсы через заданный промежуток времени (управление шд)",
+                "/set?addItem=19": "19.Счетчик импульсов для счетчиков воды и газа",
+                "/set?addItem=20": "20.Таймер обратного отчета",
+                "/set?addItem=21": "21.Виджеты отображения данных полученных из uart, get-запроса, или по udp",
+                "/set?addItem=22": "22.Логгирование и вывод в график любой величины (раз в указанный в секундах период)",
+                "/set?addItem=23": "23.Логгирование и вывод в график накопительных величин (раз в сутки)",
+                "/set?addItem=24": "24.Отобразить время работы устройства"
+            }
+        },
+        {
+            "type": "dropdown",
+            "name": "help-url2",
+            "class": "btn btn-default",
+            "style": "display:inline",
+            "title": {
+                "#": "Выберите пресет из списка<span class=\"caret\"></span>",
+                "/set?addPreset=1": "1.Термостат на основе ds18b20 с оповещением в телеграм",
+                "/set?addPreset=2": "2.Гистерезис термостат на основе ds18b20 с суточным расписанием",
+                "/set?addPreset=3": "3.Контроль влажности на основе DHT с оповещением в телеграм",
+                "/set?addPreset=4": "4.Включение выключение реле в заданное время",
+                "/set?addPreset=5": "5.Выключить все (пример работы сценариев)",
+                "/set?addPreset=6": "6.Включить кнопку на время заданное в приложении",
+                "/set?addPreset=7": "7.Циклический таймер с настройкой времени в приложении",
+                "/set?addPreset=8": "8.Охранный датчик движения",
+                "/set?addPreset=9": "9.Датчик движения включающий свет с настраиваемой задержкой",
+                "/set?addPreset=10": "10.Управление светом с помощью выключателя и приложения"
+            }
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "csv",
+            "title": [
+                "checkbox",
+                "html",
+                "text",
+                "select:widgets.json",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text"
+            ],
+            "state": "s.conf.csv",
+            "style": "width:100%;",
+            "action": "/set?saveItems",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "link",
+            "title": "Удалить выбранные элементы",
+            "action": "javascript:{send_request(this,'/set?delChoosingItems');setTimeout(function(){location.href='/?set.device' ; }, 1000);}",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "link",
+            "title": "Удалить все",
+            "action": "/set?delAllItems",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "text",
+            "title": "<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #F5F5F5; padding: 10px;'>После любого изменения таблицы элементов, включая удаление/добавление строк, необходимо нажать кнопку <b>СОХРАНИТЬ ТАБЛИЦУ</b>. Иногда, для корректной работы необходимо перезагрузить устройство после финального завершения его настройки</p></font></div>"
+        },
+        {
+            "type": "h2",
+            "title": "Сценарии"
+        },
+        {
+            "type": "checkbox",
+            "name": "scen",
+            "title": "Включить сценарии",
+            "action": "/set?scen=[[scen]]",
+            "state": "{{scen}}"
+        },
+        {
+            "type": "file",
+            "state": "s.scen.txt",
+            "style": "width:100%;height:350px",
+            "title": "Сохранить",
+            "action": "/set?sceninit",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "checkbox",
+            "name": "MqttOut",
+            "title": "Передавать события другим устройствам",
+            "action": "/set?MqttOut=[[MqttOut]]",
+            "state": "{{MqttOut}}"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "checkbox",
+            "name": "MqttIn",
+            "title": "Принимать события с других устройств",
+            "action": "/set?MqttIn=[[MqttIn]]",
+            "state": "{{MqttIn}}"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "button",
+            "title": "Синхронизировать сценарии на всех устройствах",
+            "action": "/set?scenMqtt",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "button",
+            "title": "Очистить графики и введенные данные",
+            "action": "/set?cleanlog",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "link",
+            "title": "Ручная настройка",
+            "action": "/?set.manual",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "link",
+            "title": "Инструкция к системе автоматизации",
+            "action": "https://github.com/IoTManagerProject/IoTManager/wiki",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "h3",
+            "name": "my-block",
+            "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+            "class": "hidden"
+        },
+        {
+            "type": "button",
+            "title": "Обновить прошивку устройства",
+            "action": "/check",
+            "response": "[[my-block]]",
+            "class": "btn btn-block btn-default"
+        },
+        {
+            "type": "hr"
+        },
+        {
+            "type": "h3",
+            "name": "reset-block",
+            "style": "position:fixed;top:50%;left:50%;width:400px;margin-left:-200px;text-align:center;",
+            "class": "hidden"
+        },
+        {
+            "type": "button",
+            "title": "Перезагрузить устройство",
+            "action": "/set?reqReset",
+            "response": "[[reset-block]]",
+            "class": "btn btn-block btn-danger"
+        }
+    ]
+}

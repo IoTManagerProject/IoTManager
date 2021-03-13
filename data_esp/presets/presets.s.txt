@@ -25,11 +25,11 @@ timenow = time24
 threshold threshold4
 end*
 h3 > hUp3
-hUp3 0
+btn3 0
 telegram Теплица полив#выключен
 end
 h3 < hLow3
-hUp3 1
+btn3 1
 telegram Теплица полив#включен
 end*
 timenow = time41
@@ -56,29 +56,45 @@ pwm51 800
 pwm52 200
 txt5 выключено
 end*
-button = 1
-count input
+btn6 = 1
+cnt6 sec6
 end
-count = 0
-button 0
+cnt6 = 0
+btn6 0
 end*
-sensor = 1
-text обнаружено
-time %date%
+start = 1
+cnt71 sec71
+btn7 1
+end
+cnt71 = 0
+btn7 0
+cnt72 sec72
+end
+cnt72 = 0
+btn7 1
+cnt71 sec71
+end
+start = 0
+cnt71 0
+cnt72 0
+end*
+sens8 = 1
+txt81 обнаружено
+txt82 %date%
 telegram often Обнаружено#движение
 end
-reset = 1
-text не#обнаружено
-time %date%
-reset 0
+rst8 = 1
+txt81 не#обнаружено
+txt82 %date%
+rst8 0
 end*
-sensor = 1
-light 1
-count period
+sens9 = 1
+btn9 1
+cnt9 sec9
 end
-count = 0
-light 0
+cnt9 = 0
+btn9 0
 end*
-switch = 1
-light change
+sw10 = 1
+btn10 change
 end*

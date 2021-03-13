@@ -17,10 +17,10 @@
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
+#include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
-#include "items/vSensorNode.h"
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -75,7 +75,8 @@ void deviceInit() {
     }
 
     savedFromWeb = false;
-    //outcoming_date();
+    publishWidgets();
+    publishState();
 }
 
 void loadScenario() {
