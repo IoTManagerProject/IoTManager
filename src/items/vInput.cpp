@@ -1,13 +1,12 @@
 #include "Consts.h"
 #ifdef EnableInput
-#include "items/vInput.h"
-
 #include <Arduino.h>
 
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Clock.h"
 #include "Global.h"
+#include "items/vInput.h"
 
 //this class save date to flash
 Input::Input(String key, String widget) {
@@ -36,7 +35,7 @@ void Input::execute(String value) {
 
 MyInputVector* myInput = nullptr;
 
-void input() {
+void inputValue() {
     myLineParsing.update();
     String widget = myLineParsing.gfile();
     String key = myLineParsing.gkey();
@@ -62,7 +61,7 @@ void inputExecute() {
             String valueJson = getValue(value);
             if (valueJson != "no value") {  //если это ключ переменной
                 value = valueJson;
-            } 
+            }
         }
     }
 

@@ -278,7 +278,7 @@ class LineParsing {
         buf = readFile(getWidgetFile(filename), 2048);
         bool res = !(buf == "Failed" || buf == "Large");
         if (!res) {
-            //SerialPrint("[E]","module","on load" + filename);
+            SerialPrint("[E]","module","on load" + filename);
         }
         return res;
     }

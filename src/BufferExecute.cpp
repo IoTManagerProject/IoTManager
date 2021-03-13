@@ -70,13 +70,13 @@ void csvCmdExecute(String& cmdStr) {
 #ifdef EnableButtonIn
                 sCmd.addCommand(order.c_str(), buttonIn);
 #endif
-            } else if (order == F("input")) {
+            } else if (order == F("input-value")) {
 #ifdef EnableInput
-                sCmd.addCommand(order.c_str(), input);
+                sCmd.addCommand(order.c_str(), inputValue);
 #endif
-            } else if (order == F("output")) {
+            } else if (order == F("output-value")) {
 #ifdef EnableOutput
-                sCmd.addCommand(order.c_str(), output);
+                sCmd.addCommand(order.c_str(), outputValue);             
 #endif
             } else if (order == F("analog-adc")) {
 #ifdef EnableSensorAnalog

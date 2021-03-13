@@ -24,7 +24,7 @@ class Output {
 
 extern MyOutputVector* myOutput;
 
-extern void output();
+extern void outputValue();
 extern void outputExecute();
 #endif
 

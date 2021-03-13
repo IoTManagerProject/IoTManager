@@ -75,8 +75,8 @@ void deviceInit() {
     }
 
     savedFromWeb = false;
-    publishWidgets();
-    publishState();
+    //publishWidgets();
+    //publishState();
 }
 
 void loadScenario() {

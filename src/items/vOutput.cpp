@@ -24,7 +24,7 @@ void Output::execute(String value) {
 
 MyOutputVector* myOutput = nullptr;
 
-void output() {
+void outputValue() {
     myLineParsing.update();
     String key = myLineParsing.gkey();
     myLineParsing.clear();
