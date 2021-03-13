@@ -81,8 +81,8 @@ void sendTelegramMsg() {
             jsonWriteStr(telegramMsgJson, sabject, msg);
             msg.replace("#", " ");
             sabject.replace("#", " ");
-            myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), sabject + " " + msg);
-            SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + sabject + " " + msg);
+            myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
+            SerialPrint("<-", "Telegram", "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
         }
     }
 }

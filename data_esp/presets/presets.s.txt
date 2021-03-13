@@ -1,10 +1,10 @@
 t1 > tUp1
 btn1 0
-telegram Гостинная нагрев#выключен
+telegram msg1 нагрев#выключен
 end
 t1 < tLow1
 btn1 1
-telegram Гостинная нагрев#включен
+telegram msg1 нагрев#включен
 end*
 t2 > threshold+-2
 heater2 0
@@ -26,11 +26,11 @@ threshold threshold4
 end*
 h3 > hUp3
 btn3 0
-telegram Теплица полив#выключен
+telegram msg3 полив#выключен
 end
 h3 < hLow3
 btn3 1
-telegram Теплица полив#включен
+telegram msg3 полив#включен
 end*
 timenow = time41
 btn41 1
