@@ -341,7 +341,7 @@ void web_init() {
             String order = request->getParam("order")->value();
             order.replace("_", " ");
             orderBuf += order + ",";
-            request->send(200);
+            request->send(200, "text/html", order);
         }
 
         if (request->hasArg("grafmax")) {
