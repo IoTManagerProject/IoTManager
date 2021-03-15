@@ -5,6 +5,7 @@
     "appass": "",
     "routerssid": "rise",
     "routerpass": "hostel3333",
+    
     "timezone": 1,
     "ntp": "pool.ntp.org",
     "mqttServer": "91.204.228.124",
