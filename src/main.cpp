@@ -34,6 +34,18 @@
 #include "items/vSensorUptime.h"
 #include "items/vSensorNode.h"
 
+//hap
+#ifdef ENABLE_HAP
+extern "C"{
+#include "homeintegration.h"
+}
+#include <hapfilestorage\hapfilestorage.hpp>
+#ifdef ESP8266
+#include "homekitintegrationcpp.h"
+#endif
+#endif
+//end hap
+
 void not_async_actions();
 
 Timings metric;
@@ -80,7 +92,19 @@ void setup() {
     getFSInfo();
 #endif
     //testsPerform();
+#ifdef ENABLE_HAP
+    init_hap_storage("/pair.dat");
+    hap_setbase_accessorytype(homekit_accessory_category_lightbulb); //??
+    
+    // Setup ID in format "XXXX" (where X is digit or latin capital letter)
+    // Used for pairing using QR code
+    hap_set_device_setupId((char*)"YK72");
+    /// init base properties
+    hap_initbase_accessory_service(getChipId().c_str(),"Yurik72","0","EspHap","1.1");
 
+    hap_init_homekit_server();
+
+#endif
     just_load = false;
     initialized = true;
 }
@@ -107,7 +131,11 @@ void loop() {
 #ifdef EnableTelegram
     handleTelegram();
 #endif
-
+#ifdef ENABLE_HAP
+#ifdef ESP8266
+  hap_homekit_loop();
+#endif 
+#endif
 #ifdef EnableUart
     uartHandle();
 #endif
