@@ -23,13 +23,24 @@ class Scenario {
             String oneBlock = selectToMarker(allBlocks, "end\n");
             String condition = selectToMarker(oneBlock, "\n");
             if (condition.indexOf("&&") != -1) {  //если двойное условие
-                String condition1 = selectFromMarkerToMarker(condition, "&&", 0);
-                String condition2 = selectFromMarkerToMarker(condition, "&&", 1);
-                if (isScenarioNeedToDoJson(condition1) && isScenarioNeedToDoJson(condition2)) {
-                    oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
-                    oneBlock.replace("end", "");
-                    SerialPrint("I", "Scenario", condition1 + " && " + condition2 + " \n" + oneBlock);
-                    spaceCmdExecute(oneBlock);
+                String condition1 = selectFromMarkerToMarker(condition, " && ", 0);
+                String condition2 = selectFromMarkerToMarker(condition, " && ", 1);
+
+                //если хотя бы одно условие совпало с этим событием то второе тянем из json!!!!!!!!!!!!!!!!!!!!!!!!!
+                if (isScenarioNeedToDo(condition1, incommingEventKey, incommingEventValue, 1)) {
+                    if (isScenarioNeedToDoJson(condition2)) {
+                        oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
+                        oneBlock.replace("end", "");
+                        SerialPrint("I", "Scenario", condition1 + " && " + condition2 + " \n" + oneBlock);
+                        spaceCmdExecute(oneBlock);
+                    }
+                } else if (isScenarioNeedToDo(condition2, incommingEventKey, incommingEventValue, 1)) {
+                    if (isScenarioNeedToDoJson(condition1)) {
+                        oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
+                        oneBlock.replace("end", "");
+                        SerialPrint("I", "Scenario", condition1 + " && " + condition2 + " \n" + oneBlock);
+                        spaceCmdExecute(oneBlock);
+                    }
                 }
             } else if (condition.indexOf("+-") != -1) {  //если гистерезис
                 if (isScenarioNeedToDo(condition, incommingEventKey, incommingEventValue, 2)) {
