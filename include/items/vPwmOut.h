@@ -3,9 +3,6 @@
 #include <Arduino.h>
 #include "Consts.h"
 #include "Global.h"
-#ifdef ESP32
-//#include <analogWrite.h>
-#endif
 
 class PwmOut;
 
