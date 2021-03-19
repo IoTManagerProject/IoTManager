@@ -62,6 +62,86 @@ class Scenario {
         }
     }
 
+    void loop2() {
+        if (!jsonReadBool(configSetupJson, "scen")) {
+            return;
+        }
+        String allBlocks = scenario;
+        allBlocks.replace("\r\n", "\n");
+        allBlocks.replace("\r", "\n");
+        allBlocks += "\n";
+
+        String incommingEvent = selectToMarker(eventBuf, ",");
+        String incommingEventKey = selectToMarker(incommingEvent, " ");
+        String incommingEventValue = selectToMarkerLast(incommingEvent, " ");
+
+        while (allBlocks.length() > 1) {
+            String oneBlock = selectToMarker(allBlocks, "end\n");
+            String condition = selectToMarker(oneBlock, "\n");
+            if (condition.indexOf("&&") != -1) {  //если двойное условие
+                condition = condition += " && ";
+                int conditionCnt = itemsCount2(condition, "&&") - 1;  //посчитаем количество условий
+
+                bool *arr = new bool[conditionCnt];
+                for (int i = 0; i < conditionCnt; i++) {
+                    arr[i] = false;
+                }
+
+                //есть ли входящее событие хотя бы одном из условий и удавлетварено ли оно?
+                int evenInConditionNum = -1;
+                for (int i = 0; i < conditionCnt; i++) {
+                    String buf = selectFromMarkerToMarker(condition, " && ", i);
+                    if (isScenarioNeedToDo(buf, incommingEventKey, incommingEventValue, 1)) {
+                        arr[i] = true;
+                        evenInConditionNum = i;
+                    }
+                }
+
+                //если да то проверяем остальные условия по json
+                if (evenInConditionNum >= 0) {
+                    for (int i = 0; i < conditionCnt; i++) {
+                        String buf = selectFromMarkerToMarker(condition, " && ", i);
+                        if (i != evenInConditionNum) {
+                            if (isScenarioNeedToDoJson(buf)) {
+                                arr[i] = true;
+                            }
+                        }
+                    }
+                }
+
+                bool result = true;
+                for (int i = 0; i < conditionCnt; i++) {
+                    if (!arr[i]) {
+                        result = false;
+                    }
+                }
+
+                if (result) {
+                    oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
+                    oneBlock.replace("end", "");
+                    SerialPrint("I", "Scenario", "multiconditions action \n" + oneBlock);
+                    spaceCmdExecute(oneBlock);
+                }
+            } else if (condition.indexOf("+-") != -1) {  //если гистерезис
+                if (isScenarioNeedToDo(condition, incommingEventKey, incommingEventValue, 2)) {
+                    oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
+                    oneBlock.replace("end", "");
+                    SerialPrint("I", "Scenario", condition + " \n" + oneBlock);
+                    spaceCmdExecute(oneBlock);
+                }
+            } else {  //остальные случаи
+                if (isScenarioNeedToDo(condition, incommingEventKey, incommingEventValue, 1)) {
+                    oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
+                    oneBlock.replace("end", "");
+                    SerialPrint("I", "Scenario", condition + " \n" + oneBlock);
+                    spaceCmdExecute(oneBlock);
+                }
+            }
+            allBlocks = deleteBeforeDelimiter(allBlocks, "end\n");
+            eventBuf = deleteBeforeDelimiter(eventBuf, ",");
+        }
+    }
+
     bool isScenarioNeedToDo(String &condition, String &incommingEventKey, String &incommingEventValue, int type) {
         bool res = false;
         String setEventKey = selectFromMarkerToMarker(condition, " ", 0);

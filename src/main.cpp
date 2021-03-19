@@ -98,7 +98,7 @@ void loop() {
     timeNow->loop();
     mqttLoop();
 
-    myScenario->loop();
+    myScenario->loop2();
     loopCmdExecute();
 
     myNotAsyncActions->loop();
