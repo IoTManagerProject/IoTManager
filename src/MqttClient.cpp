@@ -7,11 +7,6 @@
 #include "items/vLogging.h"
 #include "items/vSensorNode.h"
 
-enum MqttBroker { MQTT_PRIMARY,
-                  MQTT_RESERVE };
-
-MqttBroker activeBroker = MQTT_PRIMARY;
-
 String mqttPrefix;
 String mqttRootDevice;
 String mqttPass;
@@ -20,14 +15,6 @@ String mqttUser;
 uint16_t mqttPort{0};
 uint16_t reconnectionCounter{0};
 uint16_t fallbackCounter{0};
-
-const String getParamName(const char* param, MqttBroker broker) {
-    return String("mqtt") + param + (broker == MQTT_RESERVE ? "2" : "");
-}
-
-bool checkBrokerParams(MqttBroker broker) {
-    return !jsonReadStr(configSetupJson, getParamName("Server", broker)).isEmpty();
-}
 
 void mqttInit() {
     myNotAsyncActions->add(
@@ -44,31 +31,10 @@ void mqttInit() {
             if (WiFi.status() == WL_CONNECTED) {
                 SerialPrint("I", "WIFI", "OK");
                 if (mqtt.connected()) {
-                    if (activeBroker == MQTT_RESERVE) {
-                        // при 20 cекундных интервалах проверки, каждые 100 сек
-                        if (fallbackCounter++ > 5) {
-                            if (checkBrokerParams(MQTT_PRIMARY)) {
-                                activeBroker = MQTT_PRIMARY;
-                                fallbackCounter = 0;
-                                mqttReconnect();
-                            }
-                        }
-                    } else {
-                        SerialPrint("I", "MQTT", "OK");
-                        setLedStatus(LED_OFF);
-                    }
+                    SerialPrint("I", "MQTT", "OK");
+                    setLedStatus(LED_OFF);
                 } else {
                     SerialPrint("E", "MQTT", "lost connection");
-                    if (reconnectionCounter++ > 5) {
-                        if (activeBroker == MQTT_PRIMARY) {
-                            if (checkBrokerParams(MQTT_RESERVE)) {
-                                activeBroker = MQTT_RESERVE;
-                            }
-                        } else {
-                            activeBroker = MQTT_PRIMARY;
-                        }
-                        reconnectionCounter = 0;
-                    }
                     mqttConnect();
                 }
             } else {
@@ -117,33 +83,29 @@ void mqttSubscribe() {
     }
 }
 
-bool readBrokerParams(MqttBroker broker) {
-    if (!checkBrokerParams(broker)) {
-        return false;
-    }
-    mqttServer = jsonReadStr(configSetupJson, getParamName("Server", broker));
-    mqttPort = jsonReadInt(configSetupJson, getParamName("Port", broker));
-    mqttUser = jsonReadStr(configSetupJson, getParamName("User", broker));
-    mqttPass = jsonReadStr(configSetupJson, getParamName("Pass", broker));
-
-    return true;
+void readBrokerParams() {
+    mqttServer = jsonReadStr(configSetupJson, "mqttServer");
+    mqttPort = jsonReadInt(configSetupJson, "mqttPort");
+    mqttUser = jsonReadStr(configSetupJson, "mqttUser");
+    mqttPass = jsonReadStr(configSetupJson, "mqttPass");
+    mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
 }
 
 boolean mqttConnect() {
-    SerialPrint("I", "MQTT", String("use ") + (activeBroker == MQTT_PRIMARY ? "primary" : "reserve"));
-    if (!checkBrokerParams(activeBroker)) {
-        SerialPrint("E", "MQTT", "empty broker address");
-        return false;
+    bool res = false;
+    readBrokerParams();
+    if(mqttServer == "") {
+        SerialPrint("E", "MQTT", "mqttServer empty");
+        return res;
     }
-    readBrokerParams(activeBroker);
     SerialPrint("I", "MQTT", "start connection");
-    mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
+    
     mqttRootDevice = mqttPrefix + "/" + chipId;
     SerialPrint("I", "MQTT", "broker " + mqttServer + ":" + String(mqttPort, DEC));
     SerialPrint("I", "MQTT", "topic " + mqttRootDevice);
     setLedStatus(LED_FAST);
     mqtt.setServer(mqttServer.c_str(), mqttPort);
-    bool res = false;
+    
     if (!mqtt.connected()) {
         if (mqtt.connect(chipId.c_str(), mqttUser.c_str(), mqttPass.c_str())) {
             SerialPrint("I", "MQTT", "connected");
