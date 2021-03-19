@@ -43,6 +43,8 @@ extern boolean just_load;
 extern boolean telegramInitBeen;
 extern boolean savedFromWeb;
 
+
+
 // Json
 extern String configSetupJson;   //все настройки
 extern String configLiveJson;    //все данные с датчиков (связан с mqtt)
@@ -52,6 +54,7 @@ extern String telegramMsgJson;
 extern String getValue(String& key);
 
 // Mqtt
+extern String mqttRootDevice;
 extern String chipId;
 extern String prex;
 extern String all_widgets;

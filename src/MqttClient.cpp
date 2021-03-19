@@ -7,15 +7,6 @@
 #include "items/vLogging.h"
 #include "items/vSensorNode.h"
 
-String mqttPrefix;
-String mqttRootDevice;
-String mqttPass;
-String mqttServer;
-String mqttUser;
-uint16_t mqttPort{0};
-uint16_t reconnectionCounter{0};
-uint16_t fallbackCounter{0};
-
 void mqttInit() {
     myNotAsyncActions->add(
         do_MQTTPARAMSCHANGED, [&](void*) {
@@ -72,42 +63,33 @@ void mqttLoop() {
 
 void mqttSubscribe() {
     SerialPrint("I", "MQTT", "subscribe");
-    mqtt.subscribe(mqttPrefix.c_str());
+    mqtt.subscribe(jsonReadStr(configSetupJson, "mqttPrefix").c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/update").c_str());
 
     if (jsonReadBool(configSetupJson, "MqttIn")) {
-        mqtt.subscribe((mqttPrefix + "/+/+/event").c_str());
-        mqtt.subscribe((mqttPrefix + "/+/+/order").c_str());
-        mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
+        mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/+/+/event").c_str());
+        mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/+/+/order").c_str());
+        mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/+/+/info").c_str());
     }
-}
-
-void readBrokerParams() {
-    mqttServer = jsonReadStr(configSetupJson, "mqttServer");
-    mqttPort = jsonReadInt(configSetupJson, "mqttPort");
-    mqttUser = jsonReadStr(configSetupJson, "mqttUser");
-    mqttPass = jsonReadStr(configSetupJson, "mqttPass");
-    mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
 }
 
 boolean mqttConnect() {
     bool res = false;
-    readBrokerParams();
-    if(mqttServer == "") {
+    if (jsonReadStr(configSetupJson, "mqttServer") == "") {
         SerialPrint("E", "MQTT", "mqttServer empty");
         return res;
     }
     SerialPrint("I", "MQTT", "start connection");
-    
-    mqttRootDevice = mqttPrefix + "/" + chipId;
-    SerialPrint("I", "MQTT", "broker " + mqttServer + ":" + String(mqttPort, DEC));
+
+    mqttRootDevice = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + chipId;
+    SerialPrint("I", "MQTT", "broker " + jsonReadStr(configSetupJson, "mqttServer") + ":" + String(jsonReadInt(configSetupJson, "mqttPort"), DEC));
     SerialPrint("I", "MQTT", "topic " + mqttRootDevice);
     setLedStatus(LED_FAST);
-    mqtt.setServer(mqttServer.c_str(), mqttPort);
-    
+    mqtt.setServer(jsonReadStr(configSetupJson, "mqttServer").c_str(), jsonReadInt(configSetupJson, "mqttPort"));
+
     if (!mqtt.connected()) {
-        if (mqtt.connect(chipId.c_str(), mqttUser.c_str(), mqttPass.c_str())) {
+        if (mqtt.connect(chipId.c_str(), jsonReadStr(configSetupJson, "mqttUser").c_str(), jsonReadStr(configSetupJson, "mqttPass").c_str())) {
             SerialPrint("I", "MQTT", "connected");
             setLedStatus(LED_OFF);
             mqttSubscribe();
@@ -217,7 +199,7 @@ boolean publishChart(const String& topic, const String& data) {
 }
 
 boolean publishControl(String id, String topic, String state) {
-    String path = mqttPrefix + "/" + id + "/" + topic + "/control";
+    String path = jsonReadStr(configSetupJson, "mqttPrefix") + "/" + id + "/" + topic + "/control";
     return mqtt.publish(path.c_str(), state.c_str(), false);
 }
 

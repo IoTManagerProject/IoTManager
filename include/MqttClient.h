@@ -2,8 +2,7 @@
 
 #include <Arduino.h>
 
-extern String mqttPrefix;
-extern String mqttRootDevice;
+
 
 void mqttInit();
 boolean mqttConnect();

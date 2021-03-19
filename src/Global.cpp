@@ -20,6 +20,8 @@ boolean just_load = true;
 boolean telegramInitBeen = false;
 boolean savedFromWeb = false;
 
+
+
 // Json
 String configSetupJson = "{}";
 String configLiveJson = "{}";
@@ -32,6 +34,7 @@ String chipId = "";
 String prex = "";
 String all_widgets = "";
 String scenario = "";
+String mqttRootDevice = "";
 
 //orders and events
 String orderBuf = "";

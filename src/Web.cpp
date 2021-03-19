@@ -71,8 +71,8 @@ void web_init() {
             bool value = request->getParam(F("MqttIn"))->value().toInt();
             jsonWriteBool(configSetupJson, "MqttIn", value);
             saveConfig();
-            mqtt.subscribe((mqttPrefix + "/+/+/event").c_str());
-            mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
+            mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/+/+/event").c_str());
+            mqtt.subscribe((jsonReadStr(configSetupJson, "mqttPrefix") + "/+/+/info").c_str());
             request->send(200);
         }
 

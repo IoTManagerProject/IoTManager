@@ -116,6 +116,8 @@ class Scenario {
                     }
                 }
 
+                delete [] arr;
+
                 if (result) {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
