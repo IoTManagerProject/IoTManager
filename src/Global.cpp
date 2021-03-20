@@ -41,7 +41,7 @@ String mqttRootDevice = "";
 
 int mqttConnectAttempts = 0;
 bool changeBroker = false;
-int currentBroker = 0;
+int currentBroker = 1;
 
 //orders and events
 String orderBuf = "";

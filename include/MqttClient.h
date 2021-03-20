@@ -5,6 +5,7 @@
 
 
 void mqttInit();
+void selectBroker();
 void getMqttData1();
 void getMqttData2();
 bool isSecondBrokerSet();

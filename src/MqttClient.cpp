@@ -26,6 +26,7 @@ void mqttInit() {
                     setLedStatus(LED_OFF);
                 } else {
                     SerialPrint("E", "MQTT", "connection lost");
+
                     mqttConnect();
                 }
             } else {
@@ -63,6 +64,7 @@ void mqttLoop() {
 
 void mqttSubscribe() {
     SerialPrint("I", "MQTT", "subscribed");
+    SerialPrint("I", "MQTT", mqttRootDevice);
     mqtt.subscribe(mqttPrefix.c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/update").c_str());
@@ -74,6 +76,18 @@ void mqttSubscribe() {
     }
 }
 
+void selectBroker() {
+    if (changeBroker) {
+        if (currentBroker == 1) {
+            getMqttData2();
+        } else if (currentBroker == 2) {
+            getMqttData1();
+        }
+    } else {
+        getMqttData1();
+    }
+}
+
 void getMqttData1() {
     currentBroker = 1;
     mqttServer = jsonReadStr(configSetupJson, "mqttServer");
@@ -81,6 +95,7 @@ void getMqttData1() {
     mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix");
     mqttUser = jsonReadStr(configSetupJson, "mqttUser");
     mqttPass = jsonReadStr(configSetupJson, "mqttPass");
+    prex = mqttPrefix + "/" + chipId;
 }
 
 void getMqttData2() {
@@ -90,6 +105,7 @@ void getMqttData2() {
     mqttPrefix = jsonReadStr(configSetupJson, "mqttPrefix2");
     mqttUser = jsonReadStr(configSetupJson, "mqttUser2");
     mqttPass = jsonReadStr(configSetupJson, "mqttPass2");
+    prex = mqttPrefix + "/" + chipId;
 }
 
 bool isSecondBrokerSet() {
@@ -104,17 +120,7 @@ bool isSecondBrokerSet() {
 }
 
 boolean mqttConnect() {
-
-    if (changeBroker) {
-        if (currentBroker == 1) {
-            getMqttData2();
-        } else if (currentBroker == 2) {
-            getMqttData1();
-        }
-    } else {
-        getMqttData1();
-    }
-
+    selectBroker();
     bool res = false;
     if (mqttServer == "") {
         SerialPrint("E", "MQTT", "mqttServer empty");
@@ -132,6 +138,8 @@ boolean mqttConnect() {
     if (!mqtt.connected()) {
         if (mqtt.connect(chipId.c_str(), mqttUser.c_str(), mqttPass.c_str())) {
             SerialPrint("I", "MQTT", "connected");
+            if (currentBroker == 1) jsonWriteStr(configSetupJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к основному брокеру</p></font></div>"));
+            if (currentBroker == 2) jsonWriteStr(configSetupJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к резервному брокеру</p></font></div>"));
             setLedStatus(LED_OFF);
             mqttSubscribe();
             res = true;
@@ -139,7 +147,7 @@ boolean mqttConnect() {
             mqttConnectAttempts++;
             SerialPrint("E", "MQTT", "🡆 Attempt No: " + String(mqttConnectAttempts) + " could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
             setLedStatus(LED_FAST);
-
+            jsonWriteStr(configSetupJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #fa987a; padding: 10px;'>Не подключено брокеру</p></font></div>"));
             if (mqttConnectAttempts >= CHANGE_BROKER_AFTER) {
                 mqttConnectAttempts = 0;
                 if (isSecondBrokerSet()) {

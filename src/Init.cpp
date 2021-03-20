@@ -40,7 +40,7 @@ void loadConfig() {
     jsonWriteInt(configSetupJson, "firmware_version", FIRMWARE_VERSION);
     jsonWriteStr(configSetupJson, "firmware_name", FIRMWARE_NAME);
 
-    prex = mqttPrefix + "/" + chipId;
+    selectBroker();
 
     serverIP = jsonReadStr(configSetupJson, "serverip");
 
