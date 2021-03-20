@@ -82,6 +82,9 @@ void deviceInit() {
 void loadScenario() {
     if (jsonReadStr(configSetupJson, "scen") == "1") {
         scenario = readFile(String(DEVICE_SCENARIO_FILE), 2048);
+        scenario.replace("~\n","");
+        scenario.replace("~","");
+        //Serial.println(scenario);
     }
 }
 
