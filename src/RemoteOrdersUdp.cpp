@@ -75,7 +75,7 @@ void asyncUdpInit() {
     //},
     //nullptr, true);
 
-     SerialPrint("I", F("UDP"), "Udp Init");
+     SerialPrint("I", F("UDP"), F("Udp Init"));
 
 }
 

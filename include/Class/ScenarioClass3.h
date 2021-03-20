@@ -6,61 +6,61 @@
 
 class Scenario {
    public:
-    void loop() {
-        if (!jsonReadBool(configSetupJson, "scen")) {
-            return;
-        }
-        String allBlocks = scenario;
-        allBlocks.replace("\r\n", "\n");
-        allBlocks.replace("\r", "\n");
-        allBlocks += "\n";
-
-        String incommingEvent = selectToMarker(eventBuf, ",");
-        String incommingEventKey = selectToMarker(incommingEvent, " ");
-        String incommingEventValue = selectToMarkerLast(incommingEvent, " ");
-
-        while (allBlocks.length() > 1) {
-            String oneBlock = selectToMarker(allBlocks, "end\n");
-            String condition = selectToMarker(oneBlock, "\n");
-            if (condition.indexOf("&&") != -1) {  //если двойное условие
-                String condition1 = selectFromMarkerToMarker(condition, " && ", 0);
-                String condition2 = selectFromMarkerToMarker(condition, " && ", 1);
-
-                //если хотя бы одно условие совпало с этим событием то второе тянем из json!!!!!!!!!!!!!!!!!!!!!!!!!
-                if (isScenarioNeedToDo(condition1, incommingEventKey, incommingEventValue, 1)) {
-                    if (isScenarioNeedToDoJson(condition2)) {
-                        oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
-                        oneBlock.replace("end", "");
-                        SerialPrint("I", "Scenario", condition1 + " && " + condition2 + " \n" + oneBlock);
-                        spaceCmdExecute(oneBlock);
-                    }
-                } else if (isScenarioNeedToDo(condition2, incommingEventKey, incommingEventValue, 1)) {
-                    if (isScenarioNeedToDoJson(condition1)) {
-                        oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
-                        oneBlock.replace("end", "");
-                        SerialPrint("I", "Scenario", condition1 + " && " + condition2 + " \n" + oneBlock);
-                        spaceCmdExecute(oneBlock);
-                    }
-                }
-            } else if (condition.indexOf("+-") != -1) {  //если гистерезис
-                if (isScenarioNeedToDo(condition, incommingEventKey, incommingEventValue, 2)) {
-                    oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
-                    oneBlock.replace("end", "");
-                    SerialPrint("I", "Scenario", condition + " \n" + oneBlock);
-                    spaceCmdExecute(oneBlock);
-                }
-            } else {  //остальные случаи
-                if (isScenarioNeedToDo(condition, incommingEventKey, incommingEventValue, 1)) {
-                    oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
-                    oneBlock.replace("end", "");
-                    SerialPrint("I", "Scenario", condition + " \n" + oneBlock);
-                    spaceCmdExecute(oneBlock);
-                }
-            }
-            allBlocks = deleteBeforeDelimiter(allBlocks, "end\n");
-            eventBuf = deleteBeforeDelimiter(eventBuf, ",");
-        }
-    }
+    //void loop() {
+    //    if (!jsonReadBool(configSetupJson, "scen")) {
+    //        return;
+    //    }
+    //    String allBlocks = scenario;
+    //    allBlocks.replace("\r\n", "\n");
+    //    allBlocks.replace("\r", "\n");
+    //    allBlocks += "\n";
+//
+    //    String incommingEvent = selectToMarker(eventBuf, ",");
+    //    String incommingEventKey = selectToMarker(incommingEvent, " ");
+    //    String incommingEventValue = selectToMarkerLast(incommingEvent, " ");
+//
+    //    while (allBlocks.length() > 1) {
+    //        String oneBlock = selectToMarker(allBlocks, "end\n");
+    //        String condition = selectToMarker(oneBlock, "\n");
+    //        if (condition.indexOf("&&") != -1) {  //если двойное условие
+    //            String condition1 = selectFromMarkerToMarker(condition, " && ", 0);
+    //            String condition2 = selectFromMarkerToMarker(condition, " && ", 1);
+//
+    //            //если хотя бы одно условие совпало с этим событием то второе тянем из json!!!!!!!!!!!!!!!!!!!!!!!!!
+    //            if (isScenarioNeedToDo(condition1, incommingEventKey, incommingEventValue, 1)) {
+    //                if (isScenarioNeedToDoJson(condition2)) {
+    //                    oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
+    //                    oneBlock.replace("end", "");
+    //                    SerialPrint("I", "Scenario", condition1 + " && " + condition2 + " \n" + oneBlock);
+    //                    spaceCmdExecute(oneBlock);
+    //                }
+    //            } else if (isScenarioNeedToDo(condition2, incommingEventKey, incommingEventValue, 1)) {
+    //                if (isScenarioNeedToDoJson(condition1)) {
+    //                    oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
+    //                    oneBlock.replace("end", "");
+    //                    SerialPrint("I", "Scenario", condition1 + " && " + condition2 + " \n" + oneBlock);
+    //                    spaceCmdExecute(oneBlock);
+    //                }
+    //            }
+    //        } else if (condition.indexOf("+-") != -1) {  //если гистерезис
+    //            if (isScenarioNeedToDo(condition, incommingEventKey, incommingEventValue, 2)) {
+    //                oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
+    //                oneBlock.replace("end", "");
+    //                SerialPrint("I", "Scenario", condition + " \n" + oneBlock);
+    //                spaceCmdExecute(oneBlock);
+    //            }
+    //        } else {  //остальные случаи
+    //            if (isScenarioNeedToDo(condition, incommingEventKey, incommingEventValue, 1)) {
+    //                oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
+    //                oneBlock.replace("end", "");
+    //                SerialPrint("I", "Scenario", condition + " \n" + oneBlock);
+    //                spaceCmdExecute(oneBlock);
+    //            }
+    //        }
+    //        allBlocks = deleteBeforeDelimiter(allBlocks, "end\n");
+    //        eventBuf = deleteBeforeDelimiter(eventBuf, ",");
+    //    }
+    //}
 
     void loop2() {
         if (!jsonReadBool(configSetupJson, "scen")) {

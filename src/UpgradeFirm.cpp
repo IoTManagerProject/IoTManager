@@ -25,7 +25,7 @@ void upgradeInit() {
     if (isNetworkActive()) {
         getLastVersion();
         if (lastVersion > 0) {
-            SerialPrint("I", "Update", "available version: " + String(lastVersion));
+            SerialPrint("I", F("Update"), "available version: " + String(lastVersion));
             if (lastVersion > FIRMWARE_VERSION) {
                 jsonWriteStr(configSetupJson, "warning2", F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Вышла новая версия прошивки, нажмите <b>обновить прошивку</b></p></font></div>"));
             }
@@ -117,7 +117,7 @@ bool upgradeFS() {
     HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp32ms/littlefs/spiffs.bin"));
 #endif
     if (retFS == HTTP_UPDATE_OK) {  //если FS обновилась успешно
-        SerialPrint("I", "Update", "FS upgrade done!");
+        SerialPrint("I", F("Update"), F("FS upgrade done!"));
         ret = true;
     }
     return ret;
@@ -128,7 +128,7 @@ bool upgradeBuild() {
 #ifndef esp8266_1mb
     WiFiClient wifiClient;
     bool ret = false;
-    Serial.println("Start upgrade BUILD, please wait...");
+    Serial.println(F("Start upgrade BUILD, please wait..."));
 
 #ifdef esp8266_4mb
     ESPhttpUpdate.rebootOnUpdate(false);
@@ -148,7 +148,7 @@ bool upgradeBuild() {
 #endif
 
     if (retBuild == HTTP_UPDATE_OK) {  //если BUILD обновился успешно
-        SerialPrint("I", "Update", "BUILD upgrade done!");
+        SerialPrint("I", F("Update"), F("BUILD upgrade done!"));
         ret = true;
     }
     return ret;
@@ -156,7 +156,7 @@ bool upgradeBuild() {
 }
 
 void restartEsp() {
-    Serial.println("Restart ESP....");
+    Serial.println(F("Restart ESP...."));
     delay(1000);
     ESP.restart();
 }

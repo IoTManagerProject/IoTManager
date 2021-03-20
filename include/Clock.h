@@ -81,7 +81,7 @@ class Clock {
         if (_hasSynced) {
             SerialPrint("I", "NTP", "synced " + getDateDotFormated() + " " + getTime());
         } else {
-            SerialPrint("E", "NTP", "failed to obtain time");
+            SerialPrint("E", "NTP", F("failed to obtain time"));
         }
     }
 

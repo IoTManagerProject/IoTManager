@@ -29,7 +29,7 @@ void loopCmdAdd(const String& cmdStr) {
             if (jsonReadBool(configSetupJson, "uartEvents")) {
                 if (myUART) {
                     myUART->print(cmdStr);
-                    SerialPrint("I", "<=UART", cmdStr);
+                    SerialPrint("I", F("<=UART"), cmdStr);
                 }
             }
         }
@@ -156,7 +156,7 @@ void spaceCmdExecute(String& cmdStr) {
 void loopCmdExecute() {
     if (orderBuf.length()) {
         String tmp = selectToMarker(orderBuf, ",");  //выделяем первую команду rel 5 1,
-        SerialPrint("I", "CMD", "do: " + tmp);
+        SerialPrint("I", F("CMD"), "do: " + tmp);
         sCmd.readStr(tmp);                                //выполняем
         orderBuf = deleteBeforeDelimiter(orderBuf, ",");  //осекаем
     }
