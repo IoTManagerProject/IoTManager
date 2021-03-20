@@ -54,11 +54,21 @@ extern String telegramMsgJson;
 extern String getValue(String& key);
 
 // Mqtt
+extern String mqttServer;
+extern int mqttPort;
+extern String mqttPrefix;
+extern String mqttUser;
+extern String mqttPass;
+
 extern String mqttRootDevice;
 extern String chipId;
 extern String prex;
 extern String all_widgets;
 extern String scenario;
+
+extern int mqttConnectAttempts;
+extern bool changeBroker;
+extern int currentBroker;
 
 //orders and events
 extern String orderBuf;
