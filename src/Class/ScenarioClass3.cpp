@@ -11,6 +11,8 @@ void eventGen2(String eventName, String eventValue) {
     String event = eventName + " " + eventValue + ",";
     eventBuf += event;
 
+    SerialPrint("I", "Event:", eventName + " " + eventValue);
+
     if (jsonReadBool(configSetupJson, "MqttOut")) {
         if (eventName != "timenow") {
             publishEvent(eventName, eventValue);

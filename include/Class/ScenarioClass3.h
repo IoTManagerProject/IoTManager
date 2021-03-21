@@ -71,11 +71,13 @@ class Scenario {
                 if (result) {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
-                    SerialPrint("I", "Scenario", "multiconditions action \n" + oneBlock);
+
+                    SerialPrint("I", "Scenario", "Incomming Event: " + incommingEvent);
+                    SerialPrint("I", "Scenario", "\nmulticonditions action \n" + oneBlock);
                     spaceCmdExecute(oneBlock);
                 }
-            
-            //логическое или
+
+                //логическое или
             } else if (condition.indexOf("||") != -1) {
                 condition = condition += " || ";
 
@@ -123,7 +125,9 @@ class Scenario {
                 if (result) {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
-                    SerialPrint("I", "Scenario", "multiconditions action \n" + oneBlock);
+
+                    SerialPrint("I", "Scenario", "Incomming Event: " + incommingEvent);
+                    SerialPrint("I", "Scenario", "\nmulticonditions action \n" + oneBlock);
                     spaceCmdExecute(oneBlock);
                 }
 
@@ -132,7 +136,9 @@ class Scenario {
                 if (isScenarioNeedToDo(condition, incommingEventKey, incommingEventValue, 2)) {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
-                    SerialPrint("I", "Scenario", condition + " \n" + oneBlock);
+
+                    SerialPrint("I", "Scenario", "Incomming Event: " + incommingEvent);
+                    SerialPrint("I", "Scenario", "Condition: " + condition + "\n" + oneBlock);
                     spaceCmdExecute(oneBlock);
                 }
 
@@ -141,13 +147,15 @@ class Scenario {
                 if (isScenarioNeedToDo(condition, incommingEventKey, incommingEventValue, 1)) {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
-                    SerialPrint("I", "Scenario", condition + " \n" + oneBlock);
+
+                    SerialPrint("I", "Scenario", "Incomming Event: " + incommingEvent);
+                    SerialPrint("I", "Scenario", "Condition: " + condition + "\n" + oneBlock);
                     spaceCmdExecute(oneBlock);
                 }
             }
             allBlocks = deleteBeforeDelimiter(allBlocks, "end\n");
-            eventBuf = deleteBeforeDelimiter(eventBuf, ",");
         }
+        eventBuf = deleteBeforeDelimiter(eventBuf, ",");
     }
 
    private:
