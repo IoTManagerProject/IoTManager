@@ -56,11 +56,27 @@ void inputExecute() {
     String key = sCmd.order();
     String value = sCmd.next();
 
-    if (!isDigitStr(value)) {            //если значение - текст
-        if (value.indexOf(":") == -1) {  //если этот текст не время
-            String valueJson = getValue(value);
-            if (valueJson != "no value") {  //если это ключ переменной
-                value = valueJson;
+    if (!isDigitStr(value)) {                 //если значение - текст
+        if (value.indexOf(":") == -1) {       //если этот текст не время
+            if (value.indexOf("++") != -1) {  //если тест - инкримент
+                String prevValue = getValue(key);
+                if (prevValue != "no value") {
+                    int prevValueInt = prevValue.toInt();
+                    prevValueInt++;
+                    value = String(prevValueInt);
+                }
+            } else if (value.indexOf("--") != -1) {  //если тест - дикремент
+                String prevValue = getValue(key);
+                if (prevValue != "no value") {
+                    int prevValueInt = prevValue.toInt();
+                    prevValueInt--;
+                    value = String(prevValueInt);
+                }
+            } else {  //остальные случаи любого текста
+                String valueJson = getValue(value);
+                if (valueJson != "no value") {  //если это ключ переменной
+                    value = valueJson;
+                }
             }
         }
     }
