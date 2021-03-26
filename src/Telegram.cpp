@@ -13,7 +13,9 @@ void telegramInit() {
             myBot = new CTBot();
         }
         myBot->setTelegramToken(token);
+        SerialPrint("I", F("Telegram"), F("Telegram Token"));
         myBot->enableUTF8Encoding(true);
+        SerialPrint("I", F("Telegram"), F("UTF8 Encoding"));
         if (myBot->testConnection()) {
             SerialPrint("I", F("Telegram"), F("Connected"));
         } else {
