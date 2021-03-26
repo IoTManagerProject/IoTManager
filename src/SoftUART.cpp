@@ -1,8 +1,8 @@
 #include "Consts.h"
 #ifdef EnableUart
-#include "SoftUART.h"
-#include "Global.h"
 #include "BufferExecute.h"
+#include "Global.h"
+#include "SoftUART.h"
 
 #ifdef ESP8266
 SoftwareSerial* myUART = nullptr;
@@ -18,9 +18,13 @@ void uartInit() {
 #ifdef ESP8266
         myUART = new SoftwareSerial(jsonReadInt(configSetupJson, "uartTX"), jsonReadInt(configSetupJson, "uartRX"));
         myUART->begin(jsonReadInt(configSetupJson, "uartS"));
-#else
+#endif        
+#ifdef ESP32
         myUART = new HardwareSerial(2);
-        myUART->begin(4, 5);
+        long speed = jsonReadInt(configSetupJson, "uartS");       
+        int rxPin = jsonReadInt(configSetupJson, "uartRX");
+        int txPin = jsonReadInt(configSetupJson, "uartTX");
+        myUART->begin(speed, SERIAL_8N1, rxPin, txPin);
 #endif
     }
     SerialPrint("I", F("UART"), F("UART Init"));
@@ -38,7 +42,7 @@ void uartHandle() {
             incStr += inc;
             if (inc == '\n') {
                 parse(incStr);
-                incStr = "";               
+                incStr = "";
             }
         }
     }
