@@ -14,12 +14,9 @@ void telegramInit() {
         }
 #ifdef ESP32
         myBot->useDNS(true);
-        SerialPrint("I", F("Telegram"), F("use DNS"));
 #endif
         myBot->setTelegramToken(token);
-        SerialPrint("I", F("Telegram"), F("Telegram Token"));
         myBot->enableUTF8Encoding(true);
-        SerialPrint("I", F("Telegram"), F("UTF8 Encoding"));
         if (myBot->testConnection()) {
             SerialPrint("I", F("Telegram"), F("Connected"));
         } else {

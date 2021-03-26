@@ -26,7 +26,6 @@ void mqttInit() {
                     setLedStatus(LED_OFF);
                 } else {
                     SerialPrint("E", F("MQTT"), F("Connection lost"));
-
                     mqttConnect();
                 }
             } else {
@@ -78,13 +77,18 @@ void mqttSubscribe() {
 
 void selectBroker() {
     if (changeBroker) {
+        changeBroker = false;
         if (currentBroker == 1) {
             getMqttData2();
         } else if (currentBroker == 2) {
             getMqttData1();
         }
     } else {
-        getMqttData1();
+        if (currentBroker == 1) {
+            getMqttData1();
+        } else if (currentBroker == 2) {
+            getMqttData2();
+        }
     }
 }
 
@@ -137,7 +141,7 @@ boolean mqttConnect() {
 
     if (!mqtt.connected()) {
         if (mqtt.connect(chipId.c_str(), mqttUser.c_str(), mqttPass.c_str())) {
-            SerialPrint("I", F("MQTT"), F("connected"));
+            SerialPrint("I", F("MQTT"), F("✔ connected"));
             if (currentBroker == 1) jsonWriteStr(configSetupJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к основному брокеру</p></font></div>"));
             if (currentBroker == 2) jsonWriteStr(configSetupJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к резервному брокеру</p></font></div>"));
             setLedStatus(LED_OFF);
@@ -152,7 +156,7 @@ boolean mqttConnect() {
                 mqttConnectAttempts = 0;
                 if (isSecondBrokerSet()) {
                     changeBroker = true;
-                    SerialPrint("E", F("MQTT"), "Broker fully missed (" + String(CHANGE_BROKER_AFTER) + " attempts passed), try connect to another one");
+                    SerialPrint("E", F("MQTT"), "✖ Broker fully missed (" + String(CHANGE_BROKER_AFTER) + " attempts passed), try connect to another one");
                 } else {
                     SerialPrint("E", F("MQTT"), F("Secound broker not seted"));
                 }

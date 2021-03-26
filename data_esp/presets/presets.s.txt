@@ -78,7 +78,7 @@ start = 0
 cnt71 0
 cnt72 0
 end*
-sens8 = 1
+sens8 = 1 && on8b = 1
 txt81 обнаружено
 txt82 %date%
 telegram often Обнаружено#движение

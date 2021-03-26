@@ -44,7 +44,8 @@
 0;output-value;txt81;anydataAlarm;Сигнализация;Движение:;1
 0;output-value;txt82;anydataTime;Сигнализация;Время:;2
 0;button-in;sens8;na;na;na;3;pin[0];db[20]
-0;button-out;rst8;toggleBtn;Сигнализация;Сбросить;4*
+0;button-out;rst8;toggleBtn;Сигнализация;Сбросить;4
+0;button-out;on8;toggleBtn;Сигнализация;Включить;5*
 0;button-in;sens9;na;na;na;1;pin[0];db[20]
 0;button-out;btn9;toggleBtn;Освещение;Освещение;2;pin[13]
 0;count-down;cnt9;anydata;Освещение;Обратный#отчет;3
