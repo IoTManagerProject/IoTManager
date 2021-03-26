@@ -1,6 +1,7 @@
 #include "FileSystem.h"
 
 #include "Global.h"
+
 #ifdef ESP8266
 bool getInfo(FSInfo& info) {
     return FileFS.info(info);
@@ -12,8 +13,8 @@ void getFSInfo() {
     if (getInfo(buf)) {
         //SerialPrint("I", F("FS"), F("Get FS info completed"));
 
-        size_t totalBytes = buf.totalBytes;      // всего
-        size_t usedBytes = buf.usedBytes;        // использовано
+        size_t totalBytes = buf.totalBytes;  // всего
+        size_t usedBytes = buf.usedBytes;    // использовано
         //size_t maxOpenFiles = buf.maxOpenFiles;  // лимит на открые файлы
         //size_t blockSize = buf.blockSize;
         //size_t pageSize = buf.pageSize;
@@ -35,5 +36,15 @@ void getFSInfo() {
     } else {
         SerialPrint("E", F("FS"), F("FS info error"));
     }
+}
+#endif
+
+#ifdef ESP32
+void getFSInfo() {
+    size_t totalBytes = FileFS.totalBytes();  // всего
+    size_t usedBytes = FileFS.usedBytes();    // использовано
+    size_t freeBytes = totalBytes - usedBytes;
+    float freePer = ((float)freeBytes / totalBytes) * 100;
+    jsonWriteStr(configSetupJson, F("freeBytes"), String(freePer) + "% (" + prettyBytes(freeBytes) + ")");
 }
 #endif

@@ -76,9 +76,9 @@ void setup() {
 #ifdef SSDP_ENABLED
     SsdpInit();
 #endif
-#ifdef ESP8266
+
     getFSInfo();
-#endif
+
     //testsPerform();
 
     just_load = false;

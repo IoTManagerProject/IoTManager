@@ -141,9 +141,9 @@ void wifiSignalInit() {
     ts.add(
         SYGNAL, 1000 * 60, [&](void*) {
             SerialPrint("I", "System", printMemoryStatus());
-#ifdef ESP8266
+
             getFSInfo();
-#endif
+
             switch (RSSIquality()) {
                 case 0:
                     jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>не подключено к роутеру</font>"));
