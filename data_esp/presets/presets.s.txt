@@ -55,6 +55,11 @@ btn54 0
 pwm51 800
 pwm52 200
 txt5 выключено
+end
+pwm51 > 900 && pwm52 > 900
+btn52 0
+btn53 0
+btn54 0
 end*
 btn6 = 1
 cnt6 sec6

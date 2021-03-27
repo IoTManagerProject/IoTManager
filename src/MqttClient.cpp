@@ -140,7 +140,19 @@ boolean mqttConnect() {
     mqtt.setServer(mqttServer.c_str(), mqttPort);
 
     if (!mqtt.connected()) {
-        if (mqtt.connect(chipId.c_str(), mqttUser.c_str(), mqttPass.c_str())) {
+        bool connected = false;
+        if (mqttUser != "" && mqttPass != "") {
+            connected = mqtt.connect(chipId.c_str(), mqttUser.c_str(), mqttPass.c_str());
+            SerialPrint("I", F("MQTT"), F("Go to connection with login and password"));
+        } else if (mqttUser == "" && mqttPass == "") {
+            connected = mqtt.connect(chipId.c_str());
+            SerialPrint("I", F("MQTT"), F("Go to connection without login and password"));
+        } else {
+            SerialPrint("E", F("MQTT"), F("✖ Login or password missing"));
+            return res;
+        }
+
+        if (connected) {
             SerialPrint("I", F("MQTT"), F("✔ connected"));
             if (currentBroker == 1) jsonWriteStr(configSetupJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к основному брокеру</p></font></div>"));
             if (currentBroker == 2) jsonWriteStr(configSetupJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к резервному брокеру</p></font></div>"));

@@ -11,15 +11,13 @@ class Scenario {
             return;
         }
         String allBlocks = scenario;
-        allBlocks.replace("\r\n", "\n");
-        allBlocks.replace("\r", "\n");
         allBlocks += "\n";
 
         String incommingEvent = selectToMarker(eventBuf, ",");
         String incommingEventKey = selectToMarker(incommingEvent, " ");
         String incommingEventValue = selectToMarkerLast(incommingEvent, " ");
 
-        while (allBlocks.length() > 1) {
+        while (allBlocks.length()) {
             String oneBlock = selectToMarker(allBlocks, "end\n");
             String condition = selectToMarker(oneBlock, "\n");
 
@@ -72,8 +70,7 @@ class Scenario {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
 
-                    SerialPrint("I", "Scenario", "Incomming Event: " + incommingEvent);
-                    SerialPrint("I", "Scenario", "\nmulticonditions action \n" + oneBlock);
+                    SerialPrint("I", "Scenario", "Multiconditions action");
                     spaceCmdExecute(oneBlock);
                 }
 
@@ -126,8 +123,7 @@ class Scenario {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
 
-                    SerialPrint("I", "Scenario", "Incomming Event: " + incommingEvent);
-                    SerialPrint("I", "Scenario", "\nmulticonditions action \n" + oneBlock);
+                    SerialPrint("I", "Scenario", "Multiconditions action");
                     spaceCmdExecute(oneBlock);
                 }
 
@@ -137,8 +133,7 @@ class Scenario {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
 
-                    SerialPrint("I", "Scenario", "Incomming Event: " + incommingEvent);
-                    SerialPrint("I", "Scenario", "Condition: " + condition + "\n" + oneBlock);
+                    SerialPrint("I", "Scenario", "Condition: " + condition);
                     spaceCmdExecute(oneBlock);
                 }
 
@@ -148,8 +143,7 @@ class Scenario {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
 
-                    SerialPrint("I", "Scenario", "Incomming Event: " + incommingEvent);
-                    SerialPrint("I", "Scenario", "Condition: " + condition + "\n" + oneBlock);
+                    SerialPrint("I", "Scenario", "Condition: " + condition);
                     spaceCmdExecute(oneBlock);
                 }
             }

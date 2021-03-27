@@ -82,9 +82,17 @@ void deviceInit() {
 void loadScenario() {
     if (jsonReadStr(configSetupJson, "scen") == "1") {
         scenario = readFile(String(DEVICE_SCENARIO_FILE), 10240);
-        scenario.replace("~\n","");
-        scenario.replace("~","");
-        //Serial.println(scenario);
+        scenario.replace("\r\n", "\n");
+        scenario.replace("\r", "\n");
+        scenario.replace("~\n", "");
+        scenario.replace("~", "");
+        scenario += "\n";
+        if (scenario.startsWith("setup\n")) {
+            String setup = selectToMarker(scenario, "end\n");
+            setup.replace("setup\n", "");
+            spaceCmdExecute(setup);
+            scenario = deleteBeforeDelimiter(scenario, "end\n");
+        }
     }
 }
 
