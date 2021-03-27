@@ -27,8 +27,10 @@ void CountDownClass::loop() {
     difference = millis() - prevMillis;
     if (difference > 1000 && _countDownPeriod > 0) {
         prevMillis = millis();
-        Serial.println(_key + " " + String(sec));
-        publishStatus(_key, String(sec));
+        String time = String(prettyMillis(sec * 1000));
+        jsonWriteStr(configLiveJson, _key, time);
+        Serial.println(_key + " " + time);
+        publishStatus(_key, time);
         sec--;
         if (sec < 0) {
             _countDownPeriod = 0;
