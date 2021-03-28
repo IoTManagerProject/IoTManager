@@ -16,14 +16,15 @@
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
+#include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
-#include "items/vSensorNode.h"
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
         orderBuf += cmdStr;
+        SerialPrint("I", F("Order add"), cmdStr);
 #ifdef EnableUart
         if (jsonReadBool(configSetupJson, "uart")) {
             if (jsonReadBool(configSetupJson, "uartEvents")) {
@@ -34,6 +35,18 @@ void loopCmdAdd(const String& cmdStr) {
             }
         }
 #endif
+    }
+}
+
+void loopCmdExecute() {
+    if (orderBuf.length()) {
+        String tmp = selectToMarker(orderBuf, ",");  //выделяем первую команду rel 5 1,
+        sCmd.readStr(tmp);                           //выполняем
+        if (tmp != "") {
+            sCmd.readStr(tmp); 
+            SerialPrint("I", F("Order done L"), tmp);
+        }
+        orderBuf = deleteBeforeDelimiter(orderBuf, ",");  //осекаем
     }
 }
 
@@ -76,7 +89,7 @@ void csvCmdExecute(String& cmdStr) {
 #endif
             } else if (order == F("output-value")) {
 #ifdef EnableOutput
-                sCmd.addCommand(order.c_str(), outputValue);             
+                sCmd.addCommand(order.c_str(), outputValue);
 #endif
             } else if (order == F("analog-adc")) {
 #ifdef EnableSensorAnalog
@@ -148,18 +161,22 @@ void spaceCmdExecute(String& cmdStr) {
     cmdStr.replace("\r", "\n");
     while (cmdStr.length()) {
         String buf = selectToMarker(cmdStr, "\n");
-        sCmd.readStr(buf);
+        if (buf != "") {
+            sCmd.readStr(buf);
+            SerialPrint("I", F("Order done W"), buf);
+        }
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
     }
 }
 
-void loopCmdExecute() {
-    if (orderBuf.length()) {
-        String tmp = selectToMarker(orderBuf, ",");  //выделяем первую команду rel 5 1,
-        SerialPrint("I", F("CMD"), "do: " + tmp);
-        sCmd.readStr(tmp);                                //выполняем
-        orderBuf = deleteBeforeDelimiter(orderBuf, ",");  //осекаем
-    }
+//альтернативный вариант распределяющий нагрузку более правильно
+void spaceCmdExecute2(String& cmdStr) {
+    cmdStr += "\r\n";
+    cmdStr.replace("\r\n", "\n");
+    cmdStr.replace("\r", "\n");
+    cmdStr.replace("\n", ",");
+    cmdStr.replace(",,", ",");
+    loopCmdAdd(cmdStr);
 }
 
 void addKey(String& key, String& keyNumberTable, int number) {

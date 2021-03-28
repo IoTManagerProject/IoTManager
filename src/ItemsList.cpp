@@ -54,7 +54,7 @@ void addItem2(int num) {
     }
 
     addFile(DEVICE_CONFIG_FILE, seachingLine);
-    Serial.println(seachingLine);
+    //Serial.println(seachingLine);
 }
 
 void addItemAuto(int num, String key, String widget, String descr) {
@@ -235,7 +235,7 @@ void delChoosingItems() {
     }
     removeFile(String(DEVICE_CONFIG_FILE));
     addFile(String(DEVICE_CONFIG_FILE), finalConf);
-    Serial.println(finalConf);
+    //Serial.println(finalConf);
     configFile.close();
 }
 

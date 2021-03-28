@@ -83,6 +83,7 @@ void setup() {
 
     just_load = false;
     initialized = true;
+    SerialPrint("I", F("System"), F("✔ Initialization completed"));
 }
 
 void loop() {

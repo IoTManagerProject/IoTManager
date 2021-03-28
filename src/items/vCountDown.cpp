@@ -31,12 +31,10 @@ void CountDownClass::loop() {
         eventGen2(_key, String(sec));
         String time = String(prettyMillis(sec * 1000));
         jsonWriteStr(configLiveJson, _key, time);
-        Serial.println(_key + " " + time);
         publishStatus(_key, time);
         sec--;
         if (sec < 0) {
             _countDownPeriod = 0;
-            Serial.println(_key + " completed");
         }
     }
 }
@@ -51,8 +49,8 @@ void countDown() {
     countDown_EnterCounter++;
     addKey(key, countDown_KeyList, countDown_EnterCounter);
 
-    Serial.println(countDown_EnterCounter);
-    Serial.println(countDown_KeyList);
+    //Serial.println(countDown_EnterCounter);
+    //Serial.println(countDown_KeyList);
 
     static bool firstTime = true;
     if (firstTime) myCountDown = new MyCountDownVector();

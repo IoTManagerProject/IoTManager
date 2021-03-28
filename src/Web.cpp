@@ -1,5 +1,5 @@
 #include "Web.h"
-
+#include "BufferExecute.h"
 #include "Class/NotAsync.h"
 #include "Global.h"
 #include "Init.h"
@@ -340,7 +340,7 @@ void web_init() {
         if (request->hasArg("order")) {
             String order = request->getParam("order")->value();
             order.replace("_", " ");
-            orderBuf += order + ",";
+            loopCmdAdd(order + ",");
             request->send(200, "text/html", order);
         }
 

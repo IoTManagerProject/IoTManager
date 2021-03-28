@@ -25,11 +25,11 @@ void mqttInit() {
                     SerialPrint("I", F("MQTT"), "OK, broker No " + String(currentBroker));
                     setLedStatus(LED_OFF);
                 } else {
-                    SerialPrint("E", F("MQTT"), F("Connection lost"));
+                    SerialPrint("E", F("MQTT"), F("✖ Connection lost"));
                     mqttConnect();
                 }
             } else {
-                SerialPrint("E", F("WIFI"), F("Lost WiFi connection"));
+                SerialPrint("E", F("WIFI"), F("✖ Lost WiFi connection"));
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
                 startAPMode();
             }
@@ -236,7 +236,8 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
         SerialPrint("I", F("=>MQTT"), "Received direct order " + key + " " + payloadStr);
         String order = key + " " + payloadStr + ",";
-        orderBuf += order;
+        loopCmdAdd(order);
+        SerialPrint("I", "Order add", order);
     }
 
     else if (topicStr.indexOf("info") != -1) {
