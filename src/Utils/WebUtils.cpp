@@ -1,22 +1,20 @@
 #include "Utils/WebUtils.h"
+
 #include "ESPAsyncWebServer.h"
 
 String getURL(const String& urls) {
     String res = "";
     HTTPClient http;
-    http.begin(urls);
+    http.begin(espClient, urls);
     int httpCode = http.GET();
     if (httpCode == HTTP_CODE_OK) {
         res = http.getString();
-    }
-    else {
+    } else {
         res = "error";
     }
     http.end();
     return res;
 }
-
-
 
 const String getMethodName(AsyncWebServerRequest* request) {
     String res = F("UNKNOWN");
@@ -69,11 +67,9 @@ const String getRequestInfo(AsyncWebServerRequest* request) {
             AsyncWebParameter* p = request->getParam(i);
             if (p->isFile()) {
                 res += "FILE";
-            }
-            else if (p->isPost()) {
+            } else if (p->isPost()) {
                 res += "POST";
-            }
-            else {
+            } else {
                 res += "GET";
             }
             res += ' ';
@@ -89,4 +85,3 @@ const String getRequestInfo(AsyncWebServerRequest* request) {
     }
     return res;
 }
-
