@@ -39,13 +39,13 @@ void getLastVersion() {
         String tmp;
 #ifdef esp8266_4mb
         tmp = getURL(serverIP + F("/projects/iotmanager/esp8266/esp8266ver/esp8266ver.txt"));
-#endif        
+#endif
 #ifdef esp32_4mb
         tmp = getURL(serverIP + F("/projects/iotmanager/esp32/esp32ver/esp32ver.txt"));
 #endif
 #ifdef esp8266_mysensors_4mb
         tmp = getURL(serverIP + F("/projects/iotmanager/esp8266ms/esp8266ver/esp8266ver.txt"));
-#endif        
+#endif
 #ifdef esp32_mysensors_4mb
         tmp = getURL(serverIP + F("/projects/iotmanager/esp32ms/esp32ver/esp32ver.txt"));
 #endif
@@ -96,13 +96,13 @@ void upgrade_firmware(int type) {
 }
 
 bool upgradeFS() {
+    bool ret = false;
 #ifndef esp8266_1mb
     WiFiClient wifiClient;
-    bool ret = false;
     Serial.printf("Start upgrade %s, please wait...", FS_NAME);
 #ifdef esp8266_4mb
     ESPhttpUpdate.rebootOnUpdate(false);
-    t_httpUpdate_return retFS = ESPhttpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp8266/littlefs/littlefs.bin"));
+    t_httpUpdate_return retFS = ESPhttpUpdate.updateFS(wifiClient, serverIP + F("/projects/iotmanager/esp8266/littlefs/littlefs.bin"));
 #endif
 #ifdef esp32_4mb
     httpUpdate.rebootOnUpdate(false);
@@ -120,16 +120,15 @@ bool upgradeFS() {
         SerialPrint("I", F("Update"), F("FS upgrade done!"));
         ret = true;
     }
-    return ret;
 #endif
+    return ret;
 }
 
 bool upgradeBuild() {
+    bool ret = false;
 #ifndef esp8266_1mb
     WiFiClient wifiClient;
-    bool ret = false;
     Serial.println(F("Start upgrade BUILD, please wait..."));
-
 #ifdef esp8266_4mb
     ESPhttpUpdate.rebootOnUpdate(false);
     t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, serverIP + F("/projects/iotmanager/esp8266/firmware/firmware.bin"));
@@ -151,8 +150,8 @@ bool upgradeBuild() {
         SerialPrint("I", F("Update"), F("BUILD upgrade done!"));
         ret = true;
     }
-    return ret;
 #endif
+    return ret;
 }
 
 void restartEsp() {
