@@ -27,7 +27,11 @@ void init() {
     server.serveStatic("/icon.jpeg", FileFS, "/icon.jpeg").setCacheControl("max-age=600");
     server.serveStatic("/edit", FileFS, "/edit").setCacheControl("max-age=600");
 
+#ifdef svelte
+    server.serveStatic("/", FileFS, "/").setDefaultFile("index.html").setAuthentication(login.c_str(), pass.c_str());
+#else
     server.serveStatic("/", FileFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
+#endif
 
     server.onNotFound([](AsyncWebServerRequest *request) {
         SerialPrint("[E]","WebServer","not found:\n" + getRequestInfo(request));
