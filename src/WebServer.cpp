@@ -74,6 +74,8 @@ void init() {
         request->send(200, "text/html", "OK");
     });
 
+    
+
     server.begin();
 
     initOta();
