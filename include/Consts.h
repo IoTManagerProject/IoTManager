@@ -2,7 +2,7 @@
 
 #define FIRMWARE_VERSION 301
 
-#define svelte
+//#define svelte
 
 #ifdef esp8266_4mb
 #define FIRMWARE_NAME "esp8266_4mb"
