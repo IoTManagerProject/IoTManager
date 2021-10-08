@@ -5,7 +5,7 @@ AsyncWebSocket ws;
 //AsyncEventSource events;
 #endif
 
-TickerScheduler ts(TIMES + 1);
+TickerScheduler ts(MYTEST + 1);
 WiFiClient espClient;
 PubSubClient mqtt(espClient);
 StringCommand sCmd;
