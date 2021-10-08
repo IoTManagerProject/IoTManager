@@ -46,7 +46,7 @@
 #define MYSENSORS
 #endif
 
-#define JSON_BUFFER_SIZE 1024
+#define JSON_BUFFER_SIZE 4096
 #define NUM_BUTTONS 6
 #define MQTT_RECONNECT_INTERVAL 20000
 #define CHANGE_BROKER_AFTER 5
@@ -104,7 +104,8 @@ enum TimerTask_t { WIFI_SCAN,
                    UPTIME,
                    UDP,
                    SYGNAL,
-                   TIMES };
+                   TIMES,
+                   MYTEST };
 
 enum NotAsyncActions {
     do_ZERO,

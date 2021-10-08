@@ -26,7 +26,7 @@
     "webpass": "admin",
     "MqttIn": "0",
     "MqttOut": "0",
-    "blink": "0",
+    "blink": "1",
     "oneWirePin": "2",
     "serverip": "http://206.189.49.244",
     "uart": "0",

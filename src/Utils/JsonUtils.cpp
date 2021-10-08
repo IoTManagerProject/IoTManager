@@ -64,47 +64,63 @@
 
 String jsonReadStr(String& json, String name) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    deserializeJson(doc, json);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) SerialPrint("E", F("jsonRead"), error.f_str());
     return doc[name].as<String>();
 }
 
 boolean jsonReadBool(String& json, String name) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    deserializeJson(doc, json);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) SerialPrint("E", F("jsonRead"), error.f_str());
     return doc[name].as<bool>();
 }
 
 int jsonReadInt(String& json, String name) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    deserializeJson(doc, json);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) SerialPrint("E", F("jsonRead"), error.f_str());
     return doc[name].as<int>();
 }
 
+//=================================================================================
 String jsonWriteStr(String& json, String name, String value) {
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    deserializeJson(doc, json);
+    DynamicJsonDocument doc(json.length());
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) SerialPrint("E", F("jsonWrite"), error.f_str());
     doc[name] = value;
+    json = "";
+    serializeJson(doc, json);
     return json;
 }
 
 String jsonWriteBool(String& json, String name, boolean value) {
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    deserializeJson(doc, json);
+    DynamicJsonDocument doc(json.length());
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) SerialPrint("E", F("jsonWrite"), error.f_str());
     doc[name] = value;
+    json = "";
+    serializeJson(doc, json);
     return json;
 }
 
 String jsonWriteInt(String& json, String name, int value) {
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    deserializeJson(doc, json);
+    DynamicJsonDocument doc(json.length());
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) SerialPrint("E", F("jsonWrite"), error.f_str());
     doc[name] = value;
+    json = "";
+    serializeJson(doc, json);
     return json;
 }
 
 String jsonWriteFloat(String& json, String name, float value) {
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    deserializeJson(doc, json);
+    DynamicJsonDocument doc(json.length());
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) SerialPrint("E", F("jsonWrite"), error.f_str());
     doc[name] = value;
+    json = "";
+    serializeJson(doc, json);
     return json;
 }
 

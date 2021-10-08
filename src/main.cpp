@@ -11,6 +11,7 @@
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
+#include "MySensorsDataParse.h"
 #include "RemoteOrdersUdp.h"
 #include "SoftUART.h"
 #include "Telegram.h"
@@ -18,7 +19,6 @@
 #include "Utils/StatUtils.h"
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
-#include "MySensorsDataParse.h"
 #include "items/ButtonInClass.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
@@ -29,10 +29,10 @@
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
+#include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
-#include "items/vSensorNode.h"
 
 void not_async_actions();
 
@@ -83,6 +83,16 @@ void setup() {
 
     just_load = false;
     initialized = true;
+
+    const int capacity = JSON_OBJECT_SIZE(35);
+    SerialPrint("I", F("Test"), String(capacity));
+
+    ts.add(
+        MYTEST, 10000, [&](void*) {
+            Serial.println(configSetupJson.length());
+        },
+        nullptr, true);
+
     SerialPrint("I", F("System"), F("✔ Initialization completed"));
 }
 
