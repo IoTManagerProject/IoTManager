@@ -7,7 +7,7 @@ void routerConnect() {
 
     setLedStatus(LED_SLOW);
     WiFi.mode(WIFI_STA);
-    byte tries = 20;
+    byte tries = 40;
 
     String _ssid = jsonReadStr(configSetupJson, "routerssid");
     String _password = jsonReadStr(configSetupJson, "routerpass");
@@ -22,6 +22,7 @@ void routerConnect() {
         WiFi.setOutputPower(20.5);
 #endif
         SerialPrint("I", "WIFI", "ssid: " + _ssid);
+        SerialPrint("I", "WIFI", "pass: " + _password);
     }
 
     while (--tries && WiFi.status() != WL_CONNECTED) {

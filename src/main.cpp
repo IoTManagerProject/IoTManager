@@ -90,6 +90,12 @@ void setup() {
     ts.add(
         MYTEST, 10000, [&](void*) {
             Serial.println(configSetupJson.length());
+            Serial.println(F("--------------------------------------"));
+            Serial.println(jsonReadStr(configSetupJson, "apssidx"));
+            Serial.println(jsonReadBool(configSetupJson, "telegonof"));
+            Serial.println(jsonReadInt(configSetupJson, "mqttPort"));
+            Serial.println(jsonReadInt(configSetupJson, "uartTX"));
+            Serial.println(F("--------------------------------------"));
         },
         nullptr, true);
 
