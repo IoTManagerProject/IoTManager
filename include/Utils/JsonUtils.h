@@ -8,6 +8,8 @@ int jsonReadInt(String& json, String name);
 
 boolean jsonReadBool(String& json, String name);
 
+bool jsonReadFromStr(String& json, String key, String& value);
+
 String jsonWriteStr(String& json, String name, String value);
 
 String jsonWriteInt(String& json, String name, int value);

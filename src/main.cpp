@@ -88,14 +88,16 @@ void setup() {
     SerialPrint("I", F("Test"), String(capacity));
 
     ts.add(
-        MYTEST, 10000, [&](void*) {
-            //Serial.println(configSetupJson.length());
-            //Serial.println(F("--------------------------------------"));
-            //Serial.println(jsonReadStr(configSetupJson, "apssidx"));
-            //Serial.println(jsonReadBool(configSetupJson, "telegonof"));
-            //Serial.println(jsonReadInt(configSetupJson, "mqttPort"));
-            //Serial.println(jsonReadInt(configSetupJson, "uartTX"));
-            //Serial.println(F("--------------------------------------"));
+        MYTEST, 5000, [&](void*) {
+            Serial.println(configSetupJson.length());
+            Serial.println(F("--------------------------------------"));
+
+            String value;
+            if (jsonReadFromStr(configSetupJson, "name", value)) {
+                Serial.println(value);
+            }
+
+            Serial.println(F("--------------------------------------"));
         },
         nullptr, true);
 
