@@ -15,10 +15,10 @@ bool jsonRead(String& json, String key, String& value);
 bool jsonRead(String& json, String key, bool& value);
 bool jsonRead(String& json, String key, int& value);
 
-bool jsonWrite(String& json, String name, String value);
-bool jsonWrite(String& json, String name, bool value);
-bool jsonWrite(String& json, String name, int value);
-bool jsonWrite(String& json, String name, float value);
+bool jsonWriteStr_(String& json, String name, String value);
+bool jsonWriteBool_(String& json, String name, bool value);
+bool jsonWriteInt_(String& json, String name, int value);
+bool jsonWriteFloat_(String& json, String name, float value);
 
 void saveConfig();
 void saveStore();

@@ -114,7 +114,7 @@ String jsonWriteFloat(String& json, String name, float value) {
 }
 
 //new==============================================================================
-bool jsonWrite(String& json, String name, String value) {
+bool jsonWriteStr_(String& json, String key, String value) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
@@ -122,13 +122,13 @@ bool jsonWrite(String& json, String name, String value) {
         SerialPrint("EE", F("jsonWrite"), error.f_str());
         ret = false;
     }
-    doc[name] = value;
+    doc[key] = value;
     json = "";
     serializeJson(doc, json);
     return ret;
 }
 
-bool jsonWrite(String& json, String name, bool value) {
+bool jsonWriteBool_(String& json, String key, bool value) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
@@ -136,13 +136,13 @@ bool jsonWrite(String& json, String name, bool value) {
         SerialPrint("EE", F("jsonWrite"), error.f_str());
         ret = false;
     }
-    doc[name] = value;
+    doc[key] = value;
     json = "";
     serializeJson(doc, json);
     return ret;
 }
 
-bool jsonWrite(String& json, String name, int value) {
+bool jsonWriteInt_(String& json, String key, int value) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
@@ -150,13 +150,13 @@ bool jsonWrite(String& json, String name, int value) {
         SerialPrint("EE", F("jsonWrite"), error.f_str());
         ret = false;
     }
-    doc[name] = value;
+    doc[key] = value;
     json = "";
     serializeJson(doc, json);
     return ret;
 }
 
-bool jsonWrite(String& json, String name, float value) {
+bool jsonWriteFloat_(String& json, String key, float value) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
@@ -164,7 +164,7 @@ bool jsonWrite(String& json, String name, float value) {
         SerialPrint("EE", F("jsonWrite"), error.f_str());
         ret = false;
     }
-    doc[name] = value;
+    doc[key] = value;
     json = "";
     serializeJson(doc, json);
     return ret;

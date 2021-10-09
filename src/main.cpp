@@ -92,7 +92,7 @@ void setup() {
             Serial.println(configSetupJson.length());
             Serial.println(F("--------------------------------------"));
 
-            if (jsonWrite(configSetupJson, "name", "test value")) {
+            if (jsonWriteStr_(configSetupJson, "name", "test value")) {
                 Serial.println("write sucsess");
             }
 
