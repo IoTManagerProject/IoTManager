@@ -92,9 +92,26 @@ void setup() {
             Serial.println(configSetupJson.length());
             Serial.println(F("--------------------------------------"));
 
-            String value;
-            if (jsonReadFromStr(configSetupJson, "name", value)) {
-                Serial.println(value);
+            if (jsonWrite(configSetupJson, "name", "test value")) {
+                Serial.println("write sucsess");
+            }
+
+            Serial.print("str test: ");
+            String valueStr;
+            if (jsonRead(configSetupJson, "name", valueStr)) {
+                Serial.println(valueStr);
+            }
+
+            Serial.print("int test: ");
+            int valueInt;
+            if (jsonRead(configSetupJson, "mqttPort", valueInt)) {
+                Serial.println(valueInt);
+            }
+
+            Serial.print("bool test: ");
+            bool valueBool;
+            if (jsonRead(configSetupJson, "telegonof", valueBool)) {
+                Serial.println(valueBool);
             }
 
             Serial.println(F("--------------------------------------"));

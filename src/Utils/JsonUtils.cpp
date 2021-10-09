@@ -28,7 +28,7 @@ int jsonReadInt(String& json, String name) {
 }
 
 //new==============================================================================
-bool jsonReadFromStr(String& json, String key, String& value) {
+bool jsonRead(String& json, String key, String& value) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
@@ -43,7 +43,7 @@ bool jsonReadFromStr(String& json, String key, String& value) {
     return ret;
 }
 
-bool jsonReadFromStr(String& json, String key, bool& value) {
+bool jsonRead(String& json, String key, bool& value) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
@@ -58,7 +58,7 @@ bool jsonReadFromStr(String& json, String key, bool& value) {
     return ret;
 }
 
-bool jsonReadFromStr(String& json, String key, int& value) {
+bool jsonRead(String& json, String key, int& value) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
@@ -72,7 +72,7 @@ bool jsonReadFromStr(String& json, String key, int& value) {
     value = doc[key].as<int>();
     return ret;
 }
-//=================================================================================
+//depricated========================================================================
 String jsonWriteStr(String& json, String name, String value) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
@@ -113,6 +113,62 @@ String jsonWriteFloat(String& json, String name, float value) {
     return json;
 }
 
+//new==============================================================================
+bool jsonWrite(String& json, String name, String value) {
+    bool ret = true;
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        SerialPrint("EE", F("jsonWrite"), error.f_str());
+        ret = false;
+    }
+    doc[name] = value;
+    json = "";
+    serializeJson(doc, json);
+    return ret;
+}
+
+bool jsonWrite(String& json, String name, bool value) {
+    bool ret = true;
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        SerialPrint("EE", F("jsonWrite"), error.f_str());
+        ret = false;
+    }
+    doc[name] = value;
+    json = "";
+    serializeJson(doc, json);
+    return ret;
+}
+
+bool jsonWrite(String& json, String name, int value) {
+    bool ret = true;
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        SerialPrint("EE", F("jsonWrite"), error.f_str());
+        ret = false;
+    }
+    doc[name] = value;
+    json = "";
+    serializeJson(doc, json);
+    return ret;
+}
+
+bool jsonWrite(String& json, String name, float value) {
+    bool ret = true;
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        SerialPrint("EE", F("jsonWrite"), error.f_str());
+        ret = false;
+    }
+    doc[name] = value;
+    json = "";
+    serializeJson(doc, json);
+    return ret;
+}
 //=================================================================================
 void saveConfig() {
     writeFile(String("config.json"), configSetupJson);
