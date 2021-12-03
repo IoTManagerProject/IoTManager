@@ -25,6 +25,7 @@
 #include "items/vLogging.h"
 #include "items/vSensorAnalog.h"
 #include "items/vSensorBme280.h"
+#include "items/vSensorSht20.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
@@ -170,6 +171,13 @@ void loop() {
     if (mySensorBme280 != nullptr) {
         for (unsigned int i = 0; i < mySensorBme280->size(); i++) {
             mySensorBme280->at(i).loop();
+        }
+    }
+#endif
+#ifdef EnableSensorSht20
+    if (mySensorSht20 != nullptr) {
+        for (unsigned int i = 0; i < mySensorSht20->size(); i++) {
+            mySensorSht20->at(i).loop();
         }
     }
 #endif

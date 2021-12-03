@@ -184,21 +184,22 @@ void FSEditor::getDirList(const String &path, String &output) {
 }
 #else
 void FSEditor::getDirList(const String &path, String &output) {
-    auto dir = _fs.open(path, FILE_READ);
+    File dir = _fs.open(path.c_str(), FILE_READ);
     dir.rewindDirectory();
-    while (dir.openNextFile()) {
-        String fname = dir.name();
-        if (!path.endsWith("/") && !fname.startsWith("/")) {
-            fname = "/" + fname;
-        }
-        fname = path + fname;
-        if (isExcluded(_fs, fname.c_str())) {
-            continue;
-        }
-        if (dir.isDirectory()) {
-            getDirList(fname, output);
-            continue;
-        }
+    File file;
+    while (file = dir.openNextFile()) {
+        String fname = file.name();
+        //if (!path.endsWith("/") && !fname.startsWith("/")) {
+        //    fname = "/" + fname;
+        //}
+        //fname = path + fname;
+        //if (isExcluded(_fs, fname.c_str())) {
+        //    continue;
+        //}
+        //if (dir.isDirectory()) {
+        //    getDirList(fname, output);
+        //    continue;
+        //}
         if (output != "[") output += ',';
         char buf[128];
         sprintf(buf, "{\"type\":\"file\",\"name\":\"%s\",\"size\":%d}", fname.c_str(), dir.size());

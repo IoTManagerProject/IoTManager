@@ -70,6 +70,7 @@
 #define EnablePwmOut
 #define EnableSensorAnalog
 #define EnableSensorBme280
+#define EnableSensorSht20
 #define EnableSensorBmp280
 #define EnableSensorCcs811
 #define EnableSensorDallas

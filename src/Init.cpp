@@ -13,6 +13,7 @@
 #include "items/vPwmOut.h"
 #include "items/vSensorAnalog.h"
 #include "items/vSensorBme280.h"
+#include "items/vSensorSht20.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
@@ -185,6 +186,11 @@ void clearVectors() {
 #ifdef EnableSensorBme280
     if (mySensorBme280 != nullptr) {
         mySensorBme280->clear();
+    }
+#endif
+#ifdef EnableSensorSht20
+    if (mySensorSht20 != nullptr) {
+        mySensorSht20->clear();
     }
 #endif
 #ifdef EnableSensorBmp280

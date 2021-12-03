@@ -12,6 +12,7 @@
 #include "items/vPwmOut.h"
 #include "items/vSensorAnalog.h"
 #include "items/vSensorBme280.h"
+#include "items/vSensorSht20.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
@@ -110,6 +111,10 @@ void csvCmdExecute(String& cmdStr) {
             } else if (order == F("bme280")) {
 #ifdef EnableSensorBme280
                 sCmd.addCommand(order.c_str(), bme280Sensor);
+#endif
+            } else if (order == F("sht20")) {
+#ifdef EnableSensorSht20
+                sCmd.addCommand(order.c_str(), sht20Sensor);
 #endif
             } else if (order == F("bmp280")) {
 #ifdef EnableSensorBmp280
