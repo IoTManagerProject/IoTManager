@@ -32,3 +32,5 @@
 0;logging;crtid;chart;Графики;История;order;val[any];int[60];cnt[100]*
 0;logging;crtid;chart3;Графики;История;order;val[any];int[23:30];cnt[100];st[0]*
 0;uptime;uptid;anydataTime;Системные;%name%#uptime;order;int[60]*
+0;sht20;tmpid;anydataTemp;Сенсоры;Температура;1;c[1]
+0;sht20;humid;anydataHum;Сенсоры;Влажность;2;c[1];int[50]*
