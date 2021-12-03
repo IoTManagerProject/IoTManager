@@ -20,7 +20,7 @@ class ButtonInClass : public LineParsing {
     void init() {
         if (_pin != "") {
             int number = numberEntering++;
-            buttons[number].attach(_pin.toInt());
+            buttons[number].attach(_pin.toInt(), INPUT);
             buttons[number].interval(_db.toInt());
             but[number] = true;
             jsonWriteStr(configOptionJson, "switch_num_" + String(number), _key);
