@@ -1,8 +1,6 @@
 #pragma once
 //===================Libraries===================================================================================================================================================
-#include "Consts.h"
 #include <Arduino.h>
-#include "CTBot.h"
 #include <ArduinoJson.h>
 #include <ArduinoOTA.h>
 #include <PubSubClient.h>
@@ -10,13 +8,15 @@
 #include <TickerScheduler.h>
 #include <Wire.h>
 #include <time.h>
+
+#include "CTBot.h"
 #include "Clock.h"
+#include "Consts.h"
 #include "ESP32.h"
 #include "ESP8266.h"
 #include "GyverFilters.h"
 #include "MqttClient.h"
 #include "Upgrade.h"
-
 #include "Utils/FileUtils.h"
 #include "Utils/JsonUtils.h"
 #include "Utils/SerialPrint.h"
@@ -26,9 +26,8 @@
 
 #ifdef WEBSOCKET_ENABLED
 extern AsyncWebSocket ws;
-//extern AsyncEventSource events;
+extern AsyncEventSource events;
 #endif
-
 
 extern TickerScheduler ts;
 extern WiFiClient espClient;
@@ -36,14 +35,10 @@ extern PubSubClient mqtt;
 extern StringCommand sCmd;
 extern AsyncWebServer server;
 
-
-
-//Global vars
+// Global vars
 extern boolean just_load;
 extern boolean telegramInitBeen;
 extern boolean savedFromWeb;
-
-
 
 // Json
 extern String configSetupJson;   //все настройки
@@ -70,14 +65,14 @@ extern int mqttConnectAttempts;
 extern bool changeBroker;
 extern int currentBroker;
 
-//orders and events
+// orders and events
 extern String orderBuf;
 extern String eventBuf;
 extern String mysensorBuf;
 extern String itemsFile;
 extern String itemsLine;
 
-//key lists and numbers
+// key lists and numbers
 //=========================================
 extern String impuls_KeyList;
 extern int impuls_EnterCounter;
@@ -101,11 +96,8 @@ extern String logging_KeyList;
 extern int logging_EnterCounter;
 //=========================================
 
-
-
 extern String itemName;
 extern String presetName;
-
 
 extern int scenario_line_status[40];
 extern int lastVersion;
@@ -122,11 +114,11 @@ extern void servo_();
 
 extern void setLedStatus(LedStatus_t);
 
-//Scenario
+// Scenario
 extern void eventGen2(String eventName, String eventValue);
 extern String add_set(String param_name);
 
-//Timers
+// Timers
 extern void Timer_countdown_init();
 extern void timerStart_();
 extern void addTimer(String number, String time);
@@ -146,9 +138,9 @@ extern void createChart(String widget_name, String page_name, String page_number
 extern void pushControl();
 
 // UDP
-//extern void udpInit();
-//extern void do_udp_data_parse();
-//extern void do_mqtt_send_settings_to_udp();
+// extern void udpInit();
+// extern void do_udp_data_parse();
+// extern void do_mqtt_send_settings_to_udp();
 
 extern void do_update();
 
@@ -159,4 +151,4 @@ extern void uptime_init();
 extern void web_init();
 
 // Upgrade
-extern String serverIP; 
+extern String serverIP;

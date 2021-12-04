@@ -79,13 +79,13 @@ void setup() {
 
     getFSInfo();
 
-    //testsPerform();
+    // testsPerform();
 
     just_load = false;
     initialized = true;
 
-    const int capacity = JSON_OBJECT_SIZE(35);
-    SerialPrint("I", F("Test"), String(capacity));
+    // const int capacity = JSON_OBJECT_SIZE(35);
+    // SerialPrint("I", F("Test"), String(capacity));
 
     ts.add(
         MYTEST, 5000, [&](void*) {

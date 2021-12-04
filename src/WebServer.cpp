@@ -1,11 +1,11 @@
-#include "HttpServer.h"
 #include "BufferExecute.h"
+#include "FSEditor.h"
+#include "HttpServer.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
-#include "FSEditor.h"
-
+AsyncWebSocket ws("/ws");
+AsyncEventSource events("/events");
 namespace HttpServer {
-
 
 /* Forward declaration */
 void initOta();
@@ -34,17 +34,17 @@ void init() {
 #endif
 
     server.onNotFound([](AsyncWebServerRequest *request) {
-        SerialPrint("[E]","WebServer","not found:\n" + getRequestInfo(request));
+        SerialPrint("[E]", "WebServer", "not found:\n" + getRequestInfo(request));
         request->send(404);
     });
 
     server.onFileUpload([](AsyncWebServerRequest *request, const String &filename, size_t index, uint8_t *data, size_t len, bool final) {
         // TODO
         if (!index) {
-            SerialPrint("I","WebServer","start upload " + filename);
+            SerialPrint("I", "WebServer", "start upload " + filename);
         }
         if (final) {
-            SerialPrint("I","WebServer","finish upload: " + prettyBytes(index + len));
+            SerialPrint("I", "WebServer", "finish upload: " + prettyBytes(index + len));
         }
     });
 
@@ -69,12 +69,10 @@ void init() {
 
     server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
         String cmdStr = request->getParam("command")->value();
-        SerialPrint("I","WebServer","do: " + cmdStr);
+        SerialPrint("I", "WebServer", "do: " + cmdStr);
         loopCmdAdd(cmdStr);
         request->send(200, "text/html", "OK");
     });
-
-    
 
     server.begin();
 
@@ -90,7 +88,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
     if (type == WS_EVT_CONNECT) {
         Serial.printf("ws[%s][%u] connect\n", server->url(), client->id());
         client->printf(json.c_str(), client->id());
-        //client->ping();
+        // client->ping();
     } else if (type == WS_EVT_DISCONNECT) {
         Serial.printf("ws[%s][%u] disconnect\n", server->url(), client->id());
     } else if (type == WS_EVT_ERROR) {
@@ -101,7 +99,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
         AwsFrameInfo *info = (AwsFrameInfo *)arg;
         String msg = "";
         if (info->final && info->index == 0 && info->len == len) {
-            //the whole message is in a single frame and we got all of it's data
+            // the whole message is in a single frame and we got all of it's data
             Serial.printf("ws[%s][%u] %s-message[%llu]: ", server->url(), client->id(), (info->opcode == WS_TEXT) ? "text" : "binary", info->len);
 
             if (info->opcode == WS_TEXT) {
@@ -122,7 +120,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
             else
                 client->binary("{}");
         } else {
-            //message is comprised of multiple frames or the frame is split into multiple packets
+            // message is comprised of multiple frames or the frame is split into multiple packets
             if (info->index == 0) {
                 if (info->num == 0)
                     Serial.printf("ws[%s][%u] %s-message start\n", server->url(), client->id(), (info->message_opcode == WS_TEXT) ? "text" : "binary");
