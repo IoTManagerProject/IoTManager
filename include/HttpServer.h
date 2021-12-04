@@ -4,6 +4,7 @@
 
 namespace HttpServer {
 
+void initWS();
 void init();
 
 }  // namespace HttpServer

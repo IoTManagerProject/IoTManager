@@ -9,6 +9,7 @@
 #include "Cmd.h"
 #include "FileSystem.h"
 #include "Global.h"
+#include "HttpServer.h"
 #include "Init.h"
 #include "ItemsList.h"
 #include "MySensorsDataParse.h"
@@ -66,6 +67,7 @@ void setup() {
     uptime_init();
     upgradeInit();
     HttpServer::init();
+    HttpServer::initWS();
     web_init();
     initSt();
     busInit();
@@ -89,32 +91,7 @@ void setup() {
 
     ts.add(
         MYTEST, 5000, [&](void*) {
-            Serial.println(configSetupJson.length());
-            Serial.println(F("--------------------------------------"));
-
-            if (jsonWriteStr_(configSetupJson, "name", "test value")) {
-                Serial.println("write sucsess");
-            }
-
-            Serial.print("str test: ");
-            String valueStr;
-            if (jsonRead(configSetupJson, "name", valueStr)) {
-                Serial.println(valueStr);
-            }
-
-            Serial.print("int test: ");
-            int valueInt;
-            if (jsonRead(configSetupJson, "mqttPort", valueInt)) {
-                Serial.println(valueInt);
-            }
-
-            Serial.print("bool test: ");
-            bool valueBool;
-            if (jsonRead(configSetupJson, "telegonof", valueBool)) {
-                Serial.println(valueBool);
-            }
-
-            Serial.println(F("--------------------------------------"));
+            // ws.textAll("test msg from esp");
         },
         nullptr, true);
 

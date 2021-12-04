@@ -2,7 +2,7 @@
 
 #ifdef WS_enable
 AsyncWebSocket ws;
-//AsyncEventSource events;
+AsyncEventSource events;
 #endif
 
 TickerScheduler ts(MYTEST + 1);
@@ -12,8 +12,8 @@ StringCommand sCmd;
 AsyncWebServer server(80);
 
 /*
-* Global vars
-*/
+ * Global vars
+ */
 
 boolean just_load = true;
 boolean telegramInitBeen = false;
@@ -43,14 +43,14 @@ int mqttConnectAttempts = 0;
 bool changeBroker = false;
 int currentBroker = 1;
 
-//orders and events
+// orders and events
 String orderBuf = "";
 String eventBuf = "";
 String mysensorBuf = "";
 String itemsFile = "";
 String itemsLine = "";
 
-//key lists and numbers
+// key lists and numbers
 //=========================================
 String impuls_KeyList = "";
 int impuls_EnterCounter = -1;

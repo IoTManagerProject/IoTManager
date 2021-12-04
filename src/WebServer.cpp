@@ -10,7 +10,6 @@ namespace HttpServer {
 /* Forward declaration */
 void initOta();
 void initMDNS();
-void initWS();
 
 void init() {
     String login = jsonReadStr(configSetupJson, "weblogin");
@@ -84,10 +83,11 @@ void init() {
 }
 
 void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
-#ifdef WS_enable
+#ifdef WEBSOCKET_ENABLED
     if (type == WS_EVT_CONNECT) {
+        SerialPrint("I", F("WS"), F("CONNECTED"));
         Serial.printf("ws[%s][%u] connect\n", server->url(), client->id());
-        client->printf(json.c_str(), client->id());
+        // client->printf(json.c_str(), client->id());
         // client->ping();
     } else if (type == WS_EVT_DISCONNECT) {
         Serial.printf("ws[%s][%u] disconnect\n", server->url(), client->id());
@@ -114,6 +114,13 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
                 }
             }
             Serial.printf("%s\n", msg.c_str());
+
+            if (msg.startsWith("HELLO")) {
+                SerialPrint("I", F("WS"), F("Full update"));
+                // publishWidgetsWS();
+                // publishStateWS();
+                // choose_log_date_and_send(); //  функцию выгрузки архива с графиком я не сделал. Забираю при выгрузке по MQTT
+            }
 
             if (info->opcode == WS_TEXT)
                 client->text("{}");
@@ -198,7 +205,7 @@ void initOta() {
 }
 
 void initWS() {
-#ifdef WS_enable
+#ifdef WEBSOCKET_ENABLED
     ws.onEvent(onWsEvent);
     server.addHandler(&ws);
     events.onConnect([](AsyncEventSourceClient *client) {
@@ -206,7 +213,6 @@ void initWS() {
     });
     server.addHandler(&events);
 #endif
-    ;
 }
 
 }  // namespace HttpServer
