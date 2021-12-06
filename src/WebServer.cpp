@@ -162,7 +162,6 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
         }
     }
 #endif
-    ;
 }
 
 void initMDNS() {
@@ -170,7 +169,6 @@ void initMDNS() {
     MDNS.addService("http", "tcp", 80);
     // TODO Add Adduino OTA
 #endif
-    ;
 }
 
 void initOta() {
@@ -201,7 +199,6 @@ void initOta() {
     ArduinoOTA.setHostname(hostName);
     ArduinoOTA.begin();
 #endif
-    ;
 }
 
 void initWS() {
