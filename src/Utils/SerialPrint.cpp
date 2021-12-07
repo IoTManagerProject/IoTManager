@@ -7,5 +7,6 @@ void SerialPrint(String errorLevel, String module, String msg) {
     String tosend = prettyMillis(millis()) + " [" + errorLevel + "] [" + module + "] " + msg;
 
     Serial.println(tosend);
-    ws.textAll(tosend);
+    // mqttRootDevice +
+    ws.textAll("/core/" + tosend);
 }

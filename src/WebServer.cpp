@@ -122,10 +122,11 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
                 // choose_log_date_and_send(); //  функцию выгрузки архива с графиком я не сделал. Забираю при выгрузке по MQTT
             }
 
-            if (info->opcode == WS_TEXT)
-                client->text("{}");
-            else
-                client->binary("{}");
+            if (info->opcode == WS_TEXT) {
+                // client->text("{}");
+            } else {
+                // client->binary("{}");
+            }
         } else {
             // message is comprised of multiple frames or the frame is split into multiple packets
             if (info->index == 0) {
@@ -206,7 +207,7 @@ void initWS() {
     ws.onEvent(onWsEvent);
     server.addHandler(&ws);
     events.onConnect([](AsyncEventSourceClient *client) {
-        client->send("", NULL, millis(), 1000);
+        //     client->send("", NULL, millis(), 1000);
     });
     server.addHandler(&events);
 #endif
