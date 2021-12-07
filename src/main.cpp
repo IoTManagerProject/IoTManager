@@ -11,6 +11,7 @@
 #include "Global.h"
 #include "Init.h"
 #include "ItemsList.h"
+#include "MySensorsDataParse.h"
 #include "RemoteOrdersUdp.h"
 #include "SoftUART.h"
 #include "Telegram.h"
@@ -18,22 +19,21 @@
 #include "Utils/StatUtils.h"
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
-#include "MySensorsDataParse.h"
 #include "items/ButtonInClass.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
 #include "items/vLogging.h"
 #include "items/vSensorAnalog.h"
 #include "items/vSensorBme280.h"
-#include "items/vSensorSht20.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
+#include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
+#include "items/vSensorSht20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
-#include "items/vSensorNode.h"
 
 void not_async_actions();
 
@@ -80,7 +80,7 @@ void setup() {
 
     getFSInfo();
 
-    //testsPerform();
+    // testsPerform();
 
     just_load = false;
     initialized = true;

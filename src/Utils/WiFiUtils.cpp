@@ -1,4 +1,5 @@
 #include "Utils/WiFiUtils.h"
+
 #include "FileSystem.h"
 
 void routerConnect() {
@@ -63,7 +64,7 @@ bool startAPMode() {
     SerialPrint("I", "WIFI", "AP IP: " + myIP.toString());
     jsonWriteStr(configSetupJson, "ip", myIP.toString());
 
-    //if (jsonReadInt(configOptionJson, "pass_status") != 1) {
+    // if (jsonReadInt(configOptionJson, "pass_status") != 1) {
     ts.add(
         WIFI_SCAN, 10 * 1000, [&](void*) {
             String sta_ssid = jsonReadStr(configSetupJson, "routerssid");
@@ -88,7 +89,7 @@ boolean RouterFind(String ssid) {
 
     if (n == -2) {  //Сканирование не было запущено, запускаем
         SerialPrint("I", "WIFI", "start scanning");
-        WiFi.scanNetworks(true, false);  //async, show_hidden
+        WiFi.scanNetworks(true, false);  // async, show_hidden
     }
 
     else if (n == -1) {  //Сканирование все еще выполняется
@@ -146,25 +147,25 @@ void wifiSignalInit() {
 
             switch (RSSIquality()) {
                 case 0:
-                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>не подключено к роутеру</font>"));
+                    jsonWriteStr(configSetupJson, F("signal"), F("не подключено к роутеру"));
                     break;
                 case 1:
-                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>нет сигнала</font>"));
+                    jsonWriteStr(configSetupJson, F("signal"), F("нет сигнала"));
                     break;
                 case 2:
-                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>очень низкий</font>"));
+                    jsonWriteStr(configSetupJson, F("signal"), F("очень низкий"));
                     break;
                 case 3:
-                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='orange'>низкий</font>"));
+                    jsonWriteStr(configSetupJson, F("signal"), F("низкий"));
                     break;
                 case 4:
-                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>хороший</font>"));
+                    jsonWriteStr(configSetupJson, F("signal"), F("хороший"));
                     break;
                 case 5:
-                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>очень хороший</font>"));
+                    jsonWriteStr(configSetupJson, F("signal"), F("очень хороший"));
                     break;
                 case 6:
-                    jsonWriteStr(configSetupJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>отличный</font>"));
+                    jsonWriteStr(configSetupJson, F("signal"), F("отличный"));
                     break;
             }
         },

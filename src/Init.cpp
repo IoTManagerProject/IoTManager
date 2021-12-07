@@ -13,13 +13,13 @@
 #include "items/vPwmOut.h"
 #include "items/vSensorAnalog.h"
 #include "items/vSensorBme280.h"
-#include "items/vSensorSht20.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
+#include "items/vSensorSht20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 
@@ -70,14 +70,14 @@ void deviceInit() {
     int errors = myLineParsing.getPinErrors();
 
     if (errors > 0) {
-        jsonWriteStr(configSetupJson, F("warning3"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Обнаружен неверный номер пина</p></font></div>"));
+        jsonWriteStr(configSetupJson, F("warning3"), F("Обнаружен неверный номер пина"));
     } else {
         jsonWriteStr(configSetupJson, F("warning3"), "");
     }
 
     savedFromWeb = false;
-    //publishWidgets();
-    //publishState();
+    // publishWidgets();
+    // publishState();
 }
 
 void loadScenario() {

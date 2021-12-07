@@ -27,7 +27,7 @@ void upgradeInit() {
         if (lastVersion > 0) {
             SerialPrint("I", F("Update"), "available version: " + String(lastVersion));
             if (lastVersion > FIRMWARE_VERSION) {
-                jsonWriteStr(configSetupJson, "warning2", F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Вышла новая версия прошивки, нажмите <b>обновить прошивку</b></p></font></div>"));
+                jsonWriteStr(configSetupJson, "warning2", F("Вышла новая версия прошивки, нажмите обновить прошивку"));
             }
         }
     };
@@ -69,11 +69,11 @@ void upgrade_firmware(int type) {
     devconfig_ForUpdate = readFile(String(DEVICE_CONFIG_FILE), 4096);
     configSetup_ForUpdate = configSetupJson;
 
-    if (type == 1) {  //only build
+    if (type == 1) {  // only build
         if (upgradeBuild()) restartEsp();
     }
 
-    else if (type == 2) {  //only spiffs
+    else if (type == 2) {  // only spiffs
         if (upgradeFS()) {
             writeFile(String(DEVICE_SCENARIO_FILE), scenario_ForUpdate);
             writeFile(String(DEVICE_CONFIG_FILE), devconfig_ForUpdate);
@@ -82,7 +82,7 @@ void upgrade_firmware(int type) {
         }
     }
 
-    else if (type == 3) {  //spiffs and build
+    else if (type == 3) {  // spiffs and build
         if (upgradeFS()) {
             writeFile(String(DEVICE_SCENARIO_FILE), scenario_ForUpdate);
             writeFile(String(DEVICE_CONFIG_FILE), devconfig_ForUpdate);

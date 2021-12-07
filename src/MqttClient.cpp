@@ -154,8 +154,8 @@ boolean mqttConnect() {
 
         if (connected) {
             SerialPrint("I", F("MQTT"), F("✔ connected"));
-            if (currentBroker == 1) jsonWriteStr(configSetupJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к основному брокеру</p></font></div>"));
-            if (currentBroker == 2) jsonWriteStr(configSetupJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к резервному брокеру</p></font></div>"));
+            if (currentBroker == 1) jsonWriteStr(configSetupJson, F("warning4"), F("Подключено к основному брокеру"));
+            if (currentBroker == 2) jsonWriteStr(configSetupJson, F("warning4"), F("Подключено к резервному брокеру"));
             setLedStatus(LED_OFF);
             mqttSubscribe();
             res = true;
@@ -163,7 +163,7 @@ boolean mqttConnect() {
             mqttConnectAttempts++;
             SerialPrint("E", F("MQTT"), "🡆 Attempt No: " + String(mqttConnectAttempts) + " could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
             setLedStatus(LED_FAST);
-            jsonWriteStr(configSetupJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #fa987a; padding: 10px;'>Не подключено брокеру</p></font></div>"));
+            jsonWriteStr(configSetupJson, F("warning4"), F("Не подключено брокеру"));
             if (mqttConnectAttempts >= CHANGE_BROKER_AFTER) {
                 mqttConnectAttempts = 0;
                 if (isSecondBrokerSet()) {
@@ -180,14 +180,14 @@ boolean mqttConnect() {
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     String topicStr = String(topic);
-    //SerialPrint("I", "=>MQTT", topicStr);
+    // SerialPrint("I", "=>MQTT", topicStr);
     String payloadStr;
     payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
         payloadStr += (char)payload[i];
     }
 
-    //SerialPrint("I", "=>MQTT", payloadStr);
+    // SerialPrint("I", "=>MQTT", payloadStr);
 
     if (payloadStr.startsWith("HELLO")) {
         SerialPrint("I", F("MQTT"), F("Full update"));
@@ -321,8 +321,8 @@ void publishWidgets() {
             line = all_widgets.substring(psn_1, psn_2);
             line.replace("\n", "");
             line.replace("\r\n", "");
-            //jsonWriteStr(line, "id", String(counter));
-            //jsonWriteStr(line, "pageId", String(counter));
+            // jsonWriteStr(line, "id", String(counter));
+            // jsonWriteStr(line, "pageId", String(counter));
             counter++;
             sendMQTT("config", line);
             Serial.println("[V] " + line);
