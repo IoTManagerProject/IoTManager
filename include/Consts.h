@@ -46,7 +46,13 @@
 #define MYSENSORS
 #endif
 
+#ifndef esp32_4mb
 #define NUM_BUTTONS 6
+#endif
+#ifdef esp32_4mb
+#define NUM_BUTTONS 8
+#endif
+
 #define MQTT_RECONNECT_INTERVAL 20000
 #define CHANGE_BROKER_AFTER 5
 #define TELEMETRY_UPDATE_INTERVAL_MIN 60
