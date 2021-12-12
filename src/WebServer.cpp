@@ -1,17 +1,14 @@
+#include "WebServer.h"
+
 #include "BufferExecute.h"
 #include "FSEditor.h"
-#include "HttpServer.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
+
 AsyncWebSocket ws("/ws");
 AsyncEventSource events("/events");
-namespace HttpServer {
 
-/* Forward declaration */
-void initOta();
-void initMDNS();
-
-void init() {
+void HttpServerinit() {
     String login = jsonReadStr(configSetupJson, "weblogin");
     String pass = jsonReadStr(configSetupJson, "webpass");
 #ifdef ESP32
@@ -77,7 +74,7 @@ void init() {
 
     initOta();
     initMDNS();
-    initWS();
+    HttpServerinitWS();
 
     SerialPrint("I", F("HTTP"), F("HttpServer Init"));
 }
@@ -202,7 +199,7 @@ void initOta() {
 #endif
 }
 
-void initWS() {
+void HttpServerinitWS() {
 #ifdef WEBSOCKET_ENABLED
     ws.onEvent(onWsEvent);
     server.addHandler(&ws);
@@ -212,5 +209,3 @@ void initWS() {
     server.addHandler(&events);
 #endif
 }
-
-}  // namespace HttpServer
