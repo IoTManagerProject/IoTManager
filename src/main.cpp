@@ -9,7 +9,6 @@
 #include "Cmd.h"
 #include "FileSystem.h"
 #include "Global.h"
-#include "HttpServer.h"
 #include "Init.h"
 #include "ItemsList.h"
 #include "MySensorsDataParse.h"
@@ -20,6 +19,7 @@
 #include "Utils/StatUtils.h"
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
+#include "WebServer.h"
 #include "items/ButtonInClass.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
@@ -34,6 +34,9 @@
 #include "items/vSensorPzem.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
+//=========================================
+#include "SetupESP.h"
+#include "WebServer.h"
 
 void not_async_actions();
 
@@ -66,8 +69,8 @@ void setup() {
 #endif
     uptime_init();
     upgradeInit();
-    HttpServer::init();
-    HttpServer::initWS();
+    HttpServerinit();
+    HttpServerinitWS();
     web_init();
     initSt();
     busInit();
@@ -94,6 +97,8 @@ void setup() {
             // ws.textAll("test msg from esp");
         },
         nullptr, true);
+
+    setupESP();
 
     SerialPrint("I", F("System"), F("✔ Initialization completed"));
 }

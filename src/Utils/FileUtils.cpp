@@ -181,3 +181,28 @@ const String getConfigFile(uint8_t preset, ConfigType_t type) {
     sprintf(buf, "/conf/%s%03d.txt", (type == CT_CONFIG) ? "c" : "s", preset);
     return String(buf);
 }
+
+bool cutFile(const String& src, const String& dst) {
+    String srcPath = filepath(src);
+    String dstPath = filepath(dst);
+    Serial.println("cut " + srcPath + " to " + dstPath);
+    if (!FileFS.exists(srcPath)) {
+        Serial.println("not exist: " + srcPath);
+        return false;
+    }
+    if (FileFS.exists(dstPath)) {
+        FileFS.remove(dstPath);
+    }
+    auto srcFile = FileFS.open(srcPath, "r");
+    auto dstFile = FileFS.open(dstPath, "w");
+
+    uint8_t buf[512];
+    while (srcFile.available()) {
+        size_t len = srcFile.read(buf, 512);
+        dstFile.write(buf, len);
+    }
+    srcFile.close();
+    dstFile.close();
+    FileFS.remove(srcPath);
+    return true;
+}

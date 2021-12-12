@@ -1,0 +1,28 @@
+[
+    {
+        "type": "button-out",
+        "id": "btn1",
+        "gpio": 1,
+        "inv": false,
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение1",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn2"
+        }
+    },
+    {
+        "type": "button-out",
+        "id": "btn2",
+        "gpio": 1,
+        "inv": false,
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение2",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn2"
+        }
+    }
+]

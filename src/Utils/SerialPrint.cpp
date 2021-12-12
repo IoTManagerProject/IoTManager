@@ -1,7 +1,7 @@
 #include "Utils\SerialPrint.h"
 
 #include "Global.h"
-#include "HttpServer.h"
+#include "WebServer.h"
 
 void SerialPrint(String errorLevel, String module, String msg) {
     String tosend = prettyMillis(millis()) + " [" + errorLevel + "] [" + module + "] " + msg;
