@@ -1,1 +1,5 @@
 Удалить;Тип элемента;Id;Виджет;Имя вкладки;Имя виджета;Позиция виджета
+0;uptime;upt;anydataTime;IoTManager;%name%#uptime;8;int[60]
+0;output-value;ip;anydata;IoTManager;IP;9
+0;output-value;time;anydata;IoTManager;Время#на#устройстве;10
+0;output-value;weekday;anydata;IoTManager;День#недели#на#устройстве ;11

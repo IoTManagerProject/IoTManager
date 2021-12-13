@@ -1,5 +1,16 @@
 {
   "widget": "anydata",
   "after": "°С",
-  "icon": "thermometer"
+  "icon": "thermometer",
+  "font": "OCR A Std",
+  "color": [
+  { "level": -20, "value": "#0000CC" },
+  { "level": -10, "value": "#0000CC" },
+  { "level": 0, "value": "#0000CC" },
+  { "level": 12, "value": "#3366FF" },
+  { "level": 16, "value": "#33CCFF" },
+  { "level": 18, "value": "#009933" },
+  { "level": 30, "value": "#FF9900" },
+	{ "level": 40, "value": "red" }
+  ]
 }
