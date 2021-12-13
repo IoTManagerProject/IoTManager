@@ -35,11 +35,12 @@
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 
+//#include "WebServer.h"
 void not_async_actions();
 
 Timings metric;
 boolean initialized = false;
-
+extern int   flagq ;
 void setup() {
     Serial.begin(115200);
     Serial.flush();
@@ -94,8 +95,14 @@ void loop() {
 #ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.handle();
 #endif
-#ifdef WS_enable
-    ws.cleanupClients();
+#ifdef WEBSOCKET_ENABLED
+
+   ws.cleanupClients();
+   if ( flagq == 1){
+   SerialPrint("I", "WS ", "choose_log_date_and_send()");
+    choose_log_date_and_sendWS();
+   flagq = 0;
+}
 #endif
     timeNow->loop();
     mqttLoop();

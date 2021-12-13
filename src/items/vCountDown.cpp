@@ -32,6 +32,12 @@ void CountDownClass::loop() {
         String time = String(prettyMillis(sec * 1000));
         jsonWriteStr(configLiveJson, _key, time);
         publishStatus(_key, time);
+        String path = mqttRootDevice + "/" + _key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", time);
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
         sec--;
         if (sec < 0) {
             _countDownPeriod = 0;
@@ -48,10 +54,8 @@ void countDown() {
 
     countDown_EnterCounter++;
     addKey(key, countDown_KeyList, countDown_EnterCounter);
-
     //Serial.println(countDown_EnterCounter);
     //Serial.println(countDown_KeyList);
-
     static bool firstTime = true;
     if (firstTime) myCountDown = new MyCountDownVector();
     firstTime = false;

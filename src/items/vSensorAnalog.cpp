@@ -45,6 +45,12 @@ void SensorAnalog::readAnalog() {
     eventGen2(_key, String(valueFloat));
     jsonWriteStr(configLiveJson, _key, String(valueFloat));
     publishStatus(_key, String(valueFloat));
+     String path = mqttRootDevice + "/" + _key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", String(valueFloat));
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
     SerialPrint("I", "Sensor", "'" + _key + "' data: " + String(valueFloat));
 }
 

@@ -25,6 +25,12 @@ void PwmOut::execute(String state) {
     jsonWriteInt(configStoreJson, _key, state.toInt());
     saveStore();
     publishStatus(_key, state);
+     String path = mqttRootDevice + "/" + _key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", state);
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
 }
 
 MyPwmOutVector* myPwmOut = nullptr;

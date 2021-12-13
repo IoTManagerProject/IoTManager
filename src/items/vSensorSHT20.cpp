@@ -49,11 +49,24 @@ void SensorSht20::read() {
     eventGen2(_paramsTmp.key, String(tmp));
     jsonWriteStr(configLiveJson, _paramsTmp.key, String(tmp));
     publishStatus(_paramsTmp.key, String(tmp));
+	   String path = mqttRootDevice + "/" +_paramsTmp.key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", String(tmp));
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
+	
     SerialPrint("I", "Sensor", "'" + _paramsTmp.key + "' data: " + String(tmp));
 
     eventGen2(_paramsHum.key, String(hum));
     jsonWriteStr(configLiveJson, _paramsHum.key, String(hum));
     publishStatus(_paramsHum.key, String(hum));
+	    path = mqttRootDevice + "/" +_paramsHum.key + "/status";
+     json = "{}";
+    jsonWriteStr(json, "status", String(hum));
+     MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
     SerialPrint("I", "Sensor", "'" + _paramsHum.key + "' data: " + String(hum));
 }
 

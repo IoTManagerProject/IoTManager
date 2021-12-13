@@ -41,11 +41,23 @@ void SensorCcs811::read() {
             eventGen2(_paramsPpm.key, String(co2));
             jsonWriteStr(configLiveJson, _paramsPpm.key, String(co2));
             publishStatus(_paramsPpm.key, String(co2));
+               String path = mqttRootDevice + "/" +_paramsPpm.key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", String(co2));
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
             SerialPrint("I", "Sensor", "'" + _paramsPpm.key + "' data: " + String(co2));
 
             eventGen2(_paramsPpb.key, String(ppm));
             jsonWriteStr(configLiveJson, _paramsPpb.key, String(ppm));
             publishStatus(_paramsPpb.key, String(ppm));
+                 path = mqttRootDevice + "/" +_paramsPpb.key + "/status";
+     json = "{}";
+    jsonWriteStr(json, "status", String(ppm));
+     MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
             SerialPrint("I", "Sensor", "'" + _paramsPpb.key + "' data: " + String(ppm));
         } else {
             SerialPrint("E", "Sensor CCS", "Error");

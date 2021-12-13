@@ -39,6 +39,12 @@ void SensorDallas::readDallas() {
     eventGen2(_key, String(value));
     jsonWriteStr(configLiveJson, _key, String(value));
     publishStatus(_key, String(value));
+         String path = mqttRootDevice + "/" +_key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", String(value));
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
     SerialPrint("I", "Sensor", "'" + _key + "' data: " + String(value));
 }
 

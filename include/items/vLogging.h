@@ -11,15 +11,11 @@ typedef std::vector<LoggingClass> MyLoggingVector;
 
 class LoggingClass {
    public:
-
     LoggingClass(String interval, unsigned int maxPoints, String loggingValueKey, String key, String startState, bool savedFromWeb);
     ~LoggingClass();
-
     void loop();
     void execute(String keyOrValue);
-
    private:
-
     unsigned long currentMillis;
     unsigned long prevMillis;
     unsigned long difference;
@@ -29,16 +25,14 @@ class LoggingClass {
     unsigned int _maxPoints;
     String _loggingValueKey;
     String _key;
-
-    
 };
-
 extern MyLoggingVector* myLogging;
-
 extern void logging();
 extern void loggingExecute();
 extern void choose_log_date_and_send();
+extern void choose_log_date_and_sendWS();
 extern void sendLogData(String file, String topic);
+extern void sendLogDataWS(String file, String topic);
 extern void sendLogData2(String file, String topic);
 extern void cleanLogAndData();
 #endif

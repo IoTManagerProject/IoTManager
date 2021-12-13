@@ -44,11 +44,23 @@ void SensorBmp280::read() {
     eventGen2(_paramsTmp.key, String(tmp));
     jsonWriteStr(configLiveJson, _paramsTmp.key, String(tmp));
     publishStatus(_paramsTmp.key, String(tmp));
+     String path = mqttRootDevice + "/" +_paramsTmp.key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", String(tmp));
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
     SerialPrint("I", "Sensor", "'" + _paramsTmp.key + "' data: " + String(tmp));
 
     eventGen2(_paramsPrs.key, String(prs));
     jsonWriteStr(configLiveJson, _paramsPrs.key, String(prs));
     publishStatus(_paramsPrs.key, String(prs));
+        path = mqttRootDevice + "/" +_paramsPrs.key + "/status";
+     json = "{}";
+    jsonWriteStr(json, "status", String(prs));
+     MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
     SerialPrint("I", "Sensor", "'" + _paramsPrs.key + "' data: " + String(prs));
 }
 

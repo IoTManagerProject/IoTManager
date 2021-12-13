@@ -143,8 +143,16 @@ class Clock {
         return String(buf);
     }
 
+ /*
+    * Локальное дата время "день недели"
+    */
+    const String getWeekday() {
+        char buf[32];
+        sprintf(buf, "%d", _time_local.day_of_week);
+        return String(buf);
+    }
 
-    /*
+   /*
     * Локальное время "чч:мм:cc"
     */
     const String getTime() {
