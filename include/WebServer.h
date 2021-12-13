@@ -7,3 +7,6 @@ extern void initMDNS();
 
 extern void HttpServerinitWS();
 extern void HttpServerinit();
+
+//===========web sockets==============================
+extern void sendEspSetupToWS();

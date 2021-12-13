@@ -98,7 +98,9 @@ void setup() {
         },
         nullptr, true);
 
-    setupESP();
+    // setupESP();
+
+    sendEspSetupToWS();
 
     SerialPrint("I", F("System"), F("✔ Initialization completed"));
 }

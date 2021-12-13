@@ -112,8 +112,10 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
             }
             Serial.printf("%s\n", msg.c_str());
 
-            if (msg.startsWith("HELLO")) {
-                SerialPrint("I", F("WS"), F("Full update"));
+            if (msg.startsWith("config")) {
+                SerialPrint("I", F("WS"), F("config send"));
+                sendEspSetupToWS();
+
                 // publishWidgetsWS();
                 // publishStateWS();
                 // choose_log_date_and_send(); //  функцию выгрузки архива с графиком я не сделал. Забираю при выгрузке по MQTT
@@ -208,4 +210,19 @@ void HttpServerinitWS() {
     });
     server.addHandler(&events);
 #endif
+}
+
+//===========web sockets==============================
+void sendEspSetupToWS() {
+    File file = seekFile("/setup.json");
+    DynamicJsonDocument doc(1024);
+    file.find("[");
+
+    do {
+        deserializeJson(doc, file);
+
+        // Serial.println(doc.as<String>());
+        ws.textAll(doc.as<String>());
+
+    } while (file.findUntil(",", "]"));
 }
