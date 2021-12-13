@@ -76,6 +76,11 @@ void sendTelegramMsg() {
     String msg = sCmd.next();
     if (sabject == "often") {
         msg.replace("#", " ");
+            msg.replace("%date%", timeNow->getDateTimeDotFormated());
+            msg.replace("%weekday%", timeNow->getWeekday());
+            msg.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
+            msg.replace("%name%", jsonReadStr(configSetupJson, F("name")));
+
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
         SerialPrint("<-", F("Telegram"), "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
     } else {
@@ -84,6 +89,11 @@ void sendTelegramMsg() {
             jsonWriteStr(telegramMsgJson, sabject, msg);
             msg.replace("#", " ");
             sabject.replace("#", " ");
+            msg.replace("%date%", timeNow->getDateTimeDotFormated());
+            msg.replace("%weekday%", timeNow->getWeekday());
+            msg.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
+            msg.replace("%name%", jsonReadStr(configSetupJson, F("name")));
+
             myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
             SerialPrint("<-", F("Telegram"), "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
         }
