@@ -23,7 +23,6 @@ class ImpulsOutClass {
     unsigned int _impulsCount = 0;
     unsigned int _impulsCountBuf = 0;
     unsigned int _impulsPin = 0;
-
 };
 
 extern MyImpulsOutVector* myImpulsOut;

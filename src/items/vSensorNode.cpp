@@ -37,6 +37,12 @@ void SensorNode::onChange(String newValue, String incommingKey) {
         eventGen2(_params.key, newValue);
         jsonWriteStr(configLiveJson, _params.key, newValue);
         publishStatus(_params.key, newValue);
+           String path = mqttRootDevice + "/" +_params.key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", newValue);
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
 
         _updateTime = timeNow->getDateTimeDotFormated();
 
@@ -48,17 +54,72 @@ void SensorNode::onChange(String newValue, String incommingKey) {
 void SensorNode::publish() {
     if (_minutesPassed < _params.tm1.toInt()) {
         publishAnyJsonKey(_params.key, "info", String(_minutesPassed) + " min");
+    
+    String path = mqttRootDevice + "/" + _params.key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "info", String(_minutesPassed) + " min");
+     String MyJson = json; 
+        jsonWriteStr(MyJson, "topic", path); 
+        ws.textAll(MyJson);
+
+        
         publishAnyJsonKey(_params.key, "color", "");
+        
+        
+     path = mqttRootDevice + "/" + _params.key + "/status";
+     json = "{}";
+    jsonWriteStr(json, "color", "");
+      MyJson = json; 
+        jsonWriteStr(MyJson, "topic", path); 
+        ws.textAll(MyJson);
+
     } else if (_minutesPassed >= _params.tm1.toInt() && _minutesPassed < _params.tm2.toInt()) {
         publishAnyJsonKey(_params.key, "info", String(_minutesPassed) + " min");
+       
+       String   path = mqttRootDevice + "/" + _params.key + "/status";
+     String json = "{}";
+    jsonWriteStr(json, "info", String(_minutesPassed) + " min");
+      String MyJson = json; 
+        jsonWriteStr(MyJson, "topic", path); 
+        ws.textAll(MyJson);
+
         publishAnyJsonKey(_params.key, "color", "orange");
+                  path = mqttRootDevice + "/" + _params.key + "/status";
+     json = "{}";
+    jsonWriteStr(json, "color", "orange");
+      MyJson = json; 
+        jsonWriteStr(MyJson, "topic", path); 
+        ws.textAll(MyJson);
+
     } else if (_minutesPassed >= _params.tm2.toInt()) {
         if (_updateTime == "") {
             publishAnyJsonKey(_params.key, "info", "offline");
+         
+         
+     String path = mqttRootDevice + "/" + _params.key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "info", "offline");
+     String MyJson = json; 
+        jsonWriteStr(MyJson, "topic", path); 
+        ws.textAll(MyJson);
         } else {
             publishAnyJsonKey(_params.key, "info", _updateTime);
+     String path = mqttRootDevice + "/" + _params.key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "info", _updateTime);
+     String MyJson = json; 
+        jsonWriteStr(MyJson, "topic", path); 
+        ws.textAll(MyJson);
+     
+     
         }
         publishAnyJsonKey(_params.key, "color", "red");
+       String path = mqttRootDevice + "/" + _params.key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "color", "red");
+     String MyJson = json; 
+        jsonWriteStr(MyJson, "topic", path); 
+        ws.textAll(MyJson);
     }
 }
 

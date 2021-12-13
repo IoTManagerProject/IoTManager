@@ -3,7 +3,13 @@
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
 #include "FSEditor.h"
+#include "Upgrade.h"
+#include "Class/NotAsync.h"
+#include "items/vLogging.h"
 
+int   flagq ;
+AsyncWebSocket ws ("/ws");
+AsyncEventSource events("/events");
 namespace HttpServer {
 
 
@@ -84,12 +90,100 @@ void init() {
 
     SerialPrint("I", F("HTTP"), F("HttpServer Init"));
 }
+///////////
 
+#ifndef LAYOUT_IN_RAM
+void publishWidgetsWS() {
+     String str="";
+    auto file = seekFile("layout.txt");
+    if (!file) {
+        SerialPrint("E", F("WS"), F("no file layout.txt"));
+        return;
+    }
+    while (file.available()) {
+        
+         String payload = file.readStringUntil('\n');
+        if (str==""){
+        str += payload;
+        }else {str += "," + payload;}
+    
+    }
+    file.close();
+     SerialPrint("I", "WS", "widgets: " + str);
+     ws.textAll(str);
+
+     
+ 
+}
+
+void publishStateWS() {
+ String mystr="";
+     String str;
+    if (configLiveJson != "{}") {
+        str += configLiveJson;
+    }
+    if (configStoreJson != "{}") {
+        str += "," + configStoreJson;
+    }
+  
+
+
+    str.replace("{", "");
+    str.replace("}", "");
+    str.replace("\"", "");
+    str += ",";
+
+    while (str.length() != 0) {
+        String tmp = selectToMarker(str, ",");
+        String topic = selectToMarker(tmp, ":");
+        String state = deleteBeforeDelimiter(tmp, ":");
+
+
+        if (topic != "" && state != "") {
+         
+        String json = "{}";
+    jsonWriteStr(json, "status", state);
+    jsonWriteStr(json, "topic", mqttRootDevice + "/" + topic + "/status"); 
+    SerialPrint("I", "ws", json.c_str());
+       if (mystr==""){
+        mystr += json;
+        }else {mystr += "," + json;}
+    
+           
+        }
+        str = deleteBeforeDelimiter(str, ",");
+    }
+    ws.textAll(mystr);
+
+}
+/*
+boolean publishStatusWS(const String& topic, const String& data)  {
+    String path = mqttRootDevice + "/" + topic + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", data);
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
+  
+}
+*/
+ boolean publishAnyJsonKeyWS(const String& topic, const String& key, const String& data) {
+    String path = mqttRootDevice + "/" + topic + "/status";
+    String json = "{}";
+    jsonWriteStr(json, key, data);
+   //добавляем топик, выводим в ws
+     String MyJson = json; 
+        jsonWriteStr(MyJson, "topic", path); 
+        ws.textAll(MyJson);
+}
+#endif
+
+/////////
 void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
-#ifdef WS_enable
+#ifdef WEBSOCKET_ENABLED
     if (type == WS_EVT_CONNECT) {
         Serial.printf("ws[%s][%u] connect\n", server->url(), client->id());
-        client->printf(json.c_str(), client->id());
+    //    client->printf(json.c_str(), client->id());
         //client->ping();
     } else if (type == WS_EVT_DISCONNECT) {
         Serial.printf("ws[%s][%u] disconnect\n", server->url(), client->id());
@@ -116,6 +210,121 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
                 }
             }
             Serial.printf("%s\n", msg.c_str());
+   //->
+//если пришло HELLO публикуем виджеты и статусы
+        if (msg.startsWith("HELLO")) {
+        SerialPrint("I", F("WS"), F("Full update"));
+        publishWidgetsWS();
+        publishStateWS();
+        flagq = 1;
+          }
+//если пришло UPGRADE
+        if (msg.startsWith("upgrade")) {
+    // SerialPrint("I", F("WS"), F("do_UPGRADEstart"));
+     myNotAsyncActions->make(do_UPGRADE); 
+       String temp = jsonWriteInt(msg, "upgrade", 1 );
+    ws.textAll(temp);
+          }
+ 
+       String upgrade = jsonReadStr(msg, "upgrade");
+    
+        if (upgrade != ""){
+      //  SerialPrint("I", F("WS"), F("do_UPGRADE"));
+        myNotAsyncActions->make(do_UPGRADE);    
+     String temp = jsonWriteInt(msg, "upgrade", 1 );
+    ws.textAll(temp);
+          }
+
+
+ 
+//отправляем конфигурацию  на ESP 
+    if (msg.startsWith("getconfigsetupjson")) {
+        ws.textAll(configSetupJson);
+       // Serial.printf("%s\n", configSetupJson.c_str());
+    }
+//отправляем NetworkMap в ESP
+  if (msg.startsWith("getNetworkMap")) {
+        String  NetworkMap= readFile("NetworkMap.json", 409600);
+       // NetworkMap = NetworkMap.replace("\r\n", "");
+        ws.textAll(NetworkMap);
+ 
+        }
+
+//отправляем файл в ESP
+    String getFileName = jsonReadStr(msg, "getFileName");
+   if (getFileName !=""){
+          String  getFile= readFile(getFileName, 409600);
+       // getFile.replace("\n", " ");
+        getFile="{getFileText:'"+getFile+"', getFileName: '"+getFileName+"'}";
+        jsonWriteStr(getFile, "getFileName", getFileName); 
+         ws.textAll(getFile);
+         Serial.printf("%s\n getFileName: ", getFileName.c_str());
+         Serial.printf("%s\n getFile: ", getFile.c_str());
+  }
+//получаем файл  от ESP
+    
+    String setFileName = jsonReadStr(msg, "setFileName");
+   if (setFileName !=""){
+      
+
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& root = jsonBuffer.parseObject(msg);
+
+    root.remove("setFileName");
+    String newmsg;  
+    root.printTo(newmsg);
+    
+    
+     writeFile(setFileName,newmsg);
+     //Serial.printf("%s\n setFileName: ", setFileName.c_str());
+     Serial.printf("%s\n text: ", newmsg.c_str());
+     }        
+
+//получаем NetworkMap от ESP
+    String NetworkMap = jsonReadStr(msg, "NetworkMap");
+   if (NetworkMap !=""){
+     writeFile("NetworkMap.json", NetworkMap.c_str());
+    // ws.textAll(NetworkMap);
+   }
+       //перезагрузка
+ String command = jsonReadStr(msg, "command");
+   if (command !="" && jsonReadStr(msg, "command")=="reboot"){
+ ESP.restart();   
+   }
+ 
+
+
+//получаем конфигурацию от ESP
+
+    String changeConf = jsonReadStr(msg, "setconfigsetupjson");
+   if (changeConf = "1"){
+
+        jsonWriteStr(configSetupJson, jsonReadStr(msg, "name"), jsonReadStr(msg, "val"));
+        saveConfig();
+        Serial.printf("%s\n",  jsonReadStr(msg, "name").c_str(), jsonReadStr(msg, "val").c_str());
+   }
+   
+
+
+// если пришло в control управляем 
+    String path = jsonReadStr(msg, "path");
+    String status = jsonReadStr(msg, "status"); 
+      
+if (path.indexOf("control") != -1) {
+        String key = selectFromMarkerToMarker(path, "/", 3);
+
+        String order;
+        order += key;
+        order += " ";
+        order += status;
+        order += ",";
+
+        loopCmdAdd(order);
+      
+    }
+          
+
+
 
             if (info->opcode == WS_TEXT)
                 client->text("{}");
@@ -200,7 +409,7 @@ void initOta() {
 }
 
 void initWS() {
-#ifdef WS_enable
+#ifdef WEBSOCKET_ENABLED
     ws.onEvent(onWsEvent);
     server.addHandler(&ws);
     events.onConnect([](AsyncEventSourceClient *client) {

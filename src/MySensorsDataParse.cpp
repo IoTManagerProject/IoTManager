@@ -7,7 +7,15 @@
 
 //для того что бы выключить оригинальный лог нужно перейти в файл библиотеки MyGatewayTransportSerial.cpp
 //и заккоментировать строку 36 MY_SERIALDEVICE.print(protocolMyMessage2Serial(message));
-
+boolean publishAnyJsonKeyWS(const String& topic, const String& key, const String& data) {
+    String path = mqttRootDevice + "/" + topic + "/status";
+    String json = "{}";
+    jsonWriteStr(json, key, data);
+   //добавляем топик, выводим в ws
+     String MyJson = json; 
+        jsonWriteStr(MyJson, "topic", path); 
+        ws.textAll(MyJson);
+}
 void loopMySensorsExecute() {
     if (mysensorBuf.length()) {
         String tmp = selectToMarker(mysensorBuf, ";");
@@ -27,9 +35,15 @@ void loopMySensorsExecute() {
             if (command == "3") {    //это особое внутреннее сообщение
                 if (type == "11") {  //название ноды
                     SerialPrint("I", "MySensor", "Node name: " + value);
-                }
+//*
+ publishAnyJsonKey("MySensors", "Node name:", value);
+publishAnyJsonKeyWS("MySensors", "Node name:", value);
+                 }
                 if (type == "12") {  //версия ноды
                     SerialPrint("I", "MySensor", "Node version: " + value);
+ //*
+ publishAnyJsonKey("MySensors", "Node version: ", value);
+ publishAnyJsonKeyWS("MySensors", "Node version: ", value);
                 }
             }
         } else {
@@ -44,13 +58,26 @@ void loopMySensorsExecute() {
                         addItemAuto(num, key, widget, descr);
                         descr.replace("#", " ");
                         SerialPrint("I", "MySensor", "Add new item: " + key + ": " + descr);
+//*
+ publishAnyJsonKey("MySensors", key, descr);
+ publishAnyJsonKeyWS("MySensors", key, descr);
+ 
+
                     } else {
                         descr.replace("#", " ");
                         SerialPrint("I", "MySensor", "Item already exist: " + key + ": " + descr);
+
+//*
+ publishAnyJsonKey("MySensors", key, descr);          
+ publishAnyJsonKeyWS("MySensors", key, descr);                        
                     }
                 } else {
                     descr.replace("#", " ");
                     SerialPrint("I", "MySensor", "Presentation: " + key + ": " + descr);
+
+//*
+ publishAnyJsonKey("MySensors", key, descr);     
+ publishAnyJsonKeyWS("MySensors", key, descr);                    
                 }
             }
             if (command == "1") {  //это данные
@@ -63,6 +90,9 @@ void loopMySensorsExecute() {
                     if (mySensorNode != nullptr) {
                         for (unsigned int i = 0; i < mySensorNode->size(); i++) {
                             mySensorNode->at(i).onChange(value, key);  //вызываем поочередно все экземпляры, там где подойдет там и выполнится
+//*
+ publishAnyJsonKey("MySensors", key, value);         
+ publishAnyJsonKeyWS("MySensors", key, value);                            
                         }
                     }
                     SerialPrint("I", "MySensor", "node: " + nodeId + ", sensor: " + childSensorId + ", command: " + command + ", type: " + type + ", val: " + value);

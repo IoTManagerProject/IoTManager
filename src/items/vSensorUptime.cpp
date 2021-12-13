@@ -28,6 +28,12 @@ void SensorUptime::read() {
     eventGen2(_paramsUpt.key, upt);
     jsonWriteStr(configLiveJson, _paramsUpt.key, upt);
     publishStatus(_paramsUpt.key, upt);
+        String path = mqttRootDevice + "/" +_paramsUpt.key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", upt);
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
     SerialPrint("I", "Sensor", "'" + _paramsUpt.key + "' data: " + upt);
 }
 
@@ -38,12 +44,9 @@ void uptimeSensor() {
     String key = myLineParsing.gkey();
     String interval = myLineParsing.gint();
     myLineParsing.clear();
-
     static paramsUptime paramsUpt;
-
     paramsUpt.key = key;
     paramsUpt.interval = interval.toInt() * 1000;
-
     static bool firstTime = true;
     if (firstTime) mySensorUptime = new MySensorUptimeVector();
     firstTime = false;

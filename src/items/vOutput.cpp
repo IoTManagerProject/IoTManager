@@ -19,6 +19,12 @@ void Output::execute(String value) {
     eventGen2(_key, value);
     jsonWriteStr(configLiveJson, _key, value);
     publishStatus(_key, value);
+    String path = mqttRootDevice + "/" + _key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", value);
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
     //publishLastUpdateTime(_key, timeNow->getTime());
 }
 

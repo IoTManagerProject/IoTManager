@@ -38,26 +38,56 @@ void SensorPzem::read() {
         eventGen2(_paramsV.key, String(voltage));
         jsonWriteStr(configLiveJson, _paramsV.key, String(voltage));
         publishStatus(_paramsV.key, String(voltage));
+          String path = mqttRootDevice + "/" +_paramsV.key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", String(voltage));
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
         SerialPrint("I", "Sensor", "'" + _paramsV.key + "' data: " + String(voltage));
 
         eventGen2(_paramsA.key, String(current));
         jsonWriteStr(configLiveJson, _paramsA.key, String(current));
         publishStatus(_paramsA.key, String(current));
+            path = mqttRootDevice + "/" +_paramsA.key + "/status";
+     json = "{}";
+    jsonWriteStr(json, "status",  String(current));
+     MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
         SerialPrint("I", "Sensor", "'" + _paramsA.key + "' data: " + String(current));
 
         eventGen2(_paramsWatt.key, String(power));
         jsonWriteStr(configLiveJson, _paramsWatt.key, String(power));
         publishStatus(_paramsWatt.key, String(power));
+           path = mqttRootDevice + "/" +_paramsWatt.key + "/status";
+     json = "{}";
+    jsonWriteStr(json, "status", String(power));
+     MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
         SerialPrint("I", "Sensor", "'" + _paramsWatt.key + "' data: " + String(power));
 
         eventGen2(_paramsWattHrs.key, String(energy));
         jsonWriteStr(configLiveJson, _paramsWattHrs.key, String(energy));
         publishStatus(_paramsWattHrs.key, String(energy));
+              path = mqttRootDevice + "/" +_paramsWattHrs.key + "/status";
+     json = "{}";
+    jsonWriteStr(json, "status", String(energy));
+     MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
         SerialPrint("I", "Sensor", "'" + _paramsWattHrs.key + "' data: " + String(energy));
 
         eventGen2(_paramsHz.key, String(freq));
         jsonWriteStr(configLiveJson, _paramsHz.key, String(freq));
         publishStatus(_paramsHz.key, String(freq));
+               path = mqttRootDevice + "/" +_paramsHz.key + "/status";
+     json = "{}";
+    jsonWriteStr(json, "status", String(freq));
+     MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
         SerialPrint("I", "Sensor", "'" + _paramsHz.key + "' data: " + String(freq));
     } else {
         SerialPrint("E", "Sensor PZEM", "Error, UART switched off");

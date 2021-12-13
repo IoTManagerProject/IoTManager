@@ -53,20 +53,22 @@ void SensorUltrasonic::readUltrasonic() {
     value = duration_ / 29 / 2;
 
     value = testFilter.filtered(value);
-
     value = map(value, _map1, _map2, _map3, _map4);
     float valueFloat = value * _c;
-
     if (counter > 10) {
         eventGen2(_key, String(valueFloat));
         jsonWriteStr(configLiveJson, _key, String(valueFloat));
         publishStatus(_key, String(valueFloat));
+          String path = mqttRootDevice + "/" +_key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", String(valueFloat));
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
         SerialPrint("I", "Sensor", "'" + _key + "' data: " + String(valueFloat));
     }
 }
-
 MySensorUltrasonicVector* mySensorUltrasonic = nullptr;
-
 void ultrasonic() {
     myLineParsing.update();
     String interval = myLineParsing.gint();
@@ -75,15 +77,12 @@ void ultrasonic() {
     String map = myLineParsing.gmap();
     String c = myLineParsing.gc();
     myLineParsing.clear();
-
     unsigned int trig = selectFromMarkerToMarker(pin, ",", 0).toInt();
     unsigned int echo = selectFromMarkerToMarker(pin, ",", 1).toInt();
-
     int map1 = selectFromMarkerToMarker(map, ",", 0).toInt();
     int map2 = selectFromMarkerToMarker(map, ",", 1).toInt();
     int map3 = selectFromMarkerToMarker(map, ",", 2).toInt();
     int map4 = selectFromMarkerToMarker(map, ",", 3).toInt();
-
     static bool firstTime = true;
     if (firstTime) mySensorUltrasonic = new MySensorUltrasonicVector();
     firstTime = false;

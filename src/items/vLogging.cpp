@@ -166,7 +166,78 @@ void loggingExecute() {
     }
 }
 
+void choose_log_date_and_sendWS() {
+    
+    String all_line = logging_KeyList;
+    while (all_line.length() != 0) {
+        String tmp = selectToMarker(all_line, ",");
+        sendLogDataWS("/logs/" + tmp + ".txt", tmp);
+        all_line = deleteBeforeDelimiter(all_line, ",");
+    }
+}
+
+void sendLogDataWS(String file, String topic) {
+    File configFile = FileFS.open(file, "r");
+    if (!configFile) {
+        return;
+    }
+    configFile.seek(0, SeekSet);
+    int i = 0;
+    String buf = "{}";
+    String json_array;
+    String unix_time;
+    String value;
+    unsigned int psn;
+    unsigned int sz = configFile.size();
+    do {
+        i++;
+        psn = configFile.position();
+        String line = configFile.readStringUntil('\n');
+        unix_time = selectToMarker(line, " ");
+        jsonWriteInt(buf, "x", unix_time.toInt());
+        value = deleteBeforeDelimiter(line, " ");
+        jsonWriteFloat(buf, "y1", value.toFloat());
+        if (unix_time != "" || value != "") {
+            json_array += buf + ",";
+        }
+        int grafmax = jsonReadInt(configSetupJson, "grafmax");
+        if (grafmax != 0) {
+            if (i >= grafmax) {
+                json_array = "{\"status\":[" + json_array + "]}";
+                json_array.replace("},]}", "}]}");
+              //  publishChart(topic, json_array);
+
+                    // добавляем топик, выводим в ws
+    String path = mqttRootDevice + "/" + topic;
+    String json = "{}";
+    json=json_array;
+    jsonWriteStr(json, "topic", path); 
+    ws.textAll(json);
+
+
+                json_array = "";
+                i = 0;
+            }
+        }
+    } while (psn < sz);
+
+    configFile.close();
+
+    json_array = "{\"status\":[" + json_array + "]}";
+    json_array.replace("},]}", "}]}");
+    //publishChart(topic, json_array);
+
+        // добавляем топик, выводим в ws
+    String path = mqttRootDevice + "/" + topic;
+    String json = "{}";
+    json=json_array;
+    jsonWriteStr(json, "topic", path); 
+    ws.textAll(json);
+
+}
+
 void choose_log_date_and_send() {
+    
     String all_line = logging_KeyList;
     while (all_line.length() != 0) {
         String tmp = selectToMarker(all_line, ",");
@@ -205,7 +276,8 @@ void sendLogData(String file, String topic) {
                 json_array = "{\"status\":[" + json_array + "]}";
                 json_array.replace("},]}", "}]}");
                 publishChart(topic, json_array);
-                json_array = "";
+
+                           json_array = "";
                 i = 0;
             }
         }
@@ -216,6 +288,7 @@ void sendLogData(String file, String topic) {
     json_array = "{\"status\":[" + json_array + "]}";
     json_array.replace("},]}", "}]}");
     publishChart(topic, json_array);
+
 }
 
 void cleanLogAndData() {

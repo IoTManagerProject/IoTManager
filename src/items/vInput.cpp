@@ -31,6 +31,12 @@ void Input::execute(String value) {
     jsonWriteStr(configStoreJson, _key, value);
     saveStore();
     publishStatus(_key, value);
+        String path = mqttRootDevice + "/" + _key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", value);
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
 }
 
 MyInputVector* myInput = nullptr;

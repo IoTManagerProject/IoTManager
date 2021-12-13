@@ -152,8 +152,7 @@ class Clock {
         return String(buf);
     }
 
-    /*
-    /*
+   /*
     * Локальное время "чч:мм:cc"
     */
     const String getTime() {

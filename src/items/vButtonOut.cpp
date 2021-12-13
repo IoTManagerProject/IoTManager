@@ -7,6 +7,7 @@
 #include "Global.h"
 #include "SoftUART.h"
 #include "items/vButtonOut.h"
+//#include "WebServer.h"
 //this class save data to flash
 ButtonOut::ButtonOut(String pin, boolean inv, String key, String type) {
     _pin = pin;
@@ -21,6 +22,12 @@ ButtonOut::ButtonOut(String pin, boolean inv, String key, String type) {
     this->execute(String(state)); //установили это состояние
 #endif
 #ifdef GATE_MODE
+   if (_pin != "") {
+        pinMode(_pin.toInt(), OUTPUT);
+    }
+    int state = jsonReadInt(configStoreJson, key); //прочитали из памяти 
+    this->execute(String(state)); //установили это состояние
+    
 //TO DO запросили ноду о состоянии реле
 //установили в это состояние кнопку в приложении
 //если нода не ответила - кнопку сделать красным цветом
@@ -44,6 +51,20 @@ void ButtonOut::execute(String state) {
     }
 #endif
 #ifdef GATE_MODE
+// включаем кнопки на ESP гейта
+    if (state != "" && _pin != "") {
+        if (state == "change") {
+            state = String(!digitalRead(_pin.toInt()));
+            digitalWrite(_pin.toInt(), state.toInt());
+        } else {
+            if (_inv) {
+                digitalWrite(_pin.toInt(), !state.toInt());
+            } else {
+                digitalWrite(_pin.toInt(), state.toInt());
+            }
+        }
+    }
+
 //отправили ноде команду на вкл выкл
 //получили обратную связь - переставили кнопку в приложении
 //не получили обратную связь - сделали кнопку красной
@@ -52,6 +73,12 @@ void ButtonOut::execute(String state) {
     jsonWriteInt(configStoreJson, _key, state.toInt());
     saveStore();
     publishStatus(_key, state);
+    String path = mqttRootDevice + "/" + _key + "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", state);
+    String MyJson = json; 
+    jsonWriteStr(MyJson, "topic", path); 
+    ws.textAll(MyJson);
 }
 
 MyButtonOutVector* myButtonOut = nullptr;

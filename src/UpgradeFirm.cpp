@@ -8,11 +8,14 @@
 #endif
 
 #include "Global.h"
-
+ String msg = "";
 void upgradeInit() {
+
+
     myNotAsyncActions->add(
         do_UPGRADE, [&](void*) {
             upgrade_firmware(3);
+
         },
         nullptr);
 
@@ -27,7 +30,7 @@ void upgradeInit() {
         if (lastVersion > 0) {
             SerialPrint("I", F("Update"), "available version: " + String(lastVersion));
             if (lastVersion > FIRMWARE_VERSION) {
-                jsonWriteStr(configSetupJson, "warning2", F("Вышла новая версия прошивки, нажмите обновить прошивку"));
+                jsonWriteStr(configSetupJson, "warning2", F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #ffc7c7; padding: 10px;'>Вышла новая версия прошивки, нажмите <b>обновить прошивку</b></p></font></div>"));
             }
         }
     };
@@ -61,6 +64,8 @@ void getLastVersion() {
 }
 
 void upgrade_firmware(int type) {
+  
+   
     String scenario_ForUpdate;
     String devconfig_ForUpdate;
     String configSetup_ForUpdate;
@@ -69,11 +74,11 @@ void upgrade_firmware(int type) {
     devconfig_ForUpdate = readFile(String(DEVICE_CONFIG_FILE), 4096);
     configSetup_ForUpdate = configSetupJson;
 
-    if (type == 1) {  // only build
+    if (type == 1) {  //only build
         if (upgradeBuild()) restartEsp();
     }
 
-    else if (type == 2) {  // only spiffs
+    else if (type == 2) {  //only spiffs
         if (upgradeFS()) {
             writeFile(String(DEVICE_SCENARIO_FILE), scenario_ForUpdate);
             writeFile(String(DEVICE_CONFIG_FILE), devconfig_ForUpdate);
@@ -82,8 +87,10 @@ void upgrade_firmware(int type) {
         }
     }
 
-    else if (type == 3) {  // spiffs and build
+    else if (type == 3) {  //spiffs and build
         if (upgradeFS()) {
+             String temp = jsonWriteInt(msg, "upgrade", 3 );
+              ws.textAll(temp);
             writeFile(String(DEVICE_SCENARIO_FILE), scenario_ForUpdate);
             writeFile(String(DEVICE_CONFIG_FILE), devconfig_ForUpdate);
             writeFile("config.json", configSetup_ForUpdate);
@@ -95,11 +102,18 @@ void upgrade_firmware(int type) {
     }
 }
 
-bool upgradeFS() {
-    bool ret = false;
+bool upgradeFS() {  
+
+   
+
+      bool ret = false;
 #ifndef esp8266_1mb
     WiFiClient wifiClient;
+ 
+  
+  
     Serial.printf("Start upgrade %s, please wait...", FS_NAME);
+   
 #ifdef esp8266_4mb
     ESPhttpUpdate.rebootOnUpdate(false);
     t_httpUpdate_return retFS = ESPhttpUpdate.updateFS(wifiClient, serverIP + F("/projects/iotmanager/esp8266/littlefs/littlefs.bin"));
@@ -117,6 +131,8 @@ bool upgradeFS() {
     HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, serverIP + F("/projects/iotmanager/esp32ms/littlefs/spiffs.bin"));
 #endif
     if (retFS == HTTP_UPDATE_OK) {  //если FS обновилась успешно
+      String temp = jsonWriteInt(msg, "upgrade", 2);
+            ws.textAll(temp);
         SerialPrint("I", F("Update"), F("FS upgrade done!"));
         ret = true;
     }
@@ -125,6 +141,8 @@ bool upgradeFS() {
 }
 
 bool upgradeBuild() {
+     String temp = jsonWriteInt(msg, "upgrade", 4 );
+            ws.textAll(temp);
     bool ret = false;
 #ifndef esp8266_1mb
     WiFiClient wifiClient;
@@ -149,12 +167,16 @@ bool upgradeBuild() {
     if (retBuild == HTTP_UPDATE_OK) {  //если BUILD обновился успешно
         SerialPrint("I", F("Update"), F("BUILD upgrade done!"));
         ret = true;
+          String temp = jsonWriteInt(msg, "upgrade", 5 );
+            ws.textAll(temp);
     }
 #endif
     return ret;
 }
 
 void restartEsp() {
+    String temp = jsonWriteInt(msg, "upgrade", 6 );
+            ws.textAll(temp);
     Serial.println(F("Restart ESP...."));
     delay(1000);
     ESP.restart();
