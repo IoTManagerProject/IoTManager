@@ -1,6 +1,6 @@
 #pragma once
 
-#define FIRMWARE_VERSION 303
+#define FIRMWARE_VERSION 304
 
 //#define svelte
 
