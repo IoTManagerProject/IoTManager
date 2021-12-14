@@ -11,14 +11,15 @@
 #include "items/vOutput.h"
 #include "items/vPwmOut.h"
 #include "items/vSensorAnalog.h"
+#include "items/vSensorAny.h"
 #include "items/vSensorBme280.h"
-#include "items/vSensorSht20.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
+#include "items/vSensorSht20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 
@@ -44,7 +45,7 @@ void loopCmdExecute() {
         String tmp = selectToMarker(orderBuf, ",");  //выделяем первую команду rel 5 1,
         sCmd.readStr(tmp);                           //выполняем
         if (tmp != "") {
-            sCmd.readStr(tmp); 
+            sCmd.readStr(tmp);
             SerialPrint("I", F("Order done L"), tmp);
         }
         orderBuf = deleteBeforeDelimiter(orderBuf, ",");  //осекаем
@@ -70,7 +71,7 @@ void csvCmdExecute(String& cmdStr) {
         count++;
 
         if (count > 1) {
-            //SerialPrint("I", "Items", buf);
+            // SerialPrint("I", "Items", buf);
             String order = selectToMarker(buf, " ");  //отсечка самой команды
             if (order == F("button-out")) {
 #ifdef EnableButtonOut
@@ -116,6 +117,10 @@ void csvCmdExecute(String& cmdStr) {
 #ifdef EnableSensorSht20
                 sCmd.addCommand(order.c_str(), sht20Sensor);
 #endif
+            } else if (order == F("sensor")) {
+#ifdef EnableSensorAny
+                sCmd.addCommand(order.c_str(), AnySensor);
+#endif
             } else if (order == F("bmp280")) {
 #ifdef EnableSensorBmp280
                 sCmd.addCommand(order.c_str(), bmp280Sensor);
@@ -146,7 +151,7 @@ void csvCmdExecute(String& cmdStr) {
 #endif
             } else if (order == F("impuls-in")) {
 #ifdef EnableImpulsIn
-                //sCmd.addCommand(order.c_str(), impulsInSensor);
+                // sCmd.addCommand(order.c_str(), impulsInSensor);
 #endif
             } else if (order == F("sensor-node")) {
 #ifdef EnableSensorNode

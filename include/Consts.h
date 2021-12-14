@@ -84,6 +84,7 @@
 #define EnableSensorPzem
 #define EnableSensorUltrasonic
 #define EnableSensorUptime
+#define EnableSensorAny
 #define EnableTelegram
 #define EnableUart
 #endif

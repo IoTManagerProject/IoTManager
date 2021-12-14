@@ -1,6 +1,7 @@
 #include "Utils/JsonUtils.h"
-#include "Utils/FileUtils.h"
+
 #include "Global.h"
+#include "Utils/FileUtils.h"
 
 String jsonReadStr(String& json, String name) {
     DynamicJsonBuffer jsonBuffer;
@@ -15,6 +16,12 @@ boolean jsonReadBool(String& json, String name) {
 }
 
 int jsonReadInt(String& json, String name) {
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& root = jsonBuffer.parseObject(json);
+    return root[name];
+}
+
+float jsonReadFloat(String& json, String name) {
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(json);
     return root[name];
