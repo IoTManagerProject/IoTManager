@@ -163,6 +163,7 @@ void clearVectors() {
     pwmOut_EnterCounter = -1;
 #endif
     //==================================
+    //ИНТЕГРИРУЮ: Вторая интеграция в ядро. Следим за наименованием
 #ifdef EnableSensorDallas
     if (mySensorDallas2 != nullptr) {
         mySensorDallas2->clear();

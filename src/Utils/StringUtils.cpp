@@ -62,6 +62,41 @@ String selectFromMarkerToMarker(String str, String tofind, int number) {
     return "not found";
 }
 
+//преобразовываем байтовый массив в человеческий вид HEX в строке
+void hex2string(byte array[], unsigned int len, char buffer[])
+{
+    for (unsigned int i = 0; i < len; i++)
+    {
+        byte nib1 = (array[i] >> 4) & 0x0F;
+        byte nib2 = (array[i] >> 0) & 0x0F;
+        buffer[i*2+0] = nib1  < 0xA ? '0' + nib1  : 'A' + nib1  - 0xA;
+        buffer[i*2+1] = nib2  < 0xA ? '0' + nib2  : 'A' + nib2  - 0xA;
+    }
+    buffer[len*2] = '\0';
+}
+
+inline unsigned char ChartoHex( char ch )
+{
+   return ( ( ch >= 'A' ) ? ( ch - 'A' + 0xA ) : ( ch - '0' ) ) & 0x0F;
+}
+
+// str   - указатель на массив символов
+// bytes - выходной буфер
+// функция возвращает колл-во байт
+//
+int string2hex(const char* str, unsigned char* bytes ) 
+{
+   unsigned char Hi, Lo;
+
+   int i = 0;
+   while( ( Hi = *str++ ) && ( Lo = *str++ ) )
+   {
+      bytes[i++] = ( ChartoHex( Hi ) << 4 ) | ChartoHex( Lo ); 
+   }
+
+   return i;
+}
+
 uint8_t hexStringToUint8(String hex) {
     uint8_t tmp = strtol(hex.c_str(), NULL, 0);
     if (tmp >= 0x00 && tmp <= 0xFF) {

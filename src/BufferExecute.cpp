@@ -100,6 +100,7 @@ void csvCmdExecute(String& cmdStr) {
 #ifdef EnableSensorUltrasonic
                 sCmd.addCommand(order.c_str(), ultrasonic);
 #endif
+//ИНТЕГРИРУЮ: Первая интеграция в ядро. Следим за наименованием
             } else if (order == F("dallas-temp")) {
 #ifdef EnableSensorDallas
                 sCmd.addCommand(order.c_str(), dallas);
