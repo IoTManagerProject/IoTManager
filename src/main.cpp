@@ -24,6 +24,7 @@
 #include "items/vImpulsOut.h"
 #include "items/vLogging.h"
 #include "items/vSensorAnalog.h"
+#include "items/vSensorAny.h"
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
@@ -34,13 +35,12 @@
 #include "items/vSensorSht20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
-
 //#include "WebServer.h"
 void not_async_actions();
 
 Timings metric;
 boolean initialized = false;
-extern int   flagq ;
+extern int flagq;
 void setup() {
     Serial.begin(115200);
     Serial.flush();
@@ -97,12 +97,12 @@ void loop() {
 #endif
 #ifdef WEBSOCKET_ENABLED
 
-   ws.cleanupClients();
-   if ( flagq == 1){
-   SerialPrint("I", "WS ", "choose_log_date_and_send()");
-    choose_log_date_and_sendWS();
-   flagq = 0;
-}
+    ws.cleanupClients();
+    if (flagq == 1) {
+        SerialPrint("I", "WS ", "choose_log_date_and_send()");
+        choose_log_date_and_sendWS();
+        flagq = 0;
+    }
 #endif
     timeNow->loop();
     mqttLoop();
@@ -185,6 +185,13 @@ void loop() {
     if (mySensorSht20 != nullptr) {
         for (unsigned int i = 0; i < mySensorSht20->size(); i++) {
             mySensorSht20->at(i).loop();
+        }
+    }
+#endif
+#ifdef EnableSensorAny
+    if (mySensorAny != nullptr) {
+        for (unsigned int i = 0; i < mySensorAny->size(); i++) {
+            mySensorAny->at(i).loop();
         }
     }
 #endif

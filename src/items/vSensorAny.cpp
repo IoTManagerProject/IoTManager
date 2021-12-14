@@ -22,7 +22,7 @@ SensorAny::~SensorAny() {}
 
 void SensorAny::loop() {
     difference = millis() - prevMillis;
-    if (difference >= _interval) {
+    if (difference >= _interval * 1000) {
         prevMillis = millis();
         read();
     }
@@ -54,6 +54,7 @@ void AnySensor() {
     jsonWriteStr(params, "addr", myLineParsing.gaddr());
     jsonWriteStr(params, "int", myLineParsing.gint());
     jsonWriteStr(params, "c", myLineParsing.gc());
+    jsonWriteStr(params, "type", myLineParsing.gtype());
     myLineParsing.clear();
 
     static bool firstTime = true;
