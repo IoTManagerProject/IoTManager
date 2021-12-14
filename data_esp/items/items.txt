@@ -34,3 +34,4 @@
 0;uptime;uptid;anydataTime;Системные;%name%#uptime;order;int[60]*
 0;sht20;tmpid;anydataTemp;Сенсоры;Температура;1;c[1]
 0;sht20;humid;anydataHum;Сенсоры;Влажность;2;c[1];int[50]*
+0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[1];int[10];type[type1]*
