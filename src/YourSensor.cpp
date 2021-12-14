@@ -1,12 +1,12 @@
-#include "sensors/YourSensor.h"
+#include "YourSensor.h"
 
 float yourSensorReading(String type) {
     float value;
-    if (type == "name1") {
+    if (type == "type1") {
         value++;
-    } else if (type == "name2") {
+    } else if (type == "type2") {
         value--;
-    } else if (type == "name3") {
+    } else if (type == "type3") {
         value = value + 10;
     }
     return value;

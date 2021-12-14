@@ -5,8 +5,8 @@
 #include "BufferExecute.h"
 #include "Class/LineParsing.h"
 #include "Global.h"
+#include "YourSensor.h"
 #include "items/vSensorAny.h"
-#include "sensors/SensorYour.h"
 
 SensorAny::SensorAny(const String& paramsAny) {
     _paramsAny = paramsAny;
