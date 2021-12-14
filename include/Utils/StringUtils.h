@@ -2,6 +2,10 @@
 
 #include <Arduino.h>
 
+void hex2string(byte array[], unsigned int len, char buffer[]);
+
+int string2hex(const char* str, unsigned char* bytes );
+
 uint8_t hexStringToUint8(String hex);
 
 uint16_t hexStringToUint16(String hex);

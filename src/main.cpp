@@ -138,6 +138,7 @@ void loop() {
         }
     }
 #endif
+//ИНТЕГРИРУЮ: Третья интеграция в ядро. Следим за наименованием
 #ifdef EnableLogging
     if (myLogging != nullptr) {
         for (unsigned int i = 0; i < myLogging->size(); i++) {
