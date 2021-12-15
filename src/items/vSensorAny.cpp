@@ -29,7 +29,7 @@ void SensorAny::loop() {
 }
 
 void SensorAny::read() {
-    float value = yourSensorReading(_type);
+    float value = yourSensorReading(_type, _addr);
 
     value = value * _c;
 
