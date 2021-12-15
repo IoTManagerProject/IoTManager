@@ -19,7 +19,7 @@
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
-#include "items/vSensorSht20.h"
+#include "items/vSensorSHT20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 
