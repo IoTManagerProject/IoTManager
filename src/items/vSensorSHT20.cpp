@@ -1,6 +1,6 @@
 #include "Consts.h"
 #ifdef EnableSensorSht20
-#include "items/vSensorSht20.h"
+#include "items/vSensorSHT20.h"
 
 #include <Arduino.h>
 
