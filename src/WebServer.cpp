@@ -4,6 +4,7 @@
 #include "FSEditor.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
+#include "WebSocket.h"
 
 AsyncWebSocket ws("/ws");
 AsyncEventSource events("/events");
@@ -112,9 +113,9 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
             }
             Serial.printf("%s\n", msg.c_str());
 
-            if (msg.startsWith("config")) {
+            if (msg.startsWith("/config")) {
                 SerialPrint("I", F("WS"), F("config send"));
-                sendEspSetupToWS();
+                wsSendSetup();
 
                 // publishWidgetsWS();
                 // publishStateWS();
@@ -210,19 +211,4 @@ void HttpServerinitWS() {
     });
     server.addHandler(&events);
 #endif
-}
-
-//===========web sockets==============================
-void sendEspSetupToWS() {
-    File file = seekFile("/setup.json");
-    DynamicJsonDocument doc(1024);
-    file.find("[");
-
-    do {
-        deserializeJson(doc, file);
-
-        // Serial.println(doc.as<String>());
-        ws.textAll(doc.as<String>());
-
-    } while (file.findUntil(",", "]"));
 }

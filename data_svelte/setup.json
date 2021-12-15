@@ -1,28 +1,29 @@
 [
     {
-        "type": "button-out",
+        "type": "binary",
+        "subtype": "button-out",
         "id": "btn1",
         "gpio": 1,
-        "inv": false,
-        "web": {
-            "widget": "toggle",
-            "page": "Кнопки",
-            "descr": "Освещение1",
-            "order": 1,
-            "topic": "/prefix/123456-123456/btn2"
-        }
+        "inv": false
     },
     {
-        "type": "button-out",
-        "id": "btn2",
-        "gpio": 1,
-        "inv": false,
-        "web": {
-            "widget": "toggle",
-            "page": "Кнопки",
-            "descr": "Освещение2",
-            "order": 1,
-            "topic": "/prefix/123456-123456/btn2"
-        }
+        "type": "sensor",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp1",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
     }
 ]

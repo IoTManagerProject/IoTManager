@@ -180,14 +180,14 @@ boolean mqttConnect() {
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     String topicStr = String(topic);
-    //SerialPrint("I", "=>MQTT", topicStr);
+    // SerialPrint("I", "=>MQTT", topicStr);
     String payloadStr;
     payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
         payloadStr += (char)payload[i];
     }
 
-    //SerialPrint("I", "=>MQTT", payloadStr);
+    // SerialPrint("I", "=>MQTT", payloadStr);
 
     if (payloadStr.startsWith("HELLO")) {
         SerialPrint("I", F("MQTT"), F("Full update"));
@@ -321,8 +321,8 @@ void publishWidgets() {
             line = all_widgets.substring(psn_1, psn_2);
             line.replace("\n", "");
             line.replace("\r\n", "");
-            //jsonWriteStr(line, "id", String(counter));
-            //jsonWriteStr(line, "pageId", String(counter));
+            // jsonWriteStr(line, "id", String(counter));
+            // jsonWriteStr(line, "pageId", String(counter));
             counter++;
             sendMQTT("config", line);
             Serial.println("[V] " + line);
