@@ -114,8 +114,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
             Serial.printf("%s\n", msg.c_str());
 
             if (msg.startsWith("/config")) {
-                SerialPrint("I", F("WS"), F("config send"));
-                wsSendSetup();
+                                wsSendSetup();
 
                 // publishWidgetsWS();
                 // publishStateWS();

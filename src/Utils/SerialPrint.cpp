@@ -7,5 +7,5 @@
 void SerialPrint(String errorLevel, String module, String msg) {
     String tosend = prettyMillis(millis()) + " [" + errorLevel + "] [" + module + "] " + msg;
     Serial.println(tosend);
-    wsPublishData(F("log"), tosend);
+    // wsPublishData(F("log"), tosend);
 }
