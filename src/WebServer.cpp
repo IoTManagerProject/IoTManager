@@ -1,6 +1,7 @@
 #include "WebServer.h"
 
 #include "BufferExecute.h"
+#include "Class/NotAsync.h"
 #include "FSEditor.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
@@ -10,6 +11,7 @@ AsyncWebSocket ws("/ws");
 AsyncEventSource events("/events");
 
 void HttpServerinit() {
+    wsInit();
     String login = jsonReadStr(configSetupJson, "weblogin");
     String pass = jsonReadStr(configSetupJson, "webpass");
 #ifdef ESP32
@@ -114,11 +116,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
             Serial.printf("%s\n", msg.c_str());
 
             if (msg.startsWith("/config")) {
-                                wsSendSetup();
-
-                // publishWidgetsWS();
-                // publishStateWS();
-                // choose_log_date_and_send(); //  функцию выгрузки архива с графиком я не сделал. Забираю при выгрузке по MQTT
+                myNotAsyncActions->make(do_webSocketSendSetup);
             }
 
             if (info->opcode == WS_TEXT) {

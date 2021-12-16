@@ -1,6 +1,15 @@
 #include "WebSocket.h"
 
+#include "Class/NotAsync.h"
 #include "Global.h"
+
+void wsInit() {
+    myNotAsyncActions->add(
+        do_webSocketSendSetup, [&](void*) {
+            wsSendSetup();
+        },
+        nullptr);
+}
 
 void wsSendSetup() {
     SerialPrint("I", F("WS"), F("start send config"));
@@ -19,6 +28,8 @@ void wsSendSetup() {
         //}
 
         // if (ws.enabled()) Serial.println("on");
+
+        delay(100);
 
         Serial.println(doc.as<String>());
 
