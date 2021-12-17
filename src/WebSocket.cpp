@@ -16,7 +16,6 @@ void wsSendSetup() {
     File file = seekFile("/setup.json");
 
     DynamicJsonDocument doc(2048);
-    // AsyncWebSocketMessageBuffer(20480);
 
     file.find("[");
     do {
@@ -28,8 +27,6 @@ void wsSendSetup() {
         //}
 
         // if (ws.enabled()) Serial.println("on");
-
-        delay(100);
 
         Serial.println(doc.as<String>());
 
