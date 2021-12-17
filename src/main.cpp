@@ -100,9 +100,7 @@ void setup() {
 
     // setupESP();
 
-    sendEspSetupToWS();
-
-    SerialPrint("I", F("System"), F("✔ Initialization completed"));
+        SerialPrint("I", F("System"), F("✔ Initialization completed"));
 }
 
 void loop() {
