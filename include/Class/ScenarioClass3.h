@@ -12,7 +12,7 @@ class Scenario {
         }
         String allBlocks = scenario;
         allBlocks += "\n";
-
+        
         String incommingEvent = selectToMarker(eventBuf, ",");
 
         String incommingEventKey = selectToMarker(incommingEvent, " ");
@@ -164,11 +164,12 @@ class Scenario {
         if (isEventExist(incommingEventKey, setEventKey)) {
             String setEventSign;
             String setEventValue;
-            if (type == 1) preCalculation(condition, setEventSign, setEventValue);
+            if (type == 1) preCalculation(condition, setEventSign, incommingEventValue, setEventValue);
             if (type == 2) preCalculationGisteresis(condition, setEventSign, setEventValue);
             if (isConditionMatch(setEventSign, incommingEventValue, setEventValue)) {
                 res = true;
             }
+            //SerialPrint("I", "incommingEventKey", incommingEventKey);
         }
         return res;
     }
@@ -178,8 +179,15 @@ class Scenario {
         String setEventKey = selectFromMarkerToMarker(condition, " ", 0);
         String setEventSign;
         String setEventValue;
-        preCalculation(condition, setEventSign, setEventValue);
-        String jsonValue = getValue(setEventKey);
+        String jsonValue;
+
+        if (setEventKey == "timeNow") {
+            jsonValue = timeNow->getTimeWOsec();
+        } else {
+            jsonValue = getValue(setEventKey);
+        }
+
+        preCalculation(condition, setEventSign, jsonValue, setEventValue); //warning тут не уверен что jsonValue можно использовать
         if (isConditionMatch(setEventSign, jsonValue, setEventValue)) {
             res = true;
         }
@@ -200,11 +208,22 @@ class Scenario {
     //    return res;
     //}
 
-    void preCalculation(String &condition, String &setEventSign, String &setEventValue) {
+    void preCalculation(String &condition, String &setEventSign, String &incommingEventValue, String &setEventValue) {
         setEventSign = selectFromMarkerToMarker(condition, " ", 1);
         setEventValue = selectFromMarkerToMarker(condition, " ", 2);
+        
         if (!isDigitDotCommaStr(setEventValue)) {
-            setEventValue = getValue(setEventValue);
+            if (selectToMarker(incommingEventValue, ":") != "") {
+                int hhLStr = selectToMarker(incommingEventValue, ":").toInt();
+                int mmLStr = selectToMarkerLast(incommingEventValue, ":").toInt(); 
+                int hhRStr = selectToMarker(setEventValue, ":").toInt();
+                int mmRStr = selectToMarkerLast(setEventValue, ":").toInt(); 
+                
+                incommingEventValue = hhLStr*60 + mmLStr;
+                setEventValue = hhRStr*60 + mmRStr;
+            } else {
+                setEventValue = getValue(setEventValue);
+            }
         }
     }
 
@@ -236,6 +255,7 @@ class Scenario {
 
     bool isConditionMatch(String &setEventSign, String &incommingEventValue, String &setEventValue) {
         boolean flag = false;
+        
         if (setEventSign == "=") {
             flag = incommingEventValue == setEventValue;
         } else if (setEventSign == "!=") {
@@ -249,6 +269,7 @@ class Scenario {
         } else if (setEventSign == "<=") {
             flag = incommingEventValue.toFloat() <= setEventValue.toFloat();
         }
+
         return flag;
     }
 };
