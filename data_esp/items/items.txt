@@ -34,4 +34,10 @@
 0;uptime;uptid;anydataTime;Системные;%name%#uptime;order;int[60]*
 0;sht20;tmpid;anydataTemp;Сенсоры;Температура;1;c[1]
 0;sht20;humid;anydataHum;Сенсоры;Влажность;2;c[1];int[50]*
-0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[1];int[10];type[type1]*
+0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[1];int[10];type[HDC1080_temp];addr[0x76]
+0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[1];int[10];type[HDC1080_hum];addr[0x76]*
+0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[1];int[10];type[AHTX0_temp];addr[0x76]
+0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[1];int[10];type[AHTX0_hum];addr[0x76]*
+0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[0];k[0];int[10];type[LCD];val[any]
+0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[8];k[1];int[10];type[LCD];val[any]*
+0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[1];int[10];type[type1];addr[0x76]*
