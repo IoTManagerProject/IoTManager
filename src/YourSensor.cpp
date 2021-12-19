@@ -45,7 +45,8 @@ float yourSensorReading(String type, String paramsAny) {
     if (type == "LCD") {
         LCD_init();
         LCD.setCursor(jsonReadInt(paramsAny, "с"), jsonReadInt(paramsAny, "k"));
-        LCD.print(jsonReadFloat(configLiveJson, jsonReadStr(paramsAny, "val")));
+        String toPrint = jsonReadStr(paramsAny, "descr") + " " + jsonReadStr(configLiveJson, jsonReadStr(paramsAny, "val"));
+        LCD.print(toPrint);
     }
     return value;
 }

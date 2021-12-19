@@ -25,6 +25,7 @@ class SensorAny {
     String _addr;
     String _type;
     String _val;
+    String _descr;
 
     unsigned long prevMillis;
     unsigned long difference;
