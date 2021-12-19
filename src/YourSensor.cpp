@@ -1,9 +1,12 @@
 #include "YourSensor.h"
 
+#include "Global.h"
+#include "Utils/JsonUtils.h"
 #include "Utils/StringUtils.h"
 
 //подключаем необходимые файлы библиотеки
 #include <Adafruit_AHTX0.h>
+#include <LiquidCrystal_I2C.h>
 
 #include "ClosedCube_HDC1080.h"
 
@@ -15,14 +18,17 @@ Adafruit_AHTX0 aht;
 Adafruit_Sensor *aht_humidity, *aht_temp;
 sensors_event_t tmpEvent_t;
 
-float yourSensorReading(String type, String addr) {
+//создаем объект LCD
+LiquidCrystal_I2C LCD(0x27, 16, 2);
+
+float yourSensorReading(String type, String paramsAny) {
     float value;
     //========================================================HDC1080================================================================
     if (type == "HDC1080_temp") {
-        HDC1080_init(addr);
+        HDC1080_init(jsonReadStr(paramsAny, "addr"));
         value = hdc1080.readTemperature();
     } else if (type == "HDC1080_hum") {
-        HDC1080_init(addr);
+        HDC1080_init(jsonReadStr(paramsAny, "addr"));
         value = hdc1080.readHumidity();
     }
     //==========================================================AHTX0=================================================================
@@ -30,15 +36,21 @@ float yourSensorReading(String type, String addr) {
         AHTX0_init();
         aht_temp->getEvent(&tmpEvent_t);
         value = tmpEvent_t.temperature;
-    } else if (type == "typeAHTX0_hum") {
+    } else if (type == "AHTX0_hum") {
         AHTX0_init();
         aht_humidity->getEvent(&tmpEvent_t);
         value = tmpEvent_t.relative_humidity;
     }
+    //==========================================================LCD=================================================================
+    if (type == "LCD") {
+        LCD_init();
+        LCD.setCursor(jsonReadInt(paramsAny, "с"), jsonReadInt(paramsAny, "k"));
+        LCD.print(jsonReadFloat(configLiveJson, jsonReadStr(paramsAny, "val")));
+    }
     return value;
 }
 
-void HDC1080_init(String &addr) {
+void HDC1080_init(String addr) {
     static bool HDC1080_flag = true;
     if (HDC1080_flag) {
         hdc1080.begin(hexStringToUint8(addr));
@@ -59,5 +71,13 @@ void AHTX0_init() {
         aht_humidity = aht.getHumiditySensor();
         aht_humidity->printSensorDetails();
         AHTX0_flag = false;
+    }
+}
+
+void LCD_init() {
+    static bool LCD_flag = true;
+    if (LCD_flag) {
+        LCD.init();       //инициализация дисплея
+        LCD.backlight();  //включаем подсветку
     }
 }

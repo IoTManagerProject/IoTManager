@@ -20,9 +20,11 @@ class SensorAny {
     String _paramsAny;
     int _interval;
     float _c;
+    float _k;
     String _key;
     String _addr;
     String _type;
+    String _val;
 
     unsigned long prevMillis;
     unsigned long difference;

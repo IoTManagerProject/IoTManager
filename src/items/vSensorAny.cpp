@@ -13,9 +13,11 @@ SensorAny::SensorAny(const String& paramsAny) {
 
     _interval = jsonReadInt(_paramsAny, "int");
     _c = jsonReadFloat(_paramsAny, "c");
+    _k = jsonReadFloat(_paramsAny, "k");
     _key = jsonReadStr(_paramsAny, "key");
     _addr = jsonReadStr(_paramsAny, "addr");
     _type = jsonReadStr(_paramsAny, "type");
+    _val = jsonReadStr(_paramsAny, "val");
 }
 
 SensorAny::~SensorAny() {}
@@ -29,7 +31,7 @@ void SensorAny::loop() {
 }
 
 void SensorAny::read() {
-    float value = yourSensorReading(_type, _addr);
+    float value = yourSensorReading(_type, _paramsAny);
 
     value = value * _c;
 
@@ -54,6 +56,8 @@ void AnySensor() {
     jsonWriteStr(params, "addr", myLineParsing.gaddr());
     jsonWriteStr(params, "int", myLineParsing.gint());
     jsonWriteStr(params, "c", myLineParsing.gc());
+    jsonWriteStr(params, "k", myLineParsing.gk());
+    jsonWriteStr(params, "val", myLineParsing.gval());
     jsonWriteStr(params, "type", myLineParsing.gtype());
     myLineParsing.clear();
 
