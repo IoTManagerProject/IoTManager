@@ -21,15 +21,9 @@ void wsSendSetup() {
     do {
         deserializeJson(doc, file);
 
-        // wsPublishData(F("config"), doc.as<String>());
-        // if (ws.enabled()) {
-        ws.textAll("[config]" + doc.as<String>());
-        //}
-
-        // if (ws.enabled()) Serial.println("on");
+        ws.textAll("[config]" + doc.as<char>());
 
         Serial.println(doc.as<String>());
-
     } while (file.findUntil(",", "]"));
     SerialPrint("I", F("WS"), F("completed send config"));
 }
@@ -38,3 +32,8 @@ void wsPublishData(String topic, String data) {
     data = "[" + topic + "]" + data;
     ws.textAll(data);
 }
+
+// wsPublishData(F("config"), doc.as<String>());
+// if (ws.enabled()) {
+//}
+// if (ws.enabled()) Serial.println("on");
