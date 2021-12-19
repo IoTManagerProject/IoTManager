@@ -1,6 +1,7 @@
 #pragma once
 //===================Libraries===================================================================================================================================================
 #include <Arduino.h>
+#include "CTBot.h"
 #include <ArduinoJson.h>
 #include <ArduinoOTA.h>
 #include <PubSubClient.h>
@@ -9,7 +10,7 @@
 #include <Wire.h>
 #include <time.h>
 
-#include "CTBot.h"
+
 #include "Clock.h"
 #include "Consts.h"
 #include "ESP32.h"
