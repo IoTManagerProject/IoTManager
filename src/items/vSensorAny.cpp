@@ -18,6 +18,7 @@ SensorAny::SensorAny(const String& paramsAny) {
     _addr = jsonReadStr(_paramsAny, "addr");
     _type = jsonReadStr(_paramsAny, "type");
     _val = jsonReadStr(_paramsAny, "val");
+    _descr = jsonReadStr(_paramsAny, "descr");
 }
 
 SensorAny::~SensorAny() {}
@@ -59,6 +60,7 @@ void AnySensor() {
     jsonWriteStr(params, "k", myLineParsing.gk());
     jsonWriteStr(params, "val", myLineParsing.gval());
     jsonWriteStr(params, "type", myLineParsing.gtype());
+    jsonWriteStr(params, "descr", myLineParsing.gdescr());
     myLineParsing.clear();
 
     static bool firstTime = true;
