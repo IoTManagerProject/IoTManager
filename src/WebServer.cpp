@@ -116,7 +116,8 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
             Serial.printf("%s\n", msg.c_str());
 
             if (msg.startsWith("/config")) {
-                myNotAsyncActions->make(do_webSocketSendSetup);
+                // myNotAsyncActions->make(do_webSocketSendSetup);
+                wsSetupFlag = true;
             }
 
             if (info->opcode == WS_TEXT) {

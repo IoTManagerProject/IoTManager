@@ -18,6 +18,7 @@ AsyncWebServer server(80);
 boolean just_load = true;
 boolean telegramInitBeen = false;
 boolean savedFromWeb = false;
+boolean wsSetupFlag = false;
 
 // Json
 String configSetupJson = "{}";
@@ -45,6 +46,7 @@ int currentBroker = 1;
 
 // orders and events
 String orderBuf = "";
+String wsBuf = "";
 String eventBuf = "";
 String mysensorBuf = "";
 String itemsFile = "";

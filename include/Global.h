@@ -1,7 +1,6 @@
 #pragma once
 //===================Libraries===================================================================================================================================================
 #include <Arduino.h>
-#include "CTBot.h"
 #include <ArduinoJson.h>
 #include <ArduinoOTA.h>
 #include <PubSubClient.h>
@@ -10,7 +9,7 @@
 #include <Wire.h>
 #include <time.h>
 
-
+#include "CTBot.h"
 #include "Clock.h"
 #include "Consts.h"
 #include "ESP32.h"
@@ -40,6 +39,7 @@ extern AsyncWebServer server;
 extern boolean just_load;
 extern boolean telegramInitBeen;
 extern boolean savedFromWeb;
+extern boolean wsSetupFlag;
 
 // Json
 extern String configSetupJson;   //все настройки
@@ -68,6 +68,7 @@ extern int currentBroker;
 
 // orders and events
 extern String orderBuf;
+extern String wsBuf;
 extern String eventBuf;
 extern String mysensorBuf;
 extern String itemsFile;
