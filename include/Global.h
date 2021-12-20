@@ -66,6 +66,10 @@ extern int mqttConnectAttempts;
 extern bool changeBroker;
 extern int currentBroker;
 
+// web sockets
+extern int wsAttempts;
+//extern char* wsBufChar;
+
 // orders and events
 extern String orderBuf;
 extern String wsBuf;

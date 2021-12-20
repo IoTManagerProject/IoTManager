@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Class/CircularBuffer.h"
 #include "Global.h"
 void wsInit();
 void wsSendSetup();

@@ -1,6 +1,7 @@
 #include "WebSocket.h"
 
 #include "ArduinoJson.h"
+#include "Class/CircularBuffer.h"
 #include "Class/NotAsync.h"
 #include "Global.h"
 
@@ -22,11 +23,10 @@ void wsPublishData(String topic, String data) {
     }
 }
 
-//отправка setup массива в sockets способом через string
+//отправка setup массива в sockets способом через буфер string, рабочий способ но буфер стринг - плохой метод
 void wsSendSetup() {
     File file = seekFile("/setup.json");
     DynamicJsonDocument doc(2048);
-    AsyncWebSocketMessageBuffer(20480);
     int i = 0;
     file.find("[");
     SerialPrint("I", F("WS"), F("start send config"));
@@ -41,13 +41,50 @@ void wsSendSetup() {
 }
 
 void loopWsExecute() {
+    static int attampts = wsAttempts;
     if (wsBuf.length()) {
-        if (ws.availableForWriteAll()) {
-            String tmp = selectToMarker(wsBuf, "\n");
-            wsPublishData("config", tmp);
-            wsBuf = deleteBeforeDelimiter(wsBuf, "\n");
+        if (attampts > 0) {
+            if (ws.availableForWriteAll()) {
+                String tmp = selectToMarker(wsBuf, "\n");
+                wsPublishData("config", tmp);
+                wsBuf = deleteBeforeDelimiter(wsBuf, "\n");
+                attampts = wsAttempts;
+            } else {
+                attampts--;
+                SerialPrint("I", F("WS"), String(attampts));
+            }
+        } else {
+            SerialPrint("I", F("WS"), F("socket fatal error"));
+            attampts = wsAttempts;
         }
     }
+}
+
+//отправка setup массива в sockets способом через кольщевой буфер char
+void wsSendSetup2() {
+    // myWsBuffer = new CircularBuffer<char*, 20480>;
+    // File file = seekFile("/setup.json");
+    // DynamicJsonDocument doc(2048);
+    // int i = 0;
+    // file.find("[");
+    // SerialPrint("I", F("WS"), F("start send config"));
+    // do {
+    //     i++;
+    //     deserializeJson(doc, file);
+    //     char* element = "";
+    //     serializeJson(doc, (char*)element, 1024);
+    //     Serial.println(element);
+    //     myWsBuffer->push(element);
+    //
+    //} while (file.findUntil(",", "]"));
+    // SerialPrint("I", F("WS"), F("completed send config"));
+}
+
+void loopWsExecute2() {
+    // char* item;
+    // if (myWsBuffer->pop(item)) {
+    //     Serial.println(item);
+    // }
 }
 
 //отправка setup массива в sockets способом прямой загрузки в ws buffer

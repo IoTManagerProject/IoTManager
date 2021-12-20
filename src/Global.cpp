@@ -44,6 +44,10 @@ int mqttConnectAttempts = 0;
 bool changeBroker = false;
 int currentBroker = 1;
 
+// web sockets
+int wsAttempts = 100;
+//char* wsBufChar = "";
+
 // orders and events
 String orderBuf = "";
 String wsBuf = "";

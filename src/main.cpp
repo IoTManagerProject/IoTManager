@@ -85,7 +85,7 @@ void setup() {
 
     getFSInfo();
 
-    // testsPerform();
+    testsPerform();
 
     just_load = false;
     initialized = true;
@@ -108,6 +108,8 @@ void loop() {
     if (!initialized) {
         return;
     }
+
+    testLoop();
 
     if (wsSetupFlag) {
         wsSetupFlag = false;
