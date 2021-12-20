@@ -34,8 +34,6 @@ void wsSendSetup() {
         i++;
         deserializeJson(doc, file);
         wsBuf += doc.as<String>() + "\n";
-        // wsPublishData("config", doc.as<String>());
-        // Serial.println(doc.as<String>());
     } while (file.findUntil(",", "]"));
     SerialPrint("I", F("WS"), F("completed send config"));
 }
