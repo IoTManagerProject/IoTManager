@@ -5,6 +5,8 @@ void wsInit();
 void wsPublishData(String topic, String data);
 
 // void wsSendSetup();
+// void handleWs();
+
 // void wsSendSetupBuffer();
 //
 // void sendDataWs();

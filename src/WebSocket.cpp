@@ -4,15 +4,11 @@
 #include "Class/NotAsync.h"
 #include "Class/TCircularBuffer.h"
 #include "Global.h"
+#include "ws.h"
 
 void wsInit() {
-    // myWsBuffer = new TCircularBuffer<char*, 20480>;
-    //  myNotAsyncActions->add(
-    //      do_webSocketSendSetup, [&](void*) {
-    //          delay(100);
-    //          wsSendSetup();
-    //      },
-    //      nullptr);
+    // myWebSockets->sendFile("/setup.json");
+    // SerialPrint("I", F("WS"), F("start ws"));
 }
 
 void wsPublishData(String topic, String data) {
@@ -25,39 +21,39 @@ void wsPublishData(String topic, String data) {
 }
 
 //отправка setup массива в sockets способом через буфер string, рабочий способ но буфер стринг - плохой метод
-void wsSendSetup3() {
-    File file = seekFile("/setup.json");
-    DynamicJsonDocument doc(2048);
-    int i = 0;
-    file.find("[");
-    SerialPrint("I", F("WS"), F("start send config"));
-    do {
-        i++;
-        deserializeJson(doc, file);
-        wsBuf += doc.as<String>() + "\n";
-    } while (file.findUntil(",", "]"));
-    SerialPrint("I", F("WS"), F("completed send config"));
-}
-
-void loopWsExecute3() {
-    static int attampts = wsAttempts;
-    if (wsBuf.length()) {
-        if (attampts > 0) {
-            if (ws.availableForWriteAll()) {
-                String tmp = selectToMarker(wsBuf, "\n");
-                wsPublishData("config", tmp);
-                wsBuf = deleteBeforeDelimiter(wsBuf, "\n");
-                attampts = wsAttempts;
-            } else {
-                attampts--;
-                SerialPrint("I", F("WS"), String(attampts));
-            }
-        } else {
-            SerialPrint("I", F("WS"), F("socket fatal error"));
-            attampts = wsAttempts;
-        }
-    }
-}
+// void wsSendSetup3() {
+//    File file = seekFile("/setup.json");
+//    DynamicJsonDocument doc(1024);
+//    int i = 0;
+//    file.find("[");
+//    SerialPrint("I", F("WS"), F("start send config"));
+//    do {
+//        i++;
+//        deserializeJson(doc, file);
+//        wsBuf += doc.as<String>() + "\n";
+//    } while (file.findUntil(",", "]"));
+//    SerialPrint("I", F("WS"), F("completed send config"));
+//}
+//
+// void loopWsExecute3() {
+//    static int attampts = wsAttempts;
+//    if (wsBuf.length()) {
+//        if (attampts > 0) {
+//            if (ws.availableForWriteAll()) {
+//                String tmp = selectToMarker(wsBuf, "\n");
+//                wsPublishData("config", tmp);
+//                wsBuf = deleteBeforeDelimiter(wsBuf, "\n");
+//                attampts = wsAttempts;
+//            } else {
+//                attampts--;
+//                SerialPrint("I", F("WS"), String(attampts));
+//            }
+//        } else {
+//            SerialPrint("I", F("WS"), F("socket fatal error"));
+//            attampts = wsAttempts;
+//        }
+//    }
+//}
 
 //отправка setup массива в sockets способом через кольцевой буфер char
 // void wsSendSetup() {

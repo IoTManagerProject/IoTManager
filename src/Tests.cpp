@@ -11,19 +11,15 @@
 void testsPerform() {
     Serial.println("====some tests section====");
     //ТЕСТ КОЛЬЦЕВОГО БУФЕРА=============================================================================
-    myTCircularBuffer = new TCircularBuffer<char*, 1024>;
-
-    char* buf = "text";
-
-    for (int i = 1; i <= 5; i++) {
-        myTCircularBuffer->push(buf);
-    }
-
-    char* item;
-
-    while (myTCircularBuffer->pop(item)) {
-        Serial.println(item);
-    }
+    // myTCircularBuffer = new TCircularBuffer<char*, 1024>;
+    // char* buf = "text";
+    // for (int i = 1; i <= 5; i++) {
+    //    myTCircularBuffer->push(buf);
+    //}
+    // char* item;
+    // while (myTCircularBuffer->pop(item)) {
+    //    Serial.println(item);
+    //}
     //===================================================================================================
     // String str = "0;1;2;3;4";
     // char* mychar = new char[str.length() + 1];

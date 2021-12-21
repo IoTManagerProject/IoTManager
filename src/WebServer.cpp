@@ -6,6 +6,7 @@
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
 #include "WebSocket.h"
+#include "ws.h"
 
 AsyncWebSocket ws("/ws");
 AsyncEventSource events("/events");
@@ -37,10 +38,10 @@ void HttpServerinit() {
     server.serveStatic("/", FileFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
 #endif
 
-    //server.onNotFound([](AsyncWebServerRequest *request) {
-    //    SerialPrint("[E]", "WebServer", "not found:\n" + getRequestInfo(request));
-    //    request->send(404);
-    //});
+    // server.onNotFound([](AsyncWebServerRequest *request) {
+    //     SerialPrint("[E]", "WebServer", "not found:\n" + getRequestInfo(request));
+    //     request->send(404);
+    // });
 
     server.onNotFound([](AsyncWebServerRequest *request) {
         if (request->method() == HTTP_OPTIONS) {
@@ -134,8 +135,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
             Serial.printf("%s\n", msg.c_str());
 
             if (msg.startsWith("/config")) {
-                // myNotAsyncActions->make(do_webSocketSendSetup);
-                // wsSetupFlag = true;
+                myWebSockets->sendFile("/setup.json");
             }
 
             if (info->opcode == WS_TEXT) {

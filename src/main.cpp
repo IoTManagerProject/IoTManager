@@ -38,6 +38,7 @@
 //=========================================
 #include "SetupESP.h"
 #include "WebServer.h"
+#include "ws.h"
 
 void not_async_actions();
 
@@ -52,8 +53,6 @@ void setup() {
 
     myNotAsyncActions = new NotAsync(do_LAST);
     myScenario = new Scenario();
-
-    wsInit();
 
     //=========================================initialisation==============================================================
     setChipId();
@@ -103,12 +102,20 @@ void setup() {
 
     // setupESP();
 
+    myWebSockets = new WebSockets;
+
+    wsInit();
+
     SerialPrint("I", F("System"), F("✔ Initialization completed"));
 }
 
 void loop() {
     if (!initialized) {
         return;
+    }
+
+    if (myWebSockets != nullptr) {
+        myWebSockets->loop();
     }
 
     testLoop();

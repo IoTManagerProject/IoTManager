@@ -103,5 +103,5 @@ class TCircularBuffer {
     bool _full;
 };
 
-extern TCircularBuffer<char *, 1024> *myTCircularBuffer;
-extern TCircularBuffer<char *, 20480> *myWsBuffer;
+// extern TCircularBuffer<char *, 1024> *myTCircularBuffer;
+// extern TCircularBuffer<char *, 20480> *myWsBuffer;
