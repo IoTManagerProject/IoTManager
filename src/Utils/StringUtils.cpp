@@ -155,6 +155,18 @@ boolean isDigitStr(const String& str) {
     return str.length();
 }
 
+boolean isTimeStr(const String& str) {
+    
+    for (size_t i = 0; i < str.length(); i++) {
+        char latter = str.charAt(i);
+        if (!isDigit(latter) && latter != ':') {
+            return false;
+        }
+    }
+    if (str.charAt(2) != ':') return false;
+    return true;
+}
+
 boolean isDigitDotCommaStr(const String& str) {
     for (size_t i = 0; i < str.length(); i++) {
         char latter = str.charAt(i);

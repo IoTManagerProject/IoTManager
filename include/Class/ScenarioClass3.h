@@ -10,10 +10,14 @@ class Scenario {
         if (!jsonReadBool(configSetupJson, "scen")) {
             return;
         }
+
         String allBlocks = scenario;
         allBlocks += "\n";
         
         String incommingEvent = selectToMarker(eventBuf, ",");
+        if (incommingEvent == "") {
+            return;
+        }
 
         String incommingEventKey = selectToMarker(incommingEvent, " ");
         String incommingEventValue = selectToMarkerLast(incommingEvent, " ");
@@ -159,19 +163,20 @@ class Scenario {
 
    private:
     bool isScenarioNeedToDo(String &condition, String &incommingEventKey, String &incommingEventValue, int type) {
-        bool res = false;
+        if (condition == "") return false;
         String setEventKey = selectFromMarkerToMarker(condition, " ", 0);
         if (isEventExist(incommingEventKey, setEventKey)) {
             String setEventSign;
             String setEventValue;
-            if (type == 1) preCalculation(condition, setEventSign, incommingEventValue, setEventValue);
+            String cloneOfIncommingEventValue = incommingEventValue; //клонируем для изменения в preCalculation и передачи для проверки по условиям
+            if (type == 1) preCalculation(condition, setEventSign, cloneOfIncommingEventValue, setEventValue);
             if (type == 2) preCalculationGisteresis(condition, setEventSign, setEventValue);
-            if (isConditionMatch(setEventSign, incommingEventValue, setEventValue)) {
-                res = true;
+            if (isConditionMatch(setEventSign, cloneOfIncommingEventValue, setEventValue)) {
+                return true;
             }
             //SerialPrint("I", "incommingEventKey", incommingEventKey);
         }
-        return res;
+        return false;
     }
 
     bool isScenarioNeedToDoJson(String &condition) {
@@ -179,15 +184,9 @@ class Scenario {
         String setEventKey = selectFromMarkerToMarker(condition, " ", 0);
         String setEventSign;
         String setEventValue;
-        String jsonValue;
 
-        if (setEventKey == "timeNow") {
-            jsonValue = timeNow->getTimeWOsec();
-        } else {
-            jsonValue = getValue(setEventKey);
-        }
-
-        preCalculation(condition, setEventSign, jsonValue, setEventValue); //warning тут не уверен что jsonValue можно использовать
+        String jsonValue = getValue(setEventKey);
+        preCalculation(condition, setEventSign, jsonValue, setEventValue);
         if (isConditionMatch(setEventSign, jsonValue, setEventValue)) {
             res = true;
         }
@@ -211,14 +210,14 @@ class Scenario {
     void preCalculation(String &condition, String &setEventSign, String &incommingEventValue, String &setEventValue) {
         setEventSign = selectFromMarkerToMarker(condition, " ", 1);
         setEventValue = selectFromMarkerToMarker(condition, " ", 2);
-        
+
         if (!isDigitDotCommaStr(setEventValue)) {
-            if (selectToMarker(incommingEventValue, ":") != "") {
+            if (isTimeStr(incommingEventValue)) {
                 int hhLStr = selectToMarker(incommingEventValue, ":").toInt();
                 int mmLStr = selectToMarkerLast(incommingEventValue, ":").toInt(); 
                 int hhRStr = selectToMarker(setEventValue, ":").toInt();
                 int mmRStr = selectToMarkerLast(setEventValue, ":").toInt(); 
-                
+
                 incommingEventValue = hhLStr*60 + mmLStr;
                 setEventValue = hhRStr*60 + mmRStr;
             } else {
@@ -247,15 +246,20 @@ class Scenario {
 
     bool isEventExist(String &incommingEventKey, String &setEventKey) {
         bool res = false;
-        if (incommingEventKey == setEventKey) {
+        if (incommingEventKey != "not found" && incommingEventKey == setEventKey) {
             res = true;
         }
         return res;
     }
 
     bool isConditionMatch(String &setEventSign, String &incommingEventValue, String &setEventValue) {
-        boolean flag = false;
+        if (setEventValue == "no value") return false;
         
+        boolean flag = false;
+        //SerialPrint("I", "setEventSign", setEventSign);
+        //SerialPrint("I", "incommingEventValue", incommingEventValue);
+        //SerialPrint("I", "setEventValue", setEventValue);
+        //SerialPrint("I", "==========", "===============");
         if (setEventSign == "=") {
             flag = incommingEventValue == setEventValue;
         } else if (setEventSign == "!=") {
