@@ -1,9 +1,11 @@
 #include "WebServer.h"
 
 #include "BufferExecute.h"
+#include "Class/NotAsync.h"
 #include "FSEditor.h"
 #include "Utils/FileUtils.h"
 #include "Utils/WebUtils.h"
+#include "WebSocket.h"
 
 AsyncWebSocket ws("/ws");
 AsyncEventSource events("/events");
@@ -17,6 +19,12 @@ void HttpServerinit() {
     server.addHandler(new FSEditor(login, pass));
 #endif
 
+    //#ifdef CORS_DEBUG
+    DefaultHeaders::Instance().addHeader(F("Access-Control-Allow-Origin"), F("*"));
+    DefaultHeaders::Instance().addHeader(F("Access-Control-Allow-Headers"), F("content-type"));
+    //#endif
+
+    // server.sendHeader("Access-Control-Allow-Origin", "*");
     server.serveStatic("/css/", FileFS, "/css/").setCacheControl("max-age=600");
     server.serveStatic("/js/", FileFS, "/js/").setCacheControl("max-age=600");
     server.serveStatic("/favicon.ico", FileFS, "/favicon.ico").setCacheControl("max-age=600");
@@ -29,9 +37,17 @@ void HttpServerinit() {
     server.serveStatic("/", FileFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
 #endif
 
+    //server.onNotFound([](AsyncWebServerRequest *request) {
+    //    SerialPrint("[E]", "WebServer", "not found:\n" + getRequestInfo(request));
+    //    request->send(404);
+    //});
+
     server.onNotFound([](AsyncWebServerRequest *request) {
-        SerialPrint("[E]", "WebServer", "not found:\n" + getRequestInfo(request));
-        request->send(404);
+        if (request->method() == HTTP_OPTIONS) {
+            request->send(200);
+        } else {
+            request->send(404);
+        }
     });
 
     server.onFileUpload([](AsyncWebServerRequest *request, const String &filename, size_t index, uint8_t *data, size_t len, bool final) {
@@ -42,6 +58,11 @@ void HttpServerinit() {
         if (final) {
             SerialPrint("I", "WebServer", "finish upload: " + prettyBytes(index + len));
         }
+    });
+
+    server.on("/file.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        String file = readFile("file.json", 1024);
+        request->send(200, "application/json", file);
     });
 
     // динамические данные
@@ -112,13 +133,9 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
             }
             Serial.printf("%s\n", msg.c_str());
 
-            if (msg.startsWith("config")) {
-                SerialPrint("I", F("WS"), F("config send"));
-                sendEspSetupToWS();
-
-                // publishWidgetsWS();
-                // publishStateWS();
-                // choose_log_date_and_send(); //  функцию выгрузки архива с графиком я не сделал. Забираю при выгрузке по MQTT
+            if (msg.startsWith("/config")) {
+                // myNotAsyncActions->make(do_webSocketSendSetup);
+                // wsSetupFlag = true;
             }
 
             if (info->opcode == WS_TEXT) {
@@ -210,19 +227,4 @@ void HttpServerinitWS() {
     });
     server.addHandler(&events);
 #endif
-}
-
-//===========web sockets==============================
-void sendEspSetupToWS() {
-    File file = seekFile("/setup.json");
-    DynamicJsonDocument doc(1024);
-    file.find("[");
-
-    do {
-        deserializeJson(doc, file);
-
-        // Serial.println(doc.as<String>());
-        ws.textAll(doc.as<String>());
-
-    } while (file.findUntil(",", "]"));
 }

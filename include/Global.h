@@ -39,6 +39,7 @@ extern AsyncWebServer server;
 extern boolean just_load;
 extern boolean telegramInitBeen;
 extern boolean savedFromWeb;
+extern boolean wsSetupFlag;
 
 // Json
 extern String configSetupJson;   //все настройки
@@ -65,8 +66,13 @@ extern int mqttConnectAttempts;
 extern bool changeBroker;
 extern int currentBroker;
 
+// web sockets
+extern int wsAttempts;
+//extern char* wsBufChar;
+
 // orders and events
 extern String orderBuf;
+extern String wsBuf;
 extern String eventBuf;
 extern String mysensorBuf;
 extern String itemsFile;
