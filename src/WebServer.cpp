@@ -11,7 +11,7 @@ AsyncWebSocket ws("/ws");
 AsyncEventSource events("/events");
 
 void HttpServerinit() {
-    wsInit();
+    
     String login = jsonReadStr(configSetupJson, "weblogin");
     String pass = jsonReadStr(configSetupJson, "webpass");
 #ifdef ESP32

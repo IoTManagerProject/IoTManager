@@ -53,6 +53,8 @@ void setup() {
     myNotAsyncActions = new NotAsync(do_LAST);
     myScenario = new Scenario();
 
+    wsInit();
+
     //=========================================initialisation==============================================================
     setChipId();
     fileSystemInit();

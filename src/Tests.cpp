@@ -1,7 +1,7 @@
 #include "Tests.h"
 
 #include "BufferExecute.h"
-#include "Class/CircularBuffer.h"
+#include "Class/TCircularBuffer.h"
 #include "Global.h"
 #include "ItemsList.h"
 #include "Macro.h"
@@ -11,20 +11,19 @@
 void testsPerform() {
     Serial.println("====some tests section====");
     //ТЕСТ КОЛЬЦЕВОГО БУФЕРА=============================================================================
-    // CircularBuffer<char*, 2048>* myCircularBuffer;
-    // myCircularBuffer = new CircularBuffer<char*, 1024>;
-    //
-    // char* buf = "text";
-    //
-    // for (int i = 1; i <= 5; i++) {
-    //    myCircularBuffer->push(buf);
-    //}
-    //
-    // char* item;
-    //
-    // while (myCircularBuffer->pop(item)) {
-    //    Serial.println(item);
-    //}
+    myTCircularBuffer = new TCircularBuffer<char*, 1024>;
+
+    char* buf = "text";
+
+    for (int i = 1; i <= 5; i++) {
+        myTCircularBuffer->push(buf);
+    }
+
+    char* item;
+
+    while (myTCircularBuffer->pop(item)) {
+        Serial.println(item);
+    }
     //===================================================================================================
     // String str = "0;1;2;3;4";
     // char* mychar = new char[str.length() + 1];

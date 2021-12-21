@@ -4,11 +4,11 @@
 
 template <typename T, size_t BUFFER_SIZE>
 
-class CircularBuffer {
+class TCircularBuffer {
    public:
-    CircularBuffer() : _head{0}, _tail{0}, _full{false} {}
+    TCircularBuffer() : _head{0}, _tail{0}, _full{false} {}
 
-    ~CircularBuffer() {}
+    ~TCircularBuffer() {}
 
     void reset() {
         _head = _tail = _full = 0;
@@ -103,4 +103,5 @@ class CircularBuffer {
     bool _full;
 };
 
-extern CircularBuffer<char *, 20480> *myWsBuffer;
+extern TCircularBuffer<char *, 1024> *myTCircularBuffer;
+extern TCircularBuffer<char *, 20480> *myWsBuffer;
