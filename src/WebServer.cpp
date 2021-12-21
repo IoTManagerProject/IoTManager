@@ -11,7 +11,6 @@ AsyncWebSocket ws("/ws");
 AsyncEventSource events("/events");
 
 void HttpServerinit() {
-    wsInit();
     String login = jsonReadStr(configSetupJson, "weblogin");
     String pass = jsonReadStr(configSetupJson, "webpass");
 #ifdef ESP32
@@ -20,6 +19,12 @@ void HttpServerinit() {
     server.addHandler(new FSEditor(login, pass));
 #endif
 
+    //#ifdef CORS_DEBUG
+    DefaultHeaders::Instance().addHeader(F("Access-Control-Allow-Origin"), F("*"));
+    DefaultHeaders::Instance().addHeader(F("Access-Control-Allow-Headers"), F("content-type"));
+    //#endif
+
+    // server.sendHeader("Access-Control-Allow-Origin", "*");
     server.serveStatic("/css/", FileFS, "/css/").setCacheControl("max-age=600");
     server.serveStatic("/js/", FileFS, "/js/").setCacheControl("max-age=600");
     server.serveStatic("/favicon.ico", FileFS, "/favicon.ico").setCacheControl("max-age=600");
@@ -32,9 +37,17 @@ void HttpServerinit() {
     server.serveStatic("/", FileFS, "/").setDefaultFile("index.htm").setAuthentication(login.c_str(), pass.c_str());
 #endif
 
+    //server.onNotFound([](AsyncWebServerRequest *request) {
+    //    SerialPrint("[E]", "WebServer", "not found:\n" + getRequestInfo(request));
+    //    request->send(404);
+    //});
+
     server.onNotFound([](AsyncWebServerRequest *request) {
-        SerialPrint("[E]", "WebServer", "not found:\n" + getRequestInfo(request));
-        request->send(404);
+        if (request->method() == HTTP_OPTIONS) {
+            request->send(200);
+        } else {
+            request->send(404);
+        }
     });
 
     server.onFileUpload([](AsyncWebServerRequest *request, const String &filename, size_t index, uint8_t *data, size_t len, bool final) {
@@ -45,6 +58,11 @@ void HttpServerinit() {
         if (final) {
             SerialPrint("I", "WebServer", "finish upload: " + prettyBytes(index + len));
         }
+    });
+
+    server.on("/file.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        String file = readFile("file.json", 1024);
+        request->send(200, "application/json", file);
     });
 
     // динамические данные
@@ -116,7 +134,8 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
             Serial.printf("%s\n", msg.c_str());
 
             if (msg.startsWith("/config")) {
-                myNotAsyncActions->make(do_webSocketSendSetup);
+                // myNotAsyncActions->make(do_webSocketSendSetup);
+                // wsSetupFlag = true;
             }
 
             if (info->opcode == WS_TEXT) {

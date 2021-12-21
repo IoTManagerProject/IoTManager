@@ -1,4 +1,5 @@
 #include "Web.h"
+
 #include "BufferExecute.h"
 #include "Class/NotAsync.h"
 #include "Global.h"
@@ -174,7 +175,7 @@ void web_init() {
         }
 
         //==============================mqtt settings=============================================
-        //primary
+        // primary
         if (request->hasArg(F("mqttServer"))) {
             jsonWriteStr(configSetupJson, F("mqttServer"), request->getParam(F("mqttServer"))->value());
             saveConfig();
@@ -206,7 +207,7 @@ void web_init() {
             myNotAsyncActions->make(do_MQTTPARAMSCHANGED);
             request->send(200);
         }
-        //secondary
+        // secondary
         if (request->hasArg(F("mqttServer2"))) {
             jsonWriteStr(configSetupJson, F("mqttServer2"), request->getParam(F("mqttServer2"))->value());
             saveConfig();
@@ -240,7 +241,7 @@ void web_init() {
         }
 
         if (request->hasArg("mqttsend")) {
-            //myNotAsyncActions->make(do_MQTTUDP);
+            // myNotAsyncActions->make(do_MQTTUDP);
             request->send(200);
         }
 
@@ -336,7 +337,7 @@ void web_init() {
             serverIP = jsonReadStr(configSetupJson, "serverip");
             request->send(200);
         }
-        //set?order=button_1
+        // set?order=button_1
         if (request->hasArg("order")) {
             String order = request->getParam("order")->value();
             order.replace("_", " ");
@@ -351,7 +352,7 @@ void web_init() {
             request->send(200);
         }
 
-        //gate mode
+        // gate mode
 
         if (request->hasArg("gateAuto")) {
             bool value = request->getParam("gateAuto")->value().toInt();
@@ -359,19 +360,18 @@ void web_init() {
             saveConfig();
             request->send(200);
         }
-
     });
 
-    //server.on("/del", HTTP_GET, [](AsyncWebServerRequest* request) {
-    //    if (request->hasArg("file") && request->hasArg("line")) {
-    //        String fileName = request->getParam("file")->value();
-    //        Serial.println(fileName);
-    //        int line = request->getParam("line")->value().toInt();
-    //        Serial.println(line);
-    //        myNotAsyncActions->make(do_delChoosingItems);
-    //        request->redirect(F("/?set.device"));
-    //    }
-    //});
+    // server.on("/del", HTTP_GET, [](AsyncWebServerRequest* request) {
+    //     if (request->hasArg("file") && request->hasArg("line")) {
+    //         String fileName = request->getParam("file")->value();
+    //         Serial.println(fileName);
+    //         int line = request->getParam("line")->value().toInt();
+    //         Serial.println(line);
+    //         myNotAsyncActions->make(do_delChoosingItems);
+    //         request->redirect(F("/?set.device"));
+    //     }
+    // });
 
     server.on("/check", HTTP_GET, [](AsyncWebServerRequest* request) {
         myNotAsyncActions->make(do_GETLASTVERSION);
@@ -402,8 +402,8 @@ void web_init() {
     });
 
     /*
-    * Upgrade
-    */
+     * Upgrade
+     */
     server.on("/upgrade", HTTP_GET, [](AsyncWebServerRequest* request) {
         myNotAsyncActions->make(do_UPGRADE);
         request->send(200, "text/html");

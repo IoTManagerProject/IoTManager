@@ -20,6 +20,7 @@
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
 #include "WebServer.h"
+#include "WebSocket.h"
 #include "items/ButtonInClass.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
@@ -51,6 +52,8 @@ void setup() {
 
     myNotAsyncActions = new NotAsync(do_LAST);
     myScenario = new Scenario();
+
+    wsInit();
 
     //=========================================initialisation==============================================================
     setChipId();
@@ -84,7 +87,7 @@ void setup() {
 
     getFSInfo();
 
-    // testsPerform();
+    testsPerform();
 
     just_load = false;
     initialized = true;
@@ -100,13 +103,23 @@ void setup() {
 
     // setupESP();
 
-        SerialPrint("I", F("System"), F("✔ Initialization completed"));
+    SerialPrint("I", F("System"), F("✔ Initialization completed"));
 }
 
 void loop() {
     if (!initialized) {
         return;
     }
+
+    testLoop();
+
+    // if (wsSetupFlag) {
+    // wsSetupFlag = false;
+    // wsSendSetup();
+    //}
+
+    // loopWsExecute();
+
 #ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.handle();
 #endif
