@@ -113,12 +113,12 @@ void loop() {
 
     testLoop();
 
-    if (wsSetupFlag) {
-        wsSetupFlag = false;
-        wsSendSetup();
-    }
+    // if (wsSetupFlag) {
+    // wsSetupFlag = false;
+    // wsSendSetup();
+    //}
 
-    loopWsExecute();
+    // loopWsExecute();
 
 #ifdef OTA_UPDATES_ENABLED
     ArduinoOTA.handle();
