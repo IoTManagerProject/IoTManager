@@ -19,6 +19,3 @@ bool jsonWriteStr_(String& json, String name, String value);
 bool jsonWriteBool_(String& json, String name, bool value);
 bool jsonWriteInt_(String& json, String name, int value);
 bool jsonWriteFloat_(String& json, String name, float value);
-
-void saveConfig();
-void saveStore();

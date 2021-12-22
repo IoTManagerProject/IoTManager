@@ -124,9 +124,9 @@ void breakEpochToTime(unsigned long epoch, Time_t& tm) {
 //                prevTime = timenow;
 //                jsonWriteStr(configLiveJson, "timenow", timenow);
 //                eventGen2("timenow", timenow);
-//                SerialPrint("I", F("NTP"), timenow);
+//                SerialPrint("i", F("NTP"), timenow);
 //            }
 //        },
 //        nullptr, true);
-//    SerialPrint("I", F("NTP"), F("Handle time init"));
+//    SerialPrint("i", F("NTP"), F("Handle time init"));
 //}

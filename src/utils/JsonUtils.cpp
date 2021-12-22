@@ -166,11 +166,5 @@ bool jsonWriteFloat_(String& json, String key, float value) {
     serializeJson(doc, json);
     return ret;
 }
-//=================================================================================
-void saveConfig() {
-    writeFile(String("config.json"), settingsFlashJson);
-}
 
-void saveStore() {
-    writeFile(String("store.json"), paramsFlashJson);
-}
+//=================================================================================

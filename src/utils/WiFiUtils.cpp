@@ -19,8 +19,8 @@ void routerConnect() {
 #else
         WiFi.setOutputPower(20.5);
 #endif
-        SerialPrint("I", "WIFI", "ssid: " + _ssid);
-        SerialPrint("I", "WIFI", "pass: " + _password);
+        SerialPrint("i", "WIFI", "ssid: " + _ssid);
+        SerialPrint("i", "WIFI", "pass: " + _password);
     }
 
     while (--tries && WiFi.status() != WL_CONNECTED) {
@@ -38,16 +38,16 @@ void routerConnect() {
         startAPMode();
     } else {
         Serial.println("");
-        SerialPrint("I", "WIFI", "http://" + WiFi.localIP().toString());
+        SerialPrint("i", "WIFI", "http://" + WiFi.localIP().toString());
         jsonWriteStr(settingsFlashJson, "ip", WiFi.localIP().toString());
 
         //mqttInit();
     }
-    SerialPrint("I", F("WIFI"), F("Network Init"));
+    SerialPrint("i", F("WIFI"), F("Network Init"));
 }
 
 bool startAPMode() {
-    SerialPrint("I", "WIFI", "AP Mode");
+    SerialPrint("i", "WIFI", "AP Mode");
 
     WiFi.disconnect();
     WiFi.mode(WIFI_AP);
@@ -58,7 +58,7 @@ bool startAPMode() {
     WiFi.softAP(_ssidAP.c_str(), _passwordAP.c_str());
     IPAddress myIP = WiFi.softAPIP();
 
-    SerialPrint("I", "WIFI", "AP IP: " + myIP.toString());
+    SerialPrint("i", "WIFI", "AP IP: " + myIP.toString());
     jsonWriteStr(settingsFlashJson, "ip", myIP.toString());
 
     // if (jsonReadInt(paramsHeapJson, "pass_status") != 1) {
@@ -66,7 +66,7 @@ bool startAPMode() {
         WIFI_SCAN, 10 * 1000, [&](void*) {
             String sta_ssid = jsonReadStr(settingsFlashJson, "routerssid");
 
-            SerialPrint("I", "WIFI", "scanning for " + sta_ssid);
+            SerialPrint("i", "WIFI", "scanning for " + sta_ssid);
 
             if (RouterFind(sta_ssid)) {
                 ts.remove(WIFI_SCAN);
@@ -82,19 +82,19 @@ bool startAPMode() {
 boolean RouterFind(String ssid) {
     bool res = false;
     int n = WiFi.scanComplete();
-    SerialPrint("I", "WIFI", "scan result: " + String(n, DEC));
+    SerialPrint("i", "WIFI", "scan result: " + String(n, DEC));
 
     if (n == -2) {  //Сканирование не было запущено, запускаем
-        SerialPrint("I", "WIFI", "start scanning");
+        SerialPrint("i", "WIFI", "start scanning");
         WiFi.scanNetworks(true, false);  // async, show_hidden
     }
 
     else if (n == -1) {  //Сканирование все еще выполняется
-        SerialPrint("I", "WIFI", "scanning in progress");
+        SerialPrint("i", "WIFI", "scanning in progress");
     }
 
     else if (n == 0) {  //ни одна сеть не найдена
-        SerialPrint("I", "WIFI", "no networks found");
+        SerialPrint("i", "WIFI", "no networks found");
         WiFi.scanNetworks(true, false);
     }
 
@@ -103,7 +103,7 @@ boolean RouterFind(String ssid) {
             if (WiFi.SSID(i) == ssid) {
                 res = true;
             }
-            SerialPrint("I", "WIFI", (res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
+            SerialPrint("i", "WIFI", (res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
         }
     }
     WiFi.scanDelete();
@@ -138,7 +138,7 @@ uint8_t RSSIquality() {
 void wifiSignalInit() {
     ts.add(
         SYGNAL, 1000 * 60, [&](void*) {
-            //SerialPrint("I", "System", printMemoryStatus());
+            //SerialPrint("i", "System", printMemoryStatus());
 
             //getFSInfo();
 

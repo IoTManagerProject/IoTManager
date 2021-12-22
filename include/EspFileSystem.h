@@ -11,3 +11,6 @@ extern FS* filesystem;
 
 extern bool fileSystemInit();
 extern void globalVarsSync();
+
+void saveSettingsFlashJson();
+void saveParamsFlashJson();

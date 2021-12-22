@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESP8266httpUpdate.h>
+#include <ESPAsyncWebServer.h>
 #include <FS.h>
 #include <TickerScheduler.h>
 
@@ -15,6 +16,7 @@
 
 //глобальные объекты классов
 extern TickerScheduler ts;
+extern AsyncWebServer server;
 
 //глобальные переменные
 extern String settingsFlashJson;
