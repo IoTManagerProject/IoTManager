@@ -2,10 +2,10 @@
 
 bool fileSystemInit() {
     if (!FileFS.begin()) {
-        Serial.println("FS Init ERROR, may be FS was not flashed");
+        SerialPrint(F("E"), F("FS"), F("Init ERROR, may be FS was not flashed"));
         return false;
     }
-    Serial.println("FS Init completed");
+    SerialPrint(F("i"), F("FS"), F("Init completed"));
     return true;
 }
 
@@ -13,7 +13,7 @@ File seekFile(const String& filename, size_t position) {
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
     if (!file) {
-        Serial.println("[E] file error");
+        SerialPrint(F("E"), F("FS"), F("seek file error"));
     }
     file.seek(position, SeekSet);
     return file;
@@ -53,9 +53,9 @@ const String filepath(const String& filename) {
 bool cutFile(const String& src, const String& dst) {
     String srcPath = filepath(src);
     String dstPath = filepath(dst);
-    Serial.println("cut " + srcPath + " to " + dstPath);
+    SerialPrint(F("i"), F("FS"), "cut " + srcPath + " to " + dstPath);
     if (!FileFS.exists(srcPath)) {
-        Serial.println("not exist: " + srcPath);
+        SerialPrint(F("E"), F("FS"), "not exist: " + srcPath);
         return false;
     }
     if (FileFS.exists(dstPath)) {
@@ -63,7 +63,6 @@ bool cutFile(const String& src, const String& dst) {
     }
     auto srcFile = FileFS.open(srcPath, "r");
     auto dstFile = FileFS.open(dstPath, "w");
-
     uint8_t buf[512];
     while (srcFile.available()) {
         size_t len = srcFile.read(buf, 512);
