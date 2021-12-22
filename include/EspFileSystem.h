@@ -10,3 +10,4 @@ extern FS* filesystem;
 #define FS_NAME "LittleFS"
 
 extern bool fileSystemInit();
+extern void globalVarsSync();

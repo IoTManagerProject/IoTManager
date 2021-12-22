@@ -8,3 +8,8 @@ bool fileSystemInit() {
     SerialPrint(F("i"), F("FS"), F("Init completed"));
     return true;
 }
+
+void globalVarsSync() {
+    settingsFlashJson = readFile("settings.json", 4096);
+    settingsFlashJson.replace("\r\n", "");
+}
