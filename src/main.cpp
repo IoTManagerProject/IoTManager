@@ -1,6 +1,4 @@
-#include "main.h"
-
-#include "rest.h"
+#include "Main.h"
 
 void setup() {
     Serial.begin(115200);
