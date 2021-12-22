@@ -1,4 +1,4 @@
-#include "rest.h"
+#include "Utils/Pretty.h"
 
 String prettyBytes(size_t size) {
     if (size < 1024)
