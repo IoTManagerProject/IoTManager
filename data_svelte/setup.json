@@ -1,0 +1,542 @@
+[
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 1,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 2,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 3,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 4,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 5,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 6,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 7,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 8,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 9,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 10,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 11,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 12,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 13,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 14,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 15,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 16,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 17,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 18,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 19,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 20,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 21,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 22,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 23,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 24,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 25,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 26,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 27,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 28,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 29,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 30,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 31,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 32,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 33,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 34,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 1,
+            "topic": "/prefix/123456-123456/btn1"
+        },
+        "set": {
+            "id": "btn1",
+            "gpio": 35,
+            "inv": false
+        }
+    },
+    {
+        "type": "button-out",
+        "web": {
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "order": 2,
+            "topic": "/prefix/123456-123456/btn2"
+        },
+        "set": {
+            "id": "btn2",
+            "gpio": 36,
+            "inv": false
+        }
+    }
+]
