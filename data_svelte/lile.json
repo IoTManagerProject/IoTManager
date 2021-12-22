@@ -1,7 +1,0 @@
-{
-    "type": "binary",
-    "subtype": "button-out",
-    "id": "btn1",
-    "gpio": 1,
-    "inv": false
-}
