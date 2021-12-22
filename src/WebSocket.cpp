@@ -22,7 +22,7 @@ void wsPublishData(String topic, String data) {
 
 //отправка setup массива в sockets способом через буфер string, рабочий способ но буфер стринг - плохой метод
 // void wsSendSetup3() {
-//    File file = seekFile("/setup.json");
+//   File file = seekFile("/setup.json");
 //    DynamicJsonDocument doc(1024);
 //    int i = 0;
 //    file.find("[");
