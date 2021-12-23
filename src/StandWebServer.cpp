@@ -24,7 +24,7 @@ void standWebServerInit() {
 File fsUploadFile;
 
 void standWebServerFiles() {
-#ifdef RSET_FILE_OPERATIONS
+#ifdef REST_FILE_OPERATIONS
     SPIFFS.begin();
     {
         Dir dir = SPIFFS.openDir("/");
@@ -107,7 +107,7 @@ String getContentType(String filename) {
     return "text/plain";
 }
 
-#ifdef RSET_FILE_OPERATIONS
+#ifdef REST_FILE_OPERATIONS
 // Здесь функции для работы с файловой системой
 void handleFileUpload() {
     if (HTTP.uri() != "/edit") return;

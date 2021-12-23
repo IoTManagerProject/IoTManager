@@ -1,9 +1,12 @@
 #pragma once
 
+//Это версия прошивки
 #define FIRMWARE_VERSION 400
 
+//Размер буфера json
 #define JSON_BUFFER_SIZE 4096
 
+//выбор сервера
 //#define ASYNC_WEB_SERVER
 #define STANDARD_WEB_SERVER
 

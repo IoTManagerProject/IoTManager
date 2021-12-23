@@ -23,8 +23,13 @@
 #endif
 
 #ifdef STANDARD_WEB_SERVER
+#ifdef ESP8266
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
+#endif
+#ifdef ESP32
+#include <WebServer.h>
+#endif
 #endif
 
 #include <FS.h>
@@ -41,8 +46,13 @@ extern AsyncWebServer server;
 #endif
 
 #ifdef STANDARD_WEB_SERVER
+#ifdef ESP8266
 extern ESP8266WebServer HTTP;
 extern ESP8266HTTPUpdateServer httpUpdater;
+#endif
+#ifdef ESP32
+extern WebServer HTTP;
+#endif
 #endif
 
 //глобальные переменные
