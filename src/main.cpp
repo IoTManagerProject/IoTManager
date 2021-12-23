@@ -12,11 +12,11 @@ void setup() {
     //синхронизация глобальных переменных с flash
     globalVarsSync();
 
-    //инициализация асинхронного веб сервера
+//инициализация асинхронного веб сервера и веб сокетов
+#ifdef ACYNC_WEB_SERVER
     webServerInit();
-
-    //инициализация веб сокетов асинхронного веб сервера
     webSocketsInit();
+#endif
 
     //подключаемся к роутеру
     routerConnect();
@@ -26,7 +26,13 @@ void setup() {
     // 22.12.21 запустил wifi       остаток    = 48.59 kB
     // 22.12.21 добавил асинхронный веб сервер = 38.36 kB
     // 22.12.21 добавил web sockets            = 37.63 kB
-    SerialPrint(F("i"), F("HEAP"), prettyBytes(ESP.getFreeHeap()));
+
+    //создали задачу которая будет выполняться каждые 30 секунд
+    ts.add(
+        MYTEST, 1000 * 30, [&](void*) {
+            SerialPrint(F("i"), F("HEAP"), prettyBytes(ESP.getFreeHeap()));
+        },
+        nullptr, true);
 }
 
 void loop() {

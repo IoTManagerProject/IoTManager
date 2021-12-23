@@ -1,5 +1,5 @@
 #include "WebServer.h"
-
+#ifdef ACYNC_WEB_SERVER
 AsyncWebSocket ws("/ws");
 AsyncEventSource events("/events");
 
@@ -10,6 +10,11 @@ void webServerInit() {
     // server.addHandler(new FSEditor(FileFS, login, pass));
 #else
     // server.addHandler(new FSEditor(login, pass));
+#endif
+
+#ifdef CORS_DEBUG
+    DefaultHeaders::Instance().addHeader(F("Access-Control-Allow-Origin"), F("*"));
+    DefaultHeaders::Instance().addHeader(F("Access-Control-Allow-Headers"), F("content-type"));
 #endif
 
     server.serveStatic("/css/", FileFS, "/css/").setCacheControl("max-age=600");
@@ -34,6 +39,8 @@ void webServerInit() {
             // SerialPrint("i", "WebServer", "finish upload: " + prettyBytes(index + len));
         }
     });
+
+    //Обработка гет запросов
 
     // динамические данные
     // server.on("/config.live.json", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -145,3 +152,4 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
         }
     }
 }
+#endif
