@@ -10,14 +10,14 @@ bool fileSystemInit() {
 }
 
 void globalVarsSync() {
-    settingsFlashJson = readFile("settings.json", 4096);
+    settingsFlashJson = readFile(F("settings.json"), 4096);
     settingsFlashJson.replace("\r\n", "");
 }
 
 void saveSettingsFlashJson() {
-    writeFile(String("config.json"), settingsFlashJson);
+    writeFile(F("settings.json"), settingsFlashJson);
 }
 
 void saveParamsFlashJson() {
-    writeFile(String("store.json"), paramsFlashJson);
+    writeFile(F("params.json"), paramsFlashJson);
 }

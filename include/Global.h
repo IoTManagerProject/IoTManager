@@ -3,10 +3,20 @@
 //внешние глобальные директории
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <TickerScheduler.h>
+
+#ifdef ESP32
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <HTTPUpdate.h>
+#endif
+
+#ifdef ESP8266
 #include <ESP8266httpUpdate.h>
+#endif
+
 #include <ESPAsyncWebServer.h>
 #include <FS.h>
-#include <TickerScheduler.h>
 
 //внутренние глобальные директории проекта
 #include "Const.h"
