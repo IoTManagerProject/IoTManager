@@ -43,7 +43,7 @@
 
 std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
 std::vector<IoTSensor*> iotSensors;  //v3dev: вектор ссылок базового класса IoTSensor - список всех запущенных сенсоров
-int InitModulesApi();  //v3dev: инициализация модуля при первом вызове . 
+void InitModulesApi();  //v3dev: инициализация модуля при первом вызове . 
 
 
 void not_async_actions();

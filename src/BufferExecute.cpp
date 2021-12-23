@@ -179,8 +179,8 @@ void csvCmdExecute(String& cmdStr) {
                 if (moduleInfo.key == order) {
                     SerialPrint("I", "Debug moduleInfo.parameters", buf);
 
-                    if (moduleInfo.type == "Sensor") {
-                        myLineParsing.update();
+                    if (moduleInfo.type == "Sensor") { 
+                        myLineParsing.update();  //v3dev: пока используем мостик для совместимости версий, предполагается, что настройки сразу будут в JSON
                         String interval = myLineParsing.gint();
                         String pin = myLineParsing.gpin();
                         String index = myLineParsing.gindex();

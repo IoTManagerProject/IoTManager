@@ -10,7 +10,7 @@
 
 extern std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
 
-#define IOTSENSORKEY "dallas-temp"
+#define IOTDALLASTEMPKEY "dallas-temp"
 
 class IoTSensorDallas: public IoTSensor {
     private:
@@ -26,7 +26,7 @@ class IoTSensorDallas: public IoTSensor {
     public:
         //аналог setup() из Arduino
         IoTSensorDallas(String parameters) {
-            init(jsonReadInt(parameters, "int"), IOTSENSORKEY);  //передаем часть базовых параметров в конструктор базового класса для обеспечения работы его методов
+            init(jsonReadInt(parameters, "int"), IOTDALLASTEMPKEY);  //передаем часть базовых параметров в конструктор базового класса для обеспечения работы его методов
             _pin = jsonReadInt(parameters, "pin");
             _index = jsonReadInt(parameters, "index");
             _addr = jsonReadStr(parameters, "addr");             
@@ -61,32 +61,18 @@ class IoTSensorDallas: public IoTSensor {
         }
 };
 
-
-// void dallas() {
-//     myLineParsing.update();
-//     String interval = myLineParsing.gint();
-//     String pin = myLineParsing.gpin();
-//     String index = myLineParsing.gindex();
-//     String key = myLineParsing.gkey();
-//     String addr = myLineParsing.gaddr();
-//     myLineParsing.clear();
-
-//     static bool firstTime = true;
-//     if (firstTime) mySensorDallas2 = new MySensorDallasVector();
-//     firstTime = false;
-// }
-
-
+//технический класс для взаимодействия с ядром, меняются только названия
 class IoTModuleDallasTemp: public IoTModule {
+    //обязательный метод для инициализации экземпляра датчика, вызывается при чтении конфигурации. Нужно учитывать, что некоторые датчики могут обеспечивать
+    //несколько измерений, для каждого будет отдельный вызов.
     void* initInstance(String parameters) {
-        SerialPrint("I", "Debug", "Вызывается initInstance из IoTModuleDallasTemp");
-
         return new IoTSensorDallas(parameters);
     };
 
+    //обязательный метод для отправки информации о модуле, 
     ModuleInfo getInfo() {
         ModuleInfo MI;
-        MI.key = IOTSENSORKEY;
+        MI.key = IOTDALLASTEMPKEY;
         MI.name = "Датчик температуры Ds18b20";
         MI.parameters = "{\"addr\": \"\", \"int\": \"10\", \"pin\": \"18\", \"index\": \"0\"}";
         MI.type = "Sensor";
@@ -94,9 +80,8 @@ class IoTModuleDallasTemp: public IoTModule {
     };
 };
 
-
+//точка входа в модуль для заполнения вектора, требуется только изменить имя и прописать в файле api.cpp
 void getApiIoTSensorDallasTemp() {
-    SerialPrint("I", "Debug", "call getApiIoTSensorDallasTemp");
     iotModules.push_back(new IoTModuleDallasTemp());
     return;
 }
