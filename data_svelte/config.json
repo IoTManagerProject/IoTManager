@@ -1,0 +1,559 @@
+[
+    {
+        "type": "binary",
+        "subtype": "button-out",
+        "id": "btn1",
+        "gpio": 1,
+        "inv": false
+    },
+    {
+        "type": "sensor1",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp1",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor2",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor3",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor4",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor5",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor6",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor7",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor8",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor9",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor10",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor11",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor12",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor13",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor14",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor15",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor16",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor17",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor18",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor19",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor20",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor21",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor22",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor23",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor24",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor25",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor26",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor27",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor28",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor29",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor30",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor31",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor32",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor33",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor34",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor35",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor36",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor37",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor38",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor39",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor40",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor41",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor42",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor43",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor44",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor45",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor46",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor47",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor48",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor49",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor50",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor51",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor52",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor53",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor54",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    },
+    {
+        "type": "sensor55",
+        "subtype": "bme280",
+        "units": "temp",
+        "id": "tmp2",
+        "addr": "0x48",
+        "int": 10,
+        "c": 1,
+        "s": 0
+    }
+]

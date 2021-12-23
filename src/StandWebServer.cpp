@@ -205,6 +205,16 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
         case WStype_TEXT: {
             Serial.printf("[%u] get Text: %s\n", num, payload);
 
+            String payloadStr;
+            payloadStr.reserve(length + 1);
+            for (size_t i = 0; i < length; i++) {
+                payloadStr += (char)payload[i];
+            }
+
+            if (payloadStr.startsWith("/config")) {
+                if (myStreamJsonArray) myStreamJsonArray->sendFile("/config.json", num);
+            }
+
             // send message to client
             // standWebSocket.sendTXT(num, "message here");
 

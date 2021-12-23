@@ -1,0 +1,11 @@
+{
+    "name": "IoTmanager",
+    "apssid": "IoTmanager",
+    "appass": "",
+    "routerssid": "rise",
+    "routerpass": "hostel3333",
+    "timezone": 1,
+    "ntp": "pool.ntp.org",
+    "weblogin": "admin",
+    "webpass": "admin"
+}

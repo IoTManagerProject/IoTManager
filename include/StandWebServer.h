@@ -1,5 +1,6 @@
 #pragma once
 #include "Global.h"
+#include "Web.h"
 #ifdef STANDARD_WEB_SERVER
 extern void standWebServerInit();
 

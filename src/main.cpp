@@ -31,6 +31,8 @@ void setup() {
     //подключаемся к роутеру
     routerConnect();
 
+    myStreamJsonArray = new StreamJsonArray;
+
     //выводим остаток оперативной памяти после старта
     // 22.12.21 пустой код без wifi остаток    = 50.28 kB
     // 22.12.21 запустил wifi       остаток    = 48.59 kB
@@ -48,6 +50,8 @@ void setup() {
 void loop() {
     //обновление задач таскера
     ts.update();
+
+    if (myStreamJsonArray) myStreamJsonArray->loop();
 
 #ifdef STANDARD_WEB_SERVER
     HTTP.handleClient();
