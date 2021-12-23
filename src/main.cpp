@@ -30,4 +30,6 @@ void setup() {
 }
 
 void loop() {
+    //обновление задач таскера
+    ts.update();
 }

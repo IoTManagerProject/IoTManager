@@ -41,7 +41,7 @@ void routerConnect() {
         SerialPrint("i", "WIFI", "http://" + WiFi.localIP().toString());
         jsonWriteStr(settingsFlashJson, "ip", WiFi.localIP().toString());
 
-        //mqttInit();
+        // mqttInit();
     }
     SerialPrint("i", F("WIFI"), F("Network Init"));
 }
@@ -138,31 +138,27 @@ uint8_t RSSIquality() {
 void wifiSignalInit() {
     ts.add(
         SYGNAL, 1000 * 60, [&](void*) {
-            //SerialPrint("i", "System", printMemoryStatus());
-
-            //getFSInfo();
-
             switch (RSSIquality()) {
                 case 0:
-                    jsonWriteStr(settingsFlashJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>не подключено к роутеру</font>"));
+                    jsonWriteStr(settingsFlashJson, F("signal"), F("не подключено к роутеру"));
                     break;
                 case 1:
-                    jsonWriteStr(settingsFlashJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>нет сигнала</font>"));
+                    jsonWriteStr(settingsFlashJson, F("signal"), F("нет сигнала"));
                     break;
                 case 2:
-                    jsonWriteStr(settingsFlashJson, F("signal"), F("Уровень WiFi сигнала: <font color='red'>очень низкий</font>"));
+                    jsonWriteStr(settingsFlashJson, F("signal"), F("очень низкий"));
                     break;
                 case 3:
-                    jsonWriteStr(settingsFlashJson, F("signal"), F("Уровень WiFi сигнала: <font color='orange'>низкий</font>"));
+                    jsonWriteStr(settingsFlashJson, F("signal"), F("низкий"));
                     break;
                 case 4:
-                    jsonWriteStr(settingsFlashJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>хороший</font>"));
+                    jsonWriteStr(settingsFlashJson, F("signal"), F("хороший"));
                     break;
                 case 5:
-                    jsonWriteStr(settingsFlashJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>очень хороший</font>"));
+                    jsonWriteStr(settingsFlashJson, F("signal"), F("очень хороший"));
                     break;
                 case 6:
-                    jsonWriteStr(settingsFlashJson, F("signal"), F("Уровень WiFi сигнала: <font color='green'>отличный</font>"));
+                    jsonWriteStr(settingsFlashJson, F("signal"), F("отличный"));
                     break;
             }
         },
