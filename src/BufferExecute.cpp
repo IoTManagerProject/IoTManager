@@ -15,13 +15,21 @@
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
-#include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
 #include "items/vSensorSHT20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
+
+#include "Class/LineParsing.h"
+#include "Utils/JsonUtils.h"
+
+#include "Class/IoTModule.h"
+#include "Class/IoTSensor.h"
+
+extern std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
+extern std::vector<IoTSensor*> iotSensors;  //v3dev: вектор ссылок базового класса IoTSensor - список всех запущенных сенсоров
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
@@ -73,6 +81,7 @@ void csvCmdExecute(String& cmdStr) {
         if (count > 1) {
             // SerialPrint("I", "Items", buf);
             String order = selectToMarker(buf, " ");  //отсечка самой команды
+            
             if (order == F("button-out")) {
 #ifdef EnableButtonOut
                 sCmd.addCommand(order.c_str(), buttonOut);
@@ -103,9 +112,9 @@ void csvCmdExecute(String& cmdStr) {
 #endif
 //ИНТЕГРИРУЮ: Первая интеграция в ядро. Следим за наименованием
             } else if (order == F("dallas-temp")) {
-#ifdef EnableSensorDallas
-                sCmd.addCommand(order.c_str(), dallas);
-#endif
+// #ifdef EnableSensorDallas
+//                 sCmd.addCommand(order.c_str(), dallas);
+// #endif
             } else if (order == F("dht")) {
 #ifdef EnableSensorDht
                 sCmd.addCommand(order.c_str(), dhtSensor);
@@ -161,6 +170,31 @@ void csvCmdExecute(String& cmdStr) {
             }
 
             sCmd.readStr(buf);
+
+            //v3dev: инициируем экземпляр модулей в случае необходимости
+            for (unsigned int i = 0; i < iotModules.size(); i++) {
+                SerialPrint("I", "Debug iotModules count", "");
+
+                ModuleInfo moduleInfo = iotModules[i]->getInfo();
+                if (moduleInfo.key == order) {
+                    SerialPrint("I", "Debug moduleInfo.parameters", buf);
+
+                    if (moduleInfo.type == "Sensor") {
+                        myLineParsing.update();
+                        String interval = myLineParsing.gint();
+                        String pin = myLineParsing.gpin();
+                        String index = myLineParsing.gindex();
+                        String addr = myLineParsing.gaddr();
+                        myLineParsing.clear();
+                        String strTmp = "{\"addr\": \"" + addr + "\", \"int\": \"" + interval + "\", \"pin\": \"" + pin + "\", \"index\": \"" + index + "\"}";
+
+                        iotSensors.push_back((IoTSensor*)iotModules[i]->initInstance(strTmp));
+                    } else if (moduleInfo.type == "Container")
+                    {
+                        //iot.push_back((IoTSensor*)iotModules[i]->initInstance(moduleInfo.parameters));
+                    }
+                }
+            }
         }
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
     }

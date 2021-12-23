@@ -15,7 +15,6 @@
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
-#include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
@@ -161,13 +160,6 @@ void clearVectors() {
     }
     pwmOut_KeyList = "";
     pwmOut_EnterCounter = -1;
-#endif
-    //==================================
-    //ИНТЕГРИРУЮ: Вторая интеграция в ядро. Следим за наименованием
-#ifdef EnableSensorDallas
-    if (mySensorDallas2 != nullptr) {
-        mySensorDallas2->clear();
-    }
 #endif
 #ifdef EnableSensorUltrasonic
     if (mySensorUltrasonic != nullptr) {

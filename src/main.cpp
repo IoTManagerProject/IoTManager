@@ -28,7 +28,6 @@
 #include "items/vSensorBme280.h"
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
-#include "items/vSensorDallas.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
@@ -36,6 +35,17 @@
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 //#include "WebServer.h"
+
+#include <vector>
+#include "Class/IoTSensor.h"
+#include "Class/IoTModule.h"
+
+
+std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
+std::vector<IoTSensor*> iotSensors;  //v3dev: вектор ссылок базового класса IoTSensor - список всех запущенных сенсоров
+int InitModulesApi();  //v3dev: инициализация модуля при первом вызове . 
+
+
 void not_async_actions();
 
 Timings metric;
@@ -60,6 +70,10 @@ void setup() {
     clockInit();
     timeInit();
     itemsListInit();
+
+    SerialPrint("I", "Debug", "call setup");
+    InitModulesApi();  //v3dev: инициализация модуля при первом вызове . 
+
     espInit();
     routerConnect();
 #ifdef EnableTelegram
@@ -146,13 +160,7 @@ void loop() {
         }
     }
 #endif
-#ifdef EnableSensorDallas
-    if (mySensorDallas2 != nullptr) {
-        for (unsigned int i = 0; i < mySensorDallas2->size(); i++) {
-            mySensorDallas2->at(i).loop();
-        }
-    }
-#endif
+
 #ifdef EnableSensorUltrasonic
     if (mySensorUltrasonic != nullptr) {
         for (unsigned int i = 0; i < mySensorUltrasonic->size(); i++) {
@@ -234,4 +242,12 @@ void loop() {
 #ifdef EnableButtonIn
     myButtonIn.loop();
 #endif
+
+
+
+
+    //v3dev: перебираем все экземпляры сенсоров должно заменить в v4 все вызовы сенсоров выше
+    for (unsigned int i = 0; i < iotSensors.size(); i++) {
+        iotSensors[i]->loop();
+    }
 }
