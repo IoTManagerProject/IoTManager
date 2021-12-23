@@ -24,6 +24,10 @@ void setup() {
     standWebServerFiles();
 #endif
 
+#ifdef STANDARD_WEB_SOCKETS
+    standWebSocketsInit();
+#endif
+
     //подключаемся к роутеру
     routerConnect();
 
@@ -47,5 +51,9 @@ void loop() {
 
 #ifdef STANDARD_WEB_SERVER
     HTTP.handleClient();
+#endif
+
+#ifdef STANDARD_WEB_SOCKETS
+    standWebSocket.loop();
 #endif
 }

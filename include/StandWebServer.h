@@ -14,3 +14,8 @@ extern void handleFileCreate();
 extern void handleFileList();
 #endif
 #endif
+
+#ifdef STANDARD_WEB_SOCKETS
+extern void standWebSocketsInit();
+extern void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length);
+#endif

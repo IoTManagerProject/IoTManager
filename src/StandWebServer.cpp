@@ -68,7 +68,7 @@ bool handleFileRead(String path) {
         if (FileFS.exists(pathWithGz))
             path += ".gz";
         File file = FileFS.open(path, "r");
-        size_t sent = HTTP.streamFile(file, contentType);
+        HTTP.streamFile(file, contentType);
         file.close();
         return true;
     }
@@ -180,4 +180,46 @@ void handleFileList() {
     HTTP.send(200, "text/json", output);
 }
 #endif
+#endif
+
+#ifdef STANDARD_WEB_SOCKETS
+void standWebSocketsInit() {
+    standWebSocket.begin();
+    standWebSocket.onEvent(webSocketEvent);
+}
+
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length) {
+    switch (type) {
+        case WStype_DISCONNECTED:
+            Serial.printf("[%u] Disconnected!\n", num);
+            break;
+
+        case WStype_CONNECTED: {
+            IPAddress ip = standWebSocket.remoteIP(num);
+            Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+
+            // send message to client
+            standWebSocket.sendTXT(num, "Connected");
+        } break;
+
+        case WStype_TEXT:
+            Serial.printf("[%u] get Text: %s\n", num, payload);
+
+            // send message to client
+            // standWebSocket.sendTXT(num, "message here");
+
+            // send data to all connected clients
+            // standWebSocket.broadcastTXT("message here");
+            break;
+
+        case WStype_BIN:
+            Serial.printf("[%u] get binary length: %u\n", num, length);
+            hexdump(payload, length);
+
+            // send message to client
+            // standWebSocket.sendBIN(num, payload, length);
+            break;
+    }
+}
+
 #endif
