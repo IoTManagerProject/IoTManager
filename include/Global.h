@@ -14,11 +14,17 @@
 #endif
 
 #ifdef ESP8266
+#include <ESP8266WiFi.h>
 #include <ESP8266httpUpdate.h>
 #endif
 
-#ifdef ACYNC_WEB_SERVER
+#ifdef ASYNC_WEB_SERVER
 #include <ESPAsyncWebServer.h>
+#endif
+
+#ifdef STANDARD_WEB_SERVER
+#include <ESP8266WebServer.h>
+#include <ESP8266HTTPUpdateServer.h>
 #endif
 
 #include <FS.h>
@@ -30,8 +36,13 @@
 
 //глобальные объекты классов
 extern TickerScheduler ts;
-#ifdef ACYNC_WEB_SERVER
+#ifdef ASYNC_WEB_SERVER
 extern AsyncWebServer server;
+#endif
+
+#ifdef STANDARD_WEB_SERVER
+extern ESP8266WebServer HTTP;
+extern ESP8266HTTPUpdateServer httpUpdater;
 #endif
 
 //глобальные переменные

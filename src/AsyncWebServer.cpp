@@ -1,9 +1,9 @@
-#include "WebServer.h"
-#ifdef ACYNC_WEB_SERVER
+#include "AsyncWebServer.h"
+#ifdef ASYNC_WEB_SERVER
 AsyncWebSocket ws("/ws");
 AsyncEventSource events("/events");
 
-void webServerInit() {
+void asyncWebServerInit() {
     String login = jsonReadStr(settingsFlashJson, "weblogin");
     String pass = jsonReadStr(settingsFlashJson, "webpass");
 #ifdef ESP32
@@ -71,7 +71,7 @@ void webServerInit() {
     SerialPrint("i", F("WEB"), F("WebServer Init"));
 }
 
-void webSocketsInit() {
+void asyncWebSocketsInit() {
     ws.onEvent(onWsEvent);
     server.addHandler(&ws);
     events.onConnect([](AsyncEventSourceClient *client) {

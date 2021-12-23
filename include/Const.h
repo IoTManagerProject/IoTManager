@@ -4,7 +4,7 @@
 
 #define JSON_BUFFER_SIZE 4096
 
-#define ACYNC_WEB_SERVER
+//#define ASYNC_WEB_SERVER
 #define STANDARD_WEB_SERVER
 
 #ifdef esp8266_4mb

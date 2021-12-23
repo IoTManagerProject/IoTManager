@@ -2,8 +2,13 @@
 
 //глобальные объекты классов
 TickerScheduler ts(MYTEST + 1);
-#ifdef ACYNC_WEB_SERVER
+#ifdef ASYNC_WEB_SERVER
 AsyncWebServer server(80);
+#endif
+
+#ifdef STANDARD_WEB_SERVER
+ESP8266HTTPUpdateServer httpUpdater;
+ESP8266WebServer HTTP(80);
 #endif
 
 //глобальные переменные

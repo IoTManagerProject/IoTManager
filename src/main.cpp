@@ -13,9 +13,15 @@ void setup() {
     globalVarsSync();
 
 //инициализация асинхронного веб сервера и веб сокетов
-#ifdef ACYNC_WEB_SERVER
-    webServerInit();
-    webSocketsInit();
+#ifdef ASYNC_WEB_SERVER
+    asyncWebServerInit();
+    asyncWebSocketsInit();
+#endif
+
+//инициализация стандартного веб сервера
+#ifdef STANDARD_WEB_SERVER
+    standWebServerInit();
+    standWebServerFiles();
 #endif
 
     //подключаемся к роутеру
@@ -38,4 +44,8 @@ void setup() {
 void loop() {
     //обновление задач таскера
     ts.update();
+
+#ifdef STANDARD_WEB_SERVER
+    HTTP.handleClient();
+#endif
 }
