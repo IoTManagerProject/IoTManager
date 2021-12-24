@@ -2,7 +2,7 @@
 
 #include "Utils/FileUtils.h"
 
-//================================================================================
+// new================================================================================
 String jsonReadStrDoc(DynamicJsonDocument& doc, String name) {
     return doc[name].as<String>();
 }
@@ -54,6 +54,63 @@ bool jsonRead(String& json, String key, int& value) {
         ret = false;
     }
     value = doc[key].as<int>();
+    return ret;
+}
+
+// new==============================================================================
+bool jsonWriteStr_(String& json, String key, String value) {
+    bool ret = true;
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        SerialPrint("EE", F("jsonWrite"), error.f_str());
+        ret = false;
+    }
+    doc[key] = value;
+    json = "";
+    serializeJson(doc, json);
+    return ret;
+}
+
+bool jsonWriteBool_(String& json, String key, bool value) {
+    bool ret = true;
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        SerialPrint("EE", F("jsonWrite"), error.f_str());
+        ret = false;
+    }
+    doc[key] = value;
+    json = "";
+    serializeJson(doc, json);
+    return ret;
+}
+
+bool jsonWriteInt_(String& json, String key, int value) {
+    bool ret = true;
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        SerialPrint("EE", F("jsonWrite"), error.f_str());
+        ret = false;
+    }
+    doc[key] = value;
+    json = "";
+    serializeJson(doc, json);
+    return ret;
+}
+
+bool jsonWriteFloat_(String& json, String key, float value) {
+    bool ret = true;
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        SerialPrint("EE", F("jsonWrite"), error.f_str());
+        ret = false;
+    }
+    doc[key] = value;
+    json = "";
+    serializeJson(doc, json);
     return ret;
 }
 
@@ -119,62 +176,3 @@ String jsonWriteFloat(String& json, String name, float value) {
     serializeJson(doc, json);
     return json;
 }
-
-// new==============================================================================
-bool jsonWriteStr_(String& json, String key, String value) {
-    bool ret = true;
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) {
-        SerialPrint("EE", F("jsonWrite"), error.f_str());
-        ret = false;
-    }
-    doc[key] = value;
-    json = "";
-    serializeJson(doc, json);
-    return ret;
-}
-
-bool jsonWriteBool_(String& json, String key, bool value) {
-    bool ret = true;
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) {
-        SerialPrint("EE", F("jsonWrite"), error.f_str());
-        ret = false;
-    }
-    doc[key] = value;
-    json = "";
-    serializeJson(doc, json);
-    return ret;
-}
-
-bool jsonWriteInt_(String& json, String key, int value) {
-    bool ret = true;
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) {
-        SerialPrint("EE", F("jsonWrite"), error.f_str());
-        ret = false;
-    }
-    doc[key] = value;
-    json = "";
-    serializeJson(doc, json);
-    return ret;
-}
-
-bool jsonWriteFloat_(String& json, String key, float value) {
-    bool ret = true;
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) {
-        SerialPrint("EE", F("jsonWrite"), error.f_str());
-        ret = false;
-    }
-    doc[key] = value;
-    json = "";
-    serializeJson(doc, json);
-    return ret;
-}
-
-//=================================================================================

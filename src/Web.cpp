@@ -14,7 +14,8 @@ void StreamJsonArray::sendFile(String path, uint8_t num) {
 void StreamJsonArray::loop() {
     // if (ws.availableForWriteAll()) {
     if (file.available()) {
-        String jsonArrayElement = file.readStringUntil('}') + "}";
+        String jsonArrayElement = _path + file.readStringUntil('}') + "}";
+        //jsonArrayElement.replace("]}", "]");
         // Serial.println(jsonArrayElement);
         standWebSocket.sendTXT(_num, jsonArrayElement);
         // ws.textAll(jsonArrayElement);

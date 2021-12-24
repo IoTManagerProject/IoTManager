@@ -77,6 +77,6 @@ extern String settingsFlashJson;
 extern String paramsFlashJson;
 extern String paramsHeapJson;
 
-extern DynamicJsonDocument settingsFlashJsonDoc;
-extern DynamicJsonDocument paramsFlashJsonDoc;
-extern DynamicJsonDocument paramsHeapJsonDoc;
+// extern DynamicJsonDocument settingsFlashJsonDoc;
+// extern DynamicJsonDocument paramsFlashJsonDoc;
+// extern DynamicJsonDocument paramsHeapJsonDoc;

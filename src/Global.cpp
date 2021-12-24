@@ -32,6 +32,6 @@ String settingsFlashJson = "{}";  //переменная в которой хр�
 String paramsFlashJson = "{}";    //переменная в которой хранятся все параметры, находится в оперативной памяти и синхронизированна с flash памятью
 String paramsHeapJson = "{}";     //переменная в которой хранятся все параметры, находится в оперативной памяти только
 
-DynamicJsonDocument settingsFlashJsonDoc(JSON_BUFFER_SIZE);
-DynamicJsonDocument paramsFlashJsonDoc(JSON_BUFFER_SIZE);
-DynamicJsonDocument paramsHeapJsonDoc(JSON_BUFFER_SIZE);
+// DynamicJsonDocument settingsFlashJsonDoc(JSON_BUFFER_SIZE);
+// DynamicJsonDocument paramsFlashJsonDoc(JSON_BUFFER_SIZE);
+// DynamicJsonDocument paramsHeapJsonDoc(JSON_BUFFER_SIZE);
