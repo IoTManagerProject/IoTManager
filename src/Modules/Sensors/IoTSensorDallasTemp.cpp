@@ -7,16 +7,21 @@
 
 #include "DallasTemperature.h"
 #include <OneWire.h>
+#include <map>
 
 extern std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
-
 #define IOTDALLASTEMPKEY "dallas-temp"
+
+//глобальные списки необходимы для хранения объектов об активных линиях 1-wire используемых разными датчиками из модуля. Ключ - номер пина
+std::map<int, OneWire*> oneWireTemperatureArray;
+std::map<int, DallasTemperature*> sensorsTemperatureArray;
 
 class IoTSensorDallas: public IoTSensor {
     private:
         //описание переменных экземпляра датчика - аналог глобальных переменных из Arduino
+        //для работы библиотеки с несколькими линиями  необходимо обеспечить каждый экземпляр класса ссылками на объекты настроенные на эти линии
         OneWire* oneWire;
-        DallasTemperature sensors;
+        DallasTemperature* sensors;
 
         //описание параметров передаваемых из настроек датчика из веба
         String _addr;
@@ -31,31 +36,41 @@ class IoTSensorDallas: public IoTSensor {
             _index = jsonReadInt(parameters, "index");
             _addr = jsonReadStr(parameters, "addr");             
 
-            oneWire = new OneWire((uint8_t)_pin);
-            sensors.setOneWire(oneWire);
-            sensors.begin();
-            sensors.setResolution(12);
+            //учитываем, что библиотека может работать с несколькими линиями на разных пинах, поэтому инициируем библиотеку, если линия ранее не использовалась
+            if (oneWireTemperatureArray.find(_pin) == oneWireTemperatureArray.end()) {
+                oneWire = new OneWire((uint8_t)_pin);
+                sensors = new DallasTemperature();
+                sensors->setOneWire(oneWire);
+                sensors->begin();
+                sensors->setResolution(12);
+
+                oneWireTemperatureArray[_pin] = oneWire;
+                sensorsTemperatureArray[_pin] = sensors;
+            } else {
+                oneWire = oneWireTemperatureArray[_pin];
+                sensors = sensorsTemperatureArray[_pin];
+            }
         }
         
         ~IoTSensorDallas() {}
 
         //аналог loop() из Arduino но квотируемый по времени параметром interval
         void doByInterval() {  
-            SerialPrint("I", "Sensor", "Вызывается doByInterval");
+            //запускаем опрос измерений у всех датчиков на линии
+            sensors->requestTemperatures();
             
-            sensors.requestTemperatures();
-            
+            //Определяем адрес. Если парамтер addr не установлен, то узнаем адрес по индексу
             DeviceAddress deviceAddress;
             if (_addr == "") {
-                sensors.getAddress(deviceAddress, _index);
+                sensors->getAddress(deviceAddress, _index);
             } else {
                 string2hex(_addr.c_str(), deviceAddress);
             }
-
-            float value = sensors.getTempC(deviceAddress);
-            
+            //получаем температуру по адресу
+            float value = sensors->getTempC(deviceAddress); 
+           
             char addrStr[20] = "";
-            hex2string(deviceAddress, 8, addrStr); 
+            hex2string(deviceAddress, 8, addrStr);
 
             regEvent((String)value, "addr: " + String(addrStr));  //обязательный вызов для отправки результата работы
         }
