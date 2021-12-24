@@ -224,12 +224,27 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
         case WStype_BIN: {
             Serial.printf("[%u] get binary length: %u\n", num, length);
-            hexdump(payload, length);
+            //hexdump(payload, length);
 
             // send message to client
             // standWebSocket.sendBIN(num, payload, length);
         } break;
     }
 }
+
+#ifdef ESP32
+void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
+    const uint8_t* src = (const uint8_t*)mem;
+    Serial.printf("\n[HEXDUMP] Address: 0x%08X len: 0x%X (%d)", (ptrdiff_t)src, len, len);
+    for (uint32_t i = 0; i < len; i++) {
+        if (i % cols == 0) {
+            Serial.printf("\n[0x%08X] 0x%08X: ", (ptrdiff_t)src, i);
+        }
+        Serial.printf("%02X ", *src);
+        src++;
+    }
+    Serial.printf("\n");
+}
+#endif
 
 #endif

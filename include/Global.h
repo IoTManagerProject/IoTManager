@@ -8,9 +8,10 @@
 #include <TickerScheduler.h>
 
 #ifdef ESP32
-#include <WiFi.h>
+#include "WiFi.h"
 #include <HTTPClient.h>
 #include <HTTPUpdate.h>
+
 #endif
 
 #ifdef ESP8266
@@ -34,7 +35,9 @@
 
 #ifdef STANDARD_WEB_SOCKETS
 #include <WebSocketsServer.h>
+#ifdef ESP8266
 #include <Hash.h>
+#endif
 #endif
 
 #include <FS.h>
@@ -49,6 +52,7 @@
 **********************************************************************************************************************/
 
 extern TickerScheduler ts;
+extern WiFiClient espClient;
 #ifdef ASYNC_WEB_SERVER
 extern AsyncWebServer server;
 #endif

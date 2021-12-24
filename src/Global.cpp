@@ -5,6 +5,7 @@
 **********************************************************************************************************************/
 
 TickerScheduler ts(MYTEST + 1);
+WiFiClient espClient;
 #ifdef ASYNC_WEB_SERVER
 AsyncWebServer server(80);
 #endif

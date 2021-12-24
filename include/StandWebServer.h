@@ -19,4 +19,7 @@ extern void handleFileList();
 #ifdef STANDARD_WEB_SOCKETS
 extern void standWebSocketsInit();
 extern void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length);
+#ifdef ESP32
+extern void hexdump(const void* mem, uint32_t len, uint8_t cols);
+#endif
 #endif
