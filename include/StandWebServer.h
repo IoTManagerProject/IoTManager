@@ -1,13 +1,11 @@
 #pragma once
 #include "Global.h"
 #include "Web.h"
+
 #ifdef STANDARD_WEB_SERVER
 extern void standWebServerInit();
-
-extern void standWebServerFiles();
 extern bool handleFileRead(String path);
 extern String getContentType(String filename);
-
 #ifdef REST_FILE_OPERATIONS
 extern void handleFileUpload();
 extern void handleFileDelete();

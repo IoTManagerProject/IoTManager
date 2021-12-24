@@ -31,3 +31,7 @@ WebSocketsServer standWebSocket = WebSocketsServer(81);
 String settingsFlashJson = "{}";  //переменная в которой хранятся все настройки, находится в оперативной памяти и синхронизированна с flash памятью
 String paramsFlashJson = "{}";    //переменная в которой хранятся все параметры, находится в оперативной памяти и синхронизированна с flash памятью
 String paramsHeapJson = "{}";     //переменная в которой хранятся все параметры, находится в оперативной памяти только
+
+DynamicJsonDocument settingsFlashJsonDoc(JSON_BUFFER_SIZE);
+DynamicJsonDocument paramsFlashJsonDoc(JSON_BUFFER_SIZE);
+DynamicJsonDocument paramsHeapJsonDoc(JSON_BUFFER_SIZE);

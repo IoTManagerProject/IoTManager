@@ -12,25 +12,26 @@ void setup() {
     //синхронизация глобальных переменных с flash
     globalVarsSync();
 
+    //подключаемся к роутеру
+    routerConnect();
+
 //инициализация асинхронного веб сервера и веб сокетов
 #ifdef ASYNC_WEB_SERVER
     asyncWebServerInit();
+#endif
+#ifdef ASYNC_WEB_SOCKETS
     asyncWebSocketsInit();
 #endif
 
-//инициализация стандартного веб сервера
+//инициализация стандартного веб сервера и веб сокетов
 #ifdef STANDARD_WEB_SERVER
     standWebServerInit();
-    standWebServerFiles();
 #endif
-
 #ifdef STANDARD_WEB_SOCKETS
     standWebSocketsInit();
 #endif
 
-    //подключаемся к роутеру
-    routerConnect();
-
+    //создаем объект класса выгружающего json массив из файла
     myStreamJsonArray = new StreamJsonArray;
 
     //выводим остаток оперативной памяти после старта

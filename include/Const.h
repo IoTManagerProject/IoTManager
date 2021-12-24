@@ -4,17 +4,13 @@
 #define FIRMWARE_VERSION 400
 
 //Размер буфера json
-#define JSON_BUFFER_SIZE 4096
+#define JSON_BUFFER_SIZE 1024
 
-//выбор сервера (или асинхронный, или обычный)
+//выбор сервера
 //#define ASYNC_WEB_SERVER
+//#define ASYNC_WEB_SOCKETS
 #define STANDARD_WEB_SERVER
-
-//если мы используем стандартный веб сервер то нужна библиотека веб сокетов
-//если асинхронный то плагин сокетов включен в него
-#ifdef STANDARD_WEB_SERVER
 #define STANDARD_WEB_SOCKETS
-#endif
 
 #ifdef esp8266_4mb
 #define USE_LITTLEFS true

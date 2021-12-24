@@ -2,26 +2,13 @@
 
 #include "Utils/FileUtils.h"
 
-// depricated======================================================================
-String jsonReadStr(String& json, String name) {
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) SerialPrint("EE", F("jsonRead"), error.f_str());
+//================================================================================
+String jsonReadStrDoc(DynamicJsonDocument& doc, String name) {
     return doc[name].as<String>();
 }
 
-boolean jsonReadBool(String& json, String name) {
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) SerialPrint("EE", F("jsonRead"), error.f_str());
-    return doc[name].as<bool>();
-}
-
-int jsonReadInt(String& json, String name) {
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) SerialPrint("EE", F("jsonRead"), error.f_str());
-    return doc[name].as<int>();
+void jsonWriteStrDoc(DynamicJsonDocument& doc, String name, String value) {
+    doc[name] = value;
 }
 
 // new==============================================================================
@@ -69,6 +56,29 @@ bool jsonRead(String& json, String key, int& value) {
     value = doc[key].as<int>();
     return ret;
 }
+
+// depricated======================================================================
+String jsonReadStr(String& json, String name) {
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) SerialPrint("EE", F("jsonRead"), error.f_str());
+    return doc[name].as<String>();
+}
+
+boolean jsonReadBool(String& json, String name) {
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) SerialPrint("EE", F("jsonRead"), error.f_str());
+    return doc[name].as<bool>();
+}
+
+int jsonReadInt(String& json, String name) {
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) SerialPrint("EE", F("jsonRead"), error.f_str());
+    return doc[name].as<int>();
+}
+
 // depricated========================================================================
 String jsonWriteStr(String& json, String name, String value) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);

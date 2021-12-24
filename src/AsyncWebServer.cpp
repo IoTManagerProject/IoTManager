@@ -1,7 +1,5 @@
 #include "AsyncWebServer.h"
 #ifdef ASYNC_WEB_SERVER
-AsyncWebSocket ws("/ws");
-AsyncEventSource events("/events");
 
 void asyncWebServerInit() {
     String login = jsonReadStr(settingsFlashJson, "weblogin");
@@ -70,6 +68,12 @@ void asyncWebServerInit() {
 
     SerialPrint("i", F("WEB"), F("WebServer Init"));
 }
+#endif
+
+#ifdef ASYNC_WEB_SOCKETS
+
+AsyncWebSocket ws("/ws");
+AsyncEventSource events("/events");
 
 void asyncWebSocketsInit() {
     ws.onEvent(onWsEvent);

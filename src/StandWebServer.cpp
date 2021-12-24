@@ -1,5 +1,8 @@
 #include "StandWebServer.h"
 #ifdef STANDARD_WEB_SERVER
+
+File fsUploadFile;
+
 void standWebServerInit() {
     //  Кэшировать файлы для быстрой работы
     HTTP.serveStatic("/css/", FileFS, "/css/", "max-age=31536000");  // кеширование на 1 год
@@ -19,11 +22,7 @@ void standWebServerInit() {
     //  httpUpdater.setup(&HTTP);
     //  Запускаем HTTP сервер
     HTTP.begin();
-}
 
-File fsUploadFile;
-
-void standWebServerFiles() {
 #ifdef REST_FILE_OPERATIONS
     SPIFFS.begin();
     {
@@ -224,7 +223,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
         case WStype_BIN: {
             Serial.printf("[%u] get binary length: %u\n", num, length);
-            //hexdump(payload, length);
+            // hexdump(payload, length);
 
             // send message to client
             // standWebSocket.sendBIN(num, payload, length);
@@ -246,5 +245,4 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
     Serial.printf("\n");
 }
 #endif
-
 #endif

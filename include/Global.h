@@ -11,7 +11,6 @@
 #include "WiFi.h"
 #include <HTTPClient.h>
 #include <HTTPUpdate.h>
-
 #endif
 
 #ifdef ESP8266
@@ -77,3 +76,7 @@ extern WebSocketsServer standWebSocket;
 extern String settingsFlashJson;
 extern String paramsFlashJson;
 extern String paramsHeapJson;
+
+extern DynamicJsonDocument settingsFlashJsonDoc;
+extern DynamicJsonDocument paramsFlashJsonDoc;
+extern DynamicJsonDocument paramsHeapJsonDoc;
