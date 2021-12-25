@@ -214,6 +214,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 if (myStreamJsonArray) myStreamJsonArray->sendFile("/config.json", num);
             }
 
+            if (payloadStr.startsWith("/changed")) {
+                payloadStr.replace("/changed", "");
+                writeFile(F("config.json"), payloadStr);
+            }
+
             // send message to client
             // standWebSocket.sendTXT(num, "message here");
 

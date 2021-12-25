@@ -12,6 +12,8 @@
 #define STANDARD_WEB_SERVER
 #define STANDARD_WEB_SOCKETS
 
+//#define REST_FILE_OPERATIONS
+
 #ifdef esp8266_4mb
 #define USE_LITTLEFS true
 #endif
