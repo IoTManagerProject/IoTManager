@@ -26,7 +26,7 @@ LiquidCrystal_I2C LCD(0x27, 16, 2);
 BH1750 lightMeter;
 
 //создаем объект ADS1015
-//Adafruit_ADS1015 ads;
+// Adafruit_ADS1015 ads;
 
 float yourSensorReading(String type, String paramsAny) {
     float value;
@@ -53,7 +53,7 @@ float yourSensorReading(String type, String paramsAny) {
     //==========================================================LCD=================================================================
     if (type == "LCD") {
         LCD_init();
-        LCD.setCursor(jsonReadInt(paramsAny, "с"), jsonReadInt(paramsAny, "k"));
+        LCD.setCursor(jsonReadInt(paramsAny, "c"), jsonReadInt(paramsAny, "k"));
         String toPrint = jsonReadStr(paramsAny, "descr") + " " + jsonReadStr(configLiveJson, jsonReadStr(paramsAny, "val"));
         LCD.print(toPrint);
     }
@@ -96,6 +96,7 @@ void LCD_init() {
         LCD.init();       //инициализация дисплея
         LCD.backlight();  //включаем подсветку
     }
+    LCD_flag = false;
 }
 
 void BH1750_init() {
