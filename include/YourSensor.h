@@ -8,6 +8,5 @@ extern void AHTX0_init();
 extern void LCD_init();
 extern void BH1750_init();
 
-//extern SoftwareSerial K_30_Serial;
 extern unsigned long getValue(byte packet[]);
 extern void sendRequest(byte packet[]);
