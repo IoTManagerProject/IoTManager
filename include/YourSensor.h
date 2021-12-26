@@ -1,9 +1,13 @@
 #pragma once
 
 #include <Arduino.h>
-float yourSensorReading(String type, String addr);
+extern float yourSensorReading(String type, String addr);
 
-void HDC1080_init(String addr);
-void AHTX0_init();
-void LCD_init();
-void BH1750_init();
+extern void HDC1080_init(String addr);
+extern void AHTX0_init();
+extern void LCD_init();
+extern void BH1750_init();
+
+//extern SoftwareSerial K_30_Serial;
+extern unsigned long getValue(byte packet[]);
+extern void sendRequest(byte packet[]);

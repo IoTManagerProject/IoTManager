@@ -28,6 +28,23 @@ BH1750 lightMeter;
 //создаем объект ADS1015
 // Adafruit_ADS1015 ads;
 
+// co2 sensor
+SoftwareSerial K_30_Serial(13, 15);                           //Программный порт
+byte readCO2[] = {0xFE, 0X44, 0X00, 0X08, 0X02, 0X9F, 0X25};  //Команды для запроса показаний с датчика
+byte response[] = {0, 0, 0, 0, 0, 0, 0};                      //массив для ответа от датчика
+unsigned long getValue(byte packet[]) {
+    int high = packet[3];                    //верхний байт показания СО2
+    int low = packet[4];                     //нижний байт показания СО2
+    unsigned long val_1 = high * 256 + low;  //соединяем байты
+    return val_1;
+}
+void sendRequest(byte packet[]) {
+    while (!K_30_Serial.available()) {
+        K_30_Serial.write(readCO2, 7);
+        delay(50);
+    }
+}
+
 float yourSensorReading(String type, String paramsAny) {
     float value;
     //========================================================HDC1080================================================================
@@ -61,6 +78,14 @@ float yourSensorReading(String type, String paramsAny) {
     if (type == "BH1750_lux") {
         BH1750_init();
         value = lightMeter.readLightLevel();
+    }
+    //==========================================================BH1750=================================================================
+    if (type == "valCO2") {
+        K_30_Serial.begin(9600);
+        sendRequest(readCO2);
+        int valCO2 = getValue(response);
+        value = valCO2;
+        // Serial.println(valCO2);
     }
 
     return value;
