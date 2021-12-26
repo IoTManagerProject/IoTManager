@@ -32,6 +32,10 @@ class SensorDallas {
     String _addr;
     unsigned int _pin;
     unsigned int _index;
+
+    //для работы библиотеки с несколькими линиями  необходимо обеспечить каждый экземпляр класса ссылками на объекты настроенные на эти линии
+    OneWire* oneWire;
+    DallasTemperature* sensors;
 };
 
 extern MySensorDallasVector* mySensorDallas2;

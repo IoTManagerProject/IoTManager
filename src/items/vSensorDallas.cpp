@@ -6,12 +6,13 @@
 #include "Global.h"
 #include "DallasTemperature.h"
 #include "Utils/StringUtils.h"
+#include <map>
 
 #include <Arduino.h>
 
 //ИНТЕГРИРУЮ: переменные необходимые для работы интегрируемой библиотеки. Аналог Arduino
-OneWire* oneWire;
-DallasTemperature sensors;
+std::map<int, OneWire*> oneWireTemperatureArray;
+std::map<int, DallasTemperature*> sensorsTemperatureArray;
 
 //ИНТЕГРИРУЮ:
 //Для каждого датчика указанного в конфигурации вызывается конструктор для настройки перед запуском. Аналог функции setup() в Arduino.
@@ -26,10 +27,20 @@ SensorDallas::SensorDallas(unsigned long interval, unsigned int pin, unsigned in
 
     //ИНТЕГРИРУЮ: 
     //вызываем необходимые инициирующие функции интегрируемой библиотеки
-    oneWire = new OneWire((uint8_t)_pin);
-    sensors.setOneWire(oneWire);
-    sensors.begin();
-    sensors.setResolution(12);
+    //учитываем, что библиотека может работать с несколькими линиями на разных пинах, поэтому инициируем библиотеку, если линия ранее не использовалась
+    if (oneWireTemperatureArray.find(_pin) == oneWireTemperatureArray.end()) {
+        oneWire = new OneWire((uint8_t)_pin);
+        sensors = new DallasTemperature();
+        sensors->setOneWire(oneWire);
+        sensors->begin();
+        sensors->setResolution(12);
+
+        oneWireTemperatureArray[_pin] = oneWire;
+        sensorsTemperatureArray[_pin] = sensors;
+    } else {
+        oneWire = oneWireTemperatureArray[_pin];
+        sensors = sensorsTemperatureArray[_pin];
+    }
 }
 
 //ИНТЕГРИРУЮ: оставляем как есть или развиваем, если нужно правильно завершить работу с интегрируемой библиотекой после отключения датчика
@@ -48,18 +59,18 @@ void SensorDallas::loop() {
 //ИНТЕГРИРУЮ: вызывается из цикла loop каждый установленный временно интервал в параметрах датчика. Необходимо изменить для чтения данных из датчика.
 void SensorDallas::readDallas() {
     //запускаем опрос измерений у всех датчиков на линии
-    sensors.requestTemperatures();
+    sensors->requestTemperatures();
     
     //Определяем адрес. Если парамтер addr не установлен, то узнаем адрес по индексу
     DeviceAddress deviceAddress;
     if (_addr == "") {
-        sensors.getAddress(deviceAddress, _index);
+        sensors->getAddress(deviceAddress, _index);
     } else {
         string2hex(_addr.c_str(), deviceAddress);
     }
 
     //получаем температуру по адресу
-    float value = sensors.getTempC(deviceAddress);
+    float value = sensors->getTempC(deviceAddress);
     
     //ИНТЕГРИРУЮ: блок генерации уведомлений в ядре системы. Стоит обратить внимание только на формат выводимого сообщения в консоли. 
     eventGen2(_key, String(value));

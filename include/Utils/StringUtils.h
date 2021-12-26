@@ -34,6 +34,8 @@ size_t itemsCount(String& str, const char* delim);
 
 boolean isDigitStr(const String& str);
 
+boolean isTimeStr(const String& str);
+
 boolean isDigitDotCommaStr(const String& str);
 
 String prettyBytes(size_t size);
