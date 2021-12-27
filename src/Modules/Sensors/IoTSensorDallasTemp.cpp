@@ -86,11 +86,18 @@ class IoTModuleDallasTemp: public IoTModule {
 
     //обязательный к заполнению метод, если модуль использует свои глобальные переменные. Необходимо сбросить и очистить используемую память.
     void clear() {
-        for (unsigned int i = 0; i < sensorsTemperatureArray.size(); i++) {
-            delete oneWireTemperatureArray[i];
+        for (auto it = sensorsTemperatureArray.cbegin(), next_it = it; it != sensorsTemperatureArray.cend(); it = next_it) {
+            ++next_it;
+            DallasTemperature* tmpptr = it->second;  //временно сохраняем указатель на сенсор, т.к. его преждевременное удаление оставит поломаную запись в векторе, к которой может обратиться ядро и вызвать исключение
+            sensorsTemperatureArray.erase(it);
+            delete tmpptr;  //а далее уже удаляем объект сенсора
         }
-        for (unsigned int i = 0; i < oneWireTemperatureArray.size(); i++) {
-            delete oneWireTemperatureArray[i];
+        
+        for (auto it = oneWireTemperatureArray.cbegin(), next_it = it; it != oneWireTemperatureArray.cend(); it = next_it) {
+            ++next_it;
+            OneWire* tmpptr = it->second;  //временно сохраняем указатель на сенсор, т.к. его преждевременное удаление оставит поломаную запись в векторе, к которой может обратиться ядро и вызвать исключение
+            oneWireTemperatureArray.erase(it);
+            delete tmpptr;  //а далее уже удаляем объект сенсора
         }
     }
 
