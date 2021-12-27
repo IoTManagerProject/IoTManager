@@ -10,7 +10,6 @@
 #include <map>
 
 extern std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
-#define IOTDALLASTEMPKEY "dallas-temp"
 
 //глобальные списки необходимы для хранения объектов об активных линиях 1-wire используемых разными датчиками из модуля. Ключ - номер пина
 std::map<int, OneWire*> oneWireTemperatureArray;
@@ -31,7 +30,8 @@ class IoTSensorDallas: public IoTSensor {
     public:
         //аналог setup() из Arduino
         IoTSensorDallas(String parameters) {
-            init(jsonReadInt(parameters, "int"), IOTDALLASTEMPKEY);  //передаем часть базовых параметров в конструктор базового класса для обеспечения работы его методов
+            //передаем часть базовых параметров в конструктор базового класса для обеспечения работы его методов
+            init(jsonReadStr(parameters, "key"), jsonReadStr(parameters, "id"), jsonReadInt(parameters, "int"));  
             _pin = jsonReadInt(parameters, "pin");
             _index = jsonReadInt(parameters, "index");
             _addr = jsonReadStr(parameters, "addr");             
@@ -84,12 +84,22 @@ class IoTModuleDallasTemp: public IoTModule {
         return new IoTSensorDallas(parameters);
     };
 
+    //обязательный к заполнению метод, если модуль использует свои глобальные переменные. Необходимо сбросить и очистить используемую память.
+    void clear() {
+        for (unsigned int i = 0; i < sensorsTemperatureArray.size(); i++) {
+            delete oneWireTemperatureArray[i];
+        }
+        for (unsigned int i = 0; i < oneWireTemperatureArray.size(); i++) {
+            delete oneWireTemperatureArray[i];
+        }
+    }
+
     //обязательный метод для отправки информации о модуле, 
     ModuleInfo getInfo() {
         ModuleInfo MI;
-        MI.key = IOTDALLASTEMPKEY;
-        MI.name = "Датчик температуры Ds18b20";
-        MI.parameters = "{\"addr\": \"\", \"int\": \"10\", \"pin\": \"18\", \"index\": \"0\"}";
+        MI.name = "dallas-temp";
+        MI.title = "Датчик температуры Ds18b20";
+        MI.parameters = "{\"key\": \"dallas-temp\", \"id\": \"tmp\", \"addr\": \"\", \"int\": \"10\", \"pin\": \"18\", \"index\": \"0\"}";
         MI.type = "Sensor";
         return MI;
     };

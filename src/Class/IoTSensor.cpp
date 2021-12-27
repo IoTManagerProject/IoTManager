@@ -3,13 +3,22 @@
 #include "Class/ScenarioClass3.h"
 #include "Class/IoTSensor.h"
 
-void IoTSensor::init(unsigned long interval, String key) {
+void IoTSensor::init(String key, String id, unsigned long interval) {
     _interval = interval * 1000;
     _key = key;
+    _id = id;
 }
 
 IoTSensor::IoTSensor() {}
 IoTSensor::~IoTSensor() {}
+
+String IoTSensor::getKey() {
+    return _key;
+}
+
+String IoTSensor::getID() {
+    return _id;
+};
 
 void IoTSensor::loop() {
     currentMillis = millis();
@@ -22,10 +31,10 @@ void IoTSensor::loop() {
 }
 
 void IoTSensor::regEvent(String value, String consoleInfo = "") {
-    eventGen2(_key, String(value));
-    jsonWriteStr(configLiveJson, _key, String(value));
-    publishStatus(_key, String(value));
-    SerialPrint("I", "Sensor", "'" + _key + "' data: " + String(value) + "' " + consoleInfo);
+    eventGen2(_id, String(value));
+    jsonWriteStr(configLiveJson, _id, String(value));
+    publishStatus(_id, String(value));
+    SerialPrint("I", "Sensor", "'" + _id + "' data: " + String(value) + "' " + consoleInfo);
 }
 
 void IoTSensor::doByInterval() {}

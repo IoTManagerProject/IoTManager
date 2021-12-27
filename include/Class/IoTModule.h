@@ -4,10 +4,10 @@
 
 struct ModuleInfo
 {
-    String name;
-    String key;
-    String parameters;
-    String type;
+    String name;  //имя модуля
+    String title;  //заголовок для описания модуля
+    String parameters;  //параметры, которые может принять модуль и сущность
+    String type;  //тип для определения сущности, которую генерирует модуль Sensor или Variable
 };
 
 class IoTModule {
@@ -17,4 +17,5 @@ class IoTModule {
 
     virtual void* initInstance(String parameters);
     virtual ModuleInfo getInfo();
+    virtual void clear();
 };

@@ -18,7 +18,6 @@
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
-#include "items/vSensorSHT20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 
@@ -123,10 +122,6 @@ void csvCmdExecute(String& cmdStr) {
 #ifdef EnableSensorBme280
                 sCmd.addCommand(order.c_str(), bme280Sensor);
 #endif
-            } else if (order == F("sht20")) {
-#ifdef EnableSensorSht20
-                sCmd.addCommand(order.c_str(), sht20Sensor);
-#endif
             } else if (order == F("sensor")) {
 #ifdef EnableSensorAny
                 sCmd.addCommand(order.c_str(), AnySensor);
@@ -170,24 +165,27 @@ void csvCmdExecute(String& cmdStr) {
             }
 
             sCmd.readStr(buf);
-
+            
             //v3dev: инициируем экземпляр модулей в случае необходимости
             for (unsigned int i = 0; i < iotModules.size(); i++) {
-                SerialPrint("I", "Debug iotModules count", "");
-
                 ModuleInfo moduleInfo = iotModules[i]->getInfo();
-                if (moduleInfo.key == order) {
-                    SerialPrint("I", "Debug moduleInfo.parameters", buf);
-
+                //del SerialPrint("I", "moduleInfo.name", moduleInfo.name);
+                //del SerialPrint("I", "order", order);
+                if (moduleInfo.name == order) {  //проверка вхождения имени искомого модуля в ключе элемента настройки
                     if (moduleInfo.type == "Sensor") { 
                         myLineParsing.update();  //v3dev: пока используем мостик для совместимости версий, предполагается, что настройки сразу будут в JSON
                         String interval = myLineParsing.gint();
+                        if (interval == "") interval = "50";
                         String pin = myLineParsing.gpin();
                         String index = myLineParsing.gindex();
                         String addr = myLineParsing.gaddr();
+                        String c = myLineParsing.gc();
+                        String id = myLineParsing.gkey();
+                        String key = myLineParsing.gfile();
                         myLineParsing.clear();
-                        String strTmp = "{\"addr\": \"" + addr + "\", \"int\": \"" + interval + "\", \"pin\": \"" + pin + "\", \"index\": \"" + index + "\"}";
+                        String strTmp = "{\"key\": \"" + key + "\", \"id\": \"" + id + "\", \"addr\": \"" + addr + "\", \"int\": \"" + interval + "\", \"pin\": \"" + pin + "\", \"index\": \"" + index + "\", \"c\": \"" + c + "\"}";
 
+                        SerialPrint("I", "Строка параметров при инициализации модуля " + moduleInfo.name + ": ", strTmp);
                         iotSensors.push_back((IoTSensor*)iotModules[i]->initInstance(strTmp));
                     } else if (moduleInfo.type == "Container")
                     {

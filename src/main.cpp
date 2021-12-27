@@ -31,7 +31,6 @@
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
-#include "items/vSensorSHT20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 //#include "WebServer.h"
@@ -187,13 +186,6 @@ void loop() {
     if (mySensorBme280 != nullptr) {
         for (unsigned int i = 0; i < mySensorBme280->size(); i++) {
             mySensorBme280->at(i).loop();
-        }
-    }
-#endif
-#ifdef EnableSensorSht20
-    if (mySensorSht20 != nullptr) {
-        for (unsigned int i = 0; i < mySensorSht20->size(); i++) {
-            mySensorSht20->at(i).loop();
         }
     }
 #endif

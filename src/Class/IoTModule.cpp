@@ -4,3 +4,4 @@ IoTModule::IoTModule() {};
 IoTModule::~IoTModule() {};
 void* IoTModule::initInstance(String parameters) {};
 ModuleInfo IoTModule::getInfo() {};
+void IoTModule::clear() {};
