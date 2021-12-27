@@ -211,7 +211,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             if (payloadStr.startsWith("/config")) {
-                if (myStreamJsonArray) myStreamJsonArray->sendFile("/config.json", num);
+                if (mySendJson) mySendJson->sendFile("/config.json", num);
             }
 
             if (payloadStr.startsWith("/changed")) {

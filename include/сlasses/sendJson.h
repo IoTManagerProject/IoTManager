@@ -1,21 +1,23 @@
 #pragma once
 #include "Global.h"
+#include "сlasses/sendJsonWs.h"
 
-class StreamJsonArray;
+class SendJson;
 
-class StreamJsonArray {
+class SendJson : SendJsonWs {
    public:
-    StreamJsonArray();
-    ~StreamJsonArray();
+    SendJson();
+    ~SendJson();
 
     void sendFile(String path, uint8_t num);
 
     void loop();
 
+    uint8_t _num;
+
    private:
     File file;
     String _path;
-    uint8_t _num;
 };
 
-extern StreamJsonArray* myStreamJsonArray;
+extern SendJson* mySendJson;

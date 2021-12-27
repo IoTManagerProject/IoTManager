@@ -32,7 +32,7 @@ void setup() {
 #endif
 
     //создаем объект класса выгружающего json массив из файла
-    myStreamJsonArray = new StreamJsonArray;
+    mySendJson = new SendJson;
 
     //выводим остаток оперативной памяти после старта
     // 22.12.21 пустой код без wifi остаток    = 50.28 kB
@@ -52,7 +52,7 @@ void loop() {
     //обновление задач таскера
     ts.update();
 
-    if (myStreamJsonArray) myStreamJsonArray->loop();
+    if (mySendJson) mySendJson->loop();
 
 #ifdef STANDARD_WEB_SERVER
     HTTP.handleClient();
