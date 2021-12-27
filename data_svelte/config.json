@@ -51,6 +51,33 @@
         "id": "t",
         "widget": "anydata",
         "page": "Сенсоры",
+        "descr": "Температура",
+        "int": 10
+    },
+    {
+        "type": "Reading",
+        "subtype": "bme280",
+        "id": "t",
+        "widget": "anydata",
+        "page": "Сенсоры",
         "descr": "Температура"
+    },
+    {
+        "type": "Reading",
+        "subtype": "bme280",
+        "id": "p",
+        "widget": "anydata",
+        "page": "Сенсоры",
+        "descr": "Давление"
+    },
+    {
+        "type": "Reading",
+        "subtype": "bme280",
+        "id": "h",
+        "widget": "anydata",
+        "page": "Сенсоры",
+        "descr": "Влажность",
+        "int": 10,
+        "addr": "0x78"
     }
 ]
