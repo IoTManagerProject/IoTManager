@@ -37,6 +37,7 @@ class IoTSensorSHT20: public IoTSensor {
         //аналог loop() из Arduino но квотируемый по времени параметром interval
         void doByInterval() {  
             //запускаем опрос измерений
+            sht->read();
             float value;
             if (getKey() == "anydataTemp") {
                 value = sht->getTemperature();
