@@ -19,7 +19,6 @@
 #include "Utils/statUtils.h"
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
-#include "items/ButtonInClass.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
 #include "items/vLogging.h"
@@ -231,9 +230,7 @@ void loop() {
         }
     }
 #endif
-#ifdef EnableButtonIn
-    myButtonIn.loop();
-#endif
+
 
 
 

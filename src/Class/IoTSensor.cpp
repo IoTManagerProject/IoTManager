@@ -25,7 +25,6 @@ void IoTSensor::loop() {
     difference = currentMillis - prevMillis;
     if (difference >= _interval) {
         prevMillis = millis();
-        SerialPrint("I", "Sensor", "Вызывается loop");
         this->doByInterval();
     }
 }

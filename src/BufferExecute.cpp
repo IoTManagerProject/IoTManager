@@ -89,10 +89,6 @@ void csvCmdExecute(String& cmdStr) {
 #ifdef EnablePwmOut
                 sCmd.addCommand(order.c_str(), pwmOut);
 #endif
-            } else if (order == F("button-in")) {
-#ifdef EnableButtonIn
-                sCmd.addCommand(order.c_str(), buttonIn);
-#endif
             } else if (order == F("input-value")) {
 #ifdef EnableInput
                 sCmd.addCommand(order.c_str(), inputValue);
@@ -182,8 +178,9 @@ void csvCmdExecute(String& cmdStr) {
                         String c = myLineParsing.gc();
                         String id = myLineParsing.gkey();
                         String key = myLineParsing.gfile();
+                        String db = myLineParsing.gdb();
                         myLineParsing.clear();
-                        String strTmp = "{\"key\": \"" + key + "\", \"id\": \"" + id + "\", \"addr\": \"" + addr + "\", \"int\": \"" + interval + "\", \"pin\": \"" + pin + "\", \"index\": \"" + index + "\", \"c\": \"" + c + "\"}";
+                        String strTmp = "{\"key\": \"" + key + "\", \"id\": \"" + id + "\", \"addr\": \"" + addr + "\", \"int\": \"" + interval + "\", \"pin\": \"" + pin + "\", \"index\": \"" + index + "\", \"c\": \"" + c + "\", \"db\": \"" + db + "\"}";
 
                         SerialPrint("I", "Строка параметров при инициализации модуля " + moduleInfo.name + ": ", strTmp);
                         iotSensors.push_back((IoTSensor*)iotModules[i]->initInstance(strTmp));

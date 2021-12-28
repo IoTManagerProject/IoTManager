@@ -210,6 +210,9 @@ class LineParsing {
     String gtm2() {
         return _tm2;
     }
+    String gdb() {
+        return _db;
+    }
 
     int getPinErrors() {
         return pinErrors;
