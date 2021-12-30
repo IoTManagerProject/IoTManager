@@ -189,6 +189,10 @@ void standWebSocketsInit() {
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length) {
     switch (type) {
+        case WStype_ERROR: {
+            Serial.printf("[%u] Error!\n", num);
+        } break;
+
         case WStype_DISCONNECTED: {
             Serial.printf("[%u] Disconnected!\n", num);
         } break;
@@ -196,13 +200,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
         case WStype_CONNECTED: {
             IPAddress ip = standWebSocket.remoteIP(num);
             Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-
-            // send message to client
             standWebSocket.sendTXT(num, "Connected");
         } break;
 
         case WStype_TEXT: {
-            Serial.printf("[%u] get Text: %s\n", num, payload);
+            // Serial.printf("[%u] get Text: %s\n", num, payload);
 
             String payloadStr;
             payloadStr.reserve(length + 1);
@@ -210,28 +212,48 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 payloadStr += (char)payload[i];
             }
 
-            if (payloadStr.startsWith("/config")) {
+            if (payloadStr.startsWith("/config")) {  //если прилетел url страницы /config то отправим пакеты с меткой /config.json
                 if (mySendJson) mySendJson->sendFile("/config.json", num);
             }
-
-            if (payloadStr.startsWith("/changed")) {
-                payloadStr.replace("/changed", "");
+            if (payloadStr.startsWith("/gifnoc.json")) {  //если прилетел измененный пакет с меткой /gifnoc то перепишем файл
+                payloadStr.replace("/gifnoc.json", "");
                 writeFile(F("config.json"), payloadStr);
             }
 
-            // send message to client
-            // standWebSocket.sendTXT(num, "message here");
-
-            // send data to all connected clients
-            // standWebSocket.broadcastTXT("message here");
         } break;
 
         case WStype_BIN: {
             Serial.printf("[%u] get binary length: %u\n", num, length);
             // hexdump(payload, length);
-
-            // send message to client
             // standWebSocket.sendBIN(num, payload, length);
+        } break;
+
+        case WStype_FRAGMENT_TEXT_START: {
+            Serial.printf("[%u] fragment test start: %u\n", num, length);
+        } break;
+
+        case WStype_FRAGMENT_BIN_START: {
+            Serial.printf("[%u] fragment bin start: %u\n", num, length);
+        } break;
+
+        case WStype_FRAGMENT: {
+            Serial.printf("[%u] fragment: %u\n", num, length);
+        } break;
+
+        case WStype_FRAGMENT_FIN: {
+            Serial.printf("[%u] fragment finish: %u\n", num, length);
+        } break;
+
+        case WStype_PING: {
+            Serial.printf("[%u] ping: %u\n", num, length);
+        } break;
+
+        case WStype_PONG: {
+            Serial.printf("[%u] pong: %u\n", num, length);
+        } break;
+
+        default: {
+            Serial.printf("[%u] not recognized: %u\n", num, length);
         } break;
     }
 }

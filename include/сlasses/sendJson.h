@@ -1,10 +1,9 @@
 #pragma once
 #include "Global.h"
-#include "сlasses/sendJsonWs.h"
 
 class SendJson;
 
-class SendJson : SendJsonWs {
+class SendJson {
    public:
     SendJson();
     ~SendJson();
@@ -12,6 +11,10 @@ class SendJson : SendJsonWs {
     void sendFile(String path, uint8_t num);
 
     void loop();
+
+    void sendWs(String& jsonArrayElement);
+
+    void sendMqtt(String& jsonArrayElement);
 
     uint8_t _num;
 
