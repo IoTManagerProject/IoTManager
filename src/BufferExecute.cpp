@@ -26,9 +26,11 @@
 
 #include "Class/IoTModule.h"
 #include "Class/IoTSensor.h"
+#include "Class/IoTVariable.h"
 
 extern std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
 extern std::vector<IoTSensor*> iotSensors;  //v3dev: вектор ссылок базового класса IoTSensor - список всех запущенных сенсоров
+extern std::vector<IoTVariable*> iotVariables;  //v3dev: вектор ссылок базового класса IoTVariable - список всех подготовленных переменных
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
@@ -168,25 +170,24 @@ void csvCmdExecute(String& cmdStr) {
                 //del SerialPrint("I", "moduleInfo.name", moduleInfo.name);
                 //del SerialPrint("I", "order", order);
                 if (moduleInfo.name == order) {  //проверка вхождения имени искомого модуля в ключе элемента настройки
-                    if (moduleInfo.type == "Sensor") { 
-                        myLineParsing.update();  //v3dev: пока используем мостик для совместимости версий, предполагается, что настройки сразу будут в JSON
-                        String interval = myLineParsing.gint();
-                        if (interval == "") interval = "50";
-                        String pin = myLineParsing.gpin();
-                        String index = myLineParsing.gindex();
-                        String addr = myLineParsing.gaddr();
-                        String c = myLineParsing.gc();
-                        String id = myLineParsing.gkey();
-                        String key = myLineParsing.gfile();
-                        String db = myLineParsing.gdb();
-                        myLineParsing.clear();
-                        String strTmp = "{\"key\": \"" + key + "\", \"id\": \"" + id + "\", \"addr\": \"" + addr + "\", \"int\": \"" + interval + "\", \"pin\": \"" + pin + "\", \"index\": \"" + index + "\", \"c\": \"" + c + "\", \"db\": \"" + db + "\"}";
+                    myLineParsing.update();  //v3dev: пока используем мостик для совместимости версий, предполагается, что настройки сразу будут в JSON
+                    String interval = myLineParsing.gint();
+                    if (interval == "") interval = "50";
+                    String pin = myLineParsing.gpin();
+                    String index = myLineParsing.gindex();
+                    String addr = myLineParsing.gaddr();
+                    String c = myLineParsing.gc();
+                    String id = myLineParsing.gkey();
+                    String key = myLineParsing.gfile();
+                    String db = myLineParsing.gdb();
+                    myLineParsing.clear();
+                    String strTmp = "{\"key\": \"" + key + "\", \"id\": \"" + id + "\", \"addr\": \"" + addr + "\", \"int\": \"" + interval + "\", \"pin\": \"" + pin + "\", \"index\": \"" + index + "\", \"c\": \"" + c + "\", \"db\": \"" + db + "\"}";
+                    SerialPrint("I", "Строка параметров при инициализации модуля " + moduleInfo.name + ": ", strTmp);
 
-                        SerialPrint("I", "Строка параметров при инициализации модуля " + moduleInfo.name + ": ", strTmp);
+                    if (moduleInfo.type == "Sensor") { 
                         iotSensors.push_back((IoTSensor*)iotModules[i]->initInstance(strTmp));
-                    } else if (moduleInfo.type == "Container")
-                    {
-                        //iot.push_back((IoTSensor*)iotModules[i]->initInstance(moduleInfo.parameters));
+                    } else if (moduleInfo.type == "Variable") {
+                        iotVariables.push_back((IoTVariable*)iotModules[i]->initInstance(strTmp));
                     }
                 }
             }

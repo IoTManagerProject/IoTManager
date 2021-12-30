@@ -8,17 +8,17 @@ class IoTVariable {
         ~IoTVariable();
 
         virtual String execute(String command);
+        virtual void selfExec();
         virtual void loop();
 
-        void init(String key, String value);
-        void setValue(String value);
-        void getValue(String value);
+        void init(String key, String id);
         void regEvent(String value, String consoleInfo);
 
-        String _widgetName;  //название виджета на фронтэнде для правильного отображения информации из меременной
-        String _key;  //код переменной для идентификации событий, команд в сценариях
-        String _title;
+        String getKey();
+        String getID();
+        
+    protected:
+        String _key;  //имя переменной, для идентификации при работе с несколькими переменными в одном модуле
+        String _id;  //код переменной для идентификации событий, команд в сценариях и логах
 
-    private:
-        String _value;  //значение переменной
 };

@@ -6,20 +6,14 @@
 IoTVariable::IoTVariable() {}
 IoTVariable::~IoTVariable() {}
 
-String execute(String command) {}
+String IoTVariable::execute(String command) { return "";}
+void IoTVariable::selfExec() {}
 void IoTVariable::loop() {}
 
-void IoTVariable::init(String key, String value) {
-    
+void IoTVariable::init(String key, String id) {
+    _key = key;
+    _id = id;
 }
-
-void setValue(String value) {
-
-};
-
-void getValue(String value ){
-
-};
 
 void IoTVariable::regEvent(String value, String consoleInfo = "") {
     eventGen2(_key, String(value));
@@ -27,3 +21,11 @@ void IoTVariable::regEvent(String value, String consoleInfo = "") {
     publishStatus(_key, String(value));
     SerialPrint("I", "Sensor", "'" + _key + "' data: " + String(value) + "' " + consoleInfo);
 }
+
+String IoTVariable::getKey() {
+    return _key;
+}
+
+String IoTVariable::getID() {
+    return _id;
+};

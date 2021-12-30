@@ -37,10 +37,12 @@
 #include <vector>
 #include "Class/IoTSensor.h"
 #include "Class/IoTModule.h"
+#include "Class/IoTVariable.h"
 
 
 std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
 std::vector<IoTSensor*> iotSensors;  //v3dev: вектор ссылок базового класса IoTSensor - список всех запущенных сенсоров
+std::vector<IoTVariable*> iotVariables;  //v3dev: вектор ссылок базового класса IoTVariable - список всех подготовленных переменных
 void InitModulesApi();  //v3dev: инициализация модуля при первом вызове . 
 
 

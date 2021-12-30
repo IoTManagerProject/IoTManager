@@ -5,7 +5,7 @@
 class IoTSensor {
     public:
         IoTSensor();
-        virtual ~IoTSensor();
+        ~IoTSensor();
 
         void loop();
         virtual void doByInterval();
