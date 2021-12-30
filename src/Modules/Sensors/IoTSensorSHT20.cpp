@@ -8,7 +8,6 @@
 #include "Wire.h"
 #include "SHT2x.h"
 
-extern std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
 
 SHT2x* sht = nullptr;
 
@@ -76,7 +75,6 @@ class IoTModuleSHT20: public IoTModule {
 };
 
 //точка входа в модуль для заполнения вектора, требуется только изменить имя и прописать в файле api.cpp
-void getApiIoTSensorSHT20() {
-    iotModules.push_back(new IoTModuleSHT20());
-    return;
+void* getApiIoTSensorSHT20() {
+    return new IoTModuleSHT20();
 }

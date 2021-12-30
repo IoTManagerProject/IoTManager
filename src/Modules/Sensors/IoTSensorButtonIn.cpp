@@ -6,8 +6,6 @@
 
 #include <Bounce2.h>
 
-extern std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
-
 class IoTSensorButtonIn: public IoTSensor {
     private:
         //описание переменных экземпляра датчика - аналог глобальных переменных из Arduino
@@ -76,7 +74,6 @@ class IoTModuleButtonIn: public IoTModule {
 };
 
 //точка входа в модуль для заполнения вектора, требуется только изменить имя и прописать в файле api.cpp
-void getApiIoTSensorButtonIn() {
-    iotModules.push_back(new IoTModuleButtonIn());
-    return;
+void* getApiIoTSensorButtonIn() {
+    return new IoTModuleButtonIn();
 }

@@ -9,7 +9,6 @@
 #include <OneWire.h>
 #include <map>
 
-extern std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
 
 //глобальные списки необходимы для хранения объектов об активных линиях 1-wire используемых разными датчиками из модуля. Ключ - номер пина
 std::map<int, OneWire*> oneWireTemperatureArray;
@@ -86,19 +85,19 @@ class IoTModuleDallasTemp: public IoTModule {
 
     //обязательный к заполнению метод, если модуль использует свои глобальные переменные. Необходимо сбросить и очистить используемую память.
     void clear() {
-        for (auto it = sensorsTemperatureArray.cbegin(), next_it = it; it != sensorsTemperatureArray.cend(); it = next_it) {
-            ++next_it;
-            DallasTemperature* tmpptr = it->second;  //временно сохраняем указатель на сенсор, т.к. его преждевременное удаление оставит поломаную запись в векторе, к которой может обратиться ядро и вызвать исключение
-            sensorsTemperatureArray.erase(it);
-            delete tmpptr;  //а далее уже удаляем объект сенсора
-        }
+        // for (auto it = sensorsTemperatureArray.cbegin(), next_it = it; it != sensorsTemperatureArray.cend(); it = next_it) {
+        //     ++next_it;
+        //     DallasTemperature* tmpptr = it->second;  //временно сохраняем указатель на сенсор, т.к. его преждевременное удаление оставит поломаную запись в векторе, к которой может обратиться ядро и вызвать исключение
+        //     sensorsTemperatureArray.erase(it);
+        //     delete tmpptr;  //а далее уже удаляем объект сенсора
+        // }
         
-        for (auto it = oneWireTemperatureArray.cbegin(), next_it = it; it != oneWireTemperatureArray.cend(); it = next_it) {
-            ++next_it;
-            OneWire* tmpptr = it->second;  //временно сохраняем указатель на сенсор, т.к. его преждевременное удаление оставит поломаную запись в векторе, к которой может обратиться ядро и вызвать исключение
-            oneWireTemperatureArray.erase(it);
-            delete tmpptr;  //а далее уже удаляем объект сенсора
-        }
+        // for (auto it = oneWireTemperatureArray.cbegin(), next_it = it; it != oneWireTemperatureArray.cend(); it = next_it) {
+        //     ++next_it;
+        //     OneWire* tmpptr = it->second;  //временно сохраняем указатель на сенсор, т.к. его преждевременное удаление оставит поломаную запись в векторе, к которой может обратиться ядро и вызвать исключение
+        //     oneWireTemperatureArray.erase(it);
+        //     delete tmpptr;  //а далее уже удаляем объект сенсора
+        // }
     }
 
     //обязательный метод для отправки информации о модуле, 
@@ -113,7 +112,6 @@ class IoTModuleDallasTemp: public IoTModule {
 };
 
 //точка входа в модуль для заполнения вектора, требуется только изменить имя и прописать в файле api.cpp
-void getApiIoTSensorDallasTemp() {
-    iotModules.push_back(new IoTModuleDallasTemp());
-    return;
+void* getApiIoTSensorDallasTemp() {
+    return new IoTModuleDallasTemp();
 }

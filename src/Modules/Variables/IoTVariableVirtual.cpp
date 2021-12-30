@@ -5,7 +5,6 @@
 #include "Class/IoTVariable.h"
 #include "Class/IoTModule.h"
 
-extern std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
 
 class IoTVariableVirtual: public IoTVariable {
     private:
@@ -65,7 +64,6 @@ class IoTModuleVariable: public IoTModule {
 };
 
 //точка входа в модуль для заполнения вектора, требуется только изменить имя и прописать в файле api.cpp
-    void getApiIoTVariableVirtual() {
-    iotModules.push_back(new IoTModuleVariable());
-    return;
+    void* getApiIoTVariableVirtual() {
+    return new IoTModuleVariable();
 }
