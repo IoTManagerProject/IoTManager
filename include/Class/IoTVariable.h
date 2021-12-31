@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Utils/JsonUtils.h"
 #include <WString.h>
 
 class IoTVariable {
@@ -10,9 +11,11 @@ class IoTVariable {
         virtual String execute(String command);
         virtual void selfExec();
         virtual void loop();
+        virtual String getValue(String key);
 
         void init(String key, String id);
         void regEvent(String value, String consoleInfo);
+        String loadValue(String id);
 
         String getKey();
         String getID();

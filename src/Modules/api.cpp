@@ -11,6 +11,7 @@ void*  getApiIoTSensorSHT20();
 void* getApiIoTSensorButtonIn();
 
 void* getApiIoTVariableVirtual();
+void* getApiIoTVariableButtonOut();
 
 //формируем вектор модулей путем вызова из каждого модуля специальной функции
 //в дальнейшем предполагается отключать вызов, если модуль не участвует в сборке
@@ -20,4 +21,5 @@ void InitModulesApi() {
     iotModules.push_back((IoTModule*) getApiIoTSensorButtonIn());
 
     iotModules.push_back((IoTModule*) getApiIoTVariableVirtual());
+    iotModules.push_back((IoTModule*) getApiIoTVariableButtonOut());
 }

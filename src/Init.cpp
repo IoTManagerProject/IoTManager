@@ -4,7 +4,6 @@
 #include "Class/LineParsing.h"
 #include "Cmd.h"
 #include "Global.h"
-#include "items/vButtonOut.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
 #include "items/vInput.h"
@@ -154,13 +153,6 @@ for (unsigned int i = 0; i < iotModules.size(); i++) {
     countDown_EnterCounter = -1;
 #endif
 
-#ifdef EnableButtonOut
-    if (myButtonOut != nullptr) {
-        myButtonOut->clear();
-    }
-    buttonOut_KeyList = "";
-    buttonOut_EnterCounter = -1;
-#endif
 #ifdef EnableInput
     if (myInput != nullptr) {
         myInput->clear();

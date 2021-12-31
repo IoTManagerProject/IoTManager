@@ -9,6 +9,7 @@ IoTVariable::~IoTVariable() {}
 String IoTVariable::execute(String command) { return "";}
 void IoTVariable::selfExec() {}
 void IoTVariable::loop() {}
+String IoTVariable::getValue(String key) { return "";}
 
 void IoTVariable::init(String key, String id) {
     _key = key;
@@ -16,10 +17,10 @@ void IoTVariable::init(String key, String id) {
 }
 
 void IoTVariable::regEvent(String value, String consoleInfo = "") {
-    eventGen2(_key, String(value));
-    jsonWriteStr(configLiveJson, _key, String(value));
-    publishStatus(_key, String(value));
-    SerialPrint("I", "Sensor", "'" + _key + "' data: " + String(value) + "' " + consoleInfo);
+    eventGen2(_id, String(value));
+    jsonWriteStr(configLiveJson, _id, String(value));
+    publishStatus(_id, String(value));
+    SerialPrint("I", "Variable", "'" + _id + "' data: " + String(value) + "' " + consoleInfo);
 }
 
 String IoTVariable::getKey() {
@@ -28,4 +29,8 @@ String IoTVariable::getKey() {
 
 String IoTVariable::getID() {
     return _id;
+};
+
+String IoTVariable::loadValue(String id) {
+    return jsonReadStr(configStoreJson, id); //прочитали из памяти
 };

@@ -9,7 +9,7 @@
 class IoTVariableVirtual: public IoTVariable {
     private:
         //описание переменных экземпляра Variable - аналог глобальных переменных из Arduino
-        String value;
+        String _value;
 
         //описание параметров передаваемых из настроек переменной из веба
         
@@ -37,6 +37,10 @@ class IoTVariableVirtual: public IoTVariable {
         //вызывается при любом изменении переменной
         void selfExec() {
 
+        }
+
+        String getValue(String key="") {
+            return _value;
         }
 };
 
