@@ -19,7 +19,6 @@
 #include "Utils/statUtils.h"
 #include "Utils/Timings.h"
 #include "Utils/WebUtils.h"
-#include "items/ButtonInClass.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
 #include "items/vLogging.h"
@@ -31,7 +30,6 @@
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
-#include "items/vSensorSHT20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 //#include "WebServer.h"
@@ -39,10 +37,12 @@
 #include <vector>
 #include "Class/IoTSensor.h"
 #include "Class/IoTModule.h"
+#include "Class/IoTVariable.h"
 
 
 std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
 std::vector<IoTSensor*> iotSensors;  //v3dev: вектор ссылок базового класса IoTSensor - список всех запущенных сенсоров
+std::vector<IoTVariable*> iotVariables;  //v3dev: вектор ссылок базового класса IoTVariable - список всех подготовленных переменных
 void InitModulesApi();  //v3dev: инициализация модуля при первом вызове . 
 
 
@@ -190,13 +190,6 @@ void loop() {
         }
     }
 #endif
-#ifdef EnableSensorSht20
-    if (mySensorSht20 != nullptr) {
-        for (unsigned int i = 0; i < mySensorSht20->size(); i++) {
-            mySensorSht20->at(i).loop();
-        }
-    }
-#endif
 #ifdef EnableSensorAny
     if (mySensorAny != nullptr) {
         for (unsigned int i = 0; i < mySensorAny->size(); i++) {
@@ -239,9 +232,7 @@ void loop() {
         }
     }
 #endif
-#ifdef EnableButtonIn
-    myButtonIn.loop();
-#endif
+
 
 
 

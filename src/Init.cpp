@@ -18,9 +18,15 @@
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
-#include "items/vSensorSHT20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
+
+#include <vector>
+#include "Class/IoTSensor.h"
+#include "Class/IoTModule.h"
+
+extern std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
+extern std::vector<IoTSensor*> iotSensors;  //v3dev: вектор ссылок базового класса IoTSensor - список всех запущенных сенсоров
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -110,6 +116,21 @@ void handle_uptime() {
 }
 
 void clearVectors() {
+
+//v3dev: очищаем вектора с сенсорами...
+for (unsigned int i = 0; i < iotSensors.size(); i++) {
+    IoTSensor* tmpptr = iotSensors[i];  //временно сохраняем указатель на сенсор, т.к. его преждевременное удаление оставит поломаную запись в векторе, к которой может обратиться ядро и вызвать исключение
+    iotSensors.erase(iotSensors.begin() + i);  //сначала удаляем элемент вектора, 
+    delete tmpptr;  //а далее уже удаляем объект сенсора
+}
+//...и переменными
+//...
+//заставляем модули прибраться за собой
+for (unsigned int i = 0; i < iotModules.size(); i++) {
+    iotModules[i]->clear();
+}
+
+
 #ifdef EnableLogging
     if (myLogging != nullptr) {
         myLogging->clear();
@@ -179,11 +200,6 @@ void clearVectors() {
 #ifdef EnableSensorBme280
     if (mySensorBme280 != nullptr) {
         mySensorBme280->clear();
-    }
-#endif
-#ifdef EnableSensorSht20
-    if (mySensorSht20 != nullptr) {
-        mySensorSht20->clear();
     }
 #endif
 #ifdef EnableSensorBmp280

@@ -18,7 +18,6 @@
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
-#include "items/vSensorSHT20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 
@@ -27,9 +26,11 @@
 
 #include "Class/IoTModule.h"
 #include "Class/IoTSensor.h"
+#include "Class/IoTVariable.h"
 
 extern std::vector<IoTModule*> iotModules;  //v3dev: вектор ссылок базового класса IoTModule - интерфейсы для общения со всеми поддерживаемыми системой модулями
 extern std::vector<IoTSensor*> iotSensors;  //v3dev: вектор ссылок базового класса IoTSensor - список всех запущенных сенсоров
+extern std::vector<IoTVariable*> iotVariables;  //v3dev: вектор ссылок базового класса IoTVariable - список всех подготовленных переменных
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
@@ -90,10 +91,6 @@ void csvCmdExecute(String& cmdStr) {
 #ifdef EnablePwmOut
                 sCmd.addCommand(order.c_str(), pwmOut);
 #endif
-            } else if (order == F("button-in")) {
-#ifdef EnableButtonIn
-                sCmd.addCommand(order.c_str(), buttonIn);
-#endif
             } else if (order == F("input-value")) {
 #ifdef EnableInput
                 sCmd.addCommand(order.c_str(), inputValue);
@@ -122,10 +119,6 @@ void csvCmdExecute(String& cmdStr) {
             } else if (order == F("bme280")) {
 #ifdef EnableSensorBme280
                 sCmd.addCommand(order.c_str(), bme280Sensor);
-#endif
-            } else if (order == F("sht20")) {
-#ifdef EnableSensorSht20
-                sCmd.addCommand(order.c_str(), sht20Sensor);
 #endif
             } else if (order == F("sensor")) {
 #ifdef EnableSensorAny
@@ -170,28 +163,31 @@ void csvCmdExecute(String& cmdStr) {
             }
 
             sCmd.readStr(buf);
-
+            
             //v3dev: инициируем экземпляр модулей в случае необходимости
             for (unsigned int i = 0; i < iotModules.size(); i++) {
-                SerialPrint("I", "Debug iotModules count", "");
-
                 ModuleInfo moduleInfo = iotModules[i]->getInfo();
-                if (moduleInfo.key == order) {
-                    SerialPrint("I", "Debug moduleInfo.parameters", buf);
+                //del SerialPrint("I", "moduleInfo.name", moduleInfo.name);
+                //del SerialPrint("I", "order", order);
+                if (moduleInfo.name == order) {  //проверка вхождения имени искомого модуля в ключе элемента настройки
+                    myLineParsing.update();  //v3dev: пока используем мостик для совместимости версий, предполагается, что настройки сразу будут в JSON
+                    String interval = myLineParsing.gint();
+                    if (interval == "") interval = "50";
+                    String pin = myLineParsing.gpin();
+                    String index = myLineParsing.gindex();
+                    String addr = myLineParsing.gaddr();
+                    String c = myLineParsing.gc();
+                    String id = myLineParsing.gkey();
+                    String key = myLineParsing.gfile();
+                    String db = myLineParsing.gdb();
+                    myLineParsing.clear();
+                    String strTmp = "{\"key\": \"" + key + "\", \"id\": \"" + id + "\", \"addr\": \"" + addr + "\", \"int\": \"" + interval + "\", \"pin\": \"" + pin + "\", \"index\": \"" + index + "\", \"c\": \"" + c + "\", \"db\": \"" + db + "\"}";
+                    SerialPrint("I", "Строка параметров при инициализации модуля " + moduleInfo.name + ": ", strTmp);
 
                     if (moduleInfo.type == "Sensor") { 
-                        myLineParsing.update();  //v3dev: пока используем мостик для совместимости версий, предполагается, что настройки сразу будут в JSON
-                        String interval = myLineParsing.gint();
-                        String pin = myLineParsing.gpin();
-                        String index = myLineParsing.gindex();
-                        String addr = myLineParsing.gaddr();
-                        myLineParsing.clear();
-                        String strTmp = "{\"addr\": \"" + addr + "\", \"int\": \"" + interval + "\", \"pin\": \"" + pin + "\", \"index\": \"" + index + "\"}";
-
                         iotSensors.push_back((IoTSensor*)iotModules[i]->initInstance(strTmp));
-                    } else if (moduleInfo.type == "Container")
-                    {
-                        //iot.push_back((IoTSensor*)iotModules[i]->initInstance(moduleInfo.parameters));
+                    } else if (moduleInfo.type == "Variable") {
+                        iotVariables.push_back((IoTVariable*)iotModules[i]->initInstance(strTmp));
                     }
                 }
             }

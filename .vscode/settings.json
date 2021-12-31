@@ -42,7 +42,13 @@
         "chrono": "cpp",
         "mutex": "cpp",
         "ratio": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "cstddef": "cpp",
+        "unordered_set": "cpp",
+        "algorithm": "cpp",
+        "iomanip": "cpp",
+        "memory": "cpp",
+        "string": "cpp"
     },
     "cmake.configureOnOpen": false
 }
