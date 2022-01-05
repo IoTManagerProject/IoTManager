@@ -211,6 +211,10 @@ class Scenario {
         setEventSign = selectFromMarkerToMarker(condition, " ", 1);
         setEventValue = selectFromMarkerToMarker(condition, " ", 2);
 
+        String tmpStr;
+        tmpStr = getValue(setEventValue);
+        if (tmpStr != "no value") setEventValue = tmpStr;
+        
         if (!isDigitDotCommaStr(setEventValue)) {
             if (isTimeStr(incommingEventValue)) {
                 int hhLStr = selectToMarker(incommingEventValue, ":").toInt();
@@ -220,8 +224,6 @@ class Scenario {
 
                 incommingEventValue = hhLStr*60 + mmLStr;
                 setEventValue = hhRStr*60 + mmRStr;
-            } else {
-                setEventValue = getValue(setEventValue);
             }
         }
     }
