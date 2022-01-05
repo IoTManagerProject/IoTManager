@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include <OneWire.h>
 #include "Global.h"
+#include "LiquidCrystal_I2C.h"
+#include "LiquidCrystal.h"
 
 class SensorLCD2004;
 
@@ -10,7 +12,7 @@ typedef std::vector<SensorLCD2004> MySensorLCD2004Vector;
 
 class SensorLCD2004 {
    public:
-    SensorLCD2004(unsigned long interval, unsigned int pin, unsigned int index, String addr, String key);
+    SensorLCD2004(String key, unsigned long interval, unsigned int x, unsigned int y, String val, String descr);
     ~SensorLCD2004();
 
     void loop();
@@ -20,11 +22,13 @@ class SensorLCD2004 {
     unsigned long currentMillis;
     unsigned long prevMillis;
     unsigned long difference;
+ 
     unsigned long _interval;
+    unsigned int _x;
+    unsigned int _y;
+    String _val;
     String _key;
-    String _addr;
-    unsigned int _pin;
-    unsigned int _index;
+    String _descr;
 };
 
 extern MySensorLCD2004Vector* mySensorLCD20042;
