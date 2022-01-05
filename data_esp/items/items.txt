@@ -38,6 +38,5 @@
 0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[1];int[10];type[HDC1080_hum];addr[0x76]*
 0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[1];int[10];type[AHTX0_temp];addr[0x76]
 0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[1];int[10];type[AHTX0_hum];addr[0x76]*
-0;sensor;anyid;anydata;Page;Tmp;1;c[0];k[0];int[10];type[LCD];val[any]
-0;sensor;anyid;anydata;Page;Hum;1;c[8];k[1];int[10];type[LCD];val[any]*
+0;LCD2004;lcdid;anydata;Вывод;Пример;1;addr[0х27];pin[16,2];int[10];c[0,0];val[ip]*
 0;sensor;anyid;anydata;Сенсоры;Параметр;1;c[1];int[10];type[type1];addr[0x76]*
