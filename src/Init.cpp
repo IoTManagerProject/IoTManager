@@ -16,6 +16,7 @@
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
+#include "items/vSensorLCD2004.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
@@ -167,6 +168,11 @@ void clearVectors() {
 #ifdef EnableSensorDallas
     if (mySensorDallas2 != nullptr) {
         mySensorDallas2->clear();
+    }
+#endif
+#ifdef EnableSensorLCD2004
+    if (mySensorLCD20042 != nullptr) {
+        mySensorLCD20042->clear();
     }
 #endif
 #ifdef EnableSensorUltrasonic

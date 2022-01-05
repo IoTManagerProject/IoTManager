@@ -26,11 +26,11 @@ void SensorLCD2004::loop() {
     difference = currentMillis - prevMillis;
     if (difference >= _interval) {
         prevMillis = millis();
-        readLCD2004();
+        writeLCD2004();
     }
 }
 
-void SensorLCD2004::readLCD2004() {
+void SensorLCD2004::writeLCD2004() {
     //if (_addr == "") {
     //    sensors->getAddress(deviceAddress, _index);
     //} else {
@@ -49,7 +49,7 @@ void SensorLCD2004::readLCD2004() {
 
 MySensorLCD2004Vector* mySensorLCD20042 = nullptr;
 
-void LCD2004() {
+void lcd2004() {
     myLineParsing.update();
     String interval = myLineParsing.gint();
     String pin = myLineParsing.gpin();

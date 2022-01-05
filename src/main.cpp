@@ -29,6 +29,7 @@
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
+#include "items/vSensorLCD2004.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
@@ -150,6 +151,13 @@ void loop() {
     if (mySensorDallas2 != nullptr) {
         for (unsigned int i = 0; i < mySensorDallas2->size(); i++) {
             mySensorDallas2->at(i).loop();
+        }
+    }
+#endif
+#ifdef EnableSensorLCD2004
+    if (mySensorLCD20042 != nullptr) {
+        for (unsigned int i = 0; i < mySensorLCD20042->size(); i++) {
+            mySensorLCD20042->at(i).loop();
         }
     }
 #endif
