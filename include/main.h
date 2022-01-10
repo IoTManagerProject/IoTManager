@@ -6,3 +6,4 @@
 #include "AsyncWebServer.h"
 #include "StandWebServer.h"
 #include "classes/sendJson.h"
+#include "classes/NotAsync.h"

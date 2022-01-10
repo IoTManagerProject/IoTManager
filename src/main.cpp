@@ -6,6 +6,9 @@ void setup() {
     Serial.println();
     Serial.println(F("--------------started----------------"));
 
+    //создание экземпляров классов
+    myNotAsyncActions = new NotAsync(do_LAST);
+
     //инициализация файловой системы
     fileSystemInit();
 

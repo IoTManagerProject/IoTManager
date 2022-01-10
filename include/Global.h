@@ -6,6 +6,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <TickerScheduler.h>
+#include <PubSubClient.h>
 
 #ifdef ESP32
 #include "WiFi.h"
@@ -52,6 +53,7 @@
 
 extern TickerScheduler ts;
 extern WiFiClient espClient;
+extern PubSubClient mqtt;
 #ifdef ASYNC_WEB_SERVER
 extern AsyncWebServer server;
 #endif
@@ -76,6 +78,23 @@ extern WebSocketsServer standWebSocket;
 extern String settingsFlashJson;
 extern String paramsFlashJson;
 extern String paramsHeapJson;
+
+// Mqtt
+extern String mqttServer;
+extern int mqttPort;
+extern String mqttPrefix;
+extern String mqttUser;
+extern String mqttPass;
+
+extern String mqttRootDevice;
+extern String chipId;
+extern String prex;
+extern String all_widgets;
+extern String scenario;
+
+extern int mqttConnectAttempts;
+extern bool changeBroker;
+extern int currentBroker;
 
 // extern DynamicJsonDocument settingsFlashJsonDoc;
 // extern DynamicJsonDocument paramsFlashJsonDoc;
