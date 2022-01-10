@@ -1,6 +1,6 @@
 #pragma once
 #include "Global.h"
-#include "сlasses/sendJson.h"
+#include "classes/sendJson.h"
 
 #ifdef STANDARD_WEB_SERVER
 extern void standWebServerInit();
