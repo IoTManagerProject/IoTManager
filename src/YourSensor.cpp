@@ -87,6 +87,10 @@ float yourSensorReading(String type, String paramsAny) {
         value = valCO2;
         // Serial.println(valCO2);
     }
+    //==========================================================timer=================================================================
+    if (type == "timer") {
+        value = jsonReadFloat(configLiveJson, jsonReadStr(paramsAny, "val"));
+    }
 
     return value;
 }
