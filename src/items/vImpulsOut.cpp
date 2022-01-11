@@ -24,7 +24,7 @@ void ImpulsOutClass::loop() {
     currentMillis = millis();
     difference = currentMillis - prevMillis;
     if (_impulsCountBuf > 0) {
-        if (difference > _impulsPeriod) {
+        if (difference >= _impulsPeriod) {
             _impulsCountBuf--;
             prevMillis = millis();
             yield();
