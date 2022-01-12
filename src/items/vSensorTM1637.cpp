@@ -9,7 +9,7 @@
 
 #include <Arduino.h>
 
-LiquidCrystal_I2C *LCDI2C;
+LiquidCrystal_I2C *LCDI2C2;
 
 SensorTM1637::SensorTM1637(String key, unsigned long interval, unsigned int x, unsigned int y, String val, String descr) {
     _key = key;
@@ -27,15 +27,15 @@ SensorTM1637::~SensorTM1637() {}
 void SensorTM1637::printBlankStr(int strSize){
     String tmpStr = "";
     for(int i=0; i<strSize; i++) tmpStr += " ";
-    LCDI2C->setCursor(_x, _y); 
-    LCDI2C->print(tmpStr);
+    LCDI2C2->setCursor(_x, _y); 
+    LCDI2C2->print(tmpStr);
 }
 
 void SensorTM1637::execute(String command) {
-    if (command == "noBacklight") LCDI2C->noBacklight();
-    else if (command == "backlight") LCDI2C->backlight();
-    else if (command == "noDisplay") LCDI2C->noDisplay();
-    else if (command == "display") LCDI2C->display();
+    if (command == "noBacklight") LCDI2C2->noBacklight();
+    else if (command == "backlight") LCDI2C2->backlight();
+    else if (command == "noDisplay") LCDI2C2->noDisplay();
+    else if (command == "display") LCDI2C2->display();
     else if (command == "x") {
         printBlankStr(_prevStrSize);
         String par = sCmd.next();
@@ -68,14 +68,14 @@ void SensorTM1637::loop() {
 }
 
 void SensorTM1637::writeTM1637() {
-    if (LCDI2C != nullptr) {
+    if (LCDI2C2 != nullptr) {
         printBlankStr(_prevStrSize);
 
         String tmpStr = getValue(_val);
         if (tmpStr == "no value") tmpStr = _val;
         if (_descr != "none") tmpStr = _descr + " " + tmpStr;    
-        LCDI2C->setCursor(_x, _y);
-        LCDI2C->print(tmpStr); 
+        LCDI2C2->setCursor(_x, _y);
+        LCDI2C2->print(tmpStr); 
 
         _prevStrSize = tmpStr.length();
     }
@@ -108,11 +108,11 @@ void TM1637() {
     int w = selectFromMarkerToMarker(k, ",", 0).toInt();  //количество столбцов
     int h = selectFromMarkerToMarker(k, ",", 1).toInt();  //количество строк
  
-    if (LCDI2C == nullptr) {  //инициализации экрана еще не было
-        LCDI2C = new LiquidCrystal_I2C(hexStringToUint8(addr), w, h);//hexStringToUint8(addr), w, h);
-        if(LCDI2C != nullptr) {
-            LCDI2C->init();
-            LCDI2C->backlight();
+    if (LCDI2C2 == nullptr) {  //инициализации экрана еще не было
+        LCDI2C2 = new LiquidCrystal_I2C(hexStringToUint8(addr), w, h);//hexStringToUint8(addr), w, h);
+        if(LCDI2C2 != nullptr) {
+            LCDI2C2->init();
+            LCDI2C2->backlight();
         }    
     }
 
