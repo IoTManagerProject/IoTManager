@@ -19,6 +19,7 @@ class SensorLCD2004 {
     void writeLCD2004();
     void execute(String command);
     String _key;
+    void printBlankStr(int strSize);
 
    private:
     unsigned long currentMillis;

@@ -24,10 +24,10 @@ SensorLCD2004::SensorLCD2004(String key, unsigned long interval, unsigned int x,
 SensorLCD2004::~SensorLCD2004() {}
 
 //печать пустой строки нужной длинны для затирания предыдущего значения на экране
-void printBlankStr(int x, int y, int strSize){
+void SensorLCD2004::printBlankStr(int strSize){
     String tmpStr = "";
     for(int i=0; i<strSize; i++) tmpStr += " ";
-    LCDI2C->setCursor(x, y); 
+    LCDI2C->setCursor(_x, _y); 
     LCDI2C->print(tmpStr);
 }
 
@@ -37,21 +37,25 @@ void SensorLCD2004::execute(String command) {
     else if (command == "noDisplay") LCDI2C->noDisplay();
     else if (command == "display") LCDI2C->display();
     else if (command == "x") {
-        printBlankStr(_x, _y, _prevStrSize);
+        printBlankStr(_prevStrSize);
         String par = sCmd.next();
         _x = par.toInt();
     }
     else if (command == "y") {
+        printBlankStr(_prevStrSize);
         String par = sCmd.next();
         _y = par.toInt();
     }
-    else {  //не команда, значит данные (параметры - x и y) 
-
+    else if (command == "descr") {
+        printBlankStr(_prevStrSize);
+        String par = sCmd.next();
+        _descr = par;
+    }
+    else {  //не команда, значит данные
+        _val = command;
     }
 
     writeLCD2004();
-    
-    //SerialPrint("I", "execute", command + " " + par);
 }
 
 void SensorLCD2004::loop() {
@@ -65,7 +69,7 @@ void SensorLCD2004::loop() {
 
 void SensorLCD2004::writeLCD2004() {
     if (LCDI2C != nullptr) {
-        printBlankStr(_x, _y, _prevStrSize);
+        printBlankStr(_prevStrSize);
 
         String tmpStr = getValue(_val);
         if (tmpStr == "no value") tmpStr = _val;
