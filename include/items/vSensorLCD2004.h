@@ -4,7 +4,7 @@
 #include <OneWire.h>
 #include "Global.h"
 #include "LiquidCrystal_I2C.h"
-#include "LiquidCrystal.h"
+
 
 class SensorLCD2004;
 
@@ -17,6 +17,8 @@ class SensorLCD2004 {
 
     void loop();
     void writeLCD2004();
+    void execute(String command);
+    String _key;
 
    private:
     unsigned long currentMillis;
@@ -27,8 +29,8 @@ class SensorLCD2004 {
     unsigned int _x;
     unsigned int _y;
     String _val;
-    String _key;
     String _descr;
+    int _prevStrSize;
 };
 
 extern MySensorLCD2004Vector* mySensorLCD20042;

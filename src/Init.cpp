@@ -24,6 +24,10 @@
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
 
+#ifdef EnableSensorLCD2004
+extern LiquidCrystal_I2C *LCDI2C;
+#endif
+
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
     configSetupJson.replace("\r\n", "");
@@ -172,7 +176,9 @@ void clearVectors() {
 #endif
 #ifdef EnableSensorLCD2004
     if (mySensorLCD20042 != nullptr) {
+        if(LCDI2C != nullptr) LCDI2C->clear();
         mySensorLCD20042->clear();
+        
     }
 #endif
 #ifdef EnableSensorUltrasonic
