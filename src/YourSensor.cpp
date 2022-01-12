@@ -9,7 +9,7 @@
 #include "Adafruit_AHTX0.h"
 #include "BH1750.h"
 #include "ClosedCube_HDC1080.h"
-#include "LiquidCrystal_I2C.h"
+//#include "LiquidCrystal_I2C.h"
 
 //создаем объект HDC1080
 ClosedCube_HDC1080 hdc1080;
@@ -20,7 +20,7 @@ Adafruit_Sensor *aht_humidity, *aht_temp;
 sensors_event_t tmpEvent_t;
 
 //создаем объект LCD
-LiquidCrystal_I2C LCD(0x27, 16, 2);
+//LiquidCrystal_I2C LCD(0x27, 16, 2);
 
 //создаем объект BH1750
 BH1750 lightMeter;
@@ -29,7 +29,7 @@ BH1750 lightMeter;
 // Adafruit_ADS1015 ads;
 
 // co2 sensor
-SoftwareSerial K_30_Serial(13, 15);                           //Программный порт
+//SoftwareSerial K_30_Serial(13, 15);                           //Программный порт
 byte readCO2[] = {0xFE, 0X44, 0X00, 0X08, 0X02, 0X9F, 0X25};  //Команды для запроса показаний с датчика
 byte response[] = {0, 0, 0, 0, 0, 0, 0};                      //массив для ответа от датчика
 unsigned long getValue(byte packet[]) {
@@ -39,10 +39,10 @@ unsigned long getValue(byte packet[]) {
     return val_1;
 }
 void sendRequest(byte packet[]) {
-    while (!K_30_Serial.available()) {
-        K_30_Serial.write(readCO2, 7);
-        delay(50);
-    }
+    //while (!K_30_Serial.available()) {
+    //    K_30_Serial.write(readCO2, 7);
+    //    delay(50);
+    //}
 }
 
 float yourSensorReading(String type, String paramsAny) {
@@ -68,12 +68,12 @@ float yourSensorReading(String type, String paramsAny) {
         value = tmpEvent_t.relative_humidity;
     }
     //==========================================================LCD=================================================================
-    if (type == "LCD") {
-        LCD_init();
-        LCD.setCursor(jsonReadInt(paramsAny, "c"), jsonReadInt(paramsAny, "k"));
-        String toPrint = jsonReadStr(paramsAny, "descr") + " " + jsonReadStr(configLiveJson, jsonReadStr(paramsAny, "val"));
-        LCD.print(toPrint);
-    }
+    //if (type == "LCD") {
+        //LCD_init();
+    //    LCD.setCursor(jsonReadInt(paramsAny, "c"), jsonReadInt(paramsAny, "k"));
+    //    String toPrint = jsonReadStr(paramsAny, "descr") + " " + jsonReadStr(configLiveJson, jsonReadStr(paramsAny, "val"));
+    //    LCD.print(toPrint);
+    //}
     //==========================================================BH1750=================================================================
     if (type == "BH1750_lux") {
         BH1750_init();
@@ -81,10 +81,10 @@ float yourSensorReading(String type, String paramsAny) {
     }
     //==========================================================co2=================================================================
     if (type == "valCO2") {
-        K_30_Serial.begin(9600);
-        sendRequest(readCO2);
-        int valCO2 = getValue(response);
-        value = valCO2;
+        //K_30_Serial.begin(9600);
+        //sendRequest(readCO2);
+        //int valCO2 = getValue(response);
+        //value = valCO2;
         // Serial.println(valCO2);
     }
     //==========================================================timer=================================================================
@@ -119,14 +119,14 @@ void AHTX0_init() {
     }
 }
 
-void LCD_init() {
-    static bool LCD_flag = true;
-    if (LCD_flag) {
-        LCD.init();       //инициализация дисплея
-        LCD.backlight();  //включаем подсветку
-    }
-    LCD_flag = false;
-}
+//void LCD_init() {
+    //static bool LCD_flag = true;
+    //if (LCD_flag) {
+        //LCD.init();       //инициализация дисплея
+        //LCD.backlight();  //включаем подсветку
+    //}
+    //LCD_flag = false;
+//}
 
 void BH1750_init() {
     static bool BH1750_flag = true;

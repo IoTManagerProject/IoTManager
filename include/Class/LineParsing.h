@@ -127,6 +127,7 @@ class LineParsing {
         }
 
         if (_pin != "") {
+            /*
             if (_pin.indexOf(",") == -1) {
                 if (!isPinExist(_pin.toInt()) || !isDigitStr(_pin)) {
                     pinErrors++;
@@ -138,6 +139,17 @@ class LineParsing {
                 if (!isPinExist(pin1.toInt()) || !isDigitStr(pin1) || !isPinExist(pin2.toInt()) || !isDigitStr(pin2)) {
                     pinErrors++;
                     _pin = "";
+                }
+            }*/
+
+            String tmpstr;
+            for (int i=0; i<15; i++) {
+                tmpstr = selectFromMarkerToMarker(_pin, ",", i);
+                if(tmpstr == "not found") break;
+                if(!isDigitStr(tmpstr) || !isPinExist(tmpstr.toInt())){
+                    pinErrors++;
+                    _pin = "";
+                    break;
                 }
             }
         }

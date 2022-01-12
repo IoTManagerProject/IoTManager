@@ -16,12 +16,17 @@
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
+#include "items/vSensorLCD2004.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
 #include "items/vSensorSHT20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
+
+#ifdef EnableSensorLCD2004
+extern LiquidCrystal_I2C *LCDI2C;
+#endif
 
 void loadConfig() {
     configSetupJson = readFile("config.json", 4096);
@@ -167,6 +172,13 @@ void clearVectors() {
 #ifdef EnableSensorDallas
     if (mySensorDallas2 != nullptr) {
         mySensorDallas2->clear();
+    }
+#endif
+#ifdef EnableSensorLCD2004
+    if (mySensorLCD20042 != nullptr) {
+        if(LCDI2C != nullptr) LCDI2C->clear();
+        mySensorLCD20042->clear();
+        
     }
 #endif
 #ifdef EnableSensorUltrasonic

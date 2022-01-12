@@ -16,6 +16,7 @@
 #include "items/vSensorBmp280.h"
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
+#include "items/vSensorLCD2004.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
@@ -105,6 +106,10 @@ void csvCmdExecute(String& cmdStr) {
             } else if (order == F("dallas-temp")) {
 #ifdef EnableSensorDallas
                 sCmd.addCommand(order.c_str(), dallas);
+#endif
+            } else if (order == F("LCD2004")) {
+#ifdef EnableSensorLCD2004
+                sCmd.addCommand(order.c_str(), lcd2004);
 #endif
             } else if (order == F("dht")) {
 #ifdef EnableSensorDht
