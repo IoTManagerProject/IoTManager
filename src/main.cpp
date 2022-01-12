@@ -1,4 +1,3 @@
-
 #include <SSDP.h>
 
 #include "BufferExecute.h"
@@ -30,6 +29,7 @@
 #include "items/vSensorCcs811.h"
 #include "items/vSensorDallas.h"
 #include "items/vSensorLCD2004.h"
+#include "items/vSensorTM1637.h"
 #include "items/vSensorDht.h"
 #include "items/vSensorNode.h"
 #include "items/vSensorPzem.h"
@@ -158,6 +158,13 @@ void loop() {
     if (mySensorLCD20042 != nullptr) {
         for (unsigned int i = 0; i < mySensorLCD20042->size(); i++) {
             mySensorLCD20042->at(i).loop();
+        }
+    }
+#endif
+#ifdef EnableSensorTM1637
+    if (mySensorTM1637 != nullptr) {
+        for (unsigned int i = 0; i < mySensorTM1637->size(); i++) {
+            mySensorTM1637->at(i).loop();
         }
     }
 #endif

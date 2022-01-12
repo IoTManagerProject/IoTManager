@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <OneWire.h>
 #include "Global.h"
-#include "LiquidCrystal_I2C.h"
+#include <TM1637Display.h>
 
 
 class SensorTM1637;
@@ -34,7 +34,7 @@ class SensorTM1637 {
     int _prevStrSize;
 };
 
-extern MySensorTM1637Vector* mySensorTM16372;
+extern MySensorTM1637Vector* mySensorTM1637;
 
 extern void TM1637();
 #endif
