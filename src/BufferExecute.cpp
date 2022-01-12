@@ -3,7 +3,6 @@
 #include "Global.h"
 #include "SoftUART.h"
 #include "items/test.h"
-#include "items/vButtonOut.h"
 #include "items/vCountDown.h"
 #include "items/vImpulsOut.h"
 #include "items/vInput.h"
@@ -83,11 +82,7 @@ void csvCmdExecute(String& cmdStr) {
             // SerialPrint("I", "Items", buf);
             String order = selectToMarker(buf, " ");  //отсечка самой команды
             
-            if (order == F("button-out")) {
-#ifdef EnableButtonOut
-                sCmd.addCommand(order.c_str(), buttonOut);
-#endif
-            } else if (order == F("pwm-out")) {
+            if (order == F("pwm-out")) {
 #ifdef EnablePwmOut
                 sCmd.addCommand(order.c_str(), pwmOut);
 #endif
