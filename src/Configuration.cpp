@@ -11,7 +11,7 @@ void configure(String& path) {
             } else if (subtype == F("pwm-out")) {
                 //=============================
             } else if (subtype == F("analog-adc")) {
-                //iotSensors.push_back(IoTSensorAnalog(jsonArrayElement));
+                // iotSensors.push_back(new IoTSensorAnalog(jsonArrayElement));
             } else {
                 SerialPrint(F("E"), F("Config"), F("config.json error, type not exist"));
             }
