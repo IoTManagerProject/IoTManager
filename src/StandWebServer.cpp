@@ -216,7 +216,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 if (mySendJson) mySendJson->sendFile("/config.json", num);
             }
 
-            if (payloadStr.startsWith("/gifnoc.json")) {  //если прилетел измененный пакет с меткой /gifnoc (config наоборот) то перепишем файл
+            if (payloadStr.startsWith("/gifnoc.json")) {  //если прилетел измененный пакет с меткой /gifnoc (config наоборот) то перепишем файл, пока переписываем целеком
                 payloadStr.replace("/gifnoc.json", "");
                 writeFile(F("config.json"), payloadStr);
             }
