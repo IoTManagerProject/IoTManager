@@ -1,17 +1,17 @@
-#include "Config.h"
+#include "Configuration.h"
 
 void configure(String& path) {
     File file = seekFile(path);
     while (file.available()) {
         String jsonArrayElement = file.readStringUntil('}') + "}";
-        String value;
-        if (jsonRead(jsonArrayElement, F("subtype"), value)) {
-            if (value == F("button-out")) {
+        String subtype;
+        if (jsonRead(jsonArrayElement, F("subtype"), subtype)) {
+            if (subtype == F("button-out")) {
                 //=============================
-            } else if (value == F("pwm-out")) {
+            } else if (subtype == F("pwm-out")) {
                 //=============================
-            } else if (value == F("analog-adc")) {
-                //=============================
+            } else if (subtype == F("analog-adc")) {
+                //iotSensors.push_back(IoTSensorAnalog(jsonArrayElement));
             } else {
                 SerialPrint(F("E"), F("Config"), F("config.json error, type not exist"));
             }
