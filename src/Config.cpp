@@ -10,6 +10,8 @@ void configure(String& path) {
                 //=============================
             } else if (value == F("pwm-out")) {
                 //=============================
+            } else if (value == F("analog-adc")) {
+                //=============================
             } else {
                 SerialPrint(F("E"), F("Config"), F("config.json error, type not exist"));
             }

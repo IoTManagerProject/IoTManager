@@ -42,7 +42,7 @@ void asyncWebServerInit() {
 
     // динамические данные
     // server.on("/config.live.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-    //    request->send(200, "application/json", configLiveJson);
+    //    request->send(200, "application/json", paramsFlashJson);
     //});
     //
     // server.on("/config.store.json", HTTP_GET, [](AsyncWebServerRequest *request) {

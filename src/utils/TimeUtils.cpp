@@ -115,18 +115,18 @@ void breakEpochToTime(unsigned long epoch, Time_t& tm) {
     tm.valid = (epoch > MIN_DATETIME);
 }
 
-//void timeInit() {
-//    ts.add(
-//        TIME, 1000, [&](void*) {
-//            String timenow = timeNow->getTimeWOsec();
-//            static String prevTime;
-//            if (prevTime != timenow) {
-//                prevTime = timenow;
-//                jsonWriteStr(configLiveJson, "timenow", timenow);
-//                eventGen2("timenow", timenow);
-//                SerialPrint("i", F("NTP"), timenow);
-//            }
-//        },
-//        nullptr, true);
-//    SerialPrint("i", F("NTP"), F("Handle time init"));
-//}
+// void timeInit() {
+//     ts.add(
+//         TIME, 1000, [&](void*) {
+//             String timenow = timeNow->getTimeWOsec();
+//             static String prevTime;
+//             if (prevTime != timenow) {
+//                 prevTime = timenow;
+//                 jsonWriteStr(paramsFlashJson, "timenow", timenow);
+//                 eventGen2("timenow", timenow);
+//                 SerialPrint("i", F("NTP"), timenow);
+//             }
+//         },
+//         nullptr, true);
+//     SerialPrint("i", F("NTP"), F("Handle time init"));
+// }
