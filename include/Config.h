@@ -1,4 +1,4 @@
 #pragma once
 #include "Global.h"
 
-extern void configuration(String& path);
+extern void configure(String& path);
