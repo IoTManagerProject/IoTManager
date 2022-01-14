@@ -1,4 +1,4 @@
-#include "classes/sendJson.h"
+#include "classes/SendJson.h"
 
 SendJson::SendJson() {}
 SendJson::~SendJson() {}
