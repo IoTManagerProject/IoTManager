@@ -101,6 +101,7 @@
 #define EnableSensorUptime
 #define EnableTelegram
 #define EnableUart
+#define EnableSensorLCD2004
 #endif
 
 //================================================================================================================================================================

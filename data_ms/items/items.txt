@@ -8,3 +8,4 @@
 0;logging;crtid;chart;Графики;История;order;val[any];int[60];cnt[100]*
 0;logging;crtid;chart3;Графики;История;order;val[any];int[23:30];cnt[100];st[0]*
 0;uptime;uptid;anydataTime;Системные;%name%#uptime;order;int[60]*
+0;LCD2004;lcdid;anydata;Вывод;IP;1;addr[0x27];k[20,4];int[10];c[0,0];val[ip]*
