@@ -88,6 +88,7 @@
 #define EnableTelegram
 #define EnableUart
 #define EnableSensorLCD2004
+#define EnableSensorTM1637
 #endif
 
 #ifdef GATE_MODE
