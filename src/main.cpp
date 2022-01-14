@@ -55,13 +55,16 @@ void loop() {
     //обновление задач таскера
     ts.update();
 
+    //отправка json
     if (mySendJson) mySendJson->loop();
 
 #ifdef STANDARD_WEB_SERVER
+    //обработка web сервера
     HTTP.handleClient();
 #endif
 
 #ifdef STANDARD_WEB_SOCKETS
+    //обработка web сокетов
     standWebSocket.loop();
 #endif
 }
