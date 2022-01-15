@@ -1,5 +1,5 @@
 #include "Configuration.h"
-#include "modules/IoTSensorA.h"
+#include "modules/AnalogAdc.h"
 
 std::vector<IoTSensor*> iotSensors;
 
@@ -11,20 +11,10 @@ void configure(String path) {
         if (jsonArrayElement.startsWith(",")) {
             jsonArrayElement = jsonArrayElement.substring(1, jsonArrayElement.length());  //это нужно оптимизировать в последствии
         }
-        String subtype;
-        if (jsonRead(jsonArrayElement, F("subtype"), subtype)) {
-            if (subtype == F("button-out")) {
-                //=============================
-            } else if (subtype == F("pwm-out")) {
-                //=============================
-            } else if (subtype == F("analog-adc")) {
-                mySensorAnalog = new IoTSensorA(jsonArrayElement);
-                iotSensors.push_back(mySensorAnalog);
-            } else {
-                SerialPrint(F("E"), F("Config"), "type not exist " + subtype);
-            }
-        } else {
-            SerialPrint(F("E"), F("Config"), F("json error"));
+
+        myIoTSensor = (IoTSensor*)getAPI_AnalogAdc(jsonArrayElement);
+        if (myIoTSensor) {
+            iotSensors.push_back(myIoTSensor);
         }
     }
     file.close();

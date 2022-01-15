@@ -37,3 +37,5 @@ void IoTSensor::regEvent(String value, String consoleInfo = "") {
 }
 
 void IoTSensor::doByInterval() {}
+
+IoTSensor* myIoTSensor;

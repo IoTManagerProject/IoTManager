@@ -2,10 +2,10 @@
 #include "Global.h"
 #include "Classes/IoTSensor.h"
 
-class IoTSensorA : public IoTSensor {
+class AnalogAdc : public IoTSensor {
    public:
-    IoTSensorA(String parameters);
-    ~IoTSensorA();
+    AnalogAdc(String parameters);
+    ~AnalogAdc();
 
     void doByInterval();
 
@@ -13,4 +13,4 @@ class IoTSensorA : public IoTSensor {
     unsigned int _pin;
 };
 
-extern IoTSensorA* mySensorAnalog;
+extern void* getAPI_AnalogAdc(String params);
