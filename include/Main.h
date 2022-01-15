@@ -8,3 +8,4 @@
 #include "classes/SendJson.h"
 #include "classes/NotAsync.h"
 #include "ESPConfiguration.h"
+#include "MqttClient.h"

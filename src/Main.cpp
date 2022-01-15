@@ -34,6 +34,9 @@ void setup() {
     standWebSocketsInit();
 #endif
 
+    //инициализация mqtt
+    mqttInit();
+
     //создаем объект класса выгружающего json массив из файла
     mySendJson = new SendJson;
 
@@ -69,6 +72,9 @@ void loop() {
     //обработка web сокетов
     standWebSocket.loop();
 #endif
+
+    //обновление mqtt
+    mqttLoop();
 
     for (unsigned int i = 0; i < iotSensors.size(); i++) {
         iotSensors[i]->loop();

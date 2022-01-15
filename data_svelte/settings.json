@@ -7,5 +7,15 @@
     "timezone": 1,
     "ntp": "pool.ntp.org",
     "weblogin": "admin",
-    "webpass": "admin"
+    "webpass": "admin",
+    "mqttServer": "m2.wqtt.ru",
+    "mqttPort": 8021,
+    "mqttPrefix": "/ver4test",
+    "mqttUser": "rise",
+    "mqttPass": "hostel3333",
+    "mqttServer2": "",
+    "mqttPort2": 0,
+    "mqttPrefix2": "",
+    "mqttUser2": "",
+    "mqttPass2": ""
 }
