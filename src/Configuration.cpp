@@ -1,5 +1,6 @@
 #include "Configuration.h"
-#include "modules/AnalogAdc.h"
+
+extern void* getAPI_AnalogAdc(String params);
 
 std::vector<IoTSensor*> iotSensors;
 

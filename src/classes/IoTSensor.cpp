@@ -33,7 +33,7 @@ void IoTSensor::regEvent(String value, String consoleInfo = "") {
     eventGen2(_id, String(value));
     jsonWriteStr(paramsFlashJson, _id, String(value));
     publishStatus(_id, String(value));
-    SerialPrint("I", "Sensor", "'" + _id + "' data: " + String(value) + "' " + consoleInfo);
+    SerialPrint("I", "Sensor " + consoleInfo, "'" + _id + "' data: " + String(value) + "'");
 }
 
 void IoTSensor::doByInterval() {}

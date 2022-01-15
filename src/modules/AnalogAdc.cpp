@@ -1,4 +1,6 @@
-#include "modules/AnalogAdc.h"
+#include "Global.h"
+#include "Classes/IoTSensor.h"
+
 
 class AnalogAdc : public IoTSensor {
    public:
@@ -13,7 +15,7 @@ class AnalogAdc : public IoTSensor {
     void doByInterval() {
         float value = analogRead(_pin);
 
-        regEvent((String)value, "analog");
+        regEvent((String)value, "AnalogAdc");
     }
 
     ~AnalogAdc();
