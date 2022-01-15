@@ -64,3 +64,14 @@ bool cutFile(const String& src, const String& dst) {
     FileFS.remove(srcPath);
     return true;
 }
+
+const String addFileLn(const String& filename, const String& str) {
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "a");
+    if (!file) {
+        return "failed";
+    }
+    file.println(str);
+    file.close();
+    return "sucсess";
+}

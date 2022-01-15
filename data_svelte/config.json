@@ -61,7 +61,7 @@
         "type": "Reading",
         "subtype": "InputValue",
         "id": "txt",
-        "widget": "input",
+        "widget": "inputDigit",
         "page": "Лимиты",
         "descr": "Порог"
     },

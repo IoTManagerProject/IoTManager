@@ -1,0 +1,5 @@
+{
+    "widget": "chart",
+    "dateFormat": "DD.MM.YYYY",
+    "type":"bar"
+}

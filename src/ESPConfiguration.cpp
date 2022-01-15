@@ -20,6 +20,7 @@ void configure(String path) {
         myIoTSensor = (IoTSensor*)getAPI_AnalogAdc(jsonArrayElement);
         if (myIoTSensor) {
             iotSensors.push_back(myIoTSensor);
+            createWidget(jsonArrayElement);
         }
         //================================================================================================================
     }

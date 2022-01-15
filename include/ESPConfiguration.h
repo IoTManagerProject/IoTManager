@@ -1,6 +1,7 @@
 #pragma once
 #include "Global.h"
 #include "Classes/IoTSensor.h"
+#include "CreateWidget.h"
 
 extern std::vector<IoTSensor*> iotSensors;  // вектор ссылок базового класса IoTSensor - список всех запущенных сенсоров
 
