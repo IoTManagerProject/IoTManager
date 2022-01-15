@@ -2,7 +2,7 @@
     {
         "type": "Reading",
         "subtype": "AnalogAdc",
-        "id": "t",
+        "id": "t1",
         "widget": "anydata",
         "page": "Сенсоры",
         "descr": "Температура",
@@ -12,7 +12,7 @@
     {
         "type": "Reading",
         "subtype": "AnalogAdc",
-        "id": "t",
+        "id": "t2",
         "widget": "anydata",
         "page": "Сенсоры",
         "descr": "Температура",

@@ -1,20 +1,26 @@
 #include "modules/AnalogAdc.h"
 
-// setup()
-AnalogAdc::AnalogAdc(String parameters) {
-    init(jsonReadStr(parameters, "key"), jsonReadStr(parameters, "id"), jsonReadInt(parameters, "int"));
+class AnalogAdc : public IoTSensor {
+   public:
+    // setup()
+    AnalogAdc(String parameters) {
+        init(jsonReadStr(parameters, "key"), jsonReadStr(parameters, "id"), jsonReadInt(parameters, "int"));
 
-    _pin = jsonReadInt(parameters, "pin");
-}
+        _pin = jsonReadInt(parameters, "pin");
+    }
 
-AnalogAdc::~AnalogAdc() {}
+    // loop()
+    void doByInterval() {
+        float value = analogRead(_pin);
 
-// loop()
-void AnalogAdc::doByInterval() {
-    float value = analogRead(_pin);
+        regEvent((String)value, "analog");
+    }
 
-    regEvent((String)value, "analog");
-}
+    ~AnalogAdc();
+
+   private:
+    unsigned int _pin;
+};
 
 void* getAPI_AnalogAdc(String parameters) {
     String subtype;
