@@ -4,4 +4,4 @@
 
 extern std::vector<IoTSensor*> iotSensors;  // вектор ссылок базового класса IoTSensor - список всех запущенных сенсоров
 
-extern void configure(String& path);
+extern void configure(String path);

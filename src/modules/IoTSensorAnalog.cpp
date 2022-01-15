@@ -2,7 +2,7 @@
 #include "Utils/SerialPrint.h"
 #include "Utils/StringUtils.h"
 #include "Classes/IoTSensor.h"
-
+#include <map>
 class IoTSensorAnalog : public IoTSensor {
    private:
     //описание переменных экземпляра датчика - аналог глобальных переменных

@@ -37,6 +37,8 @@ void setup() {
     //создаем объект класса выгружающего json массив из файла
     mySendJson = new SendJson;
 
+    configure("/config.json");
+
     //выводим остаток оперативной памяти после старта
     // 22.12.21 пустой код без wifi остаток    = 50.28 kB
     // 22.12.21 запустил wifi       остаток    = 48.59 kB
@@ -67,4 +69,8 @@ void loop() {
     //обработка web сокетов
     standWebSocket.loop();
 #endif
+
+    for (unsigned int i = 0; i < iotSensors.size(); i++) {
+        iotSensors[i]->loop();
+    }
 }

@@ -52,7 +52,18 @@
         "widget": "anydata",
         "page": "Сенсоры",
         "descr": "Температура",
+        "pin": 0,
         "int": 10
+    },
+    {
+        "type": "Reading",
+        "subtype": "analog-adc",
+        "id": "t",
+        "widget": "anydata",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "pin": 0,
+        "int": 15
     },
     {
         "type": "Reading",
