@@ -214,6 +214,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             if (payloadStr.startsWith("/config")) {
                 //если прилетел url страницы /config то отправим widgets.json и config.json
+
+                // не нравится мне это, нужно что бы класс строил очередь и отправлял вначале первый файл потом второй
+                // очередь задавалась бы так: /widgets.json,/config.json,
+                // хорошая идея на завтра)
+
                 if (sendWigdetsJson) sendWigdetsJson->sendFile("/widgets.json", num);
                 if (sendConfigJson) sendConfigJson->sendFile("/config.json", num);
             }
