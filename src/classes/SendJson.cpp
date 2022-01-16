@@ -24,4 +24,5 @@ void SendJson::sendMqtt(String& jsonArrayElement) {
     // mqtt send to do
 }
 
-SendJson* mySendJson;
+SendJson* sendConfigJson;
+SendJson* sendWigdetsJson;

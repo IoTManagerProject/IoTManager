@@ -23,4 +23,5 @@ class SendJson {
     String _path;
 };
 
-extern SendJson* mySendJson;
+extern SendJson* sendConfigJson;
+extern SendJson* sendWigdetsJson;

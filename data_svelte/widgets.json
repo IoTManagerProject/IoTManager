@@ -1,0 +1,180 @@
+[
+    {
+        "name": "anydataRed",
+        "rus": "Сообщение1",
+        "widget": "anydata",
+        "icon": "body",
+        "color": "red",
+        "descrColor": "red"
+    },
+    {
+        "name": "anydataDgr",
+        "rus": "Сообщение2",
+        "widget": "anydata",
+        "after": "",
+        "color": "red",
+        "icon": "walk"
+    },
+    {
+        "name": "anydataDef",
+        "rus": "Текст",
+        "widget": "anydata",
+        "after": "",
+        "icon": ""
+    },
+    {
+        "name": "anydataAmp",
+        "rus": "Амперы",
+        "widget": "anydata",
+        "after": "Amp",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataHtz",
+        "rus": "Герцы",
+        "widget": "anydata",
+        "after": "Htz",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataHum",
+        "rus": "Влажность",
+        "widget": "anydata",
+        "after": "%",
+        "icon": "water",
+        "color": "#88AADF"
+    },
+    {
+        "name": "anydataMm",
+        "rus": "Давление",
+        "widget": "anydata",
+        "after": "mm",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataTm",
+        "rus": "Время",
+        "widget": "anydata",
+        "after": "",
+        "icon": "speedometer"
+    },
+    {
+        "name": "button",
+        "rus": "Кнопка",
+        "widget": "btn",
+        "size": "large",
+        "color": "green",
+        "send": "test"
+    },
+    {
+        "name": "toggle",
+        "rus": "Переключатель",
+        "widget": "toggle",
+        "icon": "",
+        "iconOff": ""
+    },
+    {
+        "name": "chart1",
+        "rus": "График1",
+        "widget": "chart",
+        "dateFormat": "HH:mm",
+        "pointRadius": 0
+    },
+    {
+        "name": "chart2",
+        "rus": "График2",
+        "widget": "chart",
+        "dateFormat": "HH:mm"
+    },
+    {
+        "name": "chart3",
+        "rus": "График3",
+        "widget": "chart",
+        "dateFormat": "DD.MM.YYYY",
+        "type": "bar"
+    },
+    {
+        "name": "chart4",
+        "rus": "График4",
+        "widget": "chart",
+        "dateFormat": "DD.MM.YYYY"
+    },
+    {
+        "name": "fillgauge",
+        "rus": "Бочка",
+        "widget": "fillgauge",
+        "circleColor": "#00FFFF",
+        "textColor": "#FFFFFF",
+        "waveTextColor": "#000000",
+        "waveColor": "#00FFFF"
+    },
+    {
+        "name": "inputDate",
+        "rus": "Ввод даты",
+        "widget": "input",
+        "size": "small",
+        "color": "orange",
+        "type": "date"
+    },
+    {
+        "name": "inputDgt",
+        "rus": "Ввод цифры",
+        "widget": "input",
+        "color": "blue",
+        "type": "number"
+    },
+    {
+        "name": "inputTxt",
+        "rus": "Ввод текста",
+        "widget": "input",
+        "size": "small",
+        "color": "orange",
+        "type": "text"
+    },
+    {
+        "name": "inputTm",
+        "rus": "Ввод времени",
+        "widget": "input",
+        "color": "blue",
+        "type": "time"
+    },
+    {
+        "name": "progressLine",
+        "rus": "Статус линия",
+        "widget": "progress-line",
+        "icon": "sunny",
+        "max": "100",
+        "stroke": "10"
+    },
+    {
+        "name": "progressRound",
+        "rus": "Статус круг",
+        "widget": "progress-round",
+        "max": "100",
+        "stroke": "20",
+        "color": "#45ccce",
+        "background": "#777",
+        "semicircle": "1"
+    },
+    {
+        "name": "range",
+        "rus": "Ползунок",
+        "widget": "range",
+        "descrColor": "red",
+        "after": "%",
+        "k": 0.0977,
+        "min": 0,
+        "max": 100,
+        "debounce": 500
+    },
+    {
+        "name": "select",
+        "rus": "Выпадающий",
+        "widget": "select",
+        "options": [
+            "Выключен",
+            "Включен"
+        ],
+        "status": 0
+    }
+]

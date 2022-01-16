@@ -212,8 +212,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 payloadStr += (char)payload[i];
             }
 
-            if (payloadStr.startsWith("/config")) {  //если прилетел url страницы /config то отправим пакеты с меткой /config.json
-                if (mySendJson) mySendJson->sendFile("/config.json", num);
+            if (payloadStr.startsWith("/config")) {
+                //если прилетел url страницы /config то отправим widgets.json и config.json
+                if (sendWigdetsJson) sendWigdetsJson->sendFile("/widgets.json", num);
+                if (sendConfigJson) sendConfigJson->sendFile("/config.json", num);
             }
 
             if (payloadStr.startsWith("/gifnoc.json")) {  //если прилетел измененный пакет с меткой /gifnoc (config наоборот) то перепишем файл, пока переписываем целеком
