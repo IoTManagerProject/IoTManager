@@ -25,11 +25,5 @@ class IoTSensor {
     unsigned long _interval;
 };
 
-struct ModuleInfo
-{
-    void* apiToComponent;
-    String defConfig;
-};
-
 //extern IoTSensor* myIoTSensor;
 //модулям не нужно знать эту переменную
