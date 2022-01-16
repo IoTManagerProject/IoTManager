@@ -46,10 +46,13 @@ class AnalogAdc : public IoTSensor {
 //после замены названия сенсора, на функцию можно не обращать внимания
 //если сенсор предполагает использование общего объекта библиотеки для нескольких экземпляров сенсора, то в данной функции необходимо предусмотреть
 //создание и контроль соответствующих глобальных переменных (см. пример реализации сенсора ds18b20)
-void* getAPI_AnalogAdc(String subtype, String param) {
+ModuleInfo getAPI_AnalogAdc(String subtype, String param) {
+        ModuleInfo mi;
+        mi.apiToComponent = nullptr;
+        mi.defConfig = "конфин такой вот джисон";
         if (subtype == F("AnalogAdc")) {
-            return new AnalogAdc(param);
-        } else {
-            return nullptr;
+            mi.apiToComponent = new AnalogAdc(param);
         }
+
+        return mi;
 }

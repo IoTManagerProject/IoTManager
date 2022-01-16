@@ -82,10 +82,13 @@ class ds18b20 : public IoTSensor {
 //после замены названия сенсора, на функцию можно не обращать внимания
 //если сенсор предполагает использование общего объекта библиотеки для нескольких экземпляров сенсора, то в данной функции необходимо предусмотреть
 //создание и контроль соответствующих глобальных переменных (см. пример реализации сенсора ds18b20)
-void* getAPI_ds18b20(String subtype, String param) {
-        if (subtype == F("ds18b20")) {
-            return new ds18b20(param);
-        } else {
-            return nullptr;
-        }
+ModuleInfo getAPI_ds18b20(String subtype, String param) {
+    ModuleInfo mi;
+    mi.apiToComponent = nullptr;
+    mi.defConfig = "конфин такой вот джисон";
+    if (subtype == F("AnalogAdc")) {
+        mi.apiToComponent = new ds18b20(param);
+    }
+
+    return mi;
 }
