@@ -25,4 +25,5 @@ class IoTSensor {
     unsigned long _interval;
 };
 
-extern IoTSensor* myIoTSensor;
+//extern IoTSensor* myIoTSensor;
+//модулям не нужно знать эту переменную

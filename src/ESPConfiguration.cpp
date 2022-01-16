@@ -1,6 +1,7 @@
 #include "ESPConfiguration.h"
 
 std::vector<IoTSensor*> iotSensors;
+void* getAPI(String subtype, String params);
 
 //============================================================================================
 //здесь скопируйте строку и вставьте ниже, заменив имя AnalogAdc на название вашего сенсора
@@ -15,14 +16,18 @@ void configure(String path) {
         if (jsonArrayElement.startsWith(",")) {
             jsonArrayElement = jsonArrayElement.substring(1, jsonArrayElement.length());  //это нужно оптимизировать в последствии
         }
-        //===============================================================================================================
-        //здесь нужно скопировать блок еще раз и вставить его ниже, переименовав AnalogAdc на название вашего сенсора
-        myIoTSensor = (IoTSensor*)getAPI_AnalogAdc(jsonArrayElement);
-        if (myIoTSensor) {
-            iotSensors.push_back(myIoTSensor);
-            createWidget(jsonArrayElement);
+        
+        String subtype;
+        if (!jsonRead(jsonArrayElement, F("subtype"), subtype)) {  //если нет такого ключа в представленном json или он не валидный
+            SerialPrint(F("E"), F("Config"), "json error " + subtype);
+            continue;
+        } else {
+            myIoTSensor = (IoTSensor*)getAPI(subtype, jsonArrayElement);
+            if (myIoTSensor) {
+                iotSensors.push_back(myIoTSensor);
+                createWidget(jsonArrayElement);
+            }
         }
-        //================================================================================================================
     }
     file.close();
 }
