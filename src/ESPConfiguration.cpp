@@ -1,12 +1,7 @@
 #include "ESPConfiguration.h"
 
 std::vector<IoTSensor*> iotSensors;
-void* getAPI(String subtype, String params);
-
-//============================================================================================
-//здесь скопируйте строку и вставьте ниже, заменив имя AnalogAdc на название вашего сенсора
-extern void* getAPI_AnalogAdc(String params);
-//============================================================================================
+ModuleInfo getAPI(String subtype, String params);
 
 void configure(String path) {
     File file = seekFile(path);
@@ -22,7 +17,7 @@ void configure(String path) {
             SerialPrint(F("E"), F("Config"), "json error " + subtype);
             continue;
         } else {
-            myIoTSensor = (IoTSensor*)getAPI(subtype, jsonArrayElement);
+            myIoTSensor = (IoTSensor*)getAPI(subtype, jsonArrayElement).apiToComponent;
             if (myIoTSensor) {
                 iotSensors.push_back(myIoTSensor);
                 createWidget(jsonArrayElement);
