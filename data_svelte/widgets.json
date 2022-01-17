@@ -1,7 +1,7 @@
 [
     {
         "name": "anydataRed",
-        "rus": "Сообщение1",
+        "label": "Сообщение1",
         "widget": "anydata",
         "icon": "body",
         "color": "red",
@@ -9,7 +9,7 @@
     },
     {
         "name": "anydataDgr",
-        "rus": "Сообщение2",
+        "label": "Сообщение2",
         "widget": "anydata",
         "after": "",
         "color": "red",
@@ -17,50 +17,57 @@
     },
     {
         "name": "anydataDef",
-        "rus": "Текст",
+        "label": "Текст",
         "widget": "anydata",
         "after": "",
         "icon": ""
     },
     {
         "name": "anydataAmp",
-        "rus": "Амперы",
+        "label": "Амперы",
         "widget": "anydata",
         "after": "Amp",
         "icon": "speedometer"
     },
     {
         "name": "anydataHtz",
-        "rus": "Герцы",
+        "label": "Герцы",
         "widget": "anydata",
         "after": "Htz",
         "icon": "speedometer"
     },
     {
+        "name": "anydataTmp",
+        "label": "Температура",
+        "widget": "anydata",
+        "after": "°С",
+        "icon": "thermometer"
+    },
+    {
+        "name": "anydataMm",
+        "label": "Давление",
+        "widget": "anydata",
+        "after": "mm",
+        "icon": "speedometer"
+    },
+    {
         "name": "anydataHum",
-        "rus": "Влажность",
+        "label": "Влажность",
         "widget": "anydata",
         "after": "%",
         "icon": "water",
         "color": "#88AADF"
     },
     {
-        "name": "anydataMm",
-        "rus": "Давление",
-        "widget": "anydata",
-        "after": "mm",
-        "icon": "speedometer"
-    },
-    {
         "name": "anydataTm",
-        "rus": "Время",
+        "label": "Время",
         "widget": "anydata",
         "after": "",
         "icon": "speedometer"
     },
     {
         "name": "button",
-        "rus": "Кнопка",
+        "label": "Кнопка",
         "widget": "btn",
         "size": "large",
         "color": "green",
@@ -68,40 +75,40 @@
     },
     {
         "name": "toggle",
-        "rus": "Переключатель",
+        "label": "Переключатель",
         "widget": "toggle",
         "icon": "",
         "iconOff": ""
     },
     {
         "name": "chart1",
-        "rus": "График1",
+        "label": "График1",
         "widget": "chart",
         "dateFormat": "HH:mm",
         "pointRadius": 0
     },
     {
         "name": "chart2",
-        "rus": "График2",
+        "label": "График2",
         "widget": "chart",
         "dateFormat": "HH:mm"
     },
     {
         "name": "chart3",
-        "rus": "График3",
+        "label": "График3",
         "widget": "chart",
         "dateFormat": "DD.MM.YYYY",
         "type": "bar"
     },
     {
         "name": "chart4",
-        "rus": "График4",
+        "label": "График4",
         "widget": "chart",
         "dateFormat": "DD.MM.YYYY"
     },
     {
         "name": "fillgauge",
-        "rus": "Бочка",
+        "label": "Бочка",
         "widget": "fillgauge",
         "circleColor": "#00FFFF",
         "textColor": "#FFFFFF",
@@ -110,7 +117,7 @@
     },
     {
         "name": "inputDate",
-        "rus": "Ввод даты",
+        "label": "Ввод даты",
         "widget": "input",
         "size": "small",
         "color": "orange",
@@ -118,14 +125,14 @@
     },
     {
         "name": "inputDgt",
-        "rus": "Ввод цифры",
+        "label": "Ввод цифры",
         "widget": "input",
         "color": "blue",
         "type": "number"
     },
     {
         "name": "inputTxt",
-        "rus": "Ввод текста",
+        "label": "Ввод текста",
         "widget": "input",
         "size": "small",
         "color": "orange",
@@ -133,14 +140,14 @@
     },
     {
         "name": "inputTm",
-        "rus": "Ввод времени",
+        "label": "Ввод времени",
         "widget": "input",
         "color": "blue",
         "type": "time"
     },
     {
         "name": "progressLine",
-        "rus": "Статус линия",
+        "label": "Статус линия",
         "widget": "progress-line",
         "icon": "sunny",
         "max": "100",
@@ -148,7 +155,7 @@
     },
     {
         "name": "progressRound",
-        "rus": "Статус круг",
+        "label": "Статус круг",
         "widget": "progress-round",
         "max": "100",
         "stroke": "20",
@@ -158,7 +165,7 @@
     },
     {
         "name": "range",
-        "rus": "Ползунок",
+        "label": "Ползунок",
         "widget": "range",
         "descrColor": "red",
         "after": "%",
@@ -169,7 +176,7 @@
     },
     {
         "name": "select",
-        "rus": "Выпадающий",
+        "label": "Выпадающий",
         "widget": "select",
         "options": [
             "Выключен",
