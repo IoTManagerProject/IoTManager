@@ -9,3 +9,4 @@
 #include "classes/NotAsync.h"
 #include "ESPConfiguration.h"
 #include "MqttClient.h"
+#include "classes/CommandBuf.h"

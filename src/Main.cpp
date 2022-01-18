@@ -41,6 +41,18 @@ void setup() {
     sendConfigJson = new SendJson;
     sendWigdetsJson = new SendJson;
 
+    myBuf = new CommandBuf;
+
+    myBuf->addCommand("zero");
+    myBuf->addCommand("one");
+    myBuf->addCommand("two");
+    myBuf->printCommands();
+
+    myBuf->getLastCommand();
+    myBuf->getLastCommand();
+    myBuf->getLastCommand();
+    //myBuf->printCommands();
+
     configure("/config.json");
 
     //выводим остаток оперативной памяти после старта
