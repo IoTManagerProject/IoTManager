@@ -10,3 +10,6 @@ extern void BH1750_init();
 
 extern unsigned long getValue(byte packet[]);
 extern void sendRequest(byte packet[]);
+extern void SSD_1306_init();
+void MCP23017_init();
+extern void ST7565_init();
