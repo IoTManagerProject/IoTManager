@@ -6,12 +6,12 @@
 
 using namespace std;
 
-class QueueBuf;
+class QueueFromInstance;
 
-class QueueBuf {
+class QueueFromInstance {
    public:
-    QueueBuf();
-    ~QueueBuf();
+    QueueFromInstance();
+    ~QueueFromInstance();
 
     void push(QueueInstance instance);
     void pop();
@@ -21,4 +21,4 @@ class QueueBuf {
     queue<QueueInstance> queue1;
 };
 
-extern QueueBuf* myQueue;
+extern QueueFromInstance* myQueue;

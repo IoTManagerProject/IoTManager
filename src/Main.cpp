@@ -41,35 +41,6 @@ void setup() {
     sendConfigJson = new SendJson;
     sendWigdetsJson = new SendJson;
 
-    // myBuf = new CommandBuf;
-    //
-    // myBuf->addCommand("zero");
-    // myBuf->addCommand("one");
-    // myBuf->addCommand("two");
-    // myBuf->printCommands();
-    //
-    // myBuf->getLastCommand();
-    // myBuf->getLastCommand();
-    // myBuf->getLastCommand();
-    // myBuf->printCommands();
-
-    myQueue = new QueueBuf;
-
-    myQueue->push(*new QueueInstance("text1"));
-    myQueue->push(*new QueueInstance("text2"));
-    myQueue->push(*new QueueInstance("text3"));
-
-    Serial.println(myQueue->front().get());
-    Serial.println(myQueue->front().get());
-    Serial.println(myQueue->front().get());
-
-    // myQueue->push(20);
-    // myQueue->push(30);
-    //
-    // Serial.println(myQueue->front());
-    // Serial.println(myQueue->front());
-    // Serial.println(myQueue->front());
-
     configure("/config.json");
 
     //выводим остаток оперативной памяти после старта

@@ -1,22 +1,22 @@
-#include "classes/QueueBuf.h"
+#include "classes/QueueFromInstance.h"
 
-QueueBuf::QueueBuf() {}
-QueueBuf::~QueueBuf() {}
+QueueFromInstance::QueueFromInstance() {}
+QueueFromInstance::~QueueFromInstance() {}
 
 //добавим элемент в конец очереди
-void QueueBuf::push(QueueInstance instance) {
+void QueueFromInstance::push(QueueInstance instance) {
     queue1.push(instance);
 }
 
 //удалим элемент из начала очереди
-void QueueBuf::pop() {
+void QueueFromInstance::pop() {
     if (!queue1.empty()) {
         queue1.pop();
     }
 }
 
 //вернуть элемент из начала очереди и удалить его
-QueueInstance QueueBuf::front() {
+QueueInstance QueueFromInstance::front() {
     QueueInstance instance("");
     if (!queue1.empty()) {
         instance = queue1.front();
@@ -25,4 +25,4 @@ QueueInstance QueueBuf::front() {
     return instance;
 }
 
-QueueBuf* myQueue;
+QueueFromInstance* myQueue;

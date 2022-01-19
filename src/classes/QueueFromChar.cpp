@@ -1,13 +1,13 @@
-#include "classes/CommandBuf.h"
+#include "classes/QueueFromChar.h"
 
-CommandBuf::CommandBuf() {
+QueueFromChar::QueueFromChar() {
     commandList = NULL;
     commandCount = 0;
 }
-CommandBuf::~CommandBuf() {}
+QueueFromChar::~QueueFromChar() {}
 
 //добавление команды в буфер
-void CommandBuf::addCommand(const char* command) {
+void QueueFromChar::addCommand(const char* command) {
     commandList = (CharBufferStruct*)realloc(commandList, (commandCount + 1) * sizeof(CharBufferStruct));
     strncpy(commandList[commandCount].command, command, MAX_COMMAND_LENGTH);
     Serial.println("command added: " + String(command) + " " + String(commandCount));
@@ -15,7 +15,7 @@ void CommandBuf::addCommand(const char* command) {
 }
 
 //распечатаем все добавленные команды
-void CommandBuf::printCommands() {
+void QueueFromChar::printCommands() {
     if (commandCount > 0 && commandList != NULL) {
         for (int i = 0; i < commandCount; i++) {
             Serial.println(commandList[i].command);
@@ -24,7 +24,7 @@ void CommandBuf::printCommands() {
 }
 
 //заберем последнюю из положенных в буфер команд
-String CommandBuf::getLastCommand() {
+String QueueFromChar::getLastCommand() {
     String ret = "empty";
     if (commandList != NULL) {
         int cnt = commandCount - 1;
@@ -40,4 +40,4 @@ String CommandBuf::getLastCommand() {
     return ret;
 }
 
-CommandBuf* myBuf;
+QueueFromChar* myBuf;
