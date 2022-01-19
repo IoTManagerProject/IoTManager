@@ -55,13 +55,20 @@ void setup() {
 
     myQueue = new QueueBuf;
 
-    myQueue->push(10);
-    myQueue->push(20);
-    myQueue->push(30);
+    myQueue->push(*new QueueInstance("text1"));
+    myQueue->push(*new QueueInstance("text2"));
+    myQueue->push(*new QueueInstance("text3"));
 
-    Serial.println(myQueue->front());
-    Serial.println(myQueue->front());
-    Serial.println(myQueue->front());
+    Serial.println(myQueue->front().get());
+    Serial.println(myQueue->front().get());
+    Serial.println(myQueue->front().get());
+
+    // myQueue->push(20);
+    // myQueue->push(30);
+    //
+    // Serial.println(myQueue->front());
+    // Serial.println(myQueue->front());
+    // Serial.println(myQueue->front());
 
     configure("/config.json");
 

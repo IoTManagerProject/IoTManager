@@ -1,4 +1,5 @@
 #pragma once
+#include "classes/QueueInst.h"
 #include "Global.h"
 #include <queue>
 #include <iostream>
@@ -12,12 +13,12 @@ class QueueBuf {
     QueueBuf();
     ~QueueBuf();
 
-    void push(int element);
+    void push(QueueInstance instance);
     void pop();
-    int front();
+    QueueInstance front();
 
    private:
-    queue<int> queue1;
+    queue<QueueInstance> queue1;
 };
 
 extern QueueBuf* myQueue;

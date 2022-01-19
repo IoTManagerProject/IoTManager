@@ -11,3 +11,4 @@
 #include "MqttClient.h"
 #include "classes/CommandBuf.h"
 #include "classes/QueueBuf.h"
+#include "classes/QueueInst.h"

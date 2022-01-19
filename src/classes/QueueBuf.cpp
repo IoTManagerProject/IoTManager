@@ -4,8 +4,8 @@ QueueBuf::QueueBuf() {}
 QueueBuf::~QueueBuf() {}
 
 //добавим элемент в конец очереди
-void QueueBuf::push(int element) {
-    queue1.push(element);
+void QueueBuf::push(QueueInstance instance) {
+    queue1.push(instance);
 }
 
 //удалим элемент из начала очереди
@@ -16,13 +16,13 @@ void QueueBuf::pop() {
 }
 
 //вернуть элемент из начала очереди и удалить его
-int QueueBuf::front() {
-    int ret;
+QueueInstance QueueBuf::front() {
+    QueueInstance instance("");
     if (!queue1.empty()) {
-        ret = queue1.front();
+        instance = queue1.front();
         queue1.pop();
     }
-    return ret;
+    return instance;
 }
 
 QueueBuf* myQueue;
