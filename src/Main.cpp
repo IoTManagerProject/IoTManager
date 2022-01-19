@@ -41,17 +41,27 @@ void setup() {
     sendConfigJson = new SendJson;
     sendWigdetsJson = new SendJson;
 
-    myBuf = new CommandBuf;
+    // myBuf = new CommandBuf;
+    //
+    // myBuf->addCommand("zero");
+    // myBuf->addCommand("one");
+    // myBuf->addCommand("two");
+    // myBuf->printCommands();
+    //
+    // myBuf->getLastCommand();
+    // myBuf->getLastCommand();
+    // myBuf->getLastCommand();
+    // myBuf->printCommands();
 
-    myBuf->addCommand("zero");
-    myBuf->addCommand("one");
-    myBuf->addCommand("two");
-    myBuf->printCommands();
+    myQueue = new QueueBuf;
 
-    myBuf->getLastCommand();
-    myBuf->getLastCommand();
-    myBuf->getLastCommand();
-    //myBuf->printCommands();
+    myQueue->push(10);
+    myQueue->push(20);
+    myQueue->push(30);
+
+    Serial.println(myQueue->front());
+    Serial.println(myQueue->front());
+    Serial.println(myQueue->front());
 
     configure("/config.json");
 

@@ -10,3 +10,4 @@
 #include "ESPConfiguration.h"
 #include "MqttClient.h"
 #include "classes/CommandBuf.h"
+#include "classes/QueueBuf.h"
