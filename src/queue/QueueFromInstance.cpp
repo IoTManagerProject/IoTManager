@@ -1,3 +1,4 @@
+#ifdef QUEUE_FROM_INST
 #include "classes/QueueFromInstance.h"
 
 QueueFromInstance::QueueFromInstance() {}
@@ -25,4 +26,5 @@ QueueInstance QueueFromInstance::front() {
     return instance;
 }
 
-QueueFromInstance* myQueue;
+// QueueFromInstance* myQueue;
+#endif

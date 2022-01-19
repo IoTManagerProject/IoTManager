@@ -1,5 +1,5 @@
 #include "classes/QueueFromStruct.h"
-
+#ifdef QUEUE_FROM_STR
 QueueFromStruct::QueueFromStruct() {}
 QueueFromStruct::~QueueFromStruct() {}
 
@@ -24,4 +24,9 @@ QueueItems QueueFromStruct::front() {
     return tmpItem;
 }
 
-QueueFromStruct* myQueueStruct;
+bool QueueFromStruct::empty() {
+    return queue1.empty();
+}
+
+QueueFromStruct* filesQueue;
+#endif

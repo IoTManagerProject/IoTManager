@@ -1,18 +1,32 @@
 #include "classes/SendJson.h"
 
-SendJson::SendJson() {}
+SendJson::SendJson() {
+    filesQueue = new QueueFromStruct;
+}
 SendJson::~SendJson() {}
 
-void SendJson::sendFile(String path, uint8_t num) {
-    _path = path;
-    _num = num;
-    file = seekFile(path);
+void SendJson::addFileToQueue(String path, uint8_t num) {
+    myItem.myword = path;
+    myItem.num = num;
+    filesQueue->push(myItem);
+    SerialPrint(F("i"), F("WS"), "file added to Queue " + path);
 }
 
 void SendJson::loop() {
+    if (!filesQueue->empty() && !sendingInProgress) {
+        Serial.println("Queue not empty");
+        myItem = filesQueue->front();
+        _path = myItem.myword;
+        _num = myItem.num;
+        file = seekFile(_path);
+        SerialPrint(F("i"), F("WS"), "seek File to WS " + _path);
+        sendingInProgress = true;
+    }
     if (file.available()) {
         String jsonArrayElement = _path + file.readStringUntil('}') + "}";
         sendWs(jsonArrayElement);
+    } else {
+        sendingInProgress = false;
     }
 }
 
@@ -24,5 +38,4 @@ void SendJson::sendMqtt(String& jsonArrayElement) {
     // mqtt send to do
 }
 
-SendJson* sendConfigJson;
-SendJson* sendWigdetsJson;
+SendJson* sendJsonFiles;

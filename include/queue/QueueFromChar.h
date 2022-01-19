@@ -1,5 +1,6 @@
 #pragma once
 #include "Global.h"
+#ifdef QUEUE_FROM_CHAR
 
 #define MAX_COMMAND_LENGTH 16
 #define BUFFER 128
@@ -25,7 +26,7 @@ class QueueFromChar {
     int commandCount = 0;
 };
 
-extern QueueFromChar* myBuf;
+// extern QueueFromChar* myBuf;
 
 //========проверка очереди=====================
 // myBuf = new QueueFromChar;
@@ -37,3 +38,5 @@ extern QueueFromChar* myBuf;
 // myBuf->getLastCommand();
 // myBuf->getLastCommand();
 // myBuf->printCommands();
+
+#endif

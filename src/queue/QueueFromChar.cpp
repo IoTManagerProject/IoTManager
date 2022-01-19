@@ -1,3 +1,4 @@
+#ifdef QUEUE_FROM_CHAR
 #include "classes/QueueFromChar.h"
 
 QueueFromChar::QueueFromChar() {
@@ -40,4 +41,6 @@ String QueueFromChar::getLastCommand() {
     return ret;
 }
 
-QueueFromChar* myBuf;
+// QueueFromChar* myBuf;
+
+#endif

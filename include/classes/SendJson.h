@@ -1,5 +1,6 @@
 #pragma once
 #include "Global.h"
+#include "classes/QueueFromStruct.h"
 
 class SendJson;
 
@@ -8,7 +9,7 @@ class SendJson {
     SendJson();
     ~SendJson();
 
-    void sendFile(String path, uint8_t num);
+    void addFileToQueue(String path, uint8_t num);
 
     void loop();
 
@@ -16,12 +17,13 @@ class SendJson {
 
     void sendMqtt(String& jsonArrayElement);
 
-    uint8_t _num;
+    QueueItems myItem;
 
    private:
     File file;
     String _path;
+    uint8_t _num;
+    bool sendingInProgress = false;
 };
 
-extern SendJson* sendConfigJson;
-extern SendJson* sendWigdetsJson;
+extern SendJson* sendJsonFiles;

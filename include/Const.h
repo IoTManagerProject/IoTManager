@@ -25,6 +25,8 @@
 #define USE_LITTLEFS false
 #endif
 
+#define QUEUE_FROM_STR
+
 //задачи таскера
 enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,

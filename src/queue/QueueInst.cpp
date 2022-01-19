@@ -1,4 +1,4 @@
-#include "classes/QueueInst.h"
+#include "queue/QueueInst.h"
 
 QueueInstance::QueueInstance(String text) {
     _text = text;

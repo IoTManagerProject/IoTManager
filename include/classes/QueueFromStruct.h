@@ -1,5 +1,6 @@
 #pragma once
 #include "Global.h"
+#ifdef QUEUE_FROM_STR
 #include <queue>
 #include <iostream>
 
@@ -7,6 +8,7 @@ using namespace std;
 
 struct QueueItems {
     String myword;
+    uint8_t num;
 };
 
 class QueueFromStruct;
@@ -19,13 +21,14 @@ class QueueFromStruct {
     void push(QueueItems word);
     void pop();
     QueueItems front();
+    bool empty();
 
    private:
     queue<QueueItems> queue1;
     QueueItems tmpItem;
 };
 
-extern QueueFromStruct* myQueueStruct;
+extern QueueFromStruct* filesQueue;
 
 //=======проверка очереди из структур=================
 // myQueueStruct = new QueueFromStruct;
@@ -39,3 +42,5 @@ extern QueueFromStruct* myQueueStruct;
 // Serial.println(myQueueStruct->front().myword);
 // Serial.println(myQueueStruct->front().myword);
 // Serial.println(myQueueStruct->front().myword);
+
+#endif
