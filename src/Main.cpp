@@ -37,9 +37,10 @@ void setup() {
     //инициализация mqtt
     mqttInit();
 
-    //создаем объект класса выгружающего json массив из файла
-    sendConfigJson = new SendJson;
-    sendWigdetsJson = new SendJson;
+//создаем объект класса выгружающего json массив из файла
+#ifdef QUEUE_FROM_STR
+    sendJsonFiles = new SendJson;
+#endif
 
     configure("/config.json");
 
@@ -61,9 +62,10 @@ void loop() {
     //обновление задач таскера
     ts.update();
 
-    //отправка json
-    if (sendConfigJson) sendConfigJson->loop();
-    if (sendWigdetsJson) sendWigdetsJson->loop();
+//отправка json
+#ifdef QUEUE_FROM_STR
+    if (sendJsonFiles) sendJsonFiles->loop();
+#endif
 
 #ifdef STANDARD_WEB_SERVER
     //обработка web сервера

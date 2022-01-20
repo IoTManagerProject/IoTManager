@@ -218,9 +218,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 // не нравится мне это, нужно что бы класс строил очередь и отправлял вначале первый файл потом второй
                 // очередь задавалась бы так: /widgets.json,/config.json,
                 // хорошая идея на завтра)
-
-                if (sendWigdetsJson) sendWigdetsJson->sendFile("/widgets.json", num);
-                if (sendConfigJson) sendConfigJson->sendFile("/config.json", num);
+#ifdef QUEUE_FROM_STR
+                if (sendJsonFiles) sendJsonFiles->addFileToQueue("/widgets.json", num);
+                if (sendJsonFiles) sendJsonFiles->addFileToQueue("/config.json", num);
+#endif
             }
 
             if (payloadStr.startsWith("/gifnoc.json")) {  //если прилетел измененный пакет с меткой /gifnoc (config наоборот) то перепишем файл, пока переписываем целеком
