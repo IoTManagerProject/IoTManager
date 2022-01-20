@@ -35,11 +35,11 @@ void setup() {
 #endif
 
     //инициализация mqtt
-    // mqttInit();
+    mqttInit();
 
     //создаем объект класса выгружающего json массив из файла
-
-    sendJsonFiles = new SendJson;
+    sendConfigJson = new SendJson;
+    sendWigdetsJson = new SendJson;
 
     configure("/config.json");
 
@@ -62,7 +62,8 @@ void loop() {
     ts.update();
 
     //отправка json
-    if (sendJsonFiles) sendJsonFiles->loop();
+    if (sendConfigJson) sendConfigJson->loop();
+    if (sendWigdetsJson) sendWigdetsJson->loop();
 
 #ifdef STANDARD_WEB_SERVER
     //обработка web сервера
