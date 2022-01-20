@@ -2,7 +2,7 @@
 #include "Global.h"
 #ifdef QUEUE_FROM_STR
 #include <queue>
-#include <iostream>
+//#include <iostream> долбанный стрим сука
 
 using namespace std;
 
