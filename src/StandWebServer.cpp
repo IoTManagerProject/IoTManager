@@ -13,6 +13,10 @@ void standWebServerInit() {
         HTTP.send(200, "application/json", settingsFlashJson);
     });
 
+    HTTP.on("/config.json", HTTP_GET, []() {
+        HTTP.send(200, "application/json", readFile(F("config.json"), 5096));
+    });
+
     HTTP.on("/restart", HTTP_GET, []() {
         // ESP.restart();
         HTTP.send(200, "text/plain", "ok");
@@ -215,10 +219,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (payloadStr.startsWith("/config")) {
                 //если прилетел url страницы /config то отправим widgets.json и config.json
 
-#ifdef QUEUE_FROM_STR
-                // sendFileToWs2("/widgets.json", num);
+                sendFileToWs4("/widgets.json", num);
                 sendFileToWs4("/config.json", num);
-#endif
             }
 
             if (payloadStr.startsWith("/gifnoc.json")) {  //если прилетел измененный пакет с меткой /gifnoc (config наоборот) то перепишем файл, пока переписываем целеком
@@ -314,31 +316,30 @@ void sendFileToWs2(const String& filename, uint8_t num) {
 }
 
 void sendFileToWs3(const String& filename, uint8_t num) {
+    standWebSocket.sendTXT(num, "/st" + filename);
+    size_t ws_buffer = 512;
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
     if (!file) {
         SerialPrint(F("E"), F("FS"), F("reed file error"));
     }
-
     size_t fileSize = file.size();
-
     SerialPrint(F("i"), F("WS"), "Send file '" + filename + "', file size: " + String(fileSize));
-
     String ret;
-    ret.reserve(file.size() - file.position());
-    char temp[256 + 1];
+    char temp[ws_buffer + 1];
     int countRead = file.readBytes(temp, sizeof(temp) - 1);
     while (countRead > 0) {
         temp[countRead] = 0;
-        ret += temp;
+        ret = temp;
+        standWebSocket.sendTXT(num, ret);
         countRead = file.readBytes(temp, sizeof(temp) - 1);
     }
-
-    standWebSocket.sendTXT(num, ret);
+    standWebSocket.sendTXT(num, "/end" + filename);
 }
 
 void sendFileToWs4(const String& filename, uint8_t num) {
-    size_t ws_buffer = 1024;
+    standWebSocket.sendTXT(num, "/st" + filename);
+    size_t ws_buffer = 512;
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
     if (!file) {
@@ -353,4 +354,5 @@ void sendFileToWs4(const String& filename, uint8_t num) {
         standWebSocket.sendTXT(num, temp, countRead);
         countRead = file.readBytes(temp, sizeof(temp) - 1);
     }
+    standWebSocket.sendTXT(num, "/end" + filename);
 }
