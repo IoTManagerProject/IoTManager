@@ -13,6 +13,7 @@ void SendJson::addFileToQueue(String path, uint8_t num) {
     SerialPrint(F("i"), F("WS"), "file added to Queue " + path);
 }
 
+//опсылает массив json по объектно в сокеты
 void SendJson::loop() {
     if (!filesQueue->empty() && !sendingInProgress) {
         Serial.println("Queue not empty");

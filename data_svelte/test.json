@@ -1,0 +1,74 @@
+[
+    {
+        "type": "Variable",
+        "subtype": "ButtonOut",
+        "id": "btn1",
+        "widget": "toggle",
+        "page": "Кнопки",
+        "descr": "Освещение",
+        "gpio": 13,
+        "inv": false
+    },
+    {
+        "type": "Variable",
+        "subtype": "PwmOut",
+        "id": "pwm1",
+        "widget": "range",
+        "page": "Регуляторы",
+        "descr": "Освещение",
+        "gpio": 14,
+        "inv": false
+    },
+    {
+        "type": "Reading",
+        "subtype": "ButtonIn",
+        "id": "btn",
+        "widget": "toggle",
+        "page": "Кнопки",
+        "descr": "Освещение",
+        "gpio": 12,
+        "inv": false
+    },
+    {
+        "type": "Reading",
+        "subtype": "OutputValue",
+        "id": "txt",
+        "widget": "anydataRed",
+        "page": "Предупреждения",
+        "descr": "Статус"
+    },
+    {
+        "type": "Reading",
+        "subtype": "InputValue",
+        "id": "txt",
+        "widget": "inputDgt",
+        "page": "Лимиты",
+        "descr": "Порог"
+    },
+    {
+        "type": "Reading",
+        "subtype": "Bme280",
+        "id": "t",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура"
+    },
+    {
+        "type": "Reading",
+        "subtype": "Bme280",
+        "id": "p",
+        "widget": "anydataMm",
+        "page": "Сенсоры",
+        "descr": "Давление"
+    },
+    {
+        "type": "Reading",
+        "subtype": "Bme280",
+        "id": "h",
+        "widget": "anydataHum",
+        "page": "Сенсоры",
+        "descr": "Влажность",
+        "int": 10,
+        "addr": "0x78"
+    }
+]

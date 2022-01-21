@@ -215,12 +215,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (payloadStr.startsWith("/config")) {
                 //если прилетел url страницы /config то отправим widgets.json и config.json
 
-                // не нравится мне это, нужно что бы класс строил очередь и отправлял вначале первый файл потом второй
-                // очередь задавалась бы так: /widgets.json,/config.json,
-                // хорошая идея на завтра)
 #ifdef QUEUE_FROM_STR
-                if (sendJsonFiles) sendJsonFiles->addFileToQueue("/widgets.json", num);
-                if (sendJsonFiles) sendJsonFiles->addFileToQueue("/config.json", num);
+                // sendFileToWs2("/widgets.json", num);
+                sendFileToWs4("/config.json", num);
 #endif
             }
 
@@ -282,3 +279,78 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
 }
 #endif
 #endif
+
+void sendFileToWs(const String& filename, uint8_t num) {
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "r");
+    if (!file) {
+        SerialPrint(F("E"), F("FS"), F("reed file error"));
+    }
+
+    size_t fileSize = file.size();
+
+    uint8_t bufuint[fileSize];
+
+    SerialPrint(F("i"), F("WS"), "Send file '" + filename + "', file size: " + String(fileSize));
+
+    long st = millis();
+    int i = 0;
+    while (file.available()) {
+        bufuint[i] = file.read();
+        i++;
+        yield();
+    }
+    long end = millis();
+    SerialPrint(F("i"), F("WS"), "Time '" + String(end - st));
+
+    standWebSocket.sendTXT(num, bufuint, i);
+}
+
+void sendFileToWs2(const String& filename, uint8_t num) {
+    String file = readFile(filename, 5000);
+    size_t fileSize = sizeof(file);
+    SerialPrint(F("i"), F("WS"), String(fileSize));
+    standWebSocket.sendTXT(num, file);
+}
+
+void sendFileToWs3(const String& filename, uint8_t num) {
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "r");
+    if (!file) {
+        SerialPrint(F("E"), F("FS"), F("reed file error"));
+    }
+
+    size_t fileSize = file.size();
+
+    SerialPrint(F("i"), F("WS"), "Send file '" + filename + "', file size: " + String(fileSize));
+
+    String ret;
+    ret.reserve(file.size() - file.position());
+    char temp[256 + 1];
+    int countRead = file.readBytes(temp, sizeof(temp) - 1);
+    while (countRead > 0) {
+        temp[countRead] = 0;
+        ret += temp;
+        countRead = file.readBytes(temp, sizeof(temp) - 1);
+    }
+
+    standWebSocket.sendTXT(num, ret);
+}
+
+void sendFileToWs4(const String& filename, uint8_t num) {
+    size_t ws_buffer = 1024;
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "r");
+    if (!file) {
+        SerialPrint(F("E"), F("FS"), F("reed file error"));
+    }
+    size_t fileSize = file.size();
+    SerialPrint(F("i"), F("WS"), "Send file '" + filename + "', file size: " + String(fileSize));
+    char temp[ws_buffer + 1];
+    int countRead = file.readBytes(temp, sizeof(temp) - 1);
+    while (countRead > 0) {
+        temp[countRead] = 0;
+        standWebSocket.sendTXT(num, temp, countRead);
+        countRead = file.readBytes(temp, sizeof(temp) - 1);
+    }
+}
