@@ -181,7 +181,7 @@ namespace ST7565
 
         for (size_t n = _page_n * LINE_NUMS; n < (_page_n + 1) * LINE_NUMS; n++)
         {
-            if (++_line_n >= LINE_NUMS || (n > _line.size())
+            if (++_line_n >= LINE_NUMS || (n > _line.size()))
             {
                 _line_n = 0;
                 _page_n++;
