@@ -175,6 +175,8 @@ boolean publishStatusWS(const String& topic, const String& data)  {
      String MyJson = json; 
         jsonWriteStr(MyJson, "topic", path); 
         ws.textAll(MyJson);
+
+    return true;
 }
 #endif
 
@@ -301,7 +303,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
 
         jsonWriteStr(configSetupJson, jsonReadStr(msg, "name"), jsonReadStr(msg, "val"));
         saveConfig();
-        Serial.printf("%s\n",  jsonReadStr(msg, "name").c_str(), jsonReadStr(msg, "val").c_str());
+        Serial.printf("%s%s\n",  jsonReadStr(msg, "name").c_str(), jsonReadStr(msg, "val").c_str());
    }
    
 

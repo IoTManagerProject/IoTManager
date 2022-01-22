@@ -25,7 +25,7 @@ SensorAny::~SensorAny() {}
 
 void SensorAny::loop() {
     difference = millis() - prevMillis;
-    if (difference >= _interval * 1000) {
+    if (difference >= (_interval * 1000)) {
         prevMillis = millis();
         read();
     }

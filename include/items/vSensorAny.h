@@ -28,7 +28,7 @@ class SensorAny {
     String _descr;
 
     unsigned long prevMillis;
-    unsigned long difference;
+    int difference;
 };
 
 extern MySensorAnyVector* mySensorAny;
