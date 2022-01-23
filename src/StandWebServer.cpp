@@ -14,7 +14,7 @@ void standWebServerInit() {
     });
 
     HTTP.on("/config.json", HTTP_GET, []() {
-        HTTP.send(200, "application/json", readFile(F("config.json"), 5096));
+        HTTP.send(200, "application/json", readFile(F("config.json"), 10000));
     });
 
     HTTP.on("/restart", HTTP_GET, []() {
@@ -219,8 +219,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (payloadStr.startsWith("/config")) {
                 //если прилетел url страницы /config то отправим widgets.json и config.json
 
-                sendFileToWs4("/widgets.json", num);
-                sendFileToWs4("/config.json", num);
+                sendFileToWs5("/widgets.json", num);
+                sendFileToWs5("/config.json", num);
             }
 
             if (payloadStr.startsWith("/gifnoc.json")) {  //если прилетел измененный пакет с меткой /gifnoc (config наоборот) то перепишем файл, пока переписываем целеком
@@ -353,6 +353,27 @@ void sendFileToWs4(const String& filename, uint8_t num) {
         temp[countRead] = 0;
         standWebSocket.sendTXT(num, temp, countRead);
         countRead = file.readBytes(temp, sizeof(temp) - 1);
+    }
+    standWebSocket.sendTXT(num, "/end" + filename);
+}
+
+void sendFileToWs5(const String& filename, uint8_t num) {
+    standWebSocket.sendTXT(num, "/st" + filename);
+    // standWebSocket.createHeader();
+    size_t ws_buffer = 512;
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "r");
+    if (!file) {
+        SerialPrint(F("E"), F("FS"), F("reed file error"));
+    }
+    size_t fileSize = file.size();
+    SerialPrint(F("i"), F("WS"), "Send file '" + filename + "', file size: " + String(fileSize));
+    uint8_t payload[ws_buffer + 1];
+    int countRead = file.read(payload, sizeof(payload) - 1);
+    while (countRead > 0) {
+        payload[countRead] = 0;
+        standWebSocket.sendBIN(num, payload, countRead);  //, true);
+        countRead = file.read(payload, sizeof(payload) - 1);
     }
     standWebSocket.sendTXT(num, "/end" + filename);
 }

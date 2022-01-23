@@ -26,3 +26,4 @@ void sendFileToWs(const String& filename, uint8_t num);
 void sendFileToWs2(const String& filename, uint8_t num);
 void sendFileToWs3(const String& filename, uint8_t num);
 void sendFileToWs4(const String& filename, uint8_t num);
+void sendFileToWs5(const String& filename, uint8_t num);
