@@ -133,7 +133,7 @@ float yourSensorReading(String type, String paramsAny)
     //----------------------------------------------------------------ST 7565---------------------------------------------------------------
     if (type == "ST7565")
     {
-        ST7565::show(configLiveJson);
+        ST7565::show(configLiveJson, paramsAny); 
     }
     // if (type == "ST7565_1")
     // {
