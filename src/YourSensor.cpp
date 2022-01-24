@@ -134,8 +134,6 @@ float yourSensorReading(String type, String paramsAny)
     if (type == "ST7565")
     {
         ST7565::show(configLiveJson, paramsAny); 
-
-        Serial.println(configStoreJson);
     }
     // if (type == "ST7565_1")
     // {

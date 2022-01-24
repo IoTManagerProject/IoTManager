@@ -5,7 +5,6 @@
 #include <U8g2lib.h>
 
 #include <vector>
-
 #define STRHELPER(x) #x
 #define TO_STRING_AUX(...) "" #__VA_ARGS__
 #define TO_STRING(x) TO_STRING_AUX(x)
@@ -184,6 +183,7 @@ void load( String dataJson, String eventJson) {
     }
 }
 
+<<<<<<< HEAD
 
 void show(const String &data, const String &event) {
     // создаем конкретный дисплей передавая его реализацию
@@ -191,10 +191,26 @@ void show(const String &data, const String &event) {
         _display = new Display(&u8g2);
     
     load(data, event);
+=======
+    // {"ip":"192.168.25.169","time":"23.01.22 01:18:44","weekday":"1","timenow":"01:18","upt":"00:00:18","any109":"0.00","any248":"0.00","any230":"0.00"}
+    void fill(String json)
+    {
+        StaticJsonBuffer<512> doc;
+        JsonObject &root = doc.parseObject(json);
+>>>>>>> 28b2bb7b056afa829df63dbcaf89195f4630f152
 
-    draw();
-}
+        for (JsonObject::iterator it = root.begin(); it != root.end(); ++it)
+        {
+            auto key = (*it).key;
+            auto value = (*it).value.as<char *>();
+            auto entry = findKey(key);
+            if (!entry)
+                _line.push_back(Line(key, value));
+            else
+                entry->setValue(value);
+        }
 
+<<<<<<< HEAD
 void draw() {
     if (!_line.size()) return;
     
@@ -238,3 +254,75 @@ void draw() {
     _display->endRefresh();
 }
 }  // namespace ST7565
+=======
+        calcMaxWidth();
+    }
+
+    void show(const String &data, const String &meta)
+    {
+        if (!_init)
+        {
+            Display::init();
+            _init = true;
+        }
+
+        fill(data);
+
+        load(meta);
+
+        draw();
+    }
+
+    void draw()
+    {
+        if (_lastResfresh && (millis() < (_lastResfresh + PAGE_UPDATE_ms)))
+            return;
+
+        size_t page_lines = Display::getLines();
+
+        // Количество страниц
+        size_t page_cnt = _line.size() / page_lines;
+        if (_line.size() % page_lines)
+            page_cnt++;
+
+        // Следующая страница
+        if (millis() >= (_nextPage + PAGE_CHANGE_ms))
+        {
+            if (++_page_n >= page_cnt)
+                _page_n = 0;
+            _fullDraw = true;
+            u8g2.clearDisplay();
+            _nextPage = millis();
+        }
+        // Номер первой строки стрницы
+
+        size_t line_first = _page_n * page_lines;
+        // Номер последней строки стрницы
+        size_t line_last = line_first + page_lines - 1;
+        if (line_last > (_line.size() - 1))
+            line_last = _line.size() - 1;
+
+        Serial.printf("%d-%d\r\n", line_first, line_last);
+
+        // Строка п/п на странице
+        u8g2.clearBuffer();
+        size_t page_line = 0;
+        for (size_t n = line_first; n <= line_last; n++)
+        {
+            auto entry = &_line.at(n);
+            Serial.printf("%s: %s%s\r\n", entry->key.c_str(), entry->descr.c_str(), entry->value.c_str());
+            int y = CHAR_HEIGHT * (page_line++ + 1);
+            u8g2.drawStr(0, y, entry->descr.c_str());
+            int x = entry->descrWidth();
+            u8g2.drawFrame(x, y, x + entry->valueWidth(), y + CHAR_HEIGHT);
+            u8g2.drawStr(x, y, entry->value.c_str());
+            entry->updated = false;
+            }
+        }
+
+        u8g2.sendBuffer();
+
+        _lastResfresh = millis();
+    }
+} // namespace ST7565
+>>>>>>> 28b2bb7b056afa829df63dbcaf89195f4630f152
