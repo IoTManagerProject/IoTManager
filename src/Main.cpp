@@ -37,11 +37,6 @@ void setup() {
     //инициализация mqtt
     mqttInit();
 
-//создаем объект класса выгружающего json массив из файла
-#ifdef QUEUE_FROM_STR
-    sendJsonFiles = new SendJson;
-#endif
-
     configure("/config.json");
 
     // readFileBin("/config.json");

@@ -1,6 +1,5 @@
 #pragma once
 #include "Global.h"
-#include "classes/SendJson.h"
 
 #ifdef STANDARD_WEB_SERVER
 extern void standWebServerInit();
@@ -22,8 +21,6 @@ extern void hexdump(const void* mem, uint32_t len, uint8_t cols);
 #endif
 #endif
 
-void sendFileToWs(const String& filename, uint8_t num);
-void sendFileToWs2(const String& filename, uint8_t num);
 void sendFileToWs3(const String& filename, uint8_t num);
 void sendFileToWs4(const String& filename, uint8_t num);
 void sendFileToWs5(const String& filename, uint8_t num);

@@ -216,14 +216,14 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 payloadStr += (char)payload[i];
             }
 
+            //если прилетел url страницы /config то отправим widgets.json и config.json
             if (payloadStr.startsWith("/config")) {
-                //если прилетел url страницы /config то отправим widgets.json и config.json
-
                 sendFileToWs5("/widgets.json", num);
                 sendFileToWs5("/config.json", num);
             }
 
-            if (payloadStr.startsWith("/gifnoc.json")) {  //если прилетел измененный пакет с меткой /gifnoc (config наоборот) то перепишем файл, пока переписываем целеком
+            //если прилетел измененный пакет с меткой /gifnoc (config наоборот) то перепишем файл
+            if (payloadStr.startsWith("/gifnoc.json")) {
                 payloadStr.replace("/gifnoc.json", "");
                 writeFile(F("config.json"), payloadStr);
             }
@@ -282,39 +282,7 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
 #endif
 #endif
 
-void sendFileToWs(const String& filename, uint8_t num) {
-    String path = filepath(filename);
-    auto file = FileFS.open(path, "r");
-    if (!file) {
-        SerialPrint(F("E"), F("FS"), F("reed file error"));
-    }
-
-    size_t fileSize = file.size();
-
-    uint8_t bufuint[fileSize];
-
-    SerialPrint(F("i"), F("WS"), "Send file '" + filename + "', file size: " + String(fileSize));
-
-    long st = millis();
-    int i = 0;
-    while (file.available()) {
-        bufuint[i] = file.read();
-        i++;
-        yield();
-    }
-    long end = millis();
-    SerialPrint(F("i"), F("WS"), "Time '" + String(end - st));
-
-    standWebSocket.sendTXT(num, bufuint, i);
-}
-
-void sendFileToWs2(const String& filename, uint8_t num) {
-    String file = readFile(filename, 5000);
-    size_t fileSize = sizeof(file);
-    SerialPrint(F("i"), F("WS"), String(fileSize));
-    standWebSocket.sendTXT(num, file);
-}
-
+//посылка данных из файла в string
 void sendFileToWs3(const String& filename, uint8_t num) {
     standWebSocket.sendTXT(num, "/st" + filename);
     size_t ws_buffer = 512;
@@ -337,6 +305,7 @@ void sendFileToWs3(const String& filename, uint8_t num) {
     standWebSocket.sendTXT(num, "/end" + filename);
 }
 
+//посылка данных из файла в char
 void sendFileToWs4(const String& filename, uint8_t num) {
     standWebSocket.sendTXT(num, "/st" + filename);
     size_t ws_buffer = 512;
@@ -354,9 +323,9 @@ void sendFileToWs4(const String& filename, uint8_t num) {
         standWebSocket.sendTXT(num, temp, countRead);
         countRead = file.readBytes(temp, sizeof(temp) - 1);
     }
-    standWebSocket.sendTXT(num, "/end" + filename);
 }
 
+//посылка данных из файла в бинарном виде
 void sendFileToWs5(const String& filename, uint8_t num) {
     standWebSocket.sendTXT(num, "/st" + filename);
     // standWebSocket.createHeader();
@@ -375,5 +344,4 @@ void sendFileToWs5(const String& filename, uint8_t num) {
         standWebSocket.sendBIN(num, payload, countRead);  //, true);
         countRead = file.read(payload, sizeof(payload) - 1);
     }
-    standWebSocket.sendTXT(num, "/end" + filename);
 }
