@@ -1,5 +1,20 @@
 #include "Utils/FileUtils.h"
 
+void writeFileUint8(const String& filename, uint8_t*& payload, size_t length, size_t headerLenth) {
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "w");
+    if (!file) {
+        Serial.println(F("failed write file uint8"));
+    }
+    for (size_t i = 0; i < length; i++) {
+        if (i >= headerLenth) {
+            file.print((char)payload[i]);
+            yield();
+        }
+    }
+    file.close();
+}
+
 File seekFile(const String& filename, size_t position) {
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
