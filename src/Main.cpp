@@ -39,8 +39,6 @@ void setup() {
 
     configure("/config.json");
 
-    // readFileBin("/config.json");
-
     //создали задачу которая будет выполняться каждые 30 секунд
     ts.add(
         MYTEST, 1000 * 30, [&](void*) {

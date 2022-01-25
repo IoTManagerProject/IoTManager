@@ -17,6 +17,10 @@ void standWebServerInit() {
         HTTP.send(200, "application/json", readFile(F("config.json"), 10000));
     });
 
+    HTTP.on("/layout.json", HTTP_GET, []() {
+        HTTP.send(200, "application/json", readFile(F("layout.json"), 10000));
+    });
+
     HTTP.on("/restart", HTTP_GET, []() {
         // ESP.restart();
         HTTP.send(200, "text/plain", "ok");
