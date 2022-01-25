@@ -30,7 +30,10 @@ void PwmOut::execute(String state) {
     jsonWriteStr(json, "status", state);
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
+    
+    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
+    #endif
 }
 
 MyPwmOutVector* myPwmOut = nullptr;

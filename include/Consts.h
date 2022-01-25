@@ -14,7 +14,7 @@
 
 #ifdef esp8266_1mb
 #define FIRMWARE_NAME "esp8266_1mb"
-#define USE_LITTLEFS true
+#define USE_LITTLEFS false
 #define USE_OTA false
 #define LED_PIN 2
 #define ESP_MODE
@@ -60,7 +60,7 @@
 #define DEVICE_SCENARIO_FILE "s.scen.txt"
 //#define OTA_UPDATES_ENABLED
 //#define MDNS_ENABLED
-#define WEBSOCKET_ENABLED
+//#define WEBSOCKET_ENABLED
 //#define LAYOUT_IN_RAM
 //#define UDP_ENABLED
 //#define SSDP_ENABLED

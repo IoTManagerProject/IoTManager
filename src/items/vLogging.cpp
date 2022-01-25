@@ -212,7 +212,9 @@ void sendLogDataWS(String file, String topic) {
     String json = "{}";
     json=json_array;
     jsonWriteStr(json, "topic", path); 
+    #ifdef WEBSOCKET_ENABLED
     ws.textAll(json);
+    #endif
 
 
                 json_array = "";
@@ -232,7 +234,9 @@ void sendLogDataWS(String file, String topic) {
     String json = "{}";
     json=json_array;
     jsonWriteStr(json, "topic", path); 
+    #ifdef WEBSOCKET_ENABLED
     ws.textAll(json);
+    #endif
 
 }
 

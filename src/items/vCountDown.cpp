@@ -37,7 +37,9 @@ void CountDownClass::loop() {
     jsonWriteStr(json, "status", time);
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
+   #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
+    #endif
         sec--;
         if (sec < 0) {
             _countDownPeriod = 0;
