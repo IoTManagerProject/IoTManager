@@ -36,7 +36,9 @@ void Input::execute(String value) {
     jsonWriteStr(json, "status", value);
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
+    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
+    #endif
 }
 
 MyInputVector* myInput = nullptr;

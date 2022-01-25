@@ -24,7 +24,9 @@ void Output::execute(String value) {
     jsonWriteStr(json, "status", value);
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
+    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
+    #endif
     //publishLastUpdateTime(_key, timeNow->getTime());
 }
 

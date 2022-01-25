@@ -33,7 +33,9 @@ void SensorUptime::read() {
     jsonWriteStr(json, "status", upt);
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
+    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
+    #endif
     SerialPrint("I", "Sensor", "'" + _paramsUpt.key + "' data: " + upt);
 }
 
