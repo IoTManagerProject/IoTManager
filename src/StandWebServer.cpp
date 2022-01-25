@@ -225,7 +225,16 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //если прилетел измененный пакет с меткой /gifnoc (config наоборот) то перепишем файл
             if (payloadStr.startsWith("/gifnoc.json")) {
                 payloadStr.replace("/gifnoc.json", "");
-                writeFile(F("config.json"), payloadStr);
+                String path = filepath("config.json");
+                auto file = FileFS.open(path, "w");
+                if (!file) {
+                    Serial.println("failed");
+                }
+                for (size_t i = 0; i < length; i++) {
+                    file.print((char)payload[i]);
+                    yield();
+                }
+                file.close();
             }
 
         } break;
