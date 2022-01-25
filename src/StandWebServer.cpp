@@ -327,13 +327,8 @@ void sendFileToWs4(const String& filename, uint8_t num) {
 
 //посылка данных из файла в бинарном виде
 void sendFileToWs5(const char* filename, uint8_t num) {
-    size_t size = strlen(filename);
-    uint8_t filenameUint[size];
-    for (size_t i = 0; i < size; i++) {
-        filenameUint[i] = uint8_t(filename[i]);
-    }
-    standWebSocket.sendBIN(num, filenameUint, sizeof(filenameUint));
-    size_t ws_buffer = 512;
+    sendMark(filename, "/st", num);
+    size_t ws_buffer = 1024;
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
     if (!file) {
@@ -348,12 +343,17 @@ void sendFileToWs5(const char* filename, uint8_t num) {
         standWebSocket.sendBIN(num, payload, countRead);
         countRead = file.read(payload, sizeof(payload) - 1);
     }
-    standWebSocket.sendBIN(num, filenameUint, sizeof(filenameUint));
+    sendMark(filename, "/end", num);
 }
 
-char* getFileMark(const char* filename, const char* mark) {
-    char summ[strlen(filename) + strlen(mark)];
-    strcpy(summ, filename);
-    strcpy(summ, mark);
-    return summ;
+void sendMark(const char* filename, const char* mark, uint8_t num) {
+    char outChar[strlen(filename) + strlen(mark) + 1];
+    strcpy(outChar, mark);
+    strcat(outChar, filename);
+    size_t size = strlen(outChar);
+    uint8_t outUint[size];
+    for (size_t i = 0; i < size; i++) {
+        outUint[i] = uint8_t(outChar[i]);
+    }
+    standWebSocket.sendBIN(num, outUint, sizeof(outUint));
 }

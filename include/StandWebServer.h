@@ -24,4 +24,4 @@ extern void hexdump(const void* mem, uint32_t len, uint8_t cols);
 void sendFileToWs3(const String& filename, uint8_t num);
 void sendFileToWs4(const String& filename, uint8_t num);
 void sendFileToWs5(const char* filename, uint8_t num);
-char* getFileMark(const char* filename, const char* mark);
+void sendMark(const char* filename, const char* mark, uint8_t num);
