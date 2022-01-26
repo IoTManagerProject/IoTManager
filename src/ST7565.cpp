@@ -38,20 +38,28 @@ class Display {
         _obj->enableUTF8Print();
         // width: 128, height: 64, char_height: 11, lines: 5
         // 64 - 55 = 9 / 5 = 2
-        Serial.printf("width: %d, height: %d, char_height: %d(%d), lines: %d\r\n", getWidth(), getHeight(), getMaxCharHeight(), getLineYSpacer(), getLines());
+        Serial.printf("width: %d, height: %d, char_height: %d(%d), lines: %d\r\n", getWidth(), getHeight(), getMaxCharHeight(), getYSpacer(), getLines());
         clear();
     }
 
-    uint8_t drawAtLine(uint8_t x, uint8_t n, const String &str, bool inFrame = false) {
+    uint8_t drawAtLine(uint8_t x, uint8_t n, const String &str, bool frame = falsаe) {
+       
         int y = getLineY(n);
         // x, y нижний левой
         uint8_t width = _obj->drawStr(x, y, str.c_str());
-        Serial.printf("x:%d y:%d w:%d\t", x, y, width);
-        if (inFrame) {
-            uint8_t spacer = getLineYSpacer();
-            // x, y верхней  длина, высота
-            _obj->drawFrame(x - spacer, y - (getMaxCharHeight() + spacer), width + spacer, getMaxCharHeight() + spacer);
+        Serial.printf("x:%d y:%d w:%d", x, y, width);
+        if (frame) {            
+            x-= getXSpacer();
+            y-= getMaxCharHeight();
+            width += getXSpacer() * 2;
+            int height = getMaxCharHeight() + getYSpacer() * 2;
+
+            // x, y верхней левой блин. длина, высота
+            _obj->drawFrame(x, y, width, height);
+
+            Serial.printf("[x:%d y:%d w:%d h:%d]", x, y, width, height);
         }
+        Serial.println();
         return width;
     }
 
@@ -60,11 +68,19 @@ class Display {
     }
 
     uint8_t getLineHeight() {
-        return getMaxCharHeight() + getLineYSpacer();
+        return getMaxCharHeight() + getYSpacer();
     }
 
-    int getLineYSpacer() {
-        return (getHeight() - (getLines() * getMaxCharHeight())) / getLines();
+    int getXSpacer() {
+        int res = getWidth() / 100;        
+        if (!res) res = 1;
+        return res;
+    }
+
+    int getYSpacer() {
+        int res = (getHeight() - (getLines() * getMaxCharHeight())) / getLines();
+        if (!res) res = 1;
+        return res;
     }
 
     uint8_t getWidth() {
@@ -151,7 +167,7 @@ struct Param {
     void draw(Display *obj, uint8_t line) {
         Serial.printf("%d %s '%s%s'\r\n", line, key.c_str(), descr.c_str(), value.c_str());
         size_t width = obj->drawAtLine(0, line, descr.c_str());
-        obj->drawAtLine(width, line, value.c_str(), props.frame);
+        obj->drawAtLine(width, line, value.c_str(), false);
     }
 };
 
