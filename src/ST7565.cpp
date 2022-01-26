@@ -46,10 +46,11 @@ class Display {
         int y = getLineY(n);
         // x, y нижний левой
         uint8_t width = _obj->drawStr(x, y, str.c_str());
+        Serial.printf("x:%d y:%d w:%d\t", x, y, width);
         if (inFrame) {
-            uint8_t spacer = getLineYSpacer() / 2;
+            uint8_t spacer = getLineYSpacer();
             // x, y верхней  длина, высота
-            _obj->drawFrame(x, y - (getMaxCharHeight() + spacer), width, getMaxCharHeight() + spacer);
+            _obj->drawFrame(x - spacer, y - (getMaxCharHeight() + spacer), width + spacer, getMaxCharHeight() + spacer);
         }
         return width;
     }
@@ -62,8 +63,8 @@ class Display {
         return getMaxCharHeight() + getLineYSpacer();
     }
 
-    uint8_t getLineYSpacer() {
-        return (getHeight() - (getLines() * getMaxCharHeight()) / getLines());
+    int getLineYSpacer() {
+        return (getHeight() - (getLines() * getMaxCharHeight())) / getLines();
     }
 
     uint8_t getWidth() {
@@ -100,6 +101,10 @@ class Display {
     }
 };
 
+struct ParamPropeties {
+    // рамка
+    bool frame[false];
+};
 
 struct Param {
     // Ключ
@@ -112,6 +117,8 @@ struct Param {
     bool updated;
     // группа
     uint8_t group;
+    
+    ParamPropeties props;
 
     Param(const String &key, const String &value = emptyString, const String &descr = emptyString) : key{key}, group{0} {
         setValue(value.c_str());
@@ -141,10 +148,10 @@ struct Param {
         return false;
     }
 
-    void draw(Display* obj, uint8_t line) {
+    void draw(Display *obj, uint8_t line) {
         Serial.printf("%d %s '%s%s'\r\n", line, key.c_str(), descr.c_str(), value.c_str());
         size_t width = obj->drawAtLine(0, line, descr.c_str());
-        obj->drawAtLine(width, line, value.c_str(), true);
+        obj->drawAtLine(width, line, value.c_str(), props.frame);
     }
 };
 
@@ -153,9 +160,11 @@ class ParamCollection {
 
    public:
     void load(String dataJson, String eventJson) {
-        DynamicJsonBuffer eventDoc;
+        Serial.print(dataJson);
+        Serial.print(dataJson);
+        StaticJsonBuffer<512> eventDoc;
         JsonObject &event = eventDoc.parseObject(eventJson);
-        DynamicJsonBuffer dataDoc;
+        StaticJsonBuffer<512> dataDoc;
         JsonObject &data = dataDoc.parseObject(dataJson);
         auto key = event["key"].as<char *>();
         auto valueKey = event["val"].as<char *>();
@@ -201,7 +210,6 @@ class ParamCollection {
             if (res < entry.group) res = entry.group;
         return res;
     }
-
 };
 
 namespace ST7565 {
@@ -219,7 +227,7 @@ struct Page {
     std::vector<Line *> line;
 };
 
-uint8_t getPageCount(ParamCollection* param, uint8_t linesPerPage) {
+uint8_t getPageCount(ParamCollection *param, uint8_t linesPerPage) {
     size_t res = 0;
     size_t totalLines = param->count();
     if (totalLines && linesPerPage) {
@@ -253,7 +261,7 @@ void show(const String &data, const String &event) {
     if (!param_cnt) return;
 
     if (_pageChanged) _display->clear();
-    
+
     size_t page_cnt = getPageCount(_param, _display->getLines());
 
     if (_display->isNeedsRefresh() || _pageChanged) {
@@ -280,8 +288,8 @@ void draw(uint8_t page) {
     size_t lineOfPage = 0;
     for (size_t n = line_first; n <= line_last; n++) {
         auto entry = _param->get(n);
-        if (entry) {        
-            entry->draw(_display, lineOfPage);            
+        if (entry) {
+            entry->draw(_display, lineOfPage);
             lineOfPage++;
         } else {
             break;
