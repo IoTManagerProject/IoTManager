@@ -8,5 +8,5 @@
 
 namespace ST7565 {
     void show(const String& data, const String& meta);
-    void draw();
+    void draw(uint8_t page);
 }

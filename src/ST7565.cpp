@@ -25,6 +25,7 @@ class Display {
    private:
     U8G2 *_obj{nullptr};
     unsigned long _lastResfresh{0};
+
    public:
     Display(U8G2 *obj) : _obj{obj} {
         init();
@@ -41,15 +42,16 @@ class Display {
         clear();
     }
 
-    void drawAtLine(uint8_t x, uint8_t n, const String &str, bool inFrame = false) {
+    uint8_t drawAtLine(uint8_t x, uint8_t n, const String &str, bool inFrame = false) {
         int y = getLineY(n);
         // x, y нижний левой
-        size_t width = _obj->drawStr(x, y, str.c_str());
+        uint8_t width = _obj->drawStr(x, y, str.c_str());
         if (inFrame) {
             uint8_t spacer = getLineYSpacer() / 2;
             // x, y верхней  длина, высота
             _obj->drawFrame(x, y - (getMaxCharHeight() + spacer), width, getMaxCharHeight() + spacer);
         }
+        return width;
     }
 
     uint8_t getLineY(uint8_t n) {
@@ -98,15 +100,8 @@ class Display {
     }
 };
 
-namespace ST7565 {
-// текущая
-size_t _page_n{0};
-Display *_display{nullptr};
-unsigned long _pageChange{0};
-bool _pageChanged{true};
-uint8_t _max_descr_width{0};
 
-struct Line {
+struct Param {
     // Ключ
     const String key;
     // Описание
@@ -115,9 +110,15 @@ struct Line {
     String value;
     // значение изменилось
     bool updated;
+    // группа
+    uint8_t group;
 
-    Line(const String &key, const String &value = emptyString, const String &descr = emptyString) : key{key} {
+    Param(const String &key, const String &value = emptyString, const String &descr = emptyString) : key{key}, group{0} {
         setValue(value.c_str());
+    }
+
+    bool isValid() {
+        return !descr.isEmpty();
     }
 
     bool setDescr(const char *str) {
@@ -140,67 +141,92 @@ struct Line {
         return false;
     }
 
-    size_t descrWidth() {
-        return calcWidth(descr.c_str());
-    }
-
-    size_t valueWidth() {
-        return calcWidth(value.c_str());
-    }
-
-    static size_t calcWidth(const char *str) {
-        return u8g2.getUTF8Width(str);
+    void draw(Display* obj, uint8_t line) {
+        Serial.printf("%d %s '%s%s'\r\n", line, key.c_str(), descr.c_str(), value.c_str());
+        size_t width = obj->drawAtLine(0, line, descr.c_str());
+        obj->drawAtLine(width, line, value.c_str(), true);
     }
 };
 
+class ParamCollection {
+    std::vector<Param> _item;
 
-struct Page {
-    std::vector<Line*> line;
-};
-
-std::vector<Line> _line;
-
-std::vector<Page*> _page;
-
-Line *findKey(const char *key) {
-    Line *res = nullptr;
-    for (size_t i = 0; i < _line.size(); i++) {
-        if (_line.at(i).key.equalsIgnoreCase(key)) {
-            res = &_line.at(i);
-            break;
+   public:
+    void load(String dataJson, String eventJson) {
+        DynamicJsonBuffer eventDoc;
+        JsonObject &event = eventDoc.parseObject(eventJson);
+        DynamicJsonBuffer dataDoc;
+        JsonObject &data = dataDoc.parseObject(dataJson);
+        auto key = event["key"].as<char *>();
+        auto valueKey = event["val"].as<char *>();
+        auto value = data[valueKey].as<char *>();
+        auto descr = event["descr"].as<char *>();
+        auto entry = find(key);
+        if (!entry) {
+            _item.push_back(Param(key, value));
+        } else {
+            entry->setValue(value);
+            entry->setDescr(descr);
         }
     }
-    return res;
-}
 
-size_t lineCount() { 
+    Param *find(const char *key) {
+        Param *res = nullptr;
+        for (size_t i = 0; i < _item.size(); i++) {
+            if (_item.at(i).key.equalsIgnoreCase(key)) {
+                res = &_item.at(i);
+                break;
+            }
+        }
+        return res;
+    }
+
+    // n - номер по порядку
+    Param *get(int n) {
+        for (size_t i = 0; i < _item.size(); i++)
+            if (_item.at(i).isValid())
+                if (!(n--)) return &_item.at(i);
+        return nullptr;
+    }
+
+    size_t count() {
+        size_t res = 0;
+        for (auto entry : _item) res += entry.isValid();
+        return res;
+    }
+
+    size_t max_group() {
+        size_t res = 0;
+        for (auto entry : _item)
+            if (res < entry.group) res = entry.group;
+        return res;
+    }
+
+};
+
+namespace ST7565 {
+// текущая
+size_t _page_n{0};
+Display *_display{nullptr};
+ParamCollection *_param{nullptr};
+unsigned long _pageChange{0};
+bool _pageChanged{true};
+uint8_t _max_descr_width{0};
+
+typedef std::vector<Param *> Line;
+
+struct Page {
+    std::vector<Line *> line;
+};
+
+uint8_t getPageCount(ParamCollection* param, uint8_t linesPerPage) {
     size_t res = 0;
-    for(auto line: _line) res += !line.descr.isEmpty();
-    return res;
-}
-
-Line* getLine(int n) {    
-    for(size_t i = 0; i < _line.size(); i++)
-        if (!_line.at(i).descr.isEmpty()) if (!(n--)) return &_line.at(i);
-    return nullptr;
-}
-
-uint8_t getPageCount(size_t totalLines, uint8_t linesPerPage) {
-    size_t res = 0;
+    size_t totalLines = param->count();
     if (totalLines && linesPerPage) {
         res = totalLines / linesPerPage;
         if (totalLines % linesPerPage) res++;
     }
     return res;
-}
-
-void calcMaxWidth() {
-    _max_descr_width = 0;
-    for (auto entry : _line) {
-        auto width = entry.descrWidth();
-        if (_max_descr_width < width)
-            _max_descr_width = width;
-    }
 }
 
 // Описание данных мы получаем по одному
@@ -212,70 +238,56 @@ void calcMaxWidth() {
 //{"key":"any248","addr":"","int":"10","c":"0","k":"60","val":"time","type":"ST7565","descr":"Hum"}
 //
 // {"ip":"192.168.25.169","time":"23.01.22 01:18:44","weekday":"1","timenow":"01:18","upt":"00:00:18","any109":"0.00","any248":"0.00","any230":"0.00"}
-void load(String dataJson, String eventJson) {
-    StaticJsonBuffer<512> eventDoc;
-    JsonObject &event = eventDoc.parseObject(eventJson);
-    StaticJsonBuffer<512> dataDoc;
-    JsonObject &data = dataDoc.parseObject(dataJson);
-    auto key = event["key"].as<char *>();
-    auto valueKey = event["val"].as<char *>();
-    auto value = data[valueKey].as<char *>();
-    auto descr = event["descr"].as<char *>();
-    auto entry = findKey(key);
-    if (!entry) {
-        _line.push_back(Line(key, value));
-    } else {
-        entry->setValue(value);
-        entry->setDescr(descr);
-    }
-}
 
 void show(const String &data, const String &event) {
     if (!_display)
         _display = new Display(&u8g2);
 
-    load(data, event);
+    if (!_param)
+        _param = new ParamCollection();
 
-    draw();
+    _param->load(data, event);
+
+    size_t param_cnt = _param->count();
+
+    if (!param_cnt) return;
+
+    if (_pageChanged) _display->clear();
+    
+    size_t page_cnt = getPageCount(_param, _display->getLines());
+
+    if (_display->isNeedsRefresh() || _pageChanged) {
+        Serial.printf("page: %d/%d\r\n", _page_n + 1, page_cnt);
+        draw(_page_n);
+    }
+
+    if (millis() >= (_pageChange + PAGE_CHANGE_ms)) {
+        if (++_page_n >= page_cnt) _page_n = 0;
+        _pageChanged = true;
+        _pageChange = millis();
+    } else {
+        _pageChanged = false;
+    }
 }
 
-void draw() {
-    size_t line_cnt = lineCount();
-    if (!line_cnt) return;
-
-    if (!_display->isNeedsRefresh() && !_pageChanged) return;
-
+void draw(uint8_t page) {
     size_t linesPerPage = _display->getLines();
-    size_t page_cnt = getPageCount(line_cnt, linesPerPage);
-        
-    size_t line_first = _page_n * linesPerPage;    
+    size_t line_first = _page_n * linesPerPage;
     size_t line_last = line_first + linesPerPage - 1;
 
-    // TODO  это задача дисплея, ему надо передать lines - что рисовать
     _display->startRefresh();
-    Serial.printf("page: %d/%d\r\n", _page_n + 1, page_cnt);
+
     size_t lineOfPage = 0;
     for (size_t n = line_first; n <= line_last; n++) {
-        auto entry = getLine(n);
-        if (entry) {
-            Serial.printf("%d %s '%s%s'\r\n", lineOfPage, entry->key.c_str(), entry->descr.c_str(), entry->value.c_str());
-            _display->drawAtLine(0, lineOfPage, entry->descr);
-            _display->drawAtLine(entry->descrWidth(), lineOfPage, entry->value, true);
+        auto entry = _param->get(n);
+        if (entry) {        
+            entry->draw(_display, lineOfPage);            
             lineOfPage++;
         } else {
             break;
         }
     }
     _display->endRefresh();
-        
-    if (millis() >= (_pageChange + PAGE_CHANGE_ms)) {
-        if (++_page_n >= page_cnt) _page_n = 0;
-        _display->clear();
-        _pageChanged = true;
-        _pageChange = millis();
-    } else {
-        _pageChanged = false;
-    }
 }
 
 }  // namespace ST7565
