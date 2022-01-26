@@ -14,13 +14,17 @@
 // пока константа, но она определяет размеры выделяемого буфера и не влияет на визуализацию, главное чтобы не меньше была
 #define LINE_LEN 24
 
-U8G2_ST7565_ERC12864_F_4W_SW_SPI u8g2(U8G2_R0, /* clock=*/D5, /* data=*/D7, /* cs=*/D8, /* dc=*/D2, /* reset=*/D3);
+#ifdef DISPLAY_I2C
+#include <Wire.h>
+U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
+#else
+U8G2_ST7565_ERC12864_F_4W_SW_SPI u8g2(U8G2_R0, D6, D7, D8, D4, D3);
+#endif
 
 class Display {
    private:
     U8G2 *_obj{nullptr};
     unsigned long _lastResfresh{0};
-
    public:
     Display(U8G2 *obj) : _obj{obj} {
         init();
@@ -30,19 +34,34 @@ class Display {
         _obj->begin();
         _obj->setContrast(30);
         _obj->setFont(u8g2_font_ncenB08_tr);
-
-        Serial.printf("width: %d, height: %d, char_height: %d, lines: %d\r\n", getWidth(), getHeight(), getMaxCharHeight(), getLines());
+        _obj->enableUTF8Print();
+        // width: 128, height: 64, char_height: 11, lines: 5
+        // 64 - 55 = 9 / 5 = 2
+        Serial.printf("width: %d, height: %d, char_height: %d(%d), lines: %d\r\n", getWidth(), getHeight(), getMaxCharHeight(), getLineYSpacer(), getLines());
         clear();
     }
 
-    void draw(uint8_t x, uint8_t y, const String &str, bool inFrame = false) {
+    void drawAtLine(uint8_t x, uint8_t n, const String &str, bool inFrame = false) {
+        int y = getLineY(n);
+        // x, y нижний левой
         size_t width = _obj->drawStr(x, y, str.c_str());
-        if (inFrame)
-            _obj->drawFrame(x, y - _obj->getMaxCharHeight(), x + width, y);
+        if (inFrame) {
+            uint8_t spacer = getLineYSpacer() / 2;
+            // x, y верхней  длина, высота
+            _obj->drawFrame(x, y - (getMaxCharHeight() + spacer), width, getMaxCharHeight() + spacer);
+        }
     }
 
-    void drawAtLine(uint8_t x, uint8_t n, const String &str, bool inFrame = false) {
-        draw(x, (n + 1) * _obj->getMaxCharHeight(), str, inFrame);
+    uint8_t getLineY(uint8_t n) {
+        return (n + 1) * getLineHeight();
+    }
+
+    uint8_t getLineHeight() {
+        return getMaxCharHeight() + getLineYSpacer();
+    }
+
+    uint8_t getLineYSpacer() {
+        return (getHeight() - (getLines() * getMaxCharHeight()) / getLines());
     }
 
     uint8_t getWidth() {
@@ -58,9 +77,9 @@ class Display {
     }
 
     uint8_t getMaxCharHeight() {
-        return  _obj->getMaxCharHeight();
-    }    
-    
+        return _obj->getMaxCharHeight();
+    }
+
     void clear() {
         _obj->clearDisplay();
     }
@@ -82,11 +101,10 @@ class Display {
 namespace ST7565 {
 // текущая
 size_t _page_n{0};
-size_t _line_n{0};
-
 Display *_display{nullptr};
+unsigned long _pageChange{0};
+bool _pageChanged{true};
 uint8_t _max_descr_width{0};
-uint32_t _nextPage{0};
 
 struct Line {
     // Ключ
@@ -99,7 +117,6 @@ struct Line {
     bool updated;
 
     Line(const String &key, const String &value = emptyString, const String &descr = emptyString) : key{key} {
-        setDescr(descr.isEmpty() ? key.c_str() : descr.c_str());
         setValue(value.c_str());
     }
 
@@ -136,7 +153,14 @@ struct Line {
     }
 };
 
+
+struct Page {
+    std::vector<Line*> line;
+};
+
 std::vector<Line> _line;
+
+std::vector<Page*> _page;
 
 Line *findKey(const char *key) {
     Line *res = nullptr;
@@ -145,6 +169,27 @@ Line *findKey(const char *key) {
             res = &_line.at(i);
             break;
         }
+    }
+    return res;
+}
+
+size_t lineCount() { 
+    size_t res = 0;
+    for(auto line: _line) res += !line.descr.isEmpty();
+    return res;
+}
+
+Line* getLine(int n) {    
+    for(size_t i = 0; i < _line.size(); i++)
+        if (!_line.at(i).descr.isEmpty()) if (!(n--)) return &_line.at(i);
+    return nullptr;
+}
+
+uint8_t getPageCount(size_t totalLines, uint8_t linesPerPage) {
+    size_t res = 0;
+    if (totalLines && linesPerPage) {
+        res = totalLines / linesPerPage;
+        if (totalLines % linesPerPage) res++;
     }
     return res;
 }
@@ -167,7 +212,7 @@ void calcMaxWidth() {
 //{"key":"any248","addr":"","int":"10","c":"0","k":"60","val":"time","type":"ST7565","descr":"Hum"}
 //
 // {"ip":"192.168.25.169","time":"23.01.22 01:18:44","weekday":"1","timenow":"01:18","upt":"00:00:18","any109":"0.00","any248":"0.00","any230":"0.00"}
-void load( String dataJson, String eventJson) {
+void load(String dataJson, String eventJson) {
     StaticJsonBuffer<512> eventDoc;
     JsonObject &event = eventDoc.parseObject(eventJson);
     StaticJsonBuffer<512> dataDoc;
@@ -175,154 +220,62 @@ void load( String dataJson, String eventJson) {
     auto key = event["key"].as<char *>();
     auto valueKey = event["val"].as<char *>();
     auto value = data[valueKey].as<char *>();
+    auto descr = event["descr"].as<char *>();
     auto entry = findKey(key);
     if (!entry) {
-        _line.push_back(Line(key, value));        
+        _line.push_back(Line(key, value));
     } else {
         entry->setValue(value);
+        entry->setDescr(descr);
     }
 }
 
-<<<<<<< HEAD
-
 void show(const String &data, const String &event) {
-    // создаем конкретный дисплей передавая его реализацию
     if (!_display)
         _display = new Display(&u8g2);
-    
+
     load(data, event);
-=======
-    // {"ip":"192.168.25.169","time":"23.01.22 01:18:44","weekday":"1","timenow":"01:18","upt":"00:00:18","any109":"0.00","any248":"0.00","any230":"0.00"}
-    void fill(String json)
-    {
-        StaticJsonBuffer<512> doc;
-        JsonObject &root = doc.parseObject(json);
->>>>>>> 28b2bb7b056afa829df63dbcaf89195f4630f152
 
-        for (JsonObject::iterator it = root.begin(); it != root.end(); ++it)
-        {
-            auto key = (*it).key;
-            auto value = (*it).value.as<char *>();
-            auto entry = findKey(key);
-            if (!entry)
-                _line.push_back(Line(key, value));
-            else
-                entry->setValue(value);
-        }
+    draw();
+}
 
-<<<<<<< HEAD
 void draw() {
-    if (!_line.size()) return;
-    
-    if (!_display->isNeedsRefresh()) return;
+    size_t line_cnt = lineCount();
+    if (!line_cnt) return;
 
-    size_t page_lines = _display->getLines();
+    if (!_display->isNeedsRefresh() && !_pageChanged) return;
 
-    // Количество страниц
-    size_t page_cnt = _line.size() / page_lines;
-    if (_line.size() % page_lines)
-        page_cnt++;
-
-    // TODO  Следующая страница в display
-    if (millis() >= (_nextPage + PAGE_CHANGE_ms)) {
-        if (++_page_n >= page_cnt)
-            _page_n = 0;
-        _display->clear();
-        _nextPage = millis();
-    }
-    // Номер первой строки стрницы
-
-    size_t line_first = _page_n * page_lines;
-    // Номер последней строки стрницы
-    size_t line_last = line_first + page_lines - 1;
-    if (line_last > (_line.size() - 1))
-        line_last = _line.size() - 1;
+    size_t linesPerPage = _display->getLines();
+    size_t page_cnt = getPageCount(line_cnt, linesPerPage);
+        
+    size_t line_first = _page_n * linesPerPage;    
+    size_t line_last = line_first + linesPerPage - 1;
 
     // TODO  это задача дисплея, ему надо передать lines - что рисовать
     _display->startRefresh();
-    Serial.printf("page lines: %d\r\n", page_lines);
-    size_t page_line = 0;
+    Serial.printf("page: %d/%d\r\n", _page_n + 1, page_cnt);
+    size_t lineOfPage = 0;
     for (size_t n = line_first; n <= line_last; n++) {
-        auto entry = &_line.at(n);
-        Serial.printf("%d/%d %s: %s%s\r\n", _page_n, page_line, entry->key.c_str(), entry->descr.c_str(), entry->value.c_str());
-        _display->drawAtLine(0, page_line, entry->descr);
-        _display->drawAtLine(entry->descrWidth(), page_line, entry->value, true);
-        entry->updated = false;
-        page_line++;
+        auto entry = getLine(n);
+        if (entry) {
+            Serial.printf("%d %s '%s%s'\r\n", lineOfPage, entry->key.c_str(), entry->descr.c_str(), entry->value.c_str());
+            _display->drawAtLine(0, lineOfPage, entry->descr);
+            _display->drawAtLine(entry->descrWidth(), lineOfPage, entry->value, true);
+            lineOfPage++;
+        } else {
+            break;
+        }
     }
-
     _display->endRefresh();
+        
+    if (millis() >= (_pageChange + PAGE_CHANGE_ms)) {
+        if (++_page_n >= page_cnt) _page_n = 0;
+        _display->clear();
+        _pageChanged = true;
+        _pageChange = millis();
+    } else {
+        _pageChanged = false;
+    }
 }
+
 }  // namespace ST7565
-=======
-        calcMaxWidth();
-    }
-
-    void show(const String &data, const String &meta)
-    {
-        if (!_init)
-        {
-            Display::init();
-            _init = true;
-        }
-
-        fill(data);
-
-        load(meta);
-
-        draw();
-    }
-
-    void draw()
-    {
-        if (_lastResfresh && (millis() < (_lastResfresh + PAGE_UPDATE_ms)))
-            return;
-
-        size_t page_lines = Display::getLines();
-
-        // Количество страниц
-        size_t page_cnt = _line.size() / page_lines;
-        if (_line.size() % page_lines)
-            page_cnt++;
-
-        // Следующая страница
-        if (millis() >= (_nextPage + PAGE_CHANGE_ms))
-        {
-            if (++_page_n >= page_cnt)
-                _page_n = 0;
-            _fullDraw = true;
-            u8g2.clearDisplay();
-            _nextPage = millis();
-        }
-        // Номер первой строки стрницы
-
-        size_t line_first = _page_n * page_lines;
-        // Номер последней строки стрницы
-        size_t line_last = line_first + page_lines - 1;
-        if (line_last > (_line.size() - 1))
-            line_last = _line.size() - 1;
-
-        Serial.printf("%d-%d\r\n", line_first, line_last);
-
-        // Строка п/п на странице
-        u8g2.clearBuffer();
-        size_t page_line = 0;
-        for (size_t n = line_first; n <= line_last; n++)
-        {
-            auto entry = &_line.at(n);
-            Serial.printf("%s: %s%s\r\n", entry->key.c_str(), entry->descr.c_str(), entry->value.c_str());
-            int y = CHAR_HEIGHT * (page_line++ + 1);
-            u8g2.drawStr(0, y, entry->descr.c_str());
-            int x = entry->descrWidth();
-            u8g2.drawFrame(x, y, x + entry->valueWidth(), y + CHAR_HEIGHT);
-            u8g2.drawStr(x, y, entry->value.c_str());
-            entry->updated = false;
-            }
-        }
-
-        u8g2.sendBuffer();
-
-        _lastResfresh = millis();
-    }
-} // namespace ST7565
->>>>>>> 28b2bb7b056afa829df63dbcaf89195f4630f152
