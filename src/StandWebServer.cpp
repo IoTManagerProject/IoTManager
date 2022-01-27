@@ -14,11 +14,11 @@ void standWebServerInit() {
     });
 
     HTTP.on("/config.json", HTTP_GET, []() {
-        HTTP.send(200, "application/json", readFile(F("config.json"), 10000));
+        HTTP.send(200, "application/json", readFile(F("config.json"), 20000));
     });
 
     HTTP.on("/layout.json", HTTP_GET, []() {
-        HTTP.send(200, "application/json", readFile(F("layout.json"), 10000));
+        HTTP.send(200, "application/json", readFile(F("layout.json"), 20000));
     });
 
     HTTP.on("/restart", HTTP_GET, []() {
@@ -291,9 +291,10 @@ void sendFileToWs5(const char* filename, uint8_t num) {
     auto file = FileFS.open(path, "r");
     if (!file) {
         SerialPrint(F("E"), F("FS"), F("reed file error"));
+        return;
     }
     size_t fileSize = file.size();
-    SerialPrint(F("i"), F("WS"), "Send file '" + String(filename) + "', file size: " + String(fileSize));
+    SerialPrint(F("i"), F("FS"), "Send file '" + String(filename) + "', file size: " + String(fileSize));
     uint8_t payload[ws_buffer + 1];
     int countRead = file.read(payload, sizeof(payload) - 1);
     while (countRead > 0) {

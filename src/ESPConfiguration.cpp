@@ -16,7 +16,7 @@ void configure(String path) {
         if (jsonArrayElement.startsWith(",")) {
             jsonArrayElement = jsonArrayElement.substring(1, jsonArrayElement.length());  //это нужно оптимизировать в последствии
         }
-        
+
         String subtype;
         if (!jsonRead(jsonArrayElement, F("subtype"), subtype)) {  //если нет такого ключа в представленном json или он не валидный
             SerialPrint(F("E"), F("Config"), "json error " + subtype);
@@ -25,7 +25,7 @@ void configure(String path) {
             myIoTSensor = (IoTSensor*)getAPI(subtype, jsonArrayElement);
             if (myIoTSensor) {
                 iotSensors.push_back(myIoTSensor);
-                createWidget(jsonArrayElement);
+                // createWidget(jsonArrayElement);
             }
         }
     }

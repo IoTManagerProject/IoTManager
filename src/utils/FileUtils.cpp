@@ -5,11 +5,17 @@ void writeFileUint8(const String& filename, uint8_t*& payload, size_t length, si
     auto file = FileFS.open(path, "w");
     if (!file) {
         Serial.println(F("failed write file uint8"));
+        return;
     }
+    size_t every = 0;
     for (size_t i = 0; i < length; i++) {
         if (i >= headerLenth) {
+            every++;
             file.print((char)payload[i]);
-            yield();
+            if (every > 256) {
+                yield();
+                every = 0;
+            }
         }
     }
     file.close();
