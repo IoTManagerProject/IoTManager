@@ -1,23 +1,24 @@
 #include "Utils/FileUtils.h"
 
-//данная функция записывает файл из длинного массива uint8_t через буфер
-void writeFileUint8tFromBuf(const String& filename, uint8_t*& big_buf, size_t length, size_t headerLenth, size_t bufSize) {
+//данная функция записывает файл из буфера страницами указанного размера
+void writeFileUint8tByFrames(const String& filename, uint8_t*& big_buf, size_t length, size_t headerLenth, size_t frameSize) {
     String path = filepath(filename);
     auto file = FileFS.open(path, "w");
     if (!file) {
-        Serial.println(F("failed write file uint8tFromBuf"));
+        Serial.println(F("failed write file uint8tByFrames"));
         return;
     }
     size_t written{headerLenth};
     while (length > written) {
         size_t size = length - written;
-        if (size > bufSize) size = bufSize;
+        if (size > frameSize) size = frameSize;
         uint8_t* p = &big_buf[written];
         size_t res = file.write(p, size);
         if (size != res) {
             break;
         }
         written += res;
+        yield();
     }
     file.close();
 }

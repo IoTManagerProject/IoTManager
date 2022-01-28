@@ -2,7 +2,7 @@
 #include "EspFileSystem.h"
 #include "Global.h"
 
-extern void writeFileUint8tFromBuf(const String& filename, uint8_t*& payload, size_t length, size_t headerLenth, size_t bufSize);
+extern void writeFileUint8tByFrames(const String& filename, uint8_t*& big_buf, size_t length, size_t headerLenth, size_t frameSize);
 extern void writeFileUint8tByByte(const String& filename, uint8_t*& payload, size_t length, size_t headerLenth);
 extern File seekFile(const String& filename, size_t position = 0);
 extern const String writeFile(const String& filename, const String& str);
