@@ -1,10 +1,32 @@
 #include "Utils/FileUtils.h"
 
-void writeFileUint8(const String& filename, uint8_t*& payload, size_t length, size_t headerLenth) {
+//данная функция записывает файл из длинного массива uint8_t через буфер
+void writeFileUint8tFromBuf(const String& filename, uint8_t*& big_buf, size_t length, size_t headerLenth, size_t bufSize) {
     String path = filepath(filename);
     auto file = FileFS.open(path, "w");
     if (!file) {
-        Serial.println(F("failed write file uint8"));
+        Serial.println(F("failed write file uint8tFromBuf"));
+        return;
+    }
+    size_t written{headerLenth};
+    while (length > written) {
+        size_t size = length - written;
+        if (size > bufSize) size = bufSize;
+        uint8_t* p = &big_buf[written];
+        size_t res = file.write(p, size);
+        if (size != res) {
+            break;
+        }
+        written += res;
+    }
+    file.close();
+}
+
+void writeFileUint8tByByte(const String& filename, uint8_t*& payload, size_t length, size_t headerLenth) {
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "w");
+    if (!file) {
+        Serial.println(F("failed write file uint8tByByte"));
         return;
     }
     size_t every = 0;

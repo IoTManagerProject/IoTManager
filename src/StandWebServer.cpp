@@ -226,7 +226,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             if (headerStr == "/gifnoc") {
-                writeFileUint8("config.json", payload, length, headerLenth);
+                writeFileUint8tFromBuf("config.json", payload, length, headerLenth, 256);
             }
 
         } break;
