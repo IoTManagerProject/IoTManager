@@ -221,8 +221,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             if (headerStr == "/config") {
-                sendFileToWs5("/widgets.json", num, 128);
-                sendFileToWs5("/config.json", num, 128);
+                sendFileToWs5("/widgets.json", num, 1024);
+                sendFileToWs5("/config.json", num, 1024);
             }
 
             if (headerStr == "/gifnoc") {
@@ -304,17 +304,17 @@ void sendFileToWs5(const char* filename, uint8_t num, size_t frameSize) {
     standWebSocket.sendTXT(num, "/end" + String(filename));
 }
 
-void sendMark(const char* filename, const char* mark, uint8_t num) {
-    char outChar[strlen(filename) + strlen(mark) + 1];
-    strcpy(outChar, mark);
-    strcat(outChar, filename);
-    size_t size = strlen(outChar);
-    uint8_t outUint[size];
-    for (size_t i = 0; i < size; i++) {
-        outUint[i] = uint8_t(outChar[i]);
-    }
-    standWebSocket.sendBIN(num, outUint, sizeof(outUint));
-}
+// void sendMark(const char* filename, const char* mark, uint8_t num) {
+//     char outChar[strlen(filename) + strlen(mark) + 1];
+//     strcpy(outChar, mark);
+//     strcat(outChar, filename);
+//     size_t size = strlen(outChar);
+//     uint8_t outUint[size];
+//     for (size_t i = 0; i < size; i++) {
+//         outUint[i] = uint8_t(outChar[i]);
+//     }
+//     standWebSocket.sendBIN(num, outUint, sizeof(outUint));
+// }
 
 //посылка данных из файла в string
 // void sendFileToWs3(const String& filename, uint8_t num) {
