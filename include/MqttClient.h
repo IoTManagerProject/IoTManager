@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 
-
+extern void sendMqttMsg();
 void mqttInit();
 void selectBroker();
 void getMqttData1();

@@ -42,7 +42,18 @@ void mqttInit() {
             publishInfo("scen", scen);
         },
         nullptr);
+           sCmd.addCommand("MQTT", sendMqttMsg);
 }
+
+
+void sendMqttMsg() {
+    String sabject = sCmd.next();
+    String msg = sCmd.next();
+    publish(sabject, msg);
+           SerialPrint("<-", F("MQTT"), "sabject " + sabject + ", msg: " + msg);
+    
+}
+
 
 void mqttDisconnect() {
     SerialPrint("I", F("MQTT"), F("disconnected"));
