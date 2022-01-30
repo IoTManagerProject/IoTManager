@@ -221,8 +221,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             if (headerStr == "/config") {
-                sendFileToWs5("/widgets.json", num, 1024);
-                sendFileToWs5("/config.json", num, 1024);
+                sendFileToWs5("/widgets.json", num, 128);
+                sendFileToWs5("/config.json", num, 128);
             }
 
             if (headerStr == "/gifnoc") {
@@ -285,7 +285,7 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
 
 //посылка данных из файла в бинарном виде
 void sendFileToWs5(const char* filename, uint8_t num, size_t frameSize) {
-    sendMark(filename, "/st", num);
+    standWebSocket.sendTXT(num, "/st" + String(filename));
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
     if (!file) {
@@ -294,14 +294,14 @@ void sendFileToWs5(const char* filename, uint8_t num, size_t frameSize) {
     }
     size_t fileSize = file.size();
     SerialPrint(F("i"), F("FS"), "Send file '" + String(filename) + "', file size: " + String(fileSize));
-    uint8_t payload[frameSize + 1];
-    int countRead = file.read(payload, sizeof(payload) - 1);
+    uint8_t payload[frameSize];
+    int countRead = file.read(payload, sizeof(payload));
     while (countRead > 0) {
-        payload[countRead] = 0;
         standWebSocket.sendBIN(num, payload, countRead);
-        countRead = file.read(payload, sizeof(payload) - 1);
+        countRead = file.read(payload, sizeof(payload));
     }
-    sendMark(filename, "/end", num);
+    file.close();
+    standWebSocket.sendTXT(num, "/end" + String(filename));
 }
 
 void sendMark(const char* filename, const char* mark, uint8_t num) {

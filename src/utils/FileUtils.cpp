@@ -23,6 +23,31 @@ void writeFileUint8tByFrames(const String& filename, uint8_t*& big_buf, size_t l
     file.close();
 }
 
+//данная функция читает из файла страницами указанного размера
+// void readFileUint8tByFrames(const String& filename, size_t frameSize) {
+//    String path = filepath(filename);
+//    auto file = FileFS.open(path, "r");
+//    if (!file) {
+//        Serial.println(F("failed read file Uint8tByFrames"));
+//        return;
+//    }
+//    size_t length = file.size();
+//    size_t read{0};
+//    while (length > read) {
+//        size_t size = length - read;
+//        if (size > frameSize) size = frameSize;
+//        uint8_t p[size];
+//        size_t res = file.read(p, size);
+//        //
+//        if (size != res) {
+//            break;
+//        }
+//        read += res;
+//        yield();
+//    }
+//    file.close();
+//}
+
 void writeFileUint8tByByte(const String& filename, uint8_t*& payload, size_t length, size_t headerLenth) {
     String path = filepath(filename);
     auto file = FileFS.open(path, "w");
