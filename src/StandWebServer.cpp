@@ -229,6 +229,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
             }
 
+            if (headerStr == "/tuoyal") {
+                writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
+            }
+
         } break;
 
         case WStype_BIN: {

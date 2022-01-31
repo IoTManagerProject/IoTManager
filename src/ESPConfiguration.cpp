@@ -25,7 +25,6 @@ void configure(String path) {
             myIoTSensor = (IoTSensor*)getAPI(subtype, jsonArrayElement);
             if (myIoTSensor) {
                 iotSensors.push_back(myIoTSensor);
-                // createWidget(jsonArrayElement);
             }
         }
     }

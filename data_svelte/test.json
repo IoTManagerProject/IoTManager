@@ -70,5 +70,25 @@
         "descr": "Влажность",
         "int": 10,
         "addr": "0x78"
+    },
+    {
+        "type": "Reading",
+        "subtype": "AnalogAdc",
+        "id": "t1",
+        "widget": "anydataDef",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "pin": 0,
+        "int": 10
+    },
+    {
+        "type": "Reading",
+        "subtype": "AnalogAdc",
+        "id": "t2",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "pin": 0,
+        "int": 15
     }
 ]
