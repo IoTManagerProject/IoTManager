@@ -9,7 +9,7 @@
 std::map<int, OneWire*> oneWireTemperatureArray;
 std::map<int, DallasTemperature*> sensorsTemperatureArray;
 
-class ds18b20 : public IoTSensor {
+class Ds18b20 : public IoTSensor {
    private:
     //для работы библиотеки с несколькими линиями  необходимо обеспечить каждый экземпляр класса ссылками на объекты настроенные на эти линии
         OneWire* oneWire;
@@ -27,7 +27,7 @@ class ds18b20 : public IoTSensor {
     //Такие как ...begin и подставлять в них параметры полученные из web интерфейса.
     //Все параметры хранятся в перемененной parameters, вы можете прочитать любой параметр используя jsonRead функции:
     // jsonReadStr, jsonReadBool, jsonReadInt
-    ds18b20(String parameters): IoTSensor(parameters) {
+    Ds18b20(String parameters): IoTSensor(parameters) {
         
         _pin = jsonReadInt(parameters, "pin");
         _index = jsonReadInt(parameters, "index");
@@ -79,15 +79,15 @@ class ds18b20 : public IoTSensor {
     }
     //=======================================================================================================
 
-    ~ds18b20(){};
+    ~Ds18b20(){};
 };
 
 //после замены названия сенсора, на функцию можно не обращать внимания
 //если сенсор предполагает использование общего объекта библиотеки для нескольких экземпляров сенсора, то в данной функции необходимо предусмотреть
-//создание и контроль соответствующих глобальных переменных (см. пример реализации сенсора ds18b20)
-void* getAPI_ds18b20(String subtype, String param) {
-    if (subtype == F("ds18b20")) {
-        return new ds18b20(param);
+//создание и контроль соответствующих глобальных переменных
+void* getAPI_Ds18b20(String subtype, String param) {
+    if (subtype == F("Ds18b20")) {
+        return new Ds18b20(param);
     } else {
         return nullptr;
     }

@@ -11,5 +11,17 @@
         "multiply": 1,
         "pin": 0,
         "int": 15
+    },
+    {
+        "type": "Reading",
+        "subtype": "Ds18b20",
+        "id": "tmp",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "int": 15,
+        "pin": 0,
+        "index": 0,
+        "addr": ""
     }
 ]
