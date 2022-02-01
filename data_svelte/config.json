@@ -23,5 +23,23 @@
         "pin": 0,
         "index": 0,
         "addr": ""
+    },
+    {
+        "type": "Reading",
+        "subtype": "Sht20t",
+        "id": "tmp2",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "int": 15
+    },
+    {
+        "type": "Reading",
+        "subtype": "Sht20h",
+        "id": "Hum2",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Влажность",
+        "int": 15
     }
 ]
