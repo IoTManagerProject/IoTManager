@@ -74,7 +74,7 @@ class Ds18b20 : public IoTSensor {
         char addrStr[20] = "";
         hex2string(deviceAddress, 8, addrStr);
 
-        if (value != -127) regEvent((String)value, "addr: " + String(addrStr));  //обязательный вызов для отправки результата работы
+        if (value != -127) regEvent(value, "addr: " + String(addrStr));  //обязательный вызов для отправки результата работы
             else SerialPrint("E", "Sensor Ds18b20", "Error");
     }
     //=======================================================================================================

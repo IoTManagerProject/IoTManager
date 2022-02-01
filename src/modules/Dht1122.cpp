@@ -25,7 +25,7 @@ class Dht1122t : public IoTSensor {
     
     void doByInterval() {
         float value = dhts[_pin]->getTemperature();
-        if (String(value) != "nan") regEvent((String)value, "Dht1122t");
+        if (String(value) != "nan") regEvent(value, "Dht1122t");
             else SerialPrint("E", "Sensor DHTt", "Error");  
     }
 
@@ -44,7 +44,7 @@ class Dht1122h : public IoTSensor {
     
     void doByInterval() {
         float value = dhts[_pin]->getHumidity();
-        if (String(value) != "nan") regEvent((String)value, "Dht1122h");
+        if (String(value) != "nan") regEvent(value, "Dht1122h");
             else SerialPrint("E", "Sensor DHTh", "Error");  
     }
 
