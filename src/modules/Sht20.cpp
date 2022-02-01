@@ -14,7 +14,7 @@ class Sht20t : public IoTSensor {
     void doByInterval() {
         sht->read();
         float value = sht->getTemperature();
-        if (value != -46.85) regEvent(value, "Sht20t");  
+        if (value > -46.85F) regEvent(value, "Sht20t");  
             else SerialPrint("E", "Sensor Sht20t", "Error");  
     }
 
