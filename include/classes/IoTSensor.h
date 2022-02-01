@@ -4,12 +4,11 @@
 
 class IoTSensor {
    public:
-    IoTSensor();
+    IoTSensor(String parameters);
     ~IoTSensor();
 
     void loop();
     virtual void doByInterval();
-    void init(String subtype, String id, unsigned long interval);
     void regEvent(String value, String consoleInfo);
 
     String getSubtype();
@@ -24,7 +23,3 @@ class IoTSensor {
     String _id;
     unsigned long _interval;
 };
-
-// extern IoTSensor* myIoTSensor;
-//модулям не нужно знать эту переменную
-//- ок понял

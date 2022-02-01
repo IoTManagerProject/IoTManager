@@ -3,13 +3,12 @@
 #include "Classes/ScenarioClass3.h"
 #include "Classes/IoTSensor.h"
 
-void IoTSensor::init(String subtype, String id, unsigned long interval) {
-    _interval = interval * 1000;
-    _subtype = subtype;
-    _id = id;
-}
 
-IoTSensor::IoTSensor() {}
+IoTSensor::IoTSensor(String parameters) {
+    _interval = jsonReadInt(parameters, "int") * 1000;
+    _subtype = jsonReadStr(parameters, "subtype");
+    _id = jsonReadStr(parameters, "id");
+}
 IoTSensor::~IoTSensor() {}
 
 String IoTSensor::getSubtype() {
