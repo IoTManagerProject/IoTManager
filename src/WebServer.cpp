@@ -92,14 +92,23 @@ void init() {
      sCmd.addCommand("GET", sendGetMsg);
 }
 ///////////
-
+    String ID_name = "";
+    String ID_value = "";
 void sendGetMsg() {
     String sabject = sCmd.next();
     String msg = sCmd.next();
     
      if ((WiFi.status() == WL_CONNECTED)) {
 
-    String res = getURL(sabject);
+                   if (msg.indexOf("_") != -1) {
+            ID_name = deleteBeforeDelimiter(msg, "_");
+            ID_name = deleteAfterDelimiter(ID_name, "_");
+            ID_value = getValue(ID_name);
+            msg.replace(ID_name, ID_value);
+        }
+        msg.replace("_", " ");
+
+    String res = getURL(sabject+msg);
     if (res != "") {
      SerialPrint("<-", F("GET"), "res  " + res);
     }else{

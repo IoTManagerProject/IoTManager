@@ -45,12 +45,21 @@ void mqttInit() {
            sCmd.addCommand("MQTT", sendMqttMsg);
 }
 
-
+    String ID_name = "";
+    String ID_value = "";
 void sendMqttMsg() {
     String sabject = sCmd.next();
     String msg = sCmd.next();
+            if (msg.indexOf("_") != -1) {
+            ID_name = deleteBeforeDelimiter(msg, "_");
+            ID_name = deleteAfterDelimiter(ID_name, "_");
+            ID_value = getValue(ID_name);
+            msg.replace(ID_name, ID_value);
+        }
+        msg.replace("_", " ");
+
     publish(sabject, msg);
-           SerialPrint("<-", F("MQTT"), "sabject " + sabject + ", msg: " + msg);
+           SerialPrint("<-", F("MQTT"), sabject + " " + msg);
     
 }
 
