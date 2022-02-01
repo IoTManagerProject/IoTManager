@@ -25,6 +25,7 @@ class Sht20h : public IoTSensor {
     Sht20h(String parameters): IoTSensor(parameters) { }
     
     void doByInterval() {
+        sht->read();
         float value = sht->getHumidity();
         regEvent((String)value, "Sht20h");  
     }
