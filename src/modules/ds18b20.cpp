@@ -27,9 +27,8 @@ class ds18b20 : public IoTSensor {
     //Такие как ...begin и подставлять в них параметры полученные из web интерфейса.
     //Все параметры хранятся в перемененной parameters, вы можете прочитать любой параметр используя jsonRead функции:
     // jsonReadStr, jsonReadBool, jsonReadInt
-    ds18b20(String parameters) {
-        init(jsonReadStr(parameters, "key"), jsonReadStr(parameters, "id"), jsonReadInt(parameters, "int")); //обязательный вызов
- 
+    ds18b20(String parameters): IoTSensor(parameters) {
+        
         _pin = jsonReadInt(parameters, "pin");
         _index = jsonReadInt(parameters, "index");
         _addr = jsonReadStr(parameters, "addr");             
@@ -62,6 +61,8 @@ class ds18b20 : public IoTSensor {
         sensors->requestTemperatures();
         
         //Определяем адрес. Если парамтер addr не установлен, то узнаем адрес по индексу
+        // TODO: понять как лучше. в текущей реализации адрес вычисляется каждый раз при опросе шины, это хорошо при отладке, 
+        // но при постоянном контакте и использовании правильнее генерировать адрес при инициализации модуля. Но тогда нужно перезагружать устройство при новом датчике
         DeviceAddress deviceAddress;
         if (_addr == "") {
             sensors->getAddress(deviceAddress, _index);

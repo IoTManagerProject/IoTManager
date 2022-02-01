@@ -4,15 +4,14 @@
 
 class IoTSensor {
    public:
-    IoTSensor();
+    IoTSensor(String parameters);
     ~IoTSensor();
 
     void loop();
     virtual void doByInterval();
-    void init(String key, String id, unsigned long interval);
     void regEvent(String value, String consoleInfo);
 
-    String getKey();
+    String getSubtype();
     String getID();
 
     unsigned long currentMillis;
@@ -20,11 +19,7 @@ class IoTSensor {
     unsigned long difference;
 
    protected:
-    String _key;
+    String _subtype;
     String _id;
     unsigned long _interval;
 };
-
-// extern IoTSensor* myIoTSensor;
-//модулям не нужно знать эту переменную
-//- ок понял
