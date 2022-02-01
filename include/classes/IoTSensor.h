@@ -9,10 +9,10 @@ class IoTSensor {
 
     void loop();
     virtual void doByInterval();
-    void init(String key, String id, unsigned long interval);
+    void init(String subtype, String id, unsigned long interval);
     void regEvent(String value, String consoleInfo);
 
-    String getKey();
+    String getSubtype();
     String getID();
 
     unsigned long currentMillis;
@@ -20,7 +20,7 @@ class IoTSensor {
     unsigned long difference;
 
    protected:
-    String _key;
+    String _subtype;
     String _id;
     unsigned long _interval;
 };
