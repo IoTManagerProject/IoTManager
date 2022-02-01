@@ -224,6 +224,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
             String key = selectFromMarkerToMarker(topicStr, "/", 3);
             SerialPrint("I", F("=>MQTT"), "Received event from other device: '" + devId + "' " + key + " " + payloadStr);
             String event = key + " " + payloadStr + ",";
+            jsonWriteStr(configLiveJson, key, payloadStr);
             eventBuf += event;
         }
     }
