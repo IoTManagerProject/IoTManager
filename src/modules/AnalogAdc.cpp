@@ -20,9 +20,7 @@ class AnalogAdc : public IoTSensor {
     //Такие как ...begin и подставлять в них параметры полученные из web интерфейса.
     //Все параметры хранятся в перемененной parameters, вы можете прочитать любой параметр используя jsonRead функции:
     // jsonReadStr, jsonReadBool, jsonReadInt
-    AnalogAdc(String parameters) {
-        init(jsonReadStr(parameters, "key"), jsonReadStr(parameters, "id"), jsonReadInt(parameters, "int")); //обязательный вызов
-
+    AnalogAdc(String parameters): IoTSensor(parameters) {
         _pin = jsonReadInt(parameters, "pin");
     }
     //=======================================================================================================
