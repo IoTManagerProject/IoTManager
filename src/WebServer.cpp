@@ -92,27 +92,85 @@ void init() {
      sCmd.addCommand("GET", sendGetMsg);
 }
 ///////////
+
     String ID_name = "";
     String ID_value = "";
+    String GetMassage = "";
+
 void sendGetMsg() {
     String sabject = sCmd.next();
     String msg = sCmd.next();
-    
-     if ((WiFi.status() == WL_CONNECTED)) {
+    if ((WiFi.status() == WL_CONNECTED)) {
+    String mes1 = "";    
+    String mes2 = "";
 
-                   if (msg.indexOf("_") != -1) {
-            ID_name = deleteBeforeDelimiter(msg, "_");
-            ID_name = deleteAfterDelimiter(ID_name, "_");
-            ID_value = getValue(ID_name);
-            msg.replace(ID_name, ID_value);
+
+    if(msg){
+        // второе значение просто текст
+        SerialPrint("GET", F("есть второе значение "), msg);
+        GetMassage = msg;
         }
-        msg.replace("_", " ");
+    if(getValue(msg) != "no value"){
+    // получено значение виджета
+    SerialPrint("GET", F("получено значение виджета "),  getValue(msg));
+    GetMassage = getValue(msg);
+        }
 
-    String res = getURL(sabject+msg);
-    if (res != "") {
-     SerialPrint("<-", F("GET"), "res  " + res);
+
+if (msg.indexOf("+") != -1) {
+    // если сложение
+    mes1 = selectFromMarkerToMarker(msg, "+", 0);
+    mes2 = selectFromMarkerToMarker(msg, "+", 1);
+    if (getValue(mes1)  != "no value" and getValue(mes2)  != "no value" ){
+       SerialPrint("GET", F("Оба значения виджеты"),  getValue(msg));
+       GetMassage = (getValue(mes1).toInt()+getValue(mes2).toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        SerialPrint("GET", F("первое значение витджет второе число "),  getValue(mes1));
+        GetMassage = (getValue(mes1).toInt() + mes2.toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        SerialPrint("GET", F("первое значение число второе витджет "),  getValue(mes2));
+        GetMassage = (mes1.toInt()) + getValue(mes2).toInt(); 
+    }
+}else if (msg.indexOf("-") != -1) {
+    // если вычитание 
+    mes1 = selectFromMarkerToMarker(msg, "-", 0);
+    mes2 = selectFromMarkerToMarker(msg, "-", 1);
+    if (getValue(mes1)  != "no value" and getValue(mes2)  != "no value" ){
+        GetMassage = (getValue(mes1).toInt()-getValue(mes2).toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        GetMassage = (getValue(mes1).toInt() - mes2.toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        GetMassage = (mes1.toInt()) - getValue(mes2).toInt(); 
+    }
+}else if (msg.indexOf("*") != -1) {
+    // если умножение 
+    mes1 = selectFromMarkerToMarker(msg, "*", 0);
+    mes2 = selectFromMarkerToMarker(msg, "*", 1);
+    if (getValue(mes1)  != "no value" and getValue(mes2)  != "no value" ){
+        GetMassage = (getValue(mes1).toInt() * getValue(mes2).toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        GetMassage = (getValue(mes1).toInt() * mes2.toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        GetMassage = (mes1.toInt()) * getValue(mes2).toInt(); 
+    }
+}else if (msg.indexOf("/") != -1) {
+    // если деление 
+    mes1 = selectFromMarkerToMarker(msg, "/", 0);
+    mes2 = selectFromMarkerToMarker(msg, "/", 1);
+    if (getValue(mes1)  != "no value" and getValue(mes2)  != "no value" ){
+        GetMassage = (getValue(mes1).toInt() / getValue(mes2).toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        GetMassage = (getValue(mes1).toInt() / mes2.toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        GetMassage = (mes1.toInt()) / getValue(mes2).toInt(); 
+    }
+}
+
+    String res = getURL(sabject+GetMassage);
+    if (res != "error") {
+     SerialPrint("<-", F("GET"), "result  " + res);
     }else{
-        SerialPrint("<-", F("ERR_URL"),  sabject);
+        SerialPrint("<-", F("GET ошибка "),  sabject+GetMassage);
     }
 
       

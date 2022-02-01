@@ -47,21 +47,87 @@ void mqttInit() {
 
     String ID_name = "";
     String ID_value = "";
-void sendMqttMsg() {
+    String GetMassage = "";
+    
+    void sendMqttMsg() {
     String sabject = sCmd.next();
     String msg = sCmd.next();
-            if (msg.indexOf("_") != -1) {
-            ID_name = deleteBeforeDelimiter(msg, "_");
-            ID_name = deleteAfterDelimiter(ID_name, "_");
-            ID_value = getValue(ID_name);
-            msg.replace(ID_name, ID_value);
-        }
-        msg.replace("_", " ");
+    if ((WiFi.status() == WL_CONNECTED)) {
+    String mes1 = "";    
+    String mes2 = "";
 
-    publish(sabject, msg);
-           SerialPrint("<-", F("MQTT"), sabject + " " + msg);
-    
+
+    if(msg){
+        // второе значение просто текст
+        SerialPrint("GET", F("есть второе значение "), msg);
+        GetMassage = msg;
+        }
+    if(getValue(msg) != "no value"){
+    // получено значение виджета
+    SerialPrint("GET", F("получено значение виджета "),  getValue(msg));
+    GetMassage = getValue(msg);
+        }
+
+
+if (msg.indexOf("+") != -1) {
+    // если сложение
+    mes1 = selectFromMarkerToMarker(msg, "+", 0);
+    mes2 = selectFromMarkerToMarker(msg, "+", 1);
+    if (getValue(mes1)  != "no value" and getValue(mes2)  != "no value" ){
+       SerialPrint("GET", F("Оба значения виджеты"),  getValue(msg));
+       GetMassage = (getValue(mes1).toInt()+getValue(mes2).toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        SerialPrint("GET", F("первое значение витджет второе число "),  getValue(mes1));
+        GetMassage = (getValue(mes1).toInt() + mes2.toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        SerialPrint("GET", F("первое значение число второе витджет "),  getValue(mes2));
+        GetMassage = (mes1.toInt()) + getValue(mes2).toInt(); 
+    }
+}else if (msg.indexOf("-") != -1) {
+    // если вычитание 
+    mes1 = selectFromMarkerToMarker(msg, "-", 0);
+    mes2 = selectFromMarkerToMarker(msg, "-", 1);
+    if (getValue(mes1)  != "no value" and getValue(mes2)  != "no value" ){
+        GetMassage = (getValue(mes1).toInt()-getValue(mes2).toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+         SerialPrint("GET", F("первое значение витджет второе число "),  getValue(mes1));
+        GetMassage = (getValue(mes1).toInt() - mes2.toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+          SerialPrint("GET", F("первое значение число второе витджет "),  getValue(mes2));
+        GetMassage = (mes1.toInt()) - getValue(mes2).toInt(); 
+    }
+}else if (msg.indexOf("*") != -1) {
+    // если умножение 
+    mes1 = selectFromMarkerToMarker(msg, "*", 0);
+    mes2 = selectFromMarkerToMarker(msg, "*", 1);
+    if (getValue(mes1)  != "no value" and getValue(mes2)  != "no value" ){
+        GetMassage = (getValue(mes1).toInt() * getValue(mes2).toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        GetMassage = (getValue(mes1).toInt() * mes2.toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        GetMassage = (mes1.toInt()) * getValue(mes2).toInt(); 
+    }
+}else if (msg.indexOf("/") != -1) {
+    // если деление 
+    mes1 = selectFromMarkerToMarker(msg, "/", 0);
+    mes2 = selectFromMarkerToMarker(msg, "/", 1);
+    if (getValue(mes1)  != "no value" and getValue(mes2)  != "no value" ){
+        GetMassage = (getValue(mes1).toInt() / getValue(mes2).toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        GetMassage = (getValue(mes1).toInt() / mes2.toInt()); 
+    } else if (getValue(mes1)  != "no value"){
+        GetMassage = (mes1.toInt()) / getValue(mes2).toInt(); 
+    }
 }
+
+
+publish(sabject, GetMassage);
+           SerialPrint("<-", F("MQTT"), sabject + " " + GetMassage);
+
+     
+     }
+}
+
 
 
 void mqttDisconnect() {
@@ -363,7 +429,7 @@ void publishWidgets() {
     }
     while (file.available()) {
         String payload = file.readStringUntil('\n');
-        SerialPrint("I", F("MQTT"), "widgets: " + payload);
+        SerialPrint("I", F("MQTT"), "widgets: " + payload); 
         publishData("config", payload);
     }
     file.close();
