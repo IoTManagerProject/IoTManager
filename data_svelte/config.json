@@ -9,6 +9,7 @@
         "map": "1,1024,1,1024",
         "plus": 0,
         "multiply": 1,
+        "round": 1,
         "pin": 0,
         "int": 15
     },
@@ -41,5 +42,27 @@
         "page": "Сенсоры",
         "descr": "Влажность",
         "int": 15
+    },
+    {
+        "type": "Reading",
+        "subtype": "Dht1122t",
+        "id": "tmp3",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "int": 15,
+        "pin": 0,
+        "senstype": "dht11"
+    },
+    {
+        "type": "Reading",
+        "subtype": "Dht1122h",
+        "id": "Hum3",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Влажность",
+        "int": 15,
+        "pin": 0,
+        "senstype": "dht11"
     }
 ]
