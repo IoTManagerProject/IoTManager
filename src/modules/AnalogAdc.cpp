@@ -34,7 +34,7 @@ class AnalogAdc : public IoTSensor {
     void doByInterval() {
         float value = analogRead(_pin);
 
-        regEvent((String)value, "AnalogAdc");  //обязательный вызов хотяб один
+        regEvent(value, "AnalogAdc");  //обязательный вызов хотяб один
     }
     //=======================================================================================================
 
