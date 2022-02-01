@@ -9,7 +9,7 @@
 std::map<int, OneWire*> oneWireTemperatureArray;
 std::map<int, DallasTemperature*> sensorsTemperatureArray;
 
-class ds18b20 : public IoTSensor {
+class Ds18b20 : public IoTSensor {
    private:
     //для работы библиотеки с несколькими линиями  необходимо обеспечить каждый экземпляр класса ссылками на объекты настроенные на эти линии
         OneWire* oneWire;
@@ -17,8 +17,8 @@ class ds18b20 : public IoTSensor {
 
     //описание параметров передаваемых из настроек датчика из веба
         String _addr;
-        unsigned int _pin;
-        unsigned int _index;
+        int _pin;
+        int _index;
 
    public:
     //=======================================================================================================
@@ -27,11 +27,10 @@ class ds18b20 : public IoTSensor {
     //Такие как ...begin и подставлять в них параметры полученные из web интерфейса.
     //Все параметры хранятся в перемененной parameters, вы можете прочитать любой параметр используя jsonRead функции:
     // jsonReadStr, jsonReadBool, jsonReadInt
-    ds18b20(String parameters): IoTSensor(parameters) {
-        
-        _pin = jsonReadInt(parameters, "pin");
-        _index = jsonReadInt(parameters, "index");
-        _addr = jsonReadStr(parameters, "addr");             
+    Ds18b20(String parameters): IoTSensor(parameters) {
+        jsonRead(parameters, "pin", _pin);
+        jsonRead(parameters, "index", _index);
+        jsonRead(parameters, "addr", _addr);            
 
         //учитываем, что библиотека может работать с несколькими линиями на разных пинах, поэтому инициируем библиотеку, если линия ранее не использовалась
         if (oneWireTemperatureArray.find(_pin) == oneWireTemperatureArray.end()) {
@@ -75,19 +74,20 @@ class ds18b20 : public IoTSensor {
         char addrStr[20] = "";
         hex2string(deviceAddress, 8, addrStr);
 
-        regEvent((String)value, "addr: " + String(addrStr));  //обязательный вызов для отправки результата работы
+        if (value != -127) regEvent(value, "addr: " + String(addrStr));  //обязательный вызов для отправки результата работы
+            else SerialPrint("E", "Sensor Ds18b20", "Error");
     }
     //=======================================================================================================
 
-    ~ds18b20(){};
+    ~Ds18b20(){};
 };
 
 //после замены названия сенсора, на функцию можно не обращать внимания
 //если сенсор предполагает использование общего объекта библиотеки для нескольких экземпляров сенсора, то в данной функции необходимо предусмотреть
-//создание и контроль соответствующих глобальных переменных (см. пример реализации сенсора ds18b20)
-void* getAPI_ds18b20(String subtype, String param) {
-    if (subtype == F("ds18b20")) {
-        return new ds18b20(param);
+//создание и контроль соответствующих глобальных переменных
+void* getAPI_Ds18b20(String subtype, String param) {
+    if (subtype == F("Ds18b20")) {
+        return new Ds18b20(param);
     } else {
         return nullptr;
     }

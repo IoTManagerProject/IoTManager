@@ -12,6 +12,36 @@ void jsonWriteStrDoc(DynamicJsonDocument& doc, String name, String value) {
 }
 
 // new==============================================================================
+bool jsonRead(String& json, String key, unsigned long& value) {
+    bool ret = true;
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        SerialPrint("EE", F("jsonRead"), error.f_str());
+        ret = false;
+    } else if (!doc.containsKey(key)) {
+        SerialPrint("EE", F("jsonRead"), key + " missing");
+        ret = false;
+    }
+    value = doc[key].as<unsigned long>();
+    return ret;
+}
+
+bool jsonRead(String& json, String key, float& value) {
+    bool ret = true;
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        SerialPrint("EE", F("jsonRead"), error.f_str());
+        ret = false;
+    } else if (!doc.containsKey(key)) {
+        SerialPrint("EE", F("jsonRead"), key + " missing");
+        ret = false;
+    }
+    value = doc[key].as<float>();
+    return ret;
+}
+
 bool jsonRead(String& json, String key, String& value) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);

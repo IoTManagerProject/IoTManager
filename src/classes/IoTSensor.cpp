@@ -5,9 +5,22 @@
 
 
 IoTSensor::IoTSensor(String parameters) {
-    _interval = jsonReadInt(parameters, "int") * 1000;
-    _subtype = jsonReadStr(parameters, "subtype");
-    _id = jsonReadStr(parameters, "id");
+    jsonRead(parameters, "int", _interval);
+    _interval = _interval * 1000;
+    jsonRead(parameters, "subtype", _subtype);
+    jsonRead(parameters, "id", _id);
+    jsonRead(parameters, "multiply", _multiply);
+    jsonRead(parameters, "plus", _plus);
+    jsonRead(parameters, "round", _round);
+    
+    String map;
+    jsonRead(parameters, "map", map);
+    if (map != "") {
+        _map1 = selectFromMarkerToMarker(map, ",", 0).toInt();
+        _map2 = selectFromMarkerToMarker(map, ",", 1).toInt();
+        _map3 = selectFromMarkerToMarker(map, ",", 2).toInt();
+        _map4 = selectFromMarkerToMarker(map, ",", 3).toInt();
+    }   
 }
 IoTSensor::~IoTSensor() {}
 
@@ -29,10 +42,22 @@ void IoTSensor::loop() {
 }
 
 void IoTSensor::regEvent(String value, String consoleInfo = "") {
-    eventGen2(_id, String(value));
-    jsonWriteStr(paramsFlashJson, _id, String(value));
-    publishStatus(_id, String(value));
-    SerialPrint("I", "Sensor " + consoleInfo, "'" + _id + "' data: " + String(value) + "'");
+    eventGen2(_id, value);
+    jsonWriteStr(paramsFlashJson, _id, value);
+    publishStatus(_id, value);
+    SerialPrint("I", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
+}
+
+void IoTSensor::regEvent(float value, String consoleInfo = "") {  
+    if (_multiply) value = value * _multiply;
+    if (_plus) value = value + _multiply;
+    if (_round != 0) {    
+        if (value > 0) value = (int)(value * _round + 0.5) / _round;
+        if (value < 0) value = (int)(value * _round - 0.5) / _round;
+    }
+    if (_map1 != _map2) value = map(value, _map1, _map2, _map3, _map4);
+
+    regEvent((String)value, consoleInfo);
 }
 
 void IoTSensor::doByInterval() {}
