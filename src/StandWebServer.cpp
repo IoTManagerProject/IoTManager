@@ -221,6 +221,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             if (headerStr == "/config") {
+                sendFileToWs5("/items.json", num, 1024);
                 sendFileToWs5("/widgets.json", num, 1024);
                 sendFileToWs5("/config.json", num, 1024);
             }

@@ -1,0 +1,87 @@
+[
+    {
+        "name": "Выберите элемент",
+        "num": 0
+    },
+    {
+        "header": "Сенсоры"
+    },
+    {
+        "name": "1. Аналоговый сенсор",
+        "num": 1,
+        "type": "Reading",
+        "subtype": "AnalogAdc",
+        "id": "t",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "map": "1,1024,1,1024",
+        "plus": 0,
+        "multiply": 1,
+        "round": 1,
+        "pin": 0,
+        "int": 15
+    },
+    {
+        "name": "2. Cенсор температуры ds18b20",
+        "num": 2,
+        "type": "Reading",
+        "subtype": "Ds18b20",
+        "id": "tmp",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "int": 15,
+        "pin": 0,
+        "index": 0,
+        "addr": ""
+    },
+    {
+        "name": "3. Cенсор температуры Sht20",
+        "num": 3,
+        "type": "Reading",
+        "subtype": "Sht20t",
+        "id": "tmp2",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "int": 15
+    },
+    {
+        "name": "4. Cенсор влажности Sht20",
+        "num": 4,
+        "type": "Reading",
+        "subtype": "Sht20h",
+        "id": "Hum2",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Влажность",
+        "int": 15
+    },
+    {
+        "name": "5. Cенсор температуры dht11",
+        "num": 5,
+        "type": "Reading",
+        "subtype": "Dht1122t",
+        "id": "tmp3",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "int": 15,
+        "pin": 0,
+        "senstype": "dht11"
+    },
+    {
+        "name": "6. Cенсор влажности dht11",
+        "num": 6,
+        "type": "Reading",
+        "subtype": "Dht1122h",
+        "id": "Hum3",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Влажность",
+        "int": 15,
+        "pin": 0,
+        "senstype": "dht11"
+    }
+]
