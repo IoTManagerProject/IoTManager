@@ -21,3 +21,51 @@ void saveSettingsFlashJson() {
 void saveParamsFlashJson() {
     writeFile(F("params.json"), paramsFlashJson);
 }
+
+const String getChipId() {
+    return String(ESP_getChipId()) + "-" + String(ESP_getFlashChipId());
+}
+
+void setChipId() {
+    chipId = getChipId();
+    SerialPrint("I", "System", "id: " + chipId);
+}
+
+const String getUniqueId(const char* name) {
+    return String(name) + getMacAddress();
+}
+
+uint32_t ESP_getChipId(void) {
+#ifdef ESP32
+    uint32_t id = 0;
+    for (uint32_t i = 0; i < 17; i = i + 8) {
+        id |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
+    }
+    return id;
+#else
+    return ESP.getChipId();
+#endif
+}
+
+uint32_t ESP_getFlashChipId(void) {
+#ifdef ESP32
+    // Нет аналогичной (без доп.кода) функций в 32
+    // надо использовать другой id - варианты есть
+    return ESP_getChipId();
+#else
+    return ESP.getFlashChipId();
+#endif
+}
+
+const String getMacAddress() {
+    uint8_t mac[6];
+    char buf[13] = {0};
+#if defined(ESP8266)
+    WiFi.macAddress(mac);
+    sprintf(buf, MACSTR, MAC2STR(mac));
+#else
+    esp_read_mac(mac, ESP_MAC_WIFI_STA);
+    sprintf(buf, MACSTR, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+#endif
+    return String(buf);
+}

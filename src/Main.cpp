@@ -12,6 +12,9 @@ void setup() {
     //инициализация файловой системы
     fileSystemInit();
 
+    //получение chip id
+    setChipId();
+
     //синхронизация глобальных переменных с flash
     globalVarsSync();
 

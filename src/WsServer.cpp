@@ -29,23 +29,28 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             for (size_t i = 0; i < headerLenth; i++) {
                 headerStr += (char)payload[i];
             }
-
+            // dashboard===================================================================
             if (headerStr == "/") {
                 sendFileToWs5("/layout.json", num, 1024);
             }
-
+            if (headerStr == "/tuoyal") {
+                writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
+            }
+            // configutation===============================================================
             if (headerStr == "/config") {
                 sendFileToWs5("/items.json", num, 1024);
                 sendFileToWs5("/widgets.json", num, 1024);
                 sendFileToWs5("/config.json", num, 1024);
             }
-
             if (headerStr == "/gifnoc") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
             }
-
-            if (headerStr == "/tuoyal") {
-                writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
+            // connection===================================================================
+            if (headerStr == "/connec") {
+                sendFileToWs5("/settings.json", num, 1024);
+            }
+            if (headerStr == "/cennoc") {
+                writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
             }
 
         } break;

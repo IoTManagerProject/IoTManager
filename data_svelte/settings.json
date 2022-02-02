@@ -12,10 +12,5 @@
     "mqttPort": 8021,
     "mqttPrefix": "/ver4test",
     "mqttUser": "rise",
-    "mqttPass": "hostel3333",
-    "mqttServer2": "",
-    "mqttPort2": 0,
-    "mqttPrefix2": "",
-    "mqttUser2": "",
-    "mqttPass2": ""
+    "mqttPass": "hostel3333"
 }

@@ -26,5 +26,12 @@ extern FS* filesystem;
 extern bool fileSystemInit();
 extern void globalVarsSync();
 
-void saveSettingsFlashJson();
-void saveParamsFlashJson();
+extern void saveSettingsFlashJson();
+extern void saveParamsFlashJson();
+
+extern const String getChipId();
+extern void setChipId();
+extern const String getUniqueId(const char* name);
+extern uint32_t ESP_getChipId(void);
+extern uint32_t ESP_getFlashChipId(void);
+extern const String getMacAddress();
