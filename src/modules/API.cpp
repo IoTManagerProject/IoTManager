@@ -6,6 +6,7 @@ void* getAPI_AnalogAdc(String subtype, String params);
 void* getAPI_Ds18b20(String subtype, String params);
 void* getAPI_Sht20(String subtype, String params);
 void* getAPI_Dht1122(String subtype, String params);
+void* getAPI_Bmp280(String subtype, String params);
 //============================================================================================
 
 void* getAPI(String subtype, String params) {
@@ -16,6 +17,7 @@ void* getAPI(String subtype, String params) {
     if ((tmpAPI = getAPI_Ds18b20(subtype, params)) != nullptr) return tmpAPI;
     if ((tmpAPI = getAPI_Sht20(subtype, params)) != nullptr) return tmpAPI;
     if ((tmpAPI = getAPI_Dht1122(subtype, params)) != nullptr) return tmpAPI;
+    if ((tmpAPI = getAPI_Bmp280(subtype, params)) != nullptr) return tmpAPI;
     //================================================================================================================
 
     return nullptr;
