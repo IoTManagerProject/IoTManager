@@ -157,7 +157,7 @@ void logging() {
 
 void loggingExecute() {
     String key = sCmd.order();
-    String value = sCmd.next();
+    String value = ExecuteParser();
     int number = getKeyNum(key, logging_KeyList);
     if (myLogging != nullptr) {
         if (number != -1) {

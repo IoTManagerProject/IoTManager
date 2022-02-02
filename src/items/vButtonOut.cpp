@@ -110,13 +110,13 @@ void buttonOut() {
 
 void buttonOutExecute() {
     String key = sCmd.order();
-    String state = sCmd.next();
+    String value = ExecuteParser();
 
     int number = getKeyNum(key, buttonOut_KeyList);
 
     if (myButtonOut != nullptr) {
         if (number != -1) {
-            myButtonOut->at(number).execute(state);
+            myButtonOut->at(number).execute(value);
         }
     }
 }
