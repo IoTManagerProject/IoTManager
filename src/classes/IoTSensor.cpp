@@ -2,6 +2,7 @@
 #include "Utils/SerialPrint.h"
 #include "Classes/ScenarioClass3.h"
 #include "Classes/IoTSensor.h"
+#include "WsServer.h"
 
 IoTSensor::IoTSensor(String parameters) {
     jsonRead(parameters, "int", _interval);
@@ -44,6 +45,7 @@ void IoTSensor::regEvent(String value, String consoleInfo = "") {
     eventGen2(_id, value);
     jsonWriteStr(paramsFlashJson, _id, value);
     publishStatusMqtt(_id, value);
+    publishStatusWs(_id, value);
     SerialPrint("I", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
 }
 

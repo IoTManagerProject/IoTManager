@@ -127,8 +127,8 @@ void publishStatusWs(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     String json = "{}";
     jsonWriteStr(json, "status", data);
-    // standWebSocket.sendTXT(num, json);
-    //  mqtt.publish(path.c_str(), json.c_str(), false);
+    jsonWriteStr(json, "topic", path);
+    standWebSocket.broadcastTXT(json);
 }
 
 // void sendMark(const char* filename, const char* mark, uint8_t num) {
