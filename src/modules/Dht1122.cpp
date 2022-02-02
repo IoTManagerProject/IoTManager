@@ -16,15 +16,15 @@ std::map<int, DHTesp*> dhts;
 
 class Dht1122t : public IoTSensor {
    private:
-    int _pin; 
+    DHTesp* _dht; 
    
    public:
-    Dht1122t(String parameters): IoTSensor(parameters) {
-        jsonRead(parameters, "pin", _pin);
+    Dht1122t(DHTesp* dht, String parameters): IoTSensor(parameters) {
+        _dht = dht;
     }
     
     void doByInterval() {
-        float value = dhts[_pin]->getTemperature();
+        float value = _dht->getTemperature();
         if (String(value) != "nan") regEvent(value, "Dht1122t");
             else SerialPrint("E", "Sensor DHTt", "Error");  
     }
@@ -35,15 +35,15 @@ class Dht1122t : public IoTSensor {
 
 class Dht1122h : public IoTSensor {
    private:
-    int _pin; 
+    DHTesp* _dht; 
 
    public:
-    Dht1122h(String parameters): IoTSensor(parameters) {
-        jsonRead(parameters, "pin", _pin);
+    Dht1122h(DHTesp* dht, String parameters): IoTSensor(parameters) {
+        _dht = dht;
     }
     
     void doByInterval() {
-        float value = dhts[_pin]->getHumidity();
+        float value = _dht->getHumidity();
         if (String(value) != "nan") regEvent(value, "Dht1122h");
             else SerialPrint("E", "Sensor DHTh", "Error");  
     }
@@ -59,21 +59,19 @@ void* getAPI_Dht1122(String subtype, String param) {
     jsonRead(param, "senstype", senstype);
 
     if (dhts.find(pin) == dhts.end()) {
-        DHTesp* dht = new DHTesp();
+        dhts[pin] = new DHTesp();
         
         if (senstype == "dht11") {
-            dht->setup(pin, DHTesp::DHT11);
+            dhts[pin]->setup(pin, DHTesp::DHT11);
         } else if (senstype == "dht22") {
-            dht->setup(pin, DHTesp::DHT22);
+            dhts[pin]->setup(pin, DHTesp::DHT22);
         }
-
-        dhts[pin] = dht;
     }
 
     if (subtype == F("Dht1122t")) {
-        return new Dht1122t(param);
+        return new Dht1122t(dhts[pin], param);
     } else if (subtype == F("Dht1122h")) {
-        return new Dht1122h(param);
+        return new Dht1122h(dhts[pin], param);
     } else {
         return nullptr;
     }

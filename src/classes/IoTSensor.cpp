@@ -52,12 +52,21 @@ void IoTSensor::regEvent(float value, String consoleInfo = "") {
     if (_multiply) value = value * _multiply;
     if (_plus) value = value + _multiply;
     if (_round != 0) {    
-        if (value > 0) value = (int)(value * _round + 0.5) / _round;
-        if (value < 0) value = (int)(value * _round - 0.5) / _round;
+        if (value > 0) {
+            value = (int)(value * _round + 0.5F);
+            value = value / _round;
+        }
+        if (value < 0) {
+            value = (int)(value * _round - 0.5F);
+            value = value / _round;
+        }
     }
     if (_map1 != _map2) value = map(value, _map1, _map2, _map3, _map4);
 
-    regEvent((String)value, consoleInfo);
+    // убираем лишние нули
+    char buf[20];
+    sprintf(buf, "%g", value);
+    regEvent((String)buf, consoleInfo);
 }
 
 void IoTSensor::doByInterval() {}
