@@ -278,7 +278,7 @@ boolean publishChart_test(const String& topic, const String& data) {
     return mqtt.publish(path.c_str(), data.c_str(), false);
 }
 
-boolean publishStatus(const String& topic, const String& data) {
+boolean publishStatusMqtt(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     String json = "{}";
     jsonWriteStr(json, "status", data);
@@ -364,7 +364,7 @@ void publishState() {
     //
     //    if (topic != "" && state != "") {
     //        if (topic != "timenow") {
-    //            publishStatus(topic, state);
+    //            publishStatusMqtt(topic, state);
     //        }
     //    }
     //    str = deleteBeforeDelimiter(str, ",");

@@ -8,3 +8,4 @@
 #include "classes/NotAsync.h"
 #include "ESPConfiguration.h"
 #include "MqttClient.h"
+#include "WsServer.h"

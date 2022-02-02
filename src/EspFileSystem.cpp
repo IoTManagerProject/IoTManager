@@ -12,7 +12,6 @@ bool fileSystemInit() {
 void globalVarsSync() {
     settingsFlashJson = readFile(F("settings.json"), 4096);
     settingsFlashJson.replace("\r\n", "");
-    writeFile("layout.json", "");
 }
 
 void saveSettingsFlashJson() {
