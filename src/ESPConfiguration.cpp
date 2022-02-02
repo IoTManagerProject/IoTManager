@@ -3,11 +3,6 @@
 std::vector<IoTSensor*> iotSensors;
 void* getAPI(String subtype, String params);
 
-//============================================================================================
-//здесь скопируйте строку и вставьте ниже, заменив имя AnalogAdc на название вашего сенсора
-extern void* getAPI_AnalogAdc(String params);
-//============================================================================================
-
 void configure(String path) {
     File file = seekFile(path);
     file.find("[");
