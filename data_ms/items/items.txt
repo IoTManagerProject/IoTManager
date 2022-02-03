@@ -1,6 +1,6 @@
 0;button-out;btnid;toggleBtn;Кнопки;Освещение;order*
 0;button-out;100-0;toggleBtn;Кнопки;Освещение;order;type[ms]*
-0;input;dgtid;inputDigit;Ввод;Введите#цифру;order*
+0;input-value;dgtid;inputDigit;Ввод;Введите#цифру;order*
 0;input;tmid;inputTime;Ввод;Введите#время;order*
 0;output;txtid;anydata;Вывод;Сигнализация;order*
 0;count-down;cntid;anydata;Таймер;Обратный#отчет;order*
