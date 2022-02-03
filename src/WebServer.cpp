@@ -89,8 +89,23 @@ void init() {
     initWS();
 
     SerialPrint("I", F("HTTP"), F("HttpServer Init"));
+     sCmd.addCommand("GET", sendGetMsg);
 }
 ///////////
+
+void sendGetMsg() {
+    String sabject = sCmd.next();
+    String value = ExecuteParser();
+    if ((WiFi.status() == WL_CONNECTED)) {
+    String res = getURL(sabject+value);
+    if (res != "error") {
+     SerialPrint("<-", F("GET"), "result  " + res);
+    }else{
+        SerialPrint("<-", F("GET ошибка "),  sabject+value);
+    }
+    }
+}
+
 
 #ifndef LAYOUT_IN_RAM
 void publishWidgetsWS() {

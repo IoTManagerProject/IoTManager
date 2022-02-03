@@ -5,5 +5,6 @@
 namespace HttpServer {
 
 void init();
+void sendGetMsg();
 
 }  // namespace HttpServer

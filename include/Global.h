@@ -52,6 +52,7 @@ extern String configStoreJson;   //все данные которые должн
 extern String configOptionJson;  //для трансфера
 extern String telegramMsgJson;
 extern String getValue(String& key);
+extern String ExecuteParser();
 
 // Mqtt
 extern String mqttServer;

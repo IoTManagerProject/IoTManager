@@ -66,7 +66,7 @@ void countDown() {
 
 void countDownExecute() {
     String key = sCmd.order();
-    String value = sCmd.next();
+    String value = ExecuteParser();
 
     if (!isDigitStr(value)) {  //если значение - текст
         value = getValue(value);

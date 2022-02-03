@@ -71,24 +71,18 @@ void telegramMsgParse(String msg) {
     }
 }
 
+
 void sendTelegramMsg() {
     String sabject = sCmd.next();
     String msg = sCmd.next();
-    String ID_name = "";
-    String ID_value = "";
+    String value = ExecuteParser();
     if (sabject == "often") {
         msg.replace("#", " ");
         msg.replace("%date%", timeNow->getDateTimeDotFormated());
         msg.replace("%weekday%", timeNow->getWeekday());
         msg.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
         msg.replace("%name%", jsonReadStr(configSetupJson, F("name")));
-        if (msg.indexOf("_") != -1) {
-            ID_name = deleteBeforeDelimiter(msg, "_");
-            ID_name = deleteAfterDelimiter(ID_name, "_");
-            ID_value = getValue(ID_name);
-            msg.replace(ID_name, ID_value);
-        }
-        msg.replace("_", " ");
+        msg = msg+" "+value;
         myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
         SerialPrint("<-", F("Telegram"), "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
     } else {
@@ -101,14 +95,7 @@ void sendTelegramMsg() {
             msg.replace("%weekday%", timeNow->getWeekday());
             msg.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
             msg.replace("%name%", jsonReadStr(configSetupJson, F("name")));
-            if (msg.indexOf("_") != -1) {
-                ID_name = deleteBeforeDelimiter(msg, "_");
-                ID_name = deleteAfterDelimiter(ID_name, "_");
-                ID_value = getValue(ID_name);
-                msg.replace(ID_name, ID_value);
-            }
-            msg.replace("_", " ");
-
+            msg = msg+" "+value;
             myBot->sendMessage(jsonReadInt(configSetupJson, "chatId"), msg);
             SerialPrint("<-", F("Telegram"), "chat ID: " + String(jsonReadInt(configSetupJson, "chatId")) + ", msg: " + msg);
         }
