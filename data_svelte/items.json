@@ -102,9 +102,45 @@
         "type": "Reading",
         "subtype": "Bmp280p",
         "id": "Press3",
-        "widget": "anydataPress",
+        "widget": "anydataMm",
         "page": "Сенсоры",
         "descr": "Давление",
+        "int": 15,
+        "addr": "0x76"
+    },
+    {
+        "name": "9. Cенсор температуры Bme280",
+        "num": 9,
+        "type": "Reading",
+        "subtype": "Bme280t",
+        "id": "tmp3",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "int": 15,
+        "addr": "0x76"
+    },
+    {
+        "name": "10. Cенсор давления Bme280",
+        "num": 10,
+        "type": "Reading",
+        "subtype": "Bme280p",
+        "id": "Press3",
+        "widget": "anydataMm",
+        "page": "Сенсоры",
+        "descr": "Давление",
+        "int": 15,
+        "addr": "0x76"
+    },
+    {
+        "name": "11. Cенсор влажности Bme280",
+        "num": 11,
+        "type": "Reading",
+        "subtype": "Bme280h",
+        "id": "Hum3",
+        "widget": "anydataHum",
+        "page": "Сенсоры",
+        "descr": "Влажность",
         "int": 15,
         "addr": "0x76"
     }
