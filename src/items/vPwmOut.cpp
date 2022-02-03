@@ -54,13 +54,13 @@ void pwmOut() {
 
 void pwmOutExecute() {
     String key = sCmd.order();
-    String state = sCmd.next();
+    String value = ExecuteParser();
 
     int number = getKeyNum(key, pwmOut_KeyList);
 
     if (myPwmOut != nullptr) {
         if (number != -1) {
-            myPwmOut->at(number).execute(state);
+            myPwmOut->at(number).execute(value);
         }
     }
 }
