@@ -2,8 +2,6 @@
 
 #include <Arduino.h>
 
-
-
 void mqttInit();
 void selectBroker();
 void getMqttData1();
@@ -29,3 +27,5 @@ void publishState();
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length);
 const String getStateStr();
+
+String getAllJson();

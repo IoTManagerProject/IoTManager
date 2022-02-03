@@ -416,3 +416,14 @@ const String getStateStr() {
             break;
     }
 }
+
+String getAllJson() {
+    String str;
+    if (configLiveJson != "{}") {
+        str += configLiveJson;
+    }
+    if (configStoreJson != "{}") {
+        str += "," + configStoreJson;
+    }
+    return str;
+}

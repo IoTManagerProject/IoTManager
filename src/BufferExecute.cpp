@@ -24,6 +24,7 @@
 #include "items/vSensorSHT20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
+#include "MqttClient.h"
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
@@ -103,7 +104,7 @@ void csvCmdExecute(String& cmdStr) {
 #ifdef EnableSensorUltrasonic
                 sCmd.addCommand(order.c_str(), ultrasonic);
 #endif
-//ИНТЕГРИРУЮ: Первая интеграция в ядро. Следим за наименованием
+                //ИНТЕГРИРУЮ: Первая интеграция в ядро. Следим за наименованием
             } else if (order == F("dallas-temp")) {
 #ifdef EnableSensorDallas
                 sCmd.addCommand(order.c_str(), dallas);
@@ -182,6 +183,16 @@ void spaceCmdExecute(String& cmdStr) {
     cmdStr.replace("\r", "\n");
     while (cmdStr.length()) {
         String buf = selectToMarker(cmdStr, "\n");
+        if (buf.indexOf("*") != -1) {
+            buf.replace("*", "");
+            String order = selectToMarker(buf, " ");
+            String newValue = selectToMarkerLast(buf, " ");
+            String allJson = getAllJson();
+            String currentValue = jsonReadStr(allJson, order);
+            if (newValue == currentValue) {
+                buf = "";
+            }
+        }
         if (buf != "") {
             sCmd.readStr(buf);
             SerialPrint("I", F("Order done W"), buf);
