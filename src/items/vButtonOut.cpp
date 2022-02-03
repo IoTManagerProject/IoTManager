@@ -78,9 +78,7 @@ void ButtonOut::execute(String state) {
     jsonWriteStr(json, "status", state);
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-   #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
 }
 
 MyButtonOutVector* myButtonOut = nullptr;
@@ -110,13 +108,13 @@ void buttonOut() {
 
 void buttonOutExecute() {
     String key = sCmd.order();
-    String value = ExecuteParser();
+    String state = sCmd.next();
 
     int number = getKeyNum(key, buttonOut_KeyList);
 
     if (myButtonOut != nullptr) {
         if (number != -1) {
-            myButtonOut->at(number).execute(value);
+            myButtonOut->at(number).execute(state);
         }
     }
 }

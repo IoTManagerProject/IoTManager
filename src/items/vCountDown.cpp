@@ -37,9 +37,7 @@ void CountDownClass::loop() {
     jsonWriteStr(json, "status", time);
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-   #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
         sec--;
         if (sec < 0) {
             _countDownPeriod = 0;
@@ -68,11 +66,11 @@ void countDown() {
 
 void countDownExecute() {
     String key = sCmd.order();
-    String value = ExecuteParser();
+    String value = sCmd.next();
 
-  //  if (!isDigitStr(value)) {  //если значение - текст
-  //      value = getValue(value);
-  //  }
+    if (!isDigitStr(value)) {  //если значение - текст
+        value = getValue(value);
+    }
 
     int number = getKeyNum(key, countDown_KeyList);
 

@@ -46,9 +46,7 @@ void SensorCcs811::read() {
     jsonWriteStr(json, "status", String(co2));
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
             SerialPrint("I", "Sensor", "'" + _paramsPpm.key + "' data: " + String(co2));
 
             eventGen2(_paramsPpb.key, String(ppm));
@@ -59,9 +57,7 @@ void SensorCcs811::read() {
     jsonWriteStr(json, "status", String(ppm));
      MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
             SerialPrint("I", "Sensor", "'" + _paramsPpb.key + "' data: " + String(ppm));
         } else {
             SerialPrint("E", "Sensor CCS", "Error");

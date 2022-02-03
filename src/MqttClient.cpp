@@ -42,19 +42,7 @@ void mqttInit() {
             publishInfo("scen", scen);
         },
         nullptr);
-           sCmd.addCommand("MQTT", sendMqttMsg);
 }
-
-        
-    void sendMqttMsg() {
-    String sabject = sCmd.next();
-   String value = ExecuteParser();
-
-publish(sabject, value);
-           SerialPrint("<-", F("MQTT"), sabject + " " + value);
-}
-
-
 
 void mqttDisconnect() {
     SerialPrint("I", F("MQTT"), F("disconnected"));
@@ -355,7 +343,7 @@ void publishWidgets() {
     }
     while (file.available()) {
         String payload = file.readStringUntil('\n');
-        SerialPrint("I", F("MQTT"), "widgets: " + payload); 
+        SerialPrint("I", F("MQTT"), "widgets: " + payload);
         publishData("config", payload);
     }
     file.close();

@@ -232,19 +232,3 @@ String getValue(String& key) {
         return "data error";
     }
 }
-String ExecuteParser() {
- String value = "";   
- String value1 = sCmd.next();
- String value2 = sCmd.next();
- String value3 = sCmd.next();
- if (getValue(value1)  != "no value")
- {value1 = getValue(value1);}
- if (getValue(value3)  != "no value")
- {value3 = getValue(value3);}
-if (value2 == "+"){value = value1.toInt()+value3.toInt();}
-if (value2 == "-"){value = value1.toInt()-value3.toInt();}
-if (value2 == "*"){value = value1.toInt()*value3.toInt();}
-if (value2 == "/"){value = value1.toInt()/value3.toInt();} 
-
- return value;
-}

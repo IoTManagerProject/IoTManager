@@ -43,9 +43,7 @@ void SensorPzem::read() {
     jsonWriteStr(json, "status", String(voltage));
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
         SerialPrint("I", "Sensor", "'" + _paramsV.key + "' data: " + String(voltage));
 
         eventGen2(_paramsA.key, String(current));
@@ -56,9 +54,7 @@ void SensorPzem::read() {
     jsonWriteStr(json, "status",  String(current));
      MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
         SerialPrint("I", "Sensor", "'" + _paramsA.key + "' data: " + String(current));
 
         eventGen2(_paramsWatt.key, String(power));
@@ -69,9 +65,7 @@ void SensorPzem::read() {
     jsonWriteStr(json, "status", String(power));
      MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
         SerialPrint("I", "Sensor", "'" + _paramsWatt.key + "' data: " + String(power));
 
         eventGen2(_paramsWattHrs.key, String(energy));
@@ -82,9 +76,7 @@ void SensorPzem::read() {
     jsonWriteStr(json, "status", String(energy));
      MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
         SerialPrint("I", "Sensor", "'" + _paramsWattHrs.key + "' data: " + String(energy));
 
         eventGen2(_paramsHz.key, String(freq));
@@ -95,9 +87,7 @@ void SensorPzem::read() {
     jsonWriteStr(json, "status", String(freq));
      MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
         SerialPrint("I", "Sensor", "'" + _paramsHz.key + "' data: " + String(freq));
     } else {
         SerialPrint("E", "Sensor PZEM", "Error, UART switched off");

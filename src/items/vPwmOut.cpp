@@ -30,10 +30,7 @@ void PwmOut::execute(String state) {
     jsonWriteStr(json, "status", state);
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
 }
 
 MyPwmOutVector* myPwmOut = nullptr;
@@ -57,13 +54,13 @@ void pwmOut() {
 
 void pwmOutExecute() {
     String key = sCmd.order();
-    String value = ExecuteParser();
+    String state = sCmd.next();
 
     int number = getKeyNum(key, pwmOut_KeyList);
 
     if (myPwmOut != nullptr) {
         if (number != -1) {
-            myPwmOut->at(number).execute(value);
+            myPwmOut->at(number).execute(state);
         }
     }
 }

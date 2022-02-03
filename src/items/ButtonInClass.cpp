@@ -22,7 +22,7 @@ void buttonIn() {
 
 void buttonInSet() {
     String key = sCmd.order();
-    String value = ExecuteParser();
-    myButtonIn.switchChangeVirtual(key, value);
+    String state = sCmd.next();
+    myButtonIn.switchChangeVirtual(key, state);
 }
 #endif

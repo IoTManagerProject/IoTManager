@@ -49,9 +49,7 @@ void SensorDht::readTmpHum() {
     jsonWriteStr(json, "status", String(tmp));
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
         SerialPrint("I", "Sensor", "'" + _paramsTmp.key + "' data: " + String(tmp));
 
         eventGen2(_paramsHum.key, String(hum));
@@ -62,9 +60,7 @@ void SensorDht::readTmpHum() {
     jsonWriteStr(json, "status", String(hum));
      MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
         SerialPrint("I", "Sensor", "'" + _paramsHum.key + "' data: " + String(hum));
 
     } else {

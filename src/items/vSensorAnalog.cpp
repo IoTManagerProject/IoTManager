@@ -50,9 +50,7 @@ void SensorAnalog::readAnalog() {
     jsonWriteStr(json, "status", String(valueFloat));
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
     SerialPrint("I", "Sensor", "'" + _key + "' data: " + String(valueFloat));
 }
 

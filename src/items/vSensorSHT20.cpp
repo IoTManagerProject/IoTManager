@@ -54,9 +54,7 @@ void SensorSht20::read() {
     jsonWriteStr(json, "status", String(tmp));
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
 	
     SerialPrint("I", "Sensor", "'" + _paramsTmp.key + "' data: " + String(tmp));
 
@@ -68,9 +66,7 @@ void SensorSht20::read() {
     jsonWriteStr(json, "status", String(hum));
      MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
-    #endif
     SerialPrint("I", "Sensor", "'" + _paramsHum.key + "' data: " + String(hum));
 }
 

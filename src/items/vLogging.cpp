@@ -157,7 +157,7 @@ void logging() {
 
 void loggingExecute() {
     String key = sCmd.order();
-    String value = ExecuteParser();
+    String value = sCmd.next();
     int number = getKeyNum(key, logging_KeyList);
     if (myLogging != nullptr) {
         if (number != -1) {
@@ -212,9 +212,7 @@ void sendLogDataWS(String file, String topic) {
     String json = "{}";
     json=json_array;
     jsonWriteStr(json, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(json);
-    #endif
 
 
                 json_array = "";
@@ -234,9 +232,7 @@ void sendLogDataWS(String file, String topic) {
     String json = "{}";
     json=json_array;
     jsonWriteStr(json, "topic", path); 
-    #ifdef WEBSOCKET_ENABLED
     ws.textAll(json);
-    #endif
 
 }
 
