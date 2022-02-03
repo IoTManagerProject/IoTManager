@@ -89,20 +89,18 @@ void getMqttData1() {
     currentBroker = 1;
     mqttServer = jsonReadStr(settingsFlashJson, F("mqttServer"));
     mqttPort = jsonReadInt(settingsFlashJson, F("mqttPort"));
-    mqttPrefix = jsonReadStr(settingsFlashJson, F("mqttPrefix"));
     mqttUser = jsonReadStr(settingsFlashJson, F("mqttUser"));
     mqttPass = jsonReadStr(settingsFlashJson, F("mqttPass"));
-    prex = mqttPrefix + "/" + chipId;
+    // prex = mqttPrefix + "/" + chipId;
 }
 
 void getMqttData2() {
     currentBroker = 2;
     mqttServer = jsonReadStr(settingsFlashJson, F("mqttServer2"));
     mqttPort = jsonReadInt(settingsFlashJson, F("mqttPort2"));
-    mqttPrefix = jsonReadStr(settingsFlashJson, F("mqttPrefix2"));
     mqttUser = jsonReadStr(settingsFlashJson, F("mqttUser2"));
     mqttPass = jsonReadStr(settingsFlashJson, F("mqttPass2"));
-    prex = mqttPrefix + "/" + chipId;
+    // prex = mqttPrefix + "/" + chipId;
 }
 
 bool isSecondBrokerSet() {
@@ -125,8 +123,6 @@ boolean mqttConnect() {
     }
     SerialPrint("I", "MQTT", "connection started to broker No " + String(currentBroker));
 
-    mqttRootDevice = mqttPrefix + "/" + chipId;
-
     SerialPrint("I", "MQTT", "broker " + mqttServer + ":" + String(mqttPort, DEC));
     SerialPrint("I", "MQTT", "topic " + mqttRootDevice);
     // setLedStatus(LED_FAST);
@@ -147,16 +143,16 @@ boolean mqttConnect() {
 
         if (connected) {
             SerialPrint("I", F("MQTT"), F("✔ connected"));
-            if (currentBroker == 1) jsonWriteStr(settingsFlashJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к основному брокеру</p></font></div>"));
-            if (currentBroker == 2) jsonWriteStr(settingsFlashJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к резервному брокеру</p></font></div>"));
-            // setLedStatus(LED_OFF);
+            // if (currentBroker == 1) jsonWriteStr(settingsFlashJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к основному брокеру</p></font></div>"));
+            // if (currentBroker == 2) jsonWriteStr(settingsFlashJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к резервному брокеру</p></font></div>"));
+            //  setLedStatus(LED_OFF);
             mqttSubscribe();
             res = true;
         } else {
             mqttConnectAttempts++;
             SerialPrint("E", F("MQTT"), "🡆 Attempt No: " + String(mqttConnectAttempts) + " could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
             // setLedStatus(LED_FAST);
-            jsonWriteStr(settingsFlashJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #fa987a; padding: 10px;'>Не подключено брокеру</p></font></div>"));
+            // jsonWriteStr(settingsFlashJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #fa987a; padding: 10px;'>Не подключено брокеру</p></font></div>"));
             if (mqttConnectAttempts >= CHANGE_BROKER_AFTER) {
                 mqttConnectAttempts = 0;
                 if (isSecondBrokerSet()) {
