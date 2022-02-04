@@ -41,6 +41,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWs5("/items.json", num, 1024);
                 sendFileToWs5("/widgets.json", num, 1024);
                 sendFileToWs5("/config.json", num, 1024);
+                sendFileToWs5("/settings.json", num, 1024);
             }
             if (headerStr == "/gifnoc") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
@@ -129,7 +130,7 @@ void sendFileToWs5(const char* filename, uint8_t num, size_t frameSize) {
 }
 
 void publishStatusWs(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic + "/status";
+    String path = mqttRootDevice + "/" + topic; //+ "/status";
     String json = "{}";
     jsonWriteStr(json, "status", data);
     jsonWriteStr(json, "topic", path);
