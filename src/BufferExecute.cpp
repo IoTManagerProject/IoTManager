@@ -104,7 +104,7 @@ void csvCmdExecute(String& cmdStr) {
 #ifdef EnableSensorUltrasonic
                 sCmd.addCommand(order.c_str(), ultrasonic);
 #endif
-                //ИНТЕГРИРУЮ: Первая интеграция в ядро. Следим за наименованием
+//ИНТЕГРИРУЮ: Первая интеграция в ядро. Следим за наименованием
             } else if (order == F("dallas-temp")) {
 #ifdef EnableSensorDallas
                 sCmd.addCommand(order.c_str(), dallas);
@@ -183,7 +183,7 @@ void spaceCmdExecute(String& cmdStr) {
     cmdStr.replace("\r", "\n");
     while (cmdStr.length()) {
         String buf = selectToMarker(cmdStr, "\n");
-        if (buf.indexOf("*") != -1) {
+         if (buf.indexOf("*") != -1) {
             buf.replace("*", "");
             String order = selectToMarker(buf, " ");
             String newValue = selectToMarkerLast(buf, " ");
@@ -242,4 +242,21 @@ String getValue(String& key) {
     } else {
         return "data error";
     }
+}
+
+String ExecuteParser() {
+ String value = "";   
+ String value1 = sCmd.next();
+ String value2 = sCmd.next();
+ String value3 = sCmd.next();
+ if (getValue(value1)  != "no value")
+ {value1 = getValue(value1);}
+ if (getValue(value3)  != "no value")
+  {value3 = getValue(value3);}
+value = value1+value2+value3;  
+if (value2 == "+"){value = value1.toInt()+value3.toInt();}
+if (value2 == "-"){value = value1.toInt()-value3.toInt();}
+if (value2 == "*"){value = value1.toInt()*value3.toInt();}
+if (value2 == "/" and value3.toInt() != 0){value = value1.toInt()/value3.toInt();} 
+return value;
 }

@@ -48,11 +48,11 @@ void outputValue() {
 
 void outputExecute() {
     String key = sCmd.order();
-    String value = sCmd.next();
+    String value = ExecuteParser();
 
     value.replace("#", " ");
     value.replace("%date%", timeNow->getDateTimeDotFormated());
-   value.replace("%weekday%", timeNow->getWeekday());
+    value.replace("%weekday%", timeNow->getWeekday());
     value.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
     value.replace("%name%", jsonReadStr(configSetupJson, F("name")));
 

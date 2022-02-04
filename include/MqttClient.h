@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 
+void sendMqttMsg();
 void mqttInit();
 void selectBroker();
 void getMqttData1();
