@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
+
 #include "FileSystem.h"
 
 static const char SETTINGS_FILE[] = "/display.json";
@@ -11,20 +12,27 @@ struct DisplaySettings {
    private:
     uint8_t _page_count{0};
     String _type;
-    String  _connection;
+    String _connection;
 
    private:
     void loadJson(String str) {
         StaticJsonBuffer<512> doc;
         JsonObject &obj = doc.parseObject(str);
-        _type = obj["type"].as<char *>();
-        _connection = obj["connection"].as<char *>();
-        _page_count = obj["page_count"].as<int>();
+        if (!obj.success()) {
+            setDefault();
+        } else {
+            _type = obj["type"].as<char *>();
+            if (_type.isEmpty()) _type = "ST";
+            _connection = obj["connection"].as<char*>();
+            _page_count = obj["page_count"].as<int>();
+        }
+        Serial.printf("t: %s c: %s pc: %d", _type.c_str(), _connection.c_str(), _page_count);
     }
 
     bool loadFile(File &f) {
         if (f) {
             String buf = f.readString();
+            f.close();
             loadJson(buf);
             return true;
         }
@@ -32,17 +40,20 @@ struct DisplaySettings {
     }
 
    public:
+    void setDefault() {
+        auto f = FileFS.open(SETTINGS_FILE, FILE_WRITE);
+        if (f) {
+            f.println(SETTINGS_DEFAULT);
+            f.close();
+        }
+    }
+
     void init() {
         if (FileFS.exists(SETTINGS_FILE)) {
             auto f = FileFS.open(SETTINGS_FILE, FILE_READ);
             loadFile(f);
-            f.close();
         } else {
-            auto f = FileFS.open(SETTINGS_FILE, FILE_WRITE);
-            if (f) {
-                f.println(SETTINGS_DEFAULT);
-                f.close();
-            }
+            setDefault();
         }
     }
 

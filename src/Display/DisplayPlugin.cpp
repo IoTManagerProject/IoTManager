@@ -1,10 +1,10 @@
 #include "Display/DisplayPlugin.h"
-#include "Display/DisplayTypes.h"
-#include "Display/DisplayFactory.h"
-#include "Display/DisplaySettings.h"
-
 
 #include <vector>
+
+#include "Display/DisplayFactory.h"
+#include "Display/DisplaySettings.h"
+#include "Display/DisplayTypes.h"
 
 #define STRHELPER(x) #x
 #define TO_STRING_AUX(...) "" #__VA_ARGS__
@@ -12,7 +12,6 @@
 
 // главное чтобы не меньше была
 #define LINE_LEN 24
-
 
 class Display {
    private:
@@ -56,8 +55,6 @@ class Display {
         getPosition(tmp, b);
     }
 
-
-
     uint8_t draw(const RelativePosition &pos, const String &str) {
         AbsolutePosition tmp;
         getPosition(pos, tmp);
@@ -71,9 +68,10 @@ class Display {
     }
 
     uint8_t draw(const AbsolutePosition &pos, const String &str) {
+        Serial.printf("(x:%d, y:%d) %s", pos.x, pos.y, str.c_str());
         return _obj->drawStr(pos.x, pos.y, str.c_str());
     }
-    
+
     uint8_t println(const String &str, bool frame = false) {
         AbsolutePosition pos;
         getPosition(_cursor.pos, pos);
@@ -83,13 +81,12 @@ class Display {
         return res;
     }
 
-
     bool isEOR(uint8_t rows = 1) {
-         return _cursor.isEOL( getLineHeight(), rows);
+        return _cursor.isEOL(getLineHeight(), rows);
     }
 
     bool isEOL(uint8_t cols = 1) {
-        return _cursor.isEOL( getMaxCharWidth(), cols);
+        return _cursor.isEOL(getMaxCharWidth(), cols);
     }
 
     uint8_t print(const String &str, bool frame = false) {
@@ -358,13 +355,17 @@ uint8_t getPageCount() {
 // выводит на страницу параметры начиная c [n]
 // возвращает [n] последнего уместившегося
 uint8_t draw(Display *display, ParamCollection *param, uint8_t n) {
-    uint8_t i;
+    
+    display->startRefresh();
+    size_t i = 0;
     for (i = n; i < param->count(); i++) {
         auto entry = param->get(i);
         display->print(entry->descr);
         display->println(entry->value);
         if (display->isEOR()) break;
     }
+    // Отправит готовый буфер страницы на дисплей, если это не делать- он и пустой
+    display->endRefresh();
     return i;
 }
 
@@ -413,10 +414,10 @@ void show(Display *display, ParamCollection *param) {
 }
 
 void show(const String &data, const String &event) {
-    if(!_inited) {
+    if (!_inited) {
         _context.init();
         _param = new ParamCollection();
-        _display = new Display(DisplayFactory().createInstance(_context.getType(), _context.getConnection()));        
+        _display = new Display(DisplayFactory().createInstance(_context.getType(), _context.getConnection()));
         _inited = true;
     }
 
@@ -425,4 +426,4 @@ void show(const String &data, const String &event) {
     show(_display, _param);
 }
 
-}  // namespace ST7565
+}  // namespace DisplayPlugin

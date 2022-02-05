@@ -1,5 +1,5 @@
 {
-    "display":  {
-    "type": "ST",
+    "type": "ST7556",
+    "connection": "{\"clock\": 12,\"data\" : 13,\"cs\": 15,\"dc\": 2,\"rst\": 0}",
     "page_count": 0
 }

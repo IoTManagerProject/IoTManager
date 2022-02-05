@@ -30,12 +30,13 @@ class STHardware : public DisplayHarwareIntf {
         uint8_t data = obj.containsKey("data") ? obj["data"].as<int>() : D7;
         uint8_t cs = obj.containsKey("cs") ? obj["cs"].as<int>() : D8;
         uint8_t dc = obj.containsKey("dc") ? obj["dc"].as<int>() : D4;
-        uint8_t reset = obj.containsKey("reset") ? obj["reset"].as<int>() : D3;
-        return createInstance(clock, data, cs, dc, reset);
+        uint8_t rst = obj.containsKey("rst") ? obj["rst"].as<int>() : D3;        
+        return createInstance(clock, data, cs, dc, rst);
     }
 
    private:
     U8G2* createInstance(uint8_t clock, uint8_t data, uint8_t cs, uint8_t dc, uint8_t rst) {
+        Serial.printf("ST %d, %d, %d, %d, %d\r\n", clock, data, cs, dc, rst);
         return new U8G2_ST7565_ERC12864_F_4W_SW_SPI(U8G2_R0, clock, data, cs, dc, rst);
     }
 };
