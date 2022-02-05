@@ -38,6 +38,9 @@ String paramsHeapJson = "{}";     //переменная в которой хр�
 String orderBuf = "";
 String eventBuf = "";
 
+// wifi
+String ssidListJson = "{}";
+
 // Mqtt
 String mqttServer = "";
 int mqttPort = 0;

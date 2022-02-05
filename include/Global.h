@@ -86,6 +86,9 @@ extern String paramsHeapJson;
 extern String orderBuf;
 extern String eventBuf;
 
+// wifi
+extern String ssidListJson;
+
 // Mqtt
 extern String mqttServer;
 extern int mqttPort;
