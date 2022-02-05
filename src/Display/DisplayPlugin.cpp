@@ -409,7 +409,7 @@ void show(Display *display, ParamCollection *param) {
 }
 
 void show(const String &data, const String &event) {
-    if(_inited) {
+    if(!_inited) {
         _context.init();
         _param = new ParamCollection();
         _display = new Display(DisplayFactory().createInstance(_context.getType(), _context.getConnection()));        
