@@ -30,9 +30,8 @@ class Display {
         _obj->setContrast(30);
         _obj->setFont(u8g2_font_ncenB08_tr);
         _obj->enableUTF8Print();
-        // width: 128, height: 64, char_height: 11, lines: 5
-        // 64 - 55 = 9 / 5 = 2
-        D_LOG("width: %d, height: %d, char_height: %d(%d), lines: %d\r\n", getWidth(), getHeight(), getMaxCharHeight(), getYSpacer(), getLines());
+        _cursor = Cursor({getHeight(), getWidth()});
+        D_LOG("w: %d, h: %d, ch: %d(%d), l: %d\r\n", getWidth(), getHeight(), getMaxCharHeight(), getYSpacer(), getLines());
         clear();
     }
 
@@ -57,9 +56,7 @@ class Display {
         getPosition(tmp, b);
     }
 
-    uint8_t draw(const AbsolutePosition &pos, const String &str) {
-        return _obj->drawStr(pos.x, pos.y, str.c_str());
-    }
+
 
     uint8_t draw(const RelativePosition &pos, const String &str) {
         AbsolutePosition tmp;
@@ -73,12 +70,26 @@ class Display {
         return draw(tmp, str);
     }
 
+    uint8_t draw(const AbsolutePosition &pos, const String &str) {
+        return _obj->drawStr(pos.x, pos.y, str.c_str());
+    }
+    
     uint8_t println(const String &str, bool frame = false) {
         AbsolutePosition pos;
         getPosition(_cursor.pos, pos);
         auto res = draw(pos, str.c_str());
         _cursor.nextRow();
+        Serial.print(_cursor);
         return res;
+    }
+
+
+    bool isEOR(uint8_t rows = 1) {
+         return _cursor.isEOL( getLineHeight(), rows);
+    }
+
+    bool isEOL(uint8_t cols = 1) {
+        return _cursor.isEOL( getMaxCharWidth(), cols);
     }
 
     uint8_t print(const String &str, bool frame = false) {
@@ -87,15 +98,8 @@ class Display {
         getPosition(_cursor.pos, pos);
         uint8_t width = draw(pos, str.c_str());
         _cursor.nextCol(width / getMaxCharWidth());
+        Serial.print(_cursor);
         return width;
-    }
-
-    bool isEOR(uint8_t rows = 1) {
-        return ((_cursor.pos.row + rows) * getLineHeight()) > getHeight();
-    }
-
-    bool isEOL(uint8_t cols = 1) {
-        return ((_cursor.pos.col + cols) * getMaxCharWidth()) > getWidth();
     }
 
     uint8_t print(uint8_t x, uint8_t n, const String &str, bool frame = false) {

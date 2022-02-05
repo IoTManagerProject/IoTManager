@@ -23,6 +23,12 @@ struct TextPosition {
 struct AbsolutePosition {
     uint16_t x;
     uint16_t y;
+    
+    AbsolutePosition(): AbsolutePosition(0,0) {}
+    
+    AbsolutePosition(uint16_t x, uint16_t y): x{x}, y{y} {}
+    
+    AbsolutePosition(const AbsolutePosition& rhv): AbsolutePosition(rhv.x, rhv.y) {}
 };
 
 struct Position {
@@ -65,8 +71,13 @@ struct Position {
 };
 
 class Cursor : public Printable {
-   public:
+   private: 
+    AbsolutePosition _max;
+   public:   
     TextPosition pos{0, 0};
+    Cursor() {};
+
+    Cursor(const AbsolutePosition& max): _max{max} {};
 
     void reset() {
         pos.col = 0;
@@ -80,6 +91,14 @@ class Cursor : public Printable {
 
     void nextCol(uint8_t col) {
         pos.col += col;
+    }
+
+    bool isEOR(int8_t line_height, uint8_t rows = 1) {
+        return ((pos.row + rows) * line_height) > _max.y;
+    }
+
+    bool isEOL(uint8_t char_width, uint8_t cols = 1) {
+        return ((pos.col + cols) * char_width) > _max.x;
     }
 
     size_t printTo(Print &p) const {
