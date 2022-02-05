@@ -102,6 +102,6 @@ class Cursor : public Printable {
     }
 
     size_t printTo(Print &p) const {
-        return p.printf("(%d, %d)", pos.row, pos.col);
+        return p.printf("(x:%d, y:%d)", pos.col, pos.row);
     }
 };

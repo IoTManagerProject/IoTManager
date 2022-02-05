@@ -98,7 +98,7 @@ class Display {
         getPosition(_cursor.pos, pos);
         uint8_t width = draw(pos, str.c_str());
         _cursor.nextCol(width / getMaxCharWidth());
-        Serial.print(_cursor);
+        Serial.println(_cursor);
         return width;
     }
 
