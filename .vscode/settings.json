@@ -13,6 +13,14 @@
         "type_traits": "cpp",
         "utility": "cpp",
         "*.tcc": "cpp",
-        "streambuf": "cpp"
+        "streambuf": "cpp",
+        "sstream": "cpp",
+        "bitset": "cpp",
+        "fstream": "cpp",
+        "istream": "cpp",
+        "limits": "cpp",
+        "ostream": "cpp",
+        "numeric": "cpp",
+        "random": "cpp"
     }
 }

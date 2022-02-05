@@ -4,7 +4,7 @@
 #include "Utils/JsonUtils.h"
 #include "Utils/StringUtils.h"
 
-#include "ST7565.h"
+#include "Display/DisplayPlugin.h"
 
 //подключаем необходимые файлы библиотеки
 //#include "Adafruit_ADS1X15.h"
@@ -133,7 +133,7 @@ float yourSensorReading(String type, String paramsAny)
     //----------------------------------------------------------------ST 7565---------------------------------------------------------------
     if (type == "ST7565")
     {
-        ST7565::show(configLiveJson, paramsAny); 
+        DisplayPlugin::show(configLiveJson, paramsAny); 
     }
     // if (type == "ST7565_1")
     // {
