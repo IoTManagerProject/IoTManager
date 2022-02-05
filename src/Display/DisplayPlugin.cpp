@@ -11,7 +11,7 @@
 #define TO_STRING(x) TO_STRING_AUX(x)
 
 // главное чтобы не меньше была
-#define LINE_LEN 24
+#define LINE_LEN 256
 
 class Display {
    private:
@@ -29,97 +29,74 @@ class Display {
         _obj->setContrast(30);
         _obj->setFont(u8g2_font_ncenB08_tr);
         _obj->enableUTF8Print();
-        _cursor = Cursor({getHeight(), getWidth()});
-        D_LOG("w: %d, h: %d, ch: %d(%d), l: %d\r\n", getWidth(), getHeight(), getMaxCharHeight(), getYSpacer(), getLines());
+        _cursor = Cursor(
+            {getWidth(), getHeight()},
+            {getMaxCharHeight(), getLineHeight()});
         clear();
     }
 
-    void getPosition(const TextPosition &a, AbsolutePosition &b) {
-        b.x = a.col * getMaxCharWidth();
-        b.y = (a.row + 1) * getLineHeight();
+    void getPosition(const TextPosition &a, Point &b) {
+        b.x = a.col * _cursor.chr.x;
+        b.y = (a.row + 1) * _cursor.chr.y;
     }
 
-    void getPosition(const RelativePosition &a, AbsolutePosition &b) {
+    void getPosition(const RelativePosition &a, Point &b) {
         b.x = getHeight() * a.x;
         b.y = getWidth() * a.y;
     }
 
-    void getPosition(const AbsolutePosition &a, TextPosition &b) {
+    void getPosition(const Point &a, TextPosition &b) {
         b.row = a.y / getLineHeight();
         b.col = a.x / getMaxCharWidth();
     }
 
     void getPosition(const RelativePosition &a, TextPosition &b) {
-        AbsolutePosition tmp;
+        Point tmp;
         getPosition(a, tmp);
         getPosition(tmp, b);
     }
 
-    uint8_t draw(const RelativePosition &pos, const String &str) {
-        AbsolutePosition tmp;
+    void draw(const RelativePosition &pos, const String &str) {
+        Point tmp;
         getPosition(pos, tmp);
-        return draw(tmp, str);
+        draw(tmp, str);
     }
 
-    uint8_t draw(TextPosition &pos, const String &str) {
-        AbsolutePosition tmp;
+    void draw(TextPosition &pos, const String &str) {
+        Point tmp;
         getPosition(pos, tmp);
-        return draw(tmp, str);
+        draw(tmp, str);
     }
 
-    uint8_t draw(const AbsolutePosition &pos, const String &str) {
-        Serial.printf("(x:%d, y:%d) %s", pos.x, pos.y, str.c_str());
-        return _obj->drawStr(pos.x, pos.y, str.c_str());
+    Cursor *getCursor() {
+        return &_cursor;
+    }
+    // print меняняю cursor
+    void println(const String &str, bool frame = false) {
+        print(str, frame);
+        _cursor.lineFeed();
     }
 
-    uint8_t println(const String &str, bool frame = false) {
-        AbsolutePosition pos;
-        getPosition(_cursor.pos, pos);
-        auto res = draw(pos, str.c_str());
-        _cursor.nextRow();
+    void print(const String &str, bool frame = false) {
         Serial.print(_cursor);
-        return res;
-    }
-
-    bool isEOR(uint8_t rows = 1) {
-        return _cursor.isEOL(getLineHeight(), rows);
-    }
-
-    bool isEOL(uint8_t cols = 1) {
-        return _cursor.isEOL(getMaxCharWidth(), cols);
-    }
-
-    uint8_t print(const String &str, bool frame = false) {
-        if (isEOL(str.length())) _cursor.nextRow();
-        AbsolutePosition pos;
-        getPosition(_cursor.pos, pos);
-        uint8_t width = draw(pos, str.c_str());
-        _cursor.nextCol(width / getMaxCharWidth());
-        Serial.println(_cursor);
-        return width;
-    }
-
-    uint8_t print(uint8_t x, uint8_t n, const String &str, bool frame = false) {
-        int y = getLineY(n);
         // x, y нижний левой
-        uint8_t width = _obj->drawStr(x, y, str.c_str());
-        D_LOG("x:%d y:%d w:%d", x, y, width);
+        int width = _obj->drawStr(_cursor.abs.x, _cursor.abs.y + _cursor.chr.y, str.c_str());        
         if (frame) {
-            x -= getXSpacer();
-            y -= getMaxCharHeight();
-            width += getXSpacer() * 2;
-            int height = getMaxCharHeight() + getYSpacer() * 2;
-
-            // x, y верхней левой блин. длина, высота
-            _obj->drawFrame(x, y, width, height);
-
+            int x = _cursor.abs.x - getXSpacer();
+            int y = _cursor.abs.y - _cursor.chr.y;
+            width += (getXSpacer() * 2);
+            int height = _cursor.chr.y + getYSpacer() * 2;
+            // x, y верхней левой. длина, высота
+            _obj->drawFrame(x, y, width, height);        
             D_LOG("[x:%d y:%d w:%d h:%d]", x, y, width, height);
         }
-        return width;
+        _cursor.moveX(width);                
     }
-
-    uint8_t getLineY(uint8_t n) {
-        return (n + 1) * getLineHeight();
+    
+    // draw не меняет cursor
+    void draw(const Point &pos, const String &str) {
+        Serial.printf("(x:%d,y:%d) %s", pos.x, pos.y, str.c_str());
+        _obj->drawStr(pos.x, pos.y, str.c_str());
     }
 
     uint8_t getLineHeight() {
@@ -165,6 +142,7 @@ class Display {
 
     void startRefresh() {
         _obj->clearBuffer();
+        _cursor.reset();
     }
 
     void endRefresh() {
@@ -355,16 +333,19 @@ uint8_t getPageCount() {
 // выводит на страницу параметры начиная c [n]
 // возвращает [n] последнего уместившегося
 uint8_t draw(Display *display, ParamCollection *param, uint8_t n) {
-    
+    // Очищает буфер (не экран, а внутреннее представление) для последущего заполнения
     display->startRefresh();
     size_t i = 0;
     for (i = n; i < param->count(); i++) {
+        auto cursor = display->getCursor();        
         auto entry = param->get(i);
-        display->print(entry->descr);
-        display->println(entry->value);
-        if (display->isEOR()) break;
+        auto len = entry->value.length() + entry->descr.length();
+        if (cursor->isEndOfLine(len)) cursor->lineFeed();
+        display->print(entry->descr);        
+        display->print(entry->value);
+        if (cursor->isEndOfPage(0)) break;
     }
-    // Отправит готовый буфер страницы на дисплей, если это не делать- он и пустой
+    // Отправит готовый буфер страницы на дисплей
     display->endRefresh();
     return i;
 }
@@ -396,17 +377,14 @@ void show(Display *display, ParamCollection *param) {
 
     if (!param_count) return;
 
-    if (_pageChanged) display->clear();
-
+    size_t last_n = _n;
     if (display->isNeedsRefresh() || _pageChanged) {
         D_LOG("[Display] n: %d/%d\r\n", _n, param_count);
-        auto res = draw(display, param, _n);
-        if (_pageChanged) _n = res;
+        last_n = draw(display, param, _n);
     }
 
-    _pageChanged = false;
-
     if (millis() >= (_lastPageChange + PAGE_CHANGE_ms)) {
+        _n = last_n;
         if (_n >= param_count) _n = 0;
         _pageChanged = true;
         _lastPageChange = millis();

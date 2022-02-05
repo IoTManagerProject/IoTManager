@@ -20,28 +20,28 @@ struct TextPosition {
     uint8_t col;
 };
 
-struct AbsolutePosition {
+struct Point {
     uint16_t x;
     uint16_t y;
     
-    AbsolutePosition(): AbsolutePosition(0,0) {}
+    Point(): Point(0,0) {}
     
-    AbsolutePosition(uint16_t x, uint16_t y): x{x}, y{y} {}
+    Point(uint16_t x, uint16_t y): x{x}, y{y} {}
     
-    AbsolutePosition(const AbsolutePosition& rhv): AbsolutePosition(rhv.x, rhv.y) {}
+    Point(const Point& rhv): Point(rhv.x, rhv.y) {}
 };
 
 struct Position {
     position_t type;
     union {
-        AbsolutePosition abs;
+        Point abs;
         RelativePosition rel;
         TextPosition text;
     };
 
     Position() : type{POS_AUTO} {}
 
-    Position(const AbsolutePosition& pos) : type{POS_ABSOLUTE} {
+    Position(const Point& pos) : type{POS_ABSOLUTE} {
         abs.x = pos.x;
         abs.y = pos.y;
     }
@@ -72,36 +72,56 @@ struct Position {
 
 class Cursor : public Printable {
    private: 
-    AbsolutePosition _max;
+    Point _size;    
+
    public:   
     TextPosition pos{0, 0};
+    Point abs{0, 0};
+    Point chr;
     Cursor() {};
 
-    Cursor(const AbsolutePosition& max): _max{max} {};
+    Cursor(const Point& size,  const Point& chr): _size{size}, chr{chr} {
+        D_LOG("w: %d, h: %d, ch: %d(%d)\r\n", _size.x, _size.y,  chr.x, chr.y);
+    }
 
     void reset() {
         pos.col = 0;
         pos.row = 0;
+        abs.x = 0;
+        abs.y = 0;
     }
 
-    void nextRow() {
-        pos.row++;
+    void lineFeed() {
         pos.col = 0;
+        pos.row++;
+        abs.x= 0;
+        abs.y += chr.y;
     }
 
-    void nextCol(uint8_t col) {
+    void moveX(uint8_t x) {
+        abs.x+=x;        
+        pos.col = abs.x / chr.x;
+    }
+
+    void moveY(uint8_t y) {
+        abs.y+=y;
+    }
+
+    void moveCarret(uint8_t col) {
         pos.col += col;
+        moveX(col * chr.x);
     }
 
-    bool isEOR(int8_t line_height, uint8_t rows = 1) {
-        return ((pos.row + rows) * line_height) > _max.y;
+
+    bool isEndOfPage(uint8_t rows = 1) {
+        return (abs.y + (rows * chr.y)) > _size.y;
     }
 
-    bool isEOL(uint8_t char_width, uint8_t cols = 1) {
-        return ((pos.col + cols) * char_width) > _max.x;
+    bool isEndOfLine(uint8_t cols = 1) {
+        return (abs.x + (cols * chr.x)) > _size.x;
     }
 
     size_t printTo(Print &p) const {
-        return p.printf("(x:%d, y:%d)", pos.col, pos.row);
+        return p.printf("(c:%d, r:%d x:%d, y:%d)", pos.col, pos.row, abs.x, abs.y);
     }
 };
