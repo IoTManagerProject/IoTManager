@@ -13,7 +13,8 @@ struct DisplaySettings {
     uint8_t _page_count{0};
     String _type;
     String _connection;
-
+    uint16_t _page_change;
+    uint16_t _page_update;
    private:
     void loadJson(String str) {
         StaticJsonBuffer<512> doc;
@@ -25,6 +26,10 @@ struct DisplaySettings {
             if (_type.isEmpty()) _type = "ST";
             _connection = obj["connection"].as<char*>();
             _page_count = obj["page_count"].as<int>();
+            _page_change = obj["page_change"].as<int>();
+            _page_update = obj["page_update"].as<int>();             
+            if (_page_update < 1000) _page_update = 1000;
+            if (_page_change < _page_update) _page_change = _page_update;            
         }
         Serial.printf("t: %s c: %s pc: %d", _type.c_str(), _connection.c_str(), _page_count);
     }
@@ -71,5 +76,13 @@ struct DisplaySettings {
 
     uint8_t getPageCount() {
         return _page_count;
+    }
+
+    uint16_t getPageChange() {
+        return _page_change;
+    }
+
+    uint16_t getPageUpdate() {
+        return _page_update;
     }
 };

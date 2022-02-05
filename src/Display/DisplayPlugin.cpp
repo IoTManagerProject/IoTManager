@@ -18,9 +18,10 @@ class Display {
     unsigned long _lastResfresh{0};
     Cursor _cursor;
     U8G2 *_obj{nullptr};
+    uint16_t _update;
 
    public:
-    Display(U8G2 *obj) : _obj{obj} {
+    Display(U8G2 *obj, uint16_t update) : _obj{obj}, _update{update} {
         init();
     }
 
@@ -80,19 +81,19 @@ class Display {
     void print(const String &str, bool frame = false) {
         Serial.print(_cursor);
         // x, y нижний левой
-        int width = _obj->drawStr(_cursor.abs.x, _cursor.abs.y + _cursor.chr.y, str.c_str());        
+        int width = _obj->drawStr(_cursor.abs.x, _cursor.abs.y + _cursor.chr.y, str.c_str());
         if (frame) {
             int x = _cursor.abs.x - getXSpacer();
             int y = _cursor.abs.y - _cursor.chr.y;
             width += (getXSpacer() * 2);
             int height = _cursor.chr.y + getYSpacer() * 2;
             // x, y верхней левой. длина, высота
-            _obj->drawFrame(x, y, width, height);        
+            _obj->drawFrame(x, y, width, height);
             D_LOG("[x:%d y:%d w:%d h:%d]", x, y, width, height);
         }
-        _cursor.moveX(width);                
+        _cursor.moveX(width);
     }
-    
+
     // draw не меняет cursor
     void draw(const Point &pos, const String &str) {
         Serial.printf("(x:%d,y:%d) %s", pos.x, pos.y, str.c_str());
@@ -151,7 +152,7 @@ class Display {
     }
 
     bool isNeedsRefresh() {
-        return (!_lastResfresh || (millis() > (_lastResfresh + DISPLAY_REFRESH_ms)));
+        return _lastResfresh || (millis() > (_lastResfresh + _update));
     }
 };
 
@@ -337,11 +338,11 @@ uint8_t draw(Display *display, ParamCollection *param, uint8_t n) {
     display->startRefresh();
     size_t i = 0;
     for (i = n; i < param->count(); i++) {
-        auto cursor = display->getCursor();        
+        auto cursor = display->getCursor();
         auto entry = param->get(i);
         auto len = entry->value.length() + entry->descr.length();
         if (cursor->isEndOfLine(len)) cursor->lineFeed();
-        display->print(entry->descr);        
+        display->print(entry->descr);
         display->print(entry->value);
         if (cursor->isEndOfPage(0)) break;
     }
@@ -383,7 +384,7 @@ void show(Display *display, ParamCollection *param) {
         last_n = draw(display, param, _n);
     }
 
-    if (millis() >= (_lastPageChange + PAGE_CHANGE_ms)) {
+    if (millis() >= (_lastPageChange + _context.getPageChange())) {
         _n = last_n;
         if (_n >= param_count) _n = 0;
         _pageChanged = true;
@@ -395,7 +396,9 @@ void show(const String &data, const String &event) {
     if (!_inited) {
         _context.init();
         _param = new ParamCollection();
-        _display = new Display(DisplayFactory().createInstance(_context.getType(), _context.getConnection()));
+        _display = new Display(
+            DisplayFactory().createInstance(_context.getType(), _context.getConnection()),
+            _context.getPageUpdate());
         _inited = true;
     }
 
