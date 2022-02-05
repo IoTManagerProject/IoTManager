@@ -1,5 +1,6 @@
 #pragma once
 #include "Global.h"
+#include "Utils/WiFiUtils.h"
 
 #ifdef STANDARD_WEB_SOCKETS
 extern void standWebSocketsInit();
@@ -9,8 +10,10 @@ extern void hexdump(const void* mem, uint32_t len, uint8_t cols);
 #endif
 #endif
 
-void sendFileToWs5(const char* filename, uint8_t num, size_t frameSize);
+void sendFileToWs(const char* filename, uint8_t num, size_t frameSize);
 void publishStatusWs(const String& topic, const String& data);
+void sendStringToWs(const String& msg, uint8_t num, String name);
+
 // void sendMark(const char* filename, const char* mark, uint8_t num);
 // void sendFileToWs3(const String& filename, uint8_t num);
 // void sendFileToWs4(const String& filename, uint8_t num);

@@ -103,9 +103,12 @@ boolean RouterFind(String ssid) {
             if (WiFi.SSID(i) == ssid) {
                 res = true;
             }
-            SerialPrint("i", "WIFI", (res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
+            // SerialPrint("i", "WIFI", (res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
+            jsonWriteStr_(ssidListJson, String(i), WiFi.SSID(i));
+            // String(WiFi.RSSI(i)
         }
     }
+
     WiFi.scanDelete();
     return res;
 }

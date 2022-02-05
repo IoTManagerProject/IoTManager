@@ -31,27 +31,36 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
             // dashboard===================================================================
             if (headerStr == "/") {
-                sendFileToWs5("/layout.json", num, 1024);
+                sendFileToWs("/layout.json", num, 1024);
             }
             if (headerStr == "/tuoyal") {
                 writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
             }
             // configutation===============================================================
             if (headerStr == "/config") {
-                sendFileToWs5("/items.json", num, 1024);
-                sendFileToWs5("/widgets.json", num, 1024);
-                sendFileToWs5("/config.json", num, 1024);
-                sendFileToWs5("/settings.json", num, 1024);
+                sendFileToWs("/items.json", num, 1024);
+                sendFileToWs("/widgets.json", num, 1024);
+                sendFileToWs("/config.json", num, 1024);
+                sendFileToWs("/settings.json", num, 1024);
             }
             if (headerStr == "/gifnoc") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
             }
             // connection===================================================================
             if (headerStr == "/connec") {
-                sendFileToWs5("/settings.json", num, 1024);
+                sendFileToWs("/settings.json", num, 1024);
+                if (RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")))) {
+                    standWebSocket.sendTXT(num, ssidListJson);
+                }
+            }
+            if (headerStr == "/scan") {
+                if (RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")))) {
+                    standWebSocket.sendTXT(num, ssidListJson);
+                }
             }
             if (headerStr == "/cennoc") {
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
+                settingsFlashJson = readFile(F("settings.json"), 4096);
             }
 
         } break;
@@ -109,7 +118,7 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
 #endif
 
 //посылка данных из файла в бинарном виде
-void sendFileToWs5(const char* filename, uint8_t num, size_t frameSize) {
+void sendFileToWs(const char* filename, uint8_t num, size_t frameSize) {
     standWebSocket.sendTXT(num, "/st" + String(filename));
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
@@ -129,12 +138,23 @@ void sendFileToWs5(const char* filename, uint8_t num, size_t frameSize) {
     standWebSocket.sendTXT(num, "/end" + String(filename));
 }
 
+//публикация статус сообщений
 void publishStatusWs(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic; //+ "/status";
+    String path = mqttRootDevice + "/" + topic;  //+ "/status";
     String json = "{}";
     jsonWriteStr(json, "status", data);
     jsonWriteStr(json, "topic", path);
     standWebSocket.broadcastTXT(json);
+}
+
+//посылка данных из string
+void sendStringToWs(const String& msg, uint8_t num, String name) {
+    standWebSocket.sendTXT(num, "/st" + String(name));
+    size_t size = msg.length();
+    char dataArray[size];
+    msg.toCharArray(dataArray, size);
+    standWebSocket.sendBIN(num, (uint8_t*)dataArray, size);
+    standWebSocket.sendTXT(num, "/end" + String(name));
 }
 
 // void sendMark(const char* filename, const char* mark, uint8_t num) {
