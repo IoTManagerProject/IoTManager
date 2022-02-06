@@ -72,4 +72,6 @@ void IoTItem::regEvent(float value, String consoleInfo = "") {
 
 void IoTItem::doByInterval() {}
 
+void IoTItem::execute(String command, String param) {}
+
 IoTItem* myIoTItem;

@@ -9,6 +9,8 @@ class IoTItem {
 
     void loop();
     virtual void doByInterval();
+    virtual void execute(String command, String param);
+
     void regEvent(String value, String consoleInfo);
     void regEvent(float value, String consoleInfo);
 
