@@ -49,14 +49,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // connection===================================================================
             if (headerStr == "/connec") {
                 sendFileToWs("/settings.json", num, 1024);
-                if (RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")))) {
-                    standWebSocket.sendTXT(num, ssidListJson);
-                }
+                RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
+                standWebSocket.sendTXT(num, ssidListJson);
             }
             if (headerStr == "/scan") {
-                if (RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")))) {
-                    standWebSocket.sendTXT(num, ssidListJson);
-                }
+                RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
+                standWebSocket.sendTXT(num, ssidListJson);
             }
             if (headerStr == "/cennoc") {
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);

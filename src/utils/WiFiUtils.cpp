@@ -27,7 +27,7 @@ void routerConnect() {
         if (WiFi.status() == WL_CONNECT_FAILED) {
             SerialPrint("E", "WIFI", "password is not correct");
             tries = 1;
-            jsonWriteInt(paramsHeapJson, "pass_status", 1);
+            jsonWriteInt(settingsFlashJson, "pass_status", 1);
         }
         Serial.print(".");
         delay(1000);
@@ -61,21 +61,21 @@ bool startAPMode() {
     SerialPrint("i", "WIFI", "AP IP: " + myIP.toString());
     jsonWriteStr(settingsFlashJson, "ip", myIP.toString());
 
-    // if (jsonReadInt(paramsHeapJson, "pass_status") != 1) {
-    ts.add(
-        WIFI_SCAN, 10 * 1000, [&](void*) {
-            String sta_ssid = jsonReadStr(settingsFlashJson, "routerssid");
+    if (jsonReadInt(settingsFlashJson, "pass_status") != 1) {
+        ts.add(
+            WIFI_SCAN, 10 * 1000, [&](void*) {
+                String sta_ssid = jsonReadStr(settingsFlashJson, "routerssid");
 
-            SerialPrint("i", "WIFI", "scanning for " + sta_ssid);
+                SerialPrint("i", "WIFI", "scanning for " + sta_ssid);
 
-            if (RouterFind(sta_ssid)) {
-                ts.remove(WIFI_SCAN);
-                WiFi.scanDelete();
-                routerConnect();
-            }
-        },
-        nullptr, true);
-    //}
+                if (RouterFind(sta_ssid)) {
+                    ts.remove(WIFI_SCAN);
+                    WiFi.scanDelete();
+                    routerConnect();
+                }
+            },
+            nullptr, true);
+    }
     return true;
 }
 
@@ -105,10 +105,11 @@ boolean RouterFind(String ssid) {
             }
             // SerialPrint("i", "WIFI", (res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
             jsonWriteStr_(ssidListJson, String(i), WiFi.SSID(i));
+
             // String(WiFi.RSSI(i)
         }
     }
-
+    SerialPrint("i", "WIFI", ssidListJson);
     WiFi.scanDelete();
     return res;
 }
