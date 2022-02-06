@@ -6,7 +6,7 @@
 
 
 #include "Global.h"
-#include "Classes/IoTSensor.h"
+#include "Classes/IoTItem.h"
 
 #include "DHTesp.h"
 #include <map>
@@ -14,12 +14,12 @@
 
 std::map<int, DHTesp*> dhts;
 
-class Dht1122t : public IoTSensor {
+class Dht1122t : public IoTItem {
    private:
     DHTesp* _dht; 
    
    public:
-    Dht1122t(DHTesp* dht, String parameters): IoTSensor(parameters) {
+    Dht1122t(DHTesp* dht, String parameters): IoTItem(parameters) {
         _dht = dht;
     }
     
@@ -33,12 +33,12 @@ class Dht1122t : public IoTSensor {
 };
 
 
-class Dht1122h : public IoTSensor {
+class Dht1122h : public IoTItem {
    private:
     DHTesp* _dht; 
 
    public:
-    Dht1122h(DHTesp* dht, String parameters): IoTSensor(parameters) {
+    Dht1122h(DHTesp* dht, String parameters): IoTItem(parameters) {
         _dht = dht;
     }
     

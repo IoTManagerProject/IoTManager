@@ -1,11 +1,11 @@
 #include "Global.h"
-#include "Classes/IoTSensor.h"
+#include "Classes/IoTItem.h"
 
 //Это файл сенсора, в нем осуществляется чтение сенсора.
 //для добавления сенсора вам нужно скопировать этот файл и заменить в нем текст AnalogAdc на название вашего сенсора
 //Название должно быть уникальным, коротким и отражать суть сенсора.
 
-class AnalogAdc : public IoTSensor {
+class AnalogAdc : public IoTItem {
    private:
     //=======================================================================================================
     // Секция переменных.
@@ -20,7 +20,7 @@ class AnalogAdc : public IoTSensor {
     //Такие как ...begin и подставлять в них параметры полученные из web интерфейса.
     //Все параметры хранятся в перемененной parameters, вы можете прочитать любой параметр используя jsonRead функции:
     // jsonReadStr, jsonReadBool, jsonReadInt
-    AnalogAdc(String parameters): IoTSensor(parameters) {
+    AnalogAdc(String parameters): IoTItem(parameters) {
         _pin = jsonReadInt(parameters, "pin");
     }
     //=======================================================================================================

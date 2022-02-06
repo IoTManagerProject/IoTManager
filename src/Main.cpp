@@ -75,7 +75,7 @@ void loop() {
     //обновление mqtt
     mqttLoop();
 
-    for (unsigned int i = 0; i < iotSensors.size(); i++) {
-        iotSensors[i]->loop();
+    for (unsigned int i = 0; i < IoTItems.size(); i++) {
+        IoTItems[i]->loop();
     }
 }

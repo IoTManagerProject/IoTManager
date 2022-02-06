@@ -6,7 +6,7 @@
 
 
 #include "Global.h"
-#include "Classes/IoTSensor.h"
+#include "Classes/IoTItem.h"
 
 #include <Adafruit_BMP280.h>
 #include <map>
@@ -14,12 +14,12 @@
 
 std::map<String, Adafruit_BMP280*> bmps;
 
-class Bmp280t : public IoTSensor {
+class Bmp280t : public IoTItem {
    private:
     Adafruit_BMP280* _bmp; 
    
    public:
-    Bmp280t(Adafruit_BMP280* bmp, String parameters): IoTSensor(parameters) {
+    Bmp280t(Adafruit_BMP280* bmp, String parameters): IoTItem(parameters) {
         _bmp = bmp;
     }
     
@@ -33,12 +33,12 @@ class Bmp280t : public IoTSensor {
 };
 
   
-class Bmp280p : public IoTSensor {
+class Bmp280p : public IoTItem {
    private:
     Adafruit_BMP280* _bmp; 
 
    public:
-    Bmp280p(Adafruit_BMP280* bmp, String parameters): IoTSensor(parameters) {
+    Bmp280p(Adafruit_BMP280* bmp, String parameters): IoTItem(parameters) {
         _bmp = bmp;
     }
     

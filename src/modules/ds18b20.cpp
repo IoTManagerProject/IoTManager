@@ -1,5 +1,5 @@
 #include "Global.h"
-#include "Classes/IoTSensor.h"
+#include "Classes/IoTItem.h"
 
 #include "DallasTemperature.h"
 #include <OneWire.h>
@@ -9,7 +9,7 @@
 std::map<int, OneWire*> oneWireTemperatureArray;
 std::map<int, DallasTemperature*> sensorsTemperatureArray;
 
-class Ds18b20 : public IoTSensor {
+class Ds18b20 : public IoTItem {
    private:
     //для работы библиотеки с несколькими линиями  необходимо обеспечить каждый экземпляр класса ссылками на объекты настроенные на эти линии
         OneWire* oneWire;
@@ -27,7 +27,7 @@ class Ds18b20 : public IoTSensor {
     //Такие как ...begin и подставлять в них параметры полученные из web интерфейса.
     //Все параметры хранятся в перемененной parameters, вы можете прочитать любой параметр используя jsonRead функции:
     // jsonReadStr, jsonReadBool, jsonReadInt
-    Ds18b20(String parameters): IoTSensor(parameters) {
+    Ds18b20(String parameters): IoTItem(parameters) {
         jsonRead(parameters, "pin", _pin);
         jsonRead(parameters, "index", _index);
         jsonRead(parameters, "addr", _addr);            

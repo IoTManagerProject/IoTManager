@@ -2,13 +2,15 @@
 
 #include <WString.h>
 
-class IoTSensor {
+class IoTItem {
    public:
-    IoTSensor(String parameters);
-    ~IoTSensor();
+    IoTItem(String parameters);
+    ~IoTItem();
 
     void loop();
     virtual void doByInterval();
+    virtual void execute(String command, String param);
+
     void regEvent(String value, String consoleInfo);
     void regEvent(float value, String consoleInfo);
 
