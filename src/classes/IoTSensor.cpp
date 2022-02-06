@@ -1,10 +1,10 @@
 #include "Utils/JsonUtils.h"
 #include "Utils/SerialPrint.h"
 #include "Classes/ScenarioClass3.h"
-#include "Classes/IoTSensor.h"
+#include "Classes/IoTItem.h"
 #include "WsServer.h"
 
-IoTSensor::IoTSensor(String parameters) {
+IoTItem::IoTItem(String parameters) {
     jsonRead(parameters, "int", _interval);
     _interval = _interval * 1000;
     jsonRead(parameters, "subtype", _subtype);
@@ -22,17 +22,17 @@ IoTSensor::IoTSensor(String parameters) {
         _map4 = selectFromMarkerToMarker(map, ",", 3).toInt();
     }
 }
-IoTSensor::~IoTSensor() {}
+IoTItem::~IoTItem() {}
 
-String IoTSensor::getSubtype() {
+String IoTItem::getSubtype() {
     return _subtype;
 }
 
-String IoTSensor::getID() {
+String IoTItem::getID() {
     return _id;
 };
 
-void IoTSensor::loop() {
+void IoTItem::loop() {
     currentMillis = millis();
     difference = currentMillis - prevMillis;
     if (difference >= _interval) {
@@ -41,7 +41,7 @@ void IoTSensor::loop() {
     }
 }
 
-void IoTSensor::regEvent(String value, String consoleInfo = "") {
+void IoTItem::regEvent(String value, String consoleInfo = "") {
     eventGen2(_id, value);
     jsonWriteStr(paramsFlashJson, _id, value);
     publishStatusMqtt(_id, value);
@@ -49,7 +49,7 @@ void IoTSensor::regEvent(String value, String consoleInfo = "") {
     SerialPrint("I", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
 }
 
-void IoTSensor::regEvent(float value, String consoleInfo = "") {
+void IoTItem::regEvent(float value, String consoleInfo = "") {
     if (_multiply) value = value * _multiply;
     if (_plus) value = value + _multiply;
     if (_round != 0) {
@@ -70,6 +70,6 @@ void IoTSensor::regEvent(float value, String consoleInfo = "") {
     regEvent((String)buf, consoleInfo);
 }
 
-void IoTSensor::doByInterval() {}
+void IoTItem::doByInterval() {}
 
-IoTSensor* myIoTSensor;
+IoTItem* myIoTItem;

@@ -2,10 +2,10 @@
 
 #include <WString.h>
 
-class IoTSensor {
+class IoTItem {
    public:
-    IoTSensor(String parameters);
-    ~IoTSensor();
+    IoTItem(String parameters);
+    ~IoTItem();
 
     void loop();
     virtual void doByInterval();

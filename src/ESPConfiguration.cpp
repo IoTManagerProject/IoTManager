@@ -1,6 +1,6 @@
 #include "ESPConfiguration.h"
 
-std::vector<IoTSensor*> iotSensors;
+std::vector<IoTItem*> IoTItems;
 void* getAPI(String subtype, String params);
 
 void configure(String path) {
@@ -17,9 +17,9 @@ void configure(String path) {
             SerialPrint(F("E"), F("Config"), "json error " + subtype);
             continue;
         } else {
-            myIoTSensor = (IoTSensor*)getAPI(subtype, jsonArrayElement);
-            if (myIoTSensor) {
-                iotSensors.push_back(myIoTSensor);
+            myIoTItem = (IoTItem*)getAPI(subtype, jsonArrayElement);
+            if (myIoTItem) {
+                IoTItems.push_back(myIoTItem);
             }
         }
     }

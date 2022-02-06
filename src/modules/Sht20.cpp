@@ -1,5 +1,5 @@
 #include "Global.h"
-#include "Classes/IoTSensor.h"
+#include "Classes/IoTItem.h"
 
 #include "Wire.h"
 #include "SHT2x.h"
@@ -7,9 +7,9 @@
 
 SHT2x* sht = nullptr;
 
-class Sht20t : public IoTSensor {
+class Sht20t : public IoTItem {
    public:
-    Sht20t(String parameters): IoTSensor(parameters) { }
+    Sht20t(String parameters): IoTItem(parameters) { }
     
     void doByInterval() {
         sht->read();
@@ -21,9 +21,9 @@ class Sht20t : public IoTSensor {
     ~Sht20t();
 };
 
-class Sht20h : public IoTSensor {
+class Sht20h : public IoTItem {
    public:
-    Sht20h(String parameters): IoTSensor(parameters) { }
+    Sht20h(String parameters): IoTItem(parameters) { }
     
     void doByInterval() {
         sht->read();

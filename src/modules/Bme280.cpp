@@ -6,7 +6,7 @@
 
 
 #include "Global.h"
-#include "Classes/IoTSensor.h"
+#include "Classes/IoTItem.h"
 
 #include <Adafruit_BME280.h>
 #include <map>
@@ -14,12 +14,12 @@
 
 std::map<String, Adafruit_BME280*> bmes;
 
-class Bme280t : public IoTSensor {
+class Bme280t : public IoTItem {
    private:
     Adafruit_BME280* _bme; 
    
    public:
-    Bme280t(Adafruit_BME280* bme, String parameters): IoTSensor(parameters) {
+    Bme280t(Adafruit_BME280* bme, String parameters): IoTItem(parameters) {
         _bme = bme;
     }
     
@@ -33,12 +33,12 @@ class Bme280t : public IoTSensor {
 };
 
   
-class Bme280h : public IoTSensor {
+class Bme280h : public IoTItem {
    private:
     Adafruit_BME280* _bme; 
 
    public:
-    Bme280h(Adafruit_BME280* bme, String parameters): IoTSensor(parameters) {
+    Bme280h(Adafruit_BME280* bme, String parameters): IoTItem(parameters) {
         _bme = bme;
     }
     
@@ -52,12 +52,12 @@ class Bme280h : public IoTSensor {
 };
 
 
-class Bme280p : public IoTSensor {
+class Bme280p : public IoTItem {
    private:
     Adafruit_BME280* _bme; 
 
    public:
-    Bme280p(Adafruit_BME280* bme, String parameters): IoTSensor(parameters) {
+    Bme280p(Adafruit_BME280* bme, String parameters): IoTItem(parameters) {
         _bme = bme;
     }
     
