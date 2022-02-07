@@ -54,7 +54,6 @@ extern String telegramMsgJson;
 extern String getValue(String& key);
 extern String ExecuteParser();
 
-
 // Mqtt
 extern String mqttServer;
 extern int mqttPort;

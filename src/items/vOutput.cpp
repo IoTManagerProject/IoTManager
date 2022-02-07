@@ -52,12 +52,6 @@ void outputExecute() {
     String key = sCmd.order();
     String value = ExecuteParser();
 
-    value.replace("#", " ");
-    value.replace("%date%", timeNow->getDateTimeDotFormated());
-    value.replace("%weekday%", timeNow->getWeekday());
-    value.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
-    value.replace("%name%", jsonReadStr(configSetupJson, F("name")));
-
     int number = getKeyNum(key, output_KeyList);
 
     if (myOutput != nullptr) {

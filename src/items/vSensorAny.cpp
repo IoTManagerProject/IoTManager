@@ -52,10 +52,28 @@ void SensorAny::read() {
 
 MySensorAnyVector* mySensorAny = nullptr;
 
+void AnySensorExecute() {
+    String key = sCmd.order();
+    String command = sCmd.next();
+    
+    if (command == "cmd1") {
+        SerialPrint("I", "Sensor", key + " выполняет cmd1 без параметра");
+    } 
+    else if (command == "cmd2") {
+        String par = sCmd.next();
+        SerialPrint("I", "Sensor", key + " выполняет cmd2 c параметром " + par);
+    }
+    else if (command == "cmd3") {
+        String par = sCmd.next();
+        SerialPrint("I", "Sensor", key + " выполняет cmd3 c параметром " + par);
+    }
+}
+
 void AnySensor() {
     String params = "{}";
     myLineParsing.update();
-    jsonWriteStr(params, "key", myLineParsing.gkey());
+    String key = myLineParsing.gkey();
+    jsonWriteStr(params, "key", key);
     jsonWriteStr(params, "addr", myLineParsing.gaddr());
     jsonWriteStr(params, "int", myLineParsing.gint());
     jsonWriteStr(params, "c", myLineParsing.gc());
@@ -66,7 +84,10 @@ void AnySensor() {
     myLineParsing.clear();
 
     static bool firstTime = true;
-    if (firstTime) mySensorAny = new MySensorAnyVector();
+    if (firstTime) {
+        mySensorAny = new MySensorAnyVector();
+        sCmd.addCommand(key.c_str(), AnySensorExecute);
+    }
     firstTime = false;
     mySensorAny->push_back(SensorAny(params));
 }

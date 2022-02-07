@@ -24,6 +24,7 @@
 #include "items/vSensorSHT20.h"
 #include "items/vSensorUltrasonic.h"
 #include "items/vSensorUptime.h"
+#include "MqttClient.h"
 
 void loopCmdAdd(const String& cmdStr) {
     if (cmdStr.endsWith(",")) {
@@ -182,6 +183,16 @@ void spaceCmdExecute(String& cmdStr) {
     cmdStr.replace("\r", "\n");
     while (cmdStr.length()) {
         String buf = selectToMarker(cmdStr, "\n");
+         if (buf.indexOf("*") != -1) {
+            buf.replace("*", "");
+            String order = selectToMarker(buf, " ");
+            String newValue = selectToMarkerLast(buf, " ");
+            String allJson = getAllJson();
+            String currentValue = jsonReadStr(allJson, order);
+            if (newValue == currentValue) {
+                buf = "";
+            }
+        }
         if (buf != "") {
             sCmd.readStr(buf);
             SerialPrint("I", F("Order done W"), buf);
@@ -237,14 +248,29 @@ String ExecuteParser() {
  String value1 = sCmd.next();
  String value2 = sCmd.next();
  String value3 = sCmd.next();
+    value1.replace("#", " ");
+    value1.replace("%date%", timeNow->getDateTimeDotFormated());
+    value1.replace("%weekday%", timeNow->getWeekday());
+    value1.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
+    value1.replace("%name%", jsonReadStr(configSetupJson, F("name")));
+        value2.replace("#", " ");
+    value2.replace("%date%", timeNow->getDateTimeDotFormated());
+    value2.replace("%weekday%", timeNow->getWeekday());
+    value2.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
+    value2.replace("%name%", jsonReadStr(configSetupJson, F("name")));
+        value3.replace("#", " ");
+    value3.replace("%date%", timeNow->getDateTimeDotFormated());
+    value3.replace("%weekday%", timeNow->getWeekday());
+    value3.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
+    value3.replace("%name%", jsonReadStr(configSetupJson, F("name")));
  if (getValue(value1)  != "no value")
  {value1 = getValue(value1);}
  if (getValue(value3)  != "no value")
  {value3 = getValue(value3);}
+value =value1+value2+value3;
 if (value2 == "+"){value = value1.toInt()+value3.toInt();}
 if (value2 == "-"){value = value1.toInt()-value3.toInt();}
 if (value2 == "*"){value = value1.toInt()*value3.toInt();}
-if (value2 == "/"){value = value1.toInt()/value3.toInt();} 
-
+if (value2 == "/"  and value3.toInt() != 0){value = value1.toInt()/value3.toInt();} 
  return value;
 }

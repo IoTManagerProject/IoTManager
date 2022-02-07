@@ -148,7 +148,7 @@ class Clock {
     */
     const String getWeekday() {
         char buf[32];
-        sprintf(buf, "%d", _time_local.day_of_week);
+        sprintf(buf, "%d", _time_local.day_of_week-1);
         return String(buf);
     }
 
