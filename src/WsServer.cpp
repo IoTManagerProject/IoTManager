@@ -60,6 +60,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 settingsFlashJson = readFile(F("settings.json"), 4096);
             }
+            // list ===================================================================
+            if (headerStr == "/list") {
+                standWebSocket.sendTXT(num, devListJson);
+                sendFileToWs("/settings.json", num, 1024);
+            }
 
         } break;
 

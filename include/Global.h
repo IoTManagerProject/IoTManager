@@ -89,6 +89,8 @@ extern String eventBuf;
 // wifi
 extern String ssidListJson;
 
+extern String devListJson;
+
 // Mqtt
 extern String mqttServer;
 extern int mqttPort;

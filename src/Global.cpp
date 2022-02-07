@@ -41,6 +41,8 @@ String eventBuf = "";
 // wifi
 String ssidListJson = "{}";
 
+String devListJson = "{}";
+
 // Mqtt
 String mqttServer = "";
 int mqttPort = 0;
