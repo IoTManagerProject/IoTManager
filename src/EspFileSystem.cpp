@@ -16,6 +16,7 @@ void globalVarsSync() {
     mqttPrefix = jsonReadStr(settingsFlashJson, F("mqttPrefix"));
     mqttRootDevice = mqttPrefix + "/" + chipId;
     jsonWriteStr_(settingsFlashJson, "root", mqttRootDevice);
+    jsonWriteStr_(settingsFlashJson, "id", chipId);
     saveSettingsFlashJson();
     jsonWriteStr_(ssidListJson, "ssid", "");
 }

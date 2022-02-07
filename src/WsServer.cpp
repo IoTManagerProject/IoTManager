@@ -62,8 +62,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
             // list ===================================================================
             if (headerStr == "/list") {
-                standWebSocket.sendTXT(num, devListJson);
-                sendFileToWs("/settings.json", num, 1024);
+                // standWebSocket.sendTXT(num, devListJson);
+                // sendFileToWs("/settings.json", num, 1024);
             }
 
         } break;

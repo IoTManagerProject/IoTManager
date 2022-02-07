@@ -9,3 +9,4 @@
 #include "ESPConfiguration.h"
 #include "MqttClient.h"
 #include "WsServer.h"
+#include "DeviceList.h"

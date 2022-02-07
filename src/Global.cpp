@@ -41,7 +41,7 @@ String eventBuf = "";
 // wifi
 String ssidListJson = "{}";
 
-String devListJson = "{}";
+String devListJson;
 
 // Mqtt
 String mqttServer = "";

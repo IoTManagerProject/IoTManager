@@ -21,6 +21,9 @@ void setup() {
     //подключаемся к роутеру
     routerConnect();
 
+    //синхронизация списка устройств
+    addThisDeviceToList();
+
     //запустим один раз асинхронное сканирование сетей wifi для веба
     RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
 
@@ -49,6 +52,7 @@ void setup() {
     ts.add(
         MYTEST, 1000 * 30, [&](void*) {
             SerialPrint(F("i"), F("HEAP"), prettyBytes(ESP.getFreeHeap()));
+            standWebSocket.broadcastTXT(devListJson);
         },
         nullptr, true);
 }
