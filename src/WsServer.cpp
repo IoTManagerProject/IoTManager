@@ -32,6 +32,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // dashboard===================================================================
             if (headerStr == "/") {
                 sendFileToWs("/layout.json", num, 1024);
+                standWebSocket.sendTXT(num, paramsHeapJson);
             }
             if (headerStr == "/tuoyal") {
                 writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);

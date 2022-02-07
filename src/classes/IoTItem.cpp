@@ -43,7 +43,7 @@ void IoTItem::loop() {
 
 void IoTItem::regEvent(String value, String consoleInfo = "") {
     eventGen2(_id, value);
-    jsonWriteStr(paramsFlashJson, _id, value);
+    jsonWriteStr(paramsHeapJson, _id, value);
     publishStatusMqtt(_id, value);
     publishStatusWs(_id, value);
     SerialPrint("I", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");

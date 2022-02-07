@@ -13,6 +13,10 @@ void standWebServerInit() {
         HTTP.send(200, "application/json", settingsFlashJson);
     });
 
+    HTTP.on("/paramsh.json", HTTP_GET, []() {
+        HTTP.send(200, "application/json", paramsHeapJson);
+    });
+
     HTTP.on("/config.json", HTTP_GET, []() {
         HTTP.send(200, "application/json", readFile(F("config.json"), 20000));
     });
