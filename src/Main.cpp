@@ -48,7 +48,7 @@ void setup() {
 
     configure("/config.json");
 
-    //создали задачу которая будет выполняться каждые 30 секунд
+    //задачи редкого выполнения
     ts.add(
         MYTEST, 1000 * 30, [&](void*) {
             SerialPrint(F("i"), F("HEAP"), prettyBytes(ESP.getFreeHeap()));
