@@ -3,6 +3,7 @@
 void standWebSocketsInit() {
     standWebSocket.begin();
     standWebSocket.onEvent(webSocketEvent);
+    SerialPrint("i", "WS", "WS server initialized");
 }
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length) {
@@ -16,9 +17,16 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
         } break;
 
         case WStype_CONNECTED: {
-            IPAddress ip = standWebSocket.remoteIP(num);
-            Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-            standWebSocket.sendTXT(num, "Connected");
+            // IPAddress ip = standWebSocket.remoteIP(num);
+            SerialPrint("i", "WS " + String(num), "WS client connected");
+            if (num > 3) {
+                SerialPrint("E", "WS", "Too many clients, connection closed!!!");
+                jsonWriteInt(errorsHeapJson, "wscle", 1);
+                standWebSocket.close();
+                standWebSocketsInit();
+            }
+            // Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+            // standWebSocket.sendTXT(num, "Connected");
         } break;
 
         case WStype_TEXT: {
@@ -29,42 +37,63 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             for (size_t i = 0; i < headerLenth; i++) {
                 headerStr += (char)payload[i];
             }
+            //отправка данных которые нужны для всех страниц веб интерфейса
+            //эти данные мы отправляем в двух случаях:
+            // 1 пользователь перешел на новую страницу
+            // 2 каждые 30 секунд
+            // all pages===================================================================
+            //**отправка**//
+            if (headerStr == ("/all")) {
+                standWebSocket.sendTXT(num, ssidListHeapJson);
+                standWebSocket.broadcastTXT(errorsHeapJson);
+            }
             // dashboard===================================================================
+            //**отправка**//
             if (headerStr == "/") {
                 sendFileToWs("/layout.json", num, 1024);
                 standWebSocket.sendTXT(num, paramsHeapJson);
             }
+            //**сохранение**//
             if (headerStr == "/tuoyal") {
                 writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
             }
             // configutation===============================================================
+            //**отправка**//
             if (headerStr == "/config") {
                 sendFileToWs("/items.json", num, 1024);
                 sendFileToWs("/widgets.json", num, 1024);
                 sendFileToWs("/config.json", num, 1024);
-                sendFileToWs("/settings.json", num, 1024);
+                // sendFileToWs("/settings.json", num, 1024);
             }
+            //**сохранение**//
             if (headerStr == "/gifnoc") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
             }
             // connection===================================================================
+            //**отправка**//
             if (headerStr == "/connec") {
                 sendFileToWs("/settings.json", num, 1024);
+                //запуск асинхронного сканирования wifi сетей при переходе на страницу соединений
                 RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
-                standWebSocket.sendTXT(num, ssidListJson);
             }
+            //**отправка**//
             if (headerStr == "/scan") {
+                //запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
                 RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
-                standWebSocket.sendTXT(num, ssidListJson);
             }
+            //**сохранение**//
             if (headerStr == "/cennoc") {
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 settingsFlashJson = readFile(F("settings.json"), 4096);
             }
             // list ===================================================================
+            //**отправка**//
             if (headerStr == "/list") {
-                standWebSocket.sendTXT(num, devListJson);
-                sendFileToWs("/settings.json", num, 1024);
+                standWebSocket.sendTXT(num, devListHeapJson);
+            }
+            // orders ===================================================================
+            if (headerStr == "/reboot") {
+                ESP.restart();
             }
 
         } break;
@@ -103,6 +132,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             Serial.printf("[%u] not recognized: %u\n", num, length);
         } break;
     }
+}
+
+//данные которые мы отправляем в сокеты переодически
+void periodicWsSend() {
+    standWebSocket.broadcastTXT(devListHeapJson);
+    standWebSocket.broadcastTXT(ssidListHeapJson);
+    standWebSocket.broadcastTXT(errorsHeapJson);
 }
 
 #ifdef ESP32

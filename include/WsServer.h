@@ -12,6 +12,7 @@ extern void hexdump(const void* mem, uint32_t len, uint8_t cols);
 
 void sendFileToWs(const char* filename, uint8_t num, size_t frameSize);
 void publishStatusWs(const String& topic, const String& data);
+void periodicWsSend();
 void sendStringToWs(const String& msg, uint8_t num, String name);
 
 // void sendMark(const char* filename, const char* mark, uint8_t num);

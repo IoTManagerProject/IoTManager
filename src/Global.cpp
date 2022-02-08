@@ -4,7 +4,7 @@
 *****************************************глобальные объекты классов***************************************************
 **********************************************************************************************************************/
 
-TickerScheduler ts(MYTEST + 1);
+TickerScheduler ts(PTASK + 1);
 WiFiClient espClient;
 PubSubClient mqtt(espClient);
 StringCommand sCmd;
@@ -31,17 +31,19 @@ WebSocketsServer standWebSocket = WebSocketsServer(81);
 **********************************************************************************************************************/
 
 String settingsFlashJson = "{}";  //переменная в которой хранятся все настройки, находится в оперативной памяти и синхронизированна с flash памятью
-String paramsFlashJson = "{}";    //переменная в которой хранятся все параметры, находится в оперативной памяти и синхронизированна с flash памятью
-String paramsHeapJson = "{}";     //переменная в которой хранятся все параметры, находится в оперативной памяти только
+String errorsHeapJson = "{}";     //переменная в которой хранятся все ошибки, находится в оперативной памяти только
+
+String paramsFlashJson = "{}";  //переменная в которой хранятся все параметры, находится в оперативной памяти и синхронизированна с flash памятью
+String paramsHeapJson = "{}";   //переменная в которой хранятся все параметры, находится в оперативной памяти только
 
 // buf
 String orderBuf = "";
 String eventBuf = "";
 
 // wifi
-String ssidListJson = "{}";
+String ssidListHeapJson = "{}";
 
-String devListJson;
+String devListHeapJson;
 
 // Mqtt
 String mqttServer = "";

@@ -48,13 +48,8 @@ void setup() {
 
     configure("/config.json");
 
-    //задачи редкого выполнения
-    ts.add(
-        MYTEST, 1000 * 30, [&](void*) {
-            SerialPrint(F("i"), F("HEAP"), prettyBytes(ESP.getFreeHeap()));
-            standWebSocket.broadcastTXT(devListJson);
-        },
-        nullptr, true);
+    //инициализация задач переодического выполнения
+    periodicTasksInit();
 }
 
 void loop() {

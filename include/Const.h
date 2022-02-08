@@ -33,7 +33,7 @@ enum TimerTask_t { WIFI_SCAN,
                    UPTIME,
                    SYGNAL,
                    TIMES,
-                   MYTEST };
+                   PTASK };
 
 //задачи которые надо протащить через loop
 enum NotAsyncActions {

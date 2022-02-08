@@ -79,6 +79,7 @@ extern WebSocketsServer standWebSocket;
 ***********************************************глобальные переменные**************************************************
 **********************************************************************************************************************/
 extern String settingsFlashJson;
+extern String errorsHeapJson;
 extern String paramsFlashJson;
 extern String paramsHeapJson;
 
@@ -87,9 +88,9 @@ extern String orderBuf;
 extern String eventBuf;
 
 // wifi
-extern String ssidListJson;
+extern String ssidListHeapJson;
 
-extern String devListJson;
+extern String devListHeapJson;
 
 // Mqtt
 extern String mqttServer;
