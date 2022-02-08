@@ -267,10 +267,12 @@ String ExecuteParser() {
  {value1 = getValue(value1);}
  if (getValue(value3)  != "no value")
  {value3 = getValue(value3);}
-value =value1+value2+value3;
+ if (String(value1)){value = String(value1);}
+ if (String(value2)){value = value+String(value2);}
+ if (String(value3)){value = value+String(value3);}
 if (value2 == "+"){value = value1.toInt()+value3.toInt();}
 if (value2 == "-"){value = value1.toInt()-value3.toInt();}
 if (value2 == "*"){value = value1.toInt()*value3.toInt();}
 if (value2 == "/"  and value3.toInt() != 0){value = value1.toInt()/value3.toInt();} 
- return value;
+return value;
 }
