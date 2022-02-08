@@ -63,7 +63,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWs("/items.json", num, 1024);
                 sendFileToWs("/widgets.json", num, 1024);
                 sendFileToWs("/config.json", num, 1024);
-                // sendFileToWs("/settings.json", num, 1024);
+                sendFileToWs("/settings.json", num, 1024);
             }
             //**сохранение**//
             if (headerStr == "/gifnoc") {
