@@ -24,3 +24,7 @@ extern bool jsonWriteStr_(String& json, String name, String value);
 extern bool jsonWriteBool_(String& json, String name, bool value);
 extern bool jsonWriteInt_(String& json, String name, int value);
 extern bool jsonWriteFloat_(String& json, String name, float value);
+void writeUint8tValueToJsonString(uint8_t* payload, size_t length, size_t headerLenth, String& json);
+extern bool jsonMerge(String& json1, String& json2);
+extern void jsonMergeDocs(JsonObject dest, JsonObjectConst src);
+extern void jsonErrorDetected();

@@ -100,7 +100,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // system ===================================================================
             //**сохранение**//
             if (headerStr == "/rorre|") {
-                writeUint8tToString(payload, length, headerLenth, errorsHeapJson);
+                writeUint8tValueToJsonString(payload, length, headerLenth, errorsHeapJson);
             }
             // orders ===================================================================
             if (headerStr == "/reboot|") {

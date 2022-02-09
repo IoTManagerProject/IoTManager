@@ -4,3 +4,4 @@
 #include "Utils/TimeUtils.h"
 
 extern void periodicTasksInit();
+extern void printGlobalVarSize();
