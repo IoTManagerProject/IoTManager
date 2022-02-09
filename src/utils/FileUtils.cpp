@@ -1,13 +1,5 @@
 #include "Utils/FileUtils.h"
 
-void writeStrValueToJsonFile(const String& filename, String key, String value) {
-    String tmp = readFile(filename, 4096);
-    if (!jsonWriteStr_(tmp, key, value)) {
-        Serial.println(F("failed write json value to file"));
-    }
-    writeFile(filename, tmp);
-}
-
 //данная функция записывает файл из буфера страницами указанного размера
 void writeFileUint8tByFrames(const String& filename, uint8_t*& big_buf, size_t length, size_t headerLenth, size_t frameSize) {
     String path = filepath(filename);
@@ -30,6 +22,14 @@ void writeFileUint8tByFrames(const String& filename, uint8_t*& big_buf, size_t l
     }
     file.close();
 }
+
+// void writeStrValueToJsonFile(const String& filename, String key, String value) {
+//     String tmp = readFile(filename, 4096);
+//     if (!jsonWriteStr_(tmp, key, value)) {
+//         Serial.println(F("failed write json value to file"));
+//     }
+//     writeFile(filename, tmp);
+// }
 
 //данная функция читает из файла страницами указанного размера
 // void readFileUint8tByFrames(const String& filename, size_t frameSize) {

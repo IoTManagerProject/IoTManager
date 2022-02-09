@@ -1,5 +1,13 @@
 #include "Utils/StringUtils.h"
 
+void writeUint8tToString(uint8_t* payload, size_t length, size_t headerLenth, String& payloadStr) {
+    payloadStr = "";
+    payloadStr.reserve(length + 1);
+    for (size_t i = headerLenth; i < length; i++) {
+        payloadStr += (char)payload[i];
+    }
+}
+
 String selectToMarkerLast(String str, String found) {
     int p = str.lastIndexOf(found);
     return str.substring(p + found.length());

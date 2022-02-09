@@ -1,7 +1,7 @@
 #pragma once
 
 //Это версия прошивки
-#define FIRMWARE_VERSION 400
+#define FIRMWARE_VERSION 401
 
 //Размер буфера json
 #define JSON_BUFFER_SIZE 1024

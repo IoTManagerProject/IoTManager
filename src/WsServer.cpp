@@ -30,69 +30,80 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
         } break;
 
         case WStype_TEXT: {
-            //максимальное количество символов заголовка
-            size_t headerLenth = 7;
+            bool endOfHeaderFound = false;
+            size_t maxAllowedHeaderSize = 15;  //максимальное количество символов заголовка
+            size_t headerLenth = 0;
             String headerStr;
-            headerStr.reserve(headerLenth + 1);
-            for (size_t i = 0; i < headerLenth; i++) {
-                headerStr += (char)payload[i];
+            for (size_t i = 0; i <= maxAllowedHeaderSize; i++) {
+                headerLenth++;
+                char s = (char)payload[i];
+                headerStr += s;
+                if (s == '|') {
+                    endOfHeaderFound = true;
+                    break;
+                }
             }
-            //отправка данных которые нужны для всех страниц веб интерфейса
-            //эти данные мы отправляем в двух случаях:
-            // 1 пользователь перешел на новую страницу
-            // 2 каждые 30 секунд
+            if (!endOfHeaderFound) {
+                SerialPrint("E", "WS " + String(num), "Package without header");
+            }
+
             // all pages===================================================================
             //**отправка**//
-            if (headerStr == ("/all")) {
+            if (headerStr == ("/all|")) {
                 standWebSocket.sendTXT(num, ssidListHeapJson);
-                standWebSocket.broadcastTXT(errorsHeapJson);
+                standWebSocket.sendTXT(num, errorsHeapJson);
             }
             // dashboard===================================================================
             //**отправка**//
-            if (headerStr == "/") {
+            if (headerStr == "/|") {
                 sendFileToWs("/layout.json", num, 1024);
                 standWebSocket.sendTXT(num, paramsHeapJson);
             }
             //**сохранение**//
-            if (headerStr == "/tuoyal") {
+            if (headerStr == "/tuoyal|") {
                 writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
             }
             // configutation===============================================================
             //**отправка**//
-            if (headerStr == "/config") {
+            if (headerStr == "/config|") {
                 sendFileToWs("/items.json", num, 1024);
                 sendFileToWs("/widgets.json", num, 1024);
                 sendFileToWs("/config.json", num, 1024);
                 sendFileToWs("/settings.json", num, 1024);
             }
             //**сохранение**//
-            if (headerStr == "/gifnoc") {
+            if (headerStr == "/gifnoc|") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
             }
             // connection===================================================================
             //**отправка**//
-            if (headerStr == "/connec") {
+            if (headerStr == "/connection|") {
                 sendFileToWs("/settings.json", num, 1024);
                 //запуск асинхронного сканирования wifi сетей при переходе на страницу соединений
                 RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
             }
-            //**отправка**//
-            if (headerStr == "/scan") {
-                //запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
-                RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
-            }
             //**сохранение**//
-            if (headerStr == "/cennoc") {
+            if (headerStr == "/sgnittes|") {
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 settingsFlashJson = readFile(F("settings.json"), 4096);
             }
+            //**отправка**//
+            if (headerStr == "/scan|") {
+                //запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
+                RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
+            }
             // list ===================================================================
             //**отправка**//
-            if (headerStr == "/list") {
+            if (headerStr == "/list|") {
                 standWebSocket.sendTXT(num, devListHeapJson);
             }
+            // system ===================================================================
+            //**сохранение**//
+            if (headerStr == "/rorre|") {
+                writeUint8tToString(payload, length, headerLenth, errorsHeapJson);
+            }
             // orders ===================================================================
-            if (headerStr == "/reboot") {
+            if (headerStr == "/reboot|") {
                 ESP.restart();
             }
 

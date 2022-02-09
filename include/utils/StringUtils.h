@@ -2,6 +2,8 @@
 
 #include "Global.h"
 
+void writeUint8tToString(uint8_t* payload, size_t length, size_t headerLenth, String& payloadStr);
+
 void hex2string(byte array[], unsigned int len, char buffer[]);
 
 int string2hex(const char* str, unsigned char* bytes);
