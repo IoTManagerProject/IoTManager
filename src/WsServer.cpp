@@ -106,6 +106,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (headerStr == "/reboot|") {
                 ESP.restart();
             }
+            if (headerStr == "/mqtt|") {
+                mqttReconnect();
+            }
 
         } break;
 

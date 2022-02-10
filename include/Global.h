@@ -105,10 +105,6 @@ extern String prex;
 extern String all_widgets;
 extern String scenario;
 
-extern int mqttConnectAttempts;
-extern bool changeBroker;
-extern int currentBroker;
-
 // extern DynamicJsonDocument settingsFlashJsonDoc;
 // extern DynamicJsonDocument paramsFlashJsonDoc;
 // extern DynamicJsonDocument paramsHeapJsonDoc;

@@ -41,7 +41,7 @@ void routerConnect() {
         SerialPrint("i", "WIFI", "http://" + WiFi.localIP().toString());
         jsonWriteStr(settingsFlashJson, "ip", WiFi.localIP().toString());
 
-        // mqttInit();
+        mqttInit();
     }
     SerialPrint("i", F("WIFI"), F("Network Init"));
 }

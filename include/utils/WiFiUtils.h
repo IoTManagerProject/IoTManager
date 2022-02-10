@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Global.h"
+#include "MqttClient.h"
 
 boolean isNetworkActive();
 void routerConnect();

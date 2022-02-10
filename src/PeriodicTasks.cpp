@@ -22,18 +22,18 @@ void periodicTasksInit() {
 
 void printGlobalVarSize() {
     size_t settingsFlashJsonSize = settingsFlashJson.length();
-    SerialPrint(F("i"), F("settingsFlashJson"), String(settingsFlashJsonSize));
+    // SerialPrint(F("i"), F("settingsFlashJson"), String(settingsFlashJsonSize));
     size_t errorsHeapJsonSize = errorsHeapJson.length();
-    SerialPrint(F("i"), F("settingsFlashJson"), String(errorsHeapJsonSize));
+    // SerialPrint(F("i"), F("settingsFlashJson"), String(errorsHeapJsonSize));
     size_t paramsFlashJsonSize = paramsFlashJson.length();
-    SerialPrint(F("i"), F("settingsFlashJson"), String(paramsFlashJsonSize));
+    // SerialPrint(F("i"), F("settingsFlashJson"), String(paramsFlashJsonSize));
     size_t paramsHeapJsonSize = paramsHeapJson.length();
-    SerialPrint(F("i"), F("settingsFlashJson"), String(paramsHeapJsonSize));
+    // SerialPrint(F("i"), F("settingsFlashJson"), String(paramsHeapJsonSize));
 
     size_t halfBuffer = JSON_BUFFER_SIZE / 2;
 
     if (settingsFlashJsonSize > halfBuffer || errorsHeapJsonSize > halfBuffer || paramsFlashJsonSize > halfBuffer || paramsHeapJsonSize > halfBuffer) {
-        SerialPrint(F("EE"), F("Json"), "Insufficient buffer size!!!");
+        SerialPrint(F("EE"), F("Json"), F("Insufficient buffer size!!!"));
         jsonWriteInt(errorsHeapJson, "jsbuf", 1);
     }
 }

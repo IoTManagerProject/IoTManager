@@ -58,10 +58,6 @@ String all_widgets = "";
 String scenario = "";
 String mqttRootDevice = "";
 
-int mqttConnectAttempts = 0;
-bool changeBroker = false;
-int currentBroker = 1;
-
 // DynamicJsonDocument settingsFlashJsonDoc(JSON_BUFFER_SIZE);
 // DynamicJsonDocument paramsFlashJsonDoc(JSON_BUFFER_SIZE);
 // DynamicJsonDocument paramsHeapJsonDoc(JSON_BUFFER_SIZE);
