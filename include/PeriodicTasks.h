@@ -5,3 +5,6 @@
 
 extern void periodicTasksInit();
 extern void printGlobalVarSize();
+
+extern void handleError(String errorId, String errorValue);
+extern void handleError(String errorId, int errorValue);

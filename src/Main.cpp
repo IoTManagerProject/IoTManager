@@ -52,6 +52,10 @@ void setup() {
 
     //инициализация задач переодического выполнения
     periodicTasksInit();
+
+    // test
+    Serial.println("-------test start--------");
+    Serial.println("--------test end---------");
 }
 
 void loop() {

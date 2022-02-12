@@ -17,12 +17,12 @@ void standWebServerInit() {
         HTTP.send(200, "application/json", readFile(F("settings.json"), 20000));
     });
 
-    HTTP.on("/errors.json", HTTP_GET, []() {
-        HTTP.send(200, "application/json", errorsHeapJson);
-    });
-
     HTTP.on("/paramsh.json", HTTP_GET, []() {
         HTTP.send(200, "application/json", paramsHeapJson);
+    });
+
+    HTTP.on("/errors.json", HTTP_GET, []() {
+        HTTP.send(200, "application/json", errorsHeapJson);
     });
 
     HTTP.on("/config.json", HTTP_GET, []() {

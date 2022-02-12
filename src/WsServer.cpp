@@ -51,7 +51,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //**отправка**//
             if (headerStr == "/|") {
                 sendFileToWs("/layout.json", num, 1024);
-                standWebSocket.sendTXT(num, paramsHeapJson);
+                String json = "{}";
+                jsonMerge(json, paramsHeapJson);
+                jsonMerge(json, paramsFlashJson);
+                standWebSocket.sendTXT(num, json);
             }
             //**сохранение**//
             if (headerStr == "/tuoyal|") {
@@ -97,6 +100,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 handleMqttStatus(false, 8);                   //меняем статус на неопределенный
                 mqttReconnect();                              //начинаем переподключение
                 standWebSocket.sendTXT(num, errorsHeapJson);  //отправляем что статус неопределен
+                standWebSocket.sendTXT(num, ssidListHeapJson);
             }
             // page list ==========================================================================
             //**отправка**//

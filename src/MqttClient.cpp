@@ -248,73 +248,43 @@ boolean publishInfo(const String& topic, const String& data) {
     return mqtt.publish(path.c_str(), data.c_str(), false);
 }
 
-#ifdef LAYOUT_IN_RAM
 void publishWidgets() {
-    if (all_widgets != "") {
-        int counter = 0;
-        String line;
-        int psn_1 = 0;
-        int psn_2;
-        do {
-            psn_2 = all_widgets.indexOf("\r\n", psn_1);  //\r\n
-            line = all_widgets.substring(psn_1, psn_2);
-            line.replace("\n", "");
-            line.replace("\r\n", "");
-            // jsonWriteStr(line, "id", String(counter));
-            // jsonWriteStr(line, "pageId", String(counter));
-            counter++;
-            sendMQTT("config", line);
-            Serial.println("[V] " + line);
-            psn_1 = psn_2 + 1;
-        } while (psn_2 + 2 < all_widgets.length());
-        getMemoryLoad("I after send all widgets");
-    }
-}
-#endif
-
-#ifndef LAYOUT_IN_RAM
-void publishWidgets() {
-    auto file = seekFile("layout.txt");
+    auto file = seekFile("layout.json");
     if (!file) {
-        SerialPrint("E", F("MQTT"), F("no file layout.txt"));
+        SerialPrint("E", F("MQTT"), F("no file layout.json"));
         return;
     }
-    while (file.available()) {
-        String payload = file.readStringUntil('\n');
-        SerialPrint("I", F("MQTT"), "widgets: " + payload);
-        publishData("config", payload);
+    size_t size = file.size();
+    DynamicJsonDocument doc(size * 1.5);
+    DeserializationError error = deserializeJson(doc, file);
+    if (error) {
+        SerialPrint("E", F("MQTT"), error.f_str());
+        handleError("jse3", 1);
+    }
+    JsonArray arr = doc.as<JsonArray>();
+    for (JsonVariant value : arr) {
+        publishData("config", value.as<String>());
     }
     file.close();
 }
-#endif
 
 void publishState() {
-    //// берет строку json и ключи превращает в топики а значения колючей в них посылает
-    // String str;
-    // if (paramsHeapJson != "{}") {
-    //     str += paramsHeapJson;
-    // }
-    // if (paramsFlashJson != "{}") {
-    //     str += "," + paramsFlashJson;
-    // }
-    // str.replace("{", "");
-    // str.replace("}", "");
-    // str.replace("\"", "");
-    // str += ",";
-    //
-    // while (str.length() != 0) {
-    //    String tmp = selectToMarker(str, ",");
-    //
-    //    String topic = selectToMarker(tmp, ":");
-    //    String state = deleteBeforeDelimiter(tmp, ":");
-    //
-    //    if (topic != "" && state != "") {
-    //        if (topic != "timenow") {
-    //            publishStatusMqtt(topic, state);
-    //        }
-    //    }
-    //    str = deleteBeforeDelimiter(str, ",");
-    //}
+    String json = "{}";
+    jsonMerge(json, paramsHeapJson);
+    jsonMerge(json, paramsFlashJson);
+    json.replace("{", "");
+    json.replace("}", "");
+    json.replace("\"", "");
+    json += ",";
+    while (json.length() != 0) {
+        String tmp = selectToMarker(json, ",");
+        String topic = selectToMarker(tmp, ":");
+        String state = deleteBeforeDelimiter(tmp, ":");
+        if (topic != "" && state != "") {
+            publishStatusMqtt(topic, state);
+        }
+        json = deleteBeforeDelimiter(json, ",");
+    }
 }
 
 void handleMqttStatus(bool send) {
