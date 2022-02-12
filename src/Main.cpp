@@ -48,6 +48,8 @@ void setup() {
 
     configure("/config.json");
 
+    syncSettingsFlashJson();
+
     //инициализация задач переодического выполнения
     periodicTasksInit();
 }

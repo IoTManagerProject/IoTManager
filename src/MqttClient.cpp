@@ -9,11 +9,17 @@ void mqttInit() {
                 SerialPrint("I", F("WIFI"), F("OK"));
                 if (mqtt.connected()) {
                     SerialPrint("I", F("MQTT"), "OK");
-                    jsonWriteInt_(errorsHeapJson, F("mqtt"), mqtt.state());
+                    jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(mqtt.state()));
+
+                    static unsigned int prevMillis;
+                    mqttUptime = mqttUptime + (millis() - prevMillis);
+                    prevMillis = millis();
+                    
                     // setLedStatus(LED_OFF);
                 } else {
                     SerialPrint("E", F("MQTT"), F("✖ Connection lost"));
-                    jsonWriteInt_(errorsHeapJson, F("mqtt"), mqtt.state());
+                    jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(mqtt.state()));
+                    mqttUptime = 0;
                     mqttConnect();
                 }
             } else {
@@ -37,7 +43,8 @@ boolean mqttConnect() {
     bool res = false;
     if (mqttServer == "") {
         SerialPrint("E", "MQTT", F("mqttServer empty"));
-        jsonWriteInt_(errorsHeapJson, F("mqtt"), 6);
+        jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(6));
+        standWebSocket.broadcastTXT(errorsHeapJson);
         return res;
     }
     SerialPrint("I", "MQTT", "connection started");
@@ -59,19 +66,22 @@ boolean mqttConnect() {
             SerialPrint("I", F("MQTT"), F("Go to connection without login and password"));
         } else {
             SerialPrint("E", F("MQTT"), F("✖ Login or password missed"));
-            jsonWriteInt_(errorsHeapJson, F("mqtt"), 7);
+            jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(7));
+            standWebSocket.broadcastTXT(errorsHeapJson);
             return res;
         }
 
-        if (connected) {
+        if (mqtt.connected()) {
             SerialPrint("I", F("MQTT"), F("✔ connected"));
-            jsonWriteInt_(errorsHeapJson, F("mqtt"), mqtt.state());
+            jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(mqtt.state()));
+            standWebSocket.broadcastTXT(errorsHeapJson);
             //  setLedStatus(LED_OFF);
             mqttSubscribe();
             res = true;
         } else {
             SerialPrint("E", F("MQTT"), "🡆 Could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
-            jsonWriteInt_(errorsHeapJson, F("mqtt"), mqtt.state());
+            jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(mqtt.state()));
+            standWebSocket.broadcastTXT(errorsHeapJson);
             // setLedStatus(LED_FAST);
         }
     }
@@ -309,43 +319,49 @@ void publishState() {
     //}
 }
 
-const String getStateStr() {
-    switch (mqtt.state()) {
+const String getStateStr(int e) {
+    switch (e) {
         case -4:
-            return F("no respond");
+            return F("e1");
             break;
         case -3:
-            return F("connection was broken");
+            return F("e2");
             break;
         case -2:
-            return F("connection failed");
+            return F("e3");
             break;
         case -1:
-            return F("client disconnected");
+            return F("e4");
             break;
         case 0:
-            return F("client connected");
+            return F("e5");
             break;
         case 1:
-            return F("doesn't support the requested version");
+            return F("e6");
             break;
         case 2:
-            return F("rejected the client identifier");
+            return F("e7");
             break;
         case 3:
-            return F("unable to accept the connection");
+            return F("e8");
             break;
         case 4:
-            return F("wrong username/password");
+            return F("e9");
             break;
         case 5:
-            return F("not authorized to connect");
+            return F("e10");
+            break;
+        case 6:
+            return F("e11");
+            break;
+        case 7:
+            return F("e12");
+            break;
+        case 8:
+            return F("e13");
             break;
         default:
-            return F("unspecified");
+            return F("unk");
             break;
     }
 }
-
-// 6 сервер не задан
-// 7 Логин или пароль отсутствует

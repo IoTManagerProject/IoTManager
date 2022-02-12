@@ -13,6 +13,7 @@ void periodicTasksInit() {
             jsonWriteInt_(errorsHeapJson, F("rssi"), RSSIquality());
             // uptime
             jsonWriteStr_(errorsHeapJson, F("upt"), prettyMillis(millis()));
+            jsonWriteStr_(errorsHeapJson, F("uptm"), prettyMillis(mqttUptime));
             // build ver
             jsonWriteStr_(errorsHeapJson, F("bver"), String(FIRMWARE_VERSION));
             periodicWsSend();
@@ -34,6 +35,6 @@ void printGlobalVarSize() {
 
     if (settingsFlashJsonSize > halfBuffer || errorsHeapJsonSize > halfBuffer || paramsFlashJsonSize > halfBuffer || paramsHeapJsonSize > halfBuffer) {
         SerialPrint(F("EE"), F("Json"), F("Insufficient buffer size!!!"));
-        jsonWriteInt(errorsHeapJson, "jsbuf", 1);
+        jsonWriteInt(errorsHeapJson, "jse1", 1);
     }
 }

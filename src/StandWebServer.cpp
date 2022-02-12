@@ -9,8 +9,12 @@ void standWebServerInit() {
     HTTP.serveStatic("/js/", FileFS, "/js/", "max-age=31536000");    // кеширование на 1 год
     HTTP.serveStatic("/png/", FileFS, "/png/", "max-age=31536000");  // кеширование на 1 год
 
-    HTTP.on("/settings.json", HTTP_GET, []() {
+    HTTP.on("/settingsh.json", HTTP_GET, []() {
         HTTP.send(200, "application/json", settingsFlashJson);
+    });
+
+    HTTP.on("/settingsf.json", HTTP_GET, []() {
+        HTTP.send(200, "application/json", readFile(F("settings.json"), 20000));
     });
 
     HTTP.on("/errors.json", HTTP_GET, []() {

@@ -99,6 +99,8 @@ extern String mqttPrefix;
 extern String mqttUser;
 extern String mqttPass;
 
+extern unsigned long mqttUptime;
+
 extern String mqttRootDevice;
 extern String chipId;
 extern String prex;

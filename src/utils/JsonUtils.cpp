@@ -274,7 +274,8 @@ String jsonWriteFloat(String& json, String name, float value) {
 }
 
 void jsonErrorDetected() {
-    int number = jsonReadInt(errorsHeapJson, F("jserr"));
+    jsonWriteInt(errorsHeapJson, F("jse2"), 1);
+    int number = jsonReadInt(errorsHeapJson, F("jse2n"));
     number++;
-    jsonWriteInt(errorsHeapJson, F("jserr"), number);
+    jsonWriteInt(errorsHeapJson, F("jse2n"), number);
 }

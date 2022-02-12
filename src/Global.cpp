@@ -52,6 +52,8 @@ String mqttPrefix = "";
 String mqttUser = "";
 String mqttPass = "";
 
+unsigned long mqttUptime;
+
 String chipId = "";
 String prex = "";
 String all_widgets = "";

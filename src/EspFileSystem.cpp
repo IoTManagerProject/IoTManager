@@ -18,14 +18,14 @@ void globalVarsSync() {
     jsonWriteStr_(settingsFlashJson, "root", mqttRootDevice);
     jsonWriteStr_(settingsFlashJson, "id", chipId);
 
-    saveSettingsFlashJson();
+    syncSettingsFlashJson();
 
     jsonWriteStr_(errorsHeapJson, "errors", "");  //метка для парсинга
     jsonWriteStr_(ssidListHeapJson, "ssid", "");  //метка для парсинга
     jsonWriteStr(paramsHeapJson, "params", "");   //метка для парсинга
 }
 
-void saveSettingsFlashJson() {
+void syncSettingsFlashJson() {
     writeFile(F("settings.json"), settingsFlashJson);
 }
 

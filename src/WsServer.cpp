@@ -21,7 +21,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             SerialPrint("i", "WS " + String(num), "WS client connected");
             if (num > 3) {
                 SerialPrint("E", "WS", "Too many clients, connection closed!!!");
-                jsonWriteInt(errorsHeapJson, "wscle", 1);
+                jsonWriteInt(errorsHeapJson, "wse1", 1);
                 standWebSocket.close();
                 standWebSocketsInit();
             }
@@ -80,17 +80,19 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (headerStr == "/connection|") {
                 sendFileToWs("/settings.json", num, 1024);
                 //запуск асинхронного сканирования wifi сетей при переходе на страницу соединений
-                RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
+                // RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
             }
             //**сохранение**//
             if (headerStr == "/sgnittes|") {
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
-                settingsFlashJson = readFile(F("settings.json"), 4096);
+                writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
+                // settingsFlashJson = readFile(F("settings.json"), 4096);
             }
             //**отправка**//
             if (headerStr == "/scan|") {
                 //запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
                 RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
+                standWebSocket.sendTXT(num, ssidListHeapJson);
             }
             // list ===================================================================
             //**отправка**//
@@ -107,7 +109,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 ESP.restart();
             }
             if (headerStr == "/mqtt|") {
+                jsonWriteStr_(errorsHeapJson, F("mqtt"), F("e13"));
+                // if (jsonReadStr(errorsHeapJson, "mqtt") != "e13") {
                 mqttReconnect();
+                //}
             }
 
         } break;
