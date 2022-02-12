@@ -245,7 +245,7 @@ class ParamCollection {
 
         StaticJsonBuffer<512> eventDoc;
         JsonObject &event = eventDoc.parseObject(eventJson);
- 
+
         // Описание параметра и ключ-где его данные
         auto key = event["key"].as<char *>();
         auto valueKey = event["val"].as<char *>();
@@ -253,7 +253,7 @@ class ParamCollection {
 
         // Выборка значение параметра из данные по его ключу
         auto value = data[valueKey].as<char *>();
-   
+
         auto entry = find(key);
         if (!entry) {
             _item.push_back(Param(key, value));
@@ -310,7 +310,6 @@ Display *_display{nullptr};
 ParamCollection *_param{nullptr};
 DisplaySettings _context;
 bool _inited{false};
-
 // последний отображенный
 uint8_t _n{0};
 unsigned long _lastPageChange{0};
@@ -358,7 +357,22 @@ uint8_t draw(Display *display, ParamCollection *param, uint8_t n) {
     return i;
 }
 
-void draw(Display *display, uint8_t page) {
+String slice(const String &str, size_t index, char delim) {
+    size_t cnt = 0;
+    int subIndex[] = {0, -1};
+    size_t maxIndex = str.length() - 1;
+
+    for (size_t i = 0; (i <= maxIndex) && (cnt <= index); i++) {
+        if ((str.charAt(i) == delim) || (i == maxIndex)) {
+            cnt++;
+            subIndex[0] = subIndex[1] + 1;
+            subIndex[1] = (i == maxIndex) ? i + 1 : i;
+        }
+    }
+    return cnt > index ? str.substring(subIndex[0], subIndex[1]) : emptyString;
+}
+ 
+void showXXX(Display *display, ParamCollection *param, uint8_t page) {
     size_t linesPerPage = display->getLines();
     size_t line_first = _page_n * linesPerPage;
     size_t line_last = line_first + linesPerPage - 1;
@@ -377,10 +391,35 @@ void draw(Display *display, uint8_t page) {
     }
     display->endRefresh();
 }
-//{"key":"any248","addr":"","int":"10","c":"0","k":"60","val":"time","type":"ST7565","descr":"Hum"}
-// {"ip":"192.168.25.169","time":"23.01.22 01:18:44","weekday":"1","timenow":"01:18","upt":"00:00:18","any109":"0.00","any248":"0.00","any230":"0.00"}
 
-void show(Display *display, ParamCollection *param) {
+void drawPage(Display *display, ParamCollection *param, DisplayPage *page) {
+    auto page_item = page->item.c_str();
+    size_t n = 0;
+    auto key = slice(page_item, n, ',');
+    while (!key.isEmpty()) {
+        auto entry = param->find(key.c_str());
+        if (entry) entry->draw(_display, n++);
+        key = slice(page_item, ++n, ',');
+    }
+}
+
+// Режим пользовательской разбивки параметров по страницам
+void showManual(Display *display, ParamCollection *param) {
+    if (display->isNeedsRefresh() || _pageChanged) {
+        D_LOG("[Display] page: %d/%d\r\n", _n);
+        display->startRefresh();
+        drawPage(display, param, _context.getPage(_n));
+        display->endRefresh();
+    }
+    if (millis() >= (_lastPageChange + _context.getPage(_n)->time)) {
+        if (++_n >= _context.getPageCount()) _n = 0;
+        _pageChanged = true;
+        _lastPageChange = millis();
+    }
+}
+
+// Режим авто разбивки параметров по страницам
+void showAuto(Display *display, ParamCollection *param) {
     size_t param_count = param->count();
 
     if (!param_count) return;
@@ -391,7 +430,7 @@ void show(Display *display, ParamCollection *param) {
         last_n = draw(display, param, _n);
     }
 
-    if (millis() >= (_lastPageChange + _context.getPageChange())) {
+    if (millis() >= (_lastPageChange + DEFAULT_PAGE_TIME_ms)) {
         _n = last_n;
         if (_n >= param_count) _n = 0;
         _pageChanged = true;
@@ -405,14 +444,18 @@ void show(const String &data, const String &param) {
         _param = new ParamCollection();
         _display = new Display(
             DisplayFactory().createInstance(_context.getType(), _context.getConnection()),
-            _context.getPageUpdate());
+            _context.getDisplayUpdate());
         _inited = true;
-        Serial.printf("data:%s\r\n param:%s\r\n", data.c_str(), param.c_str());    
+        Serial.printf("data:%s\r\n param:%s\r\n", data.c_str(), param.c_str());
     }
 
     _param->load(data, param);
 
-    show(_display, _param);
+    if (_context.isAutoPage()) {
+        showAuto(_display, _param);
+    } else {
+        showManual(_display, _param);
+    }
 }
 
 }  // namespace DisplayPlugin

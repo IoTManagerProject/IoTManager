@@ -3,35 +3,40 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
+#include "DisplayTypes.h"
+
 #include "FileSystem.h"
 
-static const char SETTINGS_FILE[] = "/display.json";
-static const char SETTINGS_DEFAULT[] = "{\"type\": \"ST7556\", \"connection\": \"\", \"page_count\": 0}";
-
 struct DisplaySettings {
-   private:
-    uint8_t _page_count{0};
+   private:    
     String _type;
     String _connection;
-    uint16_t _page_change;
-    uint16_t _page_update;
+    uint16_t _update;
+public:
+    std::vector<DisplayPage> page;
    private:
     void loadJson(String str) {
         StaticJsonBuffer<512> doc;
         JsonObject &obj = doc.parseObject(str);
         if (!obj.success()) {
-            setDefault();
+            D_LOG("parse: %s", str.c_str());
         } else {
             _type = obj["type"].as<char *>();
             if (_type.isEmpty()) _type = "ST";
             _connection = obj["connection"].as<char*>();
-            _page_count = obj["page_count"].as<int>();
-            _page_change = obj["page_change"].as<int>();
-            _page_update = obj["page_update"].as<int>();             
-            if (_page_update < 1000) _page_update = 1000;
-            if (_page_change < _page_update) _page_change = _page_update;            
+            _update = obj["update"].as<int>();
+            if (_update < DEFAULT_PAGE_UPDATE_ms) _update = DEFAULT_PAGE_UPDATE_ms;
+            const JsonArray& pageArr = obj["page"].as<JsonArray>();
+            for (auto it = pageArr.begin(); it != pageArr.end(); ++it)
+            {   
+                auto pageObj = (*it);                
+                page.push_back({
+                    pageObj["time"].as<uint16_t>(), 
+                    pageObj["item"].as<char*>()
+                    });
+            }                    
         }
-        Serial.printf("t: %s c: %s pc: %d", _type.c_str(), _connection.c_str(), _page_count);
+         D_LOG("t: %s c: %s pc: %d", _type.c_str(), _connection.c_str(), page.size());
     }
 
     bool loadFile(File &f) {
@@ -71,18 +76,18 @@ struct DisplaySettings {
     }
 
     bool isAutoPage() {
-        return _page_count == 0;
+        return !getPageCount();
     }
 
     uint8_t getPageCount() {
-        return _page_count;
+        return page.size();
     }
 
-    uint16_t getPageChange() {
-        return _page_change;
+    DisplayPage* getPage(uint8_t index) {
+        return &page.at(index);
     }
 
-    uint16_t getPageUpdate() {
-        return _page_update;
+    uint16_t getDisplayUpdate() {
+        return _update;
     }
 };

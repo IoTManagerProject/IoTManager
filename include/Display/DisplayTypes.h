@@ -3,6 +3,26 @@
 #include <stdint.h>
 #include <Print.h>
 
+#define DEBUG_DISPLAY
+
+#define DEFAULT_PAGE_UPDATE_ms 1000
+#define DEFAULT_PAGE_TIME_ms 5000
+
+#ifndef DEBUG_DISPLAY
+#define D_LOG(fmt, ...)  do { (void)0; } while (0)
+#else
+#define D_LOG(fmt, ...) Serial.printf((PGM_P)PSTR(fmt), ##__VA_ARGS__)
+#endif
+
+static const char SETTINGS_FILE[] = "/display.json";
+static const char SETTINGS_DEFAULT[] = "{\"type\": \"ST7556\", \"connection\": \"\", \"page_count\": 0}";
+
+struct DisplayPage {
+    uint16_t time;
+    String item;
+};
+
+
 enum position_t {
     POS_AUTO,
     POS_ABSOLUTE,

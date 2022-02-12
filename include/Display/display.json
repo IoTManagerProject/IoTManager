@@ -1,0 +1,9 @@
+{
+    "type": "ST7556",
+    "connection": "{\"clock\": 12,\"data\" : 13,\"cs\": 15,\"dc\": 2,\"rst\": 0}",    
+    "update": 1000,
+    "page": [
+        {"time": 3000, "item": "d1"},
+        {"time": 1000, "item": "d2,d3"}      
+    ]       
+}
