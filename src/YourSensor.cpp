@@ -97,9 +97,14 @@ void sendRequest(byte packet[])
 
 float yourSensorReading(String type, String paramsAny)
 {
-    // SerialPrint("I", "Sensorrrrrrrrrrrrrrr", type); Выводит все type
-    // SerialPrint("I", "Sensoreeeeeeeeeeeee ", configLiveJson); //Выводит все сеноры которые используются
-    // SerialPrint("I", "Sensoreeeeeeeeeeeee ", configStoreJson); //Выводит все сеноры которые используются и даже кнопки!!!
+    // type  содержит тип события
+    // json с данными,
+    auto data = configLiveJson;
+    // json c описанием параметра
+    auto param = paramsAny;
+    
+    DisplayPlugin::show(data, param);    
+    
     float value{0};
     
     //==========================================================SSD 1306=================================================================
@@ -131,10 +136,6 @@ float yourSensorReading(String type, String paramsAny)
     }
     // oled.clear();
     //----------------------------------------------------------------ST 7565---------------------------------------------------------------
-    if (type == "ST7565")
-    {
-        DisplayPlugin::show(configLiveJson, paramsAny); 
-    }
     // if (type == "ST7565_1")
     // {
     //     ST7565_init();

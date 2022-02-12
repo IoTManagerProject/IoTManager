@@ -9,5 +9,5 @@
 #define D_LOG(fmt, ...) Serial.printf((PGM_P)PSTR(fmt), ##__VA_ARGS__)
 
 namespace DisplayPlugin {
-void show(const String& data, const String& meta);
+void show(const String& data, const String& param);
 }  // namespace DisplayPlugin

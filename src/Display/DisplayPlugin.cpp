@@ -240,14 +240,20 @@ class ParamCollection {
 
    public:
     void load(String dataJson, String eventJson) {
-        StaticJsonBuffer<512> eventDoc;
-        JsonObject &event = eventDoc.parseObject(eventJson);
         StaticJsonBuffer<512> dataDoc;
         JsonObject &data = dataDoc.parseObject(dataJson);
+
+        StaticJsonBuffer<512> eventDoc;
+        JsonObject &event = eventDoc.parseObject(eventJson);
+ 
+        // Описание параметра и ключ-где его данные
         auto key = event["key"].as<char *>();
         auto valueKey = event["val"].as<char *>();
-        auto value = data[valueKey].as<char *>();
         auto descr = event["descr"].as<char *>();
+
+        // Выборка значение параметра из данные по его ключу
+        auto value = data[valueKey].as<char *>();
+   
         auto entry = find(key);
         if (!entry) {
             _item.push_back(Param(key, value));
@@ -337,6 +343,7 @@ uint8_t draw(Display *display, ParamCollection *param, uint8_t n) {
     // Очищает буфер (не экран, а внутреннее представление) для последущего заполнения
     display->startRefresh();
     size_t i = 0;
+    // вот тут лог ошибка
     for (i = n; i < param->count(); i++) {
         auto cursor = display->getCursor();
         auto entry = param->get(i);
@@ -392,7 +399,7 @@ void show(Display *display, ParamCollection *param) {
     }
 }
 
-void show(const String &data, const String &event) {
+void show(const String &data, const String &param) {
     if (!_inited) {
         _context.init();
         _param = new ParamCollection();
@@ -400,9 +407,10 @@ void show(const String &data, const String &event) {
             DisplayFactory().createInstance(_context.getType(), _context.getConnection()),
             _context.getPageUpdate());
         _inited = true;
+        Serial.printf("data:%s\r\n param:%s\r\n", data.c_str(), param.c_str());    
     }
 
-    _param->load(data, event);
+    _param->load(data, param);
 
     show(_display, _param);
 }
