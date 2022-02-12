@@ -9,16 +9,16 @@ void mqttInit() {
                 SerialPrint("I", F("WIFI"), F("OK"));
                 if (mqtt.connected()) {
                     SerialPrint("I", F("MQTT"), "OK");
-                    jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(mqtt.state()));
+                    handleMqttStatus(false);
 
                     static unsigned int prevMillis;
                     mqttUptime = mqttUptime + (millis() - prevMillis);
                     prevMillis = millis();
-                    
+
                     // setLedStatus(LED_OFF);
                 } else {
                     SerialPrint("E", F("MQTT"), F("✖ Connection lost"));
-                    jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(mqtt.state()));
+                    handleMqttStatus(false);
                     mqttUptime = 0;
                     mqttConnect();
                 }
@@ -43,8 +43,9 @@ boolean mqttConnect() {
     bool res = false;
     if (mqttServer == "") {
         SerialPrint("E", "MQTT", F("mqttServer empty"));
-        jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(6));
-        standWebSocket.broadcastTXT(errorsHeapJson);
+
+        handleMqttStatus(true, 6);
+
         return res;
     }
     SerialPrint("I", "MQTT", "connection started");
@@ -66,23 +67,20 @@ boolean mqttConnect() {
             SerialPrint("I", F("MQTT"), F("Go to connection without login and password"));
         } else {
             SerialPrint("E", F("MQTT"), F("✖ Login or password missed"));
-            jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(7));
-            standWebSocket.broadcastTXT(errorsHeapJson);
+            handleMqttStatus(true, 7);
             return res;
         }
 
-        if (mqtt.connected()) {
+        if (mqtt.state() == 0) {
             SerialPrint("I", F("MQTT"), F("✔ connected"));
-            jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(mqtt.state()));
-            standWebSocket.broadcastTXT(errorsHeapJson);
-            //  setLedStatus(LED_OFF);
+            handleMqttStatus(true);
+            //   setLedStatus(LED_OFF);
             mqttSubscribe();
             res = true;
         } else {
             SerialPrint("E", F("MQTT"), "🡆 Could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
-            jsonWriteStr_(errorsHeapJson, F("mqtt"), getStateStr(mqtt.state()));
-            standWebSocket.broadcastTXT(errorsHeapJson);
-            // setLedStatus(LED_FAST);
+            handleMqttStatus(true);
+            //  setLedStatus(LED_FAST);
         }
     }
     return res;
@@ -319,45 +317,59 @@ void publishState() {
     //}
 }
 
+void handleMqttStatus(bool send) {
+    String stateStr = getStateStr(mqtt.state());
+    Serial.println(stateStr);
+    jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);
+    if (!send) standWebSocket.broadcastTXT(errorsHeapJson);
+}
+
+void handleMqttStatus(bool send, int state) {
+    String stateStr = getStateStr(state);
+    Serial.println(stateStr);
+    jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);
+    if (!send) standWebSocket.broadcastTXT(errorsHeapJson);
+}
+
 const String getStateStr(int e) {
     switch (e) {
-        case -4:
+        case -4:  //Нет ответа от сервера
             return F("e1");
             break;
-        case -3:
+        case -3:  //Соединение было разорвано
             return F("e2");
             break;
-        case -2:
+        case -2:  //Ошибка соединения. Обычно возникает когда неверно указано название сервера MQTT
             return F("e3");
             break;
-        case -1:
+        case -1:  //Клиент был отключен
             return F("e4");
             break;
-        case 0:
+        case 0:  //подключено
             return F("e5");
             break;
-        case 1:
+        case 1:  //Ошибка версии
             return F("e6");
             break;
-        case 2:
+        case 2:  //Отклонен идентификатор
             return F("e7");
             break;
-        case 3:
+        case 3:  //Не могу установить соединение
             return F("e8");
             break;
-        case 4:
+        case 4:  //Неправильное имя пользователя/пароль
             return F("e9");
             break;
-        case 5:
+        case 5:  //Не авторизован для подключения
             return F("e10");
             break;
-        case 6:
+        case 6:  //Название сервера пустое
             return F("e11");
             break;
-        case 7:
+        case 7:  //Имя пользователя или пароль пустые
             return F("e12");
             break;
-        case 8:
+        case 8:  //Подключение в процессе
             return F("e13");
             break;
         default:

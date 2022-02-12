@@ -47,13 +47,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 SerialPrint("E", "WS " + String(num), "Package without header");
             }
 
-            // all pages===================================================================
-            //**отправка**//
-            if (headerStr == ("/all|")) {
-                standWebSocket.sendTXT(num, ssidListHeapJson);
-                standWebSocket.sendTXT(num, errorsHeapJson);
-            }
-            // dashboard===================================================================
+            // page dashboard===================================================================
             //**отправка**//
             if (headerStr == "/|") {
                 sendFileToWs("/layout.json", num, 1024);
@@ -63,7 +57,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (headerStr == "/tuoyal|") {
                 writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
             }
-            // configutation===============================================================
+            // page configutation================================================================
             //**отправка**//
             if (headerStr == "/config|") {
                 sendFileToWs("/items.json", num, 1024);
@@ -75,10 +69,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (headerStr == "/gifnoc|") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
             }
-            // connection===================================================================
+            // page connection===================================================================
             //**отправка**//
             if (headerStr == "/connection|") {
                 sendFileToWs("/settings.json", num, 1024);
+                standWebSocket.sendTXT(num, ssidListHeapJson);
+                standWebSocket.sendTXT(num, errorsHeapJson);
                 //запуск асинхронного сканирования wifi сетей при переходе на страницу соединений
                 // RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
             }
@@ -86,6 +82,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (headerStr == "/sgnittes|") {
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
+                standWebSocket.sendTXT(num, errorsHeapJson);
                 // settingsFlashJson = readFile(F("settings.json"), 4096);
             }
             //**отправка**//
@@ -94,25 +91,31 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
                 standWebSocket.sendTXT(num, ssidListHeapJson);
             }
-            // list ===================================================================
+            //**сохранение**//
+            if (headerStr == "/mqtt|") {
+                sendFileToWs("/settings.json", num, 1024);    //отправляем в ответ новые полученные настройки
+                handleMqttStatus(false, 8);                   //меняем статус на неопределенный
+                mqttReconnect();                              //начинаем переподключение
+                standWebSocket.sendTXT(num, errorsHeapJson);  //отправляем что статус неопределен
+            }
+            // page list ==========================================================================
             //**отправка**//
             if (headerStr == "/list|") {
                 standWebSocket.sendTXT(num, devListHeapJson);
             }
-            // system ===================================================================
+            // page system =========================================================================
+            //**отправка**//
+            if (headerStr == "/system|") {
+                standWebSocket.sendTXT(num, errorsHeapJson);
+            }
             //**сохранение**//
             if (headerStr == "/rorre|") {
                 writeUint8tValueToJsonString(payload, length, headerLenth, errorsHeapJson);
             }
-            // orders ===================================================================
+            // orders ==============================================================================
+            //**команда перезагрузки esp**//
             if (headerStr == "/reboot|") {
                 ESP.restart();
-            }
-            if (headerStr == "/mqtt|") {
-                jsonWriteStr_(errorsHeapJson, F("mqtt"), F("e13"));
-                // if (jsonReadStr(errorsHeapJson, "mqtt") != "e13") {
-                mqttReconnect();
-                //}
             }
 
         } break;
