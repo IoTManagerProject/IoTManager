@@ -1,21 +1,17 @@
 #include "DeviceList.h"
 
+const String getThisDevice() {
+    String thisDevice;
+    jsonWriteStr_(thisDevice, F("devicelist"), "");  //метка для парсинга
+    jsonWriteStr_(thisDevice, F("ip"), jsonReadStr(settingsFlashJson, F("ip")));
+    jsonWriteStr_(thisDevice, F("id"), jsonReadStr(settingsFlashJson, F("id")));
+    jsonWriteStr_(thisDevice, F("name"), jsonReadStr(settingsFlashJson, F("name")));
+    thisDevice = "[" + thisDevice + "]";
+    return thisDevice;
+}
+
 void addThisDeviceToList() {
-    jsonWriteStr_(devListHeapJson, F("devicelist"), "");  //метка для парсинга
-    jsonWriteStr_(devListHeapJson, F("ip"), jsonReadStr(settingsFlashJson, F("ip")));
-    jsonWriteStr_(devListHeapJson, F("id"), jsonReadStr(settingsFlashJson, F("id")));
-    jsonWriteStr_(devListHeapJson, F("name"), jsonReadStr(settingsFlashJson, F("name")));
-
-    // для проверки
-    // devListHeapJson = devListHeapJson + ",";
-    // String test;
-    // jsonWriteStr_(test, "ip", "192.168.88.88");
-    // jsonWriteStr_(test, "id", "123456789");
-    // jsonWriteStr_(test, "name", "test");
-    // devListHeapJson = devListHeapJson + test;
-
-    devListHeapJson = "[" + devListHeapJson + "]";
-    Serial.println(devListHeapJson);
+    devListHeapJson = getThisDevice();
 }
 
 #ifdef UDP_ENABLED
@@ -38,19 +34,16 @@ void asyncUdpInit() {
             // Serial.print(packet.length());
             // Serial.print(", Data: ");
             // Serial.write(packet.data(), packet.length());
-
             String data = uint8tToString(packet.data(), packet.length());
-            SerialPrint("i", F("UDP"), "Udp packet received, IP: " + packet.remoteIP().toString() + ":" + String(packet.remotePort()));
-            Serial.println(data);
-
+            // Serial.println(data);
             if (udpPacketValidation(data)) {
-                SerialPrint("i", F("UDP"), F("Device presentation received"));
-                jsonMergeArrays(devListHeapJson, data);
-                Serial.println(devListHeapJson);
+                SerialPrint("i", F("UDP"), "Udp packet received, IP: " + packet.remoteIP().toString() + ":" + String(packet.remotePort()));
+                // Serial.println(data);
+                jsonMergeArrays2(devListHeapJson, data);
+                // Serial.println(devListHeapJson);
             } else {
                 SerialPrint("E", F("UDP"), F("Udp packet invalid"));
             }
-
             // reply to the client
             // String ip = WiFi.localIP().toString();
             // asyncUdp.broadcastTo(ip.c_str(), packet.remotePort());
@@ -62,7 +55,7 @@ void asyncUdpInit() {
     ts.add(
         UDP, 10000, [&](void*) {
             SerialPrint("i", F("UDP"), F("Broadcast device presentation"));
-            asyncUdp.broadcastTo(devListHeapJson.c_str(), 4210);
+            asyncUdp.broadcastTo(getThisDevice().c_str(), 4210);
             // asyncUdp.broadcast("test");
             // asyncUdp.print("Hello Server!");
         },
@@ -90,11 +83,11 @@ void jsonMergeArrays(String& arr1, String& arr2) {
     arr2.replace("]", "");
     String incIP = jsonReadStr(arr2, "ip");
 
-    Serial.println("incIP " + incIP);
+    // Serial.println("incIP " + incIP);
     bool ipExistInList = false;
     for (JsonVariant value : jarr) {
         String locIP = value["ip"].as<String>();
-        Serial.println("locIP " + locIP);
+        // Serial.println("locIP " + locIP);
         if (locIP == incIP) {
             ipExistInList = true;
             break;
@@ -106,6 +99,34 @@ void jsonMergeArrays(String& arr1, String& arr2) {
         arr1.replace("]", "");
         arr1 = arr1 + "," + arr2 + "]";
     }
+}
+
+void jsonMergeArrays2(String& arr1, String& arr2) {
+    DynamicJsonDocument doc(1024);
+    DeserializationError error = deserializeJson(doc, arr1);
+    if (error) {
+        SerialPrint("E", F("UDP"), error.f_str());
+    }
+    JsonArray jarr = doc.as<JsonArray>();
+    arr2.replace("[", "");
+    arr2.replace("]", "");
+    String incIP = jsonReadStr(arr2, "ip");
+    String outArr = "[";
+    bool ipExistInList = false;
+    for (JsonVariant value : jarr) {
+        String locIP = value["ip"].as<String>();
+        if (locIP == incIP) {
+            outArr += "," + arr2;
+            ipExistInList = true;
+        } else {
+            outArr += value.as<String>();
+        }
+    }
+    if (!ipExistInList) {
+        outArr += "," + arr2;
+    }
+    outArr = outArr + "]";
+    arr1 = outArr;
 }
 
 // void udpPacketParse(String& data) {

@@ -1,6 +1,7 @@
 #pragma once
 #include "Global.h"
 #include "Utils/WiFiUtils.h"
+#include "DeviceList.h"
 
 #ifdef STANDARD_WEB_SOCKETS
 extern void standWebSocketsInit();

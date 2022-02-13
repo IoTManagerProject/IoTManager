@@ -86,6 +86,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
                 standWebSocket.sendTXT(num, errorsHeapJson);
+                addThisDeviceToList();
                 // settingsFlashJson = readFile(F("settings.json"), 4096);
             }
             //**отправка**//
