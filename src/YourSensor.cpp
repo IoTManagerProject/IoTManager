@@ -212,7 +212,7 @@ float yourSensorReading(String type, String paramsAny)
     }
     //==========================================================co2=================================================================
     if (type == "valCO2")
-    {
+    { 
         K_30_Serial.begin(9600);
         sendRequest(readCO2);
         int valCO2 = getValue(response);

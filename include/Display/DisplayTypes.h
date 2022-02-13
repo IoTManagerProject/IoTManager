@@ -19,7 +19,10 @@ static const char SETTINGS_DEFAULT[] = "{\"type\": \"ST7556\", \"connection\": \
 
 struct DisplayPage {
     uint16_t time;
-    String item;
+    String key;
+    String format;
+    String font;
+    String valign;
 };
 
 
@@ -125,6 +128,11 @@ class Cursor : public Printable {
 
     void moveY(uint8_t y) {
         abs.y+=y;
+    }
+
+    void moveXY(uint8_t x, uint8_t y) {
+        moveX(x);
+        moveY(y);
     }
 
     void moveCarret(uint8_t col) {

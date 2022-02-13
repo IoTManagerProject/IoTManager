@@ -21,6 +21,7 @@
         "limits": "cpp",
         "ostream": "cpp",
         "numeric": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "u8g2.h": "c"
     }
 }

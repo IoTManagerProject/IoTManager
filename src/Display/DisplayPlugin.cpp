@@ -21,19 +21,27 @@ class Display {
     uint16_t _update;
 
    public:
-    Display(U8G2 *obj, uint16_t update) : _obj{obj}, _update{update} {
-        init();
+    Display(U8G2 *obj,
+            uint16_t update,
+            uint8_t contrast = 30) : _obj{obj}, _update{update} {
+        _obj->begin();
+        _obj->setContrast(contrast);
+        setFont();
+        clear();
     }
 
-    void init() {
-        _obj->begin();
-        _obj->setContrast(30);
-        _obj->setFont(u8g2_font_ncenB08_tr);
-        _obj->enableUTF8Print();
+    void setFont(const String &fontName = "ncen") {
+        if (fontName.startsWith("ncen"))
+            _obj->setFont(u8g2_font_ncenB08_tr);
+        else if (fontName.startsWith("logi"))
+            _obj->setFont(u8g2_font_logisoso16_tn);
+        else if (fontName.startsWith("inb"))
+            _obj->setFont(u8g2_font_inb16_mn);
+        else
+            _obj->setFont(u8g2_font_ncenB08_tr);
         _cursor = Cursor(
             {getWidth(), getHeight()},
             {getMaxCharHeight(), getLineHeight()});
-        clear();
     }
 
     void getPosition(const TextPosition &a, Point &b) {
@@ -125,7 +133,9 @@ class Display {
     }
 
     uint8_t getLines() {
-        return getHeight() / _obj->getMaxCharHeight();
+        uint8_t res = getHeight() / _obj->getMaxCharHeight();
+        if (!res) res = 1;
+        return res;
     }
 
     uint8_t getMaxCharHeight() {
@@ -152,7 +162,7 @@ class Display {
     }
 
     bool isNeedsRefresh() {
-        return _lastResfresh || (millis() > (_lastResfresh + _update));
+        return !_lastResfresh || (millis() > (_lastResfresh + _update));
     }
 };
 
@@ -183,15 +193,23 @@ struct Param {
         return !descr.isEmpty();
     }
 
+    bool setDescr(const String &str) {
+        return setDescr(str.c_str());
+    }
+
     bool setDescr(const char *str) {
         char buf[LINE_LEN + 1];
-        snprintf(buf, sizeof(buf), "%s: ", str);
+        snprintf(buf, sizeof(buf), "%s:", str);
         if (!descr.equals(buf)) {
             descr = buf;
             updated = true;
             return true;
         }
         return false;
+    }
+
+    bool setValue(const String &str) {
+        return setValue(str.c_str());
     }
 
     bool setValue(const char *str) {
@@ -239,28 +257,32 @@ class ParamCollection {
     std::vector<Param> _item;
 
    public:
-    void load(String dataJson, String eventJson) {
+    void load(String dataJson, String paramJson) {
         StaticJsonBuffer<512> dataDoc;
         JsonObject &data = dataDoc.parseObject(dataJson);
 
-        StaticJsonBuffer<512> eventDoc;
-        JsonObject &event = eventDoc.parseObject(eventJson);
+        StaticJsonBuffer<512> paramDoc;
+        JsonObject &param = paramDoc.parseObject(paramJson);
 
         // Описание параметра и ключ-где его данные
-        auto key = event["key"].as<char *>();
-        auto valueKey = event["val"].as<char *>();
-        auto descr = event["descr"].as<char *>();
+        String key = param["key"].as<char *>();
+        String valueKey = param["val"].as<char *>();
+        String descr = param["descr"].as<char *>();
 
         // Выборка значение параметра из данные по его ключу
-        auto value = data[valueKey].as<char *>();
+        String value = data[valueKey].as<char *>();
 
         auto entry = find(key);
         if (!entry) {
-            _item.push_back(Param(key, value));
+            _item.push_back({key, value, descr});
         } else {
             entry->setValue(value);
             entry->setDescr(descr);
         }
+    }
+
+    Param *find(const String &key) {
+        return find(key.c_str());
     }
 
     Param *find(const char *key) {
@@ -371,7 +393,7 @@ String slice(const String &str, size_t index, char delim) {
     }
     return cnt > index ? str.substring(subIndex[0], subIndex[1]) : emptyString;
 }
- 
+
 void showXXX(Display *display, ParamCollection *param, uint8_t page) {
     size_t linesPerPage = display->getLines();
     size_t line_first = _page_n * linesPerPage;
@@ -393,20 +415,37 @@ void showXXX(Display *display, ParamCollection *param, uint8_t page) {
 }
 
 void drawPage(Display *display, ParamCollection *param, DisplayPage *page) {
-    auto page_item = page->item.c_str();
-    size_t n = 0;
-    auto key = slice(page_item, n, ',');
-    while (!key.isEmpty()) {
-        auto entry = param->find(key.c_str());
-        if (entry) entry->draw(_display, n++);
-        key = slice(page_item, ++n, ',');
+    display->setFont(page->font);
+    auto keys = page->key;
+    D_LOG("page keys: %s\r\n", keys.c_str());
+    size_t l = 0;
+    auto line_keys = slice(keys, l, '#');
+    while (!line_keys.isEmpty()) {
+        if (page->valign.equalsIgnoreCase("center")) {
+            display->getCursor()->moveY((display->getHeight() / 2) - display->getMaxCharHeight());
+        }
+        D_LOG("line keys: %s\r\n", keys.c_str());
+        size_t n = 0;
+        auto key = slice(line_keys, n, ',');
+        while (!key.isEmpty()) {
+            D_LOG("key: %s\r\n", key.c_str());
+            auto entry = param->find(key.c_str());
+            if (entry) {
+                if (n) display->print(" ");
+                if (!entry->descr.isEmpty()) display->print(entry->descr);
+                display->print(entry->value);
+            }
+            key = slice(line_keys, ++n, ',');
+        }
+        display->getCursor()->lineFeed();
+        line_keys = slice(keys, ++l, '#');
     }
 }
 
 // Режим пользовательской разбивки параметров по страницам
 void showManual(Display *display, ParamCollection *param) {
     if (display->isNeedsRefresh() || _pageChanged) {
-        D_LOG("[Display] page: %d/%d\r\n", _n);
+        D_LOG("[Display] page: %d\r\n", _n);
         display->startRefresh();
         drawPage(display, param, _context.getPage(_n));
         display->endRefresh();
@@ -426,7 +465,7 @@ void showAuto(Display *display, ParamCollection *param) {
 
     size_t last_n = _n;
     if (display->isNeedsRefresh() || _pageChanged) {
-        D_LOG("[Display] n: %d/%d\r\n", _n, param_count);
+        D_LOG("n: %d/%d\r\n", _n, param_count);
         last_n = draw(display, param, _n);
     }
 
@@ -446,8 +485,9 @@ void show(const String &data, const String &param) {
             DisplayFactory().createInstance(_context.getType(), _context.getConnection()),
             _context.getDisplayUpdate());
         _inited = true;
-        Serial.printf("data:%s\r\n param:%s\r\n", data.c_str(), param.c_str());
     }
+
+    Serial.printf("data:%s\r\n param:%s\r\n", data.c_str(), param.c_str());
 
     _param->load(data, param);
 

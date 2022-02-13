@@ -16,7 +16,7 @@ public:
     std::vector<DisplayPage> page;
    private:
     void loadJson(String str) {
-        StaticJsonBuffer<512> doc;
+        StaticJsonBuffer<2048> doc;
         JsonObject &obj = doc.parseObject(str);
         if (!obj.success()) {
             D_LOG("parse: %s", str.c_str());
@@ -25,15 +25,26 @@ public:
             if (_type.isEmpty()) _type = "ST";
             _connection = obj["connection"].as<char*>();
             _update = obj["update"].as<int>();
+            String font = obj["font"].as<char*>();
             if (_update < DEFAULT_PAGE_UPDATE_ms) _update = DEFAULT_PAGE_UPDATE_ms;
             const JsonArray& pageArr = obj["page"].as<JsonArray>();
             for (auto it = pageArr.begin(); it != pageArr.end(); ++it)
             {   
-                auto pageObj = (*it);                
-                page.push_back({
-                    pageObj["time"].as<uint16_t>(), 
-                    pageObj["item"].as<char*>()
+                auto pageObj = (*it);   
+                if (pageObj["key"].success()) {             
+                    String key = pageObj["key"].as<char*>();
+                    uint16_t time = pageObj["time"].success() ? pageObj["time"].as<uint16_t>(): _update;
+                    String valign = pageObj["valign"].success() ? pageObj["valign"].as<char*>(): "";
+                    String font = pageObj["font"].success() ? pageObj["font"].as<char*>(): font;
+                    String format =  pageObj["format"].success() ? pageObj["format"].as<char*>() : "%s: %s";
+                    page.push_back({
+                        time, 
+                        key,
+                        format,
+                        font,
+                        valign,
                     });
+                }
             }                    
         }
          D_LOG("t: %s c: %s pc: %d", _type.c_str(), _connection.c_str(), page.size());
