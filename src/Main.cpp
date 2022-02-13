@@ -46,12 +46,17 @@ void setup() {
     //инициализация mqtt
     mqttInit();
 
+    //настраиваем микроконтроллер
     configure("/config.json");
-
-    syncSettingsFlashJson();
 
     //инициализация задач переодического выполнения
     periodicTasksInit();
+
+    //окончательнаясинхронизация настроек
+    syncSettingsFlashJson();
+
+    //запуск работы udp
+    asyncUdpInit();
 
     // test
     Serial.println("-------test start--------");

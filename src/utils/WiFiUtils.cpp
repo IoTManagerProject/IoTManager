@@ -138,33 +138,3 @@ uint8_t RSSIquality() {
     }
     return res;
 }
-
-// void wifiSignalInit() {
-//     ts.add(
-//         SYGNAL, 1000 * 60, [&](void*) {
-//             switch (RSSIquality()) {
-//                 case 0:
-//                     jsonWriteStr(settingsFlashJson, F("signal"), F("не подключено к роутеру"));
-//                     break;
-//                 case 1:
-//                     jsonWriteStr(settingsFlashJson, F("signal"), F("нет сигнала"));
-//                     break;
-//                 case 2:
-//                     jsonWriteStr(settingsFlashJson, F("signal"), F("очень низкий"));
-//                     break;
-//                 case 3:
-//                     jsonWriteStr(settingsFlashJson, F("signal"), F("низкий"));
-//                     break;
-//                 case 4:
-//                     jsonWriteStr(settingsFlashJson, F("signal"), F("хороший"));
-//                     break;
-//                 case 5:
-//                     jsonWriteStr(settingsFlashJson, F("signal"), F("очень хороший"));
-//                     break;
-//                 case 6:
-//                     jsonWriteStr(settingsFlashJson, F("signal"), F("отличный"));
-//                     break;
-//             }
-//         },
-//         nullptr, true);
-// }

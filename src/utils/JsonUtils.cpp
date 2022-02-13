@@ -163,10 +163,10 @@ void writeUint8tValueToJsonString(uint8_t* payload, size_t length, size_t header
     for (size_t i = headerLenth; i < length; i++) {
         payloadStr += (char)payload[i];
     }
-    jsonMerge(json, payloadStr);
+    jsonMergeObjects(json, payloadStr);
 }
 
-bool jsonMerge(String& json1, String& json2) {
+bool jsonMergeObjects(String& json1, String& json2) {
     bool ret = true;
     DynamicJsonDocument doc1(JSON_BUFFER_SIZE);
     DeserializationError error1 = deserializeJson(doc1, json1);
@@ -174,7 +174,7 @@ bool jsonMerge(String& json1, String& json2) {
     DeserializationError error2 = deserializeJson(doc2, json2);
     jsonMergeDocs(doc1.as<JsonObject>(), doc2.as<JsonObject>());
     if (error1 || error2) {
-        SerialPrint("EE", F("json"), "jsonMerge error");
+        SerialPrint("EE", F("json"), "jsonMergeObjects error");
         jsonErrorDetected();
         ret = false;
     }

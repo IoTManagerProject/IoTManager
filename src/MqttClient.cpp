@@ -255,7 +255,7 @@ void publishWidgets() {
         return;
     }
     size_t size = file.size();
-    DynamicJsonDocument doc(size * 1.5);
+    DynamicJsonDocument doc(size * 2);
     DeserializationError error = deserializeJson(doc, file);
     if (error) {
         SerialPrint("E", F("MQTT"), error.f_str());
@@ -270,8 +270,8 @@ void publishWidgets() {
 
 void publishState() {
     String json = "{}";
-    jsonMerge(json, paramsHeapJson);
-    jsonMerge(json, paramsFlashJson);
+    jsonMergeObjects(json, paramsHeapJson);
+    jsonMergeObjects(json, paramsFlashJson);
     json.replace("{", "");
     json.replace("}", "");
     json.replace("\"", "");

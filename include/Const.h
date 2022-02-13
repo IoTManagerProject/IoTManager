@@ -12,6 +12,8 @@
 #define STANDARD_WEB_SERVER
 #define STANDARD_WEB_SOCKETS
 
+#define UDP_ENABLED
+
 //#define REST_FILE_OPERATIONS
 
 #define MQTT_RECONNECT_INTERVAL 20000
@@ -31,7 +33,7 @@ enum TimerTask_t { WIFI_SCAN,
                    TIME,
                    TIME_SYNC,
                    UPTIME,
-                   SYGNAL,
+                   UDP,
                    TIMES,
                    PTASK };
 
