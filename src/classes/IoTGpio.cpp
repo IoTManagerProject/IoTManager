@@ -1,8 +1,9 @@
 #include "classes/IoTGpio.h"
 
 
-IoTGpio::IoTGpio(){
-    _ext1 = _ext2 = _ext3 = _ext4 = nullptr;    
+IoTGpio::IoTGpio(int pins) {    // инициируем стартовым числом диапазона доступных пинов для создаваемого экземпляра 0 - системный, далее 100, 200, 300, 400 или иной  
+    pinNums = pins;
+    _drivers[0] = nullptr;
 }
 
 IoTGpio::~IoTGpio(){
@@ -11,42 +12,32 @@ IoTGpio::~IoTGpio(){
 
 
 void IoTGpio::pinMode(uint8_t pin, uint8_t mode) {
-    ::pinMode(pin, mode);
+    if (_drivers[pin/100]) _drivers[pin/100]->pinMode(pin, mode);
+    else ::pinMode(pin, mode);
 }
 
 void IoTGpio::digitalWrite(uint8_t pin, uint8_t val) {
-    ::digitalWrite(pin, val);
+    if (_drivers[pin/100]) _drivers[pin/100]->digitalWrite(pin, val);
+    else ::digitalWrite(pin, val);
 }
 
 int IoTGpio::digitalRead(uint8_t pin) {
-    return ::digitalRead(pin);
+    if (_drivers[pin/100]) return _drivers[pin/100]->digitalRead(pin);
+    else return ::digitalRead(pin);
 }
-
-
 
 
 int IoTGpio::analogRead(uint8_t pin) {
-    return ::analogRead(pin);
-}
-
-void IoTGpio::analogReference(uint8_t mode) {
-    ::analogReference(mode);
+    if (_drivers[pin/100]) return _drivers[pin/100]->analogRead(pin);
+    else return ::analogRead(pin);
 }
 
 void IoTGpio::analogWrite(uint8_t pin, int val) {
-    ::analogWrite(pin, val);
-}
-
-void IoTGpio::analogWriteFreq(uint32_t freq) {
-    ::analogWriteFreq(freq);
-}
-
-void IoTGpio::analogWriteRange(uint32_t range) {
-    ::analogWriteRange(range);
+    if (_drivers[pin/100]) _drivers[pin/100]->analogWrite(pin, val);
+    else ::analogWrite(pin, val);
 }
 
 
 void IoTGpio::regDriver(IoTGpio* newDriver) {
-    
+    _drivers[newDriver->pinNums/100] = newDriver;
 }
-
