@@ -1,4 +1,7 @@
 #include "ESPConfiguration.h"
+#include "classes/IoTGpio.h"
+
+extern IoTGpio IoTgpio;
 
 std::vector<IoTItem*> IoTItems;
 void* getAPI(String subtype, String params);
@@ -19,6 +22,8 @@ void configure(String path) {
         } else {
             myIoTItem = (IoTItem*)getAPI(subtype, jsonArrayElement);
             if (myIoTItem) {
+                IoTGpio* tmp = myIoTItem->getGpioDriver();
+                if (tmp) IoTgpio.regDriver(tmp); 
                 IoTItems.push_back(myIoTItem);
             }
         }

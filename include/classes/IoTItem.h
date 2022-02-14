@@ -1,4 +1,5 @@
 #pragma once
+#include "classes/IoTGpio.h"
 
 struct IoTValue {
     float valD = 0;
@@ -26,6 +27,8 @@ class IoTItem {
     unsigned long difference;
 
     IoTValue value;  // хранение основного значения, котрое обновляется из сценария, execute(), loop() или doByInterval()
+
+    IoTGpio* getGpioDriver();
 
    protected:
     String _subtype;
