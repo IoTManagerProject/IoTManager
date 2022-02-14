@@ -11,3 +11,4 @@
 #include "WsServer.h"
 #include "DeviceList.h"
 #include "PeriodicTasks.h"
+#include "Classes/IoTScenario.h"

@@ -1,5 +1,7 @@
 #include "Main.h"
 
+IoTScenario iotScen;  // объект управления сценарием
+
 void setup() {
     Serial.begin(115200);
     Serial.flush();
@@ -57,6 +59,10 @@ void setup() {
 
     //запуск работы udp
     asyncUdpInit();
+    
+    //загрузка сценария
+    iotScen.loadScenario("/scenario.txt");
+    iotScen.ExecScenario();
 
     // test
     Serial.println("-------test start--------");
@@ -88,4 +94,6 @@ void loop() {
     for (unsigned int i = 0; i < IoTItems.size(); i++) {
         IoTItems[i]->loop();
     }
+
+    //iotScen.ExecScenario();
 }
