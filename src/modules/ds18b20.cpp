@@ -69,12 +69,12 @@ class Ds18b20 : public IoTItem {
             string2hex(_addr.c_str(), deviceAddress);
         }
         //получаем температуру по адресу
-        float value = sensors->getTempC(deviceAddress); 
+        value.valD = sensors->getTempC(deviceAddress); 
         
         char addrStr[20] = "";
         hex2string(deviceAddress, 8, addrStr);
 
-        if (value != -127) regEvent(value, "addr: " + String(addrStr));  //обязательный вызов для отправки результата работы
+        if (value.valD != -127) regEvent(value.valD, "addr: " + String(addrStr));  //обязательный вызов для отправки результата работы
             else SerialPrint("E", "Sensor Ds18b20", "Error");
     }
     //=======================================================================================================
