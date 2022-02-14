@@ -3,6 +3,7 @@
 #include "Classes/ScenarioClass3.h"
 #include "Classes/IoTItem.h"
 #include "WsServer.h"
+#include "ESPConfiguration.h"
 
 IoTItem::IoTItem(String parameters) {
     jsonRead(parameters, "int", _interval);
@@ -72,6 +73,14 @@ void IoTItem::regEvent(float value, String consoleInfo = "") {
 
 void IoTItem::doByInterval() {}
 
-void IoTItem::execute(String command, String param) {}
+IoTValue IoTItem::execute(String command, std::vector<IoTValue> &param) { return {};}
+
+IoTItem* findIoTItem(String name) {  // поиск элемента модуля в существующей конфигурации
+    for (unsigned int i = 0; i < IoTItems.size(); i++) {
+        if(IoTItems[i]->getID() == name) return IoTItems[i];
+    }
+    
+    return nullptr;
+}
 
 IoTItem* myIoTItem;
