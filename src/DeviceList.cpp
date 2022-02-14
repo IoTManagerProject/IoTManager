@@ -1,7 +1,7 @@
 #include "DeviceList.h"
 
 const String getThisDevice() {
-    String thisDevice;
+    String thisDevice = "{}";
     jsonWriteStr_(thisDevice, F("devicelist"), "");  //метка для парсинга
     jsonWriteStr_(thisDevice, F("ip"), jsonReadStr(settingsFlashJson, F("ip")));
     jsonWriteStr_(thisDevice, F("id"), jsonReadStr(settingsFlashJson, F("id")));
@@ -39,7 +39,7 @@ void asyncUdpInit() {
             if (udpPacketValidation(data)) {
                 SerialPrint("i", F("UDP"), "Udp packet received, IP: " + packet.remoteIP().toString() + ":" + String(packet.remotePort()));
                 // Serial.println(data);
-                jsonMergeArrays2(devListHeapJson, data);
+                jsonMergeArrays(devListHeapJson, data);
                 // Serial.println(devListHeapJson);
             } else {
                 SerialPrint("E", F("UDP"), F("Udp packet invalid"));
@@ -53,7 +53,7 @@ void asyncUdpInit() {
 
     //будем отправлять каждые 60 секунд презентацию данного устройства
     ts.add(
-        UDP, 60000, [&](void*) {
+        UDP, 30000, [&](void*) {
             SerialPrint("i", F("UDP"), F("Broadcast device presentation"));
             asyncUdp.broadcastTo(getThisDevice().c_str(), 4210);
             // asyncUdp.broadcast("test");
@@ -72,73 +72,54 @@ bool udpPacketValidation(String& data) {
     }
 }
 
-void jsonMergeArrays(String& arr1, String& arr2) {
-    DynamicJsonDocument doc(1024);
-    DeserializationError error = deserializeJson(doc, arr1);
-    if (error) {
-        SerialPrint("E", F("UDP"), error.f_str());
+void jsonMergeArrays(String& existJson, String& incJson) {
+    DynamicJsonDocument incJsonDoc(1024);
+    DeserializationError incJsonError = deserializeJson(incJsonDoc, incJson);
+    if (incJsonError) {
+        SerialPrint("E", F("UDP"), "Invailed json in incomming udp packet " + String(incJsonError.f_str()));
+        jsonErrorDetected();
+        return;
     }
-    JsonArray jarr = doc.as<JsonArray>();
-    arr2.replace("[", "");
-    arr2.replace("]", "");
-    String incIP = jsonReadStr(arr2, "ip");
 
-    // Serial.println("incIP " + incIP);
-    bool ipExistInList = false;
-    for (JsonVariant value : jarr) {
-        String locIP = value["ip"].as<String>();
-        // Serial.println("locIP " + locIP);
-        if (locIP == incIP) {
-            ipExistInList = true;
-            break;
-        } else {
-            ipExistInList = false;
-        }
+    DynamicJsonDocument existJsonDoc(1024);
+    DeserializationError existJsonError = deserializeJson(existJsonDoc, existJson);
+    if (existJsonError) {
+        SerialPrint("E", F("UDP"), "Invailed json in existing udp dev list " + String(incJsonError.f_str()));
+        jsonErrorDetected();
+        return;
     }
-    if (!ipExistInList) {
-        arr1.replace("]", "");
-        arr1 = arr1 + "," + arr2 + "]";
-    }
-}
+    JsonArray existJsonArr = existJsonDoc.as<JsonArray>();
 
-void jsonMergeArrays2(String& arr1, String& arr2) {
-    DynamicJsonDocument doc(1024);
-    DeserializationError error = deserializeJson(doc, arr1);
-    if (error) {
-        SerialPrint("E", F("UDP"), error.f_str());
-    }
-    JsonArray jarr = doc.as<JsonArray>();
-    arr2.replace("[", "");
-    arr2.replace("]", "");
-    String incIP = jsonReadStr(arr2, "ip");
+    incJson.replace("[", "");
+    incJson.replace("]", "");
+    String incIP = jsonReadStr(incJson, "ip");
     String outArr = "[";
     bool ipExistInList = false;
-    for (JsonVariant value : jarr) {
+    int i = 0;
+    for (JsonVariant value : existJsonArr) {
         String locIP = value["ip"].as<String>();
         if (locIP == incIP) {
-            outArr += "," + arr2;
+            if (i == 0) {
+                outArr += incJson;
+            } else {
+                outArr += ("," + incJson);
+            }
             ipExistInList = true;
         } else {
-            outArr += value.as<String>();
+            if (i == 0) {
+                outArr += value.as<String>();
+            } else {
+                outArr += ("," + value.as<String>());
+            }
         }
+        i++;
     }
     if (!ipExistInList) {
-        outArr += "," + arr2;
+        outArr += "," + incJson;
     }
     outArr = outArr + "]";
-    arr1 = outArr;
+    existJson = outArr;
 }
-
-// void udpPacketParse(String& data) {
-//     if (data.indexOf("scen:") != -1) {
-//         data = deleteBeforeDelimiter(data, ":");
-//         writeFile(String(DEVICE_SCENARIO_FILE), data);
-//         loadScenario();
-//     } else if (data.indexOf("event:") != -1) {
-//         data = deleteBeforeDelimiter(data, ":");
-//         eventBuf += data;
-//     }
-// }
 
 String uint8tToString(uint8_t* data, size_t len) {
     String ret;

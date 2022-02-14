@@ -23,9 +23,6 @@ void setup() {
     //подключаемся к роутеру
     routerConnect();
 
-    //синхронизация списка устройств
-    addThisDeviceToList();
-
     //запустим один раз асинхронное сканирование сетей wifi для веба
     RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
 
@@ -57,9 +54,12 @@ void setup() {
     //окончательнаясинхронизация настроек
     syncSettingsFlashJson();
 
+    //синхронизация списка устройств
+    addThisDeviceToList();
+
     //запуск работы udp
     asyncUdpInit();
-    
+
     //загрузка сценария
     iotScen.loadScenario("/scenario.txt");
     iotScen.ExecScenario();
@@ -95,5 +95,5 @@ void loop() {
         IoTItems[i]->loop();
     }
 
-    //iotScen.ExecScenario();
+    // iotScen.ExecScenario();
 }

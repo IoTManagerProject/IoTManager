@@ -13,5 +13,4 @@ extern void asyncUdpInit();
 extern String uint8tToString(uint8_t* data, size_t len);
 extern bool udpPacketValidation(String& data);
 extern void udpPacketParse(String& data);
-extern void jsonMergeArrays(String& arr1, String& arr2);
-extern void jsonMergeArrays2(String& arr1, String& arr2);
+extern void jsonMergeArrays(String& existJson, String& incJson);
