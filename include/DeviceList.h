@@ -1,6 +1,10 @@
 #pragma once
 #include "Global.h"
+#ifdef ESP8266
 #include "ESPAsyncUDP.h"
+#else
+#include "AsyncUDP.h"
+#endif
 extern AsyncUDP asyncUdp;
 
 extern const String getThisDevice();
