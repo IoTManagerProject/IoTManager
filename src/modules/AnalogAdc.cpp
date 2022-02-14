@@ -1,6 +1,8 @@
 #include "Global.h"
 #include "Classes/IoTItem.h"
 
+extern IoTGpio IoTgpio;
+
 //Это файл сенсора, в нем осуществляется чтение сенсора.
 //для добавления сенсора вам нужно скопировать этот файл и заменить в нем текст AnalogAdc на название вашего сенсора
 //Название должно быть уникальным, коротким и отражать суть сенсора.
@@ -32,7 +34,7 @@ class AnalogAdc : public IoTItem {
     //не используйте delay - помните, что данный loop общий для всех модулей. Если у вас планируется длительная операция, постарайтесь разбить ее на порции
     //и выполнить за несколько тактов
     void doByInterval() {
-        value.valD = analogRead(_pin);
+        value.valD = IoTgpio.analogRead(_pin);
 
         regEvent(value.valD, "AnalogAdc");  //обязательный вызов хотяб один
     }

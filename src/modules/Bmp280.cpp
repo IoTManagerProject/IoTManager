@@ -24,8 +24,8 @@ class Bmp280t : public IoTItem {
     }
     
     void doByInterval() {
-        float value = _bmp->readTemperature();
-        if (String(value) != "nan") regEvent(value, "Bmp280t");
+        value.valD = _bmp->readTemperature();
+        if (String(value.valD) != "nan") regEvent(value.valD, "Bmp280t");
             else SerialPrint("E", "Sensor DHTt", "Error");  
     }
 
@@ -43,10 +43,10 @@ class Bmp280p : public IoTItem {
     }
     
     void doByInterval() {
-        float value = _bmp->readPressure();
-        if (String(value) != "nan") {
-            value = value / 1.333224 / 100;
-            regEvent(value, "Bmp280p");
+        value.valD = _bmp->readPressure();
+        if (String(value.valD) != "nan") {
+            value.valD = value.valD / 1.333224 / 100;
+            regEvent(value.valD, "Bmp280p");
         } else SerialPrint("E", "Sensor DHTh", "Error");  
     }
 

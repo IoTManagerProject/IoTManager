@@ -24,8 +24,8 @@ class Bme280t : public IoTItem {
     }
     
     void doByInterval() {
-        float value = _bme->readTemperature();
-        if (value < 145) regEvent(value, "Bme280t");
+        value.valD = _bme->readTemperature();
+        if (value.valD < 145) regEvent(value.valD, "Bme280t");
             else SerialPrint("E", "Sensor Bme280t", "Error");  
     }
 
@@ -43,8 +43,8 @@ class Bme280h : public IoTItem {
     }
     
     void doByInterval() {
-        float value = _bme->readHumidity();
-        if (value < 100) regEvent(value, "Bme280h");
+        value.valD = _bme->readHumidity();
+        if (value.valD < 100) regEvent(value.valD, "Bme280h");
             else SerialPrint("E", "Sensor Bme280h", "Error");  
     }
 
@@ -62,10 +62,10 @@ class Bme280p : public IoTItem {
     }
     
     void doByInterval() {
-        float value = _bme->readPressure();
-        if (value > 0) {
-            value = value / 1.333224 / 100;
-            regEvent(value, "Bme280p");
+        value.valD = _bme->readPressure();
+        if (value.valD > 0) {
+            value.valD = value.valD / 1.333224 / 100;
+            regEvent(value.valD, "Bme280p");
         } else SerialPrint("E", "Sensor Bme280p", "Error");  
     }
 

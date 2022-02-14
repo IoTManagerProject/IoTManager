@@ -84,3 +84,7 @@ IoTItem* findIoTItem(String name) {  // поиск элемента модуля
 }
 
 IoTItem* myIoTItem;
+
+IoTGpio* IoTItem::getGpioDriver() {
+    return nullptr;
+}
