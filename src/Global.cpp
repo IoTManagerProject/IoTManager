@@ -44,6 +44,7 @@ String eventBuf = "";
 String ssidListHeapJson = "{}";
 
 String devListHeapJson;
+String thisDeviceJson;
 
 // Mqtt
 String mqttServer = "";

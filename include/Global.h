@@ -92,6 +92,7 @@ extern String eventBuf;
 extern String ssidListHeapJson;
 
 extern String devListHeapJson;
+extern String thisDeviceJson;
 
 // Mqtt
 extern String mqttServer;

@@ -51,9 +51,9 @@ void asyncUdpInit() {
         });
     }
 
-    //будем отправлять каждые 10 секунд презентацию данного устройства
+    //будем отправлять каждые 60 секунд презентацию данного устройства
     ts.add(
-        UDP, 10000, [&](void*) {
+        UDP, 60000, [&](void*) {
             SerialPrint("i", F("UDP"), F("Broadcast device presentation"));
             asyncUdp.broadcastTo(getThisDevice().c_str(), 4210);
             // asyncUdp.broadcast("test");

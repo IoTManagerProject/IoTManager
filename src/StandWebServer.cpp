@@ -5,9 +5,9 @@ File fsUploadFile;
 
 void standWebServerInit() {
     //  Кэшировать файлы для быстрой работы
-    HTTP.serveStatic("/css/", FileFS, "/css/", "max-age=31536000");  // кеширование на 1 год
-    HTTP.serveStatic("/js/", FileFS, "/js/", "max-age=31536000");    // кеширование на 1 год
-    HTTP.serveStatic("/png/", FileFS, "/png/", "max-age=31536000");  // кеширование на 1 год
+    HTTP.serveStatic("/bundle.js", FileFS, "/", "max-age=31536000");    // кеширование на 1 год
+    HTTP.serveStatic("/bundle.css", FileFS, "/", "max-age=31536000");   // кеширование на 1 год
+    HTTP.serveStatic("/favicon.png", FileFS, "/", "max-age=31536000");  // кеширование на 1 год
 
     HTTP.on("/devicelist.json", HTTP_GET, []() {
         HTTP.send(200, "application/json", devListHeapJson);
