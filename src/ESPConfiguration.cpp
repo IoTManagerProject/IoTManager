@@ -30,3 +30,11 @@ void configure(String path) {
     }
     file.close();
 }
+
+void clearConfigure() {
+    Serial.printf("Start clearing config\n");
+    for (unsigned int i = 0; i < IoTItems.size(); i++) {
+      if (IoTItems[i]) delete IoTItems[i];
+    }
+    IoTItems.clear();
+}
