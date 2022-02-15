@@ -1,7 +1,7 @@
-#include "Utils/JsonUtils.h"
-#include "Utils/SerialPrint.h"
-#include "Classes/ScenarioClass3.h"
-#include "Classes/IoTItem.h"
+#include "utils/JsonUtils.h"
+#include "utils/SerialPrint.h"
+#include "classes/ScenarioClass3.h"
+#include "classes/IoTItem.h"
 #include "WsServer.h"
 #include "ESPConfiguration.h"
 

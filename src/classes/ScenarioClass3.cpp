@@ -1,3 +1,3 @@
-#include "Classes/ScenarioClass3.h"
+#include "classes/ScenarioClass3.h"
 
 Scenario* myScenario;

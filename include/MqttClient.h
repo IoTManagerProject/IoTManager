@@ -2,7 +2,7 @@
 #include "Const.h"
 #include "classes/NotAsync.h"
 #include "Global.h"
-#include "Utils/WiFiUtils.h"
+#include "utils/WiFiUtils.h"
 
 void mqttInit();
 void selectBroker();

@@ -1,7 +1,7 @@
 #pragma once
 #include "Global.h"
 #include "WsServer.h"
-#include "Utils/TimeUtils.h"
+#include "utils/TimeUtils.h"
 
 #ifdef ESP32
 #include <rom/rtc.h>

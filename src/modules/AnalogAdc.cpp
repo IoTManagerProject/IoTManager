@@ -1,5 +1,5 @@
 #include "Global.h"
-#include "Classes/IoTItem.h"
+#include "classes/IoTItem.h"
 
 extern IoTGpio IoTgpio;
 

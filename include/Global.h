@@ -44,10 +44,10 @@
 #include <FS.h>
 
 //внутренние глобальные директории проекта
-#include "Utils/FileUtils.h"
-#include "Utils/JsonUtils.h"
-#include "Utils/SerialPrint.h"
-#include "Utils/StringUtils.h"
+#include "utils/FileUtils.h"
+#include "utils/JsonUtils.h"
+#include "utils/SerialPrint.h"
+#include "utils/StringUtils.h"
 #include "PeriodicTasks.h"
 #include "classes/IoTGpio.h"
 

@@ -6,7 +6,7 @@
 
 
 #include "Global.h"
-#include "Classes/IoTItem.h"
+#include "classes/IoTItem.h"
 
 #include <Adafruit_BME280.h>
 #include <map>

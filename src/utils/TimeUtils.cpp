@@ -1,4 +1,4 @@
-#include "Utils/TimeUtils.h"
+#include "utils/TimeUtils.h"
 
 static const uint8_t days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 

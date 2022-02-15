@@ -1,5 +1,5 @@
 #include "Global.h"
-#include "Classes/IoTItem.h"
+#include "classes/IoTItem.h"
 
 #include "DallasTemperature.h"
 #include <OneWire.h>

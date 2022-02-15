@@ -1,6 +1,6 @@
 #pragma once
 #include "Global.h"
-#include "Utils/WiFiUtils.h"
+#include "utils/WiFiUtils.h"
 #include "DeviceList.h"
 #include "ESPConfiguration.h"
 

@@ -2,9 +2,9 @@
 
 #pragma once
 #include "Global.h"
-#include "Classes/IoTItem.h"
-#include "Classes/IoTScenario.h"
-#include "Utils/FileUtils.h"
+#include "classes/IoTItem.h"
+#include "classes/IoTScenario.h"
+#include "utils/FileUtils.h"
 
 // Лексический анализатор возвращает токены [0-255], если это неизвестны, 
 // иначе одну из известных единиц кода
