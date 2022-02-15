@@ -6,9 +6,9 @@ void mqttInit() {
         WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL,
         [&](void*) {
             if (WiFi.status() == WL_CONNECTED) {
-                SerialPrint("I", F("WIFI"), F("OK"));
+                SerialPrint("i", F("WIFI"), F("OK"));
                 if (mqtt.connected()) {
-                    SerialPrint("I", F("MQTT"), "OK");
+                    SerialPrint("i", F("MQTT"), "OK");
                     handleMqttStatus(false);
 
                     static unsigned int prevMillis;
@@ -48,10 +48,10 @@ boolean mqttConnect() {
 
         return res;
     }
-    SerialPrint("I", "MQTT", "connection started");
+    SerialPrint("i", "MQTT", "connection started");
 
-    SerialPrint("I", "MQTT", "broker " + mqttServer + ":" + String(mqttPort, DEC));
-    SerialPrint("I", "MQTT", "topic " + mqttRootDevice);
+    SerialPrint("i", "MQTT", "broker " + mqttServer + ":" + String(mqttPort, DEC));
+    SerialPrint("i", "MQTT", "topic " + mqttRootDevice);
 
     // setLedStatus(LED_FAST);
 
@@ -61,10 +61,10 @@ boolean mqttConnect() {
         bool connected = false;
         if (mqttUser != "" && mqttPass != "") {
             connected = mqtt.connect(chipId.c_str(), mqttUser.c_str(), mqttPass.c_str());
-            SerialPrint("I", F("MQTT"), F("Go to connection with login and password"));
+            SerialPrint("i", F("MQTT"), F("Go to connection with login and password"));
         } else if (mqttUser == "" && mqttPass == "") {
             connected = mqtt.connect(chipId.c_str());
-            SerialPrint("I", F("MQTT"), F("Go to connection without login and password"));
+            SerialPrint("i", F("MQTT"), F("Go to connection without login and password"));
         } else {
             SerialPrint("E", F("MQTT"), F("✖ Login or password missed"));
             handleMqttStatus(true, 7);
@@ -72,7 +72,7 @@ boolean mqttConnect() {
         }
 
         if (mqtt.state() == 0) {
-            SerialPrint("I", F("MQTT"), F("✔ connected"));
+            SerialPrint("i", F("MQTT"), F("✔ connected"));
             handleMqttStatus(true);
             //   setLedStatus(LED_OFF);
             mqttSubscribe();
@@ -87,7 +87,7 @@ boolean mqttConnect() {
 }
 
 void mqttDisconnect() {
-    SerialPrint("I", F("MQTT"), F("disconnected"));
+    SerialPrint("i", F("MQTT"), F("disconnected"));
     mqtt.disconnect();
 }
 
@@ -104,8 +104,8 @@ void getMqttData() {
 }
 
 void mqttSubscribe() {
-    SerialPrint("I", F("MQTT"), F("subscribed"));
-    SerialPrint("I", F("MQTT"), mqttRootDevice);
+    SerialPrint("i", F("MQTT"), F("subscribed"));
+    SerialPrint("i", F("MQTT"), mqttRootDevice);
     mqtt.subscribe(mqttPrefix.c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/update").c_str());
@@ -119,17 +119,17 @@ void mqttSubscribe() {
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     String topicStr = String(topic);
-    // SerialPrint("I", "=>MQTT", topicStr);
+    // SerialPrint("i", "=>MQTT", topicStr);
     String payloadStr;
     payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
         payloadStr += (char)payload[i];
     }
 
-    // SerialPrint("I", "=>MQTT", payloadStr);
+    // SerialPrint("i", "=>MQTT", payloadStr);
 
     if (payloadStr.startsWith("HELLO")) {
-        SerialPrint("I", F("MQTT"), F("Full update"));
+        SerialPrint("i", F("MQTT"), F("Full update"));
         publishWidgets();
         publishState();
 #ifdef GATE_MODE
@@ -151,7 +151,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     //
     //    loopCmdAdd(order);
     //
-    //    SerialPrint("I", F("=>MQTT"), "Msg from iotmanager app: " + key + " " + payloadStr);
+    //    SerialPrint("i", F("=>MQTT"), "Msg from iotmanager app: " + key + " " + payloadStr);
     //}
     //
     // else if (topicStr.indexOf("event") != -1) {
@@ -161,7 +161,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     //    if (topicStr.indexOf(chipId) == -1) {
     //        String devId = selectFromMarkerToMarker(topicStr, "/", 2);
     //        String key = selectFromMarkerToMarker(topicStr, "/", 3);
-    //        SerialPrint("I", F("=>MQTT"), "Received event from other device: '" + devId + "' " + key + " " + payloadStr);
+    //        SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + key + " " + payloadStr);
     //        String event = key + " " + payloadStr + ",";
     //        eventBuf += event;
     //    }
@@ -173,17 +173,17 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     //    }
     //    String devId = selectFromMarkerToMarker(topicStr, "/", 2);
     //    String key = selectFromMarkerToMarker(topicStr, "/", 3);
-    //    SerialPrint("I", F("=>MQTT"), "Received direct order " + key + " " + payloadStr);
+    //    SerialPrint("i", F("=>MQTT"), "Received direct order " + key + " " + payloadStr);
     //    String order = key + " " + payloadStr + ",";
     //    loopCmdAdd(order);
-    //    SerialPrint("I", "Order add", order);
+    //    SerialPrint("i", "Order add", order);
     //}
     //
     // else if (topicStr.indexOf("info") != -1) {
     //    if (topicStr.indexOf("scen") != -1) {
     //        writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
     //        loadScenario();
-    //        SerialPrint("I", F("=>MQTT"), F("Scenario received"));
+    //        SerialPrint("i", F("=>MQTT"), F("Scenario received"));
     //    }
     //}
 }

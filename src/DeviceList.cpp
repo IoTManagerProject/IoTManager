@@ -12,6 +12,7 @@ const String getThisDevice() {
 
 void addThisDeviceToList() {
     devListHeapJson = getThisDevice();
+    SerialPrint("i", "List", "Add this dev to list");
 }
 
 #ifdef UDP_ENABLED
@@ -61,7 +62,7 @@ void asyncUdpInit() {
         },
         nullptr, true);
 
-    SerialPrint("I", F("UDP"), F("Udp Init"));
+    SerialPrint("i", F("UDP"), F("Udp Init"));
 }
 
 bool udpPacketValidation(String& data) {

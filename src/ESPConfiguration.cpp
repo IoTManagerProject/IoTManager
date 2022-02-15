@@ -14,27 +14,32 @@ void configure(String path) {
         if (jsonArrayElement.startsWith(",")) {
             jsonArrayElement = jsonArrayElement.substring(1, jsonArrayElement.length());  //это нужно оптимизировать в последствии
         }
-
-        String subtype;
-        if (!jsonRead(jsonArrayElement, F("subtype"), subtype)) {  //если нет такого ключа в представленном json или он не валидный
-            SerialPrint(F("E"), F("Config"), "json error " + subtype);
-            continue;
-        } else {
-            myIoTItem = (IoTItem*)getAPI(subtype, jsonArrayElement);
-            if (myIoTItem) {
-                IoTGpio* tmp = myIoTItem->getGpioDriver();
-                if (tmp) IoTgpio.regDriver(tmp); 
-                IoTItems.push_back(myIoTItem);
+        if (jsonArrayElement == "]}") {
+            jsonArrayElement = "";
+        }
+        if (jsonArrayElement != "") {
+            String subtype;
+            if (!jsonRead(jsonArrayElement, F("subtype"), subtype)) {  //если нет такого ключа в представленном json или он не валидный
+                SerialPrint(F("E"), F("Config"), "json error " + subtype);
+                continue;
+            } else {
+                myIoTItem = (IoTItem*)getAPI(subtype, jsonArrayElement);
+                if (myIoTItem) {
+                    IoTGpio* tmp = myIoTItem->getGpioDriver();
+                    if (tmp) IoTgpio.regDriver(tmp);
+                    IoTItems.push_back(myIoTItem);
+                }
             }
         }
     }
     file.close();
+    SerialPrint("i", "Config", "Configured");
 }
 
 void clearConfigure() {
     Serial.printf("Start clearing config\n");
     for (unsigned int i = 0; i < IoTItems.size(); i++) {
-      if (IoTItems[i]) delete IoTItems[i];
+        if (IoTItems[i]) delete IoTItems[i];
     }
     IoTItems.clear();
 }

@@ -23,9 +23,6 @@ void setup() {
     //подключаемся к роутеру
     routerConnect();
 
-    //запустим один раз асинхронное сканирование сетей wifi для веба
-    RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
-
 //инициализация асинхронного веб сервера и веб сокетов
 #ifdef ASYNC_WEB_SERVER
     asyncWebServerInit();
@@ -50,9 +47,6 @@ void setup() {
 
     //инициализация задач переодического выполнения
     periodicTasksInit();
-
-    //окончательнаясинхронизация настроек
-    syncSettingsFlashJson();
 
     //синхронизация списка устройств
     addThisDeviceToList();

@@ -54,7 +54,8 @@ String mqttPrefix = "";
 String mqttUser = "";
 String mqttPass = "";
 
-unsigned long mqttUptime;
+unsigned long mqttUptime = 0;
+unsigned long flashWriteNumber = 0;
 
 String chipId = "";
 String prex = "";
