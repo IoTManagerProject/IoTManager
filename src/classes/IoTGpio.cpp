@@ -34,7 +34,14 @@ int IoTGpio::analogRead(uint8_t pin) {
 
 void IoTGpio::analogWrite(uint8_t pin, int val) {
     if (_drivers[pin/100]) _drivers[pin/100]->analogWrite(pin, val);
-    else ::analogWrite(pin, val);
+    else {
+        #ifdef ESP32
+            // todo: написать для esp32 аналог функции analogWrite
+        #endif
+        #ifdef ESP8266
+            ::analogWrite(pin, val);
+        #endif
+    }
 }
 
 
