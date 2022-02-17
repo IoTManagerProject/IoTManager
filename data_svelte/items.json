@@ -15,7 +15,7 @@
         "widget": "anydataTmp",
         "page": "Сенсоры",
         "descr": "Температура",
-        "map": "1,1024,1,1024",
+        "map": "1,1024,1,100",
         "plus": 0,
         "multiply": 1,
         "round": 1,
@@ -27,14 +27,15 @@
         "num": 2,
         "type": "Reading",
         "subtype": "Ds18b20",
-        "id": "tmp",
+        "id": "dstmp",
         "widget": "anydataTmp",
         "page": "Сенсоры",
-        "descr": "Температура",
+        "descr": "DS Температура",
         "int": 15,
-        "pin": 0,
+        "pin": 2,
         "index": 0,
-        "addr": ""
+        "addr": "",
+        "round": 1
     },
     {
         "name": "3. Cенсор температуры Sht20",
@@ -45,7 +46,8 @@
         "widget": "anydataTmp",
         "page": "Сенсоры",
         "descr": "Температура",
-        "int": 15
+        "int": 15,
+        "round": 1
     },
     {
         "name": "4. Cенсор влажности Sht20",
@@ -56,7 +58,8 @@
         "widget": "anydataHum",
         "page": "Сенсоры",
         "descr": "Влажность",
-        "int": 15
+        "int": 15,
+        "round": 1
     },
     {
         "name": "5. Cенсор температуры dht11",
@@ -92,9 +95,10 @@
         "id": "tmp3",
         "widget": "anydataTmp",
         "page": "Сенсоры",
-        "descr": "Температура",
+        "descr": "280 Температура",
         "int": 15,
-        "addr": "0x76"
+        "addr": "0x77",
+        "round": 1
     },
     {
         "name": "8. Cенсор давления Bmp280",
@@ -104,9 +108,10 @@
         "id": "Press3",
         "widget": "anydataMm",
         "page": "Сенсоры",
-        "descr": "Давление",
+        "descr": "280 Давление",
         "int": 15,
-        "addr": "0x76"
+        "addr": "0x77",
+        "round": 1
     },
     {
         "name": "9. Cенсор температуры Bme280",
@@ -118,7 +123,8 @@
         "page": "Сенсоры",
         "descr": "Температура",
         "int": 15,
-        "addr": "0x76"
+        "addr": "0x77",
+        "round": 1
     },
     {
         "name": "10. Cенсор давления Bme280",
@@ -130,7 +136,8 @@
         "page": "Сенсоры",
         "descr": "Давление",
         "int": 15,
-        "addr": "0x76"
+        "addr": "0x77",
+        "round": 1
     },
     {
         "name": "11. Cенсор влажности Bme280",
@@ -142,6 +149,125 @@
         "page": "Сенсоры",
         "descr": "Влажность",
         "int": 15,
-        "addr": "0x76"
+        "addr": "0x77",
+        "round": 1
+    },
+    {
+        "name": "12. Cенсор температуры AHT20",
+        "num": 12,
+        "type": "Reading",
+        "subtype": "Aht20t",
+        "id": "Temp20",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "AHT20 Температура",
+        "int": 15,
+        "addr": "0x38",
+        "plus": 0,
+        "multiply": 1,
+        "round": 1
+    },
+    {
+        "name": "13. Cенсор влажности AHT20",
+        "num": 13,
+        "type": "Reading",
+        "subtype": "Aht20h",
+        "id": "Hum20",
+        "widget": "anydataHum",
+        "page": "Сенсоры",
+        "descr": "AHT20 Влажность",
+        "int": 15,
+        "addr": "0x38",
+        "plus": 0,
+        "multiply": 1,
+        "round": 1
+    },
+    {
+        "name": "14. Cенсор температуры HDC1080",
+        "num": 14,
+        "type": "Reading",
+        "subtype": "Hdc1080t",
+        "id": "Temp1080",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "1080 Температура",
+        "int": 15,
+        "addr": "0x40",
+        "plus": 0,
+        "multiply": 1,
+        "round": 1
+    },
+    {
+        "name": "15. Cенсор влажности HDC1080",
+        "num": 15,
+        "type": "Reading",
+        "subtype": "Hdc1080h",
+        "id": "Hum1080",
+        "widget": "anydataHum",
+        "page": "Сенсоры",
+        "descr": "1080 Влажность",
+        "int": 15,
+        "addr": "0x40",
+        "plus": 0,
+        "multiply": 1,
+        "round": 1
+    },
+    {
+        "name": "16. Cенсор температуры GY21",
+        "num": 16,
+        "type": "Reading",
+        "subtype": "GY21t",
+        "id": "tmp4",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "plus": 0,
+        "multiply": 1,
+        "round": 1,
+        "int": 1
+    },
+    {
+        "name": "17. Cенсор влажности GY21",
+        "num": 17,
+        "type": "Reading",
+        "subtype": "GY21h",
+        "id": "Hum4",
+        "widget": "anydataHum",
+        "page": "Сенсоры",
+        "descr": "Влажность",
+        "plus": 0,
+        "multiply": 1,
+        "round": 1,
+        "int": 1
+    },
+    {
+        "name": "18. LCD экран 2004",
+        "num": 18,
+        "type": "Reading",
+        "subtype": "Lcd2004",
+        "id": "Lcd",
+        "widget": "",
+        "page": "",
+        "descr": "T",
+        "int": 15,
+        "addr": "0x27",
+        "size": "20,4",
+        "coord": "0,0",
+        "id2show": "id датчика"
+    },
+    {
+        "name": "19. LCD экран 1602",
+        "num": 19,
+        "type": "Reading",
+        "subtype": "Lcd2004",
+        "id": "Lcd",
+        "widget": "",
+        "page": "",
+        "descr": "T",
+        "int": 15,
+        "addr": "0x27",
+        "size": "16,2",
+        "coord": "0,0",
+        "id2show": "id датчика"
     }
 ]

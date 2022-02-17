@@ -249,7 +249,7 @@ public:
   IoTValue* exec() {
     Serial.printf("Call from  BracketsExprAST OperCount = %d \n", BracketsList.size());
     
-    IoTValue* lastExecValue;
+    IoTValue* lastExecValue = nullptr;
     for (unsigned int i = 0; i < BracketsList.size(); i++) {
       lastExecValue = BracketsList[i]->exec();
     }
