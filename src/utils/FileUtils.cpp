@@ -21,6 +21,7 @@ void writeFileUint8tByFrames(const String& filename, uint8_t*& big_buf, size_t l
         yield();
     }
     file.close();
+    onFlashWrite();
 }
 
 // void writeStrValueToJsonFile(const String& filename, String key, String value) {
@@ -75,6 +76,7 @@ void writeFileUint8tByByte(const String& filename, uint8_t*& payload, size_t len
         }
     }
     file.close();
+    onFlashWrite();
 }
 
 File seekFile(const String& filename, size_t position) {
@@ -96,6 +98,7 @@ const String writeFile(const String& filename, const String& str) {
     file.print(str);
     file.close();
     return "sucсess";
+    onFlashWrite();
 }
 
 const String readFile(const String& filename, size_t max_size) {
@@ -139,6 +142,7 @@ bool cutFile(const String& src, const String& dst) {
     srcFile.close();
     dstFile.close();
     FileFS.remove(srcPath);
+    onFlashWrite();
     return true;
 }
 
@@ -150,5 +154,11 @@ const String addFileLn(const String& filename, const String& str) {
     }
     file.println(str);
     file.close();
+    onFlashWrite();
     return "sucсess";
+}
+
+void onFlashWrite() {
+    flashWriteNumber++;
+    SerialPrint(F("->"), F("FS"), F("write data on flash"));
 }

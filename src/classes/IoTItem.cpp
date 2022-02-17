@@ -47,7 +47,7 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
     jsonWriteStr(paramsHeapJson, _id, value);
     publishStatusMqtt(_id, value);
     publishStatusWs(_id, value);
-    SerialPrint("I", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
+    SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
 }
 
 void IoTItem::regEvent(float value, String consoleInfo = "") {
@@ -75,13 +75,13 @@ void IoTItem::regEvent(float value, String consoleInfo = "") {
 
 void IoTItem::doByInterval() {}
 
-IoTValue IoTItem::execute(String command, std::vector<IoTValue> &param) { return {};}
+IoTValue IoTItem::execute(String command, std::vector<IoTValue>& param) { return {}; }
 
 IoTItem* findIoTItem(String name) {  // поиск элемента модуля в существующей конфигурации
     for (unsigned int i = 0; i < IoTItems.size(); i++) {
-        if(IoTItems[i]->getID() == name) return IoTItems[i];
+        if (IoTItems[i]->getID() == name) return IoTItems[i];
     }
-    
+
     return nullptr;
 }
 

@@ -70,8 +70,8 @@ class Scenario {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
 
-                    // SerialPrint("I", "Event done", incommingEvent);
-                    SerialPrint("I", F("Scenario"), F("All conditions are matched"));
+                    // SerialPrint("i", "Event done", incommingEvent);
+                    SerialPrint("i", F("Scenario"), F("All conditions are matched"));
                     spaceCmdExecute(oneBlock);
                 }
 
@@ -124,8 +124,8 @@ class Scenario {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
 
-                    // SerialPrint("I", "Event done", incommingEvent);
-                    SerialPrint("I", F("Scenario"), F("One of all condition are matched"));
+                    // SerialPrint("i", "Event done", incommingEvent);
+                    SerialPrint("i", F("Scenario"), F("One of all condition are matched"));
                     spaceCmdExecute(oneBlock);
                 }
 
@@ -135,8 +135,8 @@ class Scenario {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
 
-                    // SerialPrint("I", "Event done", incommingEvent);
-                    SerialPrint("I", F("Scenario"), "Condition are matched: " + condition);
+                    // SerialPrint("i", "Event done", incommingEvent);
+                    SerialPrint("i", F("Scenario"), "Condition are matched: " + condition);
                     spaceCmdExecute(oneBlock);
                 }
 
@@ -146,8 +146,8 @@ class Scenario {
                     oneBlock = deleteBeforeDelimiter(oneBlock, "\n");
                     oneBlock.replace("end", "");
 
-                    // SerialPrint("I", "Event done", incommingEvent);
-                    SerialPrint("I", F("Scenario"), "Condition are matched: " + condition);
+                    // SerialPrint("i", "Event done", incommingEvent);
+                    SerialPrint("i", F("Scenario"), "Condition are matched: " + condition);
                     spaceCmdExecute(oneBlock);
                 }
             }

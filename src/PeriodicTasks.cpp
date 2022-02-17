@@ -14,11 +14,15 @@ void periodicTasksInit() {
             // uptime
             jsonWriteStr_(errorsHeapJson, F("upt"), prettyMillis(millis()));
             jsonWriteStr_(errorsHeapJson, F("uptm"), prettyMillis(mqttUptime));
+            // flash
+            jsonWriteInt_(errorsHeapJson, F("fl"), flashWriteNumber);
             // build ver
             jsonWriteStr_(errorsHeapJson, F("bver"), String(FIRMWARE_VERSION));
+            jsonWriteStr_(errorsHeapJson, F("bn"), String(FIRMWARE_NAME));
             periodicWsSend();
         },
         nullptr, true);
+    SerialPrint("i", "Task", "Periodic tasks init");
 }
 
 void handleError(String errorId, String errorValue) {
@@ -31,17 +35,23 @@ void handleError(String errorId, int errorValue) {
 
 void printGlobalVarSize() {
     size_t settingsFlashJsonSize = settingsFlashJson.length();
-    // SerialPrint(F("i"), F("settingsFlashJson"), String(settingsFlashJsonSize));
+    SerialPrint(F("i"), F("settingsFlashJson"), String(settingsFlashJsonSize));
     size_t errorsHeapJsonSize = errorsHeapJson.length();
-    // SerialPrint(F("i"), F("settingsFlashJson"), String(errorsHeapJsonSize));
+    SerialPrint(F("i"), F("errorsHeapJson"), String(errorsHeapJsonSize));
     size_t paramsFlashJsonSize = paramsFlashJson.length();
-    // SerialPrint(F("i"), F("settingsFlashJson"), String(paramsFlashJsonSize));
+    SerialPrint(F("i"), F("paramsFlashJson"), String(paramsFlashJsonSize));
     size_t paramsHeapJsonSize = paramsHeapJson.length();
-    // SerialPrint(F("i"), F("settingsFlashJson"), String(paramsHeapJsonSize));
+    SerialPrint(F("i"), F("paramsHeapJson"), String(paramsHeapJsonSize));
+    size_t devListHeapJsonSize = devListHeapJson.length();
+    SerialPrint(F("i"), F("devListHeapJson"), String(devListHeapJsonSize));
 
     size_t halfBuffer = JSON_BUFFER_SIZE / 2;
 
-    if (settingsFlashJsonSize > halfBuffer || errorsHeapJsonSize > halfBuffer || paramsFlashJsonSize > halfBuffer || paramsHeapJsonSize > halfBuffer) {
+    if (settingsFlashJsonSize > halfBuffer ||
+        errorsHeapJsonSize > halfBuffer ||
+        paramsFlashJsonSize > halfBuffer ||
+        paramsHeapJsonSize > halfBuffer ||
+        devListHeapJsonSize > halfBuffer) {
         SerialPrint(F("EE"), F("Json"), F("Insufficient buffer size!!!"));
         jsonWriteInt(errorsHeapJson, "jse1", 1);
     }

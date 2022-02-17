@@ -55,7 +55,6 @@
 *****************************************глобальные объекты классов***************************************************
 **********************************************************************************************************************/
 
-
 extern TickerScheduler ts;
 extern WiFiClient espClient;
 extern PubSubClient mqtt;
@@ -104,6 +103,7 @@ extern String mqttUser;
 extern String mqttPass;
 
 extern unsigned long mqttUptime;
+extern unsigned long flashWriteNumber;
 
 extern String mqttRootDevice;
 extern String chipId;

@@ -66,7 +66,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWs("/items.json", num, 1024);
                 sendFileToWs("/widgets.json", num, 1024);
                 sendFileToWs("/config.json", num, 1024);
-                sendFileToWs("/settings.json", num, 1024);
+                standWebSocket.sendTXT(num, settingsFlashJson);
             }
             //**сохранение**//
             if (headerStr == "/gifnoc|") {
@@ -77,7 +77,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // page connection===================================================================
             //**отправка**//
             if (headerStr == "/connection|") {
-                sendFileToWs("/settings.json", num, 1024);
+                standWebSocket.sendTXT(num, settingsFlashJson);
                 standWebSocket.sendTXT(num, ssidListHeapJson);
                 standWebSocket.sendTXT(num, errorsHeapJson);
                 //запуск асинхронного сканирования wifi сетей при переходе на страницу соединений
@@ -85,11 +85,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
             //**сохранение**//
             if (headerStr == "/sgnittes|") {
-                writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
+                writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 standWebSocket.sendTXT(num, errorsHeapJson);
                 addThisDeviceToList();
-                // settingsFlashJson = readFile(F("settings.json"), 4096);
             }
             //**отправка**//
             if (headerStr == "/scan|") {
@@ -99,10 +98,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
             //**сохранение**//
             if (headerStr == "/mqtt|") {
-                sendFileToWs("/settings.json", num, 1024);    //отправляем в ответ новые полученные настройки
-                handleMqttStatus(false, 8);                   //меняем статус на неопределенный
-                mqttReconnect();                              //начинаем переподключение
-                standWebSocket.sendTXT(num, errorsHeapJson);  //отправляем что статус неопределен
+                standWebSocket.sendTXT(num, settingsFlashJson);  //отправляем в ответ новые полученные настройки
+                handleMqttStatus(false, 8);                      //меняем статус на неопределенный
+                mqttReconnect();                                 //начинаем переподключение
+                standWebSocket.sendTXT(num, errorsHeapJson);     //отправляем что статус неопределен
                 standWebSocket.sendTXT(num, ssidListHeapJson);
             }
             // page list ==========================================================================

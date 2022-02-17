@@ -18,8 +18,6 @@ void globalVarsSync() {
     jsonWriteStr_(settingsFlashJson, "root", mqttRootDevice);
     jsonWriteStr_(settingsFlashJson, "id", chipId);
 
-    syncSettingsFlashJson();
-
     jsonWriteStr_(errorsHeapJson, "errors", "");  //метка для парсинга
     jsonWriteStr_(ssidListHeapJson, "ssid", "");  //метка для парсинга
     jsonWriteStr(paramsHeapJson, "params", "");   //метка для парсинга
@@ -39,7 +37,7 @@ const String getChipId() {
 
 void setChipId() {
     chipId = getChipId();
-    SerialPrint("I", "System", "id: " + chipId);
+    SerialPrint("i", "System", "id: " + chipId);
 }
 
 const String getUniqueId(const char* name) {

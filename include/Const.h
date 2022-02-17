@@ -1,10 +1,18 @@
 #pragma once
 
 //Это версия прошивки
-#define FIRMWARE_VERSION 403
+#define FIRMWARE_VERSION 404
+
+#ifdef esp8266_4mb
+#define FIRMWARE_NAME "esp8266_4mb"
+#endif
+
+#ifdef esp32_4mb
+#define FIRMWARE_NAME "esp32_4mb"
+#endif
 
 //Размер буфера json
-#define JSON_BUFFER_SIZE 1024
+#define JSON_BUFFER_SIZE 2048
 
 //выбор сервера
 //#define ASYNC_WEB_SERVER
