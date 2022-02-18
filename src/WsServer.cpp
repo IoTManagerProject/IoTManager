@@ -113,8 +113,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //**отправка**//
             if (headerStr == "/system|") {
                 standWebSocket.sendTXT(num, errorsHeapJson);
+                standWebSocket.sendTXT(num, settingsFlashJson);
             }
             //**сохранение**//
+            //переписать любое поле в errors json
             if (headerStr == "/rorre|") {
                 writeUint8tValueToJsonString(payload, length, headerLenth, errorsHeapJson);
             }
@@ -123,7 +125,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (headerStr == "/reboot|") {
                 ESP.restart();
             }
-
+            //**команда обновления esp**//
+            if (headerStr == "/update|") {
+                upgrade_firmware(3);
+            }
         } break;
 
         case WStype_BIN: {

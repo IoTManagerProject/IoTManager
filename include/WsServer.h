@@ -3,6 +3,7 @@
 #include "utils/WiFiUtils.h"
 #include "DeviceList.h"
 #include "ESPConfiguration.h"
+#include "UpgradeFirm.h"
 
 #ifdef STANDARD_WEB_SOCKETS
 extern void standWebSocketsInit();

@@ -3,8 +3,8 @@
     "name": "IoTmanagerVer4",
     "apssid": "IoTmanager",
     "appass": "",
-    "routerssid": "rise",
-    "routerpass": "hostel3333",
+    "routerssid": "WLAN1-Y1GYEF",
+    "routerpass": "2egY69YTA8DDR7En",
     "timezone": 1,
     "ntp": "pool.ntp.org",
     "weblogin": "admin",
@@ -13,5 +13,6 @@
     "mqttPort": 8021,
     "mqttPrefix": "/ver4test",
     "mqttUser": "rise",
-    "mqttPass": "hostel3333"
+    "mqttPass": "hostel3333",
+    "serverip": "http://206.189.49.244:8081"
 }
