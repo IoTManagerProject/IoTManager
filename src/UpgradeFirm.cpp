@@ -35,7 +35,7 @@ void upgrade_firmware(int type) {
 bool upgradeFS() {
     bool ret = false;
     WiFiClient wifiClient;
-    Serial.printf("Start upgrade %s, please wait...", FS_NAME);
+    SerialPrint("!!!", F("Update"), F("Start upgrade FS..."));
     if (getBinPath("") == "error") {
         SerialPrint("E", F("Update"), F("FS Path error"));
         return ret;
@@ -51,7 +51,7 @@ bool upgradeFS() {
 
     //если FS обновилась успешно
     if (retFS == HTTP_UPDATE_OK) {
-        SerialPrint("I", F("Update"), F("FS upgrade done!"));
+        SerialPrint("!!!", F("Update"), F("FS upgrade done!"));
         ret = true;
     }
 
@@ -61,7 +61,7 @@ bool upgradeFS() {
 bool upgradeBuild() {
     bool ret = false;
     WiFiClient wifiClient;
-    Serial.println(F("Start upgrade BUILD, please wait..."));
+    SerialPrint("!!!", F("Update"), F("Start upgrade BUILD..."));
     if (getBinPath("") == "error") {
         SerialPrint("E", F("Update"), F("Build Path error"));
         return ret;
@@ -77,7 +77,7 @@ bool upgradeBuild() {
 
     //если BUILD обновился успешно
     if (retBuild == HTTP_UPDATE_OK) {
-        SerialPrint("I", F("Update"), F("BUILD upgrade done!"));
+        SerialPrint("!!!", F("Update"), F("BUILD upgrade done!"));
         ret = true;
     }
 
