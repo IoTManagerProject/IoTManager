@@ -92,20 +92,18 @@ void restartEsp() {
 
 const String getBinPath(String file) {
     String path = "error";
-    if (file != "") {
-        int targetVersion = 0;
-        String serverip;
-        if (jsonRead(errorsHeapJson, F("chver"), targetVersion)) {
-            if (targetVersion >= 400) {
-                if (jsonRead(settingsFlashJson, F("serverip"), serverip)) {
-                    if (serverip != "") {
-                        path = jsonReadStr(settingsFlashJson, F("serverip")) + "/iotm/" + String(FIRMWARE_NAME) + "/" + String(targetVersion) + "/" + file;
-                    }
+    int targetVersion = 0;
+    String serverip;
+    if (jsonRead(errorsHeapJson, F("chver"), targetVersion)) {
+        if (targetVersion >= 400) {
+            if (jsonRead(settingsFlashJson, F("serverip"), serverip)) {
+                if (serverip != "") {
+                    path = jsonReadStr(settingsFlashJson, F("serverip")) + "/iotm/" + String(FIRMWARE_NAME) + "/" + String(targetVersion) + "/" + file;
                 }
             }
         }
-        SerialPrint("i", F("Update"), "path: " + path);
     }
+    SerialPrint("i", F("Update"), "path: " + path);
     return path;
 }
 
