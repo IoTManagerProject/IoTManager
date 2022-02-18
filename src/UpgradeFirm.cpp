@@ -110,9 +110,11 @@ const String getBinPath(String file) {
 void putUserDataToRam() {
     update.configJson = readFile("config.json", 4096);
     update.settingsFlashJson = readFile("settings.json", 4096);
+    update.layoutJson = readFile("layout.json", 4096);
 }
 
 void saveUserDataToFlash() {
     writeFile("/config.json", update.configJson);
     writeFile("/settings.json", update.settingsFlashJson);
+    writeFile("/layout.json", update.layoutJson);
 }
