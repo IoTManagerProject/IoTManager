@@ -163,8 +163,6 @@
         "descr": "AHT20 Температура",
         "int": 15,
         "addr": "0x38",
-        "plus": 0,
-        "multiply": 1,
         "round": 1
     },
     {
@@ -178,8 +176,6 @@
         "descr": "AHT20 Влажность",
         "int": 15,
         "addr": "0x38",
-        "plus": 0,
-        "multiply": 1,
         "round": 1
     },
     {
@@ -193,8 +189,6 @@
         "descr": "1080 Температура",
         "int": 15,
         "addr": "0x40",
-        "plus": 0,
-        "multiply": 1,
         "round": 1
     },
     {
@@ -208,8 +202,6 @@
         "descr": "1080 Влажность",
         "int": 15,
         "addr": "0x40",
-        "plus": 0,
-        "multiply": 1,
         "round": 1
     },
     {
@@ -221,10 +213,8 @@
         "widget": "anydataTmp",
         "page": "Сенсоры",
         "descr": "Температура",
-        "plus": 0,
-        "multiply": 1,
         "round": 1,
-        "int": 1
+        "int": 15
     },
     {
         "name": "17. Cенсор влажности GY21",
@@ -235,10 +225,8 @@
         "widget": "anydataHum",
         "page": "Сенсоры",
         "descr": "Влажность",
-        "plus": 0,
-        "multiply": 1,
         "round": 1,
-        "int": 1
+        "int": 15
     },
     {
         "header": "Экраны"
@@ -272,5 +260,19 @@
         "size": "16,2",
         "coord": "0,0",
         "id2show": "id датчика"
+    },
+    {
+        "header": "Расширения"
+    },
+    {
+        "name": "20. Доп. функции системы",
+        "num": 20,
+        "type": "Reading",
+        "subtype": "SysExt",
+        "id": "SysExt",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "int": 15
     }
 ]

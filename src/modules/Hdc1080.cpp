@@ -21,7 +21,7 @@ class Hdc1080t : public IoTItem {
 
     void doByInterval() {
         value.valD = hdc1080.readTemperature();
-        if (value.valD > -46.85F) regEvent(value.valD, "Hdc1080t");  
+        if (value.valD < 124) regEvent(value.valD, "Hdc1080t");  
             else SerialPrint("E", "Sensor Hdc1080t", "Error");  
     }
 
@@ -34,7 +34,7 @@ class Hdc1080h : public IoTItem {
     
     void doByInterval() {
         value.valD = hdc1080.readHumidity();
-        if (value.valD > -46.85F) regEvent(value.valD, "Hdc1080h");  
+        if (value.valD < 99 ) regEvent(value.valD, "Hdc1080h");  
             else SerialPrint("E", "Sensor Hdc1080h", "Error");  
     }
 
