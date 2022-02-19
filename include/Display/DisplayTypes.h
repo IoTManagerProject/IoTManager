@@ -7,6 +7,10 @@
 
 #define DEFAULT_PAGE_UPDATE_ms 1000
 #define DEFAULT_PAGE_TIME_ms 5000
+#define DEFAULT_ROTATION 0
+#define DEFAULT_CONTRAST 10
+#define MIN_CONTRAST 30
+#define MAX_CONTRAST 150
 
 #ifndef DEBUG_DISPLAY
 #define D_LOG(fmt, ...) \
@@ -27,29 +31,23 @@ enum rotation_t : uint8_t {
     ROTATION_270
 };
 
-uint8_t parse_contrast(const char* str) {
-    uint8_t val = 30;
-    if (strlen(str)) {
-        int val = atoi(str);
-        if (val > 100) val = 100;
-    }
+uint8_t parse_contrast(int val) {
+    if (val < MIN_CONTRAST) val = MIN_CONTRAST;
+    if (val > MAX_CONTRAST) val = MAX_CONTRAST;
     return val;
-}
+};
 
-rotation_t parse_rotation(const char* str) {
-    if (strlen(str)) {
-        int val = atoi(str);
-        if (val > 0 && val <= 90) return ROTATION_90;
-        if (val > 90 && val <= 180) return ROTATION_180;
-        if (val > 180 && val <= 270) return ROTATION_270;
-    }
+rotation_t parse_rotation(int val) {
+    if ((val > 0) && (val <= 90)) return ROTATION_90;
+    if ((val > 90) && (val <= 180)) return ROTATION_180;
+    if ((val > 180) && (val <= 270)) return ROTATION_270;
     return ROTATION_NONE;
-}
+};
 
 struct DisplayPage {
     String key;
     uint16_t time;
-    rotation_t rotation;
+    rotation_t rotate;
     String font;
     String format;
     String valign;
@@ -57,12 +55,12 @@ struct DisplayPage {
     DisplayPage(
         const String& key,
         uint16_t time,
-        rotation_t rotation,
-        const String& font) : key{key}, time{time}, rotation{rotation}, font{font} {}
+        rotation_t rotate,
+        const String& font) : key{key}, time{time}, rotate{rotate}, font{font} {}
 
     void load(const JsonObject& obj) {
         if (obj["time"].success()) time = obj["time"].as<uint16_t>();
-        if (obj["rotation"].success()) rotation = parse_rotation(obj["rotation"].as<char*>());
+        if (obj["rotate"].success()) rotate = parse_rotation(obj["rotate"].as<int>());
         if (obj["font"].success()) font = obj["font"].as<char*>();
         valign = obj["valign"].success() ? obj["valign"].as<char*>() : "";
         format = obj["format"].success() ? obj["format"].as<char*>() : "%s: %s";

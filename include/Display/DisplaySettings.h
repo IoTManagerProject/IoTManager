@@ -12,8 +12,9 @@ struct DisplaySettings {
     String _type;
     String _connection;
     uint16_t _update;
-    rotation_t _rotation;
+    rotation_t _rotate;
     uint8_t _contrast;
+    String _font; 
    public:
     std::vector<DisplayPage> page;
 
@@ -29,19 +30,17 @@ struct DisplaySettings {
             if (_type.isEmpty()) _type = "ST";
             _connection = obj["connection"].as<char*>();
             _update = obj["update"].as<int>();
-            String font = obj["font"].as<char*>();
-
-            _rotation = parse_rotation(obj["rotation"].success() ? obj["rotation"].as<char*>() : "");
-            _contrast = parse_rotation(obj["contrast"].success() ? obj["contrast"].as<char*>() : "");
-
+            _font = obj["font"].as<char*>();
+            _rotate = parse_rotation(obj["rotate"].success() ? obj["rotate"].as<int>() :DEFAULT_ROTATION);
+            _contrast = parse_contrast(obj["contrast"].success() ? obj["contrast"].as<int>() : DEFAULT_CONTRAST);
             if (_update < DEFAULT_PAGE_UPDATE_ms) _update = DEFAULT_PAGE_UPDATE_ms;
+
             const JsonArray& pageArr = obj["page"].as<JsonArray>();
             for (auto it = pageArr.begin(); it != pageArr.end(); ++it) {
                 auto pageObj = (*it);
                 if (pageObj["key"].success()) {
-
                     // Страница с настройками умолчаниями (по заданным для дисплеля)
-                    auto item = DisplayPage( pageObj["key"].as<char*>(), _update, _rotation, font);
+                    auto item = DisplayPage( pageObj["key"].as<char*>(), _update, _rotate, _font);
                     // Загрузка настроек страницы
                     item.load(pageObj);
 
@@ -109,6 +108,6 @@ struct DisplaySettings {
     }
 
     rotation_t getRotation() {
-        return _rotation;
+        return _rotate;
     }
 };
