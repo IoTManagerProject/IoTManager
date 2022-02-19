@@ -18,18 +18,33 @@ class Display {
     unsigned long _lastResfresh{0};
     Cursor _cursor;
     U8G2 *_obj{nullptr};
-    uint16_t _update;
+    DisplaySettings *_settings;
 
    public:
-    Display(U8G2 *obj,
-            uint16_t update,
-            uint8_t contrast = 30) : _obj{obj}, _update{update} {
+    Display(U8G2 *obj, DisplaySettings *settings) : _obj{obj}, _settings(settings) {
         _obj->begin();
-        _obj->setContrast(contrast);
+        _obj->setContrast(_settings->getContrast());
         setFont();
+        setRotation(settings->getRotation());
         clear();
     }
 
+    void setRotation(rotation_t rotate) {
+        switch (rotate) {
+            case ROTATION_NONE:
+                _obj->setDisplayRotation(U8G2_R0);
+                break;
+            case ROTATION_90:
+                _obj->setDisplayRotation(U8G2_R1);
+                break;
+            case ROTATION_180:
+                _obj->setDisplayRotation(U8G2_R2);
+                break;
+            case ROTATION_270:
+                _obj->setDisplayRotation(U8G2_R3);
+                break;
+        }
+    }
     void setFont(const String &fontName = "ncen") {
         if (fontName.startsWith("ncen"))
             _obj->setFont(u8g2_font_ncenB08_tr);
@@ -80,6 +95,7 @@ class Display {
     Cursor *getCursor() {
         return &_cursor;
     }
+
     // print меняняю cursor
     void println(const String &str, bool frame = false) {
         print(str, frame);
@@ -162,7 +178,7 @@ class Display {
     }
 
     bool isNeedsRefresh() {
-        return !_lastResfresh || (millis() > (_lastResfresh + _update));
+        return !_lastResfresh || (millis() > (_lastResfresh + _settings->getDisplayUpdate()));
     }
 };
 
@@ -422,7 +438,7 @@ void drawPage(Display *display, ParamCollection *param, DisplayPage *page) {
     auto line_keys = slice(keys, l, '#');
     while (!line_keys.isEmpty()) {
         if (page->valign.equalsIgnoreCase("center")) {
-            display->getCursor()->moveY((display->getHeight() / 2) - display->getMaxCharHeight());
+            display->getCursor()->moveY((display->getHeight() / 2) - display->getMaxCharHeight() / 2);
         }
         D_LOG("line keys: %s\r\n", keys.c_str());
         size_t n = 0;
@@ -444,16 +460,22 @@ void drawPage(Display *display, ParamCollection *param, DisplayPage *page) {
 
 // Режим пользовательской разбивки параметров по страницам
 void showManual(Display *display, ParamCollection *param) {
+    auto page = _context.getPage(_n);
+
     if (display->isNeedsRefresh() || _pageChanged) {
         D_LOG("[Display] page: %d\r\n", _n);
+        display->setRotation(page->rotation);
         display->startRefresh();
-        drawPage(display, param, _context.getPage(_n));
+        drawPage(display, param, page);
         display->endRefresh();
-    }
-    if (millis() >= (_lastPageChange + _context.getPage(_n)->time)) {
-        if (++_n >= _context.getPageCount()) _n = 0;
-        _pageChanged = true;
+        _pageChanged = false;
         _lastPageChange = millis();
+    }
+
+    if (millis() >= (_lastPageChange + page->time)) {
+        // Если это была последняя начинаем с начала
+        if (++_n > (_context.getPageCount() - 1)) _n = 0;
+        _pageChanged = true;
     }
 }
 
@@ -479,22 +501,26 @@ void showAuto(Display *display, ParamCollection *param) {
 
 void show(const String &data, const String &param) {
     if (!_inited) {
-        _context.init();
-        _param = new ParamCollection();
-        _display = new Display(
-            DisplayFactory().createInstance(_context.getType(), _context.getConnection()),
-            _context.getDisplayUpdate());
+        if (_context.init()) {
+            _param = new ParamCollection();
+            auto libObj = DisplayFactory().createInstance(&_context);
+            _display = new Display(libObj, &_context);
+        } else {
+            D_LOG("[Display] disabled");
+        }
         _inited = true;
     }
 
-    Serial.printf("data:%s\r\n param:%s\r\n", data.c_str(), param.c_str());
+    // Serial.printf("data:%s\r\n param:%s\r\n", data.c_str(), param.c_str());
 
-    _param->load(data, param);
+    if (_param && _display) {
+        _param->load(data, param);
 
-    if (_context.isAutoPage()) {
-        showAuto(_display, _param);
-    } else {
-        showManual(_display, _param);
+        if (_context.isAutoPage()) {
+            showAuto(_display, _param);
+        } else {
+            showManual(_display, _param);
+        }
     }
 }
 

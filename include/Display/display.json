@@ -2,8 +2,10 @@
     "type": "ST7556",
     "connection": "{\"clock\": 12,\"data\" : 13,\"cs\": 15,\"dc\": 2,\"rst\": 0}",    
     "update": 1000,
+    "contrast": 90,
+    "rotation": 90,
     "page": [
         {"time": 3000, "font": "", "format": "%s --- %s", "key": "d1,d2"},
-        {"time": 1000, "format": "%s %s", "key": "d2,d3"}      
+        {"time": 1000, "format": "%s %s", "key": "d2,d3", "rotation": 180}      
     ]       
 }

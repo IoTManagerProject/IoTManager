@@ -4,58 +4,60 @@
 #include <ArduinoJson.h>
 
 #include "DisplayTypes.h"
-
 #include "FileSystem.h"
 
+
 struct DisplaySettings {
-   private:    
+   private:
     String _type;
     String _connection;
     uint16_t _update;
-public:
+    rotation_t _rotation;
+    uint8_t _contrast;
+   public:
     std::vector<DisplayPage> page;
+
    private:
-    void loadJson(String str) {
+    bool loadJson(String str) {
         StaticJsonBuffer<2048> doc;
-        JsonObject &obj = doc.parseObject(str);
+        JsonObject& obj = doc.parseObject(str);
         if (!obj.success()) {
             D_LOG("parse: %s", str.c_str());
+            return false;
         } else {
-            _type = obj["type"].as<char *>();
+            _type = obj["type"].as<char*>();
             if (_type.isEmpty()) _type = "ST";
             _connection = obj["connection"].as<char*>();
             _update = obj["update"].as<int>();
             String font = obj["font"].as<char*>();
+
+            _rotation = parse_rotation(obj["rotation"].success() ? obj["rotation"].as<char*>() : "");
+            _contrast = parse_rotation(obj["contrast"].success() ? obj["contrast"].as<char*>() : "");
+
             if (_update < DEFAULT_PAGE_UPDATE_ms) _update = DEFAULT_PAGE_UPDATE_ms;
             const JsonArray& pageArr = obj["page"].as<JsonArray>();
-            for (auto it = pageArr.begin(); it != pageArr.end(); ++it)
-            {   
-                auto pageObj = (*it);   
-                if (pageObj["key"].success()) {             
-                    String key = pageObj["key"].as<char*>();
-                    uint16_t time = pageObj["time"].success() ? pageObj["time"].as<uint16_t>(): _update;
-                    String valign = pageObj["valign"].success() ? pageObj["valign"].as<char*>(): "";
-                    String font = pageObj["font"].success() ? pageObj["font"].as<char*>(): font;
-                    String format =  pageObj["format"].success() ? pageObj["format"].as<char*>() : "%s: %s";
-                    page.push_back({
-                        time, 
-                        key,
-                        format,
-                        font,
-                        valign,
-                    });
+            for (auto it = pageArr.begin(); it != pageArr.end(); ++it) {
+                auto pageObj = (*it);
+                if (pageObj["key"].success()) {
+
+                    // Страница с настройками умолчаниями (по заданным для дисплеля)
+                    auto item = DisplayPage( pageObj["key"].as<char*>(), _update, _rotation, font);
+                    // Загрузка настроек страницы
+                    item.load(pageObj);
+
+                    page.push_back(item);
                 }
-            }                    
+            }
         }
-         D_LOG("t: %s c: %s pc: %d", _type.c_str(), _connection.c_str(), page.size());
+        D_LOG("t: %s c: %s pc: %d", _type.c_str(), _connection.c_str(), page.size());
+        return true;
     }
 
-    bool loadFile(File &f) {
+    bool loadFile(File& f) {
         if (f) {
             String buf = f.readString();
-            f.close();
-            loadJson(buf);
-            return true;
+            f.close();           
+            return  loadJson(buf);;
         }
         return false;
     }
@@ -69,13 +71,13 @@ public:
         }
     }
 
-    void init() {
+    bool init() {
         if (FileFS.exists(SETTINGS_FILE)) {
             auto f = FileFS.open(SETTINGS_FILE, FILE_READ);
-            loadFile(f);
-        } else {
-            setDefault();
+            if (loadFile(f)) return true;
         }
+        setDefault();
+        return false;        
     }
 
     String getType() {
@@ -100,5 +102,13 @@ public:
 
     uint16_t getDisplayUpdate() {
         return _update;
+    }
+
+    uint8_t getContrast() {
+        return _contrast;
+    }
+
+    rotation_t getRotation() {
+        return _rotation;
     }
 };
