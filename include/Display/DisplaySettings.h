@@ -48,7 +48,7 @@ struct DisplaySettings {
                 }
             }
         }
-        D_LOG("t: %s c: %s pc: %d", _type.c_str(), _connection.c_str(), page.size());
+        D_LOG("t: %s c: %s pages: %d\r\n", _type.c_str(), _connection.c_str(), page.size());
         return true;
     }
 
@@ -74,8 +74,9 @@ struct DisplaySettings {
         if (FileFS.exists(SETTINGS_FILE)) {
             auto f = FileFS.open(SETTINGS_FILE, FILE_READ);
             if (loadFile(f)) return true;
+        } else {
+            setDefault();
         }
-        setDefault();
         return false;        
     }
 
