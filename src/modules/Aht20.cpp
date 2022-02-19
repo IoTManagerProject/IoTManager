@@ -22,7 +22,7 @@ class Aht20t : public IoTItem {
     
     void doByInterval() {
         value.valD = temp.temperature;
-        if (String(value.valD) != "nan") regEvent(value.valD, "Aht20t");
+        if (value.valD != -200) regEvent(value.valD, "Aht20t");  // todo: найти способ понимания ошибки получения данных
             else SerialPrint("E", "Sensor AHTt", "Error");   
     }
 
@@ -36,7 +36,7 @@ class Aht20h : public IoTItem {
     
     void doByInterval() {
         value.valD = humidity.relative_humidity;
-        if (String(value.valD) != "nan") regEvent(value.valD, "Aht20t");
+        if (value.valD != -200) regEvent(value.valD, "Aht20h");  // todo: найти способ понимания ошибки получения данных
             else SerialPrint("E", "Sensor AHTt", "Error");    
     }
 
