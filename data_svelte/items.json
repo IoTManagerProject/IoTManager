@@ -260,5 +260,19 @@
         "size": "16,2",
         "coord": "0,0",
         "id2show": "id датчика"
+    },
+    {
+        "header": "Расширения"
+    },
+    {
+        "name": "20. Доп. функции системы",
+        "num": 20,
+        "type": "Reading",
+        "subtype": "SysExt",
+        "id": "SysExt",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "int": 15
     }
 ]
