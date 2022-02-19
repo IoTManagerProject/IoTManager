@@ -36,8 +36,10 @@ bool upgradeFS() {
     bool ret = false;
     WiFiClient wifiClient;
     SerialPrint("!!!", F("Update"), F("Start upgrade FS..."));
+    handleUpdateStatus(true, UPDATE_FS_IN_PROGRESS);
     if (getBinPath("") == "error") {
         SerialPrint("E", F("Update"), F("FS Path error"));
+        handleUpdateStatus(true, PATH_ERROR);
         return ret;
     }
 #ifdef ESP8266
@@ -52,9 +54,10 @@ bool upgradeFS() {
     //если FS обновилась успешно
     if (retFS == HTTP_UPDATE_OK) {
         SerialPrint("!!!", F("Update"), F("FS upgrade done!"));
+        handleUpdateStatus(true, UPDATE_FS_COMPLETED);
         ret = true;
     }
-
+    handleUpdateStatus(true, UPDATE_FS_FAILED);
     return ret;
 }
 
@@ -62,8 +65,10 @@ bool upgradeBuild() {
     bool ret = false;
     WiFiClient wifiClient;
     SerialPrint("!!!", F("Update"), F("Start upgrade BUILD..."));
+    handleUpdateStatus(true, UPDATE_BUILD_IN_PROGRESS);
     if (getBinPath("") == "error") {
         SerialPrint("E", F("Update"), F("Build Path error"));
+        handleUpdateStatus(true, PATH_ERROR);
         return ret;
     }
 #ifdef esp8266_4mb
@@ -78,9 +83,10 @@ bool upgradeBuild() {
     //если BUILD обновился успешно
     if (retBuild == HTTP_UPDATE_OK) {
         SerialPrint("!!!", F("Update"), F("BUILD upgrade done!"));
+        handleUpdateStatus(true, UPDATE_BUILD_COMPLETED);
         ret = true;
     }
-
+    handleUpdateStatus(true, UPDATE_BUILD_FAILED);
     return ret;
 }
 
@@ -117,4 +123,9 @@ void saveUserDataToFlash() {
     writeFile("/config.json", update.configJson);
     writeFile("/settings.json", update.settingsFlashJson);
     writeFile("/layout.json", update.layoutJson);
+}
+
+void handleUpdateStatus(bool send, int state) {
+    jsonWriteInt_(errorsHeapJson, F("upd"), state);
+    if (!send) standWebSocket.broadcastTXT(errorsHeapJson);
 }

@@ -14,5 +14,6 @@
     "mqttPrefix": "/ver4test",
     "mqttUser": "rise",
     "mqttPass": "hostel3333",
-    "serverip": "http://206.189.49.244:8081"
+    "serverip": "http://206.189.49.244:8081",
+    "log": 0
 }
