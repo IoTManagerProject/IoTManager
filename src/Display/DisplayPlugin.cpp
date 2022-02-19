@@ -468,14 +468,14 @@ void showManual(Display *display, ParamCollection *param) {
         display->startRefresh();
         drawPage(display, param, page);
         display->endRefresh();
-        _pageChanged = false;
-        _lastPageChange = millis();
+        _pageChanged = false;        
     }
 
     if (millis() >= (_lastPageChange + page->time)) {
         // Если это была последняя начинаем с начала
         if (++_n > (_context.getPageCount() - 1)) _n = 0;
         _pageChanged = true;
+        _lastPageChange = millis();
     }
 }
 
