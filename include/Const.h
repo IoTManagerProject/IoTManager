@@ -1,7 +1,7 @@
 #pragma once
 
 //Версия прошивки
-#define FIRMWARE_VERSION 405
+#define FIRMWARE_VERSION 407
 
 #ifdef esp8266_4mb
 #define FIRMWARE_NAME "esp8266_4mb"
@@ -50,4 +50,15 @@ enum NotAsyncActions {
     do_ZERO,
     do_MQTTPARAMSCHANGED,
     do_LAST,
+};
+
+//состояния обновления
+enum UpdateStates { NOT_STARTED,
+                    UPDATE_FS_IN_PROGRESS,
+                    UPDATE_FS_COMPLETED,
+                    UPDATE_FS_FAILED,
+                    UPDATE_BUILD_IN_PROGRESS,
+                    UPDATE_BUILD_COMPLETED,
+                    UPDATE_BUILD_FAILED,
+                    PATH_ERROR
 };

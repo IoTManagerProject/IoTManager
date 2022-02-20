@@ -23,3 +23,4 @@ extern void restartEsp();
 extern const String getBinPath(String file);
 extern void putUserDataToRam();
 extern void saveUserDataToFlash();
+extern void handleUpdateStatus(bool send, int state);
