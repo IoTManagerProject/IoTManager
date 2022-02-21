@@ -28,7 +28,7 @@ class IoTItem {
 
     IoTValue value;  // хранение основного значения, котрое обновляется из сценария, execute(), loop() или doByInterval()
 
-    IoTGpio* getGpioDriver();
+    virtual IoTGpio* getGpioDriver();
 
    protected:
     String _subtype;
