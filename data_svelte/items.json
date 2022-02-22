@@ -274,5 +274,37 @@
         "page": "",
         "descr": "",
         "int": 15
+    },
+    {
+        "name": "21. Датчик напряжения ADS1115",
+        "num": 21,
+        "type": "Reading",
+        "subtype": "Ads1115",
+        "id": "Ads3",
+        "widget": "anydataVlt",
+        "page": "Сенсоры",
+        "descr": "ADS_3",
+        
+        "pin": "0",
+        "mode": "volt",
+        "gain": "3/4x",
+
+        "plus": 0,
+        "multiply": 1,
+        "round": 100,
+        "int": 10
+    },
+    {
+        "name": "22. Расширитель портов Mcp23017",
+        "num": 22,
+        "type": "Reading",
+        "subtype": "Mcp23017",
+        "id": "Mcp",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        
+        "addr": "0x20",
+        "index": 1
     }
 ]

@@ -13,6 +13,8 @@ void* getAPI_Hdc1080(String subtype, String params);
 void* getAPI_GY21(String subtype, String params);
 void* getAPI_Lcd2004(String subtype, String params);
 void* getAPI_SysExt(String subtype, String params);
+void* getAPI_Ads1115(String subtype, String params);
+void* getAPI_Mcp23017(String subtype, String params);
 //============================================================================================
 
 void* getAPI(String subtype, String params) {
@@ -30,6 +32,8 @@ void* getAPI(String subtype, String params) {
     if ((tmpAPI = getAPI_GY21(subtype, params)) != nullptr) return tmpAPI;
     if ((tmpAPI = getAPI_Lcd2004(subtype, params)) != nullptr) return tmpAPI;
     if ((tmpAPI = getAPI_SysExt(subtype, params)) != nullptr) return tmpAPI;
+    if ((tmpAPI = getAPI_Ads1115(subtype, params)) != nullptr) return tmpAPI;
+    if ((tmpAPI = getAPI_Mcp23017(subtype, params)) != nullptr) return tmpAPI;
     //================================================================================================================
 
     return nullptr;

@@ -61,6 +61,15 @@ void setup() {
     // test
     Serial.println("-------test start--------");
     Serial.println("--------test end---------");
+
+    //тест перебора пинов из расширения
+    // for (int i = 109; i < 112; i++) {
+    //     IoTgpio.pinMode(i, OUTPUT);
+    //     IoTgpio.digitalWrite(i, !IoTgpio.digitalRead(i));
+    //     delay(1000);
+    //     IoTgpio.digitalWrite(i, !IoTgpio.digitalRead(i));
+    //     delay(1000);
+    // }
 }
 
 void loop() {

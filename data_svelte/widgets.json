@@ -183,5 +183,12 @@
             "Включен"
         ],
         "status": 0
+    },
+    {
+        "name": "anydataVlt",
+        "label": "Вольты",
+        "widget": "anydata",
+        "after": "Vlt",
+        "icon": "speedometer"
     }
 ]
