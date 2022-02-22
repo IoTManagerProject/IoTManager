@@ -37,16 +37,18 @@ class Sht20h : public IoTItem {
 
 
 void* getAPI_Sht20(String subtype, String param) {
+    if (subtype == F("Sht20t") || subtype == F("Sht20h")) {
         if (!sht) {
-           sht = new SHT2x;
-           if (sht) sht->begin();
+            sht = new SHT2x;
+            if (sht) sht->begin();
         }
 
         if (subtype == F("Sht20t")) {
             return new Sht20t(param);
         } else if (subtype == F("Sht20h")) {
             return new Sht20h(param);
-        } else {
-            return nullptr;
         }
+    } else {
+        return nullptr;
+    }
 }

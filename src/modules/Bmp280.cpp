@@ -55,18 +55,20 @@ class Bmp280p : public IoTItem {
 
 
 void* getAPI_Bmp280(String subtype, String param) {    
-    String addr;
-    jsonRead(param, "addr", addr);
+    if (subtype == F("Bmp280t") || subtype == F("Bmp280p")) {
+        String addr;
+        jsonRead(param, "addr", addr);
 
-    if (bmps.find(addr) == bmps.end()) {
-        bmps[addr] = new Adafruit_BMP280();
-        bmps[addr]->begin(hexStringToUint8(addr));
-    }
+        if (bmps.find(addr) == bmps.end()) {
+            bmps[addr] = new Adafruit_BMP280();
+            bmps[addr]->begin(hexStringToUint8(addr));
+        }
 
-    if (subtype == F("Bmp280t")) {
-        return new Bmp280t(bmps[addr], param);
-    } else if (subtype == F("Bmp280p")) {
-        return new Bmp280p(bmps[addr], param);
+        if (subtype == F("Bmp280t")) {
+            return new Bmp280t(bmps[addr], param);
+        } else if (subtype == F("Bmp280p")) {
+            return new Bmp280p(bmps[addr], param);
+        }
     } else {
         return nullptr;
     }
