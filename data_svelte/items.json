@@ -307,5 +307,22 @@
         "int": "0",
         "addr": "0x20",
         "index": 1
+    },
+    {
+        "header": "Исполнительные устройства"
+    },
+    {
+        "name": "23. Доп. функции системы",
+        "num": 23,
+        "type": "Writing",
+        "subtype": "ButtonOut",
+        "id": "btn",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "int": 0,
+
+        "inv": 0,
+        "pin": 2
     }
 ]
