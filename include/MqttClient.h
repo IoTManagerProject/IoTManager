@@ -3,6 +3,7 @@
 #include "classes/NotAsync.h"
 #include "Global.h"
 #include "utils/WiFiUtils.h"
+#include "EventsAndOrders.h"
 
 void mqttInit();
 void selectBroker();

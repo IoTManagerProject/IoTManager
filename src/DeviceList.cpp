@@ -38,7 +38,7 @@ void asyncUdpInit() {
             String data = uint8tToString(packet.data(), packet.length());
             // Serial.println(data);
             if (udpPacketValidation(data)) {
-                SerialPrint("i", F("UDP"), "Udp packet received, IP: " + packet.remoteIP().toString() + ":" + String(packet.remotePort()));
+                SerialPrint("i", F("UDP"), "IP: " + packet.remoteIP().toString() + ":" + String(packet.remotePort()));
                 // Serial.println(data);
                 jsonMergeArrays(devListHeapJson, data);
                 // Serial.println(devListHeapJson);
