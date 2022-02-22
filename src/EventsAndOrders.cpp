@@ -1,4 +1,7 @@
 #include "EventsAndOrders.h"
+#include "classes/IoTScenario.h"
+
+extern IoTScenario iotScen;  // объект управления сценарием
 
 // orderBuf - буфер прямых команд, которые нужно выпонить сразу, нажали на кнопку в приложении, сработало условие сценария
 //необходимо тут же изменить параметр, записать новое значение
@@ -50,10 +53,13 @@ void handleEvent() {
     if (eventBuf.length()) {
         String event = selectToMarker(eventBuf, ",");
         Serial.println("event: " + event);
+       
         //здесь нужно пропускать данное событие через условия сценариев
         //и если оно есть в условии сценария и совподает
         //то нужно поместить все команды этого блока сценария в generateOrder(order1, order2, ....)
         //который в свою очередь их выполнит
+        iotScen.ExecScenario();
+
         eventBuf = deleteBeforeDelimiter(eventBuf, ",");
     }
 }
