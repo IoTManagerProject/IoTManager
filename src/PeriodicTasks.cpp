@@ -48,6 +48,8 @@ void printGlobalVarSize() {
     size_t devListHeapJsonSize = devListHeapJson.length();
     // SerialPrint(F("i"), F("devListHeapJson"), String(devListHeapJsonSize));
 
+    SerialPrint(F("i"), F("Var summ sz"), String(settingsFlashJsonSize + errorsHeapJsonSize + paramsFlashJsonSize + paramsHeapJsonSize + devListHeapJsonSize));
+
     size_t halfBuffer = JSON_BUFFER_SIZE / 2;
 
     if (settingsFlashJsonSize > halfBuffer ||
@@ -76,17 +78,17 @@ String ESP32GetResetReason(uint32_t cpu_no) {
         case SW_RESET:
             return F("Software reset digital core");  // 3
         case OWDT_RESET:
-            return F("Legacy watch dog reset digital core");  // 4
+            return F("Legacy Watchdog reset digital core");  // 4
         case DEEPSLEEP_RESET:
             return F("Deep Sleep reset digital core");  // 5
         case SDIO_RESET:
             return F("Reset by SLC module, reset digital core");  // 6
         case TG0WDT_SYS_RESET:
-            return F("Timer Group0 Watch dog reset digital core");  // 7
+            return F("Timer Group0 Watchdog reset digital core");  // 7
         case TG1WDT_SYS_RESET:
-            return F("Timer Group1 Watch dog reset digital core");  // 8
+            return F("Timer Group1 Watchdog reset digital core");  // 8
         case RTCWDT_SYS_RESET:
-            return F("RTC Watch dog Reset digital core");  // 9
+            return F("RTC Watchdog Reset digital core");  // 9
         case INTRUSION_RESET:
             return F("Instrusion tested to reset CPU");  // 10
         case TGWDT_CPU_RESET:
@@ -94,13 +96,13 @@ String ESP32GetResetReason(uint32_t cpu_no) {
         case SW_CPU_RESET:
             return F("Software reset CPU");  // 12
         case RTCWDT_CPU_RESET:
-            return F("RTC Watch dog Reset CPU");  // 13
+            return F("RTC Watchdog Reset CPU");  // 13
         case EXT_CPU_RESET:
             return F("or APP CPU, reseted by PRO CPU");  // 14
         case RTCWDT_BROWN_OUT_RESET:
             return F("Reset when the vdd voltage is not stable");  // 15
         case RTCWDT_RTC_RESET:
-            return F("RTC Watch dog reset digital core and rtc module");  // 16
+            return F("RTC Watchdog reset digital core and rtc module");  // 16
         default:
             return F("NO_MEAN");  // 0
     }
