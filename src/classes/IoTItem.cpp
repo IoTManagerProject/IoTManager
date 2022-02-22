@@ -4,6 +4,7 @@
 #include "classes/IoTItem.h"
 #include "WsServer.h"
 #include "ESPConfiguration.h"
+#include "EventsAndOrders.h"
 
 IoTItem::IoTItem(String parameters) {
     jsonRead(parameters, F("int"), _interval);
@@ -43,7 +44,7 @@ void IoTItem::loop() {
 }
 
 void IoTItem::regEvent(String value, String consoleInfo = "") {
-    eventGen2(_id, value);
+    generateEvent(_id, value);
     jsonWriteStr(paramsHeapJson, _id, value);
     publishStatusMqtt(_id, value);
     publishStatusWs(_id, value);

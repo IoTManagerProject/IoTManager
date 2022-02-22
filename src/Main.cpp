@@ -98,5 +98,9 @@ void loop() {
         IoTItems[i]->loop();
     }
 
+    handleOrder();
+
+    handleEvent();
+
     // iotScen.ExecScenario();
 }

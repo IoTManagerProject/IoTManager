@@ -139,20 +139,12 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
 #endif
     }
 
-    // else if (topicStr.indexOf("control") != -1) {
-    //     String key = selectFromMarkerToMarker(topicStr, "/", 3);
-    //
-    //    String order;
-    //    order += key;
-    //    order += " ";
-    //    order += payloadStr;
-    //    order += ",";
-    //
-    //    loopCmdAdd(order);
-    //
-    //    SerialPrint("i", F("=>MQTT"), "Msg from iotmanager app: " + key + " " + payloadStr);
-    //}
-    //
+    else if (topicStr.indexOf("control") != -1) {
+        String key = selectFromMarkerToMarker(topicStr, "/", 3);
+        generateOrder(key, payloadStr);
+        SerialPrint("i", F("=>MQTT"), "Msg from iotmanager app: " + key + " " + payloadStr);
+    }
+
     // else if (topicStr.indexOf("event") != -1) {
     //    if (!jsonReadBool(settingsFlashJson, "MqttIn")) {
     //        return;
