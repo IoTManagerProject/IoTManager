@@ -91,3 +91,9 @@ IoTItem* myIoTItem;
 IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
 }
+
+void IoTItem::setValue(IoTValue Value) {
+    value = Value;
+    if (value.isDecimal) regEvent(value.valD, "");
+    else regEvent(value.valS, "");
+}
