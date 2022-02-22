@@ -64,7 +64,10 @@ public:
   VariableExprAST(const String &name, IoTItem* item) : Name(name), Item(item) {}
 
   int setValue(IoTValue *val) {
-    Item->value = *val;  // устанавливаем значение в связанном Item модуля напрямую
+    if (Item) {
+      //Item->value = *val;  // устанавливаем значение в связанном Item модуля напрямую
+      Item->setValue(*val);
+    }
     return 1;
   }
 

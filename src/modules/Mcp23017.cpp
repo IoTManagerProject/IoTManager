@@ -43,7 +43,6 @@ class Mcp23017 : public IoTItem, IoTGpio {
 void* getAPI_Mcp23017(String subtype, String param) {
     if (subtype == F("Mcp23017")) {
         String addr;
-        uint8_t deviceAddress[1];
         jsonRead(param, "addr", addr);
         Serial.printf("deviceAddress %s = %02x \n", addr.c_str(), hexStringToUint8(addr));
 

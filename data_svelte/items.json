@@ -304,7 +304,25 @@
         "page": "",
         "descr": "",
         
+        "int": "0",
         "addr": "0x20",
         "index": 1
+    },
+    {
+        "header": "Исполнительные устройства"
+    },
+    {
+        "name": "23. Кнопка управляющая пином (Реле с кнопкой)",
+        "num": 23,
+        "type": "Writing",
+        "subtype": "ButtonOut",
+        "id": "btn",
+        "widget": "button",
+        "page": "Кнопки",
+        "descr": "",
+        "int": 0,
+
+        "inv": 0,
+        "pin": 2
     }
 ]

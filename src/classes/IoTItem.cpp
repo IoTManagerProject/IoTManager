@@ -64,7 +64,7 @@ void IoTItem::regEvent(float value, String consoleInfo = "") {
             value = value / _round;
         }
 
-        // value = (float)value / (_round ? pow(10, (int)_round) : 1);  // todo: решить как указывать округление, количество знаков после запятой или десятые сотые ...
+        // value = (float)value / (_round ? pow(10, (int)_round) : 1);  // TODO: решить как указывать округление, количество знаков после запятой или десятые сотые ...
     }
     if (_map1 != _map2) value = map(value, _map1, _map2, _map3, _map4);
 
@@ -90,4 +90,10 @@ IoTItem* myIoTItem;
 
 IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
+}
+
+void IoTItem::setValue(IoTValue Value) {
+    value = Value;
+    if (value.isDecimal) regEvent(value.valD, "");
+    else regEvent(value.valS, "");
 }
