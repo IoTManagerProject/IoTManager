@@ -52,13 +52,15 @@ void asyncUdpInit() {
         });
     }
 
-    //будем отправлять каждые 60 секунд презентацию данного устройства
+    //будем отправлять каждые 30 секунд презентацию данного устройства
     ts.add(
         UDP, 30000, [&](void*) {
-            SerialPrint("i", F("UDP"), F("Broadcast device presentation"));
-            asyncUdp.broadcastTo(getThisDevice().c_str(), 4210);
-            // asyncUdp.broadcast("test");
-            // asyncUdp.print("Hello Server!");
+            if (isNetworkActive()) {
+                SerialPrint("i", F("UDP"), F("Broadcast device presentation"));
+                asyncUdp.broadcastTo(getThisDevice().c_str(), 4210);
+                // asyncUdp.broadcast("test");
+                // asyncUdp.print("Hello Server!");
+            }
         },
         nullptr, true);
 

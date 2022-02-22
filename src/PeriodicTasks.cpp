@@ -14,11 +14,14 @@ void periodicTasksInit() {
             // uptime
             jsonWriteStr_(errorsHeapJson, F("upt"), prettyMillis(millis()));
             jsonWriteStr_(errorsHeapJson, F("uptm"), prettyMillis(mqttUptime));
+            jsonWriteStr_(errorsHeapJson, F("uptw"), prettyMillis(wifiUptime));
             // flash
             jsonWriteInt_(errorsHeapJson, F("fl"), flashWriteNumber);
             // build ver
             jsonWriteStr_(errorsHeapJson, F("bver"), String(FIRMWARE_VERSION));
             jsonWriteStr_(errorsHeapJson, F("bn"), String(FIRMWARE_NAME));
+            // reset reason
+            jsonWriteStr_(errorsHeapJson, F("rst"), ESP_getResetReason());
             periodicWsSend();
         },
         nullptr, true);
@@ -35,15 +38,15 @@ void handleError(String errorId, int errorValue) {
 
 void printGlobalVarSize() {
     size_t settingsFlashJsonSize = settingsFlashJson.length();
-    SerialPrint(F("i"), F("settingsFlashJson"), String(settingsFlashJsonSize));
+    // SerialPrint(F("i"), F("settingsFlashJson"), String(settingsFlashJsonSize));
     size_t errorsHeapJsonSize = errorsHeapJson.length();
-    SerialPrint(F("i"), F("errorsHeapJson"), String(errorsHeapJsonSize));
+    // SerialPrint(F("i"), F("errorsHeapJson"), String(errorsHeapJsonSize));
     size_t paramsFlashJsonSize = paramsFlashJson.length();
-    SerialPrint(F("i"), F("paramsFlashJson"), String(paramsFlashJsonSize));
+    // SerialPrint(F("i"), F("paramsFlashJson"), String(paramsFlashJsonSize));
     size_t paramsHeapJsonSize = paramsHeapJson.length();
-    SerialPrint(F("i"), F("paramsHeapJson"), String(paramsHeapJsonSize));
+    // SerialPrint(F("i"), F("paramsHeapJson"), String(paramsHeapJsonSize));
     size_t devListHeapJsonSize = devListHeapJson.length();
-    SerialPrint(F("i"), F("devListHeapJson"), String(devListHeapJsonSize));
+    // SerialPrint(F("i"), F("devListHeapJson"), String(devListHeapJsonSize));
 
     size_t halfBuffer = JSON_BUFFER_SIZE / 2;
 

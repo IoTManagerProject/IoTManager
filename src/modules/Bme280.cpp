@@ -4,76 +4,76 @@
   https://github.com/adafruit/Adafruit_BME280_Library
  ******************************************************************/
 
-
 #include "Global.h"
 #include "classes/IoTItem.h"
 
 #include <Adafruit_BME280.h>
 #include <map>
 
-
 std::map<String, Adafruit_BME280*> bmes;
 
 class Bme280t : public IoTItem {
    private:
-    Adafruit_BME280* _bme; 
-   
+    Adafruit_BME280* _bme;
+
    public:
-    Bme280t(Adafruit_BME280* bme, String parameters): IoTItem(parameters) {
+    Bme280t(Adafruit_BME280* bme, String parameters) : IoTItem(parameters) {
         _bme = bme;
     }
-    
+
     void doByInterval() {
         value.valD = _bme->readTemperature();
-        if (value.valD < 145) regEvent(value.valD, "Bme280t");
-            else SerialPrint("E", "Sensor Bme280t", "Error");  
+        if (value.valD < 145)
+            regEvent(value.valD, "Bme280t");
+        else
+            SerialPrint("E", "Sensor Bme280t", "Error");
     }
 
     ~Bme280t();
 };
 
-  
 class Bme280h : public IoTItem {
    private:
-    Adafruit_BME280* _bme; 
+    Adafruit_BME280* _bme;
 
    public:
-    Bme280h(Adafruit_BME280* bme, String parameters): IoTItem(parameters) {
+    Bme280h(Adafruit_BME280* bme, String parameters) : IoTItem(parameters) {
         _bme = bme;
     }
-    
+
     void doByInterval() {
         value.valD = _bme->readHumidity();
-        if (value.valD < 100) regEvent(value.valD, "Bme280h");
-            else SerialPrint("E", "Sensor Bme280h", "Error");  
+        if (value.valD < 100)
+            regEvent(value.valD, "Bme280h");
+        else
+            SerialPrint("E", "Sensor Bme280h", "Error");
     }
 
     ~Bme280h();
 };
 
-
 class Bme280p : public IoTItem {
    private:
-    Adafruit_BME280* _bme; 
+    Adafruit_BME280* _bme;
 
    public:
-    Bme280p(Adafruit_BME280* bme, String parameters): IoTItem(parameters) {
+    Bme280p(Adafruit_BME280* bme, String parameters) : IoTItem(parameters) {
         _bme = bme;
     }
-    
+
     void doByInterval() {
         value.valD = _bme->readPressure();
         if (value.valD > 0) {
             value.valD = value.valD / 1.333224 / 100;
             regEvent(value.valD, "Bme280p");
-        } else SerialPrint("E", "Sensor Bme280p", "Error");  
+        } else
+            SerialPrint("E", "Sensor Bme280p", "Error");
     }
 
     ~Bme280p();
 };
 
-
-void* getAPI_Bme280(String subtype, String param) {    
+void* getAPI_Bme280(String subtype, String param) {
     String addr;
     jsonRead(param, "addr", addr);
 

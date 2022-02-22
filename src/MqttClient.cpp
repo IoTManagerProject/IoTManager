@@ -7,13 +7,11 @@ void mqttInit() {
         [&](void*) {
             if (WiFi.status() == WL_CONNECTED) {
                 SerialPrint("i", F("WIFI"), F("OK"));
+                wifiUptimeCalc();
                 if (mqtt.connected()) {
                     SerialPrint("i", F("MQTT"), "OK");
+                    mqttUptimeCalc();
                     handleMqttStatus(false);
-
-                    static unsigned int prevMillis;
-                    mqttUptime = mqttUptime + (millis() - prevMillis);
-                    prevMillis = millis();
 
                     // setLedStatus(LED_OFF);
                 } else {
@@ -25,6 +23,7 @@ void mqttInit() {
             } else {
                 SerialPrint("E", F("WIFI"), F("✖ Lost WiFi connection"));
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
+                wifiUptime = 0;
                 startAPMode();
             }
         },
@@ -346,4 +345,16 @@ const String getStateStr(int e) {
             return F("unk");
             break;
     }
+}
+
+void mqttUptimeCalc() {
+    static unsigned int prevMillis;
+    mqttUptime = mqttUptime + (millis() - prevMillis);
+    prevMillis = millis();
+}
+
+void wifiUptimeCalc() {
+    static unsigned int prevMillis;
+    wifiUptime = wifiUptime + (millis() - prevMillis);
+    prevMillis = millis();
 }

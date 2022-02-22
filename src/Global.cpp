@@ -57,6 +57,8 @@ String mqttPass = "";
 unsigned long mqttUptime = 0;
 unsigned long flashWriteNumber = 0;
 
+unsigned long wifiUptime = 0;
+
 String chipId = "";
 String prex = "";
 String all_widgets = "";

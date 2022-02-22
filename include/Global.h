@@ -106,6 +106,8 @@ extern String mqttPass;
 extern unsigned long mqttUptime;
 extern unsigned long flashWriteNumber;
 
+extern unsigned long wifiUptime;
+
 extern String mqttRootDevice;
 extern String chipId;
 extern String prex;

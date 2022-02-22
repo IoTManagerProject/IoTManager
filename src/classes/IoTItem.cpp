@@ -6,16 +6,16 @@
 #include "ESPConfiguration.h"
 
 IoTItem::IoTItem(String parameters) {
-    jsonRead(parameters, "int", _interval);
+    jsonRead(parameters, F("int"), _interval);
     _interval = _interval * 1000;
-    jsonRead(parameters, "subtype", _subtype);
-    jsonRead(parameters, "id", _id);
-    jsonRead(parameters, "multiply", _multiply);
-    jsonRead(parameters, "plus", _plus);
-    jsonRead(parameters, "round", _round);
+    jsonRead(parameters, F("subtype"), _subtype);
+    jsonRead(parameters, F("id"), _id);
+    jsonRead(parameters, F("multiply"), _multiply, false);
+    jsonRead(parameters, F("plus"), _plus, false);
+    jsonRead(parameters, F("round"), _round, false);
 
     String map;
-    jsonRead(parameters, "map", map);
+    jsonRead(parameters, F("map"), map, false);
     if (map != "") {
         _map1 = selectFromMarkerToMarker(map, ",", 0).toInt();
         _map2 = selectFromMarkerToMarker(map, ",", 1).toInt();
@@ -63,7 +63,7 @@ void IoTItem::regEvent(float value, String consoleInfo = "") {
             value = value / _round;
         }
 
-        //value = (float)value / (_round ? pow(10, (int)_round) : 1);  // todo: решить как указывать округление, количество знаков после запятой или десятые сотые ...
+        // value = (float)value / (_round ? pow(10, (int)_round) : 1);  // todo: решить как указывать округление, количество знаков после запятой или десятые сотые ...
     }
     if (_map1 != _map2) value = map(value, _map1, _map2, _map3, _map4);
 

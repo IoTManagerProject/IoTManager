@@ -12,13 +12,13 @@ std::map<int, DallasTemperature*> sensorsTemperatureArray;
 class Ds18b20 : public IoTItem {
    private:
     //для работы библиотеки с несколькими линиями  необходимо обеспечить каждый экземпляр класса ссылками на объекты настроенные на эти линии
-        OneWire* oneWire;
-        DallasTemperature* sensors;
+    OneWire* oneWire;
+    DallasTemperature* sensors;
 
     //описание параметров передаваемых из настроек датчика из веба
-        String _addr;
-        int _pin;
-        int _index;
+    String _addr;
+    int _pin;
+    int _index;
 
    public:
     //=======================================================================================================
@@ -27,10 +27,10 @@ class Ds18b20 : public IoTItem {
     //Такие как ...begin и подставлять в них параметры полученные из web интерфейса.
     //Все параметры хранятся в перемененной parameters, вы можете прочитать любой параметр используя jsonRead функции:
     // jsonReadStr, jsonReadBool, jsonReadInt
-    Ds18b20(String parameters): IoTItem(parameters) {
+    Ds18b20(String parameters) : IoTItem(parameters) {
         jsonRead(parameters, "pin", _pin);
-        jsonRead(parameters, "index", _index);
-        jsonRead(parameters, "addr", _addr);            
+        jsonRead(parameters, "index", _index, false);
+        jsonRead(parameters, "addr", _addr, false);
 
         //учитываем, что библиотека может работать с несколькими линиями на разных пинах, поэтому инициируем библиотеку, если линия ранее не использовалась
         if (oneWireTemperatureArray.find(_pin) == oneWireTemperatureArray.end()) {
@@ -58,9 +58,9 @@ class Ds18b20 : public IoTItem {
     void doByInterval() {
         //запускаем опрос измерений у всех датчиков на линии
         sensors->requestTemperatures();
-        
+
         //Определяем адрес. Если парамтер addr не установлен, то узнаем адрес по индексу
-        // TODO: понять как лучше. в текущей реализации адрес вычисляется каждый раз при опросе шины, это хорошо при отладке, 
+        // TODO: понять как лучше. в текущей реализации адрес вычисляется каждый раз при опросе шины, это хорошо при отладке,
         // но при постоянном контакте и использовании правильнее генерировать адрес при инициализации модуля. Но тогда нужно перезагружать устройство при новом датчике
         DeviceAddress deviceAddress;
         if (_addr == "") {
@@ -69,13 +69,15 @@ class Ds18b20 : public IoTItem {
             string2hex(_addr.c_str(), deviceAddress);
         }
         //получаем температуру по адресу
-        value.valD = sensors->getTempC(deviceAddress); 
-        
+        value.valD = sensors->getTempC(deviceAddress);
+
         char addrStr[20] = "";
         hex2string(deviceAddress, 8, addrStr);
 
-        if (value.valD != -127) regEvent(value.valD, "addr: " + String(addrStr));  //обязательный вызов для отправки результата работы
-            else SerialPrint("E", "Sensor Ds18b20", "Error");
+        if (value.valD != -127)
+            regEvent(value.valD, "addr: " + String(addrStr));  //обязательный вызов для отправки результата работы
+        else
+            SerialPrint("E", "Sensor Ds18b20", "Error");
     }
     //=======================================================================================================
 
