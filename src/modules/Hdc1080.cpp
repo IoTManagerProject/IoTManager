@@ -6,7 +6,7 @@
   adapted for version 4 @Serghei63
  ******************************************************************/
 #include "Global.h"
-#include "Classes/IoTItem.h"
+#include "classes/IoTItem.h"
 
 #include "Wire.h"
 #include "ClosedCube_HDC1080.h"

@@ -6,7 +6,7 @@
   adapted for version 4 Alecs Alecs
  ******************************************************************/
 #include "Global.h"
-#include "Classes/IoTItem.h"
+#include "classes/IoTItem.h"
 
 #include "Wire.h"
 #include "GY21.h"

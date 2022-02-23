@@ -1,5 +1,5 @@
 #include "Global.h"
-#include "Classes/IoTItem.h"
+#include "classes/IoTItem.h"
 #include "classes/IoTGpio.h"
 #include <Adafruit_MCP23X17.h>
 
