@@ -56,18 +56,26 @@ public:
 };
 
 /// VariableExprAST - Класс узла выражения для переменных (например, "a").
-class VariableExprAST : public ExprAST {
+class VariableExprAST : public ExprAST, IoTItem {
   String Name;
   IoTItem* Item;  // ссылка на объект модуля (прямой доступ к идентификатору указанному в сценарии), если получилось найти модуль по ID
-  IoTValue val;   // хранение данных для внешних переменных если не найдены в итемсах
+  //IoTValue value;   // хранение данных для внешних переменных если не найдены в итемсах берем из базового класса IoTItem
 
 public:
-  VariableExprAST(const String &name, IoTItem* item) : Name(name), Item(item) {}
+  VariableExprAST(const String &name, IoTItem* item) : Name(name), Item(item), IoTItem("") {}
 
-  int setValue(IoTValue *val) {
+  int setValue(IoTValue *valueIn) {
     if (Item) {
       //Item->value = *val;  // устанавливаем значение в связанном Item модуля напрямую
-      Item->setValue(*val);
+      Item->setValue(*valueIn);
+    } else {
+      // Итем ноль, значит это переменная отсутсвует в Итемсах, значит пишем в глобальное хранилище
+      if (valueIn->isDecimal) {
+        jsonWriteFloat_(paramsHeapJson, Name, valueIn->valD);
+      } else {
+        jsonWriteStr_(paramsHeapJson, Name, valueIn->valS);
+      }
+      IoTItem::setValue(*valueIn);
     }
     return 1;
   }
@@ -84,11 +92,11 @@ public:
       // смотрим в хранилище
       String valueStr;
       jsonRead(paramsHeapJson, Name, valueStr);
-      if (val.isDecimal = isDigitDotCommaStr(valueStr))
-          val.valD = valueStr.toFloat();
+      if (value.isDecimal = isDigitDotCommaStr(valueStr))
+          value.valD = valueStr.toFloat();
       else
-          val.valS = valueStr;
-      return &val;
+          value.valS = valueStr;
+      return &value;
     }
   }
 };
