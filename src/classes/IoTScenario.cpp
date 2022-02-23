@@ -6,6 +6,8 @@
 #include "classes/IoTScenario.h"
 #include "utils/FileUtils.h"
 
+String _eventIdName = "";  // ID элемента, для которого выполняем сценарий
+
 // Лексический анализатор возвращает токены [0-255], если это неизвестны, 
 // иначе одну из известных единиц кода
 enum Token {
@@ -29,6 +31,7 @@ enum Token {
 ExprAST::~ExprAST() {}
 IoTValue* ExprAST::exec() {return nullptr;}
 int ExprAST::setValue(IoTValue *val) {return 0;}  // 0 - установка значения не поддерживается наследником
+bool ExprAST::hasEventIdName() {return false;}  // по умолчанию все узлы не связаны с ИД события, для которого выполняется сценарий
 struct IoTValue zeroIotVal;
         
 /// NumberExprAST - Класс узла выражения для числовых литералов (Например, "1.0").
@@ -85,10 +88,16 @@ class BinaryExprAST : public ExprAST {
   signed char Op;
   ExprAST *LHS, *RHS;
   IoTValue val;
+  String _IDNames;
 
 public:
-  BinaryExprAST(signed char op, ExprAST *lhs, ExprAST *rhs) 
-    : Op(op), LHS(lhs), RHS(rhs) {}
+  BinaryExprAST(signed char op, ExprAST *lhs, ExprAST *rhs, String IDNames) 
+    : Op(op), LHS(lhs), RHS(rhs), _IDNames(IDNames) {}
+
+  bool hasEventIdName() {
+      Serial.printf("Call from  BinaryExprAST _IDNames:%s\n", _IDNames.c_str());
+      return _IDNames.indexOf(_eventIdName) >= 0;   // определяем встречался ли ИД, для которого исполняем сценарий в выражении IF
+  }
 
   ~BinaryExprAST() {
     if (LHS) delete LHS;
@@ -222,9 +231,19 @@ public:
     IoTValue *res_ret = nullptr;
     IoTValue *cond_ret = nullptr;
     
+    if (Cond && !Cond->hasEventIdName()) {
+      Serial.printf("Call from  IfExprAST: Skip because %s not found\n", _eventIdName.c_str());
+      return &zeroIotVal;
+    }
+
     if (Cond) cond_ret = Cond->exec();
-    if (!cond_ret) cond_ret = &zeroIotVal;
-    if (cond_ret != nullptr && cond_ret->isDecimal && cond_ret->valD) res_ret = Then->exec();
+    
+    if (!cond_ret) {
+      Serial.printf("Call from  IfExprAST: Skip If\n");
+      return &zeroIotVal;
+    }
+
+    if (cond_ret->isDecimal && cond_ret->valD) res_ret = Then->exec();
     else if (Else) res_ret = Else->exec();
 
     if (!res_ret) Serial.printf("Call from  IfExprAST: Cond result = %f, no body result\n", cond_ret->valD);
@@ -529,10 +548,14 @@ public:
   ///   ::= identifierexpr
   ///   ::= numberexpr
   ///   ::= parenexpr
-  ExprAST* IoTScenario::ParsePrimary() {
+  ExprAST* IoTScenario::ParsePrimary(String* IDNames) {
     switch (CurTok) {
     default: return Error("unknown token when expecting an expression");
-    case tok_identifier: return ParseIdentifierExpr();
+    case tok_identifier: {
+      String tmpstr = *IDNames;
+      *IDNames = tmpstr + " " + IdentifierStr;
+      return ParseIdentifierExpr();
+    }
     case tok_number:     return ParseNumberExpr();
     case '(':            return ParseParenExpr();
     case '{':            return ParseBracketsExpr();
@@ -543,7 +566,7 @@ public:
 
   /// binoprhs
   ///   ::= ('+' primary)*
-  ExprAST* IoTScenario::ParseBinOpRHS(int ExprPrec, ExprAST *LHS) {
+  ExprAST* IoTScenario::ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames) {
     // Если это бинарный оператор, получаем его приоритет
     while (1) {
       int TokPrec = GetTokPrecedence();
@@ -558,19 +581,19 @@ public:
       getNextToken();  // eat binop
       
       // Разобрать первичное выражение после бинарного оператора
-      ExprAST *RHS = ParsePrimary();
+      ExprAST *RHS = ParsePrimary(IDNames);
       if (!RHS) return 0;
       
       // Если BinOp связан с RHS меньшим приоритетом, чем оператор после RHS, 
       // то берём часть вместе с RHS как LHS.
       int NextPrec = GetTokPrecedence();
       if (TokPrec < NextPrec) {
-        RHS = ParseBinOpRHS(TokPrec+1, RHS);
+        RHS = ParseBinOpRHS(TokPrec+1, RHS, IDNames);
         if (RHS == 0) return 0;
       }
       
       // Собираем LHS/RHS.
-      LHS = new BinaryExprAST(BinOp, LHS, RHS);
+      LHS = new BinaryExprAST(BinOp, LHS, RHS, *IDNames);
     }
   }
 
@@ -579,9 +602,10 @@ public:
   ///   ::= primary binoprhs
   ///
   ExprAST* IoTScenario::ParseExpression() {
-    ExprAST *LHS = ParsePrimary();
+    String IDNames = "";
+    ExprAST *LHS = ParsePrimary(&IDNames);
     if (!LHS) return 0;
-    return ParseBinOpRHS(0, LHS);
+    return ParseBinOpRHS(0, LHS, &IDNames);
   }
 
   void IoTScenario::clearScenarioElements() {  // удаляем все корневые элементы дерева AST
@@ -616,7 +640,9 @@ public:
     } else {Error("Open file scenario error");}
   }
 
-  void IoTScenario::ExecScenario() {  // запускаем поочереди все корневые элементы выражений в сценарии, ожидаемо - это IFы
+  void IoTScenario::ExecScenario(String eventIdName) {  // запускаем поочереди все корневые элементы выражений в сценарии, ожидаемо - это IFы
+    _eventIdName = eventIdName;   // ID элемента для которого выполняем сценарий, т.е. игнорируем любые проверки, если нет такого ID в условиях
+    
     Serial.printf("Count root elements in scenario: %d\n", ScenarioElements.size());
     for (unsigned int i = 0; i < ScenarioElements.size(); i++) {
       if (ScenarioElements[i]) ScenarioElements[i]->exec();
