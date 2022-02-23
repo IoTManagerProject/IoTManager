@@ -30,7 +30,7 @@ void handleOrder() {
         if (item) {
             String valStr = selectToMarkerLast(order, " ");
             IoTValue value;
-            if (value.isDecimal = isDigitStr(valStr))
+            if (value.isDecimal = isDigitDotCommaStr(valStr))
                 value.valD = valStr.toFloat();
             else
                 value.valS = valStr;

@@ -56,17 +56,26 @@ public:
 };
 
 /// VariableExprAST - Класс узла выражения для переменных (например, "a").
-class VariableExprAST : public ExprAST {
+class VariableExprAST : public ExprAST, IoTItem {
   String Name;
   IoTItem* Item;  // ссылка на объект модуля (прямой доступ к идентификатору указанному в сценарии), если получилось найти модуль по ID
+  //IoTValue value;   // хранение данных для внешних переменных если не найдены в итемсах берем из базового класса IoTItem
 
 public:
-  VariableExprAST(const String &name, IoTItem* item) : Name(name), Item(item) {}
+  VariableExprAST(const String &name, IoTItem* item) : Name(name), Item(item), IoTItem("") {}
 
-  int setValue(IoTValue *val) {
+  int setValue(IoTValue *valueIn) {
     if (Item) {
       //Item->value = *val;  // устанавливаем значение в связанном Item модуля напрямую
-      Item->setValue(*val);
+      Item->setValue(*valueIn);
+    } else {
+      // Итем ноль, значит это переменная отсутсвует в Итемсах, значит пишем в глобальное хранилище
+      if (valueIn->isDecimal) {
+        jsonWriteFloat_(paramsHeapJson, Name, valueIn->valD);
+      } else {
+        jsonWriteStr_(paramsHeapJson, Name, valueIn->valS);
+      }
+      IoTItem::setValue(*valueIn);
     }
     return 1;
   }
@@ -75,7 +84,20 @@ public:
     if (Item->value.isDecimal) 
       Serial.printf("Call from  VariableExprAST: %s = %f\n", Name.c_str(), Item->value.valD);
     else Serial.printf("Call from  VariableExprAST: %s = %s\n", Name.c_str(), Item->value.valS.c_str());
-    return &(Item->value);
+    
+    // если Итем не был найден по ID (Item == nulptr) значит либо опечатка, либо это ИД из другого контроллера, поэтому осуществляем поиск значения в 
+    // глобальном сетевом хранилище переменных 
+    if (Item) return &(Item->value);
+    else {
+      // смотрим в хранилище
+      String valueStr;
+      jsonRead(paramsHeapJson, Name, valueStr);
+      if (value.isDecimal = isDigitDotCommaStr(valueStr))
+          value.valD = valueStr.toFloat();
+      else
+          value.valS = valueStr;
+      return &value;
+    }
   }
 };
 
@@ -421,8 +443,9 @@ public:
     }
 
     if (CurTok != '(') { // Обычная переменная.
-      if (tmpItem) return new VariableExprAST(IdName, tmpItem);
-        else return new StringExprAST("id " + IdName + " not_found");
+      //if (tmpItem) 
+      return new VariableExprAST(IdName, tmpItem);
+      //  else return new StringExprAST("id " + IdName + " not_found");
     }
     
     // Вызов функции.
