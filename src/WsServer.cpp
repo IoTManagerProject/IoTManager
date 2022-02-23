@@ -56,23 +56,28 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 jsonMergeObjects(json, paramsFlashJson);
                 standWebSocket.sendTXT(num, json);
             }
-            //**сохранение**//
-            if (headerStr == "/tuoyal|") {
-                writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
-            }
             // page configutation================================================================
             //**отправка**//
             if (headerStr == "/config|") {
                 sendFileToWs("/items.json", num, 1024);
                 sendFileToWs("/widgets.json", num, 1024);
                 sendFileToWs("/config.json", num, 1024);
+                sendFileToWs("/scenario.txt", num, 1024);
                 standWebSocket.sendTXT(num, settingsFlashJson);
             }
             //**сохранение**//
             if (headerStr == "/gifnoc|") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
-                clearConfigure();
+                //clearConfigure();
                 configure("/config.json");
+            }
+            //**сохранение**//
+            if (headerStr == "/tuoyal|") {
+                writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
+            }
+            //**сохранение**//
+            if (headerStr == "/oiranecs|") {
+                writeFileUint8tByFrames("scenario.txt", payload, length, headerLenth, 256);
             }
             // page connection===================================================================
             //**отправка**//
