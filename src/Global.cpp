@@ -59,6 +59,8 @@ unsigned long flashWriteNumber = 0;
 
 unsigned long wifiUptime = 0;
 
+bool udpReceivingData = false;
+
 String chipId = "";
 String prex = "";
 String all_widgets = "";

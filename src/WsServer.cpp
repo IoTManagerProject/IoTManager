@@ -68,8 +68,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //**сохранение**//
             if (headerStr == "/gifnoc|") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
-                //clearConfigure();
-                configure("/config.json");
+                // clearConfigure();
+                // configure("/config.json");
             }
             //**сохранение**//
             if (headerStr == "/tuoyal|") {
@@ -134,6 +134,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (headerStr == "/update|") {
                 upgrade_firmware(3);
             }
+
         } break;
 
         case WStype_BIN: {

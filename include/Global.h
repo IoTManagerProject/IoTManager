@@ -108,6 +108,8 @@ extern unsigned long flashWriteNumber;
 
 extern unsigned long wifiUptime;
 
+extern bool udpReceivingData;
+
 extern String mqttRootDevice;
 extern String chipId;
 extern String prex;
