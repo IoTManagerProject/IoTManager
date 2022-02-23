@@ -58,7 +58,7 @@ void handleEvent() {
         //и если оно есть в условии сценария и совподает
         //то нужно поместить все команды этого блока сценария в generateOrder(order1, order2, ....)
         //который в свою очередь их выполнит
-        iotScen.ExecScenario();
+        iotScen.ExecScenario(selectToMarker(event, " "));
 
         eventBuf = deleteBeforeDelimiter(eventBuf, ",");
     }

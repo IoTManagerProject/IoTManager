@@ -56,7 +56,7 @@ void setup() {
 
     //загрузка сценария
     iotScen.loadScenario("/scenario.txt");
-    iotScen.ExecScenario();
+    iotScen.ExecScenario("");
 
     // test
     Serial.println("-------test start--------");

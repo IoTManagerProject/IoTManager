@@ -8,6 +8,7 @@ public:
   virtual ~ExprAST();
   virtual IoTValue* exec();
   virtual int setValue(IoTValue *val);  // ret 0 - установка значения не поддерживается наследником
+  virtual bool hasEventIdName();
 };
 
 class IoTScenario {
@@ -65,11 +66,11 @@ class IoTScenario {
   ///   ::= identifierexpr
   ///   ::= numberexpr
   ///   ::= parenexpr
-  ExprAST *ParsePrimary();
+  ExprAST *ParsePrimary(String* IDNames);
 
   /// binoprhs
   ///   ::= ('+' primary)*
-  ExprAST *ParseBinOpRHS(int ExprPrec, ExprAST *LHS);
+  ExprAST *ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames);
 
   /// expression
   ///   ::= primary binoprhs
@@ -86,7 +87,7 @@ class IoTScenario {
 
 public:
   void loadScenario(String fileName);
-  void ExecScenario();
+  void ExecScenario(String eventIdName);
 
   IoTScenario();
   ~IoTScenario();

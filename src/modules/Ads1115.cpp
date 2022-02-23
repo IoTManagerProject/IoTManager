@@ -7,7 +7,7 @@
  ******************************************************************/
 
 #include "Global.h"
-#include "Classes/IoTItem.h"
+#include "classes/IoTItem.h"
 
 #include "Wire.h"
 #include <Adafruit_ADS1X15.h> // Библиотека для работы с модулями ADS1115 и ADS1015
