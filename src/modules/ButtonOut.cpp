@@ -31,8 +31,9 @@ class ButtonOut : public IoTItem {
         // param - вектор ("массив") значений параметров переданных вместе с командой: ID.Команда("пар1", 22, 33) -> param[0].ValS = "пар1", param[1].ValD = 22
     
         if (command == "change") {  // выполняем код при вызове спец команды из сценария: ID.reboot();
-            value.valD = !IoTgpio.digitalRead(_pin);
+            value.valD = 1 - IoTgpio.digitalRead(_pin);
             IoTgpio.digitalWrite(_pin, value.valD);
+            regEvent(value.valD, "ButtonOut");
         }
 
         return {};  // команда поддерживает возвращаемое значения. Т.е. по итогу выполнения команды или общения с внешней системой, можно вернуть значение в сценарий для дальнейшей обработки

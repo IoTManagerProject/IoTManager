@@ -8,7 +8,7 @@ public:
   virtual ~ExprAST();
   virtual IoTValue* exec();
   virtual int setValue(IoTValue *val);  // ret 0 - установка значения не поддерживается наследником
-  virtual bool hasEventIdName();
+  virtual bool hasEventIdName(String eventIdName);
 };
 
 class IoTScenario {
@@ -45,7 +45,7 @@ class IoTScenario {
   /// identifierexpr
   ///   ::= identifier
   ///   ::= identifier '(' expression* ')'
-  ExprAST *ParseIdentifierExpr();
+  ExprAST *ParseIdentifierExpr(String *IDNames);
 
   /// numberexpr ::= number
   ExprAST *ParseNumberExpr();
@@ -60,7 +60,7 @@ class IoTScenario {
   ExprAST *ParseQuotesExpr();
 
   /// ifexpr ::= 'if' expression 'then' expression 'else' expression
-  ExprAST *ParseIfExpr();
+  ExprAST *ParseIfExpr(String* IDNames);
 
   /// primary
   ///   ::= identifierexpr
@@ -75,7 +75,7 @@ class IoTScenario {
   /// expression
   ///   ::= primary binoprhs
   ///
-  ExprAST *ParseExpression();
+  ExprAST *ParseExpression(String *IDNames);
 
   std::vector<ExprAST*> ScenarioElements;  // корневые элементы дерава   
 
