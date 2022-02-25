@@ -27,6 +27,8 @@ class IoTItem {
     unsigned long difference;
 
     IoTValue value;  // хранение основного значения, котрое обновляется из сценария, execute(), loop() или doByInterval()
+    
+    bool iAmDead = false;   // признак необходимости удалить объект из базы
 
     virtual IoTGpio* getGpioDriver();
     virtual void setValue(IoTValue Value);
@@ -46,3 +48,13 @@ class IoTItem {
 };
 
 IoTItem* findIoTItem(String name);  // поиск экземпляра элемента модуля по имени
+
+
+class externalVariable: IoTItem {   // объект, создаваемый при получении информации о событии на другом контроллере для хранения информации о событии указанное время
+
+    public:
+        externalVariable(String parameters); 
+        ~externalVariable();
+        void doByInterval();   // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
+        
+};

@@ -15,6 +15,13 @@ IoTItem::IoTItem(String parameters) {
     jsonRead(parameters, F("plus"), _plus, false);
     jsonRead(parameters, F("round"), _round, false);
 
+    String valAsStr;
+    if (jsonRead(parameters, F("val"), valAsStr, false))    // значение переменной или датчика при инициализации если есть в конфигурации
+        if (value.isDecimal = isDigitDotCommaStr(valAsStr))
+            value.valD = valAsStr.toFloat();
+        else
+            value.valS = valAsStr;
+
     String map;
     jsonRead(parameters, F("map"), map, false);
     if (map != "") {
@@ -96,4 +103,17 @@ void IoTItem::setValue(IoTValue Value) {
     value = Value;
     if (value.isDecimal) regEvent(value.valD, "");
     else regEvent(value.valS, "");
+}
+
+
+externalVariable::externalVariable(String parameters) : IoTItem(parameters) {
+    Serial.printf("Call from  externalVariable: parameters %s\n", parameters.c_str());
+}
+
+externalVariable::~externalVariable() {
+    Serial.printf("Call from  ~externalVariable: Im dead\n");
+}
+
+void externalVariable::doByInterval() {   // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
+    iAmDead = true;
 }
