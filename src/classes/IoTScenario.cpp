@@ -153,6 +153,13 @@ public:
             else val.valD = 3.4E+38;
           break;
 
+          case '|':
+            val.valD = lhs->valD || rhs->valD;
+          break;
+          case '&':
+            val.valD = lhs->valD && rhs->valD;
+          break;
+
           default:
             break;
         }
@@ -652,17 +659,19 @@ public:
   IoTScenario::IoTScenario() {
     // Задаём стандартные бинарные операторы.
     // 1 - наименьший приоритет.
-    BinopPrecedence['='] = 1;  
-    BinopPrecedence[tok_equal] = 3;  // ==
-    BinopPrecedence[tok_notequal] = 4;  // !=
-    BinopPrecedence[tok_lesseq] = 5;  // <=
-    BinopPrecedence[tok_greateq] = 6;  // >=
-    BinopPrecedence['<'] = 10;
-    BinopPrecedence['>'] = 10;
-    BinopPrecedence['+'] = 20;
-    BinopPrecedence['-'] = 20;
-    BinopPrecedence['/'] = 35;  
-    BinopPrecedence['*'] = 40;  // highest.
+    BinopPrecedence['='] = 1; 
+    BinopPrecedence['|'] = 5; 
+    BinopPrecedence['&'] = 6;  
+    BinopPrecedence[tok_equal] = 10;  // ==
+    BinopPrecedence[tok_notequal] = 11;  // !=
+    BinopPrecedence[tok_lesseq] = 15;  // <=
+    BinopPrecedence[tok_greateq] = 16;  // >=
+    BinopPrecedence['<'] = 20;
+    BinopPrecedence['>'] = 21;
+    BinopPrecedence['+'] = 25;
+    BinopPrecedence['-'] = 26;
+    BinopPrecedence['/'] = 27;  
+    BinopPrecedence['*'] = 28;  // highest.
   }
   
   IoTScenario::~IoTScenario() {}
