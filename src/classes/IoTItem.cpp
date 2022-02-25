@@ -15,6 +15,13 @@ IoTItem::IoTItem(String parameters) {
     jsonRead(parameters, F("plus"), _plus, false);
     jsonRead(parameters, F("round"), _round, false);
 
+    String valAsStr;
+    if (jsonRead(parameters, F("val"), valAsStr, false))    // значение переменной или датчика при инициализации если есть в конфигурации
+        if (value.isDecimal = isDigitDotCommaStr(valAsStr))
+            value.valD = valAsStr.toFloat();
+        else
+            value.valS = valAsStr;
+
     String map;
     jsonRead(parameters, F("map"), map, false);
     if (map != "") {
@@ -24,7 +31,8 @@ IoTItem::IoTItem(String parameters) {
         _map4 = selectFromMarkerToMarker(map, ",", 3).toInt();
     }
 }
-IoTItem::~IoTItem() {}
+
+// IoTItem::~IoTItem() {}
 
 String IoTItem::getSubtype() {
     return _subtype;
@@ -79,8 +87,8 @@ void IoTItem::doByInterval() {}
 IoTValue IoTItem::execute(String command, std::vector<IoTValue>& param) { return {}; }
 
 IoTItem* findIoTItem(String name) {  // поиск элемента модуля в существующей конфигурации
-    for (unsigned int i = 0; i < IoTItems.size(); i++) {
-        if (IoTItems[i]->getID() == name) return IoTItems[i];
+    for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if ((*it)->getID() == name) return *it;
     }
 
     return nullptr;
@@ -96,4 +104,18 @@ void IoTItem::setValue(IoTValue Value) {
     value = Value;
     if (value.isDecimal) regEvent(value.valD, "");
     else regEvent(value.valS, "");
+}
+
+
+externalVariable::externalVariable(String parameters) : IoTItem(parameters) {
+    prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
+    Serial.printf("Call from  externalVariable: parameters %s %d\n", parameters.c_str(), _interval);
+}
+
+externalVariable::~externalVariable() {
+    Serial.printf("Call from  ~externalVariable: Im dead\n");
+}
+
+void externalVariable::doByInterval() {   // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
+    iAmDead = true;
 }

@@ -25,7 +25,7 @@ class Hdc1080t : public IoTItem {
             else SerialPrint("E", "Sensor Hdc1080t", "Error");  
     }
 
-    ~Hdc1080t();
+    ~Hdc1080t() {};
 };
 
 class Hdc1080h : public IoTItem {
@@ -38,7 +38,7 @@ class Hdc1080h : public IoTItem {
             else SerialPrint("E", "Sensor Hdc1080h", "Error");  
     }
 
-    ~Hdc1080h();
+    ~Hdc1080h() {};
 };
 
 void* getAPI_Hdc1080(String subtype, String param) {

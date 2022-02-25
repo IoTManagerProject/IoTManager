@@ -29,7 +29,7 @@ class Bmp280t : public IoTItem {
             else SerialPrint("E", "Sensor DHTt", "Error");  
     }
 
-    ~Bmp280t();
+    ~Bmp280t() {};
 };
 
   
@@ -50,7 +50,7 @@ class Bmp280p : public IoTItem {
         } else SerialPrint("E", "Sensor DHTh", "Error");  
     }
 
-    ~Bmp280p();
+    ~Bmp280p() {};
 };
 
 

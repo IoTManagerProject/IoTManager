@@ -29,7 +29,7 @@ class Dht1122t : public IoTItem {
             else SerialPrint("E", "Sensor DHTt", "Error");  
     }
 
-    ~Dht1122t();
+    ~Dht1122t() {};
 };
 
 
@@ -48,7 +48,7 @@ class Dht1122h : public IoTItem {
             else SerialPrint("E", "Sensor DHTh", "Error");  
     }
 
-    ~Dht1122h();
+    ~Dht1122h() {};
 };
 
 

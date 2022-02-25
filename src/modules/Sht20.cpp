@@ -18,7 +18,7 @@ class Sht20t : public IoTItem {
             else SerialPrint("E", "Sensor Sht20t", "Error");  
     }
 
-    ~Sht20t();
+    ~Sht20t() {};
 };
 
 class Sht20h : public IoTItem {
@@ -32,7 +32,7 @@ class Sht20h : public IoTItem {
             else SerialPrint("E", "Sensor Sht20h", "Error");
     }   
 
-    ~Sht20h();
+    ~Sht20h() {};
 };
 
 

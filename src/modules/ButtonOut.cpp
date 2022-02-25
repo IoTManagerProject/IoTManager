@@ -47,7 +47,7 @@ class ButtonOut : public IoTItem {
     }
     //=======================================================================================================
 
-    ~ButtonOut();
+    ~ButtonOut() {};
 };
 
 void* getAPI_ButtonOut(String subtype, String param) {

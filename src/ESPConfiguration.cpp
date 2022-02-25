@@ -3,7 +3,7 @@
 
 extern IoTGpio IoTgpio;
 
-std::vector<IoTItem*> IoTItems;
+std::list<IoTItem*> IoTItems;
 void* getAPI(String subtype, String params);
 
 void configure(String path) {
@@ -38,8 +38,8 @@ void configure(String path) {
 
 void clearConfigure() {
     Serial.printf("Start clearing config\n");
-    for (unsigned int i = 0; i < IoTItems.size(); i++) {
-        if (IoTItems[i]) delete IoTItems[i];
+    for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if (*it) delete *it;
     }
     IoTItems.clear();
 }

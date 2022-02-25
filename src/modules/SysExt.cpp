@@ -36,7 +36,7 @@ class SysExt : public IoTItem {
         return {};  // команда поддерживает возвращаемое значения. Т.е. по итогу выполнения команды или общения с внешней системой, можно вернуть значение в сценарий для дальнейшей обработки
     }
    
-    ~SysExt(){};
+    ~SysExt() {};
 };
 
 void* getAPI_SysExt(String subtype, String param) {

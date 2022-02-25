@@ -56,11 +56,16 @@ void setup() {
 
     //загрузка сценария
     iotScen.loadScenario("/scenario.txt");
-    iotScen.ExecScenario("");
+    //iotScen.ExecScenario("");
 
     // test
     Serial.println("-------test start--------");
     Serial.println("--------test end---------");
+
+    // симуляция добавления внешних событий
+    IoTItems.push_back((IoTItem*) new externalVariable("{\"id\":\"rel1\",\"val\":10,\"int\":20}"));
+    IoTItems.push_back((IoTItem*) new externalVariable("{\"id\":\"rel4\",\"val\":34,\"int\":30}"));
+
 
     //тест перебора пинов из расширения
     // for (int i = 109; i < 112; i++) {
@@ -94,8 +99,14 @@ void loop() {
     //обновление mqtt
     mqttLoop();
 
-    for (unsigned int i = 0; i < IoTItems.size(); i++) {
-        IoTItems[i]->loop();
+    // передаем управление каждому элементу конфигурации для выполнения своих функций
+    for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
+        (*it)->loop();
+        if ((*it)->iAmDead) {
+            delete *it;
+            IoTItems.erase(it);
+            break;
+        }
     }
 
     handleOrder();

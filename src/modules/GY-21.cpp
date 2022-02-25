@@ -24,7 +24,7 @@ class GY21t : public IoTItem {
             else SerialPrint("E", "Sensor GY21t", "Error");  
     }
 
-    ~GY21t();
+    ~GY21t() {};
 };
 
 class GY21h : public IoTItem {
@@ -38,7 +38,7 @@ class GY21h : public IoTItem {
             else SerialPrint("E", "Sensor GY21h", "Error");
     }   
 
-    ~GY21h();
+    ~GY21h() {};
 };
 
 void* getAPI_GY21(String subtype, String param) {

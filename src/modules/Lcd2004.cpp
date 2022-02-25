@@ -85,7 +85,7 @@ class Lcd2004 : public IoTItem {
         LCDI2C->print(tmpStr);
     }
    
-    ~Lcd2004(){};
+    ~Lcd2004() {};
 };
 
 void* getAPI_Lcd2004(String subtype, String param) {
