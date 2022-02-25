@@ -2,7 +2,7 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 
-extern std::vector<IoTItem*> IoTItems;  // вектор ссылок базового класса IoTItem - список всех запущенных сенсоров
+extern std::list<IoTItem*> IoTItems;  // вектор ссылок базового класса IoTItem - список всех запущенных сенсоров
 
 extern void configure(String path);
 void clearConfigure();

@@ -8,6 +8,7 @@
 #include <TickerScheduler.h>
 #include <PubSubClient.h>
 #include <StringCommand.h>
+#include <list>
 
 #ifdef ESP32
 #include "WiFi.h"

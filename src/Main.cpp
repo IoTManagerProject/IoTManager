@@ -94,8 +94,10 @@ void loop() {
     //обновление mqtt
     mqttLoop();
 
-    for (unsigned int i = 0; i < IoTItems.size(); i++) {
-        IoTItems[i]->loop();
+    // передаем управление каждому элементу конфигурации для выполнения своих функций
+    for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
+        (*it)->loop();
+        //if ((*it)->iAmDead) delete *it;
     }
 
     handleOrder();

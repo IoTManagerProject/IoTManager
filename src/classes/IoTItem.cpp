@@ -86,8 +86,8 @@ void IoTItem::doByInterval() {}
 IoTValue IoTItem::execute(String command, std::vector<IoTValue>& param) { return {}; }
 
 IoTItem* findIoTItem(String name) {  // поиск элемента модуля в существующей конфигурации
-    for (unsigned int i = 0; i < IoTItems.size(); i++) {
-        if (IoTItems[i]->getID() == name) return IoTItems[i];
+    for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if ((*it)->getID() == name) return *it;
     }
 
     return nullptr;
