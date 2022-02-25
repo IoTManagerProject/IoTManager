@@ -29,7 +29,7 @@ class Bme280t : public IoTItem {
             SerialPrint("E", "Sensor Bme280t", "Error");
     }
 
-    ~Bme280t();
+    ~Bme280t() {};
 };
 
 class Bme280h : public IoTItem {
@@ -49,7 +49,7 @@ class Bme280h : public IoTItem {
             SerialPrint("E", "Sensor Bme280h", "Error");
     }
 
-    ~Bme280h();
+    ~Bme280h() {};
 };
 
 class Bme280p : public IoTItem {
@@ -70,7 +70,7 @@ class Bme280p : public IoTItem {
             SerialPrint("E", "Sensor Bme280p", "Error");
     }
 
-    ~Bme280p();
+    ~Bme280p() {};
 };
 
 

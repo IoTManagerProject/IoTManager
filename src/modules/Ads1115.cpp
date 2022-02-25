@@ -58,7 +58,7 @@ class Ads1115 : public IoTItem {
       }
     }
 
-    ~Ads1115();
+    ~Ads1115() {};
 };
 
 

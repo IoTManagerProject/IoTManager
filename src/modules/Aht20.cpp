@@ -26,7 +26,7 @@ class Aht20t : public IoTItem {
             else SerialPrint("E", "Sensor AHTt", "Error");   
     }
 
-    ~Aht20t();
+    ~Aht20t() {};
 };
 
 
@@ -40,7 +40,7 @@ class Aht20h : public IoTItem {
             else SerialPrint("E", "Sensor AHTt", "Error");    
     }
 
-    ~Aht20h();
+    ~Aht20h() {};
 };
 
 
