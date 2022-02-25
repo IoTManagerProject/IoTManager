@@ -109,6 +109,7 @@ void IoTItem::setValue(IoTValue Value) {
 
 externalVariable::externalVariable(String parameters) : IoTItem(parameters) {
     prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
+    iAmLocal = false;   // указываем, что это сущность прилетела из сети
     Serial.printf("Call from  externalVariable: parameters %s %d\n", parameters.c_str(), _interval);
 }
 
