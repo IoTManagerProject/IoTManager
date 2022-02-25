@@ -10,8 +10,7 @@ struct IoTValue {
 class IoTItem {
    public:
     IoTItem(String parameters);
-    ~IoTItem();
-
+    virtual ~IoTItem() {}
     void loop();
     virtual void doByInterval();
     virtual IoTValue execute(String command, std::vector<IoTValue> &param);
@@ -56,5 +55,5 @@ class externalVariable: IoTItem {   // объект, создаваемый пр
         externalVariable(String parameters); 
         ~externalVariable();
         void doByInterval();   // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
-        
+
 };

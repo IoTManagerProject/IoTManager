@@ -31,7 +31,8 @@ IoTItem::IoTItem(String parameters) {
         _map4 = selectFromMarkerToMarker(map, ",", 3).toInt();
     }
 }
-IoTItem::~IoTItem() {}
+
+// IoTItem::~IoTItem() {}
 
 String IoTItem::getSubtype() {
     return _subtype;
@@ -107,7 +108,8 @@ void IoTItem::setValue(IoTValue Value) {
 
 
 externalVariable::externalVariable(String parameters) : IoTItem(parameters) {
-    Serial.printf("Call from  externalVariable: parameters %s\n", parameters.c_str());
+    prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
+    Serial.printf("Call from  externalVariable: parameters %s %d\n", parameters.c_str(), _interval);
 }
 
 externalVariable::~externalVariable() {
