@@ -67,6 +67,10 @@ void setup() {
     IoTItems.push_back((IoTItem*) new externalVariable("{\"id\":\"rel4\",\"val\":34,\"int\":30}"));
 
 
+    // пример получения JSON всех Items
+    serializeJson(*getLocalItemsAsJSON(), Serial);
+    Serial.println("");
+
     //тест перебора пинов из расширения
     // for (int i = 109; i < 112; i++) {
     //     IoTgpio.pinMode(i, OUTPUT);

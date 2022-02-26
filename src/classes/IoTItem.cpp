@@ -42,6 +42,11 @@ String IoTItem::getID() {
     return _id;
 };
 
+String IoTItem::getValue() {
+    if (value.isDecimal) return (String)value.valD;
+        else return value.valS;
+}
+
 void IoTItem::loop() {
     currentMillis = millis();
     difference = currentMillis - prevMillis;
@@ -86,16 +91,6 @@ void IoTItem::doByInterval() {}
 
 IoTValue IoTItem::execute(String command, std::vector<IoTValue>& param) { return {}; }
 
-IoTItem* findIoTItem(String name) {  // поиск элемента модуля в существующей конфигурации
-    for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
-        if ((*it)->getID() == name) return *it;
-    }
-
-    return nullptr;
-}
-
-IoTItem* myIoTItem;
-
 IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
 }
@@ -119,4 +114,26 @@ externalVariable::~externalVariable() {
 
 void externalVariable::doByInterval() {   // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
     iAmDead = true;
+}
+
+
+IoTItem* myIoTItem;
+
+IoTItem* findIoTItem(String name) {  // поиск элемента модуля в существующей конфигурации
+    for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if ((*it)->getID() == name) return *it;
+    }
+
+    return nullptr;
+}
+
+StaticJsonDocument<JSON_BUFFER_SIZE> docForExport;
+
+StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON () {
+    docForExport.clear();
+    for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if ((*it)->iAmLocal) docForExport[(*it)->getID()] = (*it)->getValue();
+    }
+
+    return &docForExport;
 }
