@@ -20,6 +20,7 @@ class IoTItem {
 
     String getSubtype();
     String getID();
+    String getValue();
 
     unsigned long currentMillis;
     unsigned long prevMillis;
@@ -48,6 +49,7 @@ class IoTItem {
 };
 
 IoTItem* findIoTItem(String name);  // поиск экземпляра элемента модуля по имени
+StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных занчений Items
 
 
 class externalVariable: IoTItem {   // объект, создаваемый при получении информации о событии на другом контроллере для хранения информации о событии указанное время
