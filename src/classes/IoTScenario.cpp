@@ -31,7 +31,7 @@ ExprAST::~ExprAST() {}
 IoTValue* ExprAST::exec() {return nullptr;}
 int ExprAST::setValue(IoTValue *val) {return 0;}  // 0 - установка значения не поддерживается наследником
 bool ExprAST::hasEventIdName(String eventIdName) {return false;}  // по умолчанию все узлы не связаны с ИД события, для которого выполняется сценарий
-struct IoTValue zeroIotVal;
+//struct IoTValue zeroIotVal;
         
 /// NumberExprAST - Класс узла выражения для числовых литералов (Например, "1.0").
 class NumberExprAST : public ExprAST {
@@ -61,24 +61,31 @@ public:
 class VariableExprAST : public ExprAST {
   String Name;
   IoTItem* Item;  // ссылка на объект модуля (прямой доступ к идентификатору указанному в сценарии), если получилось найти модуль по ID
+  bool ItemIsLocal = false;
 
 public:
-  VariableExprAST(const String &name, IoTItem* item) : Name(name), Item(item) {}
+  VariableExprAST(const String &name, IoTItem* item) : Name(name), Item(item) {
+    if (item) ItemIsLocal = item->iAmLocal;
+  }
 
   int setValue(IoTValue *val) {
-    if (Item) {
-      //Item->value = *val;  // устанавливаем значение в связанном Item модуля напрямую
-      Item->setValue(*val);
-    }
+    if (!ItemIsLocal) Item = findIoTItem(Name);
+    if (Item) Item->setValue(*val);
+    else return 0;
+
     return 1;
   }
 
   IoTValue* exec() {
-    if (Item->value.isDecimal) 
-      Serial.printf("Call from  VariableExprAST: %s = %f\n", Name.c_str(), Item->value.valD);
-    else Serial.printf("Call from  VariableExprAST: %s = %s\n", Name.c_str(), Item->value.valS.c_str());
-    
-    return &(Item->value);
+    if (!ItemIsLocal) Item = findIoTItem(Name);
+    if (Item) {
+      if (Item->value.isDecimal) 
+        Serial.printf("Call from  VariableExprAST: %s = %f\n", Name.c_str(), Item->value.valD);
+      else Serial.printf("Call from  VariableExprAST: %s = %s\n", Name.c_str(), Item->value.valS.c_str());
+      return &(Item->value);
+    }
+
+    return nullptr; // Item не найден.
   }
 };
 
@@ -109,6 +116,8 @@ public:
 
     Serial.printf("Call from  BinaryExprAST: %s\n", printStr.c_str());
     
+    if (RHS == nullptr || LHS == nullptr) return nullptr;
+
     IoTValue* rhs = RHS->exec();  // получаем значение правого операнда для возможного использования в операции присваивания
 
     if (Op == '=' && LHS->setValue(rhs)) {  // если установка значения не поддерживается, т.е. слева не переменная, то работаем по другим комбинациям далее
@@ -189,22 +198,27 @@ class CallExprAST : public ExprAST {
   std::vector<ExprAST*> Args;
   IoTItem *Item;  // ссылка на объект модуля (прямой доступ к идентификатору указанному в сценарии), если получилось найти модуль по ID
   IoTValue ret;  // хранение возвращаемого значения, т.к. возврат по ссылке осуществляется
+  bool ItemIsLocal = false;
 
 public:
   CallExprAST(const String &callee, String &cmd, std::vector<ExprAST*> &args, IoTItem *item)
-    : Callee(callee), Cmd(cmd), Args(args), Item(item) {}
+    : Callee(callee), Cmd(cmd), Args(args), Item(item) {
+      if (item) ItemIsLocal = item->iAmLocal;
+    }
 
   IoTValue* exec() {
-    if (Item) {
-      std::vector<IoTValue> ArgsAsIoTValue;
-      for (unsigned int i = 0; i < Args.size(); i++) {
-        IoTValue *tmp = Args[i]->exec();
-        if (tmp != nullptr) ArgsAsIoTValue.push_back(*tmp);
-          else ArgsAsIoTValue.push_back(zeroIotVal);
-      }
-      ret = Item->execute(Cmd, ArgsAsIoTValue);  // вызываем команду из модуля напрямую с передачей всех аргументов
-    } else ret = zeroIotVal;
-
+    if (!ItemIsLocal) Item = findIoTItem(Callee);
+    if (!Item) return nullptr; //ret = zeroIotVal;
+    
+    std::vector<IoTValue> ArgsAsIoTValue;
+    for (unsigned int i = 0; i < Args.size(); i++) {
+      if (Args[i] == nullptr) return nullptr;
+      IoTValue *tmp = Args[i]->exec();
+      if (tmp != nullptr) ArgsAsIoTValue.push_back(*tmp);
+        else return nullptr; //ArgsAsIoTValue.push_back(zeroIotVal);
+    }
+    ret = Item->execute(Cmd, ArgsAsIoTValue);  // вызываем команду из модуля напрямую с передачей всех аргументов
+    
     if (ret.isDecimal) Serial.printf("Call from  CallExprAST ID = %s, Command = %s, exec result = %f\n", Callee.c_str(), Cmd.c_str(), ret.valD);
     else Serial.printf("Call from  CallExprAST ID = %s, Command = %s, exec result = %s\n", Callee.c_str(), Cmd.c_str(), ret.valS.c_str());
     return &ret;
@@ -241,11 +255,16 @@ public:
     
     if (!cond_ret) {
       Serial.printf("Call from  IfExprAST: Skip If\n");
-      return &zeroIotVal;
+      return nullptr; //&zeroIotVal;
     }
 
-    if (cond_ret->isDecimal && cond_ret->valD) res_ret = Then->exec();
-    else if (Else) res_ret = Else->exec();
+    if (cond_ret->isDecimal && cond_ret->valD) {
+      if (Then == nullptr) return nullptr;
+      res_ret = Then->exec();
+    } else { 
+      if (Else == nullptr) return nullptr;
+      res_ret = Else->exec();
+    } 
 
     if (!res_ret) Serial.printf("Call from  IfExprAST: Cond result = %f, no body result\n", cond_ret->valD);
     else if (res_ret->isDecimal) Serial.printf("Call from  IfExprAST: Cond result = %f, result = %f\n", cond_ret->valD, res_ret->valD);
@@ -275,6 +294,7 @@ public:
     
     IoTValue* lastExecValue = nullptr;
     for (unsigned int i = 0; i < BracketsList.size(); i++) {
+      if (BracketsList[i] == nullptr) return nullptr; 
       lastExecValue = BracketsList[i]->exec();
     }
 
@@ -442,8 +462,11 @@ public:
     }
 
     if (CurTok != '(') { // Обычная переменная.
-      if (tmpItem) return new VariableExprAST(IdName, tmpItem);
-        else return new StringExprAST("id " + IdName + " not_found");
+      // if (tmpItem) return new VariableExprAST(IdName, tmpItem);
+      //   else return new StringExprAST("id " + IdName + " not_found");
+
+      // создаем экземпляр переменной в любом случае, даж если не нашли (tmpItem = nulptr), т.к. переменная может придти из сети позже
+      return new VariableExprAST(IdName, tmpItem);  
     }
     
     // Вызов функции.
