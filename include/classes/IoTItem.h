@@ -49,6 +49,7 @@ class IoTItem {
 };
 
 IoTItem* findIoTItem(String name);  // поиск экземпляра элемента модуля по имени
+String getItemValue(String name);  // поиск плюс получение значения
 StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных занчений Items
 
 
