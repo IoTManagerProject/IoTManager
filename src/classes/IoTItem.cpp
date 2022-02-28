@@ -138,6 +138,12 @@ IoTItem* findIoTItem(String name) {  // поиск элемента модуля
     return nullptr;
 }
 
+String getItemValue(String name) {  // поиск плюс получение значения
+    IoTItem* tmp = findIoTItem(name);
+    if (tmp) return tmp->getValue();
+        else return "";
+}
+
 StaticJsonDocument<JSON_BUFFER_SIZE> docForExport;
 
 StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON() {

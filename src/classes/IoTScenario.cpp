@@ -7,6 +7,9 @@
 #include "utils/FileUtils.h"
 
 
+bool isIotScenException;  // признак исключения и попытки прекратить выполнение сценария заранее
+
+
 // Лексический анализатор возвращает токены [0-255], если это неизвестны, 
 // иначе одну из известных единиц кода
 enum Token {
@@ -39,7 +42,8 @@ class NumberExprAST : public ExprAST {
 public:
   NumberExprAST(float val) { Val.valD = val;}
 
-  IoTValue* exec(){
+  IoTValue* exec() {
+    if (isIotScenException) return nullptr;
     Serial.printf("Call from  NumberExprAST: %f\n", Val.valD);
     return &Val;
   }
@@ -51,7 +55,8 @@ class StringExprAST : public ExprAST {
 public:
   StringExprAST(String val) { Val.isDecimal = false; Val.valS = val;}
 
-  IoTValue* exec(){
+  IoTValue* exec() {
+    if (isIotScenException) return nullptr;
     Serial.printf("Call from  StringExprAST: %s\n", Val.valS.c_str());
     return &Val;
   }
@@ -77,6 +82,7 @@ public:
   }
 
   IoTValue* exec() {
+    if (isIotScenException) return nullptr;
     if (!ItemIsLocal) Item = findIoTItem(Name);
     if (Item) {
       if (Item->value.isDecimal) 
@@ -106,6 +112,7 @@ public:
   }
 
   IoTValue* exec(){
+    if (isIotScenException) return nullptr;
     String printStr = "";
 
     if (Op == tok_equal) printStr = "==";   
@@ -207,9 +214,22 @@ public:
     }
 
   IoTValue* exec() {
-    if (!ItemIsLocal) Item = findIoTItem(Callee);
-    if (!Item) return nullptr; //ret = zeroIotVal;
+    if (isIotScenException) return nullptr;   // если прерывание, то сразу выходим
     
+    if (Cmd == "exit" || Callee == "exit") {   // если системная команда, то выполняем и выходим
+      IoTValue* tmp;
+      if (Args.size() > 0 && Args[0]) tmp = Args[0]->exec();
+        else SerialPrint("i", "SysExt", "Exit");
+      if (tmp) SerialPrint("i", "SysExt", "Exit = '" + tmp->valS + "'");
+    
+      isIotScenException = true;
+      return nullptr;
+    }
+
+    if (!ItemIsLocal) Item = findIoTItem(Callee);   // пробуем найти переменную если она не локальная (могла придти по сети в процессе)
+    if (!Item) return nullptr; //ret = zeroIotVal;  // если все же не пришла, то либо опечатка, либо уже стерлась - выходим
+
+    // если все же все ок, то готовим параметры для передачи в модуль
     std::vector<IoTValue> ArgsAsIoTValue;
     for (unsigned int i = 0; i < Args.size(); i++) {
       if (Args[i] == nullptr) return nullptr;
@@ -217,6 +237,7 @@ public:
       if (tmp != nullptr) ArgsAsIoTValue.push_back(*tmp);
         else return nullptr; //ArgsAsIoTValue.push_back(zeroIotVal);
     }
+
     ret = Item->execute(Cmd, ArgsAsIoTValue);  // вызываем команду из модуля напрямую с передачей всех аргументов
     
     if (ret.isDecimal) Serial.printf("Call from  CallExprAST ID = %s, Command = %s, exec result = %f\n", Callee.c_str(), Cmd.c_str(), ret.valD);
@@ -248,6 +269,7 @@ public:
   }
 
   IoTValue* exec() {
+    if (isIotScenException) return nullptr;
     IoTValue *res_ret = nullptr;
     IoTValue *cond_ret = nullptr;
 
@@ -290,6 +312,7 @@ public:
     : BracketsList(bracketsList) {}
 
   IoTValue* exec() {
+    if (isIotScenException) return nullptr;
     Serial.printf("Call from  BracketsExprAST OperCount = %d \n", BracketsList.size());
     
     IoTValue* lastExecValue = nullptr;
@@ -489,8 +512,9 @@ public:
     // Получаем ')'.
     getNextToken();
   
-    if (tmpItem) return new CallExprAST(IdName, Cmd, Args, tmpItem);
-      else return new StringExprAST("id " + IdName + " not_found");
+    //if (tmpItem) 
+    return new CallExprAST(IdName, Cmd, Args, tmpItem);   // создаем объект запуска функции в любом случае даж если не нашли Item
+      //else return new StringExprAST("id " + IdName + " not_found");
   }
 
   /// numberexpr ::= number
@@ -671,10 +695,12 @@ public:
 
   void IoTScenario::ExecScenario(String eventIdName) {  // запускаем поочереди все корневые элементы выражений в сценарии, ожидаемо - это IFы
      // eventIdName - ID элемента для которого выполняем сценарий, т.е. игнорируем любые проверки, если нет такого ID в условиях
+    isIotScenException = false;
     Serial.printf("Count root elements in scenario: %d\n", ScenarioElements.size());
     for (unsigned int i = 0; i < ScenarioElements.size(); i++) {
       if (ScenarioElements[i] && ScenarioElements[i]->hasEventIdName(eventIdName)) ScenarioElements[i]->exec();
       else Serial.printf("Call from  ExecScenario: Skip ifexec because %s not found\n", eventIdName.c_str());
+      if (isIotScenException) return;
     }
   }
 
