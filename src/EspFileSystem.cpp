@@ -20,15 +20,18 @@ void globalVarsSync() {
 
     jsonWriteStr_(errorsHeapJson, "errors", "");  //метка для парсинга
     jsonWriteStr_(ssidListHeapJson, "ssid", "");  //метка для парсинга
-    jsonWriteStr(paramsHeapJson, "params", "");   //метка для парсинга
+    // jsonWriteStr(paramsHeapJson, "params", "");   //метка для парсинга
+}
+
+String getParamsJson() {
+    String json;
+    serializeJson(*getLocalItemsAsJSON(), json);
+    jsonWriteStr_(json, "params", "");
+    return json;
 }
 
 void syncSettingsFlashJson() {
     writeFile(F("settings.json"), settingsFlashJson);
-}
-
-void saveParamsFlashJson() {
-    writeFile(F("params.json"), paramsFlashJson);
 }
 
 const String getChipId() {

@@ -51,9 +51,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //**отправка**//
             if (headerStr == "/|") {
                 sendFileToWs("/layout.json", num, 1024);
-                String json = "{}";
-                jsonMergeObjects(json, paramsHeapJson);
-                jsonMergeObjects(json, paramsFlashJson);
+                String json = getParamsJson();
                 standWebSocket.sendTXT(num, json);
             }
             // page configutation================================================================

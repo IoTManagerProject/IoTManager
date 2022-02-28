@@ -15,5 +15,6 @@
     "mqttUser": "rise",
     "mqttPass": "hostel3333",
     "serverip": "http://206.189.49.244:8081",
-    "log": 0
+    "log": 0,
+    "mqttin": 1
 }

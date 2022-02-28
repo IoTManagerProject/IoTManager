@@ -22,7 +22,7 @@ void standWebServerInit() {
     });
 
     HTTP.on("/params.json", HTTP_GET, []() {
-        HTTP.send(200, "application/json", paramsHeapJson);
+       // HTTP.send(200, "application/json", paramsHeapJson);
     });
 
     HTTP.on("/errors.json", HTTP_GET, []() {

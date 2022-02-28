@@ -109,7 +109,7 @@ void mqttSubscribe() {
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/update").c_str());
 
-    if (jsonReadBool(settingsFlashJson, "MqttIn")) {
+    if (jsonReadBool(settingsFlashJson, "mqttin")) {
         mqtt.subscribe((mqttPrefix + "/+/+/event").c_str());
         mqtt.subscribe((mqttPrefix + "/+/+/order").c_str());
         mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
@@ -145,31 +145,34 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         SerialPrint("i", F("=>MQTT"), "Msg from iotmanager app: " + key + " " + payloadStr);
     }
 
-    // else if (topicStr.indexOf("event") != -1) {
-    //    if (!jsonReadBool(settingsFlashJson, "MqttIn")) {
-    //        return;
-    //    }
-    //    if (topicStr.indexOf(chipId) == -1) {
-    //        String devId = selectFromMarkerToMarker(topicStr, "/", 2);
-    //        String key = selectFromMarkerToMarker(topicStr, "/", 3);
-    //        SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + key + " " + payloadStr);
-    //        String event = key + " " + payloadStr + ",";
-    //        eventBuf += event;
-    //    }
-    //}
-    //
-    // else if (topicStr.indexOf("order") != -1) {
-    //    if (!jsonReadBool(settingsFlashJson, "MqttIn")) {
-    //        return;
-    //    }
-    //    String devId = selectFromMarkerToMarker(topicStr, "/", 2);
-    //    String key = selectFromMarkerToMarker(topicStr, "/", 3);
-    //    SerialPrint("i", F("=>MQTT"), "Received direct order " + key + " " + payloadStr);
-    //    String order = key + " " + payloadStr + ",";
-    //    loopCmdAdd(order);
-    //    SerialPrint("i", "Order add", order);
-    //}
-    //
+    //здесь мы получаем события с других устройств, которые потом проверяются в сценариях этого устройства
+    else if (topicStr.indexOf("event") != -1) {
+        if (!jsonReadBool(settingsFlashJson, "mqttin")) {
+            return;
+        }
+        if (topicStr.indexOf(chipId) == -1) {
+            String devId = selectFromMarkerToMarker(topicStr, "/", 2);
+            String id = selectFromMarkerToMarker(topicStr, "/", 3);
+            //добавим событие в базу
+            IoTItems.push_back((IoTItem*)new externalVariable(payloadStr));
+            //запустим проверку его в сценариях
+            generateEvent(id, payloadStr);
+            SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + payloadStr);
+        }
+    }
+
+    //здесь мы получаем прямые команды которые сразу выполнятся на этом устройстве
+    //необходимо для тех кто хочет управлять своим устройством из mqtt
+    else if (topicStr.indexOf("order") != -1) {
+        if (!jsonReadBool(settingsFlashJson, "mqttin")) {
+            return;
+        }
+        String devId = selectFromMarkerToMarker(topicStr, "/", 2);
+        String id = selectFromMarkerToMarker(topicStr, "/", 3);
+        generateOrder(id, payloadStr);
+        SerialPrint("i", F("=>MQTT"), "Received direct order " + id + " " + payloadStr);
+    }
+
     // else if (topicStr.indexOf("info") != -1) {
     //    if (topicStr.indexOf("scen") != -1) {
     //        writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
@@ -260,9 +263,7 @@ void publishWidgets() {
 }
 
 void publishState() {
-    String json = "{}";
-    jsonMergeObjects(json, paramsHeapJson);
-    jsonMergeObjects(json, paramsFlashJson);
+    String json = getParamsJson();
     json.replace("{", "");
     json.replace("}", "");
     json.replace("\"", "");

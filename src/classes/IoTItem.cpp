@@ -16,7 +16,7 @@ IoTItem::IoTItem(String parameters) {
     jsonRead(parameters, F("round"), _round, false);
 
     String valAsStr;
-    if (jsonRead(parameters, F("val"), valAsStr, false))    // значение переменной или датчика при инициализации если есть в конфигурации
+    if (jsonRead(parameters, F("val"), valAsStr, false))  // значение переменной или датчика при инициализации если есть в конфигурации
         if (value.isDecimal = isDigitDotCommaStr(valAsStr))
             value.valD = valAsStr.toFloat();
         else
@@ -43,8 +43,10 @@ String IoTItem::getID() {
 };
 
 String IoTItem::getValue() {
-    if (value.isDecimal) return (String)value.valD;
-        else return value.valS;
+    if (value.isDecimal)
+        return (String)value.valD;
+    else
+        return value.valS;
 }
 
 void IoTItem::loop() {
@@ -58,8 +60,17 @@ void IoTItem::loop() {
 
 void IoTItem::regEvent(String value, String consoleInfo = "") {
     generateEvent(_id, value);
-    jsonWriteStr(paramsHeapJson, _id, value);
     publishStatusMqtt(_id, value);
+    //отправка события другим устройствам в сети==============================
+    if (jsonReadBool(settingsFlashJson, "mqttin")) {
+        String json = "{}";
+        jsonWriteStr_(json, "id", _id);
+        jsonWriteStr_(json, "val", value);
+        jsonWriteInt_(json, "int", _interval + 5000);  // 5 секунд про запас
+        publishEvent(_id, json);
+        SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
+    }
+    //========================================================================
     publishStatusWs(_id, value);
     SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
 }
@@ -97,14 +108,15 @@ IoTGpio* IoTItem::getGpioDriver() {
 
 void IoTItem::setValue(IoTValue Value) {
     value = Value;
-    if (value.isDecimal) regEvent(value.valD, "");
-    else regEvent(value.valS, "");
+    if (value.isDecimal)
+        regEvent(value.valD, "");
+    else
+        regEvent(value.valS, "");
 }
-
 
 externalVariable::externalVariable(String parameters) : IoTItem(parameters) {
     prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
-    iAmLocal = false;   // указываем, что это сущность прилетела из сети
+    iAmLocal = false;       // указываем, что это сущность прилетела из сети
     Serial.printf("Call from  externalVariable: parameters %s %d\n", parameters.c_str(), _interval);
 }
 
@@ -112,15 +124,14 @@ externalVariable::~externalVariable() {
     Serial.printf("Call from  ~externalVariable: Im dead\n");
 }
 
-void externalVariable::doByInterval() {   // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
+void externalVariable::doByInterval() {  // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
     iAmDead = true;
 }
-
 
 IoTItem* myIoTItem;
 
 IoTItem* findIoTItem(String name) {  // поиск элемента модуля в существующей конфигурации
-    for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
+    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         if ((*it)->getID() == name) return *it;
     }
 
@@ -129,9 +140,9 @@ IoTItem* findIoTItem(String name) {  // поиск элемента модуля
 
 StaticJsonDocument<JSON_BUFFER_SIZE> docForExport;
 
-StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON () {
+StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON() {
     docForExport.clear();
-    for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
+    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         if ((*it)->iAmLocal) docForExport[(*it)->getID()] = (*it)->getValue();
     }
 

@@ -84,8 +84,6 @@ extern WebSocketsServer standWebSocket;
 **********************************************************************************************************************/
 extern String settingsFlashJson;
 extern String errorsHeapJson;
-extern String paramsFlashJson;
-extern String paramsHeapJson;
 
 // buf
 extern String orderBuf;

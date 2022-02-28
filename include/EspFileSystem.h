@@ -26,8 +26,9 @@ extern FS* filesystem;
 extern bool fileSystemInit();
 extern void globalVarsSync();
 
+extern String getParamsJson();
+
 extern void syncSettingsFlashJson();
-extern void saveParamsFlashJson();
 
 extern const String getChipId();
 extern void setChipId();

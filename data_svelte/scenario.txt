@@ -1,4 +1,0 @@
-#if t22 > 10 then var = var + 1;
-#if var == 1 then btn1.change();
-#if var == 2 then btn2.change();
-#if var == 3 then { btn3.change(); var = 0;}

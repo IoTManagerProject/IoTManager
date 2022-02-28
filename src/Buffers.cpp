@@ -31,16 +31,16 @@ void spaceCmdExecute(String& cmdStr) {
     }
 }
 
-String getValueJson(String& key) {
-    String live = jsonReadStr(paramsHeapJson, key);
-    String store = jsonReadStr(paramsFlashJson, key);
-    if (live != nullptr) {
-        return live;
-    } else if (store != nullptr) {
-        return store;
-    } else if (store == nullptr && live == nullptr) {
-        return "no value";
-    } else {
-        return "data error";
-    }
-}
+// String getValueJson(String& key) {
+//     String live = jsonReadStr(paramsHeapJson, key);
+//     String store = jsonReadStr(paramsFlashJson, key);
+//     if (live != nullptr) {
+//         return live;
+//     } else if (store != nullptr) {
+//         return store;
+//     } else if (store == nullptr && live == nullptr) {
+//         return "no value";
+//     } else {
+//         return "data error";
+//     }
+// }
