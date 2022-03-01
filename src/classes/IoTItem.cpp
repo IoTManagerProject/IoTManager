@@ -75,26 +75,20 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
     SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
 }
 
-void IoTItem::regEvent(float value, String consoleInfo = "") {
-    if (_multiply) value = value * _multiply;
-    if (_plus) value = value + _multiply;
-    if (_round != 0) {
-        if (value > 0) {
-            value = (int)(value * _round + 0.5F);
-            value = value / _round;
-        }
-        if (value < 0) {
-            value = (int)(value * _round - 0.5F);
-            value = value / _round;
-        }
-
-        // value = (float)value / (_round ? pow(10, (int)_round) : 1);  // TODO: решить как указывать округление, количество знаков после запятой или десятые сотые ...
+void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
+    if (_multiply) regvalue = regvalue * _multiply;
+    if (_plus) regvalue = regvalue + _multiply;
+    if (_round >= 0 && _round < 6) {
+        int sot = _round ? pow(10, (int)_round) : 1;
+        regvalue = round(regvalue*sot)/sot;
     }
-    if (_map1 != _map2) value = map(value, _map1, _map2, _map3, _map4);
+    if (_map1 != _map2) regvalue = map(regvalue, _map1, _map2, _map3, _map4);
+
+    value.valD = regvalue;
 
     // убираем лишние нули
     char buf[20];
-    sprintf(buf, "%g", value);
+    sprintf(buf, "%g", regvalue);
     regEvent((String)buf, consoleInfo);
 }
 
