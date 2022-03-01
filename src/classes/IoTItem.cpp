@@ -78,17 +78,9 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
 void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
     if (_multiply) regvalue = regvalue * _multiply;
     if (_plus) regvalue = regvalue + _multiply;
-    if (_round != 0) {
-        if (regvalue > 0) {
-            regvalue = (int)(regvalue * _round + 0.5F);
-            regvalue = regvalue / _round;
-        }
-        if (regvalue < 0) {
-            regvalue = (int)(regvalue * _round - 0.5F);
-            regvalue = regvalue / _round;
-        }
-
-        // regvalue = (float)regvalue / (_round ? pow(10, (int)_round) : 1);  // TODO: решить как указывать округление, количество знаков после запятой или десятые сотые ...
+    if (_round >= 0 && _round < 6) {
+        int sot = _round ? pow(10, (int)_round) : 1;
+        regvalue = round(regvalue*sot)/sot;
     }
     if (_map1 != _map2) regvalue = map(regvalue, _map1, _map2, _map3, _map4);
 
