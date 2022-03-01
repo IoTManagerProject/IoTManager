@@ -11,9 +11,9 @@ IoTItem::IoTItem(String parameters) {
     _interval = _interval * 1000;
     jsonRead(parameters, F("subtype"), _subtype);
     jsonRead(parameters, F("id"), _id);
-    jsonRead(parameters, F("multiply"), _multiply, false);
-    jsonRead(parameters, F("plus"), _plus, false);
-    jsonRead(parameters, F("round"), _round, false);
+    if (jsonRead(parameters, F("multiply"), _multiply, false)) _multiply = 1;
+    if (!jsonRead(parameters, F("plus"), _plus, false)) _plus = 0;
+    if (!jsonRead(parameters, F("round"), _round, false)) _round = -1;
 
     String valAsStr;
     if (jsonRead(parameters, F("val"), valAsStr, false))  // значение переменной или датчика при инициализации если есть в конфигурации
