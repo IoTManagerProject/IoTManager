@@ -22,7 +22,8 @@ void standWebServerInit() {
     });
 
     HTTP.on("/params.json", HTTP_GET, []() {
-       // HTTP.send(200, "application/json", paramsHeapJson);
+        String json = getParamsJson();
+        HTTP.send(200, "application/json", json);
     });
 
     HTTP.on("/errors.json", HTTP_GET, []() {
