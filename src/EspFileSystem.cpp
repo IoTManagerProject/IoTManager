@@ -25,7 +25,7 @@ void globalVarsSync() {
 
 String getParamsJson() {
     String json;
-    serializeJson(*getLocalItemsAsJSON(), json);
+    serializeJson(*getLocalItemsAsJSON(), json);  // Ilya, data: "1.00" (analog sensor, round set to 1, should be "1.0")
     jsonWriteStr_(json, "params", "");
     return json;
 }

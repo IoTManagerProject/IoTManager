@@ -71,7 +71,7 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
         SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
     }
     //========================================================================
-    publishStatusWs(_id, value);
+    publishStatusWs(_id, value);  // Ilya, data: "1" (analog sensor, round set to 1, should be "1.0")
     SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
 }
 
@@ -80,7 +80,7 @@ void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
     if (_plus) regvalue = regvalue + _multiply;
     if (_round >= 0 && _round < 6) {
         int sot = _round ? pow(10, (int)_round) : 1;
-        regvalue = round(regvalue*sot)/sot;
+        regvalue = round(regvalue * sot) / sot;
     }
     if (_map1 != _map2) regvalue = map(regvalue, _map1, _map2, _map3, _map4);
 
@@ -134,8 +134,10 @@ IoTItem* findIoTItem(String name) {  // поиск элемента модуля
 
 String getItemValue(String name) {  // поиск плюс получение значения
     IoTItem* tmp = findIoTItem(name);
-    if (tmp) return tmp->getValue();
-        else return "";
+    if (tmp)
+        return tmp->getValue();
+    else
+        return "";
 }
 
 StaticJsonDocument<JSON_BUFFER_SIZE> docForExport;
