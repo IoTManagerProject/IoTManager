@@ -87,9 +87,11 @@ void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
     value.valD = regvalue;
 
     // убираем лишние нули
-    char buf[20];
-    sprintf(buf, "%g", regvalue);
-    regEvent((String)buf, consoleInfo);
+    // char buf[20];
+    // sprintf(buf, "%g", regvalue);
+    // regEvent((String)buf, consoleInfo);
+
+    regEvent((String)regvalue, consoleInfo);
 }
 
 void IoTItem::doByInterval() {}
