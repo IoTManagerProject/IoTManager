@@ -36,6 +36,10 @@ class Mcp23017 : public IoTItem, IoTGpio {
         return mcp.digitalRead(pin);
     }
 
+    void digitalInvert(uint8_t pin) {
+        mcp.digitalWrite(pin, 1 - mcp.digitalRead(pin));
+    }
+
     ~Mcp23017() {};
 };
 
