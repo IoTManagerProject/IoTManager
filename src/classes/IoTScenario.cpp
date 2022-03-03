@@ -264,9 +264,7 @@ public:
     : Cond(cond), Then(then), Else(_else) {
       if (IDNames) { 
         _IDNames = *IDNames; 
-        //Serial.printf("eeeeeeeeeeeeee %s\n", _IDNames.c_str());
       } else _IDNames = "";
-      Serial.printf("eeeeeeeeeeeeee\n");
     }
 
   bool hasEventIdName(String eventIdName) {
@@ -553,10 +551,13 @@ public:
         bracketsList.push_back(Expr);
 
         if (CurTok != ';')
-          return Error("Expected '}' or ';' in operation list");
-        getNextToken();
-
+          return Error("Expected ';' in operation list");
+        int ttok = getNextToken();
+        if (!ttok) { Error("Expected '}'"); break; }
+        
         if (CurTok == '}') break;
+
+
       }
     }
  
@@ -689,7 +690,7 @@ public:
           case tok_if: {
             String IDNames = "";  // накопитель встречающихся идентификаторов в условии
             ScenarioElements.push_back(ParseIfExpr(&IDNames)); 
-            Serial.printf("vvvvvvvvvvvvvvvv %s", IDNames.c_str());
+            //Serial.printf("vvvvvvvvvvvvvvvv %s", IDNames.c_str());
             break;
           }
           default:         getNextToken(); break;
