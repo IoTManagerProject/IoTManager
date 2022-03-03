@@ -260,8 +260,14 @@ class IfExprAST : public ExprAST {
   String _IDNames;
 
 public:
-  IfExprAST(ExprAST *cond, ExprAST *then, ExprAST *_else, String IDNames)
-    : Cond(cond), Then(then), Else(_else), _IDNames(IDNames) {}
+  IfExprAST(ExprAST *cond, ExprAST *then, ExprAST *_else, String *IDNames)
+    : Cond(cond), Then(then), Else(_else) {
+      if (IDNames) { 
+        _IDNames = *IDNames; 
+        //Serial.printf("eeeeeeeeeeeeee %s\n", _IDNames.c_str());
+      } else _IDNames = "";
+      Serial.printf("eeeeeeeeeeeeee\n");
+    }
 
   bool hasEventIdName(String eventIdName) {
       Serial.printf("Call from  BinaryExprAST _IDNames:%s\n", _IDNames.c_str());
@@ -579,7 +585,7 @@ public:
     getNextToken();  // Получаем then
     
     ExprAST *Then = ParseExpression(nullptr);
-    if (Then == 0) return 0;
+    if (!Then) return 0;
     
     //if (CurTok != tok_else)
     //  return Error("expected else");
@@ -589,7 +595,7 @@ public:
       Else = ParseExpression(nullptr);
     }
 
-    return new IfExprAST(Cond, Then, Else, *IDNames);
+    return new IfExprAST(Cond, Then, Else, IDNames);
   }
 
   /// primary
@@ -646,7 +652,7 @@ public:
       LHS = new BinaryExprAST(BinOp, LHS, RHS);
     }
   }
-
+  
 
   /// expression
   ///   ::= primary binoprhs
@@ -682,7 +688,8 @@ public:
           //case ';':        getNextToken(); break;  // игнорируем верхнеуровневые точки с запятой.
           case tok_if: {
             String IDNames = "";  // накопитель встречающихся идентификаторов в условии
-            ScenarioElements.push_back(ParseExpression(&IDNames)); 
+            ScenarioElements.push_back(ParseIfExpr(&IDNames)); 
+            Serial.printf("vvvvvvvvvvvvvvvv %s", IDNames.c_str());
             break;
           }
           default:         getNextToken(); break;
