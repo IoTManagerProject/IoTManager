@@ -11,7 +11,7 @@ IoTItem::IoTItem(String parameters) {
     _interval = _interval * 1000;
     jsonRead(parameters, F("subtype"), _subtype);
     jsonRead(parameters, F("id"), _id);
-    if (jsonRead(parameters, F("multiply"), _multiply, false)) _multiply = 1;
+    if (!jsonRead(parameters, F("multiply"), _multiply, false)) _multiply = 1;
     if (!jsonRead(parameters, F("plus"), _plus, false)) _plus = 0;
     if (!jsonRead(parameters, F("round"), _round, false)) _round = -1;
 
@@ -44,7 +44,11 @@ String IoTItem::getID() {
 
 String IoTItem::getValue() {
     if (value.isDecimal)
-        return (String)value.valD;
+        if (_round >= 0) {
+            char buf[8];
+            sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
+            return (String)buf;
+        } else return (String)value.valD;
     else
         return value.valS;
 }
@@ -78,7 +82,7 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
 void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
     if (_multiply) regvalue = regvalue * _multiply;
     if (_plus) regvalue = regvalue + _multiply;
-    if (_round >= 0 && _round < 6) {
+    if (_round >= 0 && _round <= 6) {
         int sot = _round ? pow(10, (int)_round) : 1;
         regvalue = round(regvalue * sot) / sot;
     }
@@ -86,12 +90,7 @@ void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
 
     value.valD = regvalue;
 
-    // убираем лишние нули
-    // char buf[20];
-    // sprintf(buf, "%g", regvalue);
-    // regEvent((String)buf, consoleInfo);
-
-    regEvent((String)regvalue, consoleInfo);
+    regEvent(getValue(), consoleInfo);
 }
 
 void IoTItem::doByInterval() {}
