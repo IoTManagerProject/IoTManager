@@ -48,6 +48,12 @@ void IoTGpio::analogWrite(uint8_t pin, int val) {
     }
 }
 
+void IoTGpio::digitalInvert(uint8_t pin) {
+    int pinH = pin/100;
+    if (_drivers[pinH]) _drivers[pinH]->digitalInvert(pin - pinH*100);
+    else ::digitalWrite(pin, 1 - ::digitalRead(pin));
+}
+
 
 void IoTGpio::regDriver(IoTGpio* newDriver) {
     _drivers[newDriver->index] = newDriver;

@@ -31,8 +31,25 @@ class SysExt : public IoTItem {
     
         if (command == "reboot") {  // выполняем код при вызове спец команды из сценария: ID.reboot();
             ESP.restart();
+        } else if (command == "digitalRead") { 
+            if (param.size()) {
+                IoTgpio.pinMode(param[0].valD, INPUT);
+                value.valD = IoTgpio.digitalRead(param[0].valD);
+                return value;
+            }
+        } else if (command == "digitalWrite") { 
+            if (param.size() == 2) {
+                IoTgpio.pinMode(param[0].valD, OUTPUT);
+                IoTgpio.digitalWrite(param[0].valD, param[1].valD);
+                return {};
+            }
+        } else if (command == "digitalInvert") { 
+            if (param.size()) {
+                IoTgpio.pinMode(param[0].valD, OUTPUT);
+                IoTgpio.digitalInvert(param[0].valD);
+                return {};
+            }
         }
-
         return {};  // команда поддерживает возвращаемое значения. Т.е. по итогу выполнения команды или общения с внешней системой, можно вернуть значение в сценарий для дальнейшей обработки
     }
    

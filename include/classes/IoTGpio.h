@@ -11,6 +11,7 @@ class IoTGpio {
         virtual int digitalRead(uint8_t pin);
         virtual int analogRead(uint8_t pin);
         virtual void analogWrite(uint8_t pin, int val);
+        virtual void digitalInvert(uint8_t pin);
 
         int index;
         void regDriver(IoTGpio* newDriver);

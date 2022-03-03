@@ -42,11 +42,10 @@ class Lcd2004 : public IoTItem {
     void doByInterval() {
         if (LCDI2C != nullptr) {
             printBlankStr(_prevStrSize);
-
-            String tmpStr;
-            // to do
-            //  jsonRead(paramsHeapJson, _id2show, tmpStr);
-            if (_descr != "none") tmpStr = _descr + " " + tmpStr;
+            
+            String tmpStr = "";
+            if (_descr != "none") tmpStr = _descr + " " + getItemValue(_id2show);
+                else tmpStr = getItemValue(_id2show);
             LCDI2C->setCursor(_x, _y);
             LCDI2C->print(tmpStr);
 
