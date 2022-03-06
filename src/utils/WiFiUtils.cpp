@@ -19,13 +19,13 @@ void routerConnect() {
 #else
         WiFi.setOutputPower(20.5);
 #endif
-    SerialPrint('I', "WIFI", "ssid: " + _ssid);
-    SerialPrint('I', "WIFI", "pass: " + _password);
+        SerialPrint('I', M_WIFI, "ssid: " + _ssid);
+        SerialPrint('I', M_WIFI, "pass: " + _password);
     }
 
     while (--tries && WiFi.status() != WL_CONNECTED) {
         if (WiFi.status() == WL_CONNECT_FAILED) {
-            SerialPrint('E', "WIFI", "password is not correct");
+            SerialPrint('E', M_WIFI, "password is not correct");
             tries = 1;
             jsonWriteInt(paramsHeapJson, "pass_status", 1);
         }
@@ -38,16 +38,16 @@ void routerConnect() {
         startAPMode();
     } else {
         Serial.println("");
-    SerialPrint('I', "WIFI", "http://" + WiFi.localIP().toString());
+        SerialPrint('I', M_WIFI, "http://" + WiFi.localIP().toString());
         jsonWriteStr(settingsFlashJson, "ip", WiFi.localIP().toString());
 
         // mqttInit();
     }
-SerialPrint('I', M_WIFI,F("Network Init"));
+    SerialPrint('I', M_WIFI, F("Network Init"));
 }
 
 bool startAPMode() {
-SerialPrint('I', "WIFI", "AP Mode");
+    SerialPrint('I', M_WIFI, "AP Mode");
 
     WiFi.disconnect();
     WiFi.mode(WIFI_AP);
@@ -58,7 +58,7 @@ SerialPrint('I', "WIFI", "AP Mode");
     WiFi.softAP(_ssidAP.c_str(), _passwordAP.c_str());
     IPAddress myIP = WiFi.softAPIP();
 
-SerialPrint('I', "WIFI", "AP IP: " + myIP.toString());
+    SerialPrint('I', M_WIFI, "AP IP: " + myIP.toString());
     jsonWriteStr(settingsFlashJson, "ip", myIP.toString());
 
     // if (jsonReadInt(paramsHeapJson, "pass_status") != 1) {
@@ -66,7 +66,7 @@ SerialPrint('I', "WIFI", "AP IP: " + myIP.toString());
         WIFI_SCAN, 10 * 1000, [&](void*) {
             String sta_ssid = jsonReadStr(settingsFlashJson, "routerssid");
 
-        SerialPrint('I', "WIFI", "scanning for " + sta_ssid);
+            SerialPrint('I', M_WIFI, "scanning for " + sta_ssid);
 
             if (RouterFind(sta_ssid)) {
                 ts.remove(WIFI_SCAN);
@@ -82,19 +82,19 @@ SerialPrint('I', "WIFI", "AP IP: " + myIP.toString());
 boolean RouterFind(String ssid) {
     bool res = false;
     int n = WiFi.scanComplete();
-SerialPrint('I', "WIFI", "scan result: " + String(n, DEC));
+    SerialPrint('I', M_WIFI, "scan result: " + String(n, DEC));
 
     if (n == -2) {  //Сканирование не было запущено, запускаем
-    SerialPrint('I', "WIFI", "start scanning");
+        SerialPrint('I', M_WIFI, "start scanning");
         WiFi.scanNetworks(true, false);  // async, show_hidden
     }
 
     else if (n == -1) {  //Сканирование все еще выполняется
-    SerialPrint('I', "WIFI", "scanning in progress");
+        SerialPrint('I', M_WIFI, "scanning in progress");
     }
 
     else if (n == 0) {  //ни одна сеть не найдена
-    SerialPrint('I', "WIFI", "no networks found");
+        SerialPrint('I', M_WIFI, "no networks found");
         WiFi.scanNetworks(true, false);
     }
 
@@ -103,7 +103,7 @@ SerialPrint('I', "WIFI", "scan result: " + String(n, DEC));
             if (WiFi.SSID(i) == ssid) {
                 res = true;
             }
-        SerialPrint('I', "WIFI", (res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
+            SerialPrint('I', M_WIFI, (res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
         }
     }
     WiFi.scanDelete();

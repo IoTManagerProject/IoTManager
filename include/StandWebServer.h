@@ -5,7 +5,7 @@
 #ifdef STANDARD_WEB_SERVER
 extern void standWebServerInit();
 extern bool handleFileRead(String path);
-extern String getContentType(String filename);
+String contentType(const String& filename);
 #ifdef REST_FILE_OPERATIONS
 extern void handleFileUpload();
 extern void handleFileDelete();
@@ -21,3 +21,4 @@ extern void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t 
 extern void hexdump(const void* mem, uint32_t len, uint8_t cols);
 #endif
 #endif
+

@@ -10,6 +10,9 @@ After:
 RAM:   [=         ]  12.4% (used 40664 bytes from 327680 bytes)
 Flash: [=======   ]  65.4% (used 856798 bytes from 1310720 bytes)
 
+After:
+RAM:   [=         ]  12.4% (used 40664 bytes from 327680 bytes)
+Flash: [=======   ]  65.3% (used 855546 bytes from 1310720 bytes)
 */
 
 const char* L_MODULE[] = {"WiFi", "MQTT", "WebServer", "Scenario"};
