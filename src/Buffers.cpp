@@ -8,7 +8,7 @@ void eventGen2(String eventName, String eventValue) {
     String event = eventName + " " + eventValue + ",";
     eventBuf += event;
 
-    SerialPrint("I", "Event add", eventName + " " + eventValue);
+SerialPrint('I', "Event add", eventName + " " + eventValue);
 
     if (jsonReadBool(settingsFlashJson, "MqttOut")) {
         if (eventName != "timenow") {
@@ -25,7 +25,7 @@ void spaceCmdExecute(String& cmdStr) {
         String buf = selectToMarker(cmdStr, "\n");
         if (buf != "") {
             sCmd.readStr(buf);
-            SerialPrint("I", F("Order done W"), buf);
+        SerialPrint('I', "Order done W", buf);
         }
         cmdStr = deleteBeforeDelimiter(cmdStr, "\n");
     }

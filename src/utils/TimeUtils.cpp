@@ -5,7 +5,7 @@ static const uint8_t days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 
 static const char* TIME_FORMAT PROGMEM = "%02d:%02d:%02d";
 static const char* TIME_FORMAT_WITH_DAYS PROGMEM = "%dd %02d:%02d";
 
-const String prettySeconds(unsigned long time_s) {
+char* prettySeconds(unsigned long time_s, char* buf, size_t buf_size) {
     unsigned long tmp = time_s;
     unsigned long seconds;
     unsigned long minutes;
@@ -20,14 +20,16 @@ const String prettySeconds(unsigned long time_s) {
     hours = tmp % 24;
     days = tmp / 24;
 
-    char buf[32];
+    if (days) 
+        snprintf_P(buf, buf_size, TIME_FORMAT_WITH_DAYS, days, hours, minutes, seconds);
+     else 
+        snprintf_P(buf, buf_size, TIME_FORMAT, hours, minutes, seconds);
+    return buf;
+}
 
-    if (days) {
-        sprintf_P(buf, TIME_FORMAT_WITH_DAYS, days, hours, minutes, seconds);
-    } else {
-        sprintf_P(buf, TIME_FORMAT, hours, minutes, seconds);
-    }
-    return String(buf);
+const String prettySeconds(unsigned long time_s) {
+    char buf[32];
+    return prettySeconds(time_s, buf, sizeof(buf));
 }
 
 const String prettyMillis(unsigned long time_ms) {
@@ -124,9 +126,9 @@ void breakEpochToTime(unsigned long epoch, Time_t& tm) {
 //                 prevTime = timenow;
 //                 jsonWriteStr(paramsFlashJson, "timenow", timenow);
 //                 eventGen2("timenow", timenow);
-//                 SerialPrint("i", F("NTP"), timenow);
+//             SerialPrint('I', F("NTP"), timenow);
 //             }
 //         },
 //         nullptr, true);
-//     SerialPrint("i", F("NTP"), F("Handle time init"));
+// SerialPrint('I', F("NTP"), F("Handle time init"));
 // }

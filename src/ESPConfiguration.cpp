@@ -19,7 +19,7 @@ void configure(String path) {
         
         String subtype;
         if (!jsonRead(jsonArrayElement, F("subtype"), subtype)) {  //если нет такого ключа в представленном json или он не валидный
-            SerialPrint(F("E"), F("Config"), "json error " + subtype);
+           SerialPrint('E', "Config", "json error " + subtype);
             continue;
         } else {
             myIoTSensor = (IoTSensor*)getAPI(subtype, jsonArrayElement);

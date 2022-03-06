@@ -52,7 +52,7 @@ void setup() {
     //создали задачу которая будет выполняться каждые 30 секунд
     ts.add(
         MYTEST, 1000 * 30, [&](void*) {
-            SerialPrint(F("i"), F("HEAP"), prettyBytes(ESP.getFreeHeap()));
+        SerialPrint('I', "HEAP", prettyBytes(ESP.getFreeHeap()));
         },
         nullptr, true);
 }

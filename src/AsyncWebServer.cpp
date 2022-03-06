@@ -31,10 +31,10 @@ void asyncWebServerInit() {
     server.onFileUpload([](AsyncWebServerRequest *request, const String &filename, size_t index, uint8_t *data, size_t len, bool final) {
         // TODO
         if (!index) {
-            // SerialPrint("i", "WebServer", "start upload " + filename);
+            // SerialPrint('I', "WebServer", "start upload " + filename);
         }
         if (final) {
-            // SerialPrint("i", "WebServer", "finish upload: " + prettyBytes(index + len));
+            // SerialPrint('I', "WebServer", "finish upload: " + prettyBytes(index + len));
         }
     });
 
@@ -59,14 +59,14 @@ void asyncWebServerInit() {
     //
     // server.on("/cmd", HTTP_GET, [](AsyncWebServerRequest *request) {
     //    String cmdStr = request->getParam("command")->value();
-    //    SerialPrint("i", "WebServer", "do: " + cmdStr);
+    //SerialPrint('I', "WebServer", "do: " + cmdStr);
     //    // loopCmdAdd(cmdStr);
     //    request->send(200, "text/html", "OK");
     //});
 
     server.begin();
 
-    SerialPrint("i", F("WEB"), F("WebServer Init"));
+SerialPrint('I', F("WEB"), F("WebServer Init"));
 }
 #endif
 
@@ -82,7 +82,7 @@ void asyncWebSocketsInit() {
         client->send("", NULL, millis(), 1000);
     });
     server.addHandler(&events);
-    SerialPrint("i", F("WEB"), F("WebSockets Init"));
+SerialPrint('I', F("WEB"), F("WebSockets Init"));
 }
 
 void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {

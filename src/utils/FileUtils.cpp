@@ -4,7 +4,7 @@ File seekFile(const String& filename, size_t position) {
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
     if (!file) {
-        SerialPrint(F("E"), F("FS"), F("seek file error"));
+       SerialPrint('E', "FS", F("seek file error"));
     }
     file.seek(position, SeekSet);
     return file;
@@ -44,9 +44,9 @@ const String filepath(const String& filename) {
 bool cutFile(const String& src, const String& dst) {
     String srcPath = filepath(src);
     String dstPath = filepath(dst);
-    SerialPrint(F("i"), F("FS"), "cut " + srcPath + " to " + dstPath);
+    SerialPrint('I', "FS", "cut " + srcPath + " to " + dstPath);
     if (!FileFS.exists(srcPath)) {
-        SerialPrint(F("E"), F("FS"), "not exist: " + srcPath);
+       SerialPrint('E', "FS", "not exist: " + srcPath);
         return false;
     }
     if (FileFS.exists(dstPath)) {

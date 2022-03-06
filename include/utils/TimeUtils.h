@@ -32,7 +32,7 @@ const String prettyMillis(unsigned long time_ms = millis());
  * "дд чч:мм", если > 24 часов
  */
 const String prettySeconds(unsigned long time_s);
-
+char* prettySeconds(unsigned long time_s, char* buf, size_t buf_size);
 /*
  * Тайм зона в секундах
  */

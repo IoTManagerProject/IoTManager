@@ -13,16 +13,16 @@ void mqttInit() {
         WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL,
         [&](void*) {
             if (WiFi.status() == WL_CONNECTED) {
-                SerialPrint("I", F("WIFI"), F("OK"));
+            SerialPrint('I', M_WIFI, "OK");
                 if (mqtt.connected()) {
-                    SerialPrint("I", F("MQTT"), "OK, broker No " + String(currentBroker));
+                SerialPrint('I', M_MQTT, "OK, broker No " + String(currentBroker));
                     // setLedStatus(LED_OFF);
                 } else {
-                    SerialPrint("E", F("MQTT"), F("✖ Connection lost"));
+                    SerialPrint('E', M_MQTT, F("✖ Connection lost"));
                     mqttConnect();
                 }
             } else {
-                SerialPrint("E", F("WIFI"), F("✖ Lost WiFi connection"));
+                SerialPrint('E', M_WIFI, F("✖ Lost WiFi connection"));
                 ts.remove(WIFI_MQTT_CONNECTION_CHECK);
                 startAPMode();
             }
@@ -38,7 +38,7 @@ void mqttInit() {
 }
 
 void mqttDisconnect() {
-    SerialPrint("I", F("MQTT"), F("disconnected"));
+SerialPrint('I', M_MQTT, F("disconnected"));
     mqtt.disconnect();
 }
 
@@ -55,8 +55,8 @@ void mqttLoop() {
 }
 
 void mqttSubscribe() {
-    SerialPrint("I", F("MQTT"), F("subscribed"));
-    SerialPrint("I", "MQTT", mqttRootDevice);
+SerialPrint('I', M_MQTT, F("subscribed"));
+SerialPrint('I', "MQTT", mqttRootDevice);
     mqtt.subscribe(mqttPrefix.c_str());
     mqtt.subscribe((mqttRootDevice + "/+/control").c_str());
     mqtt.subscribe((mqttRootDevice + "/update").c_str());
@@ -120,15 +120,15 @@ boolean mqttConnect() {
     selectBroker();
     bool res = false;
     if (mqttServer == "") {
-        SerialPrint("E", "MQTT", F("mqttServer empty"));
+        SerialPrint('E', "MQTT", F("mqttServer empty"));
         return res;
     }
-    SerialPrint("I", "MQTT", "connection started to broker No " + String(currentBroker));
+SerialPrint('I', "MQTT", "connection started to broker No " + String(currentBroker));
 
     mqttRootDevice = mqttPrefix + "/" + chipId;
 
-    SerialPrint("I", "MQTT", "broker " + mqttServer + ":" + String(mqttPort, DEC));
-    SerialPrint("I", "MQTT", "topic " + mqttRootDevice);
+SerialPrint('I', "MQTT", "broker " + mqttServer + ":" + String(mqttPort, DEC));
+SerialPrint('I', "MQTT", "topic " + mqttRootDevice);
     // setLedStatus(LED_FAST);
     mqtt.setServer(mqttServer.c_str(), mqttPort);
 
@@ -136,17 +136,17 @@ boolean mqttConnect() {
         bool connected = false;
         if (mqttUser != "" && mqttPass != "") {
             connected = mqtt.connect(chipId.c_str(), mqttUser.c_str(), mqttPass.c_str());
-            SerialPrint("I", F("MQTT"), F("Go to connection with login and password"));
+        SerialPrint('I', M_MQTT, F("Go to connection with login and password"));
         } else if (mqttUser == "" && mqttPass == "") {
             connected = mqtt.connect(chipId.c_str());
-            SerialPrint("I", F("MQTT"), F("Go to connection without login and password"));
+        SerialPrint('I', M_MQTT, F("Go to connection without login and password"));
         } else {
-            SerialPrint("E", F("MQTT"), F("✖ Login or password missing"));
+            SerialPrint('E', M_MQTT, F("✖ Login or password missing"));
             return res;
         }
 
         if (connected) {
-            SerialPrint("I", F("MQTT"), F("✔ connected"));
+        SerialPrint('I', M_MQTT, F("✔ connected"));
             if (currentBroker == 1) jsonWriteStr(settingsFlashJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к основному брокеру</p></font></div>"));
             if (currentBroker == 2) jsonWriteStr(settingsFlashJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #8ef584; padding: 10px;'>Подключено к резервному брокеру</p></font></div>"));
             // setLedStatus(LED_OFF);
@@ -154,16 +154,16 @@ boolean mqttConnect() {
             res = true;
         } else {
             mqttConnectAttempts++;
-            SerialPrint("E", F("MQTT"), "🡆 Attempt No: " + String(mqttConnectAttempts) + " could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
+            SerialPrint('E', M_MQTT, "🡆 Attempt No: " + String(mqttConnectAttempts) + " could't connect, retry in " + String(MQTT_RECONNECT_INTERVAL / 1000) + "s");
             // setLedStatus(LED_FAST);
             jsonWriteStr(settingsFlashJson, F("warning4"), F("<div style='margin-top:10px;margin-bottom:10px;'><font color='black'><p style='border: 1px solid #DCDCDC; border-radius: 3px; background-color: #fa987a; padding: 10px;'>Не подключено брокеру</p></font></div>"));
             if (mqttConnectAttempts >= CHANGE_BROKER_AFTER) {
                 mqttConnectAttempts = 0;
                 if (isSecondBrokerSet()) {
                     changeBroker = true;
-                    SerialPrint("E", F("MQTT"), "✖ Broker fully missed (" + String(CHANGE_BROKER_AFTER) + " attempts passed), try connect to another one");
+                    SerialPrint('E', M_MQTT, "✖ Broker fully missed (" + String(CHANGE_BROKER_AFTER) + " attempts passed), try connect to another one");
                 } else {
-                    SerialPrint("E", F("MQTT"), F("Secound broker not seted"));
+                    SerialPrint('E', M_MQTT, F("Secound broker not seted"));
                 }
             }
         }
@@ -173,17 +173,17 @@ boolean mqttConnect() {
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     String topicStr = String(topic);
-    // SerialPrint("I", "=>MQTT", topicStr);
+    // SerialPrint('I', "=>MQTT", topicStr);
     String payloadStr;
     payloadStr.reserve(length + 1);
     for (size_t i = 0; i < length; i++) {
         payloadStr += (char)payload[i];
     }
 
-    // SerialPrint("I", "=>MQTT", payloadStr);
+    // SerialPrint('I', "=>MQTT", payloadStr);
 
     if (payloadStr.startsWith("HELLO")) {
-        SerialPrint("I", F("MQTT"), F("Full update"));
+    SerialPrint('I', M_MQTT, F("Full update"));
         publishWidgets();
         publishState();
 #ifdef GATE_MODE
@@ -205,7 +205,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     //
     //    loopCmdAdd(order);
     //
-    //    SerialPrint("I", F("=>MQTT"), "Msg from iotmanager app: " + key + " " + payloadStr);
+    //SerialPrint('I', F("=>MQTT"), "Msg from iotmanager app: " + key + " " + payloadStr);
     //}
     //
     // else if (topicStr.indexOf("event") != -1) {
@@ -215,7 +215,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     //    if (topicStr.indexOf(chipId) == -1) {
     //        String devId = selectFromMarkerToMarker(topicStr, "/", 2);
     //        String key = selectFromMarkerToMarker(topicStr, "/", 3);
-    //        SerialPrint("I", F("=>MQTT"), "Received event from other device: '" + devId + "' " + key + " " + payloadStr);
+    //    SerialPrint('I', F("=>MQTT"), "Received event from other device: '" + devId + "' " + key + " " + payloadStr);
     //        String event = key + " " + payloadStr + ",";
     //        eventBuf += event;
     //    }
@@ -227,17 +227,17 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     //    }
     //    String devId = selectFromMarkerToMarker(topicStr, "/", 2);
     //    String key = selectFromMarkerToMarker(topicStr, "/", 3);
-    //    SerialPrint("I", F("=>MQTT"), "Received direct order " + key + " " + payloadStr);
+    //SerialPrint('I', F("=>MQTT"), "Received direct order " + key + " " + payloadStr);
     //    String order = key + " " + payloadStr + ",";
     //    loopCmdAdd(order);
-    //    SerialPrint("I", "Order add", order);
+    //SerialPrint('I', "Order add", order);
     //}
     //
     // else if (topicStr.indexOf("info") != -1) {
     //    if (topicStr.indexOf("scen") != -1) {
     //        writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
     //        loadScenario();
-    //        SerialPrint("I", F("=>MQTT"), F("Scenario received"));
+    //    SerialPrint('I', F("=>MQTT"), F("Scenario received"));
     //    }
     //}
 }
@@ -253,7 +253,7 @@ boolean publish(const String& topic, const String& data) {
 boolean publishData(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic;
     if (!publish(path, data)) {
-        SerialPrint("E", F("MQTT"), F("on publish data"));
+        SerialPrint('E', M_MQTT, F("on publish data"));
         return false;
     }
     return true;
@@ -262,7 +262,7 @@ boolean publishData(const String& topic, const String& data) {
 boolean publishChart(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     if (!publish(path, data)) {
-        SerialPrint("E", F("MQTT"), F("on publish chart"));
+        SerialPrint('E', M_MQTT, F("on publish chart"));
         return false;
     }
     return true;
@@ -330,12 +330,12 @@ void publishWidgets() {
 void publishWidgets() {
     auto file = seekFile("layout.txt");
     if (!file) {
-        SerialPrint("E", F("MQTT"), F("no file layout.txt"));
+        SerialPrint('E', M_MQTT, F("no file layout.txt"));
         return;
     }
     while (file.available()) {
         String payload = file.readStringUntil('\n');
-        SerialPrint("I", F("MQTT"), "widgets: " + payload);
+    SerialPrint('I', M_MQTT, "widgets: " + payload);
         publishData("config", payload);
     }
     file.close();
