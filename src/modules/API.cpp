@@ -17,6 +17,8 @@ void* getAPI_Ads1115(String subtype, String params);
 void* getAPI_Mcp23017(String subtype, String params);
 void* getAPI_ButtonOut(String subtype, String params);
 void* getAPI_Variable(String subtype, String params);
+void* getAPI_Sds011(String subtype, String params);
+void* getAPI_Mhz19(String subtype, String params);
 //============================================================================================
 
 void* getAPI(String subtype, String params) {
@@ -38,6 +40,8 @@ void* getAPI(String subtype, String params) {
     if ((tmpAPI = getAPI_Mcp23017(subtype, params)) != nullptr) return tmpAPI;
     if ((tmpAPI = getAPI_ButtonOut(subtype, params)) != nullptr) return tmpAPI;
     if ((tmpAPI = getAPI_Variable(subtype, params)) != nullptr) return tmpAPI;
+    if ((tmpAPI = getAPI_Sds011(subtype, params)) != nullptr) return tmpAPI;
+    if ((tmpAPI = getAPI_Mhz19(subtype, params)) != nullptr) return tmpAPI;
     //================================================================================================================
 
     return nullptr;
