@@ -1,0 +1,21 @@
+[
+    {
+        "name": "Датчик напряжения ADS1115",
+        "num": 28,
+        "type": "Reading",
+        "subtype": "Ads1115",
+        "id": "Ads3",
+        "widget": "anydataVlt",
+        "page": "Сенсоры",
+        "descr": "ADS_3",
+        
+        "pin": "0",
+        "mode": "volt",
+        "gain": "3/4x",
+
+        "plus": 0,
+        "multiply": 1,
+        "round": 100,
+        "int": 10
+    }
+]
