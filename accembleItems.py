@@ -5,8 +5,12 @@ import json, pprint
 config = configparser.ConfigParser()  # создаём объекта парсера INI
 allLibs_esp8266_4mb = ""
 allLibs_esp32_4mb = ""
+
 allMenuItems = json.loads('[]')
-allMenuItemsCount = 1;
+allMenuItemsCount = 1
+
+allAPI_head = ""
+allAPI_exec = ""
 
 
 def getDirs(path):
@@ -40,6 +44,14 @@ def getMenuItems(patch):
             allMenuItems = allMenuItems + data
             
             
+def getAPI(patch):
+    global allAPI_head, allAPI_exec
+    for dir in getDirs(patch):  
+        print(patch + dir)
+        allAPI_head = allAPI_head + "\nvoid* getAPI_" + dir + "(String subtype, String params);"
+        allAPI_exec = allAPI_exec + "\nif ((tmpAPI = getAPI_" + dir + "(subtype, params)) != nullptr) return tmpAPI;"
+            
+            
             
 # читаем и запоминаем все либы мз каждого модуля
 getPIOLibs("src/modules/system/") 
@@ -70,3 +82,19 @@ getMenuItems("src/modules/lcd/")
 # сохраняем пункты меню в общий файл
 with open('data_svelte/items.json', 'w') as f:
         json.dump(allMenuItems, f, ensure_ascii=False, indent=4, sort_keys=False)
+        
+        
+# собираем списки API для интеграции вызовов модулей
+getAPI("src/modules/system/")
+getAPI("src/modules/exec/")
+getAPI("src/modules/sensors/")  
+getAPI("src/modules/lcd/")
+
+# сохраняем все API в API.cpp
+apicpp = '#include "ESPConfiguration.h"\n'
+apicpp = apicpp + allAPI_head
+apicpp = apicpp + '\n\nvoid* getAPI(String subtype, String params) {\nvoid* tmpAPI;'
+apicpp = apicpp + allAPI_exec
+apicpp = apicpp + 'return nullptr;\n}'
+with open('src/modules/API.cpp', 'w') as f:
+    f.write(apicpp)
