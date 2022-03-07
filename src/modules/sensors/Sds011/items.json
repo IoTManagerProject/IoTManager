@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Датчик пыли SDS011 PM25",
+        "num": 18,
+        "type": "Reading",
+        "subtype": "Sds011_25",
+        "id": "pmuart25",
+        "widget": "anydataPpm",
+        "page": "Сенсоры",
+        "descr": "PM-2.5",
+        "plus": 0,
+        "multiply": 1,
+        "round": 10,
+        "rxPin": 13,
+        "txPin": 12,
+        "int": 15,
+        "warmUp": 30,
+        "period": 300
+    },
+    {
+        "name": "Датчик пыли SDS011 PM10",
+        "num": 19,
+        "type": "Reading",
+        "subtype": "Sds011_10",
+        "id": "pmuart10",
+        "widget": "anydataPpm",
+        "page": "Сенсоры",
+        "descr": "PM-10",
+        "plus": 0,
+        "multiply": 1,
+        "round": 10,
+        "rxPin": 13,
+        "txPin": 12,
+        "int": 15,
+        "warmUp": 30,
+        "period": 300
+    }
+]

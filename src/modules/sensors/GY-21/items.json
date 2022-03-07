@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Cенсор температуры GY21",
+        "num": 16,
+        "type": "Reading",
+        "subtype": "GY21t",
+        "id": "tmp4",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "round": 1,
+        "int": 15
+    },
+    {
+        "name": "Cенсор влажности GY21",
+        "num": 17,
+        "type": "Reading",
+        "subtype": "GY21h",
+        "id": "Hum4",
+        "widget": "anydataHum",
+        "page": "Сенсоры",
+        "descr": "Влажность",
+        "round": 1,
+        "int": 15
+    }
+]

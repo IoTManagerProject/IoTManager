@@ -1,0 +1,32 @@
+[
+    {
+        "name": "LCD экран 2004",
+        "num": 25,
+        "type": "Reading",
+        "subtype": "Lcd2004",
+        "id": "Lcd",
+        "widget": "",
+        "page": "",
+        "descr": "T",
+        "int": 15,
+        "addr": "0x27",
+        "size": "20,4",
+        "coord": "0,0",
+        "id2show": "id датчика"
+    },
+    {
+        "name": "LCD экран 1602",
+        "num": 26,
+        "type": "Reading",
+        "subtype": "Lcd2004",
+        "id": "Lcd",
+        "widget": "",
+        "page": "",
+        "descr": "T",
+        "int": 15,
+        "addr": "0x27",
+        "size": "16,2",
+        "coord": "0,0",
+        "id2show": "id датчика"
+    }
+]

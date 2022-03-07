@@ -1,0 +1,16 @@
+[
+    {
+        "name": "Кнопка управляющая пином (Реле с кнопкой)",
+        "num": 31,
+        "type": "Writing",
+        "subtype": "ButtonOut",
+        "id": "btn",
+        "widget": "toggle",
+        "page": "Кнопки",
+        "descr": "",
+        "int": 0,
+
+        "inv": 0,
+        "pin": 2
+    }
+]
