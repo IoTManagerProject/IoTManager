@@ -11,7 +11,7 @@ class IoTItem {
    public:
     IoTItem(String parameters);
     virtual ~IoTItem() {}
-    void loop();
+    virtual void loop();
     virtual void doByInterval();
     virtual IoTValue execute(String command, std::vector<IoTValue> &param);
 
