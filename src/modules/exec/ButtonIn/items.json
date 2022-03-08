@@ -1,0 +1,19 @@
+[
+    {
+        "name": "Кнопка (подключенная физически)",
+        "num": 31,
+        "type": "Writing",
+        "subtype": "ButtonIn",
+        "id": "btn",
+        "widget": "toggle",
+        "page": "Кнопки",
+        "descr": "",
+        "int": 0,
+
+        "pin": 16,
+        "execLevel": "1",
+        "pinMode": "INPUT",
+        "debounceDelay": 50,
+        "fixState": 1
+    }
+]

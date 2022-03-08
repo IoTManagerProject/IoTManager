@@ -3,6 +3,7 @@
 void* getAPI_Mcp23017(String subtype, String params);
 void* getAPI_SysExt(String subtype, String params);
 void* getAPI_Variable(String subtype, String params);
+void* getAPI_ButtonIn(String subtype, String params);
 void* getAPI_ButtonOut(String subtype, String params);
 void* getAPI_Ads1115(String subtype, String params);
 void* getAPI_Aht20(String subtype, String params);
@@ -23,6 +24,7 @@ void* tmpAPI;
 if ((tmpAPI = getAPI_Mcp23017(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_SysExt(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Variable(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_ButtonIn(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_ButtonOut(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Ads1115(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Aht20(subtype, params)) != nullptr) return tmpAPI;
