@@ -91,7 +91,7 @@ bool jsonRead(String& json, String key, bool& value, bool e) {
         }
         ret = false;
     }
-    value = doc[key].as<bool>();
+    value = doc[key].as<int>();
     return ret;
 }
 
