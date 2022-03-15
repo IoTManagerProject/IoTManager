@@ -12,33 +12,37 @@
 #include "ClosedCube_HDC1080.h"
 #include <map>
 
-//создаем объект HDC1080
+// to do убрать глобальный экземпляр
 ClosedCube_HDC1080 hdc1080;
 
 class Hdc1080t : public IoTItem {
    public:
-    Hdc1080t(String parameters): IoTItem(parameters) { }
+    Hdc1080t(String parameters) : IoTItem(parameters) {}
 
     void doByInterval() {
         value.valD = hdc1080.readTemperature();
-        if (value.valD < 124) regEvent(value.valD, "Hdc1080t");  
-            else SerialPrint("E", "Sensor Hdc1080t", "Error");  
+        if (value.valD < 124)
+            regEvent(value.valD, "Hdc1080t");
+        else
+            SerialPrint("E", "Sensor Hdc1080t", "Error");
     }
 
-    ~Hdc1080t() {};
+    ~Hdc1080t(){};
 };
 
 class Hdc1080h : public IoTItem {
    public:
-    Hdc1080h(String parameters): IoTItem(parameters) { }
-    
+    Hdc1080h(String parameters) : IoTItem(parameters) {}
+
     void doByInterval() {
         value.valD = hdc1080.readHumidity();
-        if (value.valD < 99 ) regEvent(value.valD, "Hdc1080h");  
-            else SerialPrint("E", "Sensor Hdc1080h", "Error");  
+        if (value.valD < 99)
+            regEvent(value.valD, "Hdc1080h");
+        else
+            SerialPrint("E", "Sensor Hdc1080h", "Error");
     }
 
-    ~Hdc1080h() {};
+    ~Hdc1080h(){};
 };
 
 void* getAPI_Hdc1080(String subtype, String param) {

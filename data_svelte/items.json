@@ -293,8 +293,22 @@
         "round": 1
     },
     {
-        "name": "22. Датчик CO2 MHZ-19 UART",
+        "name": "22. Cенсор температуры MAX6675",
         "num": 22,
+        "type": "Reading",
+        "subtype": "Max6675t",
+        "id": "maxtmp",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "MAX Температура",
+        "int": 15,
+        "DO": 12,
+        "CS": 13,
+        "CLK": 14
+    },
+    {
+        "name": "23. Датчик CO2 MHZ-19 UART",
+        "num": 23,
         "type": "Reading",
         "subtype": "Mhz19uart",
         "id": "co2uart",
@@ -312,8 +326,8 @@
         "ABC": 1
     },
     {
-        "name": "23. Датчик CO2 MHZ-19 PWM",
-        "num": 23,
+        "name": "24. Датчик CO2 MHZ-19 PWM",
+        "num": 24,
         "type": "Reading",
         "subtype": "Mhz19pwm",
         "id": "co2pwm",
@@ -327,8 +341,8 @@
         "int": 300
     },
     {
-        "name": "24. Cенсор температуры от MHZ-19 UART",
-        "num": 24,
+        "name": "25. Cенсор температуры от MHZ-19 UART",
+        "num": 25,
         "type": "Reading",
         "subtype": "Mhz19temp",
         "id": "Mhz19temp",
@@ -344,8 +358,8 @@
         "int": 30
     },
     {
-        "name": "25. Рабочий диапазон от MHZ-19 UART",
-        "num": 25,
+        "name": "26. Рабочий диапазон от MHZ-19 UART",
+        "num": 26,
         "type": "Reading",
         "subtype": "Mhz19range",
         "id": "Mhz19range",
@@ -362,8 +376,8 @@
         "int": 30
     },
     {
-        "name": "26. Автокалибровка от MHZ-19 UART",
-        "num": 26,
+        "name": "27. Автокалибровка от MHZ-19 UART",
+        "num": 27,
         "type": "Reading",
         "subtype": "Mhz19ABC",
         "id": "Mhz19ABC",
@@ -377,8 +391,8 @@
         "int": 30
     },
     {
-        "name": "27. Датчик пыли SDS011 PM25",
-        "num": 27,
+        "name": "28. Датчик пыли SDS011 PM25",
+        "num": 28,
         "type": "Reading",
         "subtype": "Sds011_25",
         "id": "pmuart25",
@@ -395,8 +409,8 @@
         "period": 300
     },
     {
-        "name": "28. Датчик пыли SDS011 PM10",
-        "num": 28,
+        "name": "29. Датчик пыли SDS011 PM10",
+        "num": 29,
         "type": "Reading",
         "subtype": "Sds011_10",
         "id": "pmuart10",
@@ -413,8 +427,8 @@
         "period": 300
     },
     {
-        "name": "29. Cенсор температуры Sht20",
-        "num": 29,
+        "name": "30. Cенсор температуры Sht20",
+        "num": 30,
         "type": "Reading",
         "subtype": "Sht20t",
         "id": "tmp2",
@@ -425,8 +439,8 @@
         "round": 1
     },
     {
-        "name": "30. Cенсор влажности Sht20",
-        "num": 30,
+        "name": "31. Cенсор влажности Sht20",
+        "num": 31,
         "type": "Reading",
         "subtype": "Sht20h",
         "id": "Hum2",
@@ -440,8 +454,8 @@
         "header": "Экраны"
     },
     {
-        "name": "31. LCD экран 2004",
-        "num": 31,
+        "name": "32. LCD экран 2004",
+        "num": 32,
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -455,8 +469,8 @@
         "id2show": "id датчика"
     },
     {
-        "name": "32. LCD экран 1602",
-        "num": 32,
+        "name": "33. LCD экран 1602",
+        "num": 33,
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",

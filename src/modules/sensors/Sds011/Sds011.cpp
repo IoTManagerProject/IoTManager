@@ -17,6 +17,7 @@ extern IoTGpio IoTgpio;
 //встроена в ядро для 8266, для 32 по этому же имени обращаемся к другой библиотеке plerup/EspSoftwareSerial
 #include <SoftwareSerial.h>
 
+// to do убрать глобальный экземпляр
 #ifdef ESP8266
 int rxPinSDS = 13;  // D7 – подключаем к Tx сенсора
 int txPinSDS = 12;  // D6 – подключаем к Rx сенсора
