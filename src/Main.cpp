@@ -67,7 +67,7 @@ void setup() {
     // IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"rel4\",\"val\":34,\"int\":30}"));
 
     // пример получения JSON всех Items
-    Serial.println(getParamsJson());
+    // Serial.println(getParamsJson());
 
     //чтение одного параметра
     // Serial.println(findIoTItem("t1")->getValue());

@@ -1,6 +1,8 @@
 #pragma once
 #include "Global.h"
+
 #ifdef ESP8266
+//эта библиотека встроена в ядро
 #include "ESPAsyncUDP.h"
 #else
 #include "AsyncUDP.h"
