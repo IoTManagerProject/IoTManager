@@ -12,6 +12,7 @@
         "int": 1,
         "countDown": 15,
         "ticker": 0,
-        "repeat": 0
+        "repeat": 0,
+        "needSave": 0
     }
 ]
