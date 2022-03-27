@@ -31,6 +31,8 @@ class IoTItem {
     bool iAmDead = false;   // признак необходимости удалить объект из базы
     bool iAmLocal = true;   // признак локальной переменной
 
+    bool needSave = false;
+
     virtual IoTGpio* getGpioDriver();
     virtual void setValue(IoTValue Value);
 

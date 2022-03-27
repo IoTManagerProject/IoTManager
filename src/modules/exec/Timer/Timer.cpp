@@ -12,18 +12,19 @@ class Timer : public IoTItem {
 
    public:
     Timer(String parameters): IoTItem(parameters) {
-        jsonRead(parameters, "countDown", value.valD);
+        float valDtmp;
+        jsonRead(parameters, "countDown", valDtmp);
+        if (value.valD == 0) value.valD = valDtmp;
         jsonRead(parameters, "ticker", _ticker);
         jsonRead(parameters, "repeat", _repeat);
-        if (_repeat) _repeat = value.valD;  // если в параметрах просят повторить, то запоминаем настроечное значение отчета
+        if (_repeat) _repeat = valDtmp;  // если в параметрах просят повторить, то запоминаем настроечное значение отчета
         _unfin = !value.valD;
-
-        
     }
 
     void doByInterval() {
         if (!_unfin && value.valD) {
             value.valD--;
+            needSave = true;
             if (value.valD == 0) {
                 regEvent(value.valD, "Time's up");
                 if (_repeat) value.valD = _repeat;
