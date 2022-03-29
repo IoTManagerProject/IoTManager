@@ -45,7 +45,7 @@ String IoTItem::getID() {
 String IoTItem::getValue() {
     if (value.isDecimal)
         if (_round >= 0) {
-            char buf[8];
+            char buf[15];
             sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
             return (String)buf;
         } else return (String)value.valD;
