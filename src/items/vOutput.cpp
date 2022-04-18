@@ -24,7 +24,9 @@ void Output::execute(String value) {
     jsonWriteStr(json, "status", value);
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
+    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
+    #endif
     //publishLastUpdateTime(_key, timeNow->getTime());
 }
 
@@ -48,13 +50,7 @@ void outputValue() {
 
 void outputExecute() {
     String key = sCmd.order();
-    String value = sCmd.next();
-
-    value.replace("#", " ");
-    value.replace("%date%", timeNow->getDateTimeDotFormated());
-   value.replace("%weekday%", timeNow->getWeekday());
-    value.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
-    value.replace("%name%", jsonReadStr(configSetupJson, F("name")));
+    String value = ExecuteParser();
 
     int number = getKeyNum(key, output_KeyList);
 

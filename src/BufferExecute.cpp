@@ -104,7 +104,7 @@ void csvCmdExecute(String& cmdStr) {
 #ifdef EnableSensorUltrasonic
                 sCmd.addCommand(order.c_str(), ultrasonic);
 #endif
-                //ИНТЕГРИРУЮ: Первая интеграция в ядро. Следим за наименованием
+//ИНТЕГРИРУЮ: Первая интеграция в ядро. Следим за наименованием
             } else if (order == F("dallas-temp")) {
 #ifdef EnableSensorDallas
                 sCmd.addCommand(order.c_str(), dallas);
@@ -182,8 +182,8 @@ void spaceCmdExecute(String& cmdStr) {
     cmdStr.replace("\r\n", "\n");
     cmdStr.replace("\r", "\n");
     while (cmdStr.length()) {
-        String buf = selectToMarker(cmdStr, "\n");
-        if (buf.indexOf("*") != -1) {
+         String buf = selectToMarker(cmdStr, "\n");
+         if (buf.indexOf("*") != -1) {
             buf.replace("*", "");
             String order = selectToMarker(buf, " ");
             String newValue = selectToMarkerLast(buf, " ");
@@ -242,4 +242,39 @@ String getValue(String& key) {
     } else {
         return "data error";
     }
+}
+String ExecuteParser() {
+ String value = "";   
+ String value1 = sCmd.next();
+ String value2 = sCmd.next();
+ String value3 = sCmd.next();
+       value1.replace("#", " ");
+    value1.replace("%date%", timeNow->getDateTimeDotFormated());
+    value1.replace("%weekday%", timeNow->getWeekday());
+    value1.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
+    value1.replace("%name%", jsonReadStr(configSetupJson, F("name")));
+        value2.replace("#", " ");
+    value2.replace("%date%", timeNow->getDateTimeDotFormated());
+    value2.replace("%weekday%", timeNow->getWeekday());
+    value2.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
+    value2.replace("%name%", jsonReadStr(configSetupJson, F("name")));
+        value3.replace("#", " ");
+    value3.replace("%date%", timeNow->getDateTimeDotFormated());
+    value3.replace("%weekday%", timeNow->getWeekday());
+    value3.replace("%IP%", jsonReadStr(configSetupJson, F("ip")));
+    value3.replace("%name%", jsonReadStr(configSetupJson, F("name")));
+ if (getValue(value1)  != "no value")
+ {value1 = getValue(value1);}
+ if (getValue(value3)  != "no value")
+ {value3 = getValue(value3);}
+ if (String(value1)){value = String(value1);}
+ if (String(value2)){value = value+String(value2);}
+ if (String(value3)){value = value+String(value3);}
+
+if (value2 == "+"){value = value1.toFloat()+value3.toFloat();}
+if (value2 == "-"){value = value1.toFloat()-value3.toFloat();}
+if (value2 == "×"){value = value1.toFloat()*value3.toFloat();}
+if (value2 == "/"  and value3 != 0){value = value1.toFloat()/value3.toFloat();}
+
+return value;
 }

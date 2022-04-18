@@ -1,6 +1,6 @@
 #pragma once
 
-#define FIRMWARE_VERSION 306
+#define FIRMWARE_VERSION 307
 
 //#define svelte
 
@@ -14,7 +14,7 @@
 
 #ifdef esp8266_1mb
 #define FIRMWARE_NAME "esp8266_1mb"
-#define USE_LITTLEFS true
+#define USE_LITTLEFS false
 #define USE_OTA false
 #define LED_PIN 2
 #define ESP_MODE

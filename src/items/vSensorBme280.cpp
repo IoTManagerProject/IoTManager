@@ -53,7 +53,9 @@ void SensorBme280::read() {
     jsonWriteStr(json, "status", String(tmp));
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
+    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
+    #endif
     SerialPrint("I", "Sensor", "'" + _paramsTmp.key + "' data: " + String(tmp));
 
     eventGen2(_paramsHum.key, String(hum));
@@ -64,7 +66,9 @@ void SensorBme280::read() {
     jsonWriteStr(json, "status", String(hum));
      MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
+    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
+    #endif
     SerialPrint("I", "Sensor", "'" + _paramsHum.key + "' data: " + String(hum));
 
     eventGen2(_paramsPrs.key, String(prs));
@@ -75,7 +79,9 @@ void SensorBme280::read() {
     jsonWriteStr(json, "status", String(prs));
      MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
+    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
+    #endif
     SerialPrint("I", "Sensor", "'" + _paramsPrs.key + "' data: " + String(prs));
 }
 
