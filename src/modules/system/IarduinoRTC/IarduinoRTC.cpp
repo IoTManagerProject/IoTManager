@@ -56,6 +56,14 @@ class IarduinoRTC : public IoTItem {
             time(&timeNowVar);
             localTimeVar = *localtime(&timeNowVar); 
             watch->settime(localTimeVar.tm_sec, localTimeVar.tm_min, localTimeVar.tm_hour, localTimeVar.tm_mday, localTimeVar.tm_mon+1, localTimeVar.tm_year-100, localTimeVar.tm_wday);
+        } else if (command == "setTime") {
+            if (param.size()) {
+                watch->settime(param[0].valD, param[1].valD, param[2].valD, param[3].valD, param[4].valD, param[5].valD, param[6].valD);
+            }
+        } else if (command == "setUnixTime") {
+            if (param.size()) {
+                watch->settimeUnix(param[0].valD);
+            }
         }
 
         return {}; 
