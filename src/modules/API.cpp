@@ -1,5 +1,6 @@
 #include "ESPConfiguration.h"
 
+void* getAPI_IarduinoRTC(String subtype, String params);
 void* getAPI_Mcp23017(String subtype, String params);
 void* getAPI_SysExt(String subtype, String params);
 void* getAPI_Variable(String subtype, String params);
@@ -23,6 +24,7 @@ void* getAPI_Lcd2004(String subtype, String params);
 
 void* getAPI(String subtype, String params) {
 void* tmpAPI;
+if ((tmpAPI = getAPI_IarduinoRTC(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Mcp23017(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_SysExt(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Variable(subtype, params)) != nullptr) return tmpAPI;
