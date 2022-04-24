@@ -1,7 +1,9 @@
 #include "ESPConfiguration.h"
 #include "classes/IoTGpio.h"
+#include "classes/IoTRTC.h"
 
 extern IoTGpio IoTgpio;
+extern IoTRTC *watch;
 
 std::list<IoTItem*> IoTItems;
 void* getAPI(String subtype, String params);
@@ -25,8 +27,21 @@ void configure(String path) {
             } else {
                 myIoTItem = (IoTItem*)getAPI(subtype, jsonArrayElement);
                 if (myIoTItem) {
-                    IoTGpio* tmp = myIoTItem->getGpioDriver();
-                    if (tmp) IoTgpio.regDriver(tmp);
+                    // пробуем спросить драйвер GPIO
+                    IoTGpio* gpiotmp = myIoTItem->getGpioDriver();
+                    if (gpiotmp) IoTgpio.regDriver(gpiotmp);
+                    
+                    // пробуем спросить драйвер RTC
+                    iarduino_RTC_BASE* rtctmp = myIoTItem->getRtcDriver();
+                    if (rtctmp) {
+                        delete watch->objClass;
+                        watch->objClass = rtctmp;
+                        int valPeriod_save = watch->valPeriod;
+                        watch->valPeriod = 0;
+                        watch->gettime();
+                        watch->valPeriod = valPeriod_save;
+                    }
+                    
                     IoTItems.push_back(myIoTItem);
                 }
             }
