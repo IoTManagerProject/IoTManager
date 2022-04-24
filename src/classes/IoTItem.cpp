@@ -101,6 +101,10 @@ IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
 }
 
+iarduino_RTC_BASE* IoTItem::getRtcDriver() {
+    return nullptr;
+}
+
 void IoTItem::setValue(IoTValue Value) {
     value = Value;
     if (value.isDecimal)
