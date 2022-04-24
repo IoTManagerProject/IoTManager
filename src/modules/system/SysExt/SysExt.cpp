@@ -1,5 +1,7 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
+#include "classes/IoTRTC.h"
+extern IoTRTC *watch;
 
 // Пример модуля расширения возможностей системы на примере добавления новых команд в сценарии
 // При комбинации использования doByInterval() и execute() можно обеспечить интеграцию с внешними сервисами, такими как Telegram, например.
@@ -48,6 +50,12 @@ class SysExt : public IoTItem {
                 IoTgpio.pinMode(param[0].valD, OUTPUT);
                 IoTgpio.digitalInvert(param[0].valD);
                 return {};
+            }
+        } else if (command == "getTime") { 
+            if (param.size()) {
+                value.isDecimal = false;
+                value.valS = watch->gettime(param[0].valS);
+                return value;
             }
         }
         return {};  // команда поддерживает возвращаемое значения. Т.е. по итогу выполнения команды или общения с внешней системой, можно вернуть значение в сценарий для дальнейшей обработки
