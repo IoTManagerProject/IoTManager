@@ -54,7 +54,7 @@ void asyncUdpInit() {
 
     //будем отправлять каждые 30 секунд презентацию данного устройства
     ts.add(
-        UDPP, 60000, [&](void*) {
+        UDP, 60000, [&](void*) {  //UDPP
             if (isNetworkActive()) {
                 SerialPrint("i", F("UDP"), F("Broadcast device presentation"));
                 asyncUdp.broadcastTo(getThisDevice().c_str(), 4210);
