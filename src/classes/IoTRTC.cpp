@@ -29,7 +29,7 @@ uint8_t	iarduino_RTC_NTP::funcReadTimeIndex(uint8_t i) {
         case 2: return funcConvertNumToCode(localTimeVar.tm_hour);
         case 3: return funcConvertNumToCode(localTimeVar.tm_mday);
         case 4: return funcConvertNumToCode(localTimeVar.tm_mon+1);
-        case 5: return funcConvertNumToCode(localTimeVar.tm_year);
+        case 5: return funcConvertNumToCode(localTimeVar.tm_year-100);
         case 6: return funcConvertNumToCode(localTimeVar.tm_wday);
     }
     
