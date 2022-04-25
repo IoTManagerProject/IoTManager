@@ -113,6 +113,16 @@ void IoTItem::setValue(IoTValue Value) {
         regEvent(value.valS, "");
 }
 
+void IoTItem::setValue(String valStr) {
+    if (value.isDecimal = isDigitDotCommaStr(valStr)) {
+        value.valD = valStr.toFloat();
+        regEvent(value.valD, "");
+    } else {
+        value.valS = valStr;
+        regEvent(value.valS, "");
+    }
+}
+
 externalVariable::externalVariable(String parameters) : IoTItem(parameters) {
     prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
     iAmLocal = false;       // указываем, что это сущность прилетела из сети

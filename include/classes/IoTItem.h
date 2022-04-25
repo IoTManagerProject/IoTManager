@@ -37,6 +37,7 @@ class IoTItem {
     virtual IoTGpio* getGpioDriver();
     virtual iarduino_RTC_BASE* getRtcDriver();
     virtual void setValue(IoTValue Value);
+    virtual void setValue(String valStr);
 
    protected:
     String _subtype;
