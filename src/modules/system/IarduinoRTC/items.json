@@ -9,10 +9,11 @@
         "page": "",
         "descr": "",
         
-        "int": "0",
+        "int": "1",
         "chipNum": 1,
         "rst": 16,
         "clk": 5,
-        "dat": 4
+        "dat": 4,
+        "defFormat": "d-m-Y"
     }
 ]

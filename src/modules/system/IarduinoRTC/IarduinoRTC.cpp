@@ -14,6 +14,7 @@ extern IoTRTC *watch;
 class IarduinoRTC : public IoTItem {
    private:
     int _chipNum, _rst, _clk, _dat;
+    String _defFormat;
     iarduino_RTC_BASE *RTCDriver;
 
    public:
@@ -23,6 +24,8 @@ class IarduinoRTC : public IoTItem {
         jsonRead(parameters, "rst", _rst);
         jsonRead(parameters, "clk", _clk);
         jsonRead(parameters, "dat", _dat);
+        jsonRead(parameters, "defFormat", _defFormat);
+        _defFormat = _defFormat + " ";  // костыль против обрезки последнего символа в библиотеке
 
         switch (_chipNum) {
             case 1:
@@ -41,7 +44,10 @@ class IarduinoRTC : public IoTItem {
         if (RTCDriver) RTCDriver->begin();
     }
     
-    void doByInterval() { }
+    void doByInterval() {
+        value.isDecimal = false;
+        value.valS = watch->gettime(_defFormat);
+    }
 
     IoTValue execute(String command, std::vector<IoTValue> &param) {
         if (command == "getTime") { 
