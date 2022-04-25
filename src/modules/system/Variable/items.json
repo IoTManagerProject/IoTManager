@@ -9,7 +9,8 @@
         "page": "",
         "descr": "",
         
-        "int": "0",
-        "val": "0"
+        "int": "1",
+        "val": "0",
+        "dtFormat": ""
     }
 ]
