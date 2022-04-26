@@ -28,6 +28,9 @@ class IarduinoRTC : public IoTItem {
         _defFormat = _defFormat + " ";  // костыль против обрезки последнего символа в библиотеке
 
         switch (_chipNum) {
+            case 0:
+                RTCDriver = new iarduino_RTC_NTP();   
+            break;
             case 1:
                 RTCDriver = new iarduino_RTC_DS1302(_rst, _clk, _dat);   
             break;
