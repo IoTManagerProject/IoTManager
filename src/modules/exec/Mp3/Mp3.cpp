@@ -94,13 +94,17 @@ class Mp3 : public IoTItem {
                 myMP3->enableLoop();
             } else if (command == "disableLoop") { 
                 myMP3->disableLoop();
+            } else if (command == "randomAll") { 
+                myMP3->randomAll();
+            } else if (command == "stop") { 
+                myMP3->stop();
             } else if (command == "volume") { 
                 if (param.size()) {
                     myMP3->volume(param[0].valD);
                 }
             } else if (command == "playFolder") { 
                 if (param.size()) {
-                    myMP3->playFolder(param[0].valD, param[1].valD);
+                    myMP3->playFolder(param[0].valD, param[1].valD);    // (folderNum, fileNum)
                 }
             }
         }
