@@ -20,7 +20,8 @@
         "rst": 16,
         "clk": 5,
         "dat": 4,
-        "defFormat": "d-m-Y"
+        "defFormat": "d-m-Y",
+        "ticker": 0
     },
     {
         "name": "2. Расширитель портов Mcp23017",
