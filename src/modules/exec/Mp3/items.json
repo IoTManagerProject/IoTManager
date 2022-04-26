@@ -1,0 +1,16 @@
+[
+    {
+        "name": "MP3 плеер",
+        "num": 30,
+        "type": "Reading",
+        "subtype": "Mp3",
+        "id": "mp3",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        
+        "int": 1,
+        "pins": "14,12",
+        "volume": 20
+    }
+]
