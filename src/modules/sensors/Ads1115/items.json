@@ -15,7 +15,7 @@
 
         "plus": 0,
         "multiply": 1,
-        "round": 100,
+        "round": 2,
         "int": 10
     }
 ]

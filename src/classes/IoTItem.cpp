@@ -43,7 +43,7 @@ String IoTItem::getID() {
 
 String IoTItem::getValue() {
     if (value.isDecimal)
-        if (_round >= 0) {
+        if (_round >= 0 && _round <= 6) {
             char buf[15];
             sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
             return (String)buf;
