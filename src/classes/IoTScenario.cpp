@@ -44,7 +44,7 @@ public:
 
   IoTValue* exec() {
     if (isIotScenException) return nullptr;
-    Serial.printf("Call from  NumberExprAST: %f\n", Val.valD);
+    //Serial.printf("Call from  NumberExprAST: %f\n", Val.valD);
     return &Val;
   }
 };
@@ -57,7 +57,7 @@ public:
 
   IoTValue* exec() {
     if (isIotScenException) return nullptr;
-    Serial.printf("Call from  StringExprAST: %s\n", Val.valS.c_str());
+    //Serial.printf("Call from  StringExprAST: %s\n", Val.valS.c_str());
     return &Val;
   }
 };
@@ -85,9 +85,9 @@ public:
     if (isIotScenException) return nullptr;
     if (!ItemIsLocal) Item = findIoTItem(Name);
     if (Item) {
-      if (Item->value.isDecimal) 
-        Serial.printf("Call from  VariableExprAST: %s = %f\n", Name.c_str(), Item->value.valD);
-      else Serial.printf("Call from  VariableExprAST: %s = %s\n", Name.c_str(), Item->value.valS.c_str());
+      //if (Item->value.isDecimal) 
+      //  Serial.printf("Call from  VariableExprAST: %s = %f\n", Name.c_str(), Item->value.valD);
+      //else Serial.printf("Call from  VariableExprAST: %s = %s\n", Name.c_str(), Item->value.valS.c_str());
       return &(Item->value);
     }
 
@@ -108,7 +108,7 @@ public:
   ~BinaryExprAST() {
     if (LHS) delete LHS;
     if (RHS) delete RHS;
-    Serial.printf("Call from  BinaryExprAST delete\n");
+    //Serial.printf("Call from  BinaryExprAST delete\n");
   }
 
   IoTValue* exec(){
@@ -121,7 +121,7 @@ public:
     else if (Op == tok_greateq) printStr = ">=";
     else printStr = printStr + (char)Op;
 
-    Serial.printf("Call from  BinaryExprAST: %s\n", printStr.c_str());
+    //Serial.printf("Call from  BinaryExprAST: %s\n", printStr.c_str());
     
     if (RHS == nullptr || LHS == nullptr) return nullptr;
 
@@ -240,8 +240,8 @@ public:
 
     ret = Item->execute(Cmd, ArgsAsIoTValue);  // вызываем команду из модуля напрямую с передачей всех аргументов
     
-    if (ret.isDecimal) Serial.printf("Call from  CallExprAST ID = %s, Command = %s, exec result = %f\n", Callee.c_str(), Cmd.c_str(), ret.valD);
-    else Serial.printf("Call from  CallExprAST ID = %s, Command = %s, exec result = %s\n", Callee.c_str(), Cmd.c_str(), ret.valS.c_str());
+    //if (ret.isDecimal) Serial.printf("Call from  CallExprAST ID = %s, Command = %s, exec result = %f\n", Callee.c_str(), Cmd.c_str(), ret.valD);
+    //else Serial.printf("Call from  CallExprAST ID = %s, Command = %s, exec result = %s\n", Callee.c_str(), Cmd.c_str(), ret.valS.c_str());
     return &ret;
   }
 
@@ -250,7 +250,7 @@ public:
       if (Args[i]) delete Args[i];
     }
     Args.clear();
-    Serial.printf("Call from  CallExprAST delete\n");
+    //Serial.printf("Call from  CallExprAST delete\n");
   }
 };
 
@@ -268,7 +268,7 @@ public:
     }
 
   bool hasEventIdName(String eventIdName) {
-      Serial.printf("Call from  BinaryExprAST _IDNames:%s\n", _IDNames.c_str());
+      //Serial.printf("Call from  BinaryExprAST _IDNames:%s\n", _IDNames.c_str());
       return _IDNames.indexOf(eventIdName) >= 0;   // определяем встречался ли ИД, для которого исполняем сценарий в выражении IF
   }
 
@@ -280,7 +280,7 @@ public:
     if (Cond) cond_ret = Cond->exec();
     
     if (!cond_ret) {
-      Serial.printf("Call from  IfExprAST: Skip If\n");
+      //Serial.printf("Call from  IfExprAST: Skip If\n");
       return nullptr; //&zeroIotVal;
     }
 
@@ -303,7 +303,7 @@ public:
     if (Cond) delete Cond;
     if (Then) delete Then;
     if (Else) delete Else;
-    Serial.printf("Call from  IfExprAST delete\n");
+    //Serial.printf("Call from  IfExprAST delete\n");
   }
 };
 
@@ -317,7 +317,7 @@ public:
 
   IoTValue* exec() {
     if (isIotScenException) return nullptr;
-    Serial.printf("Call from  BracketsExprAST OperCount = %d \n", BracketsList.size());
+    //Serial.printf("Call from  BracketsExprAST OperCount = %d \n", BracketsList.size());
     
     IoTValue* lastExecValue = nullptr;
     for (unsigned int i = 0; i < BracketsList.size(); i++) {
@@ -334,7 +334,7 @@ public:
     }
     BracketsList.clear();
 
-    Serial.printf("Call from  BracketsExprAST delete\n");
+    //Serial.printf("Call from  BracketsExprAST delete\n");
   }
 };
 
