@@ -1,4 +1,7 @@
 #include "WsServer.h"
+#include "classes/IoTScenario.h"
+extern IoTScenario iotScen;
+
 #ifdef STANDARD_WEB_SOCKETS
 void standWebSocketsInit() {
     standWebSocket.begin();
@@ -66,8 +69,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //**сохранение**//
             if (headerStr == "/gifnoc|") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
-                // clearConfigure();
-                // configure("/config.json");
+                clearConfigure();
+                configure("/config.json");
             }
             //**сохранение**//
             if (headerStr == "/tuoyal|") {
@@ -76,6 +79,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //**сохранение**//
             if (headerStr == "/oiranecs|") {
                 writeFileUint8tByFrames("scenario.txt", payload, length, headerLenth, 256);
+                iotScen.loadScenario("/scenario.txt");
             }
             // page connection===================================================================
             //**отправка**//
