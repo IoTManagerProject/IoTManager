@@ -41,6 +41,10 @@ String IoTItem::getID() {
     return _id;
 };
 
+void IoTItem::setInterval(unsigned long interval) {
+    _interval = interval;
+}
+
 String IoTItem::getValue() {
     if (value.isDecimal)
         if (_round >= 0 && _round <= 6) {

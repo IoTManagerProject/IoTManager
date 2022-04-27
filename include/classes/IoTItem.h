@@ -23,6 +23,8 @@ class IoTItem {
     String getID();
     String getValue();
 
+    void setInterval(unsigned long interval);
+
     unsigned long currentMillis;
     unsigned long prevMillis;
     unsigned long difference;
