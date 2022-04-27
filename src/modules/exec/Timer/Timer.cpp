@@ -28,7 +28,7 @@ class Timer : public IoTItem {
         if (!_unfin && value.valD && !_pause) {
             value.valD--;
             if (_needSave) needSave = true;
-            if (value.valD == 0) {
+            if (value.valD <= 0) {
                 regEvent(value.valD, "Time's up");
                 if (_repeat) value.valD = _initValue;
             }
