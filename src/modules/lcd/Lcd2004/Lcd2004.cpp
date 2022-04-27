@@ -14,6 +14,8 @@ class Lcd2004 : public IoTItem {
     String _descr;
     int _prevStrSize;
 
+    bool _isShow = true;    // экран показывает
+
    public:
     Lcd2004(String parameters) : IoTItem(parameters) {
         String addr, size, xy;
@@ -60,18 +62,36 @@ class Lcd2004 : public IoTItem {
             LCDI2C->noBacklight();
         else if (command == "backlight")
             LCDI2C->backlight();
-        else if (command == "noDisplay")
+        else if (command == "noDisplay") {
             LCDI2C->noDisplay();
-        else if (command == "display")
+            _isShow = false;
+        } else if (command == "display") {
             LCDI2C->display();
-        else if (command == "x") {
-            _x = param[0].valD;
+            _isShow = true;
+        } else if (command == "toggle") {
+            if (_isShow) {
+                LCDI2C->noDisplay();
+                _isShow = false;
+            } else { 
+                LCDI2C->display();
+                _isShow = true;
+            }
+        } else if (command == "x") {
+            if (param.size()) {
+                _x = param[0].valD;
+            }
         } else if (command == "y") {
-            _y = param[0].valD;
+            if (param.size()) {
+                _y = param[0].valD;
+            }
         } else if (command == "descr") {
-            _descr = param[0].valS;
+            if (param.size()) {
+                _descr = param[0].valS;
+            }
         } else if (command == "id2show") {
-            _id2show = param[0].valS;
+            if (param.size()) {
+                _id2show = param[0].valS;
+            }
         }
 
         doByInterval();
