@@ -6,11 +6,10 @@ extern IoTRTC *watch;
 
 class Variable : public IoTItem {
    private:
-    String _dtFormat;
+
    public:
     Variable(String parameters): IoTItem(parameters) {
-        jsonRead(parameters, "dtFormat", _dtFormat);
-        _dtFormat = _dtFormat;
+        
     }
 
     // особенность данного модуля - просто хранение значения для сценария, нет событий
@@ -19,10 +18,7 @@ class Variable : public IoTItem {
     // }
 
     void doByInterval() {
-        if (_dtFormat != "") {
-            value.isDecimal = false;
-            value.valS = watch->gettime(_dtFormat + " ");
-        }
+        
     }
 };
 
