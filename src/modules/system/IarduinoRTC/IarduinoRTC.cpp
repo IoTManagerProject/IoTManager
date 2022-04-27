@@ -26,7 +26,6 @@ class IarduinoRTC : public IoTItem {
         jsonRead(parameters, "dat", _dat);
         jsonRead(parameters, "defFormat", _defFormat);
         jsonRead(parameters, "ticker", _ticker);
-        _defFormat = _defFormat + " ";  // костыль против обрезки последнего символа в библиотеке
 
         switch (_chipNum) {
             case 0:
@@ -50,16 +49,17 @@ class IarduinoRTC : public IoTItem {
     
     void doByInterval() {
         value.isDecimal = false;
-        value.valS = watch->gettime(_defFormat);
+        value.valS = watch->gettime(_defFormat.c_str());   
         if (_ticker) regEvent(value.valS, "time ticker");
     }
 
     IoTValue execute(String command, std::vector<IoTValue> &param) {
+        IoTValue tmpValue;
         if (command == "getTime") { 
             if (param.size()) {
-                value.isDecimal = false;
-                value.valS = watch->gettime(param[0].valS);
-                return value;
+                tmpValue.isDecimal = false;
+                tmpValue.valS = watch->gettime(param[0].valS.c_str());   
+                return tmpValue;
             }
         } else if (command == "saveSysTime") {
             tm localTimeVar;	

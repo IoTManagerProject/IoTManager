@@ -54,7 +54,7 @@ class SysExt : public IoTItem {
         } else if (command == "getTime") { 
             if (param.size()) {
                 value.isDecimal = false;
-                value.valS = watch->gettime(param[0].valS);
+                value.valS = watch->gettime(param[0].valS.c_str());
                 return value;
             }
         }
