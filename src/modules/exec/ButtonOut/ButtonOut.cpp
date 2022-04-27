@@ -15,7 +15,7 @@ class ButtonOut : public IoTItem {
 
         IoTgpio.pinMode(_pin, OUTPUT);
         //TODO: прочитать состояние из памяти
-        IoTgpio.digitalWrite(_pin, LOW);    // пока нет памяти, устанавливаем значение в ноль
+        IoTgpio.digitalWrite(_pin, _inv?HIGH:LOW);    // пока нет памяти, устанавливаем значение в ноль
         value.valD = 0;
     }
 
@@ -30,7 +30,7 @@ class ButtonOut : public IoTItem {
         // String command - имя команды после ID. (ID.Команда())
         // param - вектор ("массив") значений параметров переданных вместе с командой: ID.Команда("пар1", 22, 33) -> param[0].ValS = "пар1", param[1].ValD = 22
     
-        if (command == "change") {  // выполняем код при вызове спец команды из сценария: ID.reboot();
+        if (command == "change") { 
             value.valD = 1 - IoTgpio.digitalRead(_pin);
             IoTgpio.digitalWrite(_pin, value.valD);
             regEvent(value.valD, "ButtonOut");
@@ -41,7 +41,7 @@ class ButtonOut : public IoTItem {
 
     void setValue(IoTValue Value) {
         value = Value;
-        IoTgpio.digitalWrite(_pin, value.valD);
+        IoTgpio.digitalWrite(_pin, _inv?!value.valD:value.valD);
         if (value.isDecimal) regEvent(value.valD, "ButtonOut");
         else regEvent(value.valS, "ButtonOut");
     }
