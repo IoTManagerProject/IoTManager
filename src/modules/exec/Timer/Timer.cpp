@@ -10,30 +10,48 @@ class Timer : public IoTItem {
     bool _ticker = false;
     bool _repeat = false;
     bool _needSave = false;
+    bool _pause = false; 
+    int _initValue;
 
    public:
     Timer(String parameters): IoTItem(parameters) {
-        float valDtmp;
-        jsonRead(parameters, "countDown", valDtmp);
-        if (value.valD == 0) value.valD = valDtmp;
+        jsonRead(parameters, "countDown", _initValue);
+        value.valD = _initValue;
+        
         jsonRead(parameters, "ticker", _ticker);
         jsonRead(parameters, "repeat", _repeat);
-        if (_repeat) _repeat = valDtmp;  // если в параметрах просят повторить, то запоминаем настроечное значение отчета
         _unfin = !value.valD;
         jsonRead(parameters, "needSave", _needSave);    // нужно сохранять счетчик в постоянную память
     }
 
     void doByInterval() {
-        if (!_unfin && value.valD) {
+        if (!_unfin && value.valD && !_pause) {
             value.valD--;
             if (_needSave) needSave = true;
             if (value.valD == 0) {
                 regEvent(value.valD, "Time's up");
-                if (_repeat) value.valD = _repeat;
+                if (_repeat) value.valD = _initValue;
             }
         }
 
-        if (_ticker) regEvent(value.valD, "Timer tick");
+        if (_ticker && !_pause) regEvent(value.valD, "Timer tick");
+    }
+
+    IoTValue execute(String command, std::vector<IoTValue> &param) {
+        if (command == "stop") { 
+            _pause = true;
+        } else if (command == "reset") {
+            _pause = false;
+            value.valD = _initValue;
+        } else if (command == "continue") {
+            _pause = false;
+        } else if (command == "int") {
+            if (param.size()) {
+                setInterval(param[0].valD);
+            }
+        }
+
+        return {}; 
     }
 
     ~Timer() {};
