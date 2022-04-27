@@ -17,7 +17,8 @@ class Timer : public IoTItem {
     Timer(String parameters): IoTItem(parameters) {
         jsonRead(parameters, "countDown", _initValue);
         _unfin = !_initValue;
-        value.valD = _initValue + _unfin?0:1;   // +1 - компенсируем ранний вычет счетчика, ранний вычет, чтоб после события значение таймера не исказилось.
+        value.valD = _initValue;                    
+        if (_initValue) value.valD = value.valD + 1;        // +1 - компенсируем ранний вычет счетчика, ранний вычет, чтоб после события значение таймера не исказилось.     
                                                 // +0 - если изначально установили бесконечный счет
         
         jsonRead(parameters, "ticker", _ticker);
@@ -44,6 +45,7 @@ class Timer : public IoTItem {
         } else if (command == "reset") {
             _pause = false;
             value.valD = _initValue;
+            if (_initValue) value.valD = value.valD + 1;
         } else if (command == "continue") {
             _pause = false;
         } else if (command == "int") {
