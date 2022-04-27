@@ -16,25 +16,26 @@ class Timer : public IoTItem {
    public:
     Timer(String parameters): IoTItem(parameters) {
         jsonRead(parameters, "countDown", _initValue);
-        value.valD = _initValue;
+        _unfin = !_initValue;
+        value.valD = _initValue + _unfin?0:1;   // +1 - компенсируем ранний вычет счетчика, ранний вычет, чтоб после события значение таймера не исказилось.
+                                                // +0 - если изначально установили бесконечный счет
         
         jsonRead(parameters, "ticker", _ticker);
         jsonRead(parameters, "repeat", _repeat);
-        _unfin = !value.valD;
         jsonRead(parameters, "needSave", _needSave);    // нужно сохранять счетчик в постоянную память
     }
 
     void doByInterval() {
-        if (!_unfin && value.valD && !_pause) {
+        if (!_unfin && value.valD >= 0 && !_pause) {
             value.valD--;
+            if (_repeat && value.valD == -1) value.valD = _initValue;
             if (_needSave) needSave = true;
-            if (value.valD <= 0) {
+            if (value.valD == 0) {
                 regEvent(value.valD, "Time's up");
-                if (_repeat) value.valD = _initValue;
             }
         }
 
-        if (_ticker && !_pause) regEvent(value.valD, "Timer tick");
+        if (_ticker && (value.valD > 0 || _unfin) && !_pause) regEvent(value.valD, "Timer tick");
     }
 
     IoTValue execute(String command, std::vector<IoTValue> &param) {
