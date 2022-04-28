@@ -73,6 +73,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 clearConfigure();
                 Serial.println("Start config");
                 configure("/config.json");
+                iotScen.loadScenario("/scenario.txt");
             }
             //**сохранение**//
             if (headerStr == "/tuoyal|") {
