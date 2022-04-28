@@ -87,7 +87,9 @@ void setup() {
 
     //загрузка сценария
     iotScen.loadScenario("/scenario.txt");
-    // iotScen.ExecScenario("");
+    // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
+    IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"onConfig\",\"val\":1,\"int\":60}"));
+    generateEvent("onConfig", "");
 
     // test
     Serial.println("-------test start--------");
