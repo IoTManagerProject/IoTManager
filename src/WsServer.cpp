@@ -69,7 +69,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //**сохранение**//
             if (headerStr == "/gifnoc|") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
+                Serial.println("Start clear");
                 clearConfigure();
+                Serial.println("Start config");
                 configure("/config.json");
             }
             //**сохранение**//

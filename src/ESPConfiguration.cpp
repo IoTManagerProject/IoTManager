@@ -34,6 +34,7 @@ void configure(String path) {
                     // пробуем спросить драйвер RTC
                     iarduino_RTC_BASE* rtctmp = myIoTItem->getRtcDriver();
                     if (rtctmp) {
+                        Serial.println("Start delete watch objClass");
                         delete watch->objClass;
                         watch->objClass = rtctmp;
                         int valPeriod_save = watch->valPeriod;
@@ -54,6 +55,7 @@ void configure(String path) {
 void clearConfigure() {
     Serial.printf("Start clearing config\n");
     for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
+        Serial.printf("Start delete iotitem %s \n", (*it)->getID().c_str());
         if (*it) delete *it;
     }
     IoTItems.clear();

@@ -5,6 +5,7 @@
 class iarduino_RTC_NTP: public iarduino_RTC_BASE {
 	public:	
 		iarduino_RTC_NTP();
+        ~iarduino_RTC_NTP();
 		void	begin(void);
 		uint8_t	funcReadTimeIndex(uint8_t i);
 		void	funcWriteTimeIndex(uint8_t i, uint8_t j);

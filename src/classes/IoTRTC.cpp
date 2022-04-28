@@ -40,3 +40,7 @@ void iarduino_RTC_NTP::funcWriteTimeIndex(uint8_t i, uint8_t j) {
 
 }
 
+iarduino_RTC_NTP::~iarduino_RTC_NTP() {
+
+}
+
