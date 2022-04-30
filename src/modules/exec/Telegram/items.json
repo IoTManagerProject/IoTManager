@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Телеграм-Бот",
+        "num": 31,
+        "type": "Writing",
+        "subtype": "Telegram",
+        "id": "tg",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "int": 10,
+
+        "token": "",
+        "autos": 1,
+        "receiveMsg": 0
+    }
+]
