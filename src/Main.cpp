@@ -36,16 +36,17 @@ void setup() {
     String ntpServer = jsonReadStr(settingsFlashJson, F("ntp"));
     int timezone = jsonReadInt(settingsFlashJson, F("timezone"));
     configTime(3600*timezone, 0, ntpServer.c_str(), "ru.pool.ntp.org", "pool.ntp.org");
-    Serial.print("Syncing NTP time");
-    int i = 0;
-    while (isNetworkActive() && iotTimeNow < 1510592825 && i < 200)
-    {
-        time(&iotTimeNow);
-        delay(300);
-        Serial.print(".");
-        i++;
-    }
-    Serial.println();
+    Serial.print("Start syncing NTP time");
+    time(&iotTimeNow);
+    // int i = 0;
+    // while (isNetworkActive() && iotTimeNow < 1510592825 && i < 200)
+    // {
+    //     time(&iotTimeNow);
+    //     delay(300);
+    //     Serial.print(".");
+    //     i++;
+    // }
+    // Serial.println();
 
     // настраиваем локальный RTC
     watch = new IoTRTC(0);    // создаем объект главного хранилища времени, но с заглушкой (0) для получения системного времени
