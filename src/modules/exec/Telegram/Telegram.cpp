@@ -48,10 +48,12 @@ class Telegram : public IoTItem {
             String list = returnListOfParams();
             _myBot.sendMessage(_chatID, list);
             SerialPrint("<-", F("Telegram"), "chat ID: " + uint64ToString(_chatID) + "\n" + list);
-        } else {
-            //_myBot.sendMessage(_chatID, "ID: " + chipId + ", Name: " + jsonReadStr(configSetupJson, F("name")));
+        } else if (msg.indexOf("help") != -1) {
             _myBot.sendMessage(_chatID, "ID: " + chipId);
+            _myBot.sendMessage(_chatID, "chatID: " + uint64ToString(_chatID));
             _myBot.sendMessage(_chatID, F("Wrong order, use /all to get all values, /get_id to get value, or /set_id_value to set value"));
+        } else {
+            setValue(msg);
         }
     }
 
@@ -68,19 +70,17 @@ class Telegram : public IoTItem {
         jsonRead(parameters, "token", _token);
         jsonRead(parameters, "autos", _autos);
         jsonRead(parameters, "receiveMsg", _receiveMsg);
+
+        String tmp;
+        jsonRead(parameters, "chatID", tmp);
+        _chatID = atoll(tmp.c_str());
         
         #ifdef ESP32
-            _myBot.useDNS(true);
+             _myBot.useDNS(true);
         #endif
 
         _myBot.setTelegramToken(_token);
         _myBot.enableUTF8Encoding(true);
-        if (_myBot.testConnection()) {
-            SerialPrint("I", F("Telegram"), F("Connected"));
-        } else {
-            SerialPrint("E", F("Telegram"), F("Not connected"));
-        }
-        SerialPrint("I", F("Telegram"), F("Telegram Init"));
     }
 
     void doByInterval() {
@@ -94,24 +94,22 @@ class Telegram : public IoTItem {
                 telegramMsgParse(String(msg.text));
             }
         }
-
-        // if (_ticker && (value.valD > 0 || _unfin) && !_pause) regEvent(value.valD, "Telegram tick");
     }
 
     IoTValue execute(String command, std::vector<IoTValue> &param) {
-        // if (command == "stop") { 
-        //     _pause = true;
-        // } else if (command == "reset") {
-        //     _pause = false;
-        //     value.valD = _initValue;
-        //     if (_initValue) value.valD = value.valD + 1;
-        // } else if (command == "continue") {
-        //     _pause = false;
-        // } else if (command == "int") {
-        //     if (param.size()) {
-        //         setInterval(param[0].valD);
-        //     }
-        // }
+        if (command == "sendMsg") { 
+            if (param.size()) {
+                String strTmp;
+                if (param[0].isDecimal) strTmp = param[0].valD; else strTmp = param[0].valS;
+                sendTelegramMsg(false, strTmp);
+            } 
+        } else if (command == "sendOftenMsg") {
+            if (param.size()) {
+                String strTmp;
+                if (param[0].isDecimal) strTmp = param[0].valD; else strTmp = param[0].valS;
+                sendTelegramMsg(true, strTmp);
+            }
+        }
 
         return {}; 
     }
@@ -129,7 +127,9 @@ class Telegram : public IoTItem {
         }
     }
 
-    ~Telegram() {};
+    ~Telegram() {
+
+    };
 };
 
 void* getAPI_Telegram(String subtype, String param) {

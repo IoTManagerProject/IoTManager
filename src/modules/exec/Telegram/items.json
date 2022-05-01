@@ -12,6 +12,7 @@
 
         "token": "",
         "autos": 1,
-        "receiveMsg": 0
+        "receiveMsg": 0,
+        "chatID": ""
     }
 ]
