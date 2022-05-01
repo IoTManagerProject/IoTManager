@@ -18,10 +18,15 @@ class Mp3 : public IoTItem {
         int pinRx = selectFromMarkerToMarker(tmpstr, ",", 0).toInt();  
         int pinTx = selectFromMarkerToMarker(tmpstr, ",", 1).toInt();  
         mySerial = new SoftwareSerial(pinRx, pinTx);
+        pinMode(pinRx, INPUT);
+        pinMode(pinTx, OUTPUT);
 
         jsonRead(parameters, "volume", volumetmp);
 
-        if (mySerial) myMP3 = new DFRobotDFPlayerMini();
+        if (mySerial) {
+            mySerial->begin(9600);
+            myMP3 = new DFRobotDFPlayerMini();
+        }
         if (myMP3) {
             myMP3->begin(*mySerial);
             myMP3->volume(volumetmp);
