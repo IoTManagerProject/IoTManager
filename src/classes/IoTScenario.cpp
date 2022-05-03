@@ -356,9 +356,9 @@ public:
     while (isspace(LastChar))
       LastChar = getLastChar();
 
-    if (isalpha(LastChar)) { // идентификатор: [a-zA-Z][a-zA-Z0-9]*
+    if (isalpha(LastChar) || LastChar == '_') { // идентификатор: [a-zA-Z][a-zA-Z0-9]*
       IdentifierStr = LastChar;
-      while (isalnum((LastChar = getLastChar()))){
+      while (isalnum((LastChar = getLastChar())) || LastChar == '_'){
         IdentifierStr += LastChar;
       }
 
