@@ -75,7 +75,22 @@ class IarduinoRTC : public IoTItem {
             if (param.size()) {
                 watch->settimeUnix(param[0].valD);
             }
-        }
+        } else if (command == "getHours") {
+            tmpValue.valD = watch->Hours;       //	Часы			0-23
+            return tmpValue;
+        } else if (command == "getMinutes") {
+            tmpValue.valD = watch->minutes;       //	Минуты			0-59
+            return tmpValue;
+        } else if (command == "getSeconds") {
+            tmpValue.valD = watch->seconds;       //	Секунды			0-59
+            return tmpValue;
+        } else if (command == "getMonth") {
+            tmpValue.valD = watch->month;       //	Месяц			1-12
+            return tmpValue;
+        } else if (command == "getDay") {
+            tmpValue.valD = watch->day;       //	День месяца		1-31
+            return tmpValue;
+        }  
 
         return {}; 
     }
