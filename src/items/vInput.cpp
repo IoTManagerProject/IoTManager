@@ -36,7 +36,9 @@ void Input::execute(String value) {
     jsonWriteStr(json, "status", value);
     String MyJson = json; 
     jsonWriteStr(MyJson, "topic", path); 
+    #ifdef WEBSOCKET_ENABLED
     ws.textAll(MyJson);
+    #endif
 }
 
 MyInputVector* myInput = nullptr;
@@ -60,7 +62,7 @@ void inputValue() {
 
 void inputExecute() {
     String key = sCmd.order();
-    String value = sCmd.next();
+    String value = ExecuteParser();
 
     if (!isDigitStr(value)) {                 //если значение - текст
         if (value.indexOf(":") == -1) {       //если этот текст не время

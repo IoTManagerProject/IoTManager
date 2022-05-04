@@ -90,7 +90,9 @@ void upgrade_firmware(int type) {
     else if (type == 3) {  //spiffs and build
         if (upgradeFS()) {
              String temp = jsonWriteInt(msg, "upgrade", 3 );
+            #ifdef WEBSOCKET_ENABLED
               ws.textAll(temp);
+            #endif  
             writeFile(String(DEVICE_SCENARIO_FILE), scenario_ForUpdate);
             writeFile(String(DEVICE_CONFIG_FILE), devconfig_ForUpdate);
             writeFile("config.json", configSetup_ForUpdate);
@@ -132,7 +134,9 @@ bool upgradeFS() {
 #endif
     if (retFS == HTTP_UPDATE_OK) {  //если FS обновилась успешно
       String temp = jsonWriteInt(msg, "upgrade", 2);
-            ws.textAll(temp);
+                       #ifdef WEBSOCKET_ENABLED
+              ws.textAll(temp);
+            #endif 
         SerialPrint("I", F("Update"), F("FS upgrade done!"));
         ret = true;
     }
@@ -142,7 +146,9 @@ bool upgradeFS() {
 
 bool upgradeBuild() {
      String temp = jsonWriteInt(msg, "upgrade", 4 );
-            ws.textAll(temp);
+           #ifdef WEBSOCKET_ENABLED
+              ws.textAll(temp);
+            #endif 
     bool ret = false;
 #ifndef esp8266_1mb
     WiFiClient wifiClient;
@@ -168,7 +174,9 @@ bool upgradeBuild() {
         SerialPrint("I", F("Update"), F("BUILD upgrade done!"));
         ret = true;
           String temp = jsonWriteInt(msg, "upgrade", 5 );
-            ws.textAll(temp);
+           #ifdef WEBSOCKET_ENABLED
+              ws.textAll(temp);
+            #endif 
     }
 #endif
     return ret;
@@ -176,7 +184,9 @@ bool upgradeBuild() {
 
 void restartEsp() {
     String temp = jsonWriteInt(msg, "upgrade", 6 );
-            ws.textAll(temp);
+           #ifdef WEBSOCKET_ENABLED
+              ws.textAll(temp);
+            #endif 
     Serial.println(F("Restart ESP...."));
     delay(1000);
     ESP.restart();
