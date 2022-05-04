@@ -111,6 +111,12 @@ class Mp3 : public IoTItem {
                 if (param.size()) {
                     myMP3->playFolder(param[0].valD, param[1].valD);    // (folderNum, fileNum)
                 }
+            } else if (command == "play") { 
+                myMP3->play(1);  //Play the first mp3
+            } else if (command == "next") { 
+                myMP3->next();  //Play next mp3
+            } else if (command == "previous") { 
+                myMP3->previous();  //Play previous mp3
             }
         }
 
