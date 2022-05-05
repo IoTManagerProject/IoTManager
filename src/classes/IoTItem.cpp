@@ -84,7 +84,7 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
 
 void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
     if (_multiply) regvalue = regvalue * _multiply;
-    if (_plus) regvalue = regvalue + _multiply;
+    if (_plus) regvalue = regvalue + _plus;
     if (_round >= 0 && _round <= 6) {
         int sot = _round ? pow(10, (int)_round) : 1;
         regvalue = round(regvalue * sot) / sot;
