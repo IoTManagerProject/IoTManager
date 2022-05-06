@@ -185,7 +185,7 @@ public:
       if (!lhs->isDecimal && !rhs->isDecimal) {
         switch (Op) {
           case tok_equal:
-            val.valD = lhs->valS == rhs->valS;
+            val.valD = compStr(lhs->valS, rhs->valS);
           break;
 
           default:
@@ -196,6 +196,17 @@ public:
     }
     return nullptr;
   }
+
+  bool compStr(String str1, String str2){
+    if (str1.length() != str2.length()) return false;
+    for (int i = 0; i < str1.length(); i++) {
+      if (str1[i] == '*' || str2[i] == '*') continue;   //считаем, что если есть подстановочная звезда, то символы равны
+      if (str1[i] != str2[i]) return false;
+    }
+    
+    return true;//str1 == str2;
+  }
+
 };
 
 /// CallExprAST - Класс узла выражения для вызова команды.
@@ -269,7 +280,7 @@ public:
 
   bool hasEventIdName(String eventIdName) {
       //Serial.printf("Call from  BinaryExprAST _IDNames:%s\n", _IDNames.c_str());
-      return _IDNames.indexOf(eventIdName) >= 0;   // определяем встречался ли ИД, для которого исполняем сценарий в выражении IF
+      return _IDNames.indexOf(" " + eventIdName + " ") >= 0;   // определяем встречался ли ИД, для которого исполняем сценарий в выражении IF
   }
 
   IoTValue* exec() {
@@ -609,7 +620,7 @@ public:
     case tok_identifier: {
       if (IDNames) {
         String tmpstr = *IDNames;
-        *IDNames = tmpstr + " " + IdentifierStr;
+        *IDNames = tmpstr + " " + IdentifierStr + " ";
       }
       return ParseIdentifierExpr(IDNames);
     }
