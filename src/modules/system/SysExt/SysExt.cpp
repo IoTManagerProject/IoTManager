@@ -57,7 +57,27 @@ class SysExt : public IoTItem {
                 value.valS = watch->gettime(param[0].valS.c_str());
                 return value;
             }
-        }
+        } else if (command == "getHours") {
+            value.valD = watch->Hours;       //	Часы			0-23
+            value.isDecimal = true;
+            return value;
+        } else if (command == "getMinutes") {
+            value.valD = watch->minutes;       //	Минуты			0-59
+            value.isDecimal = true;
+            return value;
+        } else if (command == "getSeconds") {
+            value.valD = watch->seconds;       //	Секунды			0-59
+            value.isDecimal = true;
+            return value;
+        } else if (command == "getMonth") {
+            value.valD = watch->month;       //	Месяц			1-12
+            value.isDecimal = true;
+            return value;
+        } else if (command == "getDay") {
+            value.valD = watch->day;       //	День месяца		1-31
+            value.isDecimal = true;
+            return value;
+        } 
         return {};  // команда поддерживает возвращаемое значения. Т.е. по итогу выполнения команды или общения с внешней системой, можно вернуть значение в сценарий для дальнейшей обработки
     }
    
