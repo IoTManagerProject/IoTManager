@@ -15,7 +15,7 @@ allAPI_exec = ""
 
 def getDirs(path):
     for file in os.listdir(path):
-        if os.path.isdir(os.path.join(path, file)):
+        if os.path.isdir(os.path.join(path, file)) and not("--" in file):
             yield file
 
 
