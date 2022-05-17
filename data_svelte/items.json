@@ -116,7 +116,8 @@
         "int": 10,
         "token": "",
         "autos": 1,
-        "receiveMsg": 0
+        "receiveMsg": 0,
+        "chatID": ""
     },
     {
         "name": "9. Таймер",
@@ -510,11 +511,24 @@
         "round": 1
     },
     {
+        "name": "36. Сонар HC-SR04",
+        "num": 36,
+        "type": "Reading",
+        "subtype": "Sonar",
+        "id": "sonar",
+        "widget": "anydata",
+        "page": "Сенсоры",
+        "descr": "Расстояние",
+        "pinTrig": 5,
+        "pinEcho": 4,
+        "int": 5
+    },
+    {
         "header": "Экраны"
     },
     {
-        "name": "36. LCD экран 2004",
-        "num": 36,
+        "name": "37. LCD экран 2004",
+        "num": 37,
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -528,8 +542,8 @@
         "id2show": "id датчика"
     },
     {
-        "name": "37. LCD экран 1602",
-        "num": 37,
+        "name": "38. LCD экран 1602",
+        "num": 38,
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",

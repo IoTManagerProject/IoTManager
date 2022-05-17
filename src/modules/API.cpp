@@ -22,6 +22,7 @@ void* getAPI_Max6675(String subtype, String params);
 void* getAPI_Mhz19(String subtype, String params);
 void* getAPI_Sds011(String subtype, String params);
 void* getAPI_Sht20(String subtype, String params);
+void* getAPI_Sonar(String subtype, String params);
 void* getAPI_Lcd2004(String subtype, String params);
 
 void* getAPI(String subtype, String params) {
@@ -48,5 +49,6 @@ if ((tmpAPI = getAPI_Max6675(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Mhz19(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Sds011(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Sht20(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_Sonar(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Lcd2004(subtype, params)) != nullptr) return tmpAPI;return nullptr;
 }
