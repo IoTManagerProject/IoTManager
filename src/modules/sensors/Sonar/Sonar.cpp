@@ -6,10 +6,6 @@ extern IoTGpio IoTgpio;
 
 class Sonar : public IoTItem {
    private:
-    unsigned long currentMillis;
-    unsigned long prevMillis;
-    unsigned long difference;
-
     unsigned int _pinTrig, _pinEcho;
 
    public:
@@ -39,17 +35,6 @@ class Sonar : public IoTItem {
 
         regEvent(value.valD, "Sonar"); 
     }
-
-    // void loop() {
-    //     // currentMillis = millis();
-    //     // difference = currentMillis - prevMillis;
-    //     // if (difference >= _interval) {
-    //     //     prevMillis = millis();
-            
-    //     // }
-
-        
-    // }
 
     ~Sonar() {};
 };
