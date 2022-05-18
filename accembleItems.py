@@ -12,16 +12,28 @@ allMenuItemsCount = 1
 allAPI_head = ""
 allAPI_exec = ""
 
+excludeDirs = ""
+
 
 def getDirs(path):
+    global excludeDirs
     for file in os.listdir(path):
-        if os.path.isdir(os.path.join(path, file)) and not("--" in file):
-            yield file
+        maybeDir = os.path.join(path, file)
+        if os.path.isdir(maybeDir):
+            config.clear()
+            if config.read(maybeDir + "/platformio.ini"):
+                if config.getboolean("iotm", "exclude", fallback=False):
+                    print("Excluded: " + maybeDir)
+                    maybeDir = maybeDir.replace("src/", "")
+                    excludeDirs = excludeDirs + "\n-<" + maybeDir + ">"
+                else:
+                    yield file
 
 
 def getPIOLibs(patch):
     global allLibs_esp8266_4mb, allLibs_esp32_4mb
     for dir in getDirs(patch):  
+        config.clear()
         if (config.read(patch + dir + "/platformio.ini")):
             print(patch + dir + "/platformio.ini")
             allLibs_esp8266_4mb = allLibs_esp8266_4mb + config["env:esp8266_4mb"]["lib_deps"]
@@ -58,12 +70,14 @@ getPIOLibs("src/modules/system/")
 getPIOLibs("src/modules/exec/")
 getPIOLibs("src/modules/sensors/")  
 getPIOLibs("src/modules/lcd/")
-     
 
 # сохраняем собранные либы в настройках PIO
+config.clear()
 config.read("platformio.ini")
 config["env:esp8266_4mb_fromitems"]["lib_deps"] = allLibs_esp8266_4mb
 config["env:esp32_4mb_fromitems"]["lib_deps"] = allLibs_esp32_4mb
+config["env:esp8266_4mb_fromitems"]["src_filter"] = excludeDirs
+config["env:esp32_4mb_fromitems"]["src_filter"] = excludeDirs
 with open("platformio.ini", 'w') as configfile:
     config.write(configfile)
 
