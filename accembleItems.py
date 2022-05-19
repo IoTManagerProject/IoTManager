@@ -28,6 +28,8 @@ def getDirs(path):
                     excludeDirs = excludeDirs + "\n-<" + maybeDir + ">"
                 else:
                     yield file
+            else:
+                yield file
 
 
 def getPIOLibs(patch):
