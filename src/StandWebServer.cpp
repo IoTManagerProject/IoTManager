@@ -204,14 +204,12 @@ void handleFileList() {
         HTTP.send(500, "text/plain", "BAD ARGS");
         return;
     }
-    String path = HTTP.arg("list");
-    Dir dir = FileFS.openDir(path);
-    path = String();
+    File dir = FileFS.open(HTTP.arg("list"), "r");
     String output = "[";
-    while (dir.next()) {
-        File entry = dir.openFile("r");
+    File entry;
+    while (entry = dir.openNextFile()) {
         if (output != "[") output += ',';
-        bool isDir = dir.isDirectory();
+        bool isDir = entry.isDirectory();
         output += "{\"type\":\"";
         output += (isDir) ? "dir" : "file";
         output += "\",\"name\":\"";
