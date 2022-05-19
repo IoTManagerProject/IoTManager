@@ -78,8 +78,8 @@ config.clear()
 config.read("platformio.ini")
 config["env:esp8266_4mb_fromitems"]["lib_deps"] = allLibs_esp8266_4mb
 config["env:esp32_4mb_fromitems"]["lib_deps"] = allLibs_esp32_4mb
-config["env:esp8266_4mb_fromitems"]["src_filter"] = excludeDirs
-config["env:esp32_4mb_fromitems"]["src_filter"] = excludeDirs
+config["env:esp8266_4mb_fromitems"]["build_src_filter"] = excludeDirs
+config["env:esp32_4mb_fromitems"]["build_src_filter"] = excludeDirs
 with open("platformio.ini", 'w') as configfile:
     config.write(configfile)
 
