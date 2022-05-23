@@ -1,8 +1,6 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
-#include "classes/IoTRTC.h"
 
-extern IoTRTC *watch;
 
 class Variable : public IoTItem {
    private:
