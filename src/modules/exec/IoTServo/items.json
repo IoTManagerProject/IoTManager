@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Сервопривод",
+        "num": 30,
+        "type": "Writing",
+        "subtype": "IoTServo",
+        "id": "servo",
+        "widget": "range",
+        "page": "servo",
+        "descr": "угол",
+        
+        "int": 0,
+        "pin": 12,
+        "apin": -1,
+        "amap": "0, 4096, 0, 180"
+    }
+]
