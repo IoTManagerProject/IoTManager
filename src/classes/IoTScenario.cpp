@@ -100,6 +100,7 @@ class BinaryExprAST : public ExprAST {
   signed char Op;
   ExprAST *LHS, *RHS;
   IoTValue val;
+  String lhsStr, rhsStr;
 
 public:
   BinaryExprAST(signed char op, ExprAST *lhs, ExprAST *rhs) 
@@ -182,10 +183,18 @@ public:
         return &val;
       }
 
-      if (!lhs->isDecimal && !rhs->isDecimal) {
+      if (!lhs->isDecimal || !rhs->isDecimal) {
+        if (lhs->isDecimal) lhsStr = lhs->valD; else lhsStr = lhs->valS;
+        if (rhs->isDecimal) rhsStr = rhs->valD; else rhsStr = rhs->valS;
         switch (Op) {
           case tok_equal:
-            val.valD = compStr(lhs->valS, rhs->valS);
+            val.valD = compStr(lhsStr, rhsStr);
+          break;
+
+          case '+':
+            val.valS = lhsStr + rhsStr;
+            val.valD = 1;
+            val.isDecimal = false;
           break;
 
           default:
@@ -194,7 +203,7 @@ public:
         return &val;
       }
     }
-    return nullptr;
+    return &val;
   }
 
   bool compStr(String str1, String str2){
