@@ -1,5 +1,8 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
+#include "classes/IoTGpio.h"
+
+extern IoTGpio IoTgpio;
 
 #include <Servo.h>
 
@@ -16,6 +19,7 @@ class IoTServo : public IoTItem {
             servObj.attach(pin);
 
             jsonRead(parameters, "apin", _apin);
+            if (_apin >= 0) IoTgpio.pinMode(_apin, INPUT);
         
             String map;
             jsonRead(parameters, F("amap"), map, false);
@@ -29,8 +33,8 @@ class IoTServo : public IoTItem {
 
         void doByInterval() {
             if (_apin >= 0) {
-                value.valD = map(analogRead(_apin), _locmap1, _locmap2, _locmap3, _locmap4);
-                if (abs(_oldValue - value.valD) > 1) {
+                value.valD = map(IoTgpio.analogRead(_apin), _locmap1, _locmap2, _locmap3, _locmap4);
+                if (abs(_oldValue - value.valD) > 5) {
                     _oldValue = value.valD;
                     servObj.write(_oldValue);
                 }
