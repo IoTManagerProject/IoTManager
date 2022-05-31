@@ -13,6 +13,7 @@
         "multiply": 1,
         "round": 1,
         "pin": 0,
-        "int": 15
+        "int": 15,
+        "avgSteps": 1
     }
 ]
