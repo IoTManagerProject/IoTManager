@@ -6,6 +6,9 @@ struct IoTValue {
     float valD = 0;
     String valS = "";
     bool isDecimal = true;
+
+    uint8_t *extBinInfo = NULL;     // дополнительные бинарные данные из модуля
+    size_t extBinInfoSize = 0;      // размер дополнительных данных в байтах 
 };
 
 class IoTItem {
@@ -29,12 +32,13 @@ class IoTItem {
     unsigned long prevMillis;
     unsigned long difference;
 
-    IoTValue value;  // хранение основного значения, котрое обновляется из сценария, execute(), loop() или doByInterval()
+    IoTValue value;  // хранение основного значения, которое обновляется из сценария, execute(), loop() или doByInterval()
     
     bool iAmDead = false;   // признак необходимости удалить объект из базы
     bool iAmLocal = true;   // признак локальной переменной
 
     bool needSave = false;
+    bool enableDoByInt = true;
 
     virtual IoTGpio* getGpioDriver();
     virtual iarduino_RTC_BASE* getRtcDriver();

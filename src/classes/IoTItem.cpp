@@ -7,6 +7,7 @@
 
 IoTItem::IoTItem(String parameters) {
     jsonRead(parameters, F("int"), _interval);
+    if (_interval == 0) enableDoByInt = false;
     _interval = _interval * 1000;
     jsonRead(parameters, F("subtype"), _subtype);
     jsonRead(parameters, F("id"), _id);
@@ -57,11 +58,13 @@ String IoTItem::getValue() {
 }
 
 void IoTItem::loop() {
-    currentMillis = millis();
-    difference = currentMillis - prevMillis;
-    if (difference >= _interval) {
-        prevMillis = millis();
-        this->doByInterval();
+    if (enableDoByInt) {
+        currentMillis = millis();
+        difference = currentMillis - prevMillis;
+        if (difference >= _interval) {
+            prevMillis = millis();
+            this->doByInterval();
+        }
     }
 }
 
