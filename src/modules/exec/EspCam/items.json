@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Camera OV2640 (ESPcam)",
+        "num": 30,
+        "type": "Reading",
+        "subtype": "EspCam",
+        "id": "EspCam",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        
+        "int": 60,
+        "useLed": 0,
+        "ticker": 0,
+        "webTicker": 0
+    }
+]
