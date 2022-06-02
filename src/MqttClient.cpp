@@ -125,7 +125,9 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         payloadStr += (char)payload[i];
     }
 
-    // SerialPrint("i", "=>MQTT", payloadStr);
+    //SerialPrint("i", "=>MQTT", payloadStr);
+
+    //SerialPrint("i", F("=>MQTT"), "Msg from iotmanager: " + topicStr);
 
     if (payloadStr.startsWith("HELLO")) {
         SerialPrint("i", F("MQTT"), F("Full update"));
@@ -153,8 +155,19 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         if (topicStr.indexOf(chipId) == -1) {
             String devId = selectFromMarkerToMarker(topicStr, "/", 2);
             String id = selectFromMarkerToMarker(topicStr, "/", 3);
-            //добавим событие в базу
-            IoTItems.push_back((IoTItem*)new externalVariable(payloadStr));
+            IoTItem* itemExist = findIoTItem(id);
+            if (itemExist) {
+                String valAsStr;
+                if (jsonRead(payloadStr, F("val"), valAsStr, false)) {
+                    itemExist->setValue(valAsStr);
+                    unsigned long interval;
+                    jsonRead(payloadStr, F("int"), interval);
+                    itemExist->setInterval(interval);
+                }
+            } else {
+                //добавим событие в базу
+                IoTItems.push_back((IoTItem*)new externalVariable(payloadStr));
+            }
             //запустим проверку его в сценариях
             generateEvent(id, payloadStr);
             SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + payloadStr);
