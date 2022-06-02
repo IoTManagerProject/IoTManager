@@ -92,8 +92,22 @@
         "pin": 2
     },
     {
-        "name": "7. Сервопривод",
+        "name": "7. Camera OV2640 (ESPcam)",
         "num": 7,
+        "type": "Reading",
+        "subtype": "EspCam",
+        "id": "EspCam",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "int": 60,
+        "useLed": 0,
+        "ticker": 0,
+        "webTicker": 0
+    },
+    {
+        "name": "8. Сервопривод",
+        "num": 8,
         "type": "Writing",
         "subtype": "IoTServo",
         "id": "servo",
@@ -106,8 +120,8 @@
         "amap": "0, 4096, 0, 180"
     },
     {
-        "name": "8. MP3 плеер",
-        "num": 8,
+        "name": "9. MP3 плеер",
+        "num": 9,
         "type": "Reading",
         "subtype": "Mp3",
         "id": "mp3",
@@ -119,23 +133,19 @@
         "volume": 20
     },
     {
-        "name": "9. Телеграм-Бот",
-        "num": 9,
+        "name": "10. SD карта",
+        "num": 10,
         "type": "Writing",
-        "subtype": "Telegram",
-        "id": "tg",
+        "subtype": "SDcard",
+        "id": "sd",
         "widget": "",
         "page": "",
         "descr": "",
-        "int": 10,
-        "token": "",
-        "autos": 1,
-        "receiveMsg": 0,
-        "chatID": ""
+        "int": 60
     },
     {
-        "name": "10. Таймер",
-        "num": 10,
+        "name": "11. Таймер",
+        "num": 11,
         "type": "Writing",
         "subtype": "Timer",
         "id": "timer",
@@ -152,8 +162,8 @@
         "header": "Сенсоры"
     },
     {
-        "name": "11. Датчик напряжения ADS1115",
-        "num": 11,
+        "name": "12. Датчик напряжения ADS1115",
+        "num": 12,
         "type": "Reading",
         "subtype": "Ads1115",
         "id": "Ads3",
@@ -169,8 +179,8 @@
         "int": 10
     },
     {
-        "name": "12. Cенсор температуры AHT20",
-        "num": 12,
+        "name": "13. Cенсор температуры AHT20",
+        "num": 13,
         "type": "Reading",
         "subtype": "Aht20t",
         "id": "Temp20",
@@ -182,8 +192,8 @@
         "round": 1
     },
     {
-        "name": "13. Cенсор влажности AHT20",
-        "num": 13,
+        "name": "14. Cенсор влажности AHT20",
+        "num": 14,
         "type": "Reading",
         "subtype": "Aht20h",
         "id": "Hum20",
@@ -195,8 +205,8 @@
         "round": 1
     },
     {
-        "name": "14. Аналоговый сенсор",
-        "num": 14,
+        "name": "15. Аналоговый сенсор",
+        "num": 15,
         "type": "Reading",
         "subtype": "AnalogAdc",
         "id": "t",
@@ -208,11 +218,12 @@
         "multiply": 1,
         "round": 1,
         "pin": 0,
-        "int": 15
+        "int": 15,
+        "avgSteps": 1
     },
     {
-        "name": "15. Cенсор температуры Bme280",
-        "num": 15,
+        "name": "16. Cенсор температуры Bme280",
+        "num": 16,
         "type": "Reading",
         "subtype": "Bme280t",
         "id": "tmp3",
@@ -224,8 +235,8 @@
         "round": 1
     },
     {
-        "name": "16. Cенсор давления Bme280",
-        "num": 16,
+        "name": "17. Cенсор давления Bme280",
+        "num": 17,
         "type": "Reading",
         "subtype": "Bme280p",
         "id": "Press3",
@@ -237,8 +248,8 @@
         "round": 1
     },
     {
-        "name": "17. Cенсор влажности Bme280",
-        "num": 17,
+        "name": "18. Cенсор влажности Bme280",
+        "num": 18,
         "type": "Reading",
         "subtype": "Bme280h",
         "id": "Hum3",
@@ -250,8 +261,8 @@
         "round": 1
     },
     {
-        "name": "18. Cенсор температуры Bmp280",
-        "num": 18,
+        "name": "19. Cенсор температуры Bmp280",
+        "num": 19,
         "type": "Reading",
         "subtype": "Bmp280t",
         "id": "tmp3",
@@ -263,8 +274,8 @@
         "round": 1
     },
     {
-        "name": "19. Cенсор давления Bmp280",
-        "num": 19,
+        "name": "20. Cенсор давления Bmp280",
+        "num": 20,
         "type": "Reading",
         "subtype": "Bmp280p",
         "id": "Press3",
@@ -276,8 +287,8 @@
         "round": 1
     },
     {
-        "name": "20. Cенсор температуры dht11",
-        "num": 20,
+        "name": "21. Cенсор температуры dht11",
+        "num": 21,
         "type": "Reading",
         "subtype": "Dht1122t",
         "id": "tmp3",
@@ -289,8 +300,8 @@
         "senstype": "dht11"
     },
     {
-        "name": "21. Cенсор влажности dht11",
-        "num": 21,
+        "name": "22. Cенсор влажности dht11",
+        "num": 22,
         "type": "Reading",
         "subtype": "Dht1122h",
         "id": "Hum3",
@@ -302,8 +313,8 @@
         "senstype": "dht11"
     },
     {
-        "name": "22. Cенсор температуры ds18b20",
-        "num": 22,
+        "name": "23. Cенсор температуры ds18b20",
+        "num": 23,
         "type": "Reading",
         "subtype": "Ds18b20",
         "id": "dstmp",
@@ -317,8 +328,8 @@
         "round": 1
     },
     {
-        "name": "23. Датчик тока",
-        "num": 23,
+        "name": "24. Датчик тока",
+        "num": 24,
         "type": "Reading",
         "subtype": "I",
         "id": "current",
@@ -332,8 +343,8 @@
         "multiply": 1
     },
     {
-        "name": "24. Датчик напряжения",
-        "num": 24,
+        "name": "25. Датчик напряжения",
+        "num": 25,
         "type": "Reading",
         "subtype": "U",
         "id": "voltage",
@@ -347,8 +358,8 @@
         "multiply": 1
     },
     {
-        "name": "25. Cенсор температуры GY21",
-        "num": 25,
+        "name": "26. Cенсор температуры GY21",
+        "num": 26,
         "type": "Reading",
         "subtype": "GY21t",
         "id": "tmp4",
@@ -359,8 +370,8 @@
         "int": 15
     },
     {
-        "name": "26. Cенсор влажности GY21",
-        "num": 26,
+        "name": "27. Cенсор влажности GY21",
+        "num": 27,
         "type": "Reading",
         "subtype": "GY21h",
         "id": "Hum4",
@@ -371,8 +382,8 @@
         "int": 15
     },
     {
-        "name": "27. Cенсор температуры HDC1080",
-        "num": 27,
+        "name": "28. Cенсор температуры HDC1080",
+        "num": 28,
         "type": "Reading",
         "subtype": "Hdc1080t",
         "id": "Temp1080",
@@ -384,8 +395,8 @@
         "round": 1
     },
     {
-        "name": "28. Cенсор влажности HDC1080",
-        "num": 28,
+        "name": "29. Cенсор влажности HDC1080",
+        "num": 29,
         "type": "Reading",
         "subtype": "Hdc1080h",
         "id": "Hum1080",
@@ -397,8 +408,8 @@
         "round": 1
     },
     {
-        "name": "29. Cенсор температуры MAX6675",
-        "num": 29,
+        "name": "30. Cенсор температуры MAX6675",
+        "num": 30,
         "type": "Reading",
         "subtype": "Max6675t",
         "id": "maxtmp",
@@ -411,8 +422,8 @@
         "CLK": 14
     },
     {
-        "name": "30. Датчик CO2 MHZ-19 UART",
-        "num": 30,
+        "name": "31. Датчик CO2 MHZ-19 UART",
+        "num": 31,
         "type": "Reading",
         "subtype": "Mhz19uart",
         "id": "co2uart",
@@ -430,8 +441,8 @@
         "ABC": 1
     },
     {
-        "name": "31. Датчик CO2 MHZ-19 PWM",
-        "num": 31,
+        "name": "32. Датчик CO2 MHZ-19 PWM",
+        "num": 32,
         "type": "Reading",
         "subtype": "Mhz19pwm",
         "id": "co2pwm",
@@ -445,8 +456,8 @@
         "int": 300
     },
     {
-        "name": "32. Cенсор температуры от MHZ-19 UART",
-        "num": 32,
+        "name": "33. Cенсор температуры от MHZ-19 UART",
+        "num": 33,
         "type": "Reading",
         "subtype": "Mhz19temp",
         "id": "Mhz19temp",
@@ -462,8 +473,8 @@
         "int": 30
     },
     {
-        "name": "33. Рабочий диапазон от MHZ-19 UART",
-        "num": 33,
+        "name": "34. Рабочий диапазон от MHZ-19 UART",
+        "num": 34,
         "type": "Reading",
         "subtype": "Mhz19range",
         "id": "Mhz19range",
@@ -480,8 +491,8 @@
         "int": 30
     },
     {
-        "name": "34. Автокалибровка от MHZ-19 UART",
-        "num": 34,
+        "name": "35. Автокалибровка от MHZ-19 UART",
+        "num": 35,
         "type": "Reading",
         "subtype": "Mhz19ABC",
         "id": "Mhz19ABC",
@@ -495,8 +506,8 @@
         "int": 30
     },
     {
-        "name": "35. Датчик пыли SDS011 PM25",
-        "num": 35,
+        "name": "36. Датчик пыли SDS011 PM25",
+        "num": 36,
         "type": "Reading",
         "subtype": "Sds011_25",
         "id": "pmuart25",
@@ -513,8 +524,8 @@
         "period": 300
     },
     {
-        "name": "36. Датчик пыли SDS011 PM10",
-        "num": 36,
+        "name": "37. Датчик пыли SDS011 PM10",
+        "num": 37,
         "type": "Reading",
         "subtype": "Sds011_10",
         "id": "pmuart10",
@@ -531,8 +542,8 @@
         "period": 300
     },
     {
-        "name": "37. Cенсор температуры Sht20",
-        "num": 37,
+        "name": "38. Cенсор температуры Sht20",
+        "num": 38,
         "type": "Reading",
         "subtype": "Sht20t",
         "id": "tmp2",
@@ -543,8 +554,8 @@
         "round": 1
     },
     {
-        "name": "38. Cенсор влажности Sht20",
-        "num": 38,
+        "name": "39. Cенсор влажности Sht20",
+        "num": 39,
         "type": "Reading",
         "subtype": "Sht20h",
         "id": "Hum2",
@@ -555,8 +566,8 @@
         "round": 1
     },
     {
-        "name": "39. Сонар HC-SR04",
-        "num": 39,
+        "name": "40. Сонар HC-SR04",
+        "num": 40,
         "type": "Reading",
         "subtype": "Sonar",
         "id": "sonar",
@@ -571,8 +582,8 @@
         "header": "Экраны"
     },
     {
-        "name": "40. LCD экран 2004",
-        "num": 40,
+        "name": "41. LCD экран 2004",
+        "num": 41,
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -586,8 +597,8 @@
         "id2show": "id датчика"
     },
     {
-        "name": "41. LCD экран 1602",
-        "num": 41,
+        "name": "42. LCD экран 1602",
+        "num": 42,
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
