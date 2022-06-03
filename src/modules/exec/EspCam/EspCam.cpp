@@ -25,6 +25,8 @@
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
+#define PICBUF_SIZE          50000
+
 
 IoTItem* globalItem = nullptr;
 bool webTicker = false;
@@ -78,16 +80,16 @@ class EspCam : public IoTItem {
         config.xclk_freq_hz = 20000000;
         config.pixel_format = PIXFORMAT_JPEG; 
 
-        value.extBinInfo = (uint8_t*)malloc(sizeof(uint8_t) * 35000);
+        value.extBinInfo = (uint8_t*)malloc(sizeof(uint8_t) * PICBUF_SIZE);
         
         if(psramFound()){
             config.frame_size = FRAMESIZE_SVGA; // FRAMESIZE_ + QVGA|CIF|VGA|SVGA|XGA|SXGA|UXGA
-            config.jpeg_quality = 12;
+            config.jpeg_quality = 20;  //0-63 lower number means higher quality
             config.fb_count = 1;
             Serial.printf("Camera psramFound\n");
         } else {
             config.frame_size = FRAMESIZE_SVGA;
-            config.jpeg_quality = 12;
+            config.jpeg_quality = 20;
             config.fb_count = 1;
         }
         
@@ -106,8 +108,11 @@ class EspCam : public IoTItem {
 
         // Take Picture with Camera
         fb = esp_camera_fb_get();  
-        if(!fb || fb->len >= 35000) {
-            Serial.println("Camera capture failed");
+        if(!fb || fb->len >= PICBUF_SIZE) {
+            if (fb) {
+                Serial.printf("Camera capture failed size=%d\n", fb->len);
+                esp_camera_fb_return(fb);
+            } else Serial.printf("Camera capture failed\n");
             return;
         }
         
