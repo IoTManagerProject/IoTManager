@@ -312,9 +312,9 @@ public:
       res_ret = Else->exec();
     } 
 
-    if (!res_ret) Serial.printf("Call from  IfExprAST: Cond result = %f, no body result\n", cond_ret->valD);
-    else if (res_ret->isDecimal) Serial.printf("Call from  IfExprAST: Cond result = %f, result = %f\n", cond_ret->valD, res_ret->valD);
-    else Serial.printf("Call from  IfExprAST: Cond result = %f, result = %s\n", cond_ret->valD, res_ret->valS.c_str());
+    //if (!res_ret) Serial.printf("Call from  IfExprAST: Cond result = %f, no body result\n", cond_ret->valD);
+    //else if (res_ret->isDecimal) Serial.printf("Call from  IfExprAST: Cond result = %f, result = %f\n", cond_ret->valD, res_ret->valD);
+    //else Serial.printf("Call from  IfExprAST: Cond result = %f, result = %s\n", cond_ret->valD, res_ret->valS.c_str());
     Serial.printf("\n");
     return cond_ret;
   }
@@ -727,7 +727,7 @@ public:
     Serial.printf("Count root elements in scenario: %d\n", ScenarioElements.size());
     for (unsigned int i = 0; i < ScenarioElements.size(); i++) {
       if (ScenarioElements[i] && ScenarioElements[i]->hasEventIdName(eventIdName)) ScenarioElements[i]->exec();
-      else Serial.printf("Call from  ExecScenario: Skip ifexec because %s not found\n", eventIdName.c_str());
+      //else Serial.printf("Call from  ExecScenario: Skip ifexec because %s not found\n", eventIdName.c_str());
       if (isIotScenException) return;
     }
   }
