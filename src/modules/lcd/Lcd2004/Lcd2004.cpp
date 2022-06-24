@@ -4,6 +4,8 @@
 #include "LiquidCrystal_I2C.h"
 #include <map>
 
+void scanI2C();
+
 LiquidCrystal_I2C *LCDI2C;
 
 class Lcd2004 : public IoTItem {
@@ -22,6 +24,11 @@ class Lcd2004 : public IoTItem {
         _prevStrSize = 0;
 
         jsonRead(parameters, "addr", addr);
+        if (addr == "") {
+            scanI2C();
+            return;
+        }
+
         jsonRead(parameters, "size", size);
         int w = selectFromMarkerToMarker(size, ",", 0).toInt();  //количество столбцов
         int h = selectFromMarkerToMarker(size, ",", 1).toInt();  //количество строк
@@ -50,8 +57,8 @@ class Lcd2004 : public IoTItem {
                 else tmpStr = getItemValue(_id2show);
             LCDI2C->setCursor(_x, _y);
             LCDI2C->print(tmpStr);
-
-            // LCDI2C->print("Helloy,Manager 404 !");
+            
+            //LCDI2C->print("Helloy,Manager 404 !");
 
             _prevStrSize = tmpStr.length();
         }
