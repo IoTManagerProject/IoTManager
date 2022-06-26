@@ -39,6 +39,12 @@ class SysExt : public IoTItem {
                 value.valD = IoTgpio.digitalRead(param[0].valD);
                 return value;
             }
+        } else if (command == "analogRead") { 
+            if (param.size()) {
+                IoTgpio.pinMode(param[0].valD, INPUT);
+                value.valD = IoTgpio.analogRead(param[0].valD);
+                return value;
+            }
         } else if (command == "digitalWrite") { 
             if (param.size() == 2) {
                 IoTgpio.pinMode(param[0].valD, OUTPUT);
