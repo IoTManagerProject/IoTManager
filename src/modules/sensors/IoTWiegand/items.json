@@ -1,0 +1,15 @@
+[
+    {
+        "name": "Считыватель Wiegand",
+        "num": 31,
+        "type": "Reading",
+        "subtype": "IoTWiegand",
+        "id": "wg",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Считыватель",
+        "int": 0,
+        "pinD0": 13,
+        "pinD1": 12
+    }
+]
