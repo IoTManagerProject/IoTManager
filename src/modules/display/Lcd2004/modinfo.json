@@ -1,0 +1,62 @@
+{   
+    "menuSection": "Экраны",
+
+    "configItem": [{
+        "name": "LCD экран 2004",
+        "type": "Reading",
+        "subtype": "Lcd2004",
+        "id": "Lcd",
+        "widget": "",
+        "page": "",
+        "descr": "T",
+        
+        "int": 15,
+        "addr": "0x27",
+        "size": "20,4",
+        "coord": "0,0",
+        "id2show": "id датчика"
+    },
+    {
+        "name": "LCD экран 1602",
+        "type": "Reading",
+        "subtype": "Lcd2004",
+        "id": "Lcd",
+        "widget": "",
+        "page": "",
+        "descr": "T",
+        
+        "int": 15,
+        "addr": "0x27",
+        "size": "16,2",
+        "coord": "0,0",
+        "id2show": "id датчика"
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "Sergey @Serghei63",
+        "moduleName": "Lcd2004",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет выводить на символьные экраны по указанным позициям значения других элементов конфигурации.",
+        "propInfo": {
+            "int": "Период времени в секундах обновления информации на экране по конкретному элементу.",
+            "addr": "Адрес устройства на шине, обычно 0x27.",
+            "size": "Размерность матрицы экрана.",
+            "coord": "Координата позиции для вывода данных элемента конфигурации.",
+            "id2show": "id элемента конфигурации."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [
+            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
+        ],
+        "esp8266_4mb": [
+            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
+        ]
+    }
+}

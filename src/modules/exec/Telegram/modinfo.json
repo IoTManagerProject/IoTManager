@@ -1,0 +1,46 @@
+{   
+    "menuSection": "Модули управления",
+
+    "configItem": [{
+        "name": "Телеграм-Бот",
+        "type": "Writing",
+        "subtype": "Telegram",
+        "id": "tg",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "int": 10,
+
+        "token": "",
+        "autos": 1,
+        "receiveMsg": 0,
+        "chatID": ""
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "Telegram",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Добавляет возможность отправлять сообщения от имени бота контакту в Телеграм-чате и получать команды.",
+        "propInfo": {
+            "token": "Токен для авторизации бота в системе Telegram",
+            "autos": "Автоматически(1) или нет(0) запоминать ChatID по входящим сообщениям. Т.е. бот будет информировать тех, кто последний прислал сообщение.",
+            "receiveMsg": "Обрабатывать(1) или нет(0) входящие сообщения.",
+            "chatID": "ИД диалога с контактом. Необходим для отправки сообщений именно вам."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [
+            "CTBot @2.1.9"
+        ],
+        "esp8266_4mb": [
+            "CTBot @2.1.9"
+        ]
+    }
+}
