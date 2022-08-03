@@ -1,7 +1,8 @@
-[
-    {
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
         "name": "Датчик CO2 MHZ-19 UART",
-        "num": 20,
         "type": "Reading",
         "subtype": "Mhz19uart",
         "id": "co2uart",
@@ -20,7 +21,6 @@
     },
     {
         "name": "Датчик CO2 MHZ-19 PWM",
-        "num": 21,
         "type": "Reading",
         "subtype": "Mhz19pwm",
         "id": "co2pwm",
@@ -35,7 +35,6 @@
     },
     {
         "name": "Cенсор температуры от MHZ-19 UART",
-        "num": 22,
         "type": "Reading",
         "subtype": "Mhz19temp",
         "id": "Mhz19temp",
@@ -52,7 +51,6 @@
     },
     {
         "name": "Рабочий диапазон от MHZ-19 UART",
-        "num": 23,
         "type": "Reading",
         "subtype": "Mhz19range",
         "id": "Mhz19range",
@@ -70,7 +68,6 @@
     },
     {
         "name": "Автокалибровка от MHZ-19 UART",
-        "num": 24,
         "type": "Reading",
         "subtype": "Mhz19ABC",
         "id": "Mhz19ABC",
@@ -82,5 +79,29 @@
         "range": 5000,
         "ABC": 1,
         "int": 30
+    }],
+    
+    "about": {
+        "authorName": "Alex K",
+        "authorContact": "https://t.me/cmche",
+        "authorGit": "",
+        "specialThanks": "",
+        "moduleName": "Mhz19",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет получить значения температуры и CO2 с Mhz19.",
+        "propInfo": {
+            "int": "Количество секунд между опросами датчика.",
+            "rxPin": "",
+            "txPin": "",
+            "range": "",
+            "ABC": ""
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [],
+        "esp8266_4mb": []
     }
-]
+}

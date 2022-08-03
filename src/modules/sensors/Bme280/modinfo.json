@@ -1,7 +1,8 @@
-[
-    {
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
         "name": "Cенсор температуры Bme280",
-        "num": 9,
         "type": "Reading",
         "subtype": "Bme280t",
         "id": "tmp3",
@@ -14,7 +15,6 @@
     },
     {
         "name": "Cенсор давления Bme280",
-        "num": 10,
         "type": "Reading",
         "subtype": "Bme280p",
         "id": "Press3",
@@ -27,7 +27,6 @@
     },
     {
         "name": "Cенсор влажности Bme280",
-        "num": 11,
         "type": "Reading",
         "subtype": "Bme280h",
         "id": "Hum3",
@@ -37,5 +36,30 @@
         "int": 15,
         "addr": "0x77",
         "round": 1
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "Serghei Crasnicov @Serghei63",
+        "moduleName": "Bme280",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет получить значения температуры, давления и влажности с Bme280.",
+        "propInfo": {
+            "addr": "Адрес датчика на шине, обычно 0x77.",
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [
+            "adafruit/Adafruit BME280 Library"
+        ],
+        "esp8266_4mb": [
+            "adafruit/Adafruit BME280 Library"
+        ]
     }
-]
+}

@@ -1,0 +1,45 @@
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
+        "name": "Cенсор температуры ds18b20",
+        "type": "Reading",
+        "subtype": "Ds18b20",
+        "id": "dstmp",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "DS Температура",
+        "int": 15,
+        "pin": 2,
+        "index": 0,
+        "addr": "",
+        "round": 1
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "Ds18b20",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет получить значения температуры с Ds18b20.",
+        "propInfo": {
+            "pin": "GPIO номер, к которому подключена шина данных датчиков.",
+            "index": "Порядковый номер датчика на шине.",
+            "addr": "Адрес датчика на шине для точной идентификации. Можно скопировать из консоли.",
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [
+            "milesburton/DallasTemperature@^3.9.1"
+        ],
+        "esp8266_4mb": [
+            "milesburton/DallasTemperature@^3.9.1"
+        ]
+    }
+}

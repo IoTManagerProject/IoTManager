@@ -3,5 +3,4 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
-lib/libraies-master
-
+data_svelte/settings.json

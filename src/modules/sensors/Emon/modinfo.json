@@ -1,0 +1,60 @@
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
+        "name": "Датчик тока",
+        "type": "Reading",
+        "subtype": "I",
+        "id": "current",
+        "widget": "anydataAmp",
+        "page": "Сенсоры",
+        "descr": "Датчик тока",
+        "int": 10,
+        "pin_I": 34,
+        "calib_I": 111.1,
+        "plus": 0,
+        "multiply": 1
+    },
+    {
+        "name": "Датчик напряжения",
+        "type": "Reading",
+        "subtype": "U",
+        "id": "voltage",
+        "widget": "anydataVlt",
+        "page": "Сенсоры",
+        "descr": "Датчик напряжения",
+        "int": 10,
+        "pin_U": 35,
+        "calib_U": 223.1,
+        "plus": 0,
+        "multiply": 1
+    }],
+    
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "",
+        "moduleName": "Emon",
+        "moduleVersion": "1.0",
+        "moduleDesc": ".",
+        "propInfo": {
+            "pin_U": "",
+            "calib_U": "",
+            "pin_I": "",
+            "calib_I": "",
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [
+            "openenergymonitor/EmonLib@1.1.0"
+        ],
+        "esp8266_4mb": [
+            "openenergymonitor/EmonLib@1.1.0"
+        ]
+    }
+}

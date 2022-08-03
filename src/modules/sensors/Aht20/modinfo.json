@@ -1,0 +1,54 @@
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
+        "name": "Cенсор температуры AHT20",
+        "type": "Reading",
+        "subtype": "Aht20t",
+        "id": "Temp20",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "AHT20 Температура",
+        "int": 15,
+        "addr": "0x38",
+        "round": 1
+    },
+    {
+        "name": "Cенсор влажности AHT20",
+        "type": "Reading",
+        "subtype": "Aht20h",
+        "id": "Hum20",
+        "widget": "anydataHum",
+        "page": "Сенсоры",
+        "descr": "AHT20 Влажность",
+        "int": 15,
+        "addr": "0x38",
+        "round": 1
+    }],
+    
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "",
+        "moduleName": "Aht20",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет получить температуру и влажность с Aht20.",
+        "propInfo": {
+            "pin": "GPIO номер, к которому подключен датчик.",
+            "addr": "Адрес датчика на шине, обычно 0x38.",
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [
+            "Adafruit AHTX0"
+        ],
+        "esp8266_4mb": [
+            "Adafruit AHTX0"
+        ]
+    }
+}
