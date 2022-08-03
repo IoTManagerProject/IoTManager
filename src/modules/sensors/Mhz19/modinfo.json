@@ -98,7 +98,7 @@
         }
     },
 
-    "defActive": true,
+    "defActive": false,
 
     "devices": {
         "esp32_4mb": [],
