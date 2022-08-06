@@ -83,6 +83,18 @@ class SysExt : public IoTItem {
             value.valD = watch->day;       //	День месяца		1-31
             value.isDecimal = true;
             return value;
+        } else if (command == "deepSleep") {
+            if (param.size()) {    
+                Serial.printf("Ушел спать на %d сек...", (int)param[0].valD);
+                #ifdef ESP32
+                    esp_sleep_enable_timer_wakeup(param[0].valD * 1000000);
+                    delay(1000);
+                    esp_deep_sleep_start();
+                #else
+                    ESP.deepSleep(param[0].valD * 1000000);
+                #endif
+            }
+            return {};
         } 
         return {};  // команда поддерживает возвращаемое значения. Т.е. по итогу выполнения команды или общения с внешней системой, можно вернуть значение в сценарий для дальнейшей обработки
     }
