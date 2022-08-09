@@ -8,7 +8,7 @@
  ******************************************************************/
 
 #include "Global.h"
-#include "Classes/IoTItem.h"
+#include "classes/IoTItem.h"
 
 #include "max6675.h"
 #include <map>

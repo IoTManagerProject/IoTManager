@@ -1,0 +1,44 @@
+{   
+    "menuSection": "Модули управления",
+
+    "configItem": [{
+        "name": "Кнопка (подключенная физически)",
+        "type": "Writing",
+        "subtype": "ButtonIn",
+        "id": "btn",
+        "widget": "toggle",
+        "page": "Кнопки",
+        "descr": "",
+        "int": 0,
+
+        "pin": 16,
+        "execLevel": "1",
+        "pinMode": "INPUT",
+        "debounceDelay": 50,
+        "fixState": 1
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "ButtonIn",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет интерпретировать сигналы на цифровом пине как кнопку, т.е. создает в системе объект для чтения булевых значений с внешнего физического источника. Может вести себя как кнопка или как переключатель.",
+        "propInfo": {
+            "pin": "Укажите GPIO номер пина для чтения состояний подключенной кнопки",
+            "execLevel": "Высокий 1 или низкий 0 уровень переключения состояния",
+            "pinMode": "Может быть INPUT_PULLUP INPUT_PULLDOWN INPUT",
+            "debounceDelay": "Время обработки дребезга",
+            "fixState": "Поведение входа, срабатывание на переходе или на фиксации уровня (триггерный режим)"
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [],
+        "esp8266_4mb": []
+    }
+}

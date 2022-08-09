@@ -1,0 +1,42 @@
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
+        "name": "Считыватель Wiegand",
+        "type": "Reading",
+        "subtype": "IoTWiegand",
+        "id": "wg",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Считыватель",
+        "int": 0,
+        "pinD0": 13,
+        "pinD1": 12
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "IoTWiegand",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет получить коды доступа по протоколу Wiegand с различных считывателей. На данный момент модуль в РАЗРАБОТКЕ",
+        "propInfo": {
+            "pinD0": "GPIO шины данных",
+            "pinD1": "GPIO шины данных",
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+
+    "defActive": false,
+
+    "devices": {
+        "esp32_4mb": [
+            "https://github.com/jpliew/Wiegand-NG-Multi-Bit-Wiegand-Library-for-Arduino"
+        ],
+        "esp8266_4mb": [
+            "https://github.com/jpliew/Wiegand-NG-Multi-Bit-Wiegand-Library-for-Arduino"
+        ]
+    }
+}

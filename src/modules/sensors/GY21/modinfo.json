@@ -1,0 +1,50 @@
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
+        "name": "Cенсор температуры GY21",
+        "type": "Reading",
+        "subtype": "GY21t",
+        "id": "tmp4",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "round": 1,
+        "int": 15
+    },
+    {
+        "name": "Cенсор влажности GY21",
+        "type": "Reading",
+        "subtype": "GY21h",
+        "id": "Hum4",
+        "widget": "anydataHum",
+        "page": "Сенсоры",
+        "descr": "Влажность",
+        "round": 1,
+        "int": 15
+    }],
+    
+    "about": {
+        "authorName": "Alecs",
+        "authorContact": "https://t.me/Alecs",
+        "authorGit": "",
+        "specialThanks": "",
+        "moduleName": "GY21",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет получить значения температуры и влажности с GY21.",
+        "propInfo": {
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [
+            "https://github.com/JonasGMorsch/GY-21.git"
+        ],
+        "esp8266_4mb": [
+            "https://github.com/JonasGMorsch/GY-21.git"
+        ]
+    }
+}

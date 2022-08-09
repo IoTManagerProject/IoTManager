@@ -1,6 +1,5 @@
 #include "utils/JsonUtils.h"
 #include "utils/SerialPrint.h"
-#include "classes/ScenarioClass3.h"
 #include "classes/IoTItem.h"
 #include "WsServer.h"
 #include "ESPConfiguration.h"
@@ -8,6 +7,7 @@
 
 IoTItem::IoTItem(String parameters) {
     jsonRead(parameters, F("int"), _interval);
+    if (_interval == 0) enableDoByInt = false;
     _interval = _interval * 1000;
     jsonRead(parameters, F("subtype"), _subtype);
     jsonRead(parameters, F("id"), _id);
@@ -42,10 +42,14 @@ String IoTItem::getID() {
     return _id;
 };
 
+void IoTItem::setInterval(unsigned long interval) {
+    _interval = interval;
+}
+
 String IoTItem::getValue() {
     if (value.isDecimal)
-        if (_round >= 0) {
-            char buf[8];
+        if (_round >= 0 && _round <= 6) {
+            char buf[15];
             sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
             return (String)buf;
         } else return (String)value.valD;
@@ -54,11 +58,13 @@ String IoTItem::getValue() {
 }
 
 void IoTItem::loop() {
-    currentMillis = millis();
-    difference = currentMillis - prevMillis;
-    if (difference >= _interval) {
-        prevMillis = millis();
-        this->doByInterval();
+    if (enableDoByInt) {
+        currentMillis = millis();
+        difference = currentMillis - prevMillis;
+        if (difference >= _interval) {
+            prevMillis = millis();
+            this->doByInterval();
+        }
     }
 }
 
@@ -81,7 +87,7 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
 
 void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
     if (_multiply) regvalue = regvalue * _multiply;
-    if (_plus) regvalue = regvalue + _multiply;
+    if (_plus) regvalue = regvalue + _plus;
     if (_round >= 0 && _round <= 6) {
         int sot = _round ? pow(10, (int)_round) : 1;
         regvalue = round(regvalue * sot) / sot;
@@ -101,12 +107,25 @@ IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
 }
 
+iarduino_RTC_BASE* IoTItem::getRtcDriver() {
+    return nullptr;
+}
+
 void IoTItem::setValue(IoTValue Value) {
     value = Value;
     if (value.isDecimal)
         regEvent(value.valD, "");
     else
         regEvent(value.valS, "");
+}
+
+void IoTItem::setValue(String valStr) {
+    if (value.isDecimal = isDigitDotCommaStr(valStr)) {
+        value.valD = valStr.toFloat();
+    } else {
+        value.valS = valStr;
+    }
+    setValue(value);
 }
 
 externalVariable::externalVariable(String parameters) : IoTItem(parameters) {

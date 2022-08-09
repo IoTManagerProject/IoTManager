@@ -29,12 +29,7 @@ void handleOrder() {
         IoTItem* item = findIoTItem(selectToMarker(order, " "));
         if (item) {
             String valStr = selectToMarkerLast(order, " ");
-            IoTValue value;
-            if (value.isDecimal = isDigitDotCommaStr(valStr))
-                value.valD = valStr.toFloat();
-            else
-                value.valS = valStr;
-            item->setValue(value);
+            item->setValue(valStr);
         }
 
         orderBuf = deleteBeforeDelimiter(orderBuf, ",");

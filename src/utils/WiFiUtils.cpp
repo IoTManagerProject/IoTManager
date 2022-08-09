@@ -63,7 +63,7 @@ bool startAPMode() {
 
     if (jsonReadInt(errorsHeapJson, "passer") != 1) {
         ts.add(
-            WIFI_SCAN, 10 * 1000, [&](void*) {
+            WIFI_SCAN, 30 * 1000, [&](void*) {
                 String sta_ssid = jsonReadStr(settingsFlashJson, "routerssid");
 
                 SerialPrint("i", "WIFI", "scanning for " + sta_ssid);
