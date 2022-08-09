@@ -361,8 +361,32 @@
         "num": 26
     },
     {
-        "name": "27. Сонар HC-SR04",
-        "num": 27,
+        "name": "27. Cенсор температуры Sht30",
+        "type": "Reading",
+        "subtype": "Sht30t",
+        "id": "tmp30",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "SHT30 Температура",
+        "int": 15,
+        "round": 1,
+        "num": 27
+    },
+    {
+        "name": "28. Cенсор влажности Sht30",
+        "type": "Reading",
+        "subtype": "Sht30h",
+        "id": "Hum30",
+        "widget": "anydataHum",
+        "page": "Сенсоры",
+        "descr": "SHT30 Влажность",
+        "int": 15,
+        "round": 1,
+        "num": 28
+    },
+    {
+        "name": "29. Сонар HC-SR04",
+        "num": 29,
         "type": "Reading",
         "subtype": "Sonar",
         "id": "sonar",
@@ -377,7 +401,7 @@
         "header": "Расширения"
     },
     {
-        "name": "28. Поддержка DS1302(1), DS1307(2), DS3231(3), RX8025(4)",
+        "name": "30. Поддержка DS1302(1), DS1307(2), DS3231(3), RX8025(4)",
         "type": "Reading",
         "subtype": "IarduinoRTC",
         "id": "RTC",
@@ -391,10 +415,10 @@
         "dat": 4,
         "defFormat": "d-m-Y",
         "ticker": 0,
-        "num": 28
+        "num": 30
     },
     {
-        "name": "29. Расширитель портов Mcp23017",
+        "name": "31. Расширитель портов Mcp23017",
         "type": "Reading",
         "subtype": "Mcp23017",
         "id": "Mcp",
@@ -404,10 +428,10 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 29
+        "num": 31
     },
     {
-        "name": "30. Доп. функции системы",
+        "name": "32. Доп. функции системы",
         "type": "Reading",
         "subtype": "SysExt",
         "id": "SysExt",
@@ -415,10 +439,10 @@
         "page": "",
         "descr": "",
         "int": 15,
-        "num": 30
+        "num": 32
     },
     {
-        "name": "31. Переменная",
+        "name": "33. Переменная",
         "type": "Reading",
         "subtype": "Variable",
         "id": "var",
@@ -427,6 +451,6 @@
         "descr": "",
         "int": "0",
         "val": "0",
-        "num": 31
+        "num": 33
     }
 ]
