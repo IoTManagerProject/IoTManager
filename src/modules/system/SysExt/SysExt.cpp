@@ -95,7 +95,34 @@ class SysExt : public IoTItem {
                 #endif
             }
             return {};
-        } 
+        }
+        // } else if (command == "ModemSleep") {
+        //         Serial.printf("Выключил все радио...");
+        //         #ifdef ESP32
+        //             WiFi.setSleep(true);
+        //             if (!setCpuFrequencyMhz(80)){
+        //                 Serial2.println("Not valid frequency!");
+        //             }
+        //         #else
+        //             //WiFi.disconnect();
+        //             adc_power_off();
+        //             WiFi.disconnect(true);  // Disconnect from the network
+        //             WiFi.mode(WIFI_OFF);    // Switch WiFi off
+        //         #endif
+        //     return {};
+        // } else if (command == "ModemWakeup") {
+        //         Serial.printf("Включил все радио...");
+        //         #ifdef ESP32
+        //             setCpuFrequencyMhz(240);
+        //         #else
+        //             WiFi.forceSleepWake();
+        //             delay(1);
+        //             // восстанавливаем коннект тут
+
+        //             wifi_set_sleep_type(NONE_SLEEP_T);
+        //         #endif
+        //     return {};
+        // }
         return {};  // команда поддерживает возвращаемое значения. Т.е. по итогу выполнения команды или общения с внешней системой, можно вернуть значение в сценарий для дальнейшей обработки
     }
    
