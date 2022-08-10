@@ -1,0 +1,42 @@
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
+        "name": "Аналоговый сенсор",
+        "type": "Reading",
+        "subtype": "AnalogAdc",
+        "id": "t",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "map": "1,1024,1,100",
+        "plus": 0,
+        "multiply": 1,
+        "round": 1,
+        "pin": 0,
+        "int": 15,
+        "avgSteps": 1
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "AnalogAdc",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет получить текущее значение на аналоговом GPIO или усредненное для avgSteps измерений каждого вызова loop.",
+        "propInfo": {
+            "pin": "Аналоговый GPIO номер, к которому подключен датчик.",
+            "avgSteps": "Количество считываний для усреднения. При <=1, считывается одно значение за каждый период опроса.",
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [],
+        "esp8266_4mb": []
+    }
+}

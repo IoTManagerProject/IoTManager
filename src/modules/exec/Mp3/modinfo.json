@@ -1,0 +1,43 @@
+{   
+    "menuSection": "Модули управления",
+
+    "configItem": [{
+        "name": "MP3 плеер",
+        "type": "Reading",
+        "subtype": "Mp3",
+        "id": "mp3",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        
+        "int": 1,
+        "pins": "14,12",
+        "volume": 20
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "Mp3",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет управлять модулем проигрывания MP3 файлов с SD-карты по serial интерфейсу (DFplayer mini).",
+        "propInfo": {
+            "int": "Периодичность в секундах опроса состояния плеера.",
+            "pins": "Список GPIO через запятую, к которым подключен плеер.",
+            "volume": "Уровень громкости при инициализации."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [
+            "dfrobot/DFRobotDFPlayerMini @ ^1.0.5"
+        ],
+        "esp8266_4mb": [
+            "dfrobot/DFRobotDFPlayerMini @ ^1.0.5"
+        ]
+    }
+}

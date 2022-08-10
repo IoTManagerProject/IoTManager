@@ -1,0 +1,34 @@
+{   
+    "menuSection": "Расширения",
+
+    "configItem": [{
+        "name": "Доп. функции системы",
+        "type": "Reading",
+        "subtype": "SysExt",
+        "id": "SysExt",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "int": 15
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "SysExt",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Добавляет в систему дополнительные функции. Например, возможность прямого управления GPIO из сценариев.",
+        "propInfo": {
+            "int": "Не используется"
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [],
+        "esp8266_4mb": []
+    }
+}

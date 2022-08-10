@@ -1,0 +1,40 @@
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
+        "name": "Сонар HC-SR04",
+        "num": 1,
+        "type": "Reading",
+        "subtype": "Sonar",
+        "id": "sonar",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Расстояние (см)",
+        
+        "pinTrig": 5,
+        "pinEcho": 4,
+        "int": 5
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "Sonar",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет получить значение расстояния до препятствия с использованием ультразвукового датчика (в сантиметрах).",
+        "propInfo": {
+            "pinTrig": "GPIO контакта Trig",
+            "pinEcho": "GPIO контакта Echo",
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [],
+        "esp8266_4mb": []
+    }
+}

@@ -48,36 +48,53 @@ void standWebServerInit() {
     //  Запускаем HTTP сервер
     HTTP.begin();
 
-#ifdef REST_FILE_OPERATIONS
-    SPIFFS.begin();
-    {
-        Dir dir = SPIFFS.openDir("/");
-        while (dir.next()) {
-            String fileName = dir.fileName();
-            size_t fileSize = dir.fileSize();
-        }
-    }
+//#ifdef REST_FILE_OPERATIONS
+    // SPIFFS.begin();
+    // {
+    //     Dir dir = SPIFFS.openDir("/");
+    //     while (dir.next()) {
+    //         String fileName = dir.fileName();
+    //         size_t fileSize = dir.fileSize();
+    //     }
+    // }
     // HTTP страницы для работы с FFS
+    
     // list directory
     HTTP.on("/list", HTTP_GET, handleFileList);
+    
     //загрузка редактора editor
     HTTP.on("/edit", HTTP_GET, []() {
-        if (!handleFileRead("/edit.htm")) HTTP.send(404, "text/plain", "FileNotFound");
+        if (!HTTP.args()) {
+            if (!handleFileRead("/edit.htm")) HTTP.send(404, "text/plain", "FileNotFound");
+        }
+
+        if (HTTP.hasArg("list")) {
+           handleFileList();
+        }
+
+        if (HTTP.hasArg("edit")) {
+           if (!handleFileRead(HTTP.arg("edit"))) HTTP.send(404, "text/plain", "FileNotFound");
+        }
+
+        if (HTTP.hasArg("download")) {
+           if (!handleFileRead(HTTP.arg("download"))) HTTP.send(404, "text/plain", "FileNotFound");
+        }
     });
+    
     //Создание файла
     HTTP.on("/edit", HTTP_PUT, handleFileCreate);
+    
     //Удаление файла
     HTTP.on("/edit", HTTP_DELETE, handleFileDelete);
-    // first callback is called after the request has ended with all parsed arguments
-    // second callback handles file uploads at that location
-    HTTP.on(
-        "/edit", HTTP_POST, []() {
+    
+    //Изменение файла
+    HTTP.on("/edit", HTTP_POST, []() {
             HTTP.send(200, "text/plain", "");
         },
         handleFileUpload);
-#endif
+//#endif
+    
     // called when the url is not defined here
-    // use it to load content from SPIFFS
     HTTP.onNotFound([]() {
         if (!handleFileRead(HTTP.uri()))
             HTTP.send(404, "text/plain", "FileNotFound");
@@ -92,6 +109,8 @@ bool handleFileRead(String path) {
         if (FileFS.exists(pathWithGz))
             path += ".gz";
         File file = FileFS.open(path, "r");
+        if (contentType == "application/octet-stream") 
+            HTTP.sendHeader("Content-Disposition", "attachment;filename=" + (String)file.name());
         HTTP.streamFile(file, contentType);
         file.close();
         return true;
@@ -131,7 +150,7 @@ String getContentType(String filename) {
     return "text/plain";
 }
 
-#ifdef REST_FILE_OPERATIONS
+//#ifdef REST_FILE_OPERATIONS
 // Здесь функции для работы с файловой системой
 void handleFileUpload() {
     if (HTTP.uri() != "/edit") return;
@@ -181,27 +200,25 @@ void handleFileCreate() {
 }
 
 void handleFileList() {
-    if (!HTTP.hasArg("dir")) {
+    if (!HTTP.hasArg("list")) {
         HTTP.send(500, "text/plain", "BAD ARGS");
         return;
     }
-    String path = HTTP.arg("dir");
-    Dir dir = FileFS.openDir(path);
-    path = String();
+    File dir = FileFS.open(HTTP.arg("list"), "r");
     String output = "[";
-    while (dir.next()) {
-        File entry = dir.openFile("r");
+    File entry;
+    while (entry = dir.openNextFile()) {
         if (output != "[") output += ',';
-        bool isDir = false;
+        bool isDir = entry.isDirectory();
         output += "{\"type\":\"";
         output += (isDir) ? "dir" : "file";
         output += "\",\"name\":\"";
-        output += String(entry.name()).substring(1);
+        output += String(entry.name());
         output += "\"}";
         entry.close();
     }
     output += "]";
     HTTP.send(200, "text/json", output);
 }
-#endif
+//#endif
 #endif

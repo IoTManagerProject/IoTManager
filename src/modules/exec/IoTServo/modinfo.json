@@ -1,0 +1,43 @@
+{   
+    "menuSection": "Модули управления",
+
+    "configItem": [{
+        "name": "Сервопривод",
+        "type": "Writing",
+        "subtype": "IoTServo",
+        "id": "servo",
+        "widget": "range",
+        "page": "servo",
+        "descr": "угол",
+        
+        "int": 1,
+        "pin": 12,
+        "apin": -1,
+        "amap": "0, 4096, 0, 180"
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "Oleg @Threedreality, Sergey @Serghei63",
+        "moduleName": "IoTServo",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Предназначен для управления сервоприводом по уровню аналогово сигнала.",
+        "propInfo": {
+            "int": "Пауза в секундах между опросами аналогового входа. Если 0, то читаем постоянно",
+            "pin": "Пин, к которому подключен сервопривод",
+            "apin": "Номер GPIO аналогового пина. Если -1, то функция отключена.",
+            "amap": "Настройки преобразования значений аналога в нужный диапазон сервы, имеет смысл, если аналог включен."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [
+            "https://github.com/RoboticsBrno/ServoESP32"
+        ],
+        "esp8266_4mb": []
+    }
+}

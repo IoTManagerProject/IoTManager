@@ -1,7 +1,9 @@
 #include "ESPConfiguration.h"
 #include "classes/IoTGpio.h"
+#include "classes/IoTRTC.h"
 
 extern IoTGpio IoTgpio;
+extern IoTRTC *watch;
 
 std::list<IoTItem*> IoTItems;
 void* getAPI(String subtype, String params);
@@ -25,8 +27,22 @@ void configure(String path) {
             } else {
                 myIoTItem = (IoTItem*)getAPI(subtype, jsonArrayElement);
                 if (myIoTItem) {
-                    IoTGpio* tmp = myIoTItem->getGpioDriver();
-                    if (tmp) IoTgpio.regDriver(tmp);
+                    // пробуем спросить драйвер GPIO
+                    IoTGpio* gpiotmp = myIoTItem->getGpioDriver();
+                    if (gpiotmp) IoTgpio.regDriver(gpiotmp);
+                    
+                    // пробуем спросить драйвер RTC
+                    iarduino_RTC_BASE* rtctmp = myIoTItem->getRtcDriver();
+                    if (rtctmp) {
+                        Serial.println("Start delete watch objClass");
+                        delete watch->objClass;
+                        watch->objClass = rtctmp;
+                        int valPeriod_save = watch->valPeriod;
+                        watch->valPeriod = 0;
+                        watch->gettime();
+                        watch->valPeriod = valPeriod_save;
+                    }
+                    
                     IoTItems.push_back(myIoTItem);
                 }
             }
@@ -39,6 +55,7 @@ void configure(String path) {
 void clearConfigure() {
     Serial.printf("Start clearing config\n");
     for (std::list<IoTItem*>::iterator it=IoTItems.begin(); it != IoTItems.end(); ++it) {
+        Serial.printf("Start delete iotitem %s \n", (*it)->getID().c_str());
         if (*it) delete *it;
     }
     IoTItems.clear();

@@ -1,0 +1,37 @@
+{   
+    "menuSection": "Расширения",
+
+    "configItem": [{
+        "name": "Переменная",
+        "type": "Reading",
+        "subtype": "Variable",
+        "id": "var",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        
+        "int": "0",
+        "val": "0"
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "Variable",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Специальный системный модуль для использования переменных в процессе автоматизации как элементов конфигурации.",
+        "propInfo": {
+            "int": "Не используется",
+            "val": "Не используется"
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [],
+        "esp8266_4mb": []
+    }
+}

@@ -1,0 +1,43 @@
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
+        "name": "Сканер кнопок 433 MHz",
+        "num": 31,
+        "type": "Reading",
+        "subtype": "RCswitch",
+        "id": "rsw",
+        "int": 500,
+        "pinRx": 12,
+        "pinTx": 12
+    }],
+    
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "Valentin Khandriga @Valiuhaaa",
+        "moduleName": "RCswitch",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет принимать и передавать байт-коды на частоте 433 MHz от и для простых пультов, кнопок, радиореле",
+        "propInfo": {
+            "pinRx": "GPIO номер, к которому подключен радио приемник 433 MHz. Если < 0, то приемник выключен",
+            "pinTx": "GPIO номер, к которому подключен радио передатчик 433 MHz. Если < 0, то передатчик выключен",
+            "int": "Количество миллисекунд между опросами датчика. 0 - читаем постоянно. (устранение повторений при нажатой кнопке)"
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8266_1mb": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8266_4mb": [
+            "rc-switch @ ^2.6.4"
+        ]
+    }
+}
