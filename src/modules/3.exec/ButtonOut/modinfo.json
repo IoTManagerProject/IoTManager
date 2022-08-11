@@ -1,20 +1,19 @@
-{   
+{
     "menuSection": "Исполнительные устройства",
-
-    "configItem": [{
-        "name": "Кнопка управляющая пином (Реле с кнопкой)",
-        "type": "Writing",
-        "subtype": "ButtonOut",
-        "id": "btn",
-        "widget": "toggle",
-        "page": "Кнопки",
-        "descr": "",
-        "int": 0,
-
-        "inv": 0,
-        "pin": 2
-    }],
-    
+    "configItem": [
+        {
+            "name": "Кнопка управляющая пином (Реле)",
+            "type": "Writing",
+            "subtype": "ButtonOut",
+            "id": "btn",
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "",
+            "int": 0,
+            "inv": 0,
+            "pin": 2
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -28,9 +27,7 @@
             "inv": "Инвертировать выходные сигналы"
         }
     },
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [],
         "esp8266_4mb": []
