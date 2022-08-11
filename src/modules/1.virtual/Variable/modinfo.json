@@ -2,6 +2,42 @@
     "menuSection": "Виртуальные элементы",
 
     "configItem": [{
+        "name": "Кнопка",
+        "type": "Reading",
+        "subtype": "Variable",
+        "id": "vbtn",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        
+        "int": "0",
+        "val": "0"
+    },
+    {
+        "name": "Окно ввода цифры",
+        "type": "Reading",
+        "subtype": "Variable",
+        "id": "dedit",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        
+        "int": "0",
+        "val": "0"
+    },
+    {
+        "name": "Окно ввода времени",
+        "type": "Reading",
+        "subtype": "Variable",
+        "id": "tedit",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        
+        "int": "0",
+        "val": "0"
+    },
+    {
         "name": "Переменная",
         "type": "Reading",
         "subtype": "Variable",
