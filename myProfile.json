@@ -26,143 +26,143 @@
         }
     },
     "modules": {
-        "Виртуальные элементы": [
+        "Экраны": [
             {
-                "path": "src\\modules\\1.virtual\\Timer",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\1.virtual\\Variable",
-                "active": true
-            }
-        ],
-        "Сенсоры": [
-            {
-                "path": "src\\modules\\2.sensors\\Ads1115",
-                "active": false
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Aht20",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\AnalogAdc",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Bme280",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Bmp280",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Dht1122",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Ds18b20",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Emon",
-                "active": false
-            },
-            {
-                "path": "src\\modules\\2.sensors\\GY21",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Hdc1080",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\IoTWiegand",
-                "active": false
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Max6675",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Mhz19",
-                "active": false
-            },
-            {
-                "path": "src\\modules\\2.sensors\\RCswitch",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Sds011",
-                "active": false
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Sht20",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Sht30",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\2.sensors\\Sonar",
+                "path": "src\\modules\\display\\Lcd2004",
                 "active": true
             }
         ],
         "Исполнительные устройства": [
             {
-                "path": "src\\modules\\3.exec\\ButtonIn",
+                "path": "src\\modules\\exec\\ButtonIn",
                 "active": true
             },
             {
-                "path": "src\\modules\\3.exec\\ButtonOut",
+                "path": "src\\modules\\exec\\ButtonOut",
                 "active": true
             },
             {
-                "path": "src\\modules\\3.exec\\EspCam",
+                "path": "src\\modules\\exec\\EspCam",
                 "active": false
             },
             {
-                "path": "src\\modules\\3.exec\\IarduinoRTC",
+                "path": "src\\modules\\exec\\IarduinoRTC",
                 "active": true
             },
             {
-                "path": "src\\modules\\3.exec\\IoTServo",
+                "path": "src\\modules\\exec\\IoTServo",
                 "active": true
             },
             {
-                "path": "src\\modules\\3.exec\\Mcp23017",
+                "path": "src\\modules\\exec\\Mcp23017",
                 "active": true
             },
             {
-                "path": "src\\modules\\3.exec\\Mp3",
+                "path": "src\\modules\\exec\\Mp3",
                 "active": true
             },
             {
-                "path": "src\\modules\\3.exec\\Pwm32",
+                "path": "src\\modules\\exec\\Pwm32",
                 "active": true
             },
             {
-                "path": "src\\modules\\3.exec\\Pwm8266",
+                "path": "src\\modules\\exec\\Pwm8266",
                 "active": true
             },
             {
-                "path": "src\\modules\\3.exec\\SDcard",
+                "path": "src\\modules\\exec\\SDcard",
                 "active": false
             },
             {
-                "path": "src\\modules\\3.exec\\SysExt",
+                "path": "src\\modules\\exec\\SysExt",
                 "active": true
             },
             {
-                "path": "src\\modules\\3.exec\\Telegram",
+                "path": "src\\modules\\exec\\Telegram",
                 "active": false
             }
         ],
-        "Экраны": [
+        "Сенсоры": [
             {
-                "path": "src\\modules\\4.display\\Lcd2004",
+                "path": "src\\modules\\sensors\\Ads1115",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\sensors\\Aht20",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\AnalogAdc",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Bme280",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Bmp280",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Dht1122",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Ds18b20",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Emon",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\sensors\\GY21",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Hdc1080",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\IoTWiegand",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\sensors\\Max6675",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Mhz19",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\sensors\\RCswitch",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Sds011",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\sensors\\Sht20",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Sht30",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Sonar",
+                "active": true
+            }
+        ],
+        "Виртуальные элементы": [
+            {
+                "path": "src\\modules\\virtual\\Timer",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\virtual\\Variable",
                 "active": true
             }
         ]
