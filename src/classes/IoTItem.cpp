@@ -5,6 +5,7 @@
 #include "ESPConfiguration.h"
 #include "EventsAndOrders.h"
 
+//получение параметров в экземпляр класса
 IoTItem::IoTItem(String parameters) {
     jsonRead(parameters, F("int"), _interval);
     if (_interval == 0) enableDoByInt = false;
@@ -52,7 +53,8 @@ String IoTItem::getValue() {
             char buf[15];
             sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
             return (String)buf;
-        } else return (String)value.valD;
+        } else
+            return (String)value.valD;
     else
         return value.valS;
 }
