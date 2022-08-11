@@ -26,60 +26,14 @@
         }
     },
     "modules": {
-        "Экраны": [
+        "Виртуальные элементы": [
             {
-                "path": "src\\modules\\display\\Lcd2004",
-                "active": true
-            }
-        ],
-        "Исполнительные устройства": [
-            {
-                "path": "src\\modules\\exec\\ButtonIn",
+                "path": "src\\modules\\virtual\\Timer",
                 "active": true
             },
             {
-                "path": "src\\modules\\exec\\ButtonOut",
+                "path": "src\\modules\\virtual\\Variable",
                 "active": true
-            },
-            {
-                "path": "src\\modules\\exec\\EspCam",
-                "active": false
-            },
-            {
-                "path": "src\\modules\\exec\\IarduinoRTC",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\exec\\IoTServo",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\exec\\Mcp23017",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\exec\\Mp3",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\exec\\Pwm32",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\exec\\Pwm8266",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\exec\\SDcard",
-                "active": false
-            },
-            {
-                "path": "src\\modules\\exec\\SysExt",
-                "active": true
-            },
-            {
-                "path": "src\\modules\\exec\\Telegram",
-                "active": false
             }
         ],
         "Сенсоры": [
@@ -156,13 +110,59 @@
                 "active": true
             }
         ],
-        "Виртуальные элементы": [
+        "Исполнительные устройства": [
             {
-                "path": "src\\modules\\virtual\\Timer",
+                "path": "src\\modules\\exec\\ButtonIn",
                 "active": true
             },
             {
-                "path": "src\\modules\\virtual\\Variable",
+                "path": "src\\modules\\exec\\ButtonOut",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\EspCam",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\exec\\IarduinoRTC",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\IoTServo",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\Mcp23017",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\Mp3",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\Pwm32",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\Pwm8266",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\SDcard",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\exec\\SysExt",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\Telegram",
+                "active": false
+            }
+        ],
+        "Экраны": [
+            {
+                "path": "src\\modules\\display\\Lcd2004",
                 "active": true
             }
         ]

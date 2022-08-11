@@ -39,7 +39,9 @@ def updateModulesInProfile(profJson):
                     modinfoJson = json.load(read_file)
                     # проверяем есть ли уже узловой элемент и если нет, то создаем
                     if not modinfoJson['menuSection'] in profJson["modules"]:
-                        profJson["modules"][modinfoJson['menuSection']] = []
+                        listFromFirstElement = {modinfoJson['menuSection']: []}
+                        listFromFirstElement.update(profJson["modules"])
+                        profJson["modules"] = listFromFirstElement
                     # добавляем информацию о модуле в узловой элемент
                     profJson["modules"][modinfoJson['menuSection']].append({
                         'path': root,
@@ -77,7 +79,14 @@ if Path(profile).is_file():
         profJson = json.load(read_file)  
     # если хотим обновить список модулей в существующем профиле
     if update:
-        updateModulesInProfile(profJson) 
+        updateModulesInProfile(profJson)
+        
+        # sortedListNames = sorted(profJson["modules"])
+        # sortedModules = {}
+        # for sortedModulName in sortedList:
+            
+        print(profJson)
+        
         with open(profile, "w", encoding='utf-8') as write_file:
             json.dump(profJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
 else:
