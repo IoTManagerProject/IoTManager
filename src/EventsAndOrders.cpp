@@ -23,11 +23,12 @@ void generateOrder(const String& id, const String& value) {
 void handleOrder() {
     if (orderBuf.length()) {
         String order = selectToMarker(orderBuf, ",");
-        Serial.println("order: " + order);
+        SerialPrint("i", F("ORDER"), order);
 
         //здесь нужно перебрать все методы execute всех векторов и выполнить те id которых совпали с id события
         IoTItem* item = findIoTItem(selectToMarker(order, " "));
         if (item) {
+            SerialPrint("i", F("ORDER"), "order matched " + order);
             String valStr = selectToMarkerLast(order, " ");
             item->setValue(valStr);
         }
