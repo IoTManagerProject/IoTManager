@@ -22,19 +22,7 @@
         "num": 1
     },
     {
-        "name": "2. Кнопка",
-        "type": "Reading",
-        "subtype": "Variable",
-        "id": "vbtn",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        "int": "0",
-        "val": "0",
-        "num": 2
-    },
-    {
-        "name": "3. Окно ввода цифры",
+        "name": "2. Окно ввода цифры",
         "type": "Reading",
         "subtype": "Variable",
         "id": "dedit",
@@ -43,10 +31,10 @@
         "descr": "",
         "int": "0",
         "val": "0",
-        "num": 3
+        "num": 2
     },
     {
-        "name": "4. Окно ввода времени",
+        "name": "3. Окно ввода времени",
         "type": "Reading",
         "subtype": "Variable",
         "id": "tedit",
@@ -55,15 +43,27 @@
         "descr": "",
         "int": "0",
         "val": "0",
-        "num": 4
+        "num": 3
     },
     {
-        "name": "5. Переменная",
+        "name": "4. Переменная",
         "type": "Reading",
         "subtype": "Variable",
         "id": "var",
         "widget": "",
         "page": "",
+        "descr": "",
+        "int": "0",
+        "val": "0",
+        "num": 4
+    },
+    {
+        "name": "5. Кнопка",
+        "type": "Reading",
+        "subtype": "VButton",
+        "id": "vbtn",
+        "widget": "button",
+        "page": "Кнопки",
         "descr": "",
         "int": "0",
         "val": "0",

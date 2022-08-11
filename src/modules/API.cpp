@@ -2,6 +2,7 @@
 
 void* getAPI_Timer(String subtype, String params);
 void* getAPI_Variable(String subtype, String params);
+void* getAPI_VButton(String subtype, String params);
 void* getAPI_Aht20(String subtype, String params);
 void* getAPI_AnalogAdc(String subtype, String params);
 void* getAPI_Bme280(String subtype, String params);
@@ -29,6 +30,7 @@ void* getAPI(String subtype, String params) {
 void* tmpAPI;
 if ((tmpAPI = getAPI_Timer(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Variable(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_VButton(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Aht20(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_AnalogAdc(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Bme280(subtype, params)) != nullptr) return tmpAPI;

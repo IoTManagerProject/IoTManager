@@ -1,18 +1,7 @@
 {   
     "menuSection": "Виртуальные элементы",
 
-    "configItem": [{
-        "name": "Кнопка",
-        "type": "Reading",
-        "subtype": "Variable",
-        "id": "vbtn",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        
-        "int": "0",
-        "val": "0"
-    },
+    "configItem": [
     {
         "name": "Окно ввода цифры",
         "type": "Reading",
