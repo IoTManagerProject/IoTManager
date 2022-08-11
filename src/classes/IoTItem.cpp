@@ -33,20 +33,19 @@ IoTItem::IoTItem(String parameters) {
     }
 }
 
-// IoTItem::~IoTItem() {}
-
-String IoTItem::getSubtype() {
-    return _subtype;
+//луп выполняющий переодическое дерганье
+void IoTItem::loop() {
+    if (enableDoByInt) {
+        currentMillis = millis();
+        difference = currentMillis - prevMillis;
+        if (difference >= _interval) {
+            prevMillis = millis();
+            this->doByInterval();
+        }
+    }
 }
 
-String IoTItem::getID() {
-    return _id;
-};
-
-void IoTItem::setInterval(unsigned long interval) {
-    _interval = interval;
-}
-
+//получить
 String IoTItem::getValue() {
     if (value.isDecimal)
         if (_round >= 0 && _round <= 6) {
@@ -59,15 +58,14 @@ String IoTItem::getValue() {
         return value.valS;
 }
 
-void IoTItem::loop() {
-    if (enableDoByInt) {
-        currentMillis = millis();
-        difference = currentMillis - prevMillis;
-        if (difference >= _interval) {
-            prevMillis = millis();
-            this->doByInterval();
-        }
+//установить
+void IoTItem::setValue(String valStr) {
+    if (value.isDecimal = isDigitDotCommaStr(valStr)) {
+        value.valD = valStr.toFloat();
+    } else {
+        value.valS = valStr;
     }
+    setValue(value);
 }
 
 void IoTItem::regEvent(String value, String consoleInfo = "") {
@@ -121,13 +119,18 @@ void IoTItem::setValue(IoTValue Value) {
         regEvent(value.valS, "");
 }
 
-void IoTItem::setValue(String valStr) {
-    if (value.isDecimal = isDigitDotCommaStr(valStr)) {
-        value.valD = valStr.toFloat();
-    } else {
-        value.valS = valStr;
-    }
-    setValue(value);
+//==========================всякая херня==============================================================================================
+//захрена эта хрень?
+// String IoTItem::getSubtype() {
+//    return _subtype;
+//}
+
+String IoTItem::getID() {
+    return _id;
+};
+
+void IoTItem::setInterval(unsigned long interval) {
+    _interval = interval;
 }
 
 externalVariable::externalVariable(String parameters) : IoTItem(parameters) {
@@ -143,6 +146,10 @@ externalVariable::~externalVariable() {
 void externalVariable::doByInterval() {  // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
     iAmDead = true;
 }
+
+//=========================================================================================================================================
+
+IoTItem::~IoTItem() {}
 
 IoTItem* myIoTItem;
 
