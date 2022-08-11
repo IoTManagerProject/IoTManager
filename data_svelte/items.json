@@ -96,18 +96,16 @@
         "num": 6
     },
     {
-        "name": "7. PWM ESP32",
+        "name": "7. PWM ESP8266",
         "type": "Writing",
-        "subtype": "Pwm32",
+        "subtype": "Pwm8266",
         "id": "pwm",
         "widget": "range",
         "page": "Кнопки",
         "descr": "PWM",
         "int": 0,
-        "pin": 2,
+        "pin": 15,
         "freq": 5000,
-        "ledChannel": 2,
-        "PWM_resolution": 12,
         "val": 0,
         "apin": -1,
         "num": 7

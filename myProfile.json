@@ -1,0 +1,170 @@
+{
+    "iotmSettings": {
+        "settings": "",
+        "name": "IoTmanagerVer4",
+        "apssid": "IoTmanager",
+        "appass": "",
+        "routerssid": "MercureSpeedZone",
+        "routerpass": "",
+        "timezone": 1,
+        "ntp": "pool.ntp.org",
+        "weblogin": "admin",
+        "webpass": "admin",
+        "mqttServer": "m2.wqtt.ru",
+        "mqttPort": 8021,
+        "mqttPrefix": "/ver4test",
+        "mqttUser": "rise",
+        "mqttPass": "hostel3333",
+        "serverip": "http://206.189.49.244:8081",
+        "log": 0,
+        "mqttin": 0
+    },
+    "projectProp": {
+        "platformio": {
+            "default_envs": "esp8266_4mb",
+            "data_dir": "data_svelte"
+        }
+    },
+    "modules": {
+        "Экраны": [
+            {
+                "path": "src\\modules\\display\\Lcd2004",
+                "active": true
+            }
+        ],
+        "Модули управления": [
+            {
+                "path": "src\\modules\\exec\\ButtonIn",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\ButtonOut",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\EspCam",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\exec\\IoTServo",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\Mp3",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\Pwm32",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\Pwm8266",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\exec\\SDcard",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\exec\\Telegram",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\exec\\Timer",
+                "active": true
+            }
+        ],
+        "Сенсоры": [
+            {
+                "path": "src\\modules\\sensors\\Ads1115",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\sensors\\Aht20",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\AnalogAdc",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Bme280",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Bmp280",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Dht1122",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Ds18b20",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Emon",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\sensors\\GY21",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Hdc1080",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\IoTWiegand",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\sensors\\Max6675",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Mhz19",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\sensors\\RCswitch",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Sds011",
+                "active": false
+            },
+            {
+                "path": "src\\modules\\sensors\\Sht20",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Sht30",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\Sonar",
+                "active": true
+            }
+        ],
+        "Расширения": [
+            {
+                "path": "src\\modules\\system\\IarduinoRTC",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\system\\Mcp23017",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\system\\SysExt",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\system\\Variable",
+                "active": true
+            }
+        ]
+    }
+}
