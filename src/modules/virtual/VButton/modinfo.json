@@ -1,0 +1,37 @@
+{   
+    "menuSection": "Виртуальные элементы",
+
+    "configItem": [{
+        "name": "Кнопка",
+        "type": "Reading",
+        "subtype": "VButton",
+        "id": "vbtn",
+        "widget": "button",
+        "page": "Кнопки",
+        "descr": "Кнопка1",
+        
+        "int": "0",
+        "val": "0"
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "VButton",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Специальный системный модуль для добавления виртуальной кнопки.",
+        "propInfo": {
+            "int": "Не используется",
+            "val": "Значение при старте"
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [],
+        "esp8266_4mb": []
+    }
+}
