@@ -1,0 +1,40 @@
+{   
+    "menuSection": "Модули управления",
+
+    "configItem": [{
+        "name": "PWM ESP8266",
+        "type": "Writing",
+        "subtype": "Pwm8266",
+        "id": "pwm",
+        "widget": "range",
+        "page": "Кнопки",
+        "descr": "PWM",
+        "int": 0,
+        "pin": 15,
+        "freq": 5000,
+        "val": 0,
+        "apin": -1
+      }],
+    
+    "about": {
+        "authorName": "Avaks",
+        "authorContact": "https://t.me/Avaks",
+        "authorGit": "https://github.com/avaksru",
+        "specialThanks": "Serghei Crasnicov @Serghei63",
+        "moduleName": "Pwm8266",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет управлять Широтно-Импульсной Модуляцией на конкретном пине платы.",
+        "propInfo": {
+            "int": "Количество миллисекунд между опросами аналога. 0 - выключено.",
+            "pin": "Управляемый пин",
+            "apin": "Номер GPIO аналогового пина. Если -1, то функция отключена.",
+            "freq": "Частота"
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp8266_4mb": []
+    }
+}
