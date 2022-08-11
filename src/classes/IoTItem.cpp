@@ -68,6 +68,15 @@ void IoTItem::setValue(String valStr) {
     setValue(value);
 }
 
+void IoTItem::setValue(IoTValue Value) {
+    value = Value;
+    if (value.isDecimal)
+        regEvent(value.valD, "");
+    else
+        regEvent(value.valS, "");
+}
+
+//когда событие случилось
 void IoTItem::regEvent(String value, String consoleInfo = "") {
     generateEvent(_id, value);
     publishStatusMqtt(_id, value);
@@ -103,22 +112,6 @@ void IoTItem::doByInterval() {}
 
 IoTValue IoTItem::execute(String command, std::vector<IoTValue>& param) { return {}; }
 
-IoTGpio* IoTItem::getGpioDriver() {
-    return nullptr;
-}
-
-iarduino_RTC_BASE* IoTItem::getRtcDriver() {
-    return nullptr;
-}
-
-void IoTItem::setValue(IoTValue Value) {
-    value = Value;
-    if (value.isDecimal)
-        regEvent(value.valD, "");
-    else
-        regEvent(value.valS, "");
-}
-
 //==========================всякая херня==============================================================================================
 //захрена эта хрень?
 // String IoTItem::getSubtype() {
@@ -132,6 +125,16 @@ String IoTItem::getID() {
 void IoTItem::setInterval(unsigned long interval) {
     _interval = interval;
 }
+
+IoTGpio* IoTItem::getGpioDriver() {
+    return nullptr;
+}
+
+iarduino_RTC_BASE* IoTItem::getRtcDriver() {
+    return nullptr;
+}
+
+//сетевое общение====================================================================================================================================
 
 externalVariable::externalVariable(String parameters) : IoTItem(parameters) {
     prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
