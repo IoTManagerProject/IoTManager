@@ -65,6 +65,11 @@ class ButtonIn : public IoTItem {
         _lastButtonState = _reading;
     }
 
+    void setValue(IoTValue Value) {
+        value = Value;
+        regEvent((String)(int)value.valD, "ButtonIn");
+    }
+
     ~ButtonIn() {};
 };
 

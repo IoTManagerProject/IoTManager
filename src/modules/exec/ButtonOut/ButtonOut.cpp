@@ -42,8 +42,7 @@ class ButtonOut : public IoTItem {
     void setValue(IoTValue Value) {
         value = Value;
         IoTgpio.digitalWrite(_pin, _inv?!value.valD:value.valD);
-        if (value.isDecimal) regEvent(value.valD, "ButtonOut");
-        else regEvent(value.valS, "ButtonOut");
+        regEvent((String)(int)value.valD, "ButtonOut");
     }
     //=======================================================================================================
 
