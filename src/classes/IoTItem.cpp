@@ -154,7 +154,8 @@ void externalVariable::doByInterval() {  // для данного класса d
 
 IoTItem* myIoTItem;
 
-IoTItem* findIoTItem(String name) {  // поиск элемента модуля в существующей конфигурации
+// поиск элемента модуля в существующей конфигурации
+IoTItem* findIoTItem(String name) {
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         if ((*it)->getID() == name) return *it;
     }

@@ -11,9 +11,9 @@
         "type": "Writing",
         "subtype": "Timer",
         "id": "timer",
-        "widget": "",
-        "page": "",
-        "descr": "",
+        "widget": "anydataDef",
+        "page": "Таймеры",
+        "descr": "Таймер",
         "int": 1,
         "countDown": 15,
         "ticker": 0,
@@ -22,13 +22,13 @@
         "num": 1
     },
     {
-        "name": "2. Окно ввода цифры",
+        "name": "2. Окно ввода цифры (переменная)",
         "type": "Reading",
         "subtype": "Variable",
-        "id": "dedit",
-        "widget": "",
-        "page": "",
-        "descr": "",
+        "id": "value",
+        "widget": "inputDgt",
+        "page": "Ввод",
+        "descr": "Введите цифру",
         "int": "0",
         "val": "0",
         "num": 2
@@ -37,22 +37,22 @@
         "name": "3. Окно ввода времени",
         "type": "Reading",
         "subtype": "Variable",
-        "id": "tedit",
-        "widget": "",
-        "page": "",
-        "descr": "",
+        "id": "time",
+        "widget": "inputTm",
+        "page": "Ввод",
+        "descr": "Введите время",
         "int": "0",
         "val": "0",
         "num": 3
     },
     {
-        "name": "4. Переменная",
+        "name": "4. Окно ввода даты",
         "type": "Reading",
         "subtype": "Variable",
-        "id": "var",
-        "widget": "",
-        "page": "",
-        "descr": "",
+        "id": "time",
+        "widget": "inputDate",
+        "page": "Ввод",
+        "descr": "Введите дату",
         "int": "0",
         "val": "0",
         "num": 4
@@ -61,7 +61,7 @@
         "name": "5. Кнопка",
         "type": "Reading",
         "subtype": "VButton",
-        "id": "vbtn",
+        "id": "btn",
         "widget": "button",
         "page": "Кнопки",
         "descr": "Кнопка1",
@@ -207,7 +207,7 @@
         "num": 15
     },
     {
-        "name": "16. Cенсор температуры ds18b20",
+        "name": "15. Cенсор температуры ds18b20",
         "type": "Reading",
         "subtype": "Ds18b20",
         "id": "dstmp",
@@ -222,7 +222,7 @@
         "num": 16
     },
     {
-        "name": "17. Cенсор температуры GY21",
+        "name": "16. Cенсор температуры GY21",
         "type": "Reading",
         "subtype": "GY21t",
         "id": "tmp4",
@@ -234,7 +234,7 @@
         "num": 17
     },
     {
-        "name": "18. Cенсор влажности GY21",
+        "name": "17. Cенсор влажности GY21",
         "type": "Reading",
         "subtype": "GY21h",
         "id": "Hum4",
@@ -246,7 +246,7 @@
         "num": 18
     },
     {
-        "name": "19. Cенсор температуры HDC1080",
+        "name": "18. Cенсор температуры HDC1080",
         "type": "Reading",
         "subtype": "Hdc1080t",
         "id": "Temp1080",
@@ -259,7 +259,7 @@
         "num": 19
     },
     {
-        "name": "20. Cенсор влажности HDC1080",
+        "name": "19. Cенсор влажности HDC1080",
         "type": "Reading",
         "subtype": "Hdc1080h",
         "id": "Hum1080",
@@ -272,7 +272,7 @@
         "num": 20
     },
     {
-        "name": "21. Cенсор температуры MAX6675",
+        "name": "20. Cенсор температуры MAX6675",
         "type": "Reading",
         "subtype": "Max6675t",
         "id": "maxtmp",
@@ -286,7 +286,7 @@
         "num": 21
     },
     {
-        "name": "22. Сканер кнопок 433 MHz",
+        "name": "21. Сканер кнопок 433 MHz",
         "num": 22,
         "type": "Reading",
         "subtype": "RCswitch",
@@ -296,7 +296,7 @@
         "pinTx": 12
     },
     {
-        "name": "23. Cенсор температуры Sht20",
+        "name": "22. Cенсор температуры Sht20",
         "type": "Reading",
         "subtype": "Sht20t",
         "id": "tmp2",
@@ -308,7 +308,7 @@
         "num": 23
     },
     {
-        "name": "24. Cенсор влажности Sht20",
+        "name": "23. Cенсор влажности Sht20",
         "type": "Reading",
         "subtype": "Sht20h",
         "id": "Hum2",
@@ -320,7 +320,7 @@
         "num": 24
     },
     {
-        "name": "25. Cенсор температуры Sht30",
+        "name": "24. Cенсор температуры Sht30",
         "type": "Reading",
         "subtype": "Sht30t",
         "id": "tmp30",
@@ -332,7 +332,7 @@
         "num": 25
     },
     {
-        "name": "26. Cенсор влажности Sht30",
+        "name": "25. Cенсор влажности Sht30",
         "type": "Reading",
         "subtype": "Sht30h",
         "id": "Hum30",
@@ -344,7 +344,7 @@
         "num": 26
     },
     {
-        "name": "27. Сонар HC-SR04",
+        "name": "26. Сонар HC-SR04",
         "num": 27,
         "type": "Reading",
         "subtype": "Sonar",
@@ -360,7 +360,7 @@
         "header": "Исполнительные устройства"
     },
     {
-        "name": "28. Кнопка подключенная к пину",
+        "name": "27. Кнопка подключенная к пину",
         "type": "Writing",
         "subtype": "ButtonIn",
         "id": "btn",
@@ -376,7 +376,7 @@
         "num": 28
     },
     {
-        "name": "29. Кнопка управляющая пином (Реле)",
+        "name": "28. Кнопка управляющая пином (Реле)",
         "type": "Writing",
         "subtype": "ButtonOut",
         "id": "btn",
@@ -389,7 +389,7 @@
         "num": 29
     },
     {
-        "name": "30. Поддержка DS1302(1), DS1307(2), DS3231(3), RX8025(4)",
+        "name": "29. Поддержка DS1302(1), DS1307(2), DS3231(3), RX8025(4)",
         "type": "Reading",
         "subtype": "IarduinoRTC",
         "id": "RTC",
@@ -406,7 +406,7 @@
         "num": 30
     },
     {
-        "name": "31. Сервопривод",
+        "name": "30. Сервопривод",
         "type": "Writing",
         "subtype": "IoTServo",
         "id": "servo",
@@ -420,7 +420,7 @@
         "num": 31
     },
     {
-        "name": "32. Расширитель портов Mcp23017",
+        "name": "31. Расширитель портов Mcp23017",
         "type": "Reading",
         "subtype": "Mcp23017",
         "id": "Mcp",
@@ -433,7 +433,7 @@
         "num": 32
     },
     {
-        "name": "33. MP3 плеер",
+        "name": "32. MP3 плеер",
         "type": "Reading",
         "subtype": "Mp3",
         "id": "mp3",
@@ -446,7 +446,7 @@
         "num": 33
     },
     {
-        "name": "34. PWM ESP8266",
+        "name": "33. PWM ESP8266",
         "type": "Writing",
         "subtype": "Pwm8266",
         "id": "pwm",
@@ -461,7 +461,7 @@
         "num": 34
     },
     {
-        "name": "35. Доп. функции системы",
+        "name": "34. Доп. функции системы",
         "type": "Reading",
         "subtype": "SysExt",
         "id": "SysExt",
@@ -475,7 +475,7 @@
         "header": "Экраны"
     },
     {
-        "name": "36. LCD экран 2004",
+        "name": "35. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -490,7 +490,7 @@
         "num": 36
     },
     {
-        "name": "37. LCD экран 1602",
+        "name": "36. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
