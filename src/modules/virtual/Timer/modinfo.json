@@ -1,22 +1,22 @@
-{   
+{
     "menuSection": "Виртуальные элементы",
-
-    "configItem": [{
-        "name": "Таймер",
-        "type": "Writing",
-        "subtype": "Timer",
-        "id": "timer",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        
-        "int": 1,
-        "countDown": 15,
-        "ticker": 0,
-        "repeat": 0,
-        "needSave": 0
-    }],
-    
+    "configItem": [
+        {
+            "name": "Таймер",
+            "type": "Writing",
+            "subtype": "Timer",
+            "id": "timer",
+            "widget": "anydataDef",
+            "page": "Таймеры",
+            "descr": "Таймер",
+            "int": 1,
+            "countDown": 15,
+            "ticker": 0,
+            "repeat": 0,
+            "needSave": 0,
+            "num": 1
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -33,9 +33,7 @@
             "needSave": "Требуется сохранять(1) или нет(0) состояние в энерго независимую память. Функция находится в разработке."
         }
     },
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [],
         "esp8266_4mb": []

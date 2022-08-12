@@ -1,44 +1,43 @@
-{   
+{
     "menuSection": "Виртуальные элементы",
-
     "configItem": [
-    {
-        "name": "Окно ввода цифры",
-        "type": "Reading",
-        "subtype": "Variable",
-        "id": "dedit",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        
-        "int": "0",
-        "val": "0"
-    },
-    {
-        "name": "Окно ввода времени",
-        "type": "Reading",
-        "subtype": "Variable",
-        "id": "tedit",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        
-        "int": "0",
-        "val": "0"
-    },
-    {
-        "name": "Переменная",
-        "type": "Reading",
-        "subtype": "Variable",
-        "id": "var",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        
-        "int": "0",
-        "val": "0"
-    }],
-    
+        {
+            "name": "Окно ввода цифры (переменная)",
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "value",
+            "widget": "inputDgt",
+            "page": "Ввод",
+            "descr": "Введите цифру",
+            "int": "0",
+            "val": "0",
+            "num": 2
+        },
+        {
+            "name": "Окно ввода времени",
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "time",
+            "widget": "inputTm",
+            "page": "Ввод",
+            "descr": "Введите время",
+            "int": "0",
+            "val": "0",
+            "num": 3
+        },
+        {
+            "name": "Окно ввода даты",
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "time",
+            "widget": "inputDate",
+            "page": "Ввод",
+            "descr": "Введите дату",
+            "int": "0",
+            "val": "0",
+            "num": 4
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -52,9 +51,7 @@
             "val": "Не используется"
         }
     },
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [],
         "esp8266_4mb": []

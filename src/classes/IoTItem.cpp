@@ -70,10 +70,11 @@ void IoTItem::setValue(String valStr) {
 
 void IoTItem::setValue(IoTValue Value) {
     value = Value;
-    if (value.isDecimal)
+    if (value.isDecimal) {
         regEvent(value.valD, "");
-    else
+    } else {
         regEvent(value.valS, "");
+    }
 }
 
 //когда событие случилось

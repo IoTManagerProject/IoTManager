@@ -1,13 +1,11 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 
-
+//дочь         -        родитель
 class Variable : public IoTItem {
    private:
-
    public:
-    Variable(String parameters): IoTItem(parameters) {
-        
+    Variable(String parameters) : IoTItem(parameters) {
     }
 
     // особенность данного модуля - просто хранение значения для сценария, нет событий
@@ -16,7 +14,6 @@ class Variable : public IoTItem {
     // }
 
     void doByInterval() {
-        
     }
 };
 

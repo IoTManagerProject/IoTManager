@@ -5,10 +5,11 @@
 struct IoTValue {
     float valD = 0;
     String valS = "";
+
     bool isDecimal = true;
 
-    uint8_t *extBinInfo = NULL;     // дополнительные бинарные данные из модуля
-    size_t extBinInfoSize = 0;      // размер дополнительных данных в байтах 
+    uint8_t* extBinInfo = NULL;  // дополнительные бинарные данные из модуля
+    size_t extBinInfoSize = 0;   // размер дополнительных данных в байтах
 };
 
 class IoTItem {
@@ -17,7 +18,7 @@ class IoTItem {
     virtual ~IoTItem() {}
     virtual void loop();
     virtual void doByInterval();
-    virtual IoTValue execute(String command, std::vector<IoTValue> &param);
+    virtual IoTValue execute(String command, std::vector<IoTValue>& param);
 
     void regEvent(String value, String consoleInfo);
     void regEvent(float value, String consoleInfo);
@@ -33,9 +34,9 @@ class IoTItem {
     unsigned long difference;
 
     IoTValue value;  // хранение основного значения, которое обновляется из сценария, execute(), loop() или doByInterval()
-    
-    bool iAmDead = false;   // признак необходимости удалить объект из базы
-    bool iAmLocal = true;   // признак локальной переменной
+
+    bool iAmDead = false;  // признак необходимости удалить объект из базы
+    bool iAmLocal = true;  // признак локальной переменной
 
     bool needSave = false;
     bool enableDoByInt = true;
@@ -49,9 +50,9 @@ class IoTItem {
     String _subtype;
     String _id;
     unsigned long _interval;
-    
+
     float _multiply;  // умножаем на значение
-    float _plus;  // увеличиваем на значение
+    float _plus;      // увеличиваем на значение
     int _map1;
     int _map2;
     int _map3;
@@ -59,16 +60,14 @@ class IoTItem {
     int _round;  // 1, 10, 100, 1000, 10000
 };
 
-IoTItem* findIoTItem(String name);  // поиск экземпляра элемента модуля по имени
-String getItemValue(String name);  // поиск плюс получение значения
+IoTItem* findIoTItem(String name);                            // поиск экземпляра элемента модуля по имени
+String getItemValue(String name);                             // поиск плюс получение значения
 StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных занчений Items
 
+class externalVariable : IoTItem {  // объект, создаваемый при получении информации о событии на другом контроллере для хранения информации о событии указанное время
 
-class externalVariable: IoTItem {   // объект, создаваемый при получении информации о событии на другом контроллере для хранения информации о событии указанное время
-
-    public:
-        externalVariable(String parameters); 
-        ~externalVariable();
-        void doByInterval();   // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
-
+   public:
+    externalVariable(String parameters);
+    ~externalVariable();
+    void doByInterval();  // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
 };
