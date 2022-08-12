@@ -8,7 +8,7 @@ class VButton : public IoTItem {
 
     void setValue(IoTValue Value) {
         value = Value;
-        regEvent((String)(int)value.valD, "");
+        regEvent((String)(int)value.valD, "VButton");
     }
 
     void doByInterval() { }
