@@ -58,13 +58,13 @@
         "num": 4
     },
     {
-        "name": "5. Кнопка",
+        "name": "5. Виртуальная кнопка",
         "type": "Reading",
         "subtype": "VButton",
         "id": "vbtn",
-        "widget": "button",
+        "widget": "toggle",
         "page": "Кнопки",
-        "descr": "Кнопка1",
+        "descr": "Кнопка",
         "int": "0",
         "val": "0",
         "num": 5

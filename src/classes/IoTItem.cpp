@@ -68,6 +68,7 @@ void IoTItem::setValue(String valStr) {
     setValue(value);
 }
 
+//непонятный метод к удалению
 void IoTItem::setValue(IoTValue Value) {
     value = Value;
     if (value.isDecimal) {
