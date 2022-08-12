@@ -1,11 +1,7 @@
 #include "Main.h"
-#include "classes/IoTRTC.h"
 #include <time.h>
 
 IoTScenario iotScen;  // объект управления сценарием
-
-IoTRTC *watch;     // объект хранения времени, при старте часы 00:00
-time_t iotTimeNow;
 
 String volStrForSave = "";
 unsigned long currentMillis;
@@ -31,29 +27,6 @@ void setup() {
 
     //подключаемся к роутеру
     routerConnect();
-
-    // настраиваем получение времени из сети Интернет
-    String ntpServer = jsonReadStr(settingsFlashJson, F("ntp"));
-    int timezone = jsonReadInt(settingsFlashJson, F("timezone"));
-    configTime(3600*timezone, 0, ntpServer.c_str(), "ru.pool.ntp.org", "pool.ntp.org");
-    Serial.println("Start syncing NTP time");
-    time(&iotTimeNow);
-    // int i = 0;
-    // while (isNetworkActive() && iotTimeNow < 1510592825 && i < 200)
-    // {
-    //     time(&iotTimeNow);
-    //     delay(300);
-    //     Serial.print(".");
-    //     i++;
-    // }
-    // Serial.println();
-
-    // настраиваем локальный RTC
-    watch = new IoTRTC(0);    // создаем объект главного хранилища времени, но с заглушкой (0) для получения системного времени
-    watch->period(60);    // время в минутах для синхронизации с часами реального времени или системным 
-    watch->begin();
-    //Serial.print(F("Time from Local: "));
-    //Serial.println(watch->gettime("d-m-Y, H:i:s, M"));
 
 //инициализация асинхронного веб сервера и веб сокетов
 #ifdef ASYNC_WEB_SERVER
@@ -89,7 +62,7 @@ void setup() {
     //загрузка сценария
     iotScen.loadScenario("/scenario.txt");
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
-    IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
+    IoTItems.push_back((IoTItem *)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
     generateEvent("onStart", "");
 
     // test
@@ -122,8 +95,7 @@ void loop() {
     //     Serial.println(watch->gettime("d-m-Y, H:i:s, M"));
     //     delay(1);
     // }
-    
-    
+
     //обновление задач таскера
     ts.update();
 
@@ -146,7 +118,7 @@ void loop() {
     mqttLoop();
 
     // передаем управление каждому элементу конфигурации для выполнения своих функций
-    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+    for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         (*it)->loop();
         if ((*it)->iAmDead) {
             delete *it;
@@ -164,7 +136,7 @@ void loop() {
     if (currentMillis - prevMillis >= 1000) {
         prevMillis = millis();
         volStrForSave = "";
-        for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->needSave) {
                 (*it)->needSave = false;
                 volStrForSave = volStrForSave + (*it)->getID() + "=" + (*it)->getValue() + ";";
@@ -173,10 +145,7 @@ void loop() {
 
         if (volStrForSave != "") {
             Serial.print("volStrForSave: ");
-            Serial.println(volStrForSave.c_str());    
+            Serial.println(volStrForSave.c_str());
         }
     }
-    
-    
-    
 }

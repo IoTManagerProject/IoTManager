@@ -3,25 +3,21 @@
 #include "classes/IoTGpio.h"
 #include <Adafruit_MCP23X17.h>
 
-
 class Mcp23017 : public IoTItem, IoTGpio {
    private:
-   
    public:
     Adafruit_MCP23X17 mcp;
 
-    Mcp23017(String parameters, int index): IoTItem(parameters), IoTGpio(index) {
-        
+    Mcp23017(String parameters, int index) : IoTItem(parameters), IoTGpio(index) {
     }
-    
+
     void doByInterval() {
-        
-
-        //regEvent(value.valD, "Mcp23017");  
+        // regEvent(value.valD, "Mcp23017");
     }
 
-    IoTGpio* getGpioDriver() {
-        return this;
+    //возвращает ссылку на экземпляр класса Mcp23017
+    bool isGpioDriver() {
+        return true;
     }
 
     void pinMode(uint8_t pin, uint8_t mode) {
@@ -40,9 +36,8 @@ class Mcp23017 : public IoTItem, IoTGpio {
         mcp.digitalWrite(pin, 1 - mcp.digitalRead(pin));
     }
 
-    ~Mcp23017() {};
+    ~Mcp23017(){};
 };
-
 
 void* getAPI_Mcp23017(String subtype, String param) {
     if (subtype == F("Mcp23017")) {

@@ -128,8 +128,8 @@ void IoTItem::setInterval(unsigned long interval) {
     _interval = interval;
 }
 
-IoTGpio* IoTItem::getGpioDriver() {
-    return nullptr;
+bool IoTItem::isGpioDriver() {
+    return false;
 }
 
 iarduino_RTC_BASE* IoTItem::getRtcDriver() {

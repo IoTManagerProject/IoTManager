@@ -7,6 +7,7 @@ extern IoTGpio IoTgpio;
 // для добавления сенсора вам нужно скопировать этот файл и заменить в нем текст AnalogAdc на название вашего сенсора
 // Название должно быть уникальным, коротким и отражать суть сенсора.
 
+//ребенок       -       родитель
 class AnalogAdc : public IoTItem {
    private:
     //=======================================================================================================
@@ -24,7 +25,7 @@ class AnalogAdc : public IoTItem {
     // Такие как ...begin и подставлять в них параметры полученные из web интерфейса.
     // Все параметры хранятся в перемененной parameters, вы можете прочитать любой параметр используя jsonRead функции:
     // jsonReadStr, jsonReadBool, jsonReadInt
-    AnalogAdc(String parameters): IoTItem(parameters) {
+    AnalogAdc(String parameters) : IoTItem(parameters) {
         _pin = jsonReadInt(parameters, "pin");
         _avgSteps = jsonReadInt(parameters, "avgSteps");
         _avgSumm = 0;
@@ -54,8 +55,8 @@ class AnalogAdc : public IoTItem {
             if (_avgCount > _avgSteps) {
                 value.valD = _avgSumm / _avgSteps;
                 _avgSumm = 0;
-                _avgCount = 0; 
-            } 
+                _avgCount = 0;
+            }
 
             _avgSumm = _avgSumm + IoTgpio.analogRead(_pin);
             _avgCount++;
@@ -69,7 +70,7 @@ class AnalogAdc : public IoTItem {
         }
     }
 
-    ~AnalogAdc() {};
+    ~AnalogAdc(){};
 };
 
 // после замены названия сенсора, на функцию можно не обращать внимания

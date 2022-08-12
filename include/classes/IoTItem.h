@@ -41,7 +41,8 @@ class IoTItem {
     bool needSave = false;
     bool enableDoByInt = true;
 
-    virtual IoTGpio* getGpioDriver();
+    virtual bool isGpioDriver();
+
     virtual iarduino_RTC_BASE* getRtcDriver();
     virtual void setValue(IoTValue Value);
     virtual void setValue(String valStr);
