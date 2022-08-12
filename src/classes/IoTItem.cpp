@@ -18,10 +18,11 @@ IoTItem::IoTItem(String parameters) {
 
     String valAsStr;
     if (jsonRead(parameters, F("val"), valAsStr, false))  // значение переменной или датчика при инициализации если есть в конфигурации
-        if (value.isDecimal = isDigitDotCommaStr(valAsStr))
+        if (value.isDecimal = isDigitDotCommaStr(valAsStr)) {
             value.valD = valAsStr.toFloat();
-        else
+        } else {
             value.valS = valAsStr;
+        }
 
     String map;
     jsonRead(parameters, F("map"), map, false);
