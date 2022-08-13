@@ -165,8 +165,8 @@ IoTItem* findIoTItem(String name) {
 
     return nullptr;
 }
-
-String getItemValue(String name) {  // поиск плюс получение значения
+// поиск плюс получение значения
+String getItemValue(String name) {
     IoTItem* tmp = findIoTItem(name);
     if (tmp)
         return tmp->getValue();

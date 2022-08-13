@@ -28,6 +28,10 @@
     "modules": {
         "Виртуальные элементы": [
             {
+                "path": "src\\modules\\virtual\\Logging",
+                "active": true
+            },
+            {
                 "path": "src\\modules\\virtual\\Timer",
                 "active": true
             },
@@ -126,10 +130,6 @@
             {
                 "path": "src\\modules\\exec\\EspCam",
                 "active": false
-            },
-            {
-                "path": "src\\modules\\exec\\IarduinoRTC",
-                "active": true
             },
             {
                 "path": "src\\modules\\exec\\IoTServo",
