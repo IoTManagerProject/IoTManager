@@ -11,6 +11,10 @@ class VButton : public IoTItem {
         regEvent((String)(int)value.valD, "VButton");
     }
 
+    String getValue() {
+        return (String)(int)value.valD;
+    }
+
     void doByInterval() { }
 };
 
