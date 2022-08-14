@@ -1,7 +1,7 @@
 #pragma once
 
 //Версия прошивки
-#define FIRMWARE_VERSION 408
+#define FIRMWARE_VERSION 410
 
 #ifdef esp8266_4mb
 #define FIRMWARE_NAME "esp8266_4mb"
@@ -41,7 +41,7 @@ enum TimerTask_t { WIFI_SCAN,
                    TIME,
                    TIME_SYNC,
                    UPTIME,
-                   UDP, //UDPP
+                   UDP,  // UDPP
                    TIMES,
                    PTASK };
 

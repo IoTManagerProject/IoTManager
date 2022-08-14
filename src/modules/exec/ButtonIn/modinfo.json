@@ -8,7 +8,7 @@
             "id": "btn",
             "widget": "toggle",
             "page": "Кнопки",
-            "descr": "",
+            "descr": "Освещение",
             "int": 0,
             "pin": 16,
             "execLevel": "1",

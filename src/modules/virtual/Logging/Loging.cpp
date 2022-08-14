@@ -16,12 +16,11 @@ class Loging : public IoTItem {
     // }
 
     void doByInterval() {
-        Serial.println("logging test " + logval);
         String value = getItemValue(logval);
         if (value == "") {
             SerialPrint("E", F("Logging"), F("no value set"));
         } else {
-            Serial.println("value " + value);
+            regEvent(value, "Logging");
         }
     }
 };

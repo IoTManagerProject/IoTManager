@@ -48,12 +48,10 @@ void generateEvent(const String& id, const String& value) {
 void handleEvent() {
     if (eventBuf.length()) {
         String event = selectToMarker(eventBuf, ",");
-        Serial.println("event: " + event);
+        SerialPrint("i", F("EVENT"), event);
 
         //здесь нужно пропускать данное событие через условия сценариев
         //и если оно есть в условии сценария и совподает
-        //то нужно поместить все команды этого блока сценария в generateOrder(order1, order2, ....)
-        //который в свою очередь их выполнит
         iotScen.ExecScenario(selectToMarker(event, " "));
 
         eventBuf = deleteBeforeDelimiter(eventBuf, ",");
