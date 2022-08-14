@@ -70,6 +70,10 @@ class ButtonIn : public IoTItem {
         regEvent((String)(int)value.valD, "ButtonIn");
     }
 
+    String getValue() {
+        return (String)(int)value.valD;
+    }
+
     ~ButtonIn() {};
 };
 
