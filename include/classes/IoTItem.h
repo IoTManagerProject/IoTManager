@@ -25,7 +25,7 @@ class IoTItem {
 
     String getSubtype();
     String getID();
-    String getValue();
+    virtual String getValue();
 
     void setInterval(unsigned long interval);
 
