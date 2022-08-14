@@ -44,6 +44,10 @@ class ButtonOut : public IoTItem {
         IoTgpio.digitalWrite(_pin, _inv?!value.valD:value.valD);
         regEvent((String)(int)value.valD, "ButtonOut");
     }
+
+    String getValue() {
+        return (String)(int)value.valD;
+    }
     //=======================================================================================================
 
     ~ButtonOut() {};
