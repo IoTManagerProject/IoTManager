@@ -146,9 +146,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             // cotrol ==============================================================================
             if (headerStr == "/control|") {
-                String payloadStr;
-                writeUint8tToString(payload, length, headerLenth, payloadStr);
-                SerialPrint("i", F("=>WS"), "Msg from svelte web, WS No: " + String(num) + ", msg: " + payloadStr);
+                String msg;
+                writeUint8tToString(payload, length, headerLenth, msg);
+                String key = selectFromMarkerToMarker(msg, "/", 0);
+                String value = selectFromMarkerToMarker(msg, "/", 1);
+                //generateOrder(key, value);
+                SerialPrint("i", F("=>WS"), "Msg from svelte web, WS No: " + String(num) + ", msg: " + msg);
             }
         } break;
 
