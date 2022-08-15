@@ -84,14 +84,14 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
     generateEvent(_id, value);
     publishStatusMqtt(_id, value);
     //отправка события другим устройствам в сети==============================
-    if (jsonReadBool(settingsFlashJson, "mqttin")) {
-        String json = "{}";
-        jsonWriteStr_(json, "id", _id);
-        jsonWriteStr_(json, "val", value);
-        jsonWriteInt_(json, "int", _interval + 5000);  // 5 секунд про запас
-        publishEvent(_id, json);
-        SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
-    }
+    // if (jsonReadBool(settingsFlashJson, "mqttin")) {
+    //    String json = "{}";
+    //    jsonWriteStr_(json, "id", _id);
+    //    jsonWriteStr_(json, "val", value);
+    //    jsonWriteInt_(json, "int", _interval + 5000);  // 5 секунд про запас
+    //    publishEvent(_id, json);
+    //    SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
+    //}
     //========================================================================
     publishStatusWs(_id, value);  // Ilya, data: "1" (analog sensor, round set to 1, should be "1.0")
     SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
