@@ -125,7 +125,7 @@
     },
     {
         "name": "inputDgt",
-        "label": "Ввод цифры",
+        "label": "Ввод числа",
         "widget": "input",
         "color": "blue",
         "type": "number"

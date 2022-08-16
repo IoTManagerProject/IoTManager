@@ -2,13 +2,13 @@
     "menuSection": "Виртуальные элементы",
     "configItem": [
         {
-            "name": "Окно ввода цифры (переменная)",
+            "name": "Окно ввода числа (переменная)",
             "type": "Reading",
             "subtype": "Variable",
             "id": "value",
             "widget": "inputDgt",
             "page": "Ввод",
-            "descr": "Введите цифру",
+            "descr": "Введите число",
             "int": "0",
             "val": "0.0",
             "num": 2

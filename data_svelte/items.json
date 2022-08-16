@@ -34,13 +34,13 @@
         "num": 2
     },
     {
-        "name": "3. Окно ввода цифры (переменная)",
+        "name": "3. Окно ввода числа (переменная)",
         "type": "Reading",
         "subtype": "Variable",
         "id": "value",
         "widget": "inputDgt",
         "page": "Ввод",
-        "descr": "Введите цифру",
+        "descr": "Введите число",
         "int": "0",
         "val": "0.0",
         "num": 3
