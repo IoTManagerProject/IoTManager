@@ -21,6 +21,7 @@ void ntpInit() {
             if (prevTime != timenow) {
                 prevTime = timenow;
                 String dateAndTime = getDateTimeDotFormated();
+                dateAndTime = deleteToMarkerLast(dateAndTime, ":");
                 jsonWriteStr_(errorsHeapJson, F("timenow"), dateAndTime);
                 SerialPrint("I", F("NTP"), "✔ " + dateAndTime);
             }
