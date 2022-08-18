@@ -20,8 +20,9 @@ void ntpInit() {
             static String prevTime;
             if (prevTime != timenow) {
                 prevTime = timenow;
-                // jsonWriteStr(configLiveJson, "timenow", timenow);
-                SerialPrint("I", F("✔ NTP"), getDateTimeDotFormated());
+                String dateAndTime = getDateTimeDotFormated();
+                jsonWriteStr_(errorsHeapJson, F("timenow"), dateAndTime);
+                SerialPrint("I", F("NTP"), "✔ " + dateAndTime);
             }
         },
         nullptr, true);
