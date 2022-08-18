@@ -14,7 +14,7 @@ void ntpInit() {
                 synchTime();
                 return;
             }
-            breakEpochToTime(unixTime + 3 * 60 * 60, _time_local);
+            breakEpochToTime(unixTime + jsonReadInt(settingsFlashJson, F("timezone")) * 60 * 60, _time_local);
             breakEpochToTime(unixTime, _time_utc);
             String timenow = getTimeLocal_hhmm();
             static String prevTime;
