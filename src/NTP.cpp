@@ -21,7 +21,7 @@ void ntpInit() {
             if (prevTime != timenow) {
                 prevTime = timenow;
                 // jsonWriteStr(configLiveJson, "timenow", timenow);
-                SerialPrint("I", F("NTP"), getDateTimeDotFormated());
+                SerialPrint("I", F("✔ NTP"), getDateTimeDotFormated());
             }
         },
         nullptr, true);

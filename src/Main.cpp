@@ -44,11 +44,11 @@ void setup() {
     standWebSocketsInit();
 #endif
 
-    //инициализация mqtt
-    mqttInit();
-
     // NTP
     ntpInit();
+
+    //инициализация mqtt
+    mqttInit();
 
     //настраиваем микроконтроллер
     configure("/config.json");
