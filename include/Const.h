@@ -35,6 +35,9 @@
 #define USE_LITTLEFS false
 #endif
 
+#define MIN_DATETIME 1575158400
+#define LEAP_YEAR(Y) (((1970 + Y) > 0) && !((1970 + Y) % 4) && (((1970 + Y) % 100) || !((1970 + Y) % 400)))
+
 //задачи таскера
 enum TimerTask_t { WIFI_SCAN,
                    WIFI_MQTT_CONNECTION_CHECK,

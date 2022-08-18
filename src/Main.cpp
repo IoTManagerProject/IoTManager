@@ -47,6 +47,9 @@ void setup() {
     //инициализация mqtt
     mqttInit();
 
+    // NTP
+    ntpInit();
+
     //настраиваем микроконтроллер
     configure("/config.json");
 
@@ -72,13 +75,10 @@ void setup() {
     // симуляция добавления внешних событий
     // IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"rel1\",\"val\":10,\"int\":20}"));
     // IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"rel4\",\"val\":34,\"int\":30}"));
-
     // пример получения JSON всех Items
     // Serial.println(getParamsJson());
-
     //чтение одного параметра
     // Serial.println(findIoTItem("t1")->getValue());
-
     //тест перебора пинов из расширения
     // for (int i = 109; i < 112; i++) {
     //     IoTgpio.pinMode(i, OUTPUT);

@@ -115,6 +115,23 @@ extern String prex;
 extern String all_widgets;
 extern String scenario;
 
+// Time
+struct Time_t {
+    uint8_t second;
+    uint8_t minute;
+    uint8_t hour;
+    uint8_t day_of_week;
+    uint8_t day_of_month;
+    uint8_t month;
+    uint16_t day_of_year;
+    uint16_t year;
+    unsigned long days;
+    unsigned long valid;
+};
+
+extern Time_t _time_local;
+extern Time_t _time_utc;
+
 // extern DynamicJsonDocument settingsFlashJsonDoc;
 // extern DynamicJsonDocument paramsFlashJsonDoc;
 // extern DynamicJsonDocument paramsHeapJsonDoc;
