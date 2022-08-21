@@ -29,32 +29,32 @@ class SysExt : public IoTItem {
         // String command - имя команды после ID. (ID.Команда())
         // param - вектор ("массив") значений параметров переданных вместе с командой: ID.Команда("пар1", 22, 33) -> param[0].ValS = "пар1", param[1].ValD = 22
 
-        if (command == "reboot") {  // выполняем код при вызове спец команды из сценария: ID.reboot();
-            ESP.restart();
-        } else if (command == "digitalRead") {
-            if (param.size()) {
-                IoTgpio.pinMode(param[0].valD, INPUT);
-                value.valD = IoTgpio.digitalRead(param[0].valD);
-                return value;
-            }
-        } else if (command == "analogRead") {
-            if (param.size()) {
-                IoTgpio.pinMode(param[0].valD, INPUT);
-                value.valD = IoTgpio.analogRead(param[0].valD);
-                return value;
-            }
-        } else if (command == "digitalWrite") {
-            if (param.size() == 2) {
-                IoTgpio.pinMode(param[0].valD, OUTPUT);
-                IoTgpio.digitalWrite(param[0].valD, param[1].valD);
-                return {};
-            }
-        } else if (command == "digitalInvert") {
-            if (param.size()) {
-                IoTgpio.pinMode(param[0].valD, OUTPUT);
-                IoTgpio.digitalInvert(param[0].valD);
-                return {};
-            }
+        // if (command == "reboot") {  // выполняем код при вызове спец команды из сценария: ID.reboot();
+        //     ESP.restart();
+        // } else if (command == "digitalRead") {
+        //     if (param.size()) {
+        //         IoTgpio.pinMode(param[0].valD, INPUT);
+        //         value.valD = IoTgpio.digitalRead(param[0].valD);
+        //         return value;
+        //     }
+        // } else if (command == "analogRead") {
+        //     if (param.size()) {
+        //         IoTgpio.pinMode(param[0].valD, INPUT);
+        //         value.valD = IoTgpio.analogRead(param[0].valD);
+        //         return value;
+        //     }
+        // } else if (command == "digitalWrite") {
+        //     if (param.size() == 2) {
+        //         IoTgpio.pinMode(param[0].valD, OUTPUT);
+        //         IoTgpio.digitalWrite(param[0].valD, param[1].valD);
+        //         return {};
+        //     }
+        // } else if (command == "digitalInvert") {
+        //     if (param.size()) {
+        //         IoTgpio.pinMode(param[0].valD, OUTPUT);
+        //         IoTgpio.digitalInvert(param[0].valD);
+        //         return {};
+        //     }
             //} else if (command == "getTime") {
             //    if (param.size()) {
             //        value.isDecimal = false;
@@ -81,19 +81,19 @@ class SysExt : public IoTItem {
             //    value.valD = watch->day;  //	День месяца		1-31
             //    value.isDecimal = true;
             //    return value;
-        } else if (command == "deepSleep") {
-            if (param.size()) {
-                Serial.printf("Ушел спать на %d сек...", (int)param[0].valD);
-#ifdef ESP32
-                esp_sleep_enable_timer_wakeup(param[0].valD * 1000000);
-                delay(1000);
-                esp_deep_sleep_start();
-#else
-                ESP.deepSleep(param[0].valD * 1000000);
-#endif
-            }
-            return {};
-        }
+//         } else if (command == "deepSleep") {
+//             if (param.size()) {
+//                 Serial.printf("Ушел спать на %d сек...", (int)param[0].valD);
+// #ifdef ESP32
+//                 esp_sleep_enable_timer_wakeup(param[0].valD * 1000000);
+//                 delay(1000);
+//                 esp_deep_sleep_start();
+// #else
+//                 ESP.deepSleep(param[0].valD * 1000000);
+// #endif
+//             }
+        //    return {};
+        //}
         // } else if (command == "ModemSleep") {
         //         Serial.printf("Выключил все радио...");
         //         #ifdef ESP32
