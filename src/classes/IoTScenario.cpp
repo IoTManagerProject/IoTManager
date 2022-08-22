@@ -5,7 +5,7 @@
 #include "classes/IoTItem.h"
 #include "classes/IoTScenario.h"
 #include "utils/FileUtils.h"
-
+#include "NTP.h"
 
 bool isIotScenException;  // признак исключения и попытки прекратить выполнение сценария заранее
 
@@ -24,6 +24,7 @@ enum Token {
   // управление
   tok_if = -6, tok_then = -7, tok_else = -8
 };
+
 
 //===----------------------------------------------------------------------===//
 // Abstract Syntax Tree (Абстрактное Синтаксическое Дерево или Дерево Парсинга)
@@ -266,6 +267,186 @@ public:
   }
 
   ~CallExprAST() {
+    for (unsigned int i = 0; i < Args.size(); i++) {
+      if (Args[i]) delete Args[i];
+    }
+    Args.clear();
+    //Serial.printf("Call from  CallExprAST delete\n");
+  }
+};
+
+
+// Для сокращения количества преобразований используем числовые коды для фиксации названия системной функции, 
+// которые поддерживает прошивка
+enum SysOp {
+  sysop_notfound = 0,
+  sysop_reboot = 1,
+  sysop_digitalRead,  
+  sysop_analogRead,  //  
+  sysop_digitalWrite,  //  
+  sysop_digitalInvert,  //  
+  sysop_deepSleep,  //   
+  sysop_getHours,  //  
+  sysop_getMinutes,  //  
+  sysop_getSeconds,  //  
+  sysop_getMonth,  //  
+  sysop_getDay,
+  sysop_gethhmm,
+  sysop_gethhmmss,
+  sysop_getTime,
+  sysop_getIP,
+  sysop_mqttPub
+};
+
+IoTValue sysExecute(SysOp command, std::vector<IoTValue>& param) {
+  IoTValue value;
+  switch (command) {
+    case sysop_reboot:
+      ESP.restart();
+    break;
+    case sysop_digitalRead:
+      if (param.size()) {
+        IoTgpio.pinMode(param[0].valD, INPUT);
+        value.valD = IoTgpio.digitalRead(param[0].valD);
+        return value;
+      }
+    break;
+    case sysop_analogRead:
+      if (param.size()) {
+        IoTgpio.pinMode(param[0].valD, INPUT);
+        value.valD = IoTgpio.analogRead(param[0].valD);
+        return value;
+      }
+    break;
+    case sysop_digitalWrite:
+      if (param.size() == 2) {
+        IoTgpio.pinMode(param[0].valD, OUTPUT);
+        IoTgpio.digitalWrite(param[0].valD, param[1].valD);
+        return {};
+      }
+    break;
+    case sysop_digitalInvert:
+      if (param.size()) {
+        IoTgpio.pinMode(param[0].valD, OUTPUT);
+        IoTgpio.digitalInvert(param[0].valD);
+        return {};
+      }
+    break;
+    case sysop_deepSleep:
+      if (param.size()) {
+        Serial.printf("Ушел спать на %d сек...", (int)param[0].valD);
+#ifdef ESP32
+        esp_sleep_enable_timer_wakeup(param[0].valD * 1000000);
+        delay(1000);
+        esp_deep_sleep_start();
+#else
+        ESP.deepSleep(param[0].valD * 1000000);
+#endif
+      }
+    break;
+    case sysop_getHours:
+      value.valD = _time_local.hour;
+      return value;
+    break;
+    case sysop_getMinutes:
+      value.valD = _time_local.minute;
+      return value;
+    break;
+    case sysop_getSeconds:
+      value.valD = _time_local.second;
+      return value;
+    break;
+    case sysop_getMonth:
+      value.valD = _time_local.month;
+      return value;
+    break;
+    case sysop_getDay:
+      value.valD = _time_local.day_of_month;
+      return value;
+    break;
+    case sysop_gethhmm:
+      value.isDecimal = false;
+      value.valS = getTimeLocal_hhmm();
+      return value;
+    break;
+    case sysop_gethhmmss:
+      value.isDecimal = false;
+      value.valS = getTimeLocal_hhmmss();
+      return value;
+    break;
+    case sysop_getTime:
+      value.isDecimal = false;
+      value.valS = getDateTimeDotFormated();
+      return value;
+    break;
+    case sysop_getIP:
+      value.valS = jsonReadStr(settingsFlashJson, F("ip"));
+      value.isDecimal = false;
+      return value;
+    break;
+    case sysop_mqttPub:
+      if (param.size() == 2) {
+        //Serial.printf("Call from  sysExecute %s %s\n", param[0].valS.c_str(), param[1].valS.c_str());
+        value.valD = mqtt.publish(param[0].valS.c_str(), param[1].valS.c_str(), false);
+      return value;
+      }
+    break;
+  }
+
+  return {};
+}
+
+/// SysCallExprAST - Класс узла выражения для вызова системных команд.
+class SysCallExprAST : public ExprAST {
+  String Callee;
+  std::vector<ExprAST*> Args;
+  IoTValue ret;  // хранение возвращаемого значения, т.к. возврат по ссылке осуществляется
+  //bool ItemIsLocal = false;
+  SysOp operation;
+
+public:
+  SysCallExprAST(const String &callee, std::vector<ExprAST*> &args)
+    : Callee(callee), Args(args) {
+      if (Callee == "reboot") operation = sysop_reboot; else
+      if (Callee == "digitalRead") operation = sysop_digitalRead; else 
+      if (Callee == "analogRead") operation = sysop_analogRead; else
+      if (Callee == "digitalWrite") operation = sysop_digitalWrite; else
+      if (Callee == "digitalInvert") operation = sysop_digitalInvert; else  
+      if (Callee == "deepSleep") operation = sysop_deepSleep;  else
+      if (Callee == "getTime") operation = sysop_getTime;  else
+      if (Callee == "getHours") operation = sysop_getHours;  else
+      if (Callee == "getMinutes") operation = sysop_getMinutes; else 
+      if (Callee == "getSeconds") operation = sysop_getSeconds;  else
+      if (Callee == "getMonth") operation = sysop_getMonth;  else
+      if (Callee == "getDay") operation = sysop_getDay; else
+      if (Callee == "getIP") operation = sysop_getIP; else
+      if (Callee == "mqttPub") operation = sysop_mqttPub; else
+      if (Callee == "gethhmm") operation = sysop_gethhmm; else
+      if (Callee == "gethhmmss") operation = sysop_gethhmmss; else
+      if (Callee == "getTime") operation = sysop_getTime; else
+      operation = sysop_notfound;
+    }
+
+  IoTValue* exec() {
+    Serial.printf("Call from  SysCallExprAST exec %d\n", operation);
+    
+    if (isIotScenException) return nullptr;   // если прерывание, то сразу выходим
+    
+    // готовим параметры для передачи в в функцию интерпретатор действий
+    std::vector<IoTValue> ArgsAsIoTValue;
+    for (unsigned int i = 0; i < Args.size(); i++) {
+      if (Args[i] == nullptr) return nullptr;
+      IoTValue *tmp = Args[i]->exec();
+      if (tmp != nullptr) ArgsAsIoTValue.push_back(*tmp);
+        else return nullptr;
+    }
+
+    ret = sysExecute(operation, ArgsAsIoTValue);  // вызываем функцию интерпретатор с передачей всех аргументов
+    
+    return &ret;
+  }
+
+  ~SysCallExprAST() {
     for (unsigned int i = 0; i < Args.size(); i++) {
       if (Args[i]) delete Args[i];
     }
@@ -533,12 +714,14 @@ public:
       }
     }
 
-    // Получаем ')'.
+    // Получаем ';'.
     getNextToken();
   
-    //if (tmpItem) 
-    return new CallExprAST(IdName, Cmd, Args, tmpItem);   // создаем объект запуска функции в любом случае даж если не нашли Item
-      //else return new StringExprAST("id " + IdName + " not_found");
+    if (Cmd == "") 
+      return new SysCallExprAST(IdName, Args);   // создаем объект запуска системной функции
+    else
+      return new CallExprAST(IdName, Cmd, Args, tmpItem);   // создаем объект запуска функции в любом случае даж если не нашли Item
+
   }
 
   /// numberexpr ::= number
