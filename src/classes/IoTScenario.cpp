@@ -292,12 +292,12 @@ enum SysOp {
   sysop_getSeconds,  //  
   sysop_getMonth,  //  
   sysop_getDay,
-  sysop_getIP
+  sysop_getIP,
+  sysop_mqttPub
 };
 
 IoTValue sysExecute(SysOp command, std::vector<IoTValue>& param) {
   IoTValue value;
-  Serial.printf("Call from  sysExecute %d\n", command);
   switch (command) {
     case sysop_reboot:
       ESP.restart();
@@ -374,6 +374,13 @@ IoTValue sysExecute(SysOp command, std::vector<IoTValue>& param) {
       value.isDecimal = false;
       return value;
     break;
+    case sysop_mqttPub:
+      if (param.size() == 2) {
+        //Serial.printf("Call from  sysExecute %s %s\n", param[0].valS.c_str(), param[1].valS.c_str());
+        value.valD = mqtt.publish(param[0].valS.c_str(), param[1].valS.c_str(), false);
+      return value;
+      }
+    break;
   }
 
   return {};
@@ -403,6 +410,7 @@ public:
       if (Callee == "getMonth") operation = sysop_getMonth;  else
       if (Callee == "getDay") operation = sysop_getDay; else
       if (Callee == "getIP") operation = sysop_getIP; else
+      if (Callee == "mqttPub") operation = sysop_mqttPub; else
       operation = sysop_notfound;
     }
 
