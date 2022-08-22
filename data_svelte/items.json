@@ -456,21 +456,10 @@
         "num": 34
     },
     {
-        "name": "35. Доп. функции системы",
-        "type": "Reading",
-        "subtype": "SysExt",
-        "id": "SysExt",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        "int": 15,
-        "num": 35
-    },
-    {
         "header": "Экраны"
     },
     {
-        "name": "36. LCD экран 2004",
+        "name": "35. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -482,10 +471,10 @@
         "size": "20,4",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 36
+        "num": 35
     },
     {
-        "name": "37. LCD экран 1602",
+        "name": "36. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -497,6 +486,6 @@
         "size": "16,2",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 37
+        "num": 36
     }
 ]
