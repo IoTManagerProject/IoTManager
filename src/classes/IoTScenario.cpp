@@ -285,13 +285,15 @@ enum SysOp {
   sysop_analogRead,  //  
   sysop_digitalWrite,  //  
   sysop_digitalInvert,  //  
-  sysop_deepSleep,  //  
-  sysop_getTime,  //  
+  sysop_deepSleep,  //   
   sysop_getHours,  //  
   sysop_getMinutes,  //  
   sysop_getSeconds,  //  
   sysop_getMonth,  //  
   sysop_getDay,
+  sysop_gethhmm,
+  sysop_gethhmmss,
+  sysop_getTime,
   sysop_getIP,
   sysop_mqttPub
 };
@@ -342,13 +344,6 @@ IoTValue sysExecute(SysOp command, std::vector<IoTValue>& param) {
 #endif
       }
     break;
-    case sysop_getTime:
-      if (param.size()) {
-        value.isDecimal = false;
-        value.valS = getTimeStr(param[0].valS.c_str());
-        return value;
-      }
-    break;
     case sysop_getHours:
       value.valD = _time_local.hour;
       return value;
@@ -367,6 +362,21 @@ IoTValue sysExecute(SysOp command, std::vector<IoTValue>& param) {
     break;
     case sysop_getDay:
       value.valD = _time_local.day_of_month;
+      return value;
+    break;
+    case sysop_gethhmm:
+      value.isDecimal = false;
+      value.valS = getTimeLocal_hhmm();
+      return value;
+    break;
+    case sysop_gethhmmss:
+      value.isDecimal = false;
+      value.valS = getTimeLocal_hhmmss();
+      return value;
+    break;
+    case sysop_getTime:
+      value.isDecimal = false;
+      value.valS = getDateTimeDotFormated();
       return value;
     break;
     case sysop_getIP:
@@ -411,6 +421,9 @@ public:
       if (Callee == "getDay") operation = sysop_getDay; else
       if (Callee == "getIP") operation = sysop_getIP; else
       if (Callee == "mqttPub") operation = sysop_mqttPub; else
+      if (Callee == "gethhmm") operation = sysop_gethhmm; else
+      if (Callee == "gethhmmss") operation = sysop_gethhmmss; else
+      if (Callee == "getTime") operation = sysop_getTime; else
       operation = sysop_notfound;
     }
 
