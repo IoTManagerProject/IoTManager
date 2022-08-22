@@ -19,7 +19,6 @@ import configparser
 import os, json, sys, getopt
 from pathlib import Path
 
-
 config = configparser.ConfigParser()  # создаём объекта парсера INI
 
 def printHelp():
@@ -85,7 +84,7 @@ if Path(profile).is_file():
         # sortedModules = {}
         # for sortedModulName in sortedList:
             
-        print(profJson)
+        # print(profJson)
         
         with open(profile, "w", encoding='utf-8') as write_file:
             json.dump(profJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
@@ -183,6 +182,12 @@ config["platformio"]["default_envs"] = deviceName
 config["platformio"]["data_dir"] = profJson['projectProp']['platformio']['data_dir']
 with open("platformio.ini", 'w') as configFile:
     config.write(configFile)
+    
+import ctypes  # An included library with Python install.   
+if update:    
+    ctypes.windll.user32.MessageBoxW(0, "Модули профиля " + profile + " обновлены, а сам профиль применен, можно запускать компиляцию и прошивку.", "Операция завершена.", 0)
+else:
+    ctypes.windll.user32.MessageBoxW(0, "Профиль " + profile + " применен, можно запускать компиляцию и прошивку.", "Операция завершена.", 0)
 
 
         
