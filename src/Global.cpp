@@ -67,6 +67,7 @@ String mqttRootDevice = "";
 // Time
 Time_t _time_local;
 Time_t _time_utc;
+bool _time_isTrust = false;
 
 // DynamicJsonDocument settingsFlashJsonDoc(JSON_BUFFER_SIZE);
 // DynamicJsonDocument paramsFlashJsonDoc(JSON_BUFFER_SIZE);

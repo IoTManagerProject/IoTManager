@@ -299,7 +299,43 @@ enum SysOp {
 };
 
 IoTValue sysExecute(SysOp command, std::vector<IoTValue>& param) {
-  IoTValue value;
+  IoTValue value = {};
+
+  if (_time_isTrust) 
+    switch (command) {
+      case sysop_getHours:
+        value.valD = _time_local.hour;
+      break;
+      case sysop_getMinutes:
+        value.valD = _time_local.minute;
+      break;
+      case sysop_getSeconds:
+        value.valD = _time_local.second;
+      break;
+      case sysop_getMonth:
+        value.valD = _time_local.month;
+      break;
+      case sysop_getDay:
+        value.valD = _time_local.day_of_month;
+      break;
+      case sysop_gethhmm:
+        value.isDecimal = false;
+        value.valS = getTimeLocal_hhmm();
+      break;
+      case sysop_gethhmmss:
+        value.isDecimal = false;
+        value.valS = getTimeLocal_hhmmss();
+      break;
+      case sysop_getTime:
+        value.isDecimal = false;
+        value.valS = getDateTimeDotFormated();
+      break;
+    }
+  else {
+    value.isDecimal = false;
+    value.valS = "none";
+  }
+
   switch (command) {
     case sysop_reboot:
       ESP.restart();
@@ -308,28 +344,24 @@ IoTValue sysExecute(SysOp command, std::vector<IoTValue>& param) {
       if (param.size()) {
         IoTgpio.pinMode(param[0].valD, INPUT);
         value.valD = IoTgpio.digitalRead(param[0].valD);
-        return value;
       }
     break;
     case sysop_analogRead:
       if (param.size()) {
         IoTgpio.pinMode(param[0].valD, INPUT);
         value.valD = IoTgpio.analogRead(param[0].valD);
-        return value;
       }
     break;
     case sysop_digitalWrite:
       if (param.size() == 2) {
         IoTgpio.pinMode(param[0].valD, OUTPUT);
         IoTgpio.digitalWrite(param[0].valD, param[1].valD);
-        return {};
       }
     break;
     case sysop_digitalInvert:
       if (param.size()) {
         IoTgpio.pinMode(param[0].valD, OUTPUT);
         IoTgpio.digitalInvert(param[0].valD);
-        return {};
       }
     break;
     case sysop_deepSleep:
@@ -344,56 +376,19 @@ IoTValue sysExecute(SysOp command, std::vector<IoTValue>& param) {
 #endif
       }
     break;
-    case sysop_getHours:
-      value.valD = _time_local.hour;
-      return value;
-    break;
-    case sysop_getMinutes:
-      value.valD = _time_local.minute;
-      return value;
-    break;
-    case sysop_getSeconds:
-      value.valD = _time_local.second;
-      return value;
-    break;
-    case sysop_getMonth:
-      value.valD = _time_local.month;
-      return value;
-    break;
-    case sysop_getDay:
-      value.valD = _time_local.day_of_month;
-      return value;
-    break;
-    case sysop_gethhmm:
-      value.isDecimal = false;
-      value.valS = getTimeLocal_hhmm();
-      return value;
-    break;
-    case sysop_gethhmmss:
-      value.isDecimal = false;
-      value.valS = getTimeLocal_hhmmss();
-      return value;
-    break;
-    case sysop_getTime:
-      value.isDecimal = false;
-      value.valS = getDateTimeDotFormated();
-      return value;
-    break;
     case sysop_getIP:
       value.valS = jsonReadStr(settingsFlashJson, F("ip"));
       value.isDecimal = false;
-      return value;
     break;
     case sysop_mqttPub:
       if (param.size() == 2) {
         //Serial.printf("Call from  sysExecute %s %s\n", param[0].valS.c_str(), param[1].valS.c_str());
         value.valD = mqtt.publish(param[0].valS.c_str(), param[1].valS.c_str(), false);
-      return value;
       }
     break;
   }
 
-  return {};
+  return value;
 }
 
 /// SysCallExprAST - Класс узла выражения для вызова системных команд.

@@ -131,6 +131,7 @@ struct Time_t {
 
 extern Time_t _time_local;
 extern Time_t _time_utc;
+extern bool _time_isTrust;
 
 // extern DynamicJsonDocument settingsFlashJsonDoc;
 // extern DynamicJsonDocument paramsFlashJsonDoc;
