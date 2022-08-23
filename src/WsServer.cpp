@@ -63,7 +63,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWs("/items.json", num, 1024);
                 sendFileToWs("/widgets.json", num, 1024);
                 sendFileToWs("/config.json", num, 1024);
-                sendFileToWs("/scenario.txt", num, 1024);
+                sendFileToWs("/scenario.json", num, 1024);
                 standWebSocket.sendTXT(num, settingsFlashJson);
             }
             //**сохранение**//
@@ -73,7 +73,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 clearConfigure();
                 Serial.println("Start config");
                 configure("/config.json");
-                iotScen.loadScenario("/scenario.txt");
+                iotScen.loadScenario("/scenario.json");
             }
             //**сохранение**//
             if (headerStr == "/tuoyal|") {
@@ -81,13 +81,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
             //**сохранение**//
             if (headerStr == "/oiranecs|") {
-                if (length - headerLenth == 0) {
-                    SerialPrint("i", "WS", "Scenario file empty");
-                    writeFile("/scenario.txt", "");
-                } else {
-                    writeFileUint8tByFrames("scenario.txt", payload, length, headerLenth, 256);
-                    iotScen.loadScenario("/scenario.txt");
-                }
+                writeFileUint8tByFrames("scenario.json", payload, length, headerLenth, 256);
+                iotScen.loadScenario("/scenario.json");
+
                 // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
                 IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
                 generateEvent("onStart", "");

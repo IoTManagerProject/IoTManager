@@ -63,7 +63,7 @@ void setup() {
     asyncUdpInit();
 
     //загрузка сценария
-    iotScen.loadScenario("/scenario.txt");
+    iotScen.loadScenario("/scenario.json");
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
     IoTItems.push_back((IoTItem *)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
     generateEvent("onStart", "");
