@@ -20,9 +20,13 @@ class Loging : public IoTItem {
         if (value == "") {
             SerialPrint("E", F("Logging"), F("no value set"));
         } else {
-            regEvent(value, "Logging");
-            String logData = String(_time_local.second) + " " + value + "\r\n";
-            writeFile("log.txt", logData);
+            if (isTimeSynch) {
+                regEvent(value, "Logging");
+                String logData = String(unixTime) + " " + value + "\r\n";
+                addFileLn("/log.txt", logData);
+            } else {
+                SerialPrint("E", F("Logging"), F("cant logging - no time Synch"));
+            }
         }
     }
 };

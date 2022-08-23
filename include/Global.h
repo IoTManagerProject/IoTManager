@@ -129,6 +129,8 @@ struct Time_t {
     unsigned long valid;
 };
 
+extern unsigned long unixTime;
+extern bool isTimeSynch;
 extern Time_t _time_local;
 extern Time_t _time_utc;
 extern bool _time_isTrust;

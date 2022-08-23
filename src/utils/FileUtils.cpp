@@ -101,6 +101,18 @@ const String writeFile(const String& filename, const String& str) {
     onFlashWrite();
 }
 
+const String addFileLn(const String& filename, const String& str) {
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "a");
+    if (!file) {
+        return "failed";
+    }
+    file.println(str);
+    file.close();
+    return "sucсess";
+    onFlashWrite();
+}
+
 const String readFile(const String& filename, size_t max_size) {
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
@@ -146,17 +158,7 @@ bool cutFile(const String& src, const String& dst) {
     return true;
 }
 
-const String addFileLn(const String& filename, const String& str) {
-    String path = filepath(filename);
-    auto file = FileFS.open(path, "a");
-    if (!file) {
-        return "failed";
-    }
-    file.println(str);
-    file.close();
-    onFlashWrite();
-    return "sucсess";
-}
+
 
 void onFlashWrite() {
     flashWriteNumber++;

@@ -65,6 +65,8 @@ String scenario = "";
 String mqttRootDevice = "";
 
 // Time
+unsigned long unixTime = 0;
+bool isTimeSynch = false;
 Time_t _time_local;
 Time_t _time_utc;
 bool _time_isTrust = false;

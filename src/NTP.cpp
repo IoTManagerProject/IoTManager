@@ -8,14 +8,16 @@ void ntpInit() {
 
     ts.add(
         TIME, 1000, [&](void*) {
-            unsigned long unixTime = getSystemTime();
+            unixTime = getSystemTime();
             if (unixTime < MIN_DATETIME) {
+                isTimeSynch = false;
                 // SerialPrint("E", "NTP", "Time not synched");
                 synchTime();
                 return;
             }
             breakEpochToTime(unixTime + jsonReadInt(settingsFlashJson, F("timezone")) * 60 * 60, _time_local);
             breakEpochToTime(unixTime, _time_utc);
+            isTimeSynch = true;
             String timenow = getTimeLocal_hhmm();
             static String prevTime;
             if (prevTime != timenow) {
@@ -25,7 +27,7 @@ void ntpInit() {
                 jsonWriteStr_(errorsHeapJson, F("timenow"), dateAndTime);
                 SerialPrint("I", F("NTP"), "✔ " + dateAndTime);
             }
-            _time_isTrust = true;   // доверяем значению времени
+            _time_isTrust = true;  // доверяем значению времени
         },
         nullptr, true);
 
