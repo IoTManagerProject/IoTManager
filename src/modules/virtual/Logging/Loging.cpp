@@ -22,7 +22,7 @@ class Loging : public IoTItem {
         } else {
             if (isTimeSynch) {
                 regEvent(value, "Logging");
-                String logData = String(unixTime) + " " + value + "\r\n";
+                String logData = String(unixTime) + " " + value;
                 addFileLn("/log.txt", logData);
             } else {
                 SerialPrint("E", F("Logging"), F("cant logging - no time Synch"));
