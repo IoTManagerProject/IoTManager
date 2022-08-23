@@ -50,15 +50,15 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 SerialPrint("E", "WS " + String(num), "Package without header");
             }
 
-            // page dashboard===================================================================
-            //**отправка**//
+            // Страница веб интерфейса dashboard===================================================================
+            // отправляем только файл layout.json //
             if (headerStr == "/|") {
                 String json = getParamsJson();
                 standWebSocket.sendTXT(num, json);
                 sendFileToWs("/layout.json", num, 1024);
             }
-            // page configutation================================================================
-            //**отправка**//
+            // Страница веб интерфейса configutation================================================================
+            //========отправка=========================================================//
             if (headerStr == "/config|") {
                 sendFileToWs("/items.json", num, 1024);
                 sendFileToWs("/widgets.json", num, 1024);
@@ -66,30 +66,24 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWs("/scenario.json", num, 1024);
                 standWebSocket.sendTXT(num, settingsFlashJson);
             }
-            //**сохранение**//
+            //========сохранение=======================================================//
             if (headerStr == "/gifnoc|") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
-                Serial.println("Start clear");
                 clearConfigure();
-                Serial.println("Start config");
                 configure("/config.json");
-                iotScen.loadScenario("/scenario.json");
             }
-            //**сохранение**//
             if (headerStr == "/tuoyal|") {
                 writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
             }
-            //**сохранение**//
             if (headerStr == "/oiranecs|") {
                 writeFileUint8tByFrames("scenario.json", payload, length, headerLenth, 256);
                 iotScen.loadScenario("/scenario.json");
-
                 // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
                 IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
                 generateEvent("onStart", "");
             }
-            // page connection===================================================================
-            //**отправка**//
+            // Страница веб интерфейса connection===================================================================
+            //========отправка========================================================//
             if (headerStr == "/connection|") {
                 standWebSocket.sendTXT(num, settingsFlashJson);
                 standWebSocket.sendTXT(num, ssidListHeapJson);
@@ -97,20 +91,20 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 //запуск асинхронного сканирования wifi сетей при переходе на страницу соединений
                 // RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
             }
-            //**сохранение**//
+            //========сохранение========================================================//
             if (headerStr == "/sgnittes|") {
                 writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 standWebSocket.sendTXT(num, errorsHeapJson);
                 addThisDeviceToList();
             }
-            //**отправка**//
+            //========отправка========================================================//
             if (headerStr == "/scan|") {
                 //запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
                 RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
                 standWebSocket.sendTXT(num, ssidListHeapJson);
             }
-            //**сохранение**//
+            //========сохранение========================================================//
             if (headerStr == "/mqtt|") {
                 standWebSocket.sendTXT(num, settingsFlashJson);  //отправляем в ответ новые полученные настройки
                 handleMqttStatus(false, 8);                      //меняем статус на неопределенный
@@ -118,33 +112,33 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 standWebSocket.sendTXT(num, errorsHeapJson);     //отправляем что статус неопределен
                 standWebSocket.sendTXT(num, ssidListHeapJson);
             }
-            // page list ==========================================================================
-            //**отправка**//
+            // Страница веб интерфейса list ==========================================================================
+            //========отправка========================================================//
             if (headerStr == "/list|") {
                 standWebSocket.sendTXT(num, devListHeapJson);
             }
-            // page system =========================================================================
-            //**отправка**//
+            // траница веб интерфейса system =========================================================================
+            //========отправка========================================================//
             if (headerStr == "/system|") {
                 standWebSocket.sendTXT(num, errorsHeapJson);
                 standWebSocket.sendTXT(num, settingsFlashJson);
             }
-            //**сохранение**//
+            //========сохранение========================================================//
             //переписать любое поле в errors json
             if (headerStr == "/rorre|") {
                 writeUint8tValueToJsonString(payload, length, headerLenth, errorsHeapJson);
             }
-            // orders ==============================================================================
-            //**команда перезагрузки esp**//
+            //Команды веб интерфейса ==============================================================================
+            //команда перезагрузки esp//
             if (headerStr == "/reboot|") {
                 ESP.restart();
             }
-            //**команда обновления esp**//
+            //команда обновления esp//
             if (headerStr == "/update|") {
                 upgrade_firmware(3);
             }
 
-            // cotrol ==============================================================================
+            //Прием сообщений cotrol ==============================================================================
             if (headerStr == "/control|") {
                 String msg;
                 writeUint8tToString(payload, length, headerLenth, msg);
@@ -191,6 +185,15 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
     }
 }
 
+//публикация статус сообщений
+void publishStatusWs(const String& topic, const String& data) {
+    String path = mqttRootDevice + "/" + topic;  //+ "/status";
+    String json = "{}";
+    jsonWriteStr(json, "status", data);
+    jsonWriteStr(json, "topic", path);
+    standWebSocket.broadcastTXT(json);
+}
+
 //данные которые мы отправляем в сокеты переодически
 void periodicWsSend() {
     standWebSocket.broadcastTXT(devListHeapJson);
@@ -233,15 +236,6 @@ void sendFileToWs(const char* filename, uint8_t num, size_t frameSize) {
     }
     file.close();
     standWebSocket.sendTXT(num, "/end" + String(filename));
-}
-
-//публикация статус сообщений
-void publishStatusWs(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic;  //+ "/status";
-    String json = "{}";
-    jsonWriteStr(json, "status", data);
-    jsonWriteStr(json, "topic", path);
-    standWebSocket.broadcastTXT(json);
 }
 
 //посылка данных из string
