@@ -10,11 +10,6 @@ class Loging : public IoTItem {
         jsonRead(parameters, F("logid"), logval);
     }
 
-    // void setValue(IoTValue Value) {
-    //     value = Value;
-    //     regEvent((String)(int)value.valD, "Loging");
-    // }
-
     void doByInterval() {
         String value = getItemValue(logval);
         if (value == "") {
