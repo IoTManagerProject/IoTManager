@@ -929,14 +929,14 @@ void IoTScenario::loadScenario(String fileName) {  // посимвольно с�
 
     File myfile = seekFile(fileName);
     if (myfile.available()) {
-        strFromFile = new String("");
-        *strFromFile = myfile.readString();
-        Serial.println(*strFromFile);
-        jsonRead(*strFromFile, "scen", *strFromFile, true);
+        String strFromFile = "";
+        strFromFile = myfile.readString();
+        Serial.println(strFromFile);
+        jsonRead(strFromFile, "scen", strFromFile, true);
         myfile.close();
 
         getNextToken();
-        while (strIterator < strFromFile->length() - 1) {
+        while (strIterator < strFromFile.length() - 1) {
             // Serial.printf("-%c", LastChar);
             switch (CurTok) {
                 // case tok_eof:    return;
@@ -952,7 +952,7 @@ void IoTScenario::loadScenario(String fileName) {  // посимвольно с�
                     break;
             }
         }
-        delete strFromFile;
+        // delete strFromFile;
         strIterator = 0;
     } else {
         Error("Open file scenario error");
