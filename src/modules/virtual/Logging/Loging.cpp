@@ -21,6 +21,8 @@ class Loging : public IoTItem {
             SerialPrint("E", F("Logging"), F("no value set"));
         } else {
             regEvent(value, "Logging");
+            String logData = String(_time_local.second) + " " + value + "\r\n";
+            writeFile("log.txt", logData);
         }
     }
 };

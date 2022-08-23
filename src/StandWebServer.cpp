@@ -43,12 +43,16 @@ void standWebServerInit() {
         HTTP.send(200, "text/plain", "ok");
     });
 
+    HTTP.on("/log.txt", HTTP_GET, []() {
+        HTTP.send(200, "text/plain", readFile(F("log.txt"), 20000));
+    });
+
     //  Добавляем функцию Update для перезаписи прошивки по WiFi при 1М(256K FileFS) и выше
     //  httpUpdater.setup(&HTTP);
     //  Запускаем HTTP сервер
     HTTP.begin();
 
-//#ifdef REST_FILE_OPERATIONS
+    //#ifdef REST_FILE_OPERATIONS
     // SPIFFS.begin();
     // {
     //     Dir dir = SPIFFS.openDir("/");
@@ -58,10 +62,10 @@ void standWebServerInit() {
     //     }
     // }
     // HTTP страницы для работы с FFS
-    
+
     // list directory
     HTTP.on("/list", HTTP_GET, handleFileList);
-    
+
     //загрузка редактора editor
     HTTP.on("/edit", HTTP_GET, []() {
         if (!HTTP.args()) {
@@ -69,31 +73,32 @@ void standWebServerInit() {
         }
 
         if (HTTP.hasArg("list")) {
-           handleFileList();
+            handleFileList();
         }
 
         if (HTTP.hasArg("edit")) {
-           if (!handleFileRead(HTTP.arg("edit"))) HTTP.send(404, "text/plain", "FileNotFound");
+            if (!handleFileRead(HTTP.arg("edit"))) HTTP.send(404, "text/plain", "FileNotFound");
         }
 
         if (HTTP.hasArg("download")) {
-           if (!handleFileRead(HTTP.arg("download"))) HTTP.send(404, "text/plain", "FileNotFound");
+            if (!handleFileRead(HTTP.arg("download"))) HTTP.send(404, "text/plain", "FileNotFound");
         }
     });
-    
+
     //Создание файла
     HTTP.on("/edit", HTTP_PUT, handleFileCreate);
-    
+
     //Удаление файла
     HTTP.on("/edit", HTTP_DELETE, handleFileDelete);
-    
+
     //Изменение файла
-    HTTP.on("/edit", HTTP_POST, []() {
+    HTTP.on(
+        "/edit", HTTP_POST, []() {
             HTTP.send(200, "text/plain", "");
         },
         handleFileUpload);
-//#endif
-    
+    //#endif
+
     // called when the url is not defined here
     HTTP.onNotFound([]() {
         if (!handleFileRead(HTTP.uri()))
@@ -109,7 +114,7 @@ bool handleFileRead(String path) {
         if (FileFS.exists(pathWithGz))
             path += ".gz";
         File file = FileFS.open(path, "r");
-        if (contentType == "application/octet-stream") 
+        if (contentType == "application/octet-stream")
             HTTP.sendHeader("Content-Disposition", "attachment;filename=" + (String)file.name());
         HTTP.streamFile(file, contentType);
         file.close();
