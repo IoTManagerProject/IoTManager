@@ -36,7 +36,7 @@ class IoTItem {
     IoTValue value;  // хранение основного значения, которое обновляется из сценария, execute(), loop() или doByInterval()
 
     bool iAmDead = false;  // признак необходимости удалить объект из базы
-    bool iAmLocal = true;  // признак локальной переменной
+    bool iAmLocal = true;  // признак того, что айтем был создан локально
 
     bool needSave = false;
     bool enableDoByInt = true;
@@ -59,6 +59,8 @@ class IoTItem {
     int _map3;
     int _map4;
     int _round;  // 1, 10, 100, 1000, 10000
+
+    bool _global = false;   // характеристика айтема, что ему нужно слать и принимать события из внешнего мира
 };
 
 IoTItem* findIoTItem(String name);                            // поиск экземпляра элемента модуля по имени

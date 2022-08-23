@@ -16,6 +16,8 @@ IoTItem::IoTItem(String parameters) {
     if (!jsonRead(parameters, F("plus"), _plus, false)) _plus = 0;
     if (!jsonRead(parameters, F("round"), _round, false)) _round = -1;
 
+    if (!jsonRead(parameters, F("global"), _global, false)) _global = false;
+
     String valAsStr;
     if (jsonRead(parameters, F("val"), valAsStr, false))  // значение переменной или датчика при инициализации если есть в конфигурации
         if (value.isDecimal = isDigitDotCommaStr(valAsStr)) {
@@ -83,6 +85,12 @@ void IoTItem::setValue(IoTValue Value) {
 void IoTItem::regEvent(String value, String consoleInfo = "") {
     generateEvent(_id, value);
     publishStatusMqtt(_id, value);
+
+    //  проверка если global установлен то шлем всем о событии
+    if (_global) {
+        SerialPrint("i", F("=>ALLMQTT"), "Broadcast event: ");
+    }
+
     //отправка события другим устройствам в сети==============================
     // if (jsonReadBool(settingsFlashJson, "mqttin")) {
     //    String json = "{}";
