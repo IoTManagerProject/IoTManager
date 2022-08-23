@@ -81,9 +81,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
             //**сохранение**//
             if (headerStr == "/oiranecs|") {
-                writeFileUint8tByFrames("scenario.txt", payload, length, headerLenth, 256);
-                iotScen.loadScenario("/scenario.txt");
-
+                if (length - headerLenth == 0) {
+                    SerialPrint("i", "WS", "Scenario file empty");
+                    writeFile("/scenario.txt", "");
+                } else {
+                    writeFileUint8tByFrames("scenario.txt", payload, length, headerLenth, 256);
+                    iotScen.loadScenario("/scenario.txt");
+                }
                 // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
                 IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
                 generateEvent("onStart", "");
