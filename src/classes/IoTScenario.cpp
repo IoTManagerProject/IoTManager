@@ -929,30 +929,36 @@ void IoTScenario::loadScenario(String fileName) {  // посимвольно с�
 
     File myfile = seekFile(fileName);
     if (myfile.available()) {
-        String strFromFile = "";
-        strFromFile = myfile.readString();
-        Serial.println(strFromFile);
-        jsonRead(strFromFile, "scen", strFromFile, true);
+        strFromFile = new String("");
+        
+        String strFromF = myfile.readString();
+        Serial.println(strFromF);
+        jsonRead(strFromF, "scen", *strFromFile, true);
         myfile.close();
 
-        getNextToken();
-        while (strIterator < strFromFile.length() - 1) {
-            // Serial.printf("-%c", LastChar);
-            switch (CurTok) {
-                // case tok_eof:    return;
-                // case ';':        getNextToken(); break;  // игнорируем верхнеуровневые точки с запятой.
-                case tok_if: {
-                    String IDNames = "";  // накопитель встречающихся идентификаторов в условии
-                    ScenarioElements.push_back(ParseIfExpr(&IDNames));
-                    // Serial.printf("vvvvvvvvvvvvvvvv %s", IDNames.c_str());
-                    break;
+        //Serial.println(*strFromFile);
+
+        if (strFromFile->length()) { 
+            getNextToken();
+            while (strIterator < strFromFile->length() - 1) {
+                // Serial.printf("-%c", LastChar);
+                switch (CurTok) {
+                    // case tok_eof:    return;
+                    // case ';':        getNextToken(); break;  // игнорируем верхнеуровневые точки с запятой.
+                    case tok_if: {
+                        String IDNames = "";  // накопитель встречающихся идентификаторов в условии
+                        ScenarioElements.push_back(ParseIfExpr(&IDNames));
+                        break;
+                    }
+                    default:
+                        getNextToken();
+                        break;
                 }
-                default:
-                    getNextToken();
-                    break;
             }
         }
-        // delete strFromFile;
+
+
+        delete strFromFile;
         strIterator = 0;
     } else {
         Error("Open file scenario error");
