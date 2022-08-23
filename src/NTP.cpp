@@ -25,6 +25,7 @@ void ntpInit() {
                 jsonWriteStr_(errorsHeapJson, F("timenow"), dateAndTime);
                 SerialPrint("I", F("NTP"), "✔ " + dateAndTime);
             }
+            _time_isTrust = true;   // доверяем значению времени
         },
         nullptr, true);
 
