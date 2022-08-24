@@ -930,15 +930,15 @@ void IoTScenario::loadScenario(String fileName) {  // посимвольно с�
     File myfile = seekFile(fileName);
     if (myfile.available()) {
         strFromFile = new String("");
-        
+
         String strFromF = myfile.readString();
         Serial.println(strFromF);
         jsonRead(strFromF, "scen", *strFromFile, true);
         myfile.close();
 
-        //Serial.println(*strFromFile);
+        // Serial.println(*strFromFile);
 
-        if (strFromFile->length()) { 
+        if (strFromFile->length()) {
             getNextToken();
             while (strIterator < strFromFile->length() - 1) {
                 // Serial.printf("-%c", LastChar);
@@ -957,7 +957,6 @@ void IoTScenario::loadScenario(String fileName) {  // посимвольно с�
             }
         }
 
-
         delete strFromFile;
         strIterator = 0;
     } else {
@@ -968,7 +967,7 @@ void IoTScenario::loadScenario(String fileName) {  // посимвольно с�
 void IoTScenario::ExecScenario(String eventIdName) {  // запускаем поочереди все корневые элементы выражений в сценарии, ожидаемо - это IFы
                                                       // eventIdName - ID элемента для которого выполняем сценарий, т.е. игнорируем любые проверки, если нет такого ID в условиях
     isIotScenException = false;
-    Serial.printf("Count root elements in scenario: %d\n", ScenarioElements.size());
+    // Serial.printf("Count root elements in scenario: %d\n", ScenarioElements.size());
     for (unsigned int i = 0; i < ScenarioElements.size(); i++) {
         if (ScenarioElements[i] && ScenarioElements[i]->hasEventIdName(eventIdName)) ScenarioElements[i]->exec();
         // else Serial.printf("Call from  ExecScenario: Skip ifexec because %s not found\n", eventIdName.c_str());

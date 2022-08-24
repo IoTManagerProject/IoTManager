@@ -133,6 +133,9 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         SerialPrint("i", F("MQTT"), F("Full update"));
         publishWidgets();
         publishState();
+
+        sendAllFilesToMQTT();
+
 #ifdef GATE_MODE
         publishTimes();
 #endif
@@ -306,6 +309,52 @@ void handleMqttStatus(bool send, int state) {
     // Serial.println(stateStr);
     jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);
     if (!send) standWebSocket.broadcastTXT(errorsHeapJson);
+}
+
+// log-20384820.txt
+void sendAllFilesToMQTT() {
+    String directory = "logs";
+    SerialPrint("I", "Loging", "in directory '" + directory + "' files:");
+    auto dir = FileFS.openDir(directory);
+    while (dir.next()) {
+        String fname = dir.fileName();
+        String id = selectToMarker(fname, "-");
+        SerialPrint("I", "Loging", fname);
+        sendLogData("/logs/" + fname, id);
+    }
+}
+
+void sendLogData(String file, String topic) {
+    File configFile = FileFS.open(file, "r");
+    if (!configFile) {
+        return;
+    }
+    configFile.seek(0, SeekSet);
+    int i = 0;
+    String buf = "{}";
+    String json_array;
+    String unix_time;
+    String value;
+    unsigned int psn;
+    unsigned int sz = configFile.size();
+    do {
+        i++;
+        psn = configFile.position();
+        String line = configFile.readStringUntil('\n');
+        unix_time = selectToMarker(line, " ");
+        jsonWriteInt(buf, "x", unix_time.toInt() + START_DATETIME);
+        value = deleteBeforeDelimiter(line, " ");
+        jsonWriteFloat(buf, "y1", value.toFloat());
+        if (unix_time != "" || value != "") {
+            json_array += buf + ",";
+        }
+    } while (psn < sz);
+
+    configFile.close();
+
+    json_array = "{\"status\":[" + json_array + "]}";
+    json_array.replace("},]}", "}]}");
+    publishChart(topic, json_array);
 }
 
 const String getStateStr(int e) {

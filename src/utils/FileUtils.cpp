@@ -158,8 +158,39 @@ bool cutFile(const String& src, const String& dst) {
     return true;
 }
 
+//функция считает количество строк в файле
+size_t countLines(const String filename) {
+    size_t cnt = -1;
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "r");
+    if (!file) {
+        return cnt;
+    }
+    file.seek(0, SeekSet);
+    size_t size = file.size();
+    size_t psn;
+    do {
+        cnt++;
+        file.readStringUntil('\n');
+        psn = file.position();
+    } while (psn < size);
+    file.close();
+    return cnt;
+}
 
+//удаляем файл
+void removeFile(const String& filename) {
+    String path = filepath(filename);
+    if (FileFS.exists(path)) {
+        if (!FileFS.remove(path)) {
+            SerialPrint("I", "Files", "remove " + path);
+        }
+    } else {
+        SerialPrint("E", "Files", "not exist" + path);
+    }
+}
 
+//счетчик количества записей на флешь за сеанс
 void onFlashWrite() {
     flashWriteNumber++;
     SerialPrint(F("->"), F("FS"), F("write data on flash"));

@@ -9,6 +9,7 @@ void ntpInit() {
     ts.add(
         TIME, 1000, [&](void*) {
             unixTime = getSystemTime();
+            unixTimeShort = unixTime - START_DATETIME;
             if (unixTime < MIN_DATETIME) {
                 isTimeSynch = false;
                 // SerialPrint("E", "NTP", "Time not synched");

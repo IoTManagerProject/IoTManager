@@ -130,6 +130,8 @@ struct Time_t {
 };
 
 extern unsigned long unixTime;
+extern unsigned long unixTimeShort;
+
 extern bool isTimeSynch;
 extern Time_t _time_local;
 extern Time_t _time_utc;

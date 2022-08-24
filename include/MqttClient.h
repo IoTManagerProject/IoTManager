@@ -31,6 +31,9 @@ void publishState();
 void mqttCallback(char* topic, uint8_t* payload, size_t length);
 void handleMqttStatus(bool send);
 void handleMqttStatus(bool send, int state);
+void sendAllFilesToMQTT();
+void sendLogData(String file, String topic);
+
 const String getStateStr(int e);
 
 void mqttUptimeCalc();

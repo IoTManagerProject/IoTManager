@@ -10,4 +10,6 @@ extern const String addFileLn(const String& filename, const String& str);
 extern const String readFile(const String& filename, size_t max_size);
 extern const String filepath(const String& filename);
 extern bool cutFile(const String& src, const String& dst);
+extern size_t countLines(const String filename);
+void removeFile(const String& filename);
 extern void onFlashWrite();
