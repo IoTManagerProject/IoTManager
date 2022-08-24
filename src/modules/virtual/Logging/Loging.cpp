@@ -13,6 +13,10 @@ class Loging : public IoTItem {
         jsonRead(parameters, F("id"), id);
     }
 
+    String getValue() {
+        return "";
+    }
+
     void doByInterval() {
         String value = getItemValue(logval);
         size_t lines = 0;
