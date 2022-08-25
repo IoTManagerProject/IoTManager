@@ -12,4 +12,5 @@ extern const String filepath(const String& filename);
 extern bool cutFile(const String& src, const String& dst);
 extern size_t countLines(const String filename);
 void removeFile(const String& filename);
+void cleanDirectory(String path);
 extern void onFlashWrite();

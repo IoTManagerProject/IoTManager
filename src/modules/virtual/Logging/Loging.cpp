@@ -3,7 +3,7 @@
 #include "NTP.h"
 
 //раскомментировать если нужна цельная выгрузка графиков
-//#define SOLID_UPLOADING
+#define SOLID_UPLOADING
 
 class Loging : public IoTItem {
    private:
@@ -175,16 +175,6 @@ class Loging : public IoTItem {
         oneSingleJson.replace("},]}", "}]}");
         // SerialPrint("i", "Loging " + id, "publish chart, maxCount: '" + String(maxCount) + "'");
         publishChart(id, oneSingleJson);
-    }
-
-    void cleanLog() {
-        String directory = "logs/" + id;
-        auto dir = FileFS.openDir(directory);
-        while (dir.next()) {
-            String fname = dir.fileName();
-            removeFile(directory + "/" + fname);
-            SerialPrint("I", "Loging " + id, fname + " deleted");
-        }
     }
 
     int calculateMaxCount() {

@@ -190,6 +190,17 @@ void removeFile(const String& filename) {
     }
 }
 
+//очищаем директорию с файлами
+void cleanDirectory(String path) {
+    auto dir = FileFS.openDir(path);
+    while (dir.next()) {
+        String fname = dir.fileName();
+        removeFile(path + "/" + fname);
+        SerialPrint("I", "Files", fname + " deleted");
+    }
+    onFlashWrite();
+}
+
 //счетчик количества записей на флешь за сеанс
 void onFlashWrite() {
     flashWriteNumber++;

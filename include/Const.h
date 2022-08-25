@@ -32,7 +32,7 @@
 #endif
 
 #ifdef esp32_4mb
-#define USE_LITTLEFS false
+#define USE_LITTLEFS true
 #endif
 
 #define START_DATETIME 1640995200  // 01.01.2022 00:00:00 константа для сокращения unix time
