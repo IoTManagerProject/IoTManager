@@ -2,7 +2,8 @@
 #include "classes/IoTItem.h"
 #include "NTP.h"
 
-#define SOLID_UPLOADING
+//раскомментировать если нужна цельная выгрузка графиков
+//#define SOLID_UPLOADING
 
 class Loging : public IoTItem {
    private:
@@ -10,12 +11,14 @@ class Loging : public IoTItem {
     String id;
     int points;
     String fileName = "";
+    int interval;
 
    public:
     Loging(String parameters) : IoTItem(parameters) {
         jsonRead(parameters, F("logid"), logval);
         jsonRead(parameters, F("id"), id);
         jsonRead(parameters, F("points"), points);
+        jsonRead(parameters, F("int"), interval);
     }
 
     void setValue(IoTValue Value) {
@@ -30,7 +33,7 @@ class Loging : public IoTItem {
 
     void doByInterval() {
         String value = getItemValue(logval);
-        size_t lines = 0;
+        int lines = 0;
         //если задано не правильное logid величины для логгирования
         if (value == "") {
             SerialPrint("E", F("Loging"), F("no value set"));
@@ -48,7 +51,7 @@ class Loging : public IoTItem {
                     //если 2 ой раз и последующие разы
                 } else {
                     lines = countLines(fileName);
-                    if (lines <= 100) {
+                    if (lines <= points) {
                         addFileLn(fileName, logData);
                     } else {
                         createFileWithIdDatatimeName(logData);
@@ -77,22 +80,23 @@ class Loging : public IoTItem {
         auto dir = FileFS.openDir(directory);
         String oneSingleJson;
         int maxCount = 0;
+        int i;
 
         while (dir.next()) {
             String fname = dir.fileName();
             String id = selectToMarker(fname, "-");
             unsigned long fileUnixTime = deleteBeforeDelimiter(deleteToMarkerLast(fname, "."), "-").toInt() + START_DATETIME;
 
-            SerialPrint("I", "Loging", "found file '" + fname + "'");
-
             if (isItemExist(id)) {
                 //выбираем только те файлы которые входят в выбранные сутки
                 if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
-                    Serial.println("matched!");
+                    SerialPrint("I", "Loging", "matching file found '" + fname + "'");
 #ifdef SOLID_UPLOADING
-                    createOneSingleJson(oneSingleJson, "/logs/" + fname, maxCount);
+                    //если активированна выгрузка целеком
+                    createOneSingleJson(oneSingleJson, "/logs/" + fname, maxCount, i);
 #else
-
+                    //выгрузка по частям, по одному файлу
+                    publishJsonPartly("/logs/" + fname, calculateMaxCount(), i);
 #endif
                 }
             } else {
@@ -101,11 +105,12 @@ class Loging : public IoTItem {
             }
         }
 #ifdef SOLID_UPLOADING
-        sendJson(oneSingleJson, maxCount);
+        publishJson(oneSingleJson, maxCount);
 #endif
+        SerialPrint("I", "Loging", "---------'" + String(i) + "'---------");
     }
 
-    void createOneSingleJson(String &oneSingleJson, String file, int &maxCount) {
+    void createOneSingleJson(String &oneSingleJson, String file, int &maxCount, int &i) {
         File configFile = FileFS.open(file, "r");
         if (!configFile) {
             return;
@@ -118,6 +123,7 @@ class Loging : public IoTItem {
         unsigned int sz = configFile.size();
         do {
             maxCount++;
+            i++;
             psn = configFile.position();
             String line = configFile.readStringUntil('\n');
             unix_time = selectToMarker(line, " ");
@@ -133,11 +139,40 @@ class Loging : public IoTItem {
         configFile.close();
     }
 
-    void sendJson(String &oneSingleJson, int &maxCount) {
+    void publishJsonPartly(String file, int maxCount, int &i) {
+        File configFile = FileFS.open(file, "r");
+        if (!configFile) {
+            return;
+        }
+        configFile.seek(0, SeekSet);
+        String buf = "{}";
+        String dividedJson;
+        String unix_time;
+        String value;
+        unsigned int psn;
+        unsigned int sz = configFile.size();
+        do {
+            i++;
+            psn = configFile.position();
+            String line = configFile.readStringUntil('\n');
+            unix_time = selectToMarker(line, " ");
+            jsonWriteInt(buf, "x", unix_time.toInt() + START_DATETIME);
+            value = deleteBeforeDelimiter(line, " ");
+            jsonWriteFloat(buf, "y1", value.toFloat());
+            if (unix_time != "" || value != "") {
+                dividedJson += buf + ",";
+            }
+        } while (psn < sz);
+
+        configFile.close();
+
+        publishJson(dividedJson, maxCount);
+    }
+
+    void publishJson(String &oneSingleJson, int &maxCount) {
         oneSingleJson = "{\"maxCount\":" + String(maxCount) + ",\"status\":[" + oneSingleJson + "]}";
         oneSingleJson.replace("},]}", "}]}");
-        Serial.println("final: ");
-        Serial.println(oneSingleJson);
+        // SerialPrint("i", "Loging", "publish chart, maxCount: '" + String(maxCount) + "'");
         publishChart(id, oneSingleJson);
     }
 
@@ -149,6 +184,10 @@ class Loging : public IoTItem {
             removeFile(directory + "/" + fname);
             SerialPrint("I", "Loging", fname + " deleted");
         }
+    }
+
+    int calculateMaxCount() {
+        return 86400 / interval;
     }
 };
 

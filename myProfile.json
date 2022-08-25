@@ -12,7 +12,7 @@
         "webpass": "admin",
         "mqttServer": "m2.wqtt.ru",
         "mqttPort": 8021,
-        "mqttPrefix": "/rise",
+        "mqttPrefix": "/risenew",
         "mqttUser": "rise",
         "mqttPass": "3hostel3",
         "serverip": "http://157.245.22.57:8081",
