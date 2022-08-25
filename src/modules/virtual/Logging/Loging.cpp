@@ -7,43 +7,41 @@
 
 class Loging : public IoTItem {
    private:
-    String logval;
+    String logid;
     String id;
     int points;
     String fileName = "";
     int interval;
+    bool firstTime = true;
 
    public:
     Loging(String parameters) : IoTItem(parameters) {
-        jsonRead(parameters, F("logid"), logval);
+        jsonRead(parameters, F("logid"), logid);
         jsonRead(parameters, F("id"), id);
         jsonRead(parameters, F("points"), points);
         jsonRead(parameters, F("int"), interval);
     }
 
-    void setValue(IoTValue Value) {
-        value = Value;
-        regEvent((String)(int)value.valD, "VButton");
-    }
-
     String getValue() {
         return "";
-        // return (String)(int)value.valD;
     }
 
     void doByInterval() {
-        String value = getItemValue(logval);
+        if (!isItemExist(logid)) {
+            SerialPrint("E", "Loging " + id, F("logging value not exist"));
+            return;
+        }
+        String value = getItemValue(logid);
         int lines = 0;
         //если задано не правильное logid величины для логгирования
         if (value == "") {
-            SerialPrint("E", F("Loging"), F("no value set"));
+            SerialPrint("E", "Loging " + id, F("logging value empty"));
+            return;
         } else {
             //если время было получено из интернета
             if (isTimeSynch) {
                 // regEvent(value, "Loging");
                 String logData = String(unixTimeShort) + " " + value;
-
-                static bool firstTime = true;
                 //если зашли сюда первый раз то создаем файл с именем id-timestamp
                 if (firstTime) {
                     firstTime = false;
@@ -57,10 +55,10 @@ class Loging : public IoTItem {
                         createFileWithIdDatatimeName(logData);
                     }
                 }
-                SerialPrint("i", F("Loging"), "loging in file (" + String(lines) + ") http://" + WiFi.localIP().toString() + fileName);
+                SerialPrint("i", "Loging " + id, "loging in file (" + String(lines) + ") http://" + WiFi.localIP().toString() + fileName);
 
             } else {
-                SerialPrint("E", F("Loging"), F("Сant loging - time not synchronized"));
+                SerialPrint("E", "Loging " + id, F("Сant loging - time not synchronized"));
             }
         }
     }
@@ -68,15 +66,16 @@ class Loging : public IoTItem {
     void createFileWithIdDatatimeName(String &logData) {
         fileName = "/logs/" + id + "-" + String(unixTimeShort) + ".txt";
         addFileLn(fileName, logData);
-        SerialPrint("i", F("Loging"), "file created http://" + WiFi.localIP().toString() + fileName);
+        SerialPrint("i", "Loging " + id, "file created http://" + WiFi.localIP().toString() + fileName);
     }
 
     void sendChart() {
+        SerialPrint("I", "Loging " + id, "----------------------------");
         String reqUnixTimeStr = "25.08.2022";  //нужно получить эту дату из окна ввода под графиком.
         unsigned long reqUnixTime = strDateToUnix(reqUnixTimeStr);
 
         String directory = "logs";
-        SerialPrint("I", "Loging", "in directory '" + directory + "' files:");
+        SerialPrint("I", "Loging " + id, "in directory '" + directory + "' files:");
         auto dir = FileFS.openDir(directory);
         String oneSingleJson;
         int maxCount = 0;
@@ -84,30 +83,32 @@ class Loging : public IoTItem {
 
         while (dir.next()) {
             String fname = dir.fileName();
-            String id = selectToMarker(fname, "-");
+            String idInFileName = selectToMarker(fname, "-");
             unsigned long fileUnixTime = deleteBeforeDelimiter(deleteToMarkerLast(fname, "."), "-").toInt() + START_DATETIME;
-
             if (isItemExist(id)) {
-                //выбираем только те файлы которые входят в выбранные сутки
-                if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
-                    SerialPrint("I", "Loging", "matching file found '" + fname + "'");
+                //если id в имени файла совпадает с id данного экземпляра, пусть каждый экземпляр класса шлет только свое
+                if (idInFileName == id) {
+                    //выбираем только те файлы которые входят в выбранные пользователем сутки
+                    if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
+                        SerialPrint("I", "Loging " + id, "matching file found '" + fname + "'");
 #ifdef SOLID_UPLOADING
-                    //если активированна выгрузка целеком
-                    createOneSingleJson(oneSingleJson, "/logs/" + fname, maxCount, i);
+                        //если активированна выгрузка целеком
+                        createOneSingleJson(oneSingleJson, "/logs/" + fname, maxCount, i);
 #else
-                    //выгрузка по частям, по одному файлу
-                    publishJsonPartly("/logs/" + fname, calculateMaxCount(), i);
+                        //выгрузка по частям, по одному файлу
+                        publishJsonPartly("/logs/" + fname, calculateMaxCount(), i);
 #endif
+                    }
                 }
             } else {
-                SerialPrint("i", "Loging", "file '" + fname + "' not used, deleted");
+                SerialPrint("i", "Loging " + id, "file '" + fname + "' not used, deleted");
                 removeFile(directory + "/" + fname);
             }
         }
 #ifdef SOLID_UPLOADING
         publishJson(oneSingleJson, maxCount);
 #endif
-        SerialPrint("I", "Loging", "---------'" + String(i) + "'---------");
+        SerialPrint("I", "Loging " + id, "--------------'" + String(i) + "'--------------");
     }
 
     void createOneSingleJson(String &oneSingleJson, String file, int &maxCount, int &i) {
@@ -172,7 +173,7 @@ class Loging : public IoTItem {
     void publishJson(String &oneSingleJson, int &maxCount) {
         oneSingleJson = "{\"maxCount\":" + String(maxCount) + ",\"status\":[" + oneSingleJson + "]}";
         oneSingleJson.replace("},]}", "}]}");
-        // SerialPrint("i", "Loging", "publish chart, maxCount: '" + String(maxCount) + "'");
+        // SerialPrint("i", "Loging " + id, "publish chart, maxCount: '" + String(maxCount) + "'");
         publishChart(id, oneSingleJson);
     }
 
@@ -182,7 +183,7 @@ class Loging : public IoTItem {
         while (dir.next()) {
             String fname = dir.fileName();
             removeFile(directory + "/" + fname);
-            SerialPrint("I", "Loging", fname + " deleted");
+            SerialPrint("I", "Loging " + id, fname + " deleted");
         }
     }
 
