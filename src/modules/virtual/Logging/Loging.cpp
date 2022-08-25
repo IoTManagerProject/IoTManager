@@ -85,7 +85,7 @@ class Loging : public IoTItem {
             if (isItemExist(id)) {
                 //выбираем только те файлы которые входят в выбранные сутки
                 if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
-                    Serial.print(", matched!");
+                    Serial.println("matched!");
                     createOneSingleJson(json_array, "/logs/" + fname);
                 }
             } else {
@@ -93,10 +93,10 @@ class Loging : public IoTItem {
                 removeFile(directory + "/" + fname);
             }
         }
-        Serial.println("final: ");
-        Serial.println(json_array);
         json_array = "{\"status\":[" + json_array + "]}";
         json_array.replace("},]}", "}]}");
+        Serial.println("final: ");
+        Serial.println(json_array);
         publishChart(id, json_array);
     }
 
@@ -147,3 +147,10 @@ void *getAPI_Loging(String subtype, String param) {
         return nullptr;
     }
 }
+
+class fileDB {
+   private:
+   public:
+        fileDB() {
+    }
+};
