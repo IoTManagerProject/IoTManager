@@ -31,8 +31,6 @@ void publishState();
 void mqttCallback(char* topic, uint8_t* payload, size_t length);
 void handleMqttStatus(bool send);
 void handleMqttStatus(bool send, int state);
-void sendAllFilesToMQTT();
-void createOneSingleJson(String& json_array, String file);
 
 const String getStateStr(int e);
 

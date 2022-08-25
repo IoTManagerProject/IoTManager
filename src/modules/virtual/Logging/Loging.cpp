@@ -1,5 +1,6 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
+#include "NTP.h"
 
 class Loging : public IoTItem {
    private:
@@ -63,6 +64,69 @@ class Loging : public IoTItem {
         fileName = "/logs/" + id + "-" + String(unixTimeShort) + ".txt";
         addFileLn(fileName, logData);
         SerialPrint("i", F("Loging"), "file created http://" + WiFi.localIP().toString() + fileName);
+    }
+
+    void sendChart() {
+        String reqUnixTimeStr = "25.08.2022";  //нужно получить эту дату из окна ввода под графиком.
+        unsigned long reqUnixTime = strDateToUnix(reqUnixTimeStr);
+
+        String directory = "logs";
+        SerialPrint("I", "Loging", "in directory '" + directory + "' files:");
+        auto dir = FileFS.openDir(directory);
+        String json_array;
+
+        while (dir.next()) {
+            String fname = dir.fileName();
+            String id = selectToMarker(fname, "-");
+            unsigned long fileUnixTime = deleteBeforeDelimiter(deleteToMarkerLast(fname, "."), "-").toInt() + START_DATETIME;
+
+            SerialPrint("I", "Loging", "found file '" + fname + "'");
+
+            if (isItemExist(id)) {
+                //выбираем только те файлы которые входят в выбранные сутки
+                if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
+                    Serial.print(", matched!");
+                    createOneSingleJson(json_array, "/logs/" + fname);
+                }
+            } else {
+                SerialPrint("i", "Loging", "file '" + fname + "' not used, deleted");
+                removeFile(directory + "/" + fname);
+            }
+        }
+        Serial.println("final: ");
+        Serial.println(json_array);
+        json_array = "{\"status\":[" + json_array + "]}";
+        json_array.replace("},]}", "}]}");
+        publishChart(id, json_array);
+    }
+
+    void createOneSingleJson(String &json_array, String file) {
+        File configFile = FileFS.open(file, "r");
+        if (!configFile) {
+            return;
+        }
+        configFile.seek(0, SeekSet);
+        int i = 0;
+        String buf = "{}";
+        String unix_time;
+        String value;
+        unsigned int psn;
+        unsigned int sz = configFile.size();
+        do {
+            i++;
+            psn = configFile.position();
+            String line = configFile.readStringUntil('\n');
+            unix_time = selectToMarker(line, " ");
+            jsonWriteInt(buf, "x", unix_time.toInt() + START_DATETIME);
+            value = deleteBeforeDelimiter(line, " ");
+            jsonWriteFloat(buf, "y1", value.toFloat());
+            if (unix_time != "" || value != "") {
+                json_array += buf + ",";
+            }
+
+        } while (psn < sz);
+
+        configFile.close();
     }
 
     void cleanLog() {

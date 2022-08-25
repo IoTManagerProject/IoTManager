@@ -123,11 +123,12 @@ void IoTItem::doByInterval() {}
 
 IoTValue IoTItem::execute(String command, std::vector<IoTValue>& param) { return {}; }
 
-//==========================всякая херня==============================================================================================
-//захрена эта хрень?
-// String IoTItem::getSubtype() {
-//    return _subtype;
-//}
+//захрена эта хрень? - самому пригодилась сорян Илья
+String IoTItem::getSubtype() {
+    return _subtype;
+}
+
+void IoTItem::sendChart() {}
 
 String IoTItem::getID() {
     return _id;
