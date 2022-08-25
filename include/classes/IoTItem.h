@@ -60,11 +60,12 @@ class IoTItem {
     int _map4;
     int _round;  // 1, 10, 100, 1000, 10000
 
-    bool _global = false;   // характеристика айтема, что ему нужно слать и принимать события из внешнего мира
+    bool _global = false;  // характеристика айтема, что ему нужно слать и принимать события из внешнего мира
 };
 
 IoTItem* findIoTItem(String name);                            // поиск экземпляра элемента модуля по имени
 String getItemValue(String name);                             // поиск плюс получение значения
+bool isItemExist(String name);                                // существует ли айтем
 StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных занчений Items
 
 class externalVariable : IoTItem {  // объект, создаваемый при получении информации о событии на другом контроллере для хранения информации о событии указанное время

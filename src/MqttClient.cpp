@@ -319,8 +319,13 @@ void sendAllFilesToMQTT() {
     while (dir.next()) {
         String fname = dir.fileName();
         String id = selectToMarker(fname, "-");
-        SerialPrint("I", "Loging", fname);
-        sendLogData("/logs/" + fname, id);
+        if (isItemExist(id)) {
+            SerialPrint("I", "Loging", fname);
+            sendLogData("/logs/" + fname, id);
+        } else {
+            SerialPrint("i", "Loging", "file '" + fname + "' not used, deleted");
+            removeFile(directory + "/" + fname);
+        }
     }
 }
 

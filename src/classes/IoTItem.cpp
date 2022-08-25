@@ -182,6 +182,15 @@ String getItemValue(String name) {
         return "";
 }
 
+// существует ли айтем
+bool isItemExist(String name) {
+    IoTItem* tmp = findIoTItem(name);
+    if (tmp)
+        return true;
+    else
+        return false;
+}
+
 StaticJsonDocument<JSON_BUFFER_SIZE> docForExport;
 
 StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON() {
