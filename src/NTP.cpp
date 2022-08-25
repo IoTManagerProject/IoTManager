@@ -116,3 +116,24 @@ const String getDateTimeDotFormated() {
     sprintf(buf, "%02d.%02d.%02d %02d:%02d:%02d", _time_local.day_of_month, _time_local.month, _time_local.year, _time_local.hour, _time_local.minute, _time_local.second);
     return String(buf);
 }
+
+unsigned long strDateToUnix(String date) {
+    int day = selectToMarker(date, ".").toInt();
+    date = deleteBeforeDelimiter(date, ".");
+    int month = selectToMarker(date, ".").toInt();
+    date = deleteBeforeDelimiter(date, ".");
+    int year = selectToMarker(date, ".").toInt();
+    int secsInOneDay = 86400;
+    int daysInOneYear = 365;
+    int daysInLeepYear = 366;
+    int numberOfLeepYears = 12;
+    int totalNormalYears = year - 1970 - numberOfLeepYears;
+    unsigned int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int numberOfDaysInPastMonths = 0;
+    for (int i = 0; i <= 11; i++) {
+        if (i <= month - 2) {
+            numberOfDaysInPastMonths = numberOfDaysInPastMonths + daysInMonth[i];
+        }
+    }
+    return (day * secsInOneDay) + (numberOfDaysInPastMonths * secsInOneDay) + (totalNormalYears * daysInOneYear * secsInOneDay) + (numberOfLeepYears * daysInLeepYear * secsInOneDay);
+}

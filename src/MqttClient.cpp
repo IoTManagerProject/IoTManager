@@ -1,4 +1,5 @@
 #include "MqttClient.h"
+#include "NTP.h"
 
 void mqttInit() {
     mqtt.setCallback(mqttCallback);
@@ -316,20 +317,34 @@ void sendAllFilesToMQTT() {
     String directory = "logs";
     SerialPrint("I", "Loging", "in directory '" + directory + "' files:");
     auto dir = FileFS.openDir(directory);
+    String json_array;
+
+    String reqUnixTimeStr = "25.08.2022";
+    unsigned long reqUnixTime = strDateToUnix(reqUnixTimeStr);
+
     while (dir.next()) {
         String fname = dir.fileName();
         String id = selectToMarker(fname, "-");
+        unsigned long fileUnixTime = deleteBeforeDelimiter(deleteToMarkerLast(fname, "."), "-").toInt() + START_DATETIME;
+
+        SerialPrint("I", "Loging", "found file '" + String(fileUnixTime) + "'");
+
         if (isItemExist(id)) {
-            SerialPrint("I", "Loging", fname);
-            sendLogData("/logs/" + fname, id);
+            //выбираем только те файлы которые входят в выбранные сутки
+            if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
+                SerialPrint("I", "Loging", "file sent to MQTT: '" + fname + "'");
+                createOneSingleJson(json_array, "/logs/" + fname);
+            }
         } else {
             SerialPrint("i", "Loging", "file '" + fname + "' not used, deleted");
             removeFile(directory + "/" + fname);
         }
     }
+    Serial.println("final: ");
+    Serial.println(json_array);
 }
 
-void sendLogData(String file, String topic) {
+void createOneSingleJson(String& json_array, String file) {
     File configFile = FileFS.open(file, "r");
     if (!configFile) {
         return;
@@ -337,7 +352,6 @@ void sendLogData(String file, String topic) {
     configFile.seek(0, SeekSet);
     int i = 0;
     String buf = "{}";
-    String json_array;
     String unix_time;
     String value;
     unsigned int psn;
@@ -353,13 +367,17 @@ void sendLogData(String file, String topic) {
         if (unix_time != "" || value != "") {
             json_array += buf + ",";
         }
+
     } while (psn < sz);
+
+    Serial.println(file);
+    Serial.println(json_array);
 
     configFile.close();
 
-    json_array = "{\"status\":[" + json_array + "]}";
-    json_array.replace("},]}", "}]}");
-    publishChart(topic, json_array);
+    // json_array = "{\"status\":[" + json_array + "]}";
+    // json_array.replace("},]}", "}]}");
+    // publishChart(topic, json_array);
 }
 
 const String getStateStr(int e) {

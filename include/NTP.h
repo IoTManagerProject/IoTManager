@@ -11,3 +11,4 @@ extern void synchTime();
 extern const String getTimeLocal_hhmm();
 extern const String getTimeLocal_hhmmss();
 extern const String getDateTimeDotFormated();
+extern unsigned long strDateToUnix(String date);

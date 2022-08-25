@@ -5,16 +5,24 @@ class Loging : public IoTItem {
    private:
     String logval;
     String id;
+    int points;
     String fileName = "";
 
    public:
     Loging(String parameters) : IoTItem(parameters) {
         jsonRead(parameters, F("logid"), logval);
         jsonRead(parameters, F("id"), id);
+        jsonRead(parameters, F("points"), points);
+    }
+
+    void setValue(IoTValue Value) {
+        value = Value;
+        regEvent((String)(int)value.valD, "VButton");
     }
 
     String getValue() {
         return "";
+        // return (String)(int)value.valD;
     }
 
     void doByInterval() {
@@ -26,7 +34,7 @@ class Loging : public IoTItem {
         } else {
             //если время было получено из интернета
             if (isTimeSynch) {
-                regEvent(value, "Loging");
+                // regEvent(value, "Loging");
                 String logData = String(unixTimeShort) + " " + value;
 
                 static bool firstTime = true;

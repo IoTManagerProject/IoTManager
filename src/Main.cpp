@@ -70,6 +70,7 @@ void setup() {
 
     // test
     Serial.println("-------test start--------");
+    Serial.println(strDateToUnix("25.08.2022"));
     Serial.println("--------test end---------");
 
     // симуляция добавления внешних событий

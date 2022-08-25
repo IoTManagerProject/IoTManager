@@ -16,7 +16,8 @@
         "descr": "График",
         "int": 60,
         "logid": "tmp",
-        "num": 1
+        "num": 1,
+        "points": 255
     },
     {
         "name": "2. Таймер",
