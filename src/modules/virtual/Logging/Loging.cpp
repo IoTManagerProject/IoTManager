@@ -80,7 +80,7 @@ class Loging : public IoTItem {
         auto dir = FileFS.openDir(directory);
         String oneSingleJson;
         int maxCount = 0;
-        int i;
+        int i = 0;
 
         while (dir.next()) {
             String fname = dir.fileName();
