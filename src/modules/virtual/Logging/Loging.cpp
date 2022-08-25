@@ -71,7 +71,7 @@ class Loging : public IoTItem {
 
     void sendChart() {
         SerialPrint("I", "Loging " + id, "----------------------------");
-        String reqUnixTimeStr = "25.08.2022";  //нужно получить эту дату из окна ввода под графиком.
+        String reqUnixTimeStr = "26.08.2022";  //нужно получить эту дату из окна ввода под графиком.
         unsigned long reqUnixTime = strDateToUnix(reqUnixTimeStr);
 
         String directory = "logs";
