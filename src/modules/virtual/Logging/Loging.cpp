@@ -2,6 +2,8 @@
 #include "classes/IoTItem.h"
 #include "NTP.h"
 
+#define SOLID_UPLOADING
+
 class Loging : public IoTItem {
    private:
     String logval;
@@ -46,7 +48,7 @@ class Loging : public IoTItem {
                     //если 2 ой раз и последующие разы
                 } else {
                     lines = countLines(fileName);
-                    if (lines <= 255) {
+                    if (lines <= 100) {
                         addFileLn(fileName, logData);
                     } else {
                         createFileWithIdDatatimeName(logData);
@@ -73,7 +75,8 @@ class Loging : public IoTItem {
         String directory = "logs";
         SerialPrint("I", "Loging", "in directory '" + directory + "' files:");
         auto dir = FileFS.openDir(directory);
-        String json_array;
+        String oneSingleJson;
+        int maxCount = 0;
 
         while (dir.next()) {
             String fname = dir.fileName();
@@ -86,34 +89,35 @@ class Loging : public IoTItem {
                 //выбираем только те файлы которые входят в выбранные сутки
                 if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
                     Serial.println("matched!");
-                    createOneSingleJson(json_array, "/logs/" + fname);
+#ifdef SOLID_UPLOADING
+                    createOneSingleJson(oneSingleJson, "/logs/" + fname, maxCount);
+#else
+
+#endif
                 }
             } else {
                 SerialPrint("i", "Loging", "file '" + fname + "' not used, deleted");
                 removeFile(directory + "/" + fname);
             }
         }
-        json_array = "{\"status\":[" + json_array + "]}";
-        json_array.replace("},]}", "}]}");
-        Serial.println("final: ");
-        Serial.println(json_array);
-        publishChart(id, json_array);
+#ifdef SOLID_UPLOADING
+        sendJson(oneSingleJson, maxCount);
+#endif
     }
 
-    void createOneSingleJson(String &json_array, String file) {
+    void createOneSingleJson(String &oneSingleJson, String file, int &maxCount) {
         File configFile = FileFS.open(file, "r");
         if (!configFile) {
             return;
         }
         configFile.seek(0, SeekSet);
-        int i = 0;
         String buf = "{}";
         String unix_time;
         String value;
         unsigned int psn;
         unsigned int sz = configFile.size();
         do {
-            i++;
+            maxCount++;
             psn = configFile.position();
             String line = configFile.readStringUntil('\n');
             unix_time = selectToMarker(line, " ");
@@ -121,12 +125,20 @@ class Loging : public IoTItem {
             value = deleteBeforeDelimiter(line, " ");
             jsonWriteFloat(buf, "y1", value.toFloat());
             if (unix_time != "" || value != "") {
-                json_array += buf + ",";
+                oneSingleJson += buf + ",";
             }
 
         } while (psn < sz);
 
         configFile.close();
+    }
+
+    void sendJson(String &oneSingleJson, int &maxCount) {
+        oneSingleJson = "{\"maxCount\":" + String(maxCount) + ",\"status\":[" + oneSingleJson + "]}";
+        oneSingleJson.replace("},]}", "}]}");
+        Serial.println("final: ");
+        Serial.println(oneSingleJson);
+        publishChart(id, oneSingleJson);
     }
 
     void cleanLog() {
@@ -147,10 +159,3 @@ void *getAPI_Loging(String subtype, String param) {
         return nullptr;
     }
 }
-
-class fileDB {
-   private:
-   public:
-        fileDB() {
-    }
-};

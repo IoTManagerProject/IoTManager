@@ -85,12 +85,14 @@
         "label": "График1",
         "widget": "chart",
         "dateFormat": "HH:mm",
+        "maxCount": 255,
         "pointRadius": 0
     },
     {
         "name": "chart2",
         "label": "График2",
         "widget": "chart",
+        "maxCount": 255,
         "dateFormat": "HH:mm"
     },
     {
@@ -98,12 +100,14 @@
         "label": "График3",
         "widget": "chart",
         "dateFormat": "DD.MM.YYYY",
+        "maxCount": 255,
         "type": "bar"
     },
     {
         "name": "chart4",
         "label": "График4",
         "widget": "chart",
+        "maxCount": 255,
         "dateFormat": "DD.MM.YYYY"
     },
     {

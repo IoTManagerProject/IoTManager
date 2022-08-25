@@ -1,5 +1,6 @@
 #include "Main.h"
 #include <time.h>
+#include "classes/IoTDB.h"
 
 IoTScenario iotScen;  // объект управления сценарием
 
@@ -70,7 +71,20 @@ void setup() {
 
     // test
     Serial.println("-------test start--------");
-    Serial.println(strDateToUnix("25.08.2022"));
+    //=======проверка очереди из структур=================
+
+    myDB = new IoTDB;
+    QueueItems myItem;
+    myItem.myword = "word1";
+    myDB->push(myItem);
+    myItem.myword = "word2";
+    myDB->push(myItem);
+    myItem.myword = "word3";
+    myDB->push(myItem);
+    Serial.println(myDB->front().myword);
+    Serial.println(myDB->front().myword);
+    Serial.println(myDB->front().myword);
+
     Serial.println("--------test end---------");
 
     // симуляция добавления внешних событий
