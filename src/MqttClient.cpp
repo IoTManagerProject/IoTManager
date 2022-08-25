@@ -327,12 +327,12 @@ void sendAllFilesToMQTT() {
         String id = selectToMarker(fname, "-");
         unsigned long fileUnixTime = deleteBeforeDelimiter(deleteToMarkerLast(fname, "."), "-").toInt() + START_DATETIME;
 
-        SerialPrint("I", "Loging", "found file '" + String(fileUnixTime) + "'");
+        SerialPrint("I", "Loging", "found file '" + fname + "'");
 
         if (isItemExist(id)) {
             //выбираем только те файлы которые входят в выбранные сутки
             if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
-                SerialPrint("I", "Loging", "file sent to MQTT: '" + fname + "'");
+                Serial.print(", matched!");
                 createOneSingleJson(json_array, "/logs/" + fname);
             }
         } else {
@@ -342,6 +342,9 @@ void sendAllFilesToMQTT() {
     }
     Serial.println("final: ");
     Serial.println(json_array);
+    //json_array = "{\"status\":[" + json_array + "]}";
+    //json_array.replace("},]}", "}]}");
+    //publishChart(topic, json_array);
 }
 
 void createOneSingleJson(String& json_array, String file) {
@@ -374,10 +377,6 @@ void createOneSingleJson(String& json_array, String file) {
     Serial.println(json_array);
 
     configFile.close();
-
-    // json_array = "{\"status\":[" + json_array + "]}";
-    // json_array.replace("},]}", "}]}");
-    // publishChart(topic, json_array);
 }
 
 const String getStateStr(int e) {
