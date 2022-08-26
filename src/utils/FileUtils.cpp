@@ -171,7 +171,7 @@ size_t countLines(const String filename) {
     size_t psn;
     do {
         cnt++;
-        file.readStringUntil('\n');
+        file.readStringUntil('\r\n');
         psn = file.position();
     } while (psn < size);
     file.close();
@@ -186,7 +186,7 @@ void removeFile(const String& filename) {
             SerialPrint("I", "Files", "remove " + path);
         }
     } else {
-        SerialPrint("E", "Files", "not exist" + path);
+        SerialPrint("E", "Files", "not exist " + path);
     }
 }
 

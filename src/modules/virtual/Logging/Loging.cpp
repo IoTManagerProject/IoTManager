@@ -60,8 +60,8 @@ class Loging : public IoTItem {
         }
 
         //считаем количество строк
-        lines = countLines(filePath);
-        SerialPrint("i", F("Loging"), "'" + id + "' " + String(lines) + " lines found in file");
+        //lines = countLines(filePath);
+        //SerialPrint("i", F("Loging"), "'" + id + "' " + String(lines) + " lines found in file");
 
         //если количество строк до заданной величины
         if (lines <= points) {
