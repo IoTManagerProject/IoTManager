@@ -43,25 +43,23 @@ class Loging : public IoTItem {
             return;
         }
 
-        int lines = 0;
-        String filePath = "";
-
         // regEvent(value, F("Loging"));
 
         String logData = String(unixTimeShort) + " " + value;
 
         //прочитаем путь к файлу последнего сохранения
-        filePath = readDataDB(id);
+        String filePath = readDataDB(id);
+
         //если данные о файле отсутствуют, создадим новый
         if (filePath == "failed") {
             SerialPrint("E", F("Loging"), "'" + id + "' file path not found");
             createNewFileWithData(logData);
-            return;
+            //return;
         }
 
         //считаем количество строк
-        //lines = countLines(filePath);
-        //SerialPrint("i", F("Loging"), "'" + id + "' " + String(lines) + " lines found in file");
+        int lines = countLines(filePath);
+        SerialPrint("i", F("Loging"), "'" + id + "' " + String(lines) + " lines found in file");
 
         //если количество строк до заданной величины
         if (lines <= points) {
