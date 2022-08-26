@@ -196,7 +196,7 @@ void cleanDirectory(String path) {
     while (dir.next()) {
         String fname = dir.fileName();
         removeFile(path + "/" + fname);
-        SerialPrint("I", "Files", fname + " deleted");
+        SerialPrint("I", "Files", path + "/" + fname + " => deleted");
     }
     onFlashWrite();
 }

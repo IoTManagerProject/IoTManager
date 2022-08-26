@@ -54,7 +54,7 @@ class Loging : public IoTItem {
         if (filePath == "failed") {
             SerialPrint("E", F("Loging"), "'" + id + "' file path not found");
             createNewFileWithData(logData);
-            //return;
+            return;
         }
 
         //считаем количество строк
