@@ -43,10 +43,6 @@ void standWebServerInit() {
         HTTP.send(200, "text/plain", "ok");
     });
 
-    HTTP.on("/log.txt", HTTP_GET, []() {
-        HTTP.send(200, "text/plain", readFile(F("log.txt"), 20000));
-    });
-
     //  Добавляем функцию Update для перезаписи прошивки по WiFi при 1М(256K FileFS) и выше
     //  httpUpdater.setup(&HTTP);
     //  Запускаем HTTP сервер
@@ -130,6 +126,8 @@ String getContentType(String filename) {
         return "text/html";
     else if (filename.endsWith(".html"))
         return "text/html";
+    else if (filename.endsWith(".txt"))
+        return "text/plain";
     else if (filename.endsWith(".json"))
         return "application/json";
     else if (filename.endsWith(".css"))

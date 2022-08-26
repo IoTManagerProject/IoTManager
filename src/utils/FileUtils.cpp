@@ -201,8 +201,19 @@ void cleanDirectory(String path) {
     onFlashWrite();
 }
 
+void saveDataDB(String id, String data) {
+    String path = "/db/" + id + ".txt";
+    removeFile(path);
+    addFileLn(path, data);
+}
+
+String readDataDB(String id) {
+    String path = "/db/" + id + ".txt";
+    return readFile(path, 2000);
+}
+
 //счетчик количества записей на флешь за сеанс
 void onFlashWrite() {
     flashWriteNumber++;
-    SerialPrint(F("->"), F("FS"), F("write data on flash"));
+    // SerialPrint(F("->"), F("FS"), F("write data on flash"));
 }

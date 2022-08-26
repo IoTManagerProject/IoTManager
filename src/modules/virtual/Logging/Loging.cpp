@@ -2,15 +2,12 @@
 #include "classes/IoTItem.h"
 #include "NTP.h"
 
-//раскомментировать если нужна цельная выгрузка графиков
-#define SOLID_UPLOADING
-
 class Loging : public IoTItem {
    private:
     String logid;
     String id;
     int points;
-    String fileName = "";
+
     int interval;
     bool firstTime = true;
 
@@ -27,58 +24,76 @@ class Loging : public IoTItem {
     }
 
     void doByInterval() {
+        //если объект логгирования не был создан
         if (!isItemExist(logid)) {
-            SerialPrint("E", "Loging " + id, F("logging value not exist"));
+            SerialPrint("E", F("Loging"), "'" + id + "' loging object not exist");
             return;
         }
-        String value = getItemValue(logid);
-        int lines = 0;
-        //если задано не правильное logid величины для логгирования
-        if (value == "") {
-            SerialPrint("E", "Loging " + id, F("logging value empty"));
-            return;
-        } else {
-            //если время было получено из интернета
-            if (isTimeSynch) {
-                // regEvent(value, "Loging");
-                String logData = String(unixTimeShort) + " " + value;
-                //если зашли сюда первый раз то создаем файл с именем id-timestamp
-                if (firstTime) {
-                    firstTime = false;
-                    createFileWithIdDatatimeName(logData);
-                    //если 2 ой раз и последующие разы
-                } else {
-                    lines = countLines(fileName);
-                    if (lines <= points) {
-                        addFileLn(fileName, logData);
-                    } else {
-                        createFileWithIdDatatimeName(logData);
-                    }
-                }
-                SerialPrint("i", "Loging " + id, "loging in file (" + String(lines) + ") http://" + WiFi.localIP().toString() + fileName);
 
-            } else {
-                SerialPrint("E", "Loging " + id, F("Сant loging - time not synchronized"));
-            }
+        String value = getItemValue(logid);
+        //если значение логгирования пустое
+        if (value == "") {
+            SerialPrint("E", F("Loging"), "'" + id + "' loging value is empty");
+            return;
+        }
+
+        //если время не было получено из интернета
+        if (!isTimeSynch) {
+            SerialPrint("E", F("Loging"), "'" + id + "' Сant loging - time not synchronized");
+            return;
+        }
+
+        int lines = 0;
+        String filePath = "";
+
+        // regEvent(value, F("Loging"));
+
+        String logData = String(unixTimeShort) + " " + value;
+
+        //прочитаем путь к файлу последнего сохранения
+        filePath = readDataDB(id);
+        //если данные о файле отсутствуют, создадим новый
+        if (filePath == "failed") {
+            SerialPrint("E", F("Loging"), "'" + id + "' file path not found");
+            createNewFileWithData(logData);
+            return;
+        }
+
+        //считаем количество строк
+        lines = countLines(filePath);
+        SerialPrint("i", F("Loging"), "'" + id + "' " + String(lines) + " lines found in file");
+
+        //если количество строк до заданной величины
+        if (lines <= points) {
+            //просто добавим в существующий файл новые данные
+            addNewDataToExistingFile(filePath, logData);
+            //если больше создадим следующий файл
+        } else {
+            createNewFileWithData(logData);
         }
     }
 
-    void createFileWithIdDatatimeName(String &logData) {
-        fileName = "/logs/" + id + "-" + String(unixTimeShort) + ".txt";
-        addFileLn(fileName, logData);
-        SerialPrint("i", "Loging " + id, "file created http://" + WiFi.localIP().toString() + fileName);
+    void createNewFileWithData(String &logData) {
+        String filePath = "/lg/" + id + "-" + String(unixTimeShort) + ".txt";  //создадим путь
+        addFileLn(filePath, logData);                                          //запишем файл и данные в него
+        saveDataDB(id, filePath);                                              //запишем путь к файлу в базу данных
+        SerialPrint("i", F("Loging"), "'" + id + "' file created http://" + WiFi.localIP().toString() + filePath);
+    }
+
+    void addNewDataToExistingFile(String &filePath, String &logData) {
+        addFileLn(filePath, logData);
+        SerialPrint("i", F("Loging"), "'" + id + "' loging in file http://" + WiFi.localIP().toString() + filePath);
     }
 
     void sendChart() {
-        SerialPrint("I", "Loging " + id, "----------------------------");
+        SerialPrint("i", F("Loging"), "'" + id + "'----------------------------");
         String reqUnixTimeStr = "26.08.2022";  //нужно получить эту дату из окна ввода под графиком.
         unsigned long reqUnixTime = strDateToUnix(reqUnixTimeStr);
 
-        String directory = "logs";
-        SerialPrint("I", "Loging " + id, "in directory '" + directory + "' files:");
+        String directory = "lg";
+        SerialPrint("i", F("Loging"), "'" + id + "' in directory '" + directory + "' files:");
         auto dir = FileFS.openDir(directory);
         String oneSingleJson;
-        int maxCount = 0;
         int i = 0;
 
         while (dir.next()) {
@@ -90,54 +105,17 @@ class Loging : public IoTItem {
                 if (idInFileName == id) {
                     //выбираем только те файлы которые входят в выбранные пользователем сутки
                     if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
-                        SerialPrint("I", "Loging " + id, "matching file found '" + fname + "'");
-#ifdef SOLID_UPLOADING
-                        //если активированна выгрузка целеком
-                        createOneSingleJson(oneSingleJson, "/logs/" + fname, maxCount, i);
-#else
+                        SerialPrint("i", F("Loging"), "'" + id + "' matching file found '" + fname + "'");
                         //выгрузка по частям, по одному файлу
-                        publishJsonPartly("/logs/" + fname, calculateMaxCount(), i);
-#endif
+                        publishJsonPartly("/lg/" + fname, calculateMaxCount(), i);
                     }
                 }
             } else {
-                SerialPrint("i", "Loging " + id, "file '" + fname + "' not used, deleted");
+                SerialPrint("i", F("Loging"), "'" + id + "' file '" + fname + "' not used, deleted");
                 removeFile(directory + "/" + fname);
             }
         }
-#ifdef SOLID_UPLOADING
-        publishJson(oneSingleJson, maxCount);
-#endif
-        SerialPrint("I", "Loging " + id, "--------------'" + String(i) + "'--------------");
-    }
-
-    void createOneSingleJson(String &oneSingleJson, String file, int &maxCount, int &i) {
-        File configFile = FileFS.open(file, "r");
-        if (!configFile) {
-            return;
-        }
-        configFile.seek(0, SeekSet);
-        String buf = "{}";
-        String unix_time;
-        String value;
-        unsigned int psn;
-        unsigned int sz = configFile.size();
-        do {
-            maxCount++;
-            i++;
-            psn = configFile.position();
-            String line = configFile.readStringUntil('\n');
-            unix_time = selectToMarker(line, " ");
-            jsonWriteInt(buf, "x", unix_time.toInt() + START_DATETIME);
-            value = deleteBeforeDelimiter(line, " ");
-            jsonWriteFloat(buf, "y1", value.toFloat());
-            if (unix_time != "" || value != "") {
-                oneSingleJson += buf + ",";
-            }
-
-        } while (psn < sz);
-
-        configFile.close();
+        SerialPrint("i", F("Loging"), "'" + id + "'--------------'" + String(i) + "'--------------");
     }
 
     void publishJsonPartly(String file, int maxCount, int &i) {
@@ -166,17 +144,16 @@ class Loging : public IoTItem {
         } while (psn < sz);
 
         configFile.close();
-
         publishJson(dividedJson, maxCount);
     }
 
     void publishJson(String &oneSingleJson, int &maxCount) {
         oneSingleJson = "{\"maxCount\":" + String(maxCount) + ",\"status\":[" + oneSingleJson + "]}";
         oneSingleJson.replace("},]}", "}]}");
-        // SerialPrint("i", "Loging " + id, "publish chart, maxCount: '" + String(maxCount) + "'");
         publishChart(id, oneSingleJson);
     }
 
+    //примерный подсчет максимального количества точек
     int calculateMaxCount() {
         return 86400 / interval;
     }
@@ -189,3 +166,33 @@ void *getAPI_Loging(String subtype, String param) {
         return nullptr;
     }
 }
+
+//то что не пригодилось но пригодится потом может быть
+// void createOneSingleJson(String &oneSingleJson, String file, int &maxCount, int &i) {
+//         File configFile = FileFS.open(file, "r");
+//         if (!configFile) {
+//             return;
+//         }
+//         configFile.seek(0, SeekSet);
+//         String buf = "{}";
+//         String unix_time;
+//         String value;
+//         unsigned int psn;
+//         unsigned int sz = configFile.size();
+//         do {
+//             maxCount++;
+//             i++;
+//             psn = configFile.position();
+//             String line = configFile.readStringUntil('\n');
+//             unix_time = selectToMarker(line, " ");
+//             jsonWriteInt(buf, "x", unix_time.toInt() + START_DATETIME);
+//             value = deleteBeforeDelimiter(line, " ");
+//             jsonWriteFloat(buf, "y1", value.toFloat());
+//             if (unix_time != "" || value != "") {
+//                 oneSingleJson += buf + ",";
+//             }
+//
+//         } while (psn < sz);
+//
+//         configFile.close();
+//     }

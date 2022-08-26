@@ -135,7 +135,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
             //команда очистки всех логов esp//
             if (headerStr == "/clean|") {
-                cleanDirectory("logs");
+                cleanDirectory("lg");
+                cleanDirectory("db");
             }
 
             //Прием сообщений cotrol ==============================================================================

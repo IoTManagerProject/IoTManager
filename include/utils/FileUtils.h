@@ -13,4 +13,6 @@ extern bool cutFile(const String& src, const String& dst);
 extern size_t countLines(const String filename);
 void removeFile(const String& filename);
 void cleanDirectory(String path);
+void saveDataDB(String id, String data);
+String readDataDB(String id);
 extern void onFlashWrite();

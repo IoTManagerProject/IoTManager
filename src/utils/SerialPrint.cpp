@@ -6,6 +6,7 @@ void SerialPrint(String errorLevel, String module, String msg) {
 
     tosend = prettyMillis(millis());
 
+    // if (module == "Loging") {
     tosend = tosend + " [" + errorLevel + "] [" + module + "] " + msg;
     Serial.println(tosend);
 
@@ -14,4 +15,5 @@ void SerialPrint(String errorLevel, String module, String msg) {
             standWebSocket.broadcastTXT("/log|" + tosend);
         }
     }
+    //}
 }
