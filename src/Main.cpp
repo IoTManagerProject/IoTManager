@@ -73,17 +73,19 @@ void setup() {
     Serial.println("-------test start--------");
     //=======проверка очереди из структур=================
 
-    myDB = new IoTDB;
-    QueueItems myItem;
-    myItem.myword = "word1";
-    myDB->push(myItem);
-    myItem.myword = "word2";
-    myDB->push(myItem);
-    myItem.myword = "word3";
-    myDB->push(myItem);
-    Serial.println(myDB->front().myword);
-    Serial.println(myDB->front().myword);
-    Serial.println(myDB->front().myword);
+    // myDB = new IoTDB;
+    // QueueItems myItem;
+    // myItem.myword = "word1";
+    // myDB->push(myItem);
+    // myItem.myword = "word2";
+    // myDB->push(myItem);
+    // myItem.myword = "word3";
+    // myDB->push(myItem);
+    // Serial.println(myDB->front().myword);
+    // Serial.println(myDB->front().myword);
+    // Serial.println(myDB->front().myword);
+
+    Serial.println(FileList("lg"));
 
     Serial.println("--------test end---------");
 

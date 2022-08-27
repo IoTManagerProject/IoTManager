@@ -216,3 +216,48 @@ void onFlashWrite() {
     flashWriteNumber++;
     // SerialPrint(F("->"), F("FS"), F("write data on flash"));
 }
+
+// Создаем список файлов каталога, функции от Сергея Третьякова
+#if defined(ESP8266)
+String FileList(String path) {
+    Dir dir = FileFS.openDir(path);
+    path = String();
+    String output = "[";
+    while (dir.next()) {
+        File entry = dir.openFile("r");
+        if (output != "[") output += ',';
+        bool isDir = false;
+        output += "{\"type\":\"";
+        output += (isDir) ? "dir" : "file";
+        output += "\",\"name\":\"";
+        output += String(entry.name()).substring(1);
+        output += "\"}";
+        entry.close();
+    }
+    output += "]";
+    return output;
+}
+#else
+String FileList(String path) {
+    File root = FileFS.open(path);
+    path = String();
+
+    String output = "[";
+    if (root.isDirectory()) {
+        File file = root.openNextFile();
+        while (file) {
+            if (output != "[") {
+                output += ',';
+            }
+            output += "{\"type\":\"";
+            output += (file.isDirectory()) ? "dir" : "file";
+            output += "\",\"name\":\"";
+            output += String(file.path()).substring(1);
+            output += "\"}";
+            file = root.openNextFile();
+        }
+    }
+    output += "]";
+    return output;
+}
+#endif
