@@ -203,8 +203,7 @@ void cleanDirectory(String path) {
 
 void saveDataDB(String id, String data) {
     String path = "/db/" + id + ".txt";
-    removeFile(path);
-    addFileLn(path, data);
+    writeFile(path, data);
 }
 
 String readDataDB(String id) {

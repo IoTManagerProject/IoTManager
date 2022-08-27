@@ -50,6 +50,8 @@ class Loging : public IoTItem {
         //прочитаем путь к файлу последнего сохранения
         String filePath = readDataDB(id);
 
+        Serial.println("filePath " + filePath);
+
         //если данные о файле отсутствуют, создадим новый
         if (filePath == "failed") {
             SerialPrint("E", F("Loging"), "'" + id + "' file path not found");
@@ -85,11 +87,11 @@ class Loging : public IoTItem {
 
     void sendChart() {
         SerialPrint("i", F("Loging"), "'" + id + "'----------------------------");
-        String reqUnixTimeStr = "26.08.2022";  //нужно получить эту дату из окна ввода под графиком.
+        String reqUnixTimeStr = "27.08.2022";  //нужно получить эту дату из окна ввода под графиком.
         unsigned long reqUnixTime = strDateToUnix(reqUnixTimeStr);
 
         String directory = "lg";
-        SerialPrint("i", F("Loging"), "'" + id + "' in directory '" + directory + "' files:");
+        // SerialPrint("i", F("Loging"), "'" + id + "' in directory '" + directory + "' files:");
         auto dir = FileFS.openDir(directory);
         String oneSingleJson;
         int i = 0;
