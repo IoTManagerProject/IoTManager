@@ -86,8 +86,8 @@ class IoTScenario {
     void clearScenarioElements();
 
    public:
-    void loadScenario(String fileName);
-    void ExecScenario(String eventIdName);
+    void loadScenario(String fileName, String eventIdName);
+    void execScenario(String eventIdName);
 
     IoTScenario();
     ~IoTScenario();

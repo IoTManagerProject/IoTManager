@@ -77,7 +77,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 writeFileUint8tByFrames("scenario.json", payload, length, headerLenth, 256);
                 clearConfigure();
                 configure("/config.json");
-                iotScen.loadScenario("/scenario.json");
+                if (!SCENARIO_BLOCK_LOAD) iotScen.loadScenario("/scenario.json", "");
                 // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
                 IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
                 generateEvent("onStart", "");
