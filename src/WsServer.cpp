@@ -69,14 +69,16 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //========сохранение=======================================================//
             if (headerStr == "/gifnoc|") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
-                clearConfigure();
-                configure("/config.json");
+                //clearConfigure();
+                //configure("/config.json");
             }
             if (headerStr == "/tuoyal|") {
                 writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
             }
             if (headerStr == "/oiranecs|") {
                 writeFileUint8tByFrames("scenario.json", payload, length, headerLenth, 256);
+                clearConfigure();
+                configure("/config.json");
                 iotScen.loadScenario("/scenario.json");
                 // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
                 IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
