@@ -104,11 +104,11 @@ class Loging : public IoTItem {
                 //если id в имени файла совпадает с id данного экземпляра, пусть каждый экземпляр класса шлет только свое
                 if (idInFileName == id) {
                     //выбираем только те файлы которые входят в выбранные пользователем сутки
-                    if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
-                        SerialPrint("i", F("Loging"), "'" + id + "' matching file found '" + fname + "'");
-                        //выгрузка по частям, по одному файлу
-                        publishJsonPartly("/lg/" + fname, calculateMaxCount(), i);
-                    }
+                    // if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
+                    SerialPrint("i", F("Loging"), "'" + id + "' matching file found '" + fname + "'");
+                    //выгрузка по частям, по одному файлу
+                    publishJsonPartly("/lg/" + fname, calculateMaxCount(), i);
+                    //}
                 }
             } else {
                 SerialPrint("i", F("Loging"), "'" + id + "' file '" + fname + "' not used, deleted");
