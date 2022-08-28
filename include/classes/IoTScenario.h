@@ -45,16 +45,16 @@ class IoTScenario {
     /// identifierexpr
     ///   ::= identifier
     ///   ::= identifier '(' expression* ')'
-    ExprAST *ParseIdentifierExpr(String *IDNames, bool callFromCondition);
+    ExprAST *ParseIdentifierExpr(String *IDNames);
 
     /// numberexpr ::= number
     ExprAST *ParseNumberExpr();
 
     /// parenexpr ::= '(' expression ')'
-    ExprAST *ParseParenExpr(String *IDNames, bool callFromCondition);
+    ExprAST *ParseParenExpr();
 
     /// bracketsexpr ::= '{' expression '}'
-    ExprAST *ParseBracketsExpr(String *IDNames, bool callFromCondition);
+    ExprAST *ParseBracketsExpr();
 
     /// quotesexpr ::= '"' expression '"'
     ExprAST *ParseQuotesExpr();
@@ -66,16 +66,16 @@ class IoTScenario {
     ///   ::= identifierexpr
     ///   ::= numberexpr
     ///   ::= parenexpr
-    ExprAST *ParsePrimary(String *IDNames, bool callFromCondition);
+    ExprAST *ParsePrimary(String *IDNames);
 
     /// binoprhs
     ///   ::= ('+' primary)*
-    ExprAST *ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames, bool callFromCondition);
+    ExprAST *ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames);
 
     /// expression
     ///   ::= primary binoprhs
     ///
-    ExprAST *ParseExpression(String *IDNames, bool callFromCondition);
+    ExprAST *ParseExpression(String *IDNames);
 
     std::vector<ExprAST *> ScenarioElements;  // корневые элементы дерава
 
