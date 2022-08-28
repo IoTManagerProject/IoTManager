@@ -127,25 +127,25 @@ class BinaryExprAST : public ExprAST {
 
     IoTValue *exec() {
         if (isIotScenException) return nullptr;
-        String printStr = "";
+        // String printStr = "";
 
-        if (Op == tok_equal)
-            printStr = "==";
-        else if (Op == tok_notequal)
-            printStr = "!=";
-        else if (Op == tok_lesseq)
-            printStr = "<=";
-        else if (Op == tok_greateq)
-            printStr = ">=";
-        else
-            printStr = printStr + (char)Op;
+        // if (Op == tok_equal)
+        //     printStr = "==";
+        // else if (Op == tok_notequal)
+        //     printStr = "!=";
+        // else if (Op == tok_lesseq)
+        //     printStr = "<=";
+        // else if (Op == tok_greateq)
+        //     printStr = ">=";
+        // else
+        //     printStr = printStr + (char)Op;
 
         // Serial.printf("Call from  BinaryExprAST: %s\n", printStr.c_str());
 
         if (RHS == nullptr || LHS == nullptr) return nullptr;
 
         IoTValue *rhs = RHS->exec();  // получаем значение правого операнда для возможного использования в операции присваивания
-
+        
         if (Op == '=' && LHS->setValue(rhs)) {  // если установка значения не поддерживается, т.е. слева не переменная, то работаем по другим комбинациям далее
             return rhs;                         // иначе возвращаем присвоенное значение справа
         }
