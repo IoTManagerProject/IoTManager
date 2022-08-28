@@ -587,15 +587,12 @@ class BracketsExprAST : public ExprAST {
 //===----------------------------------------------------------------------===//
 
 char IoTScenario::getLastChar() {
-    char tmp = strFromFile->charAt(strIterator);
     strIterator++;
-    return tmp;
+    return strFromFile->charAt(strIterator - 1);
 }
 
 /// gettok - Возвращает следующий токен из стандартного потока ввода.
 int IoTScenario::gettok() {
-    if (strIterator == strFromFile->length()) return tok_eof;
-
     // Пропускаем пробелы.
     while (isspace(LastChar))
         LastChar = getLastChar();
@@ -628,8 +625,10 @@ int IoTScenario::gettok() {
     if (LastChar == '#') {
         // Комментарий до конца строки
         do LastChar = getLastChar();
-        while (LastChar != '\n' && LastChar != '\r');
-        return gettok();
+        while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
+
+        if (LastChar != EOF)
+            return gettok();
     }
 
     if (LastChar == '"') {  // "строка"
@@ -937,14 +936,14 @@ void IoTScenario::loadScenario(String fileName) {  // посимвольно с�
         jsonRead(strFromF, "scen", *strFromFile, true);
         myfile.close();
 
-        //Serial.println(*strFromFile);
+        // Serial.println(*strFromFile);
 
         if (strFromFile->length()) {
             getNextToken();
-            while (strIterator == strFromFile->length()) {
-                Serial.printf("-%c", LastChar);
+            while (strIterator < strFromFile->length() - 1) {
+                // Serial.printf("-%c", LastChar);
                 switch (CurTok) {
-                    case tok_eof: break;
+                    // case tok_eof:    return;
                     // case ';':        getNextToken(); break;  // игнорируем верхнеуровневые точки с запятой.
                     case tok_if: {
                         String IDNames = "";  // накопитель встречающихся идентификаторов в условии
