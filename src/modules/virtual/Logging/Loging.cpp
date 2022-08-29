@@ -7,6 +7,7 @@ class Loging : public IoTItem {
     String logid;
     String id;
     int points;
+    int keepdays;
 
     int interval;
     bool firstTime = true;
@@ -21,6 +22,7 @@ class Loging : public IoTItem {
             SerialPrint("E", F("Loging"), "'" + id + "' user set more points than allowed, value reset to 300");
         }
         jsonRead(parameters, F("int"), interval);
+        jsonRead(parameters, F("keepdays"), keepdays);
     }
 
     String getValue() {
@@ -124,6 +126,10 @@ class Loging : public IoTItem {
                             //выгрузка по частям, по одному файлу
                             publishJsonPartly("/lg/" + fname, calculateMaxCount(), i);
                             //}
+                            if (fileUnixTime < (unixTime - (keepdays * 86400))) {
+                                SerialPrint("i", F("Loging"), "'" + id + "' file '" + fname + "' too old, deleted");
+                                removeFile(directory + "/" + fname);
+                            }
                         }
                     } else {
                         SerialPrint("i", F("Loging"), "'" + id + "' file '" + fname + "' not used, deleted");
