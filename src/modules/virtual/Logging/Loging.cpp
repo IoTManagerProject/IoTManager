@@ -126,6 +126,7 @@ class Loging : public IoTItem {
                             //выгрузка по частям, по одному файлу
                             publishJsonPartly("/lg/" + fname, calculateMaxCount(), i);
                             //}
+                            //удаление старых файлов
                             if (fileUnixTime < (unixTime - (keepdays * 86400))) {
                                 SerialPrint("i", F("Loging"), "'" + id + "' file '" + fname + "' too old, deleted");
                                 removeFile(directory + "/" + fname);
