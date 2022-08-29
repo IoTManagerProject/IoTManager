@@ -1,7 +1,7 @@
 #pragma once
 
 //Версия прошивки
-#define FIRMWARE_VERSION 412
+#define FIRMWARE_VERSION 413
 
 #ifdef esp8266_4mb
 #define FIRMWARE_NAME "esp8266_4mb"
@@ -32,7 +32,7 @@
 #endif
 
 #ifdef esp32_4mb
-#define USE_LITTLEFS true
+#define USE_LITTLEFS false
 #endif
 
 #define START_DATETIME 1640995200  // 01.01.2022 00:00:00 константа для сокращения unix time
