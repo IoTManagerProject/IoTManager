@@ -587,8 +587,10 @@ class BracketsExprAST : public ExprAST {
 //===----------------------------------------------------------------------===//
 
 char IoTScenario::getLastChar() {
+    if (strIterator == strFromFile.length()) return 0;
+    char tmpCh = strFromFile.charAt(strIterator);
     strIterator++;
-    return strFromFile->charAt(strIterator - 1);
+    return tmpCh;
 }
 
 /// gettok - Возвращает следующий токен из стандартного потока ввода.
@@ -625,7 +627,7 @@ int IoTScenario::gettok() {
     if (LastChar == '#') {
         // Комментарий до конца строки
         do LastChar = getLastChar();
-        while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
+        while (LastChar != 0 && LastChar != '\n' && LastChar != '\r');
 
         if (LastChar != EOF)
             return gettok();
@@ -634,7 +636,7 @@ int IoTScenario::gettok() {
     if (LastChar == '"') {  // "строка"
         IdentifierStr = "";
         LastChar = getLastChar();
-        while (LastChar != '"') {
+        while (LastChar != '"' && LastChar != 0) {
             IdentifierStr += LastChar;
             LastChar = getLastChar();
         }
@@ -853,6 +855,7 @@ ExprAST *IoTScenario::ParseIfExpr(String *IDNames) {
 ExprAST *IoTScenario::ParsePrimary(String *IDNames) {
     switch (CurTok) {
         default:
+            Serial.println(CurTok);
             return Error("unknown token when expecting an expression");
         case tok_identifier: {
             if (IDNames) {
@@ -929,28 +932,31 @@ void IoTScenario::loadScenario(String fileName, String eventIdName) {  // пос
 
     File myfile = seekFile(fileName);
     if (myfile.available()) {
-        strFromFile = new String("");
+        //strFromFile = new String("");
 
-        *strFromFile = myfile.readString();
+        strFromFile = myfile.readString();
         //Serial.println(strFromF);
         //jsonRead(strFromF, "scen", *strFromFile, true);
         myfile.close();
 
-        strFromFile->replace("{\"scen\":\"", "");
-        //strFromFile->replace("\"}", "");
-        //Serial.println(*strFromFile);
+        strFromFile.replace("{\"scen\":\"", "");
+        strFromFile.replace("\\n\"}", "");
+        strFromFile.replace("\\n", "\n");
+        strFromFile.replace("\\\"", "\"");
+        //Serial.println(strFromFile);
 
-        if (strFromFile->length()) {
-            getNextToken();
-            while (strIterator < strFromFile->length() - 1) {
+        if (strFromFile.length()) {
+            
+            while (strIterator < strFromFile.length()) {
                 // Serial.printf("-%c", LastChar);
+                getNextToken();
                 switch (CurTok) {
                     // case tok_eof:    break;
                     case tok_if: {
                         String IDNames = "";  // накопитель встречающихся идентификаторов в условии
                         ExprAST *tmpAST = ParseIfExpr(&IDNames);
                         if (!tmpAST) break;
-
+                        
                         if (SCENARIO_BLOCK_LOAD) {
                             if (tmpAST->hasEventIdName(eventIdName)) {
                                 tmpAST->exec();
@@ -958,17 +964,17 @@ void IoTScenario::loadScenario(String fileName, String eventIdName) {  // пос
                             }
                             delete tmpAST;
                         } else ScenarioElements.push_back(tmpAST);
-                        
-                        break;
+                    break;
                     }
+                    
                     default:
-                        getNextToken();
-                        break;
+                        
+                    break;
                 }
             }
         }
 
-        delete strFromFile;
+        //delete strFromFile;
         strIterator = 0;
     } else {
         Error("Open file scenario error");

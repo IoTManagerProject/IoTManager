@@ -79,7 +79,7 @@ class IoTScenario {
 
     std::vector<ExprAST *> ScenarioElements;  // корневые элементы дерава
 
-    String *strFromFile;
+    String strFromFile;
     char getLastChar();
     int strIterator = 0;
 
