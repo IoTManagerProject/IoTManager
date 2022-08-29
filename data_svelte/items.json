@@ -17,7 +17,8 @@
         "int": 60,
         "logid": "tmp",
         "num": 1,
-        "points": 255
+        "points": 300,
+        "keepdays": 2
     },
     {
         "name": "2. Таймер",
