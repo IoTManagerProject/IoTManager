@@ -1,11 +1,10 @@
-#include <fstream>
-
 #pragma once
 #include "Global.h"
 #include "classes/IoTItem.h"
 #include "classes/IoTScenario.h"
 #include "utils/FileUtils.h"
 #include "NTP.h"
+
 
 bool isIotScenException;  // признак исключения и попытки прекратить выполнение сценария заранее
 
@@ -586,9 +585,9 @@ class BracketsExprAST : public ExprAST {
 // Lexer (Лексический анализатор)
 //===----------------------------------------------------------------------===//
 
-char IoTScenario::getLastChar() {
-    strIterator++;
-    return strFromFile->charAt(strIterator - 1);
+int IoTScenario::getLastChar() {
+    if (file) return file.read();
+    else return EOF;
 }
 
 /// gettok - Возвращает следующий токен из стандартного потока ввода.
@@ -598,9 +597,9 @@ int IoTScenario::gettok() {
         LastChar = getLastChar();
 
     if (isalpha(LastChar) || LastChar == '_') {  // идентификатор: [a-zA-Z][a-zA-Z0-9]*
-        IdentifierStr = LastChar;
+        IdentifierStr = (char)LastChar;
         while (isalnum((LastChar = getLastChar())) || LastChar == '_') {
-            IdentifierStr += LastChar;
+            IdentifierStr += (char)LastChar;
         }
 
         // Serial.printf("%s ", IdentifierStr.c_str());
@@ -614,7 +613,7 @@ int IoTScenario::gettok() {
     if (isdigit(LastChar)) {  // Число: [0-9.]+
         String NumStr;
         do {
-            NumStr += LastChar;
+            NumStr += (char)LastChar;
             LastChar = getLastChar();
         } while (isdigit(LastChar) || LastChar == '.');
 
@@ -634,8 +633,8 @@ int IoTScenario::gettok() {
     if (LastChar == '"') {  // "строка"
         IdentifierStr = "";
         LastChar = getLastChar();
-        while (LastChar != '"') {
-            IdentifierStr += LastChar;
+        while (LastChar != '"' && LastChar != EOF) {
+            IdentifierStr += (char)LastChar;
             LastChar = getLastChar();
         }
         LastChar = getLastChar();
@@ -644,8 +643,8 @@ int IoTScenario::gettok() {
     }
 
     // Проверка конца файла.
-    // if (LastChar == EOF)
-    //  return tok_eof;
+    if (LastChar == EOF)
+        return tok_eof;
 
     if (LastChar == '=') {
         LastChar = getLastChar();
@@ -682,7 +681,7 @@ int IoTScenario::gettok() {
         } else
             return '>';
     }
-
+    
     // В противном случае просто возвращаем символ как значение ASCII
     int ThisChar = LastChar;
     LastChar = getLastChar();
@@ -747,7 +746,7 @@ ExprAST *IoTScenario::ParseIdentifierExpr(String *IDNames) {
     if (CurTok != ')') {
         while (1) {
             ExprAST *Arg = ParseExpression(IDNames);
-            if (!Arg) return 0;
+            if (!Arg) return nullptr;
             Args.push_back(Arg);
 
             if (CurTok == ')') break;
@@ -778,7 +777,7 @@ ExprAST *IoTScenario::ParseNumberExpr() {
 ExprAST *IoTScenario::ParseParenExpr() {
     getNextToken();  // получаем (.
     ExprAST *V = ParseExpression(nullptr);
-    if (!V) return 0;
+    if (!V) return nullptr;
 
     if (CurTok != ')')
         return Error("expected ')'");
@@ -793,7 +792,7 @@ ExprAST *IoTScenario::ParseBracketsExpr() {
     if (CurTok != '}') {
         while (1) {
             ExprAST *Expr = ParseExpression(nullptr);
-            if (!Expr) return 0;
+            if (!Expr) return nullptr;
             bracketsList.push_back(Expr);
 
             if (CurTok != ';')
@@ -826,14 +825,14 @@ ExprAST *IoTScenario::ParseIfExpr(String *IDNames) {
 
     // условие.
     ExprAST *Cond = ParseExpression(IDNames);
-    if (!Cond) return 0;
+    if (!Cond) return nullptr;
 
     if (CurTok != tok_then)
         return Error("expected then");
     getNextToken();  // Получаем then
 
     ExprAST *Then = ParseExpression(nullptr);
-    if (!Then) return 0;
+    if (!Then) return nullptr;
 
     // if (CurTok != tok_else)
     //   return Error("expected else");
@@ -853,6 +852,7 @@ ExprAST *IoTScenario::ParseIfExpr(String *IDNames) {
 ExprAST *IoTScenario::ParsePrimary(String *IDNames) {
     switch (CurTok) {
         default:
+            Serial.println(CurTok);
             return Error("unknown token when expecting an expression");
         case tok_identifier: {
             if (IDNames) {
@@ -892,14 +892,14 @@ ExprAST *IoTScenario::ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames)
 
         // Разобрать первичное выражение после бинарного оператора
         ExprAST *RHS = ParsePrimary(IDNames);
-        if (!RHS) return 0;
+        if (!RHS) return nullptr;
 
         // Если BinOp связан с RHS меньшим приоритетом, чем оператор после RHS,
         // то берём часть вместе с RHS как LHS.
         int NextPrec = GetTokPrecedence();
         if (TokPrec < NextPrec) {
             RHS = ParseBinOpRHS(TokPrec + 1, RHS, IDNames);
-            if (RHS == 0) return 0;
+            if (RHS == nullptr) return nullptr;
         }
 
         // Собираем LHS/RHS.
@@ -912,68 +912,41 @@ ExprAST *IoTScenario::ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames)
 ///
 ExprAST *IoTScenario::ParseExpression(String *IDNames) {
     ExprAST *LHS = ParsePrimary(IDNames);
-    if (!LHS) return 0;
+    if (!LHS) return nullptr;
     return ParseBinOpRHS(0, LHS, IDNames);
 }
 
-void IoTScenario::clearScenarioElements() {  // удаляем все корневые элементы дерева AST
-    for (unsigned int i = 0; i < ScenarioElements.size(); i++) {
-        if (ScenarioElements[i]) delete ScenarioElements[i];
-    }
-    ScenarioElements.clear();
+
+void IoTScenario::loadScenario(String fileName) {  // подготавливаем контекст для чтения и интерпретации файла
+    if (file) file.close();
+    file = FileFS.open(fileName, "r");
 }
 
-void IoTScenario::loadScenario(String fileName) {  // посимвольно считываем и сразу интерпретируем сценарий в дерево AST
-    clearScenarioElements();                       // удаляем все корневые элементы перед загрузкой новых.
-    LastChar = ' ';
-
-    File myfile = seekFile(fileName);
-    if (myfile.available()) {
-        strFromFile = new String("");
-
-        String strFromF = myfile.readString();
-        Serial.println(strFromF);
-        jsonRead(strFromF, "scen", *strFromFile, true);
-        myfile.close();
-
-        // Serial.println(*strFromFile);
-
-        if (strFromFile->length()) {
-            getNextToken();
-            while (strIterator < strFromFile->length() - 1) {
-                // Serial.printf("-%c", LastChar);
-                switch (CurTok) {
-                    // case tok_eof:    return;
-                    // case ';':        getNextToken(); break;  // игнорируем верхнеуровневые точки с запятой.
-                    case tok_if: {
-                        String IDNames = "";  // накопитель встречающихся идентификаторов в условии
-                        ScenarioElements.push_back(ParseIfExpr(&IDNames));
-                        break;
-                    }
-                    default:
-                        getNextToken();
-                        break;
-                }
-            }
-        }
-
-        delete strFromFile;
-        strIterator = 0;
-    } else {
+void IoTScenario::exec(String eventIdName) {  // посимвольно считываем и сразу интерпретируем сценарий в дерево AST
+    if (!file) {
         Error("Open file scenario error");
+        return;
+    }
+    LastChar = 0;
+    CurTok = 0;
+    file.seek(0);
+    
+    while ((getNextToken()) != EOF) {
+       switch (CurTok) {
+            case tok_if: {
+                IDNames = "";  // сбрасываем накопитель встречающихся идентификаторов в условии
+                ExprAST *tmpAST = ParseIfExpr(&IDNames);
+                if (!tmpAST) break;
+
+                if (tmpAST->hasEventIdName(eventIdName)) {
+                    tmpAST->exec();
+                }
+                delete tmpAST;
+            break;}
+        }
     }
 }
 
-void IoTScenario::ExecScenario(String eventIdName) {  // запускаем поочереди все корневые элементы выражений в сценарии, ожидаемо - это IFы
-                                                      // eventIdName - ID элемента для которого выполняем сценарий, т.е. игнорируем любые проверки, если нет такого ID в условиях
-    isIotScenException = false;
-    // Serial.printf("Count root elements in scenario: %d\n", ScenarioElements.size());
-    for (unsigned int i = 0; i < ScenarioElements.size(); i++) {
-        if (ScenarioElements[i] && ScenarioElements[i]->hasEventIdName(eventIdName)) ScenarioElements[i]->exec();
-        // else Serial.printf("Call from  ExecScenario: Skip ifexec because %s not found\n", eventIdName.c_str());
-        if (isIotScenException) return;
-    }
-}
 
 IoTScenario::IoTScenario() {
     // Задаём стандартные бинарные операторы.
@@ -993,4 +966,6 @@ IoTScenario::IoTScenario() {
     BinopPrecedence['*'] = 28;  // highest.
 }
 
-IoTScenario::~IoTScenario() {}
+IoTScenario::~IoTScenario() {
+    if (file) file.close();
+}

@@ -52,7 +52,7 @@ void handleEvent() {
 
         //здесь нужно пропускать данное событие через условия сценариев
         //и если оно есть в условии сценария и совподает
-        iotScen.ExecScenario(selectToMarker(event, " "));
+        iotScen.exec(selectToMarker(event, " "));
 
         eventBuf = deleteBeforeDelimiter(eventBuf, ",");
     }
