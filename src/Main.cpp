@@ -62,10 +62,10 @@ void setup() {
 
     //запуск работы udp
     asyncUdpInit();
-
-    //загрузка сценария
-    if (!SCENARIO_BLOCK_LOAD) iotScen.loadScenario("/scenario.json", "");
     
+    //подготавливаем сценарии
+    iotScen.loadScenario("/scenario.txt");
+
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
     IoTItems.push_back((IoTItem *)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
     generateEvent("onStart", "");

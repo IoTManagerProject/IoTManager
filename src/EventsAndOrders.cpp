@@ -52,9 +52,7 @@ void handleEvent() {
 
         //здесь нужно пропускать данное событие через условия сценариев
         //и если оно есть в условии сценария и совподает
-        String tmpStr = selectToMarker(event, " ");
-        if (SCENARIO_BLOCK_LOAD) iotScen.loadScenario("/scenario.json", tmpStr);
-        else iotScen.execScenario(tmpStr);
+        iotScen.exec(selectToMarker(event, " "));
 
         eventBuf = deleteBeforeDelimiter(eventBuf, ",");
     }

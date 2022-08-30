@@ -18,7 +18,7 @@ class IoTScenario {
 
     String IdentifierStr;  // Заполняется, если tok_identifier
     float NumVal;          // Заполняется, если tok_number
-    char LastChar = ' ';
+    int LastChar;
 
     /// gettok - Возвращает следующий токен из стандартного потока ввода.
     int gettok();
@@ -32,6 +32,7 @@ class IoTScenario {
     /// лексического анализатора и обновляет CurTok.
     int CurTok;
     int getNextToken();
+    String IDNames;     // накопитель встречающихся идентификаторов в условии
 
     /// BinopPrecedence - Содержит приоритеты для бинарных операторов
     std::map<signed char, int> BinopPrecedence;
@@ -77,17 +78,12 @@ class IoTScenario {
     ///
     ExprAST *ParseExpression(String *IDNames);
 
-    std::vector<ExprAST *> ScenarioElements;  // корневые элементы дерава
-
-    String strFromFile;
-    char getLastChar();
-    int strIterator = 0;
-
-    void clearScenarioElements();
+    int getLastChar();
+    fs::File file;
 
    public:
-    void loadScenario(String fileName, String eventIdName);
-    void execScenario(String eventIdName);
+    void loadScenario(String fileName);
+    void exec(String eventIdName);
 
     IoTScenario();
     ~IoTScenario();

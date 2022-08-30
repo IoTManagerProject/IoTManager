@@ -3,9 +3,6 @@
 //Версия прошивки
 #define FIRMWARE_VERSION 413
 
-//Поблочная загрузка сценариев =1 грузим блоками, =0 грузим и держим в памяти весь сценарий
-#define SCENARIO_BLOCK_LOAD 1
-
 #ifdef esp8266_4mb
 #define FIRMWARE_NAME "esp8266_4mb"
 #endif
