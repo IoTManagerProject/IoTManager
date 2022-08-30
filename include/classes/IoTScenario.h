@@ -19,6 +19,7 @@ class IoTScenario {
     String IdentifierStr;  // Заполняется, если tok_identifier
     float NumVal;          // Заполняется, если tok_number
     int LastChar;
+    int curLine;
 
     /// gettok - Возвращает следующий токен из стандартного потока ввода.
     int gettok();

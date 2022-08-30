@@ -467,7 +467,7 @@ class SysCallExprAST : public ExprAST {
     }
 
     IoTValue *exec() {
-        Serial.printf("Call from  SysCallExprAST exec %d\n", operation);
+        //Serial.printf("Call from  SysCallExprAST exec %d\n", operation);
 
         if (isIotScenException) return nullptr;  // если прерывание, то сразу выходим
 
@@ -586,8 +586,11 @@ class BracketsExprAST : public ExprAST {
 //===----------------------------------------------------------------------===//
 
 int IoTScenario::getLastChar() {
-    if (file) return file.read();
-    else return EOF;
+    if (file) {
+        LastChar = file.read();
+        if (LastChar == 10) curLine++;
+        return LastChar;
+    } else return EOF;
 }
 
 /// gettok - Возвращает следующий токен из стандартного потока ввода.
@@ -712,7 +715,7 @@ int IoTScenario::GetTokPrecedence() {
 
 /// Error* - Это небольшие вспомогательные функции для обработки ошибок.
 ExprAST *IoTScenario::Error(const char *Str) {
-    Serial.printf("Error: %s\n", Str);
+    Serial.printf("Scenario error in line %d: %s\n", curLine-1, Str);
     return nullptr;
 }
 
@@ -781,7 +784,7 @@ ExprAST *IoTScenario::ParseParenExpr() {
 
     if (CurTok != ')')
         return Error("expected ')'");
-    getNextToken();  // получаем ).
+    //getNextToken();  // получаем ).
     return V;
 }
 
@@ -807,7 +810,7 @@ ExprAST *IoTScenario::ParseBracketsExpr() {
         }
     }
 
-    getNextToken();  // получаем }.
+    //getNextToken();  // получаем }.
     return new BracketsExprAST(bracketsList);
 }
 
@@ -930,13 +933,17 @@ void IoTScenario::exec(String eventIdName) {  // посимвольно счит
     LastChar = 0;
     CurTok = 0;
     file.seek(0);
+    curLine = 1;
     
     while ((getNextToken()) != EOF) {
        switch (CurTok) {
             case tok_if: {
                 IDNames = "";  // сбрасываем накопитель встречающихся идентификаторов в условии
                 ExprAST *tmpAST = ParseIfExpr(&IDNames);
-                if (!tmpAST) break;
+                if (!tmpAST) {
+                    Error("IF Expr wrong.");
+                    break;
+                }
 
                 if (tmpAST->hasEventIdName(eventIdName)) {
                     tmpAST->exec();
