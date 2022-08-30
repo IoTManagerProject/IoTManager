@@ -7,6 +7,7 @@ class Loging : public IoTItem {
     String logid;
     String id;
     int points;
+    int keepdays;
 
     int interval;
     bool firstTime = true;
@@ -16,7 +17,12 @@ class Loging : public IoTItem {
         jsonRead(parameters, F("logid"), logid);
         jsonRead(parameters, F("id"), id);
         jsonRead(parameters, F("points"), points);
+        if (points >= 300) {
+            points = 300;
+            SerialPrint("E", F("Loging"), "'" + id + "' user set more points than allowed, value reset to 300");
+        }
         jsonRead(parameters, F("int"), interval);
+        jsonRead(parameters, F("keepdays"), keepdays);
     }
 
     String getValue() {
@@ -50,10 +56,10 @@ class Loging : public IoTItem {
         //прочитаем путь к файлу последнего сохранения
         String filePath = readDataDB(id);
 
-        Serial.println("filePath " + filePath);
+        // Serial.println("filePath " + filePath);
 
         //если данные о файле отсутствуют, создадим новый
-        if (filePath == "failed") {
+        if (filePath == "failed" || filePath == "") {
             SerialPrint("E", F("Loging"), "'" + id + "' file path not found");
             createNewFileWithData(logData);
             return;
@@ -74,15 +80,15 @@ class Loging : public IoTItem {
     }
 
     void createNewFileWithData(String &logData) {
-        String filePath = "/lg/" + id + "-" + String(unixTimeShort) + ".txt";  //создадим путь
-        addFileLn(filePath, logData);                                          //запишем файл и данные в него
-        saveDataDB(id, filePath);                                              //запишем путь к файлу в базу данных
-        SerialPrint("i", F("Loging"), "'" + id + "' file created http://" + WiFi.localIP().toString() + filePath);
+        String path = "/lg/" + id + "-" + String(unixTimeShort) + ".txt";  //создадим путь
+        addFileLn(path, logData);                                          //запишем файл и данные в него
+        saveDataDB(id, path);                                              //запишем путь к файлу в базу данных
+        SerialPrint("i", F("Loging"), "'" + id + "' file created http://" + WiFi.localIP().toString() + path);
     }
 
-    void addNewDataToExistingFile(String &filePath, String &logData) {
-        addFileLn(filePath, logData);
-        SerialPrint("i", F("Loging"), "'" + id + "' loging in file http://" + WiFi.localIP().toString() + filePath);
+    void addNewDataToExistingFile(String &path, String &logData) {
+        addFileLn(path, logData);
+        SerialPrint("i", F("Loging"), "'" + id + "' loging in file http://" + WiFi.localIP().toString() + path);
     }
 
     void sendChart() {
@@ -90,109 +96,132 @@ class Loging : public IoTItem {
         String reqUnixTimeStr = "27.08.2022";  //нужно получить эту дату из окна ввода под графиком.
         unsigned long reqUnixTime = strDateToUnix(reqUnixTimeStr);
 
-        String directory = "lg";
-        // SerialPrint("i", F("Loging"), "'" + id + "' in directory '" + directory + "' files:");
-        auto dir = FileFS.openDir(directory);
         String oneSingleJson;
         int i = 0;
-
+#if defined(ESP8266)
+        String directory = "lg";
+        auto dir = FileFS.openDir(directory);
         while (dir.next()) {
             String fname = dir.fileName();
-            String idInFileName = selectToMarker(fname, "-");
-            unsigned long fileUnixTime = deleteBeforeDelimiter(deleteToMarkerLast(fname, "."), "-").toInt() + START_DATETIME;
-            if (isItemExist(id)) {
-                //если id в имени файла совпадает с id данного экземпляра, пусть каждый экземпляр класса шлет только свое
-                if (idInFileName == id) {
-                    //выбираем только те файлы которые входят в выбранные пользователем сутки
-                    if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
-                        SerialPrint("i", F("Loging"), "'" + id + "' matching file found '" + fname + "'");
-                        //выгрузка по частям, по одному файлу
-                        publishJsonPartly("/lg/" + fname, calculateMaxCount(), i);
+#endif
+#if defined(ESP32)
+            String directory = "/lg";
+            File root = FileFS.open(directory);
+            directory = String();
+            if (root.isDirectory()) {
+                File file = root.openNextFile();
+                while (file) {
+                    String fname = file.name();
+                    fname = selectToMarkerLast(fname, "/");
+                    file = root.openNextFile();
+#endif
+                    String idInFileName = selectToMarker(fname, "-");
+                    unsigned long fileUnixTime = deleteBeforeDelimiter(deleteToMarkerLast(fname, "."), "-").toInt() + START_DATETIME;
+                    if (isItemExist(id)) {
+                        //если id в имени файла совпадает с id данного экземпляра, пусть каждый экземпляр класса шлет только свое
+                        if (idInFileName == id) {
+                            //выбираем только те файлы которые входят в выбранные пользователем сутки
+                            // if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
+                            SerialPrint("i", F("Loging"), "'" + id + "' matching file found '" + fname + "'");
+                            //выгрузка по частям, по одному файлу
+                            publishJsonPartly("/lg/" + fname, calculateMaxCount(), i);
+                            //}
+                            //удаление старых файлов
+                            if ((fileUnixTime + (points * interval)) < (unixTime - (keepdays * 86400))) {
+                                SerialPrint("i", F("Loging"), "'" + id + "' file '" + fname + "' too old, deleted");
+                                removeFile(directory + "/" + fname);
+                            }
+                        }
+                    } else {
+                        SerialPrint("i", F("Loging"), "'" + id + "' file '" + fname + "' not used, deleted");
+                        removeFile(directory + "/" + fname);
                     }
                 }
-            } else {
-                SerialPrint("i", F("Loging"), "'" + id + "' file '" + fname + "' not used, deleted");
-                removeFile(directory + "/" + fname);
+#if defined(ESP32)
+            }
+#endif
+
+            SerialPrint("i", F("Loging"), "'" + id + "'--------------'" + String(i) + "'--------------");
+        }
+
+        void publishJsonPartly(String file, int maxCount, int &i) {
+            File configFile = FileFS.open(file, "r");
+            if (!configFile) {
+                SerialPrint("E", F("Loging"), "'" + id + "' open file error");
+                return;
+            }
+            configFile.seek(0, SeekSet);
+            String buf = "{}";
+            String dividedJson;
+            String unix_time;
+            String value;
+            unsigned int psn;
+            unsigned int sz = configFile.size();
+            do {
+                i++;
+                psn = configFile.position();
+                String line = configFile.readStringUntil('\n');
+                unix_time = selectToMarker(line, " ");
+                jsonWriteInt(buf, "x", unix_time.toInt() + START_DATETIME);
+                value = deleteBeforeDelimiter(line, " ");
+                jsonWriteFloat(buf, "y1", value.toFloat());
+                if (unix_time != "" || value != "") {
+                    dividedJson += buf + ",";
+                }
+            } while (psn < sz);
+
+            configFile.close();
+            publishJson(dividedJson, maxCount);
+        }
+
+        void publishJson(String & oneSingleJson, int &maxCount) {
+            oneSingleJson = "{\"maxCount\":" + String(maxCount) + ",\"status\":[" + oneSingleJson + "]}";
+            oneSingleJson.replace("},]}", "}]}");
+            if (!publishChart(id, oneSingleJson)) {
+                SerialPrint("E", F("Loging"), "'" + id + "' mqtt publish error");
             }
         }
-        SerialPrint("i", F("Loging"), "'" + id + "'--------------'" + String(i) + "'--------------");
-    }
 
-    void publishJsonPartly(String file, int maxCount, int &i) {
-        File configFile = FileFS.open(file, "r");
-        if (!configFile) {
-            return;
+        //примерный подсчет максимального количества точек
+        int calculateMaxCount() {
+            return 86400 / interval;
         }
-        configFile.seek(0, SeekSet);
-        String buf = "{}";
-        String dividedJson;
-        String unix_time;
-        String value;
-        unsigned int psn;
-        unsigned int sz = configFile.size();
-        do {
-            i++;
-            psn = configFile.position();
-            String line = configFile.readStringUntil('\n');
-            unix_time = selectToMarker(line, " ");
-            jsonWriteInt(buf, "x", unix_time.toInt() + START_DATETIME);
-            value = deleteBeforeDelimiter(line, " ");
-            jsonWriteFloat(buf, "y1", value.toFloat());
-            if (unix_time != "" || value != "") {
-                dividedJson += buf + ",";
-            }
-        } while (psn < sz);
+    };
 
-        configFile.close();
-        publishJson(dividedJson, maxCount);
+    void *getAPI_Loging(String subtype, String param) {
+        if (subtype == F("Loging")) {
+            return new Loging(param);
+        } else {
+            return nullptr;
+        }
     }
 
-    void publishJson(String &oneSingleJson, int &maxCount) {
-        oneSingleJson = "{\"maxCount\":" + String(maxCount) + ",\"status\":[" + oneSingleJson + "]}";
-        oneSingleJson.replace("},]}", "}]}");
-        publishChart(id, oneSingleJson);
-    }
-
-    //примерный подсчет максимального количества точек
-    int calculateMaxCount() {
-        return 86400 / interval;
-    }
-};
-
-void *getAPI_Loging(String subtype, String param) {
-    if (subtype == F("Loging")) {
-        return new Loging(param);
-    } else {
-        return nullptr;
-    }
-}
-
-//то что не пригодилось но пригодится потом может быть
-// void createOneSingleJson(String &oneSingleJson, String file, int &maxCount, int &i) {
-//         File configFile = FileFS.open(file, "r");
-//         if (!configFile) {
-//             return;
-//         }
-//         configFile.seek(0, SeekSet);
-//         String buf = "{}";
-//         String unix_time;
-//         String value;
-//         unsigned int psn;
-//         unsigned int sz = configFile.size();
-//         do {
-//             maxCount++;
-//             i++;
-//             psn = configFile.position();
-//             String line = configFile.readStringUntil('\n');
-//             unix_time = selectToMarker(line, " ");
-//             jsonWriteInt(buf, "x", unix_time.toInt() + START_DATETIME);
-//             value = deleteBeforeDelimiter(line, " ");
-//             jsonWriteFloat(buf, "y1", value.toFloat());
-//             if (unix_time != "" || value != "") {
-//                 oneSingleJson += buf + ",";
-//             }
-//
-//         } while (psn < sz);
-//
-//         configFile.close();
-//     }
+    //то что не пригодилось но пригодится потом может быть
+    // void createOneSingleJson(String &oneSingleJson, String file, int &maxCount, int &i) {
+    //         File configFile = FileFS.open(file, "r");
+    //         if (!configFile) {
+    //             return;
+    //         }
+    //         configFile.seek(0, SeekSet);
+    //         String buf = "{}";
+    //         String unix_time;
+    //         String value;
+    //         unsigned int psn;
+    //         unsigned int sz = configFile.size();
+    //         do {
+    //             maxCount++;
+    //             i++;
+    //             psn = configFile.position();
+    //             String line = configFile.readStringUntil('\n');
+    //             unix_time = selectToMarker(line, " ");
+    //             jsonWriteInt(buf, "x", unix_time.toInt() + START_DATETIME);
+    //             value = deleteBeforeDelimiter(line, " ");
+    //             jsonWriteFloat(buf, "y1", value.toFloat());
+    //             if (unix_time != "" || value != "") {
+    //                 oneSingleJson += buf + ",";
+    //             }
+    //
+    //         } while (psn < sz);
+    //
+    //         configFile.close();
+    //     }

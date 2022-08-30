@@ -192,6 +192,7 @@ void removeFile(const String& filename) {
 
 //очищаем директорию с файлами
 void cleanDirectory(String path) {
+#if defined(ESP8266)
     auto dir = FileFS.openDir(path);
     while (dir.next()) {
         String fname = dir.fileName();
@@ -199,6 +200,21 @@ void cleanDirectory(String path) {
         SerialPrint("I", "Files", path + "/" + fname + " => deleted");
     }
     onFlashWrite();
+#endif
+#if defined(ESP32)
+    path = "/" + path;
+    File root = FileFS.open(path);
+    path = String();
+    if (root.isDirectory()) {
+        File file = root.openNextFile();
+        while (file) {
+            String fname = file.name();
+            removeFile(fname);
+            SerialPrint("I", "Files", fname + " => deleted");
+            file = root.openNextFile();
+        }
+    }
+#endif
 }
 
 void saveDataDB(String id, String data) {
@@ -252,7 +268,7 @@ String FileList(String path) {
             output += "{\"type\":\"";
             output += (file.isDirectory()) ? "dir" : "file";
             output += "\",\"name\":\"";
-            output += String(file.path()).substring(1);
+            // output += String(file.path()).substring(1);
             output += "\"}";
             file = root.openNextFile();
         }
