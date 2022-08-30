@@ -24,7 +24,7 @@ class IoTItem {
     void regEvent(float value, String consoleInfo);
 
     String getSubtype();
-    virtual void sendChart();
+    virtual void sendChart(bool mqtt);
 
     String getID();
     virtual String getValue();

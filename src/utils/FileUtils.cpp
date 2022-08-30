@@ -197,7 +197,7 @@ void cleanDirectory(String path) {
     while (dir.next()) {
         String fname = dir.fileName();
         removeFile(path + "/" + fname);
-        SerialPrint("I", "Files", path + "/" + fname + " => deleted");
+        SerialPrint("i", "Files", path + "/" + fname + " => deleted");
     }
     onFlashWrite();
 #endif
@@ -205,12 +205,16 @@ void cleanDirectory(String path) {
     path = "/" + path;
     File root = FileFS.open(path);
     path = String();
+    if (!root) {
+        SerialPrint("E", "Files", "nothing to delete");
+        return;
+    }
     if (root.isDirectory()) {
         File file = root.openNextFile();
         while (file) {
             String fname = file.name();
             removeFile(fname);
-            SerialPrint("I", "Files", fname + " => deleted");
+            SerialPrint("i", "Files", fname + " => deleted");
             file = root.openNextFile();
         }
     }
@@ -225,6 +229,11 @@ void saveDataDB(String id, String data) {
 String readDataDB(String id) {
     String path = "/db/" + id + ".txt";
     return readFile(path, 2000);
+}
+
+void cleanLogs() {
+    cleanDirectory("lg");
+    cleanDirectory("db");
 }
 
 //счетчик количества записей на флешь за сеанс

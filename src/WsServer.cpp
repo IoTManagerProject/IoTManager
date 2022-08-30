@@ -51,11 +51,16 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             // Страница веб интерфейса dashboard===================================================================
-            // отправляем только файл layout.json //
             if (headerStr == "/|") {
+                sendFileToWs("/layout.json", num, 1024);
                 String json = getParamsJson();
                 standWebSocket.sendTXT(num, json);
-                sendFileToWs("/layout.json", num, 1024);
+                //отправка данных графиков
+                for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                    if ((*it)->getSubtype() == "Loging") {
+                        (*it)->sendChart(false);
+                    }
+                }
             }
             // Страница веб интерфейса configutation================================================================
             //========отправка=========================================================//
@@ -150,8 +155,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
             //команда очистки всех логов esp//
             if (headerStr == "/clean|") {
-                cleanDirectory("lg");
-                cleanDirectory("db");
+                cleanLogs();
             }
 
             //Прием сообщений cotrol ==============================================================================
@@ -203,9 +207,16 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
 //публикация статус сообщений
 void publishStatusWs(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic;  //+ "/status";
+    String path = mqttRootDevice + "/" + topic;
     String json = "{}";
     jsonWriteStr(json, "status", data);
+    jsonWriteStr(json, "topic", path);
+    standWebSocket.broadcastTXT(json);
+}
+
+//публикация статус сообщений уже готовых
+void publishStatusWsJson(const String& topic, String& json) {
+    String path = mqttRootDevice + "/" + topic;
     jsonWriteStr(json, "topic", path);
     standWebSocket.broadcastTXT(json);
 }

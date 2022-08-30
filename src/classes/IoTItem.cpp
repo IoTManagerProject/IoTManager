@@ -128,7 +128,7 @@ String IoTItem::getSubtype() {
     return _subtype;
 }
 
-void IoTItem::sendChart() {}
+void IoTItem::sendChart(bool mqtt) {}
 
 String IoTItem::getID() {
     return _id;

@@ -17,7 +17,7 @@ class Loging : public IoTItem {
         jsonRead(parameters, F("logid"), logid);
         jsonRead(parameters, F("id"), id);
         jsonRead(parameters, F("points"), points);
-        if (points >= 300) {
+        if (points > 300) {
             points = 300;
             SerialPrint("E", F("Loging"), "'" + id + "' user set more points than allowed, value reset to 300");
         }
@@ -91,7 +91,7 @@ class Loging : public IoTItem {
         SerialPrint("i", F("Loging"), "'" + id + "' loging in file http://" + WiFi.localIP().toString() + path);
     }
 
-    void sendChart() {
+    void sendChart(bool mqtt) {
         SerialPrint("i", F("Loging"), "'" + id + "'----------------------------");
         String reqUnixTimeStr = "27.08.2022";  //нужно получить эту дату из окна ввода под графиком.
         unsigned long reqUnixTime = strDateToUnix(reqUnixTimeStr);
@@ -124,7 +124,7 @@ class Loging : public IoTItem {
                             // if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
                             SerialPrint("i", F("Loging"), "'" + id + "' matching file found '" + fname + "'");
                             //выгрузка по частям, по одному файлу
-                            publishJsonPartly("/lg/" + fname, calculateMaxCount(), i);
+                            publishJsonPartly("/lg/" + fname, calculateMaxCount(), i, mqtt);
                             //}
                             //удаление старых файлов
                             if ((fileUnixTime + (points * interval)) < (unixTime - (keepdays * 86400))) {
@@ -144,7 +144,7 @@ class Loging : public IoTItem {
             SerialPrint("i", F("Loging"), "'" + id + "'--------------'" + String(i) + "'--------------");
         }
 
-        void publishJsonPartly(String file, int maxCount, int &i) {
+        void publishJsonPartly(String file, int maxCount, int &i, bool mqtt) {
             File configFile = FileFS.open(file, "r");
             if (!configFile) {
                 SerialPrint("E", F("Loging"), "'" + id + "' open file error");
@@ -171,14 +171,17 @@ class Loging : public IoTItem {
             } while (psn < sz);
 
             configFile.close();
-            publishJson(dividedJson, maxCount);
+
+            publishJson(dividedJson, maxCount, mqtt);
         }
 
-        void publishJson(String & oneSingleJson, int &maxCount) {
+        void publishJson(String & oneSingleJson, int &maxCount, bool mqtt) {
             oneSingleJson = "{\"maxCount\":" + String(maxCount) + ",\"status\":[" + oneSingleJson + "]}";
             oneSingleJson.replace("},]}", "}]}");
-            if (!publishChart(id, oneSingleJson)) {
-                SerialPrint("E", F("Loging"), "'" + id + "' mqtt publish error");
+            if (mqtt) {
+                publishChart(id, oneSingleJson);
+            } else {
+                publishStatusWsJson(id, oneSingleJson);
             }
         }
 
