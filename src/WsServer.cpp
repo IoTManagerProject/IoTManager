@@ -215,9 +215,7 @@ void publishStatusWs(const String& topic, const String& data) {
 }
 
 //публикация статус сообщений уже готовых
-void publishStatusWsJson(const String& topic, String& json) {
-    String path = mqttRootDevice + "/" + topic;
-    jsonWriteStr(json, "topic", path);
+void publishStatusWsJson(String& json) {
     standWebSocket.broadcastTXT(json);
 }
 

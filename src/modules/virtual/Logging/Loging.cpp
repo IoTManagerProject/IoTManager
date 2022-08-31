@@ -96,7 +96,6 @@ class Loging : public IoTItem {
         String reqUnixTimeStr = "27.08.2022";  //нужно получить эту дату из окна ввода под графиком.
         unsigned long reqUnixTime = strDateToUnix(reqUnixTimeStr);
 
-        String oneSingleJson;
         int i = 0;
 #if defined(ESP8266)
         String directory = "lg";
@@ -124,7 +123,7 @@ class Loging : public IoTItem {
                             // if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
                             SerialPrint("i", F("Loging"), "'" + id + "' matching file found '" + fname + "'");
                             //выгрузка по частям, по одному файлу
-                            publishJsonPartly("/lg/" + fname, calculateMaxCount(), i, mqtt);
+                            createJson("/lg/" + fname, i, mqtt);
                             //}
                             //удаление старых файлов
                             if ((fileUnixTime + (points * interval)) < (unixTime - (keepdays * 86400))) {
@@ -144,7 +143,7 @@ class Loging : public IoTItem {
             SerialPrint("i", F("Loging"), "'" + id + "'--------------'" + String(i) + "'--------------");
         }
 
-        void publishJsonPartly(String file, int maxCount, int &i, bool mqtt) {
+        void createJson(String file, int &i, bool mqtt) {
             File configFile = FileFS.open(file, "r");
             if (!configFile) {
                 SerialPrint("E", F("Loging"), "'" + id + "' open file error");
@@ -152,7 +151,7 @@ class Loging : public IoTItem {
             }
             configFile.seek(0, SeekSet);
             String buf = "{}";
-            String dividedJson;
+            String oneSingleJson;
             String unix_time;
             String value;
             unsigned int psn;
@@ -166,22 +165,24 @@ class Loging : public IoTItem {
                 value = deleteBeforeDelimiter(line, " ");
                 jsonWriteFloat(buf, "y1", value.toFloat());
                 if (unix_time != "" || value != "") {
-                    dividedJson += buf + ",";
+                    oneSingleJson += buf + ",";
                 }
             } while (psn < sz);
 
             configFile.close();
 
-            publishJson(dividedJson, maxCount, mqtt);
+            String topic = mqttRootDevice + "/" + id;
+            oneSingleJson = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[" + oneSingleJson + "]}";
+            oneSingleJson.replace("},]}", "}]}");
+
+            publishJson(oneSingleJson, mqtt);
         }
 
-        void publishJson(String & oneSingleJson, int &maxCount, bool mqtt) {
-            oneSingleJson = "{\"maxCount\":" + String(maxCount) + ",\"status\":[" + oneSingleJson + "]}";
-            oneSingleJson.replace("},]}", "}]}");
+        void publishJson(String & oneSingleJson, bool mqtt) {
             if (mqtt) {
                 publishChart(id, oneSingleJson);
             } else {
-                publishStatusWsJson(id, oneSingleJson);
+                publishStatusWsJson(oneSingleJson);
             }
         }
 
