@@ -613,8 +613,14 @@ int IoTScenario::gettok() {
         return tok_identifier;
     }
 
+    String NumStr="";
+    if (LastChar == '-') {
+        LastChar = getLastChar();
+        if (isdigit(LastChar)) NumStr = "-";
+        else return '-';
+        
+    }
     if (isdigit(LastChar)) {  // Число: [0-9.]+
-        String NumStr;
         do {
             NumStr += (char)LastChar;
             LastChar = getLastChar();
