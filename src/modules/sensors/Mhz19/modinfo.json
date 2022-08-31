@@ -13,8 +13,8 @@
         "multiply": 1,
         "round": 1,
         "pin": 0,
-        "rxPin": 14,
-        "txPin": 16,
+        "rxPin": 13,
+        "txPin": 12,
         "int": 15,
         "range": 5000,
         "ABC": 1
@@ -30,7 +30,7 @@
         "plus": 0,
         "multiply": 1,
         "round": 1,
-        "pin": 16,
+        "pin": 15, 
         "int": 300
     },
     {
@@ -44,8 +44,8 @@
         "plus": 0,
         "multiply": 1,
         "round": 1,
-        "rxPin": 14,
-        "txPin": 16,
+        "rxPin": 13,
+        "txPin": 12,
         "ABC": 1,
         "int": 30
     },
@@ -60,8 +60,8 @@
         "plus": 0,
         "multiply": 1,
         "round": 1,
-        "rxPin": 14,
-        "txPin": 16,
+        "rxPin": 13,
+        "txPin": 12,
         "range": 5000,
         "ABC": 1,
         "int": 30
@@ -74,8 +74,8 @@
         "widget": "anydataDef",
         "page": "Сенсоры",
         "descr": "ABC",
-        "rxPin": 14,
-        "txPin": 16,
+        "rxPin": 13,
+        "txPin": 12,
         "range": 5000,
         "ABC": 1,
         "int": 30

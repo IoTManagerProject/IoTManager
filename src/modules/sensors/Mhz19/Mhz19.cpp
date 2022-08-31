@@ -11,19 +11,16 @@
 
 extern IoTGpio IoTgpio;
 
-int rxPinCO2 = 14;                               // D5                          // зеленый провод сенсора к D2 / 4
-int txPinCO2 = 16;                               // D0                          // синий провод сенсора к D1/5
-SoftwareSerial swSerialCO2(rxPinCO2, txPinCO2);  // RX, TX// ESP8266  D7 / D6 Blue/Green
-
+int rxPinCO2 ; // зеленый провод сенсора к прописаному по умолчанию D7 (GPIO13) 
+int txPinCO2 ;  // синий провод сенсора к прописаному по умолчанию D6 (GPIO12)    
+SoftwareSerial* swSerialCO2 = nullptr; 
 int MHZ19_request(int request);
 
 void MHZ19uart_init();
 
 bool MHZ19uart_flag = true;
-// int MHZ19C_PREHEATING_TIME = 2 * 60 * 1000;// покажет реальные данные после прогрева, через 2 мин.
 int MHZ19C_PREHEATING_TIME = 2 * 30 * 1000;  // покажет реальные данные после прогрева, через 2 мин.
 
-// int prevTemperature = 0;
 int temperature = 0;
 bool temperatureUpdated = false;
 int prevRange = 5000;
@@ -48,7 +45,9 @@ class Mhz19uart : public IoTItem {
         txPinCO2 = jsonReadInt(parameters, "txPin");
         range = jsonReadInt(parameters, "range");
         ABC = jsonReadInt(parameters, "ABC");
+        if (!swSerialCO2) swSerialCO2 = new SoftwareSerial(rxPinCO2, txPinCO2); 
     }
+
     //=======================================================================================================
     // doByInterval()
 
@@ -69,11 +68,12 @@ class Mhz19uart : public IoTItem {
 //если сенсор предполагает использование общего объекта библиотеки для нескольких экземпляров сенсора, то в данной функции необходимо предусмотреть
 //создание и контроль соответствующих глобальных переменных
 
+//замер по ШИМ создает задержку. вызываем его нечасто, по умолчанию раз в 5 минут 
 class Mhz19pwm : public IoTItem {
    private:
     //=======================================================================================================
     // Секция переменных.
-    int pwmPin;  ///// желтый провод сенсора к D8    (14-D5 ok)
+    int pwmPin;  // желтый провод сенсора к прописаному по умолчанию D8 (GPIO15)  
 
    public:
     //=======================================================================================================
@@ -146,6 +146,7 @@ class Mhz19temp : public IoTItem {
         txPinCO2 = jsonReadInt(parameters, "txPin");
         range = jsonReadInt(parameters, "range");
         ABC = jsonReadInt(parameters, "ABC");
+            if (!swSerialCO2) swSerialCO2 = new SoftwareSerial(rxPinCO2, txPinCO2); 
     }
     //=======================================================================================================
 
@@ -179,6 +180,7 @@ class Mhz19range : public IoTItem {
         txPinCO2 = jsonReadInt(parameters, "txPin");
         range = jsonReadInt(parameters, "range");
         ABC = jsonReadInt(parameters, "ABC");
+            if (!swSerialCO2) swSerialCO2 = new SoftwareSerial(rxPinCO2, txPinCO2); 
     }
 
     void doByInterval() {
@@ -216,6 +218,7 @@ class Mhz19ABC : public IoTItem {
         txPinCO2 = jsonReadInt(parameters, "txPin");
         range = jsonReadInt(parameters, "range");
         ABC = jsonReadInt(parameters, "ABC");
+        if (!swSerialCO2) swSerialCO2 = new SoftwareSerial(rxPinCO2, txPinCO2); 
     }
 
     void doByInterval() {
@@ -261,7 +264,7 @@ void *getAPI_Mhz19(String subtype, String param) {
 void MHZ19uart_init() {
     if (MHZ19uart_flag) {
         int reply;
-        swSerialCO2.begin(9600);
+        swSerialCO2->begin(9600);
 
         delay(50);
 
@@ -427,7 +430,7 @@ int MHZ19_request(int request) {
             break;
     }
 
-    swSerialCO2.write(request_cmd, 9);
+    swSerialCO2->write(request_cmd, 9);
 
     Serial.print("Request : ");
     for (int i = 0; i < 9; i++) {
@@ -441,7 +444,7 @@ int MHZ19_request(int request) {
     unsigned char response[9];
 
     Serial.print("Response :");
-    swSerialCO2.readBytes(response, 9);
+    swSerialCO2->readBytes(response, 9);
 
     for (int i = 0; i < 9; i++) {
         Serial.print(" ");
@@ -536,7 +539,6 @@ int MHZ19_request(int request) {
                 // byte c = {0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};
                 // if nothing else matches, do the default
                 // default is optional
-
                 break;
         }
     }
