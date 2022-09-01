@@ -22,6 +22,7 @@
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
         "authorGit": "https://github.com/biveraxe",
+        "exampleURL": "https://iotmanager.org/wiki",
         "specialThanks": "",
         "moduleName": "AnalogAdc",
         "moduleVersion": "1.0",
@@ -32,6 +33,8 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
+
+    
 
     "defActive": true,
 
