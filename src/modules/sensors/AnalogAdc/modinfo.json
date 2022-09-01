@@ -33,6 +33,8 @@
         }
     },
 
+    "exampleURL": "https://iotmanager.org/wiki",
+
     "defActive": true,
 
     "devices": {
