@@ -180,9 +180,15 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (headerStr == "/reboot|") {
                 ESP.restart();
             }
+
             //команда очистки всех логов esp
             if (headerStr == "/clean|") {
                 cleanLogs();
+            }
+
+            //команда обновления прошивки esp
+            if (headerStr == "/update|") {
+                upgrade_firmware(3);
             }
 
             //Прием команд control c dashboard
