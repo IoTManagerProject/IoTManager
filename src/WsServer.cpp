@@ -50,7 +50,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 SerialPrint("E", "WS " + String(num), "Package without header");
             }
 
-            // Страница веб интерфейса dashboard===================================================================
+            //----------------------------------------------------------------------//
+            // Страница веб интерфейса dashboard
+            //----------------------------------------------------------------------//
+
+            //отвечаем данными на запрос страницы
             if (headerStr == "/|") {
                 sendFileToWs("/layout.json", num, 1024);
                 String json = getParamsJson();
@@ -62,8 +66,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                     }
                 }
             }
-            // Страница веб интерфейса configutation================================================================
-            //========отправка=========================================================//
+
+            //----------------------------------------------------------------------//
+            // Страница веб интерфейса configutation
+            //----------------------------------------------------------------------//
+
+            //отвечаем данными на запрос страницы
             if (headerStr == "/config|") {
                 sendFileToWs("/items.json", num, 1024);
                 sendFileToWs("/widgets.json", num, 1024);
@@ -71,7 +79,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWs("/scenario.json", num, 1024);
                 standWebSocket.sendTXT(num, settingsFlashJson);
             }
-            //========сохранение=======================================================//
+
+            //обработка кнопки сохранить
             if (headerStr == "/gifnoc|") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
             }
@@ -102,29 +111,29 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
                 generateEvent("onStart", "");
             }
-            // Страница веб интерфейса connection===================================================================
-            //========отправка========================================================//
+
+            //----------------------------------------------------------------------//
+            // Страница веб интерфейса connection
+            //----------------------------------------------------------------------//
+
+            //отвечаем данными на запрос страницы
             if (headerStr == "/connection|") {
                 standWebSocket.sendTXT(num, settingsFlashJson);
                 standWebSocket.sendTXT(num, ssidListHeapJson);
                 standWebSocket.sendTXT(num, errorsHeapJson);
-                //запуск асинхронного сканирования wifi сетей при переходе на страницу соединений
+                // запуск асинхронного сканирования wifi сетей при переходе на страницу соединений
                 // RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
             }
-            //========сохранение========================================================//
+
+            //обработка кнопки сохранить настройки wifi
             if (headerStr == "/sgnittes|") {
                 writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 standWebSocket.sendTXT(num, errorsHeapJson);
                 addThisDeviceToList();
             }
-            //========отправка========================================================//
-            if (headerStr == "/scan|") {
-                //запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
-                RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
-                standWebSocket.sendTXT(num, ssidListHeapJson);
-            }
-            //========сохранение========================================================//
+
+            //обработка кнопки сохранить настройки mqtt
             if (headerStr == "/mqtt|") {
                 standWebSocket.sendTXT(num, settingsFlashJson);  //отправляем в ответ новые полученные настройки
                 handleMqttStatus(false, 8);                      //меняем статус на неопределенный
@@ -132,33 +141,51 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 standWebSocket.sendTXT(num, errorsHeapJson);     //отправляем что статус неопределен
                 standWebSocket.sendTXT(num, ssidListHeapJson);
             }
-            // Страница веб интерфейса list ==========================================================================
-            //========отправка========================================================//
+
+            //запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
+            if (headerStr == "/scan|") {
+                RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
+                standWebSocket.sendTXT(num, ssidListHeapJson);
+            }
+
+            //----------------------------------------------------------------------//
+            // Страница веб интерфейса list
+            //----------------------------------------------------------------------//
+
+            //отвечаем данными на запрос страницы
             if (headerStr == "/list|") {
                 standWebSocket.sendTXT(num, devListHeapJson);
             }
-            // траница веб интерфейса system =========================================================================
-            //========отправка========================================================//
+
+            //----------------------------------------------------------------------//
+            // Страница веб интерфейса system
+            //----------------------------------------------------------------------//
+
+            //отвечаем данными на запрос страницы
             if (headerStr == "/system|") {
                 standWebSocket.sendTXT(num, errorsHeapJson);
                 standWebSocket.sendTXT(num, settingsFlashJson);
             }
-            //========сохранение========================================================//
+
+            //----------------------------------------------------------------------//
+            // отдельные команды веб интерфейса
+            //----------------------------------------------------------------------//
+
             //переписать любое поле в errors json
             if (headerStr == "/rorre|") {
                 writeUint8tValueToJsonString(payload, length, headerLenth, errorsHeapJson);
             }
-            //Команды веб интерфейса ==============================================================================
-            //команда перезагрузки esp//
+
+            //команда перезагрузки esp
             if (headerStr == "/reboot|") {
                 ESP.restart();
             }
-            //команда очистки всех логов esp//
+            //команда очистки всех логов esp
             if (headerStr == "/clean|") {
                 cleanLogs();
             }
 
-            //Прием сообщений cotrol ==============================================================================
+            //Прием команд control c dashboard
             if (headerStr == "/control|") {
                 String msg;
                 writeUint8tToString(payload, length, headerLenth, msg);

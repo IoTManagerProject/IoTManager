@@ -92,6 +92,11 @@ class Loging : public IoTItem {
     }
 
     void sendChart(bool mqtt) {
+        //отправка графика может происходить только если время синхронизированно
+        if (!isTimeSynch) {
+            SerialPrint("E", F("Loging"), "'" + id + "' Сant send chart - time not synchronized");
+            return;
+        }
         SerialPrint("i", F("Loging"), "'" + id + "'----------------------------");
         String reqUnixTimeStr = "27.08.2022";  //нужно получить эту дату из окна ввода под графиком.
         unsigned long reqUnixTime = strDateToUnix(reqUnixTimeStr);
