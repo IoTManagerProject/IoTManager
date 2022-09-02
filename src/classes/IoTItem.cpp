@@ -33,7 +33,7 @@ IoTItem::IoTItem(String parameters) {
         _map2 = selectFromMarkerToMarker(map, ",", 1).toInt();
         _map3 = selectFromMarkerToMarker(map, ",", 2).toInt();
         _map4 = selectFromMarkerToMarker(map, ",", 3).toInt();
-    }
+    } else _map1 = _map2 = _map3 = _map4 = 0;
 }
 
 //луп выполняющий переодическое дерганье
@@ -50,15 +50,22 @@ void IoTItem::loop() {
 
 //получить
 String IoTItem::getValue() {
-    if (value.isDecimal)
+    if (value.isDecimal) {
+        if (_multiply) value.valD = value.valD * _multiply;
+        if (_plus) value.valD = value.valD + _plus;
+        if (_round >= 0 && _round <= 6) {
+            int sot = _round ? pow(10, (int)_round) : 1;
+            value.valD = round(value.valD * sot) / sot;
+        }
+        if (_map1 != _map2) value.valD = map(value.valD, _map1, _map2, _map3, _map4);
+
         if (_round >= 0 && _round <= 6) {
             char buf[15];
             sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
             return (String)buf;
         } else
             return (String)value.valD;
-    else
-        return value.valS;
+    } else return value.valS;
 }
 
 //установить
@@ -106,16 +113,7 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
 }
 
 void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
-    if (_multiply) regvalue = regvalue * _multiply;
-    if (_plus) regvalue = regvalue + _plus;
-    if (_round >= 0 && _round <= 6) {
-        int sot = _round ? pow(10, (int)_round) : 1;
-        regvalue = round(regvalue * sot) / sot;
-    }
-    if (_map1 != _map2) regvalue = map(regvalue, _map1, _map2, _map3, _map4);
-
     value.valD = regvalue;
-
     regEvent(getValue(), consoleInfo);
 }
 
