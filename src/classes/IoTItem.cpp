@@ -62,7 +62,7 @@ String IoTItem::getValue() {
         if (_round >= 0 && _round <= 6) {
             char buf[15];
             sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
-            return (String)buf;
+            return value.valS = buf;
         } else
             return (String)value.valD;
     } else return value.valS;
