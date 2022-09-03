@@ -47,16 +47,16 @@ class IoTScenario {
     /// identifierexpr
     ///   ::= identifier
     ///   ::= identifier '(' expression* ')'
-    ExprAST *ParseIdentifierExpr(String *IDNames);
+    ExprAST *ParseIdentifierExpr(String *IDNames, bool callFromCondition);
 
     /// numberexpr ::= number
     ExprAST *ParseNumberExpr();
 
     /// parenexpr ::= '(' expression ')'
-    ExprAST *ParseParenExpr();
+    ExprAST *ParseParenExpr(String *IDNames, bool callFromCondition);
 
     /// bracketsexpr ::= '{' expression '}'
-    ExprAST *ParseBracketsExpr();
+    ExprAST *ParseBracketsExpr(String *IDNames, bool callFromCondition);
 
     /// quotesexpr ::= '"' expression '"'
     ExprAST *ParseQuotesExpr();
@@ -68,16 +68,16 @@ class IoTScenario {
     ///   ::= identifierexpr
     ///   ::= numberexpr
     ///   ::= parenexpr
-    ExprAST *ParsePrimary(String *IDNames);
+    ExprAST *ParsePrimary(String *IDNames, bool callFromCondition);
 
     /// binoprhs
     ///   ::= ('+' primary)*
-    ExprAST *ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames);
+    ExprAST *ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames, bool callFromCondition);
 
     /// expression
     ///   ::= primary binoprhs
     ///
-    ExprAST *ParseExpression(String *IDNames);
+    ExprAST *ParseExpression(String *IDNames, bool callFromCondition);
 
     int getLastChar();
     fs::File file;

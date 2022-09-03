@@ -728,7 +728,7 @@ ExprAST *IoTScenario::Error(const char *Str) {
 /// identifierexpr
 ///   ::= identifier
 ///   ::= identifier '(' expression* ')'
-ExprAST *IoTScenario::ParseIdentifierExpr(String *IDNames) {
+ExprAST *IoTScenario::ParseIdentifierExpr(String *IDNames, bool callFromCondition) {
     String IdName = IdentifierStr;
     String Cmd = "";
     IoTItem *tmpItem = findIoTItem(IdName);
@@ -754,7 +754,7 @@ ExprAST *IoTScenario::ParseIdentifierExpr(String *IDNames) {
     std::vector<ExprAST *> Args;
     if (CurTok != ')') {
         while (1) {
-            ExprAST *Arg = ParseExpression(IDNames);
+            ExprAST *Arg = ParseExpression(IDNames, callFromCondition);
             if (!Arg) return nullptr;
             Args.push_back(Arg);
 
@@ -783,9 +783,9 @@ ExprAST *IoTScenario::ParseNumberExpr() {
 }
 
 /// parenexpr ::= '(' expression ')'
-ExprAST *IoTScenario::ParseParenExpr() {
+ExprAST *IoTScenario::ParseParenExpr(String *IDNames, bool callFromCondition) {
     getNextToken();  // получаем (.
-    ExprAST *V = ParseExpression(nullptr);
+    ExprAST *V = ParseExpression(IDNames, callFromCondition);
     if (!V) return nullptr;
 
     if (CurTok != ')')
@@ -795,28 +795,31 @@ ExprAST *IoTScenario::ParseParenExpr() {
 }
 
 /// bracketsexpr ::= '{' expression '}'
-ExprAST *IoTScenario::ParseBracketsExpr() {
+ExprAST *IoTScenario::ParseBracketsExpr(String *IDNames, bool callFromCondition) {
     getNextToken();  // получаем {.
     std::vector<ExprAST *> bracketsList;
-    if (CurTok != '}') {
-        while (1) {
-            ExprAST *Expr = ParseExpression(nullptr);
+    
+        while (CurTok != '}') {
+            ExprAST *Expr = ParseExpression(IDNames, callFromCondition);
             if (!Expr) return nullptr;
             bracketsList.push_back(Expr);
+            
+            //if (CurTok == '}') break;
 
-            if (CurTok != ';')
-                return Error("Expected ';' in operation list");
-            int ttok = getNextToken();
-            if (!ttok) {
-                Error("Expected '}'");
-                break;
-            }
+            Serial.printf("ParseBracketsExpr CurTok = %d \n", CurTok);
 
-            if (CurTok == '}') break;
+
+
+            //if (CurTok != ';')
+            //    return Error("Expected ';' in operation list");
+            
+            //int ttok = getNextToken();  
+            if (CurTok == tok_eof) {
+                return Error("Expected '}'");
+            } 
         }
-    }
 
-    //getNextToken();  // получаем }.
+    getNextToken();  // получаем }.
     return new BracketsExprAST(bracketsList);
 }
 
@@ -833,14 +836,14 @@ ExprAST *IoTScenario::ParseIfExpr(String *IDNames) {
     getNextToken();  // Получаем if.
 
     // условие.
-    ExprAST *Cond = ParseExpression(IDNames);
+    ExprAST *Cond = ParseExpression(IDNames, true);
     if (!Cond) return nullptr;
 
     if (CurTok != tok_then)
         return Error("expected then");
     getNextToken();  // Получаем then
 
-    ExprAST *Then = ParseExpression(nullptr);
+    ExprAST *Then = ParseExpression(IDNames, false);
     if (!Then) return nullptr;
 
     // if (CurTok != tok_else)
@@ -848,7 +851,8 @@ ExprAST *IoTScenario::ParseIfExpr(String *IDNames) {
     ExprAST *Else = nullptr;
     if (CurTok == tok_else) {
         getNextToken();
-        Else = ParseExpression(nullptr);
+        Else = ParseExpression(IDNames, false);
+        if (!Else) return nullptr;
     }
 
     return new IfExprAST(Cond, Then, Else, IDNames);
@@ -858,24 +862,24 @@ ExprAST *IoTScenario::ParseIfExpr(String *IDNames) {
 ///   ::= identifierexpr
 ///   ::= numberexpr
 ///   ::= parenexpr
-ExprAST *IoTScenario::ParsePrimary(String *IDNames) {
+ExprAST *IoTScenario::ParsePrimary(String *IDNames, bool callFromCondition) {
     switch (CurTok) {
         default:
             Serial.println(CurTok);
             return Error("unknown token when expecting an expression");
         case tok_identifier: {
-            if (IDNames) {
+            if (callFromCondition && IDNames) {
                 String tmpstr = *IDNames;
                 *IDNames = tmpstr + " " + IdentifierStr + " ";
             }
-            return ParseIdentifierExpr(IDNames);
+            return ParseIdentifierExpr(IDNames, callFromCondition);
         }
         case tok_number:
             return ParseNumberExpr();
         case '(':
-            return ParseParenExpr();
+            return ParseParenExpr(IDNames, callFromCondition);
         case '{':
-            return ParseBracketsExpr();
+            return ParseBracketsExpr(IDNames, callFromCondition);
         case tok_string:
             return ParseQuotesExpr();
         case tok_if:
@@ -885,7 +889,7 @@ ExprAST *IoTScenario::ParsePrimary(String *IDNames) {
 
 /// binoprhs
 ///   ::= ('+' primary)*
-ExprAST *IoTScenario::ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames) {
+ExprAST *IoTScenario::ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames, bool callFromCondition) {
     // Если это бинарный оператор, получаем его приоритет
     while (1) {
         int TokPrec = GetTokPrecedence();
@@ -900,14 +904,14 @@ ExprAST *IoTScenario::ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames)
         getNextToken();  // eat binop
 
         // Разобрать первичное выражение после бинарного оператора
-        ExprAST *RHS = ParsePrimary(IDNames);
+        ExprAST *RHS = ParsePrimary(IDNames, callFromCondition);
         if (!RHS) return nullptr;
 
         // Если BinOp связан с RHS меньшим приоритетом, чем оператор после RHS,
         // то берём часть вместе с RHS как LHS.
         int NextPrec = GetTokPrecedence();
         if (TokPrec < NextPrec) {
-            RHS = ParseBinOpRHS(TokPrec + 1, RHS, IDNames);
+            RHS = ParseBinOpRHS(TokPrec + 1, RHS, IDNames, callFromCondition);
             if (RHS == nullptr) return nullptr;
         }
 
@@ -919,10 +923,10 @@ ExprAST *IoTScenario::ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames)
 /// expression
 ///   ::= primary binoprhs
 ///
-ExprAST *IoTScenario::ParseExpression(String *IDNames) {
-    ExprAST *LHS = ParsePrimary(IDNames);
+ExprAST *IoTScenario::ParseExpression(String *IDNames, bool callFromCondition) {
+    ExprAST *LHS = ParsePrimary(IDNames, callFromCondition);
     if (!LHS) return nullptr;
-    return ParseBinOpRHS(0, LHS, IDNames);
+    return ParseBinOpRHS(0, LHS, IDNames, callFromCondition);
 }
 
 
