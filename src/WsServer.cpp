@@ -98,6 +98,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                     strFromFile.replace("{\"scen\":\"", "");
                     strFromFile.replace("\\n", "\n");
                     strFromFile.replace("\\\"", "\"");
+                    strFromFile.replace(";", " ");
+                    strFromFile.replace("\\t", " ");
                     strFromFile.remove(strFromFile.length() - 2, 2);
                 }
                 myfile.close();
