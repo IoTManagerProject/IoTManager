@@ -933,33 +933,44 @@ ExprAST *IoTScenario::ParseExpression(String *IDNames, bool callFromCondition) {
 void IoTScenario::loadScenario(String fileName) {  // подготавливаем контекст для чтения и интерпретации файла
     if (file) file.close();
     file = FileFS.open(fileName, "r");
-}
-
-void IoTScenario::exec(String eventIdName) {  // посимвольно считываем и сразу интерпретируем сценарий в дерево AST
     if (!file) {
         Error("Open file scenario error");
         return;
     }
+
+    if (mode == 1) {
+        strFromFile = file.readString();
+        file.close();
+    } 
+}
+
+void IoTScenario::exec(String eventIdName) {  // посимвольно считываем и сразу интерпретируем сценарий в дерево AST
+    if (mode == 0 && !file) return;
+
     LastChar = 0;
     CurTok = 0;
-    file.seek(0);
     curLine = 1;
-    
-    while ((getNextToken()) != EOF) {
-       switch (CurTok) {
-            case tok_if: {
-                IDNames = "";  // сбрасываем накопитель встречающихся идентификаторов в условии
-                ExprAST *tmpAST = ParseIfExpr(&IDNames);
-                if (!tmpAST) {
-                    Error("IF Expr wrong.");
-                    break;
-                }
 
-                if (tmpAST->hasEventIdName(eventIdName)) {
-                    tmpAST->exec();
-                }
-                delete tmpAST;
-            break;}
+    if (mode == 0) file.seek(0); else charCount = 0; 
+    
+    if (mode < 2) {
+        while (CurTok != EOF) {
+        switch (CurTok) {
+                case tok_if: {
+                    IDNames = "";  // сбрасываем накопитель встречающихся идентификаторов в условии
+                    ExprAST *tmpAST = ParseIfExpr(&IDNames);
+                    if (!tmpAST) {
+                        Error("IF Expr wrong.");
+                        break;
+                    }
+
+                    if (tmpAST->hasEventIdName(eventIdName)) {
+                        tmpAST->exec();
+                    }
+                    delete tmpAST;
+                break;}
+                default: getNextToken(); break;
+            }
         }
     }
 }
