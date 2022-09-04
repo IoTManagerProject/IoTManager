@@ -586,11 +586,22 @@ class BracketsExprAST : public ExprAST {
 //===----------------------------------------------------------------------===//
 
 int IoTScenario::getLastChar() {
-    if (file) {
-        LastChar = file.read();
-        if (LastChar == 10) curLine++;
-        return LastChar;
-    } else return EOF;
+    if (mode == 0) {
+        if (file) {
+            LastChar = file.read();
+            if (LastChar == 10) curLine++;
+            return LastChar;
+        } else return EOF;
+    } else if (mode == 1) {
+        if (charCount < strFromFile.length()) {
+            LastChar = strFromFile.charAt(charCount);
+            //Serial.printf("%d, ", LastChar);
+            if (LastChar == 10) curLine++;
+            charCount++;
+            return LastChar;
+        } else return EOF;
+    }
+
 }
 
 /// gettok - Возвращает следующий токен из стандартного потока ввода.
@@ -806,7 +817,7 @@ ExprAST *IoTScenario::ParseBracketsExpr(String *IDNames, bool callFromCondition)
             
             //if (CurTok == '}') break;
 
-            Serial.printf("ParseBracketsExpr CurTok = %d \n", CurTok);
+            //Serial.printf("ParseBracketsExpr CurTok = %d \n", CurTok);
 
 
 
@@ -931,15 +942,21 @@ ExprAST *IoTScenario::ParseExpression(String *IDNames, bool callFromCondition) {
 
 
 void IoTScenario::loadScenario(String fileName) {  // подготавливаем контекст для чтения и интерпретации файла
-    if (file) file.close();
-    file = FileFS.open(fileName, "r");
-    if (!file) {
-        Error("Open file scenario error");
-        return;
-    }
-
-    if (mode == 1) {
+    if (mode == 0) {
+        if (file) file.close();
+        file = FileFS.open(fileName.c_str(), "r");
+        if (!file) {
+            Error("Open file scenario error");
+            return;
+        }
+    } else if (mode == 1) {
+        file = FileFS.open(fileName.c_str(), "r");
+        if (!file) {
+            Error("Open file scenario error");
+            return;
+        }
         strFromFile = file.readString();
+        Serial.printf("strFromFile: %s, %s\n", strFromFile.c_str(), fileName.c_str());
         file.close();
     } 
 }
@@ -950,8 +967,9 @@ void IoTScenario::exec(String eventIdName) {  // посимвольно счит
     LastChar = 0;
     CurTok = 0;
     curLine = 1;
+    charCount = 0;
 
-    if (mode == 0) file.seek(0); else charCount = 0; 
+    if (mode == 0) file.seek(0); 
     
     if (mode < 2) {
         while (CurTok != EOF) {
