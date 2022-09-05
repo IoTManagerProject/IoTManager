@@ -6,7 +6,7 @@
 #include "NTP.h"
 
 
-bool isIotScenException;  // признак исключения и попытки прекратить выполнение сценария заранее
+bool isIotScenException = false;  // признак исключения и попытки прекратить выполнение сценария заранее
 
 // Лексический анализатор возвращает токены [0-255], если это неизвестны,
 // иначе одну из известных единиц кода
@@ -734,7 +734,8 @@ int IoTScenario::GetTokPrecedence() {
 
 /// Error* - Это небольшие вспомогательные функции для обработки ошибок.
 ExprAST *IoTScenario::Error(const char *Str) {
-    Serial.printf("Scenario error in line %d: %s\n", curLine-1, Str);
+    Serial.printf("Scenario error in line %d: %s\n", curLine, Str);
+    isIotScenException = true;
     return nullptr;
 }
 
@@ -742,6 +743,8 @@ ExprAST *IoTScenario::Error(const char *Str) {
 ///   ::= identifier
 ///   ::= identifier '(' expression* ')'
 ExprAST *IoTScenario::ParseIdentifierExpr(String *IDNames, bool callFromCondition) {
+    if (isIotScenException) return nullptr;
+
     String IdName = IdentifierStr;
     String Cmd = "";
     IoTItem *tmpItem = findIoTItem(IdName);
@@ -773,8 +776,10 @@ ExprAST *IoTScenario::ParseIdentifierExpr(String *IDNames, bool callFromConditio
 
             if (CurTok == ')') break;
 
-            if (CurTok != ',')
+            if (CurTok != ','){
+
                 return Error("Expected ')' or ',' in argument list");
+            }
             getNextToken();
         }
     }
@@ -790,6 +795,8 @@ ExprAST *IoTScenario::ParseIdentifierExpr(String *IDNames, bool callFromConditio
 
 /// numberexpr ::= number
 ExprAST *IoTScenario::ParseNumberExpr() {
+    if (isIotScenException) return nullptr;
+
     ExprAST *Result = new NumberExprAST(NumStr);
     getNextToken();  // получаем число
     return Result;
@@ -809,6 +816,8 @@ ExprAST *IoTScenario::ParseParenExpr(String *IDNames, bool callFromCondition) {
 
 /// bracketsexpr ::= '{' expression '}'
 ExprAST *IoTScenario::ParseBracketsExpr(String *IDNames, bool callFromCondition) {
+    if (isIotScenException) return nullptr;
+
     getNextToken();  // получаем {.
     std::vector<ExprAST *> bracketsList;
     
@@ -838,6 +847,8 @@ ExprAST *IoTScenario::ParseBracketsExpr(String *IDNames, bool callFromCondition)
 
 /// quotesexpr ::= '"' expression '"'
 ExprAST *IoTScenario::ParseQuotesExpr() {
+    if (isIotScenException) return nullptr;
+
     String StringCont = IdentifierStr;
     ExprAST *Result = new StringExprAST(StringCont);
     getNextToken();  // получаем число
@@ -846,6 +857,8 @@ ExprAST *IoTScenario::ParseQuotesExpr() {
 
 /// ifexpr ::= 'if' expression 'then' expression 'else' expression
 ExprAST *IoTScenario::ParseIfExpr(String *IDNames) {
+    if (isIotScenException) return nullptr;
+
     getNextToken();  // Получаем if.
 
     // условие.
@@ -903,6 +916,8 @@ ExprAST *IoTScenario::ParsePrimary(String *IDNames, bool callFromCondition) {
 /// binoprhs
 ///   ::= ('+' primary)*
 ExprAST *IoTScenario::ParseBinOpRHS(int ExprPrec, ExprAST *LHS, String *IDNames, bool callFromCondition) {
+    if (isIotScenException) return nullptr;
+
     // Если это бинарный оператор, получаем его приоритет
     while (1) {
         int TokPrec = GetTokPrecedence();
@@ -944,6 +959,8 @@ ExprAST *IoTScenario::ParseExpression(String *IDNames, bool callFromCondition) {
 
 
 void IoTScenario::loadScenario(String fileName) {  // подготавливаем контекст для чтения и интерпретации файла
+    isIotScenException = false;
+
     if (mode == 0) {
         if (file) file.close();
         file = FileFS.open(fileName.c_str(), "r");
@@ -979,15 +996,12 @@ void IoTScenario::exec(String eventIdName) {  // посимвольно счит
                 case tok_if: {
                     IDNames = "";  // сбрасываем накопитель встречающихся идентификаторов в условии
                     ExprAST *tmpAST = ParseIfExpr(&IDNames);
-                    if (!tmpAST) {
-                        Error("IF Expr wrong.");
-                        break;
-                    }
-
-                    if (tmpAST->hasEventIdName(eventIdName)) {
-                        tmpAST->exec();
-                    }
-                    delete tmpAST;
+                    if (tmpAST) {
+                        if (tmpAST->hasEventIdName(eventIdName)) {
+                            tmpAST->exec();
+                        }
+                        delete tmpAST;
+                    } else getNextToken();
                 break;}
                 default: getNextToken(); break;
             }
