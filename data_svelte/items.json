@@ -7,7 +7,7 @@
         "header": "Виртуальные элементы"
     },
     {
-        "name": "1. Логгирование в график",
+        "name": "1. Логирование в график",
         "type": "Writing",
         "subtype": "Loging",
         "id": "log",
@@ -458,10 +458,22 @@
         "num": 34
     },
     {
+        "name": "35. Телеграм-Лайт",
+        "type": "Writing",
+        "subtype": "TelegramLT",
+        "id": "tg",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "token": "",
+        "chatID": "",
+        "num": 35
+    },
+    {
         "header": "Экраны"
     },
     {
-        "name": "35. LCD экран 2004",
+        "name": "36. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -473,10 +485,10 @@
         "size": "20,4",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 35
+        "num": 36
     },
     {
-        "name": "36. LCD экран 1602",
+        "name": "37. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -488,6 +500,6 @@
         "size": "16,2",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 36
+        "num": 37
     }
 ]

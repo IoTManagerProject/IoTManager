@@ -23,6 +23,7 @@ void* getAPI_IoTServo(String subtype, String params);
 void* getAPI_Mcp23017(String subtype, String params);
 void* getAPI_Mp3(String subtype, String params);
 void* getAPI_Pwm8266(String subtype, String params);
+void* getAPI_TelegramLT(String subtype, String params);
 void* getAPI_Lcd2004(String subtype, String params);
 
 void* getAPI(String subtype, String params) {
@@ -50,6 +51,7 @@ if ((tmpAPI = getAPI_IoTServo(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Mcp23017(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Mp3(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Pwm8266(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_TelegramLT(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Lcd2004(subtype, params)) != nullptr) return tmpAPI;
 return nullptr;
 }

@@ -162,6 +162,10 @@
             {
                 "path": "src\\modules\\exec\\Telegram",
                 "active": false
+            },
+            {
+                "path": "src\\modules\\exec\\TelegramLT",
+                "active": true
             }
         ],
         "Экраны": [

@@ -26,7 +26,7 @@ class IoTScenario {
     //===----------------------------------------------------------------------===//
 
     String IdentifierStr;  // Заполняется, если tok_identifier
-    float NumVal;          // Заполняется, если tok_number
+    String NumStr = "";          // Заполняется, если tok_number
     int LastChar;
     int curLine;
 
