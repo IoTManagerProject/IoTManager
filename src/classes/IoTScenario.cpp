@@ -46,7 +46,10 @@ class NumberExprAST : public ExprAST {
     IoTValue Val;
 
    public:
-    NumberExprAST(float val) { Val.valD = val; }
+    NumberExprAST(String val) { 
+        Val.valD = strtod(val.c_str(), 0);
+        Val.valS = val;
+    }
 
     IoTValue *exec() {
         if (isIotScenException) return nullptr;
@@ -624,7 +627,7 @@ int IoTScenario::gettok() {
         return tok_identifier;
     }
 
-    String NumStr="";
+    NumStr="";
     if (LastChar == '-') {
         LastChar = getLastChar();
         if (isdigit(LastChar)) NumStr = "-";
@@ -637,7 +640,6 @@ int IoTScenario::gettok() {
             LastChar = getLastChar();
         } while (isdigit(LastChar) || LastChar == '.');
 
-        NumVal = strtod(NumStr.c_str(), 0);
         return tok_number;
     }
 
@@ -788,7 +790,7 @@ ExprAST *IoTScenario::ParseIdentifierExpr(String *IDNames, bool callFromConditio
 
 /// numberexpr ::= number
 ExprAST *IoTScenario::ParseNumberExpr() {
-    ExprAST *Result = new NumberExprAST(NumVal);
+    ExprAST *Result = new NumberExprAST(NumStr);
     getNextToken();  // получаем число
     return Result;
 }
