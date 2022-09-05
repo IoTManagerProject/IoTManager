@@ -1,14 +1,14 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 
-String _prevMsg = "";
-String _token;
-unsigned long _chatID;
-
 class TelegramLT : public IoTItem
 {
 
 public:
+    String _prevMsg = "";
+    String _token;
+    unsigned long _chatID;
+
     TelegramLT(String parameters) : IoTItem(parameters) {
         jsonRead(parameters, "token", _token);
         jsonRead(parameters, "chatID", _chatID);
