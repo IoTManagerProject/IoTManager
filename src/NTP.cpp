@@ -137,3 +137,11 @@ unsigned long strDateToUnix(String date) {
     }
     return (day * secsInOneDay) + (numberOfDaysInPastMonths * secsInOneDay) + (totalNormalYears * daysInOneYear * secsInOneDay) + (numberOfLeepYears * daysInLeepYear * secsInOneDay);
 }
+
+const String getDateTimeDotFormatedFromUnix(unsigned long unixTime) {
+    Time_t time;
+    breakEpochToTime(unixTime, time);
+    char buf[32];
+    sprintf(buf, "%02d.%02d.%02d %02d:%02d:%02d", time.day_of_month, time.month, time.year, time.hour, time.minute, time.second);
+    return String(buf);
+}

@@ -25,6 +25,7 @@ class IoTItem {
 
     String getSubtype();
     virtual void sendChart(bool mqtt);
+    virtual void cleanData();
 
     String getID();
     virtual String getValue();

@@ -62,7 +62,7 @@ void setup() {
 
     //запуск работы udp
     asyncUdpInit();
-    
+
     //подготавливаем сценарии
     iotScen.loadScenario("/scenario.txt");
 
@@ -123,7 +123,7 @@ void loop() {
 #endif
 
 #ifdef STANDARD_WEB_SERVER
-    //обработка web сервера
+    //обработка web сервера 1
     HTTP.handleClient();
 #endif
 
@@ -134,6 +134,11 @@ void loop() {
 
     //обновление mqtt
     mqttLoop();
+
+#ifdef STANDARD_WEB_SERVER
+    //обработка web сервера 2
+    // HTTP.handleClient();
+#endif
 
     // передаем управление каждому элементу конфигурации для выполнения своих функций
     for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
@@ -148,6 +153,11 @@ void loop() {
     handleOrder();
 
     handleEvent();
+
+#ifdef STANDARD_WEB_SERVER
+    //обработка web сервера 3
+    // HTTP.handleClient();
+#endif
 
     // сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
     // currentMillis = millis();

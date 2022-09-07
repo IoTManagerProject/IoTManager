@@ -33,7 +33,8 @@ IoTItem::IoTItem(String parameters) {
         _map2 = selectFromMarkerToMarker(map, ",", 1).toInt();
         _map3 = selectFromMarkerToMarker(map, ",", 2).toInt();
         _map4 = selectFromMarkerToMarker(map, ",", 3).toInt();
-    } else _map1 = _map2 = _map3 = _map4 = 0;
+    } else
+        _map1 = _map2 = _map3 = _map4 = 0;
 }
 
 //луп выполняющий переодическое дерганье
@@ -65,7 +66,8 @@ String IoTItem::getValue() {
             return value.valS = buf;
         } else
             return (String)value.valD;
-    } else return value.valS;
+    } else
+        return value.valS;
 }
 
 //установить
@@ -127,6 +129,8 @@ String IoTItem::getSubtype() {
 }
 
 void IoTItem::sendChart(bool mqtt) {}
+
+void IoTItem::cleanData() {}
 
 String IoTItem::getID() {
     return _id;

@@ -183,7 +183,7 @@ void removeFile(const String& filename) {
     String path = filepath(filename);
     if (FileFS.exists(path)) {
         if (!FileFS.remove(path)) {
-            SerialPrint("I", "Files", "remove " + path);
+            // SerialPrint("i", "Files", "remove " + path);
         }
     } else {
         SerialPrint("E", "Files", "not exist " + path);
@@ -232,8 +232,13 @@ String readDataDB(String id) {
 }
 
 void cleanLogs() {
-    cleanDirectory("lg");
     cleanDirectory("db");
+    //очистка данных всех экземпляров графиков
+    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if ((*it)->getSubtype() == "Loging") {
+            (*it)->cleanData();
+        }
+    }
 }
 
 //счетчик количества записей на флешь за сеанс
