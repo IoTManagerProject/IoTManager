@@ -36,6 +36,18 @@
             "int": "0",
             "val": "24.05.2022",
             "num": 4
+        },
+        {
+            "name": "Окно ввода текста",
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "txt",
+            "widget": "inputTxt",
+            "page": "Ввод",
+            "descr": "Введите текст",
+            "int": "0",
+            "val": "текст",
+            "num": 5
         }
     ],
     "about": {

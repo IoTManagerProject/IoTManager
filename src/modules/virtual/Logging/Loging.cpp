@@ -11,7 +11,7 @@ class Loging : public IoTItem {
     int points;
     int keepdays;
 
-    int interval;
+    unsigned long interval;
     bool firstTime = true;
 
    public:
@@ -24,11 +24,23 @@ class Loging : public IoTItem {
             SerialPrint("E", F("Loging"), "'" + id + "' user set more points than allowed, value reset to 300");
         }
         jsonRead(parameters, F("int"), interval);
+        interval = interval * 1000 * 60;
         jsonRead(parameters, F("keepdays"), keepdays);
     }
 
     String getValue() {
         return "";
+    }
+
+    void loop() {
+        if (enableDoByInt) {
+            currentMillis = millis();
+            difference = currentMillis - prevMillis;
+            if (difference >= interval) {
+                prevMillis = millis();
+                this->doByInterval();
+            }
+        }
     }
 
     void doByInterval() {
@@ -267,6 +279,8 @@ class Loging : public IoTItem {
     int calculateMaxCount() {
         return 86400 / interval;
     }
+
+    // new Variable(param);
 };
 
 void *getAPI_Loging(String subtype, String param) {

@@ -35,7 +35,7 @@
 #define USE_LITTLEFS false
 #endif
 
-#define START_DATETIME 1640995200  // 01.01.2022 00:00:00 константа для сокращения unix time
+#define START_DATETIME 1661990400  // 01.09.2022 00:00:00 константа для сокращения unix time
 
 #define MIN_DATETIME 1575158400
 #define LEAP_YEAR(Y) (((1970 + Y) > 0) && !((1970 + Y) % 4) && (((1970 + Y) % 100) || !((1970 + Y) % 400)))
