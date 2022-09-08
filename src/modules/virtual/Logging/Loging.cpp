@@ -127,9 +127,8 @@ class Loging : public IoTItem {
             File file = root.openNextFile();
             while (file) {
                 String fname = file.name();
-                fname = selectToMarkerLast(fname, "/");
+                if (fname != "") filesList += fname + ";";
                 file = root.openNextFile();
-                if (fname != "") filesList += directory + "/" + fname + ";";
             }
         }
     }
@@ -279,8 +278,6 @@ class Loging : public IoTItem {
     int calculateMaxCount() {
         return 86400 / interval;
     }
-
-    // new Variable(param);
 };
 
 void *getAPI_Loging(String subtype, String param) {
@@ -290,33 +287,3 @@ void *getAPI_Loging(String subtype, String param) {
         return nullptr;
     }
 }
-
-//то что не пригодилось но пригодится потом может быть
-// void createOneSingleJson(String &oneSingleJson, String file, int &maxCount, int &i) {
-//         File configFile = FileFS.open(file, "r");
-//         if (!configFile) {
-//             return;
-//         }
-//         configFile.seek(0, SeekSet);
-//         String buf = "{}";
-//         String unix_time;
-//         String value;
-//         unsigned int psn;
-//         unsigned int sz = configFile.size();
-//         do {
-//             maxCount++;
-//             i++;
-//             psn = configFile.position();
-//             String line = configFile.readStringUntil('\n');
-//             unix_time = selectToMarker(line, " ");
-//             jsonWriteInt(buf, "x", unix_time.toInt() + START_DATETIME);
-//             value = deleteBeforeDelimiter(line, " ");
-//             jsonWriteFloat(buf, "y1", value.toFloat());
-//             if (unix_time != "" || value != "") {
-//                 oneSingleJson += buf + ",";
-//             }
-//
-//         } while (psn < sz);
-//
-//         configFile.close();
-//     }
