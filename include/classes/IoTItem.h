@@ -20,8 +20,8 @@ class IoTItem {
     virtual void doByInterval();
     virtual IoTValue execute(String command, std::vector<IoTValue>& param);
 
-    void regEvent(String value, String consoleInfo);
-    void regEvent(float value, String consoleInfo);
+    virtual void regEvent(String value, String consoleInfo);
+    virtual void regEvent(float value, String consoleInfo);
 
     String getSubtype();
     virtual void sendChart(bool mqtt);

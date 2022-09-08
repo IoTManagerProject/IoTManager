@@ -8,7 +8,7 @@
             "id": "log",
             "widget": "chart1",
             "page": "Графики",
-            "descr": "График",
+            "descr": "Температура",
             "int": 1,
             "logid": "t",
             "num": 1,

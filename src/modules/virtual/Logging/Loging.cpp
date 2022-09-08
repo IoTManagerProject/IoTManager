@@ -43,6 +43,15 @@ class Loging : public IoTItem {
         }
     }
 
+    void regEvent(String value, String consoleInfo = "") {
+        generateEvent(_id, value);
+        publishStatusMqtt(_id, value);
+        String topic = mqttRootDevice + "/" + _id;
+        String json = "{\"topic\":\"" + topic + "\",\"status\":[{\"x\":" + String(unixTime) + ",\"y1\":" + value + "}]}";
+        publishStatusWsJson(json);
+        SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
+    }
+
     void doByInterval() {
         //если объект логгирования не был создан
         if (!isItemExist(logid)) {
@@ -63,7 +72,7 @@ class Loging : public IoTItem {
             return;
         }
 
-        // regEvent(value, F("Loging"));
+        regEvent(value, F("Loging"));
 
         String logData = String(unixTimeShort) + " " + value;
 
@@ -154,7 +163,6 @@ class Loging : public IoTItem {
             int i = 0;
 
             unsigned long fileUnixTime = selectToMarkerLast(deleteToMarkerLast(buf, "."), "/").toInt() + START_DATETIME;
-            SerialPrint("i", F("Loging"), String(f) + ") path: " + buf + ", lines №: " + String(i) + ", creation time: " + getDateTimeDotFormatedFromUnix(fileUnixTime));
 
             //удаление старых файлов
             if ((fileUnixTime + (points * (interval / 1000))) < (unixTime - (keepdays * 86400))) {
@@ -164,6 +172,7 @@ class Loging : public IoTItem {
                 createJson(buf, i, mqtt);
             }
 
+            SerialPrint("i", F("Loging"), String(f) + ") path: " + buf + ", lines №: " + String(i) + ", created: " + getDateTimeDotFormatedFromUnix(fileUnixTime));
             filesList = deleteBeforeDelimiter(filesList, ";");
         }
     }
@@ -282,9 +291,9 @@ class Loging : public IoTItem {
         }
     }
 
-    //примерный подсчет максимального количества точек
+    //просто максимальное количество точек
     int calculateMaxCount() {
-        return 86400 / interval;
+        return 86400;
     }
 };
 

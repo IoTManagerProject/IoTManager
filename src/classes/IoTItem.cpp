@@ -95,11 +95,13 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
     generateEvent(_id, value);
     publishStatusMqtt(_id, value);
 
-    //  проверка если global установлен то шлем всем о событии
-    if (_global) {
-        SerialPrint("i", F("=>ALLMQTT"), "Broadcast event: ");
-    }
+    publishStatusWs(_id, value);
+    SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
 
+    //  проверка если global установлен то шлем всем о событии
+    // if (_global) {
+    //     SerialPrint("i", F("=>ALLMQTT"), "Broadcast event: ");
+    // }
     //отправка события другим устройствам в сети==============================
     // if (jsonReadBool(settingsFlashJson, "mqttin")) {
     //    String json = "{}";
@@ -110,8 +112,6 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
     //    SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
     //}
     //========================================================================
-    publishStatusWs(_id, value);  // Ilya, data: "1" (analog sensor, round set to 1, should be "1.0")
-    SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
 }
 
 void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
