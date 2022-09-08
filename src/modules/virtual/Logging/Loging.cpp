@@ -158,7 +158,7 @@ class Loging : public IoTItem {
 
             //удаление старых файлов
             if ((fileUnixTime + (points * (interval / 1000))) < (unixTime - (keepdays * 86400))) {
-                SerialPrint("i", F("Loging"), "'" + id + "' file '" + buf + "' too old, deleted");
+                SerialPrint("i", F("Loging"), "file '" + buf + "' too old, deleted");
                 removeFile(buf);
             } else {
                 createJson(buf, i, mqtt);
