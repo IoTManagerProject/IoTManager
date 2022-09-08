@@ -24,7 +24,7 @@ class Loging : public IoTItem {
             SerialPrint("E", F("Loging"), "'" + id + "' user set more points than allowed, value reset to 300");
         }
         jsonRead(parameters, F("int"), interval);
-        interval = interval * 1000 * 60;
+        interval = interval * 1000 * 60;  //приводим к милисекундам
         jsonRead(parameters, F("keepdays"), keepdays);
     }
 
@@ -152,9 +152,17 @@ class Loging : public IoTItem {
 
             f++;
             int i = 0;
-            createJson(buf, i, mqtt);
+
             unsigned long fileUnixTime = selectToMarkerLast(deleteToMarkerLast(buf, "."), "/").toInt() + START_DATETIME;
             SerialPrint("i", F("Loging"), String(f) + ") path: " + buf + ", lines №: " + String(i) + ", creation time: " + getDateTimeDotFormatedFromUnix(fileUnixTime));
+
+            //удаление старых файлов
+            if ((fileUnixTime + (points * (interval / 1000))) < (unixTime - (keepdays * 86400))) {
+                SerialPrint("i", F("Loging"), "'" + id + "' file '" + buf + "' too old, deleted");
+                removeFile(buf);
+            } else {
+                createJson(buf, i, mqtt);
+            }
 
             filesList = deleteBeforeDelimiter(filesList, ";");
         }
