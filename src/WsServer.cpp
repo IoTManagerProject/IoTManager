@@ -62,7 +62,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 //отправка данных графиков
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->getSubtype() == "Loging") {
-                        (*it)->sendChart(false);
+                        (*it)->sendChart(2);
                     }
                 }
             }

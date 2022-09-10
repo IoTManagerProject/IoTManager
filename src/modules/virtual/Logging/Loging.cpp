@@ -12,8 +12,6 @@ class Loging : public IoTItem {
     String id;
     String filesList = "";
 
-    bool firstTime = true;
-
     int points;
     int keepdays;
 
@@ -35,43 +33,11 @@ class Loging : public IoTItem {
         jsonRead(parameters, F("keepdays"), keepdays);
 
         //создадим экземпляр класса даты
-        dateIoTItem = (IoTItem *)getAPI_Date("{\"id\": \"" + id + "-date\"}");
+        dateIoTItem = (IoTItem *)getAPI_Date("{\"id\": \"" + id + "-date\",\"int\":\"20\"}");
         IoTItems.push_back(dateIoTItem);
     }
 
-    String getValue() {
-        return "";
-    }
-
-    void loop() {
-        if (enableDoByInt) {
-            currentMillis = millis();
-            difference = currentMillis - prevMillis;
-            if (difference >= interval) {
-                prevMillis = millis();
-                this->doByInterval();
-            }
-        }
-    }
-
-    void regEvent(String value, String consoleInfo = "") {
-        generateEvent(_id, value);
-        publishStatusMqtt(_id, value);
-        String json = createSingleJson(_id, value);
-        publishStatusWsJson(json);
-        SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
-    }
-
-    String createSingleJson(String id, String value) {
-        String topic = mqttRootDevice + "/" + _id;
-        return "{\"topic\":\"" + topic + "\",\"status\":[{\"x\":" + String(unixTime) + ",\"y1\":" + value + "}]}";
-    }
-
     void doByInterval() {
-        if (firstTime) {
-            firstTime = false;
-        }
-
         //если объект логгирования не был создан
         if (!isItemExist(logid)) {
             SerialPrint("E", F("Loging"), "'" + id + "' loging object not exist");
@@ -171,9 +137,11 @@ class Loging : public IoTItem {
 #endif
     }
 
-    void sendChart(bool mqtt) {
+    void sendChart(int type) {
         getFilesList();
         int f = 0;
+
+        bool noData = true;
 
         while (filesList.length()) {
             String buf = selectToMarker(filesList, ";");
@@ -181,24 +149,31 @@ class Loging : public IoTItem {
             f++;
             int i = 0;
 
-            unsigned long fileUnixTime = selectToMarkerLast(deleteToMarkerLast(buf, "."), "/").toInt() + START_DATETIME;
+            unsigned long fileUnixTimeGMT = selectToMarkerLast(deleteToMarkerLast(buf, "."), "/").toInt() + START_DATETIME;
+            unsigned long fileUnixTimeLocal = gmtTimeToLocal(fileUnixTimeGMT);
 
             //удаление старых файлов
-            if ((fileUnixTime + (points * (interval / 1000))) < (unixTime - (keepdays * 86400))) {
-                SerialPrint("i", F("Loging"), "file '" + buf + "' too old, deleted");
-                removeFile(buf);
+            // if ((fileUnixTimeLocal + (points * (interval / 1000))) < (unixTime - (keepdays * 86400))) {
+            //    SerialPrint("i", F("Loging"), "file '" + buf + "' too old, deleted");
+            //    removeFile(buf);
+            //} else {
+            unsigned long reqUnixTime = strDateToUnix(date);
+            if (fileUnixTimeLocal > reqUnixTime && fileUnixTimeLocal < reqUnixTime + 86400) {
+                noData = false;
+                createJson(buf, i, type);
+                SerialPrint("i", F("Loging"), String(f) + ")" + buf + ", " + String(i) + ", " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", sent");
             } else {
-                unsigned long reqUnixTime = strDateToUnix(date);
-                if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
-                    createJson(buf, i, mqtt);
-                    SerialPrint("i", F("Loging"), "file '" + buf + "' sent, user requested " + date);
-                } else {
-                    SerialPrint("i", F("Loging"), "file '" + buf + "' skipped, user requested " + date);
-                }
+                SerialPrint("i", F("Loging"), String(f) + ")" + buf + ", " + String(i) + ", " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", skipped");
             }
+            //}
 
-            SerialPrint("i", F("Loging"), String(f) + ") path: " + buf + ", lines №: " + String(i) + ", created: " + getDateTimeDotFormatedFromUnix(fileUnixTime));
             filesList = deleteBeforeDelimiter(filesList, ";");
+        }
+        //если данных нет отправляем пустой грфик
+        if (noData) {
+            SerialPrint("i", F("Loging"), "clear chart");
+            String cleanJson = createEmtyJson();
+            publishJson(cleanJson, type);
         }
     }
 
@@ -216,64 +191,7 @@ class Loging : public IoTItem {
         }
     }
 
-    //    void sendChart2(bool mqtt) {
-    //        //отправка графика может происходить только если время синхронизированно
-    //        if (!isTimeSynch) {
-    //            SerialPrint("E", F("Loging"), "'" + id + "' Сant send chart - time not synchronized");
-    //            return;
-    //        }
-    //        SerialPrint("i", F("Loging"), "'" + id + "'----------------------------");
-    //        String reqUnixTimeStr = "27.08.2022";  //нужно получить эту дату из окна ввода под графиком.
-    //        unsigned long reqUnixTime = strDateToUnix(reqUnixTimeStr);
-    //
-    //        int i = 0;
-    //#if defined(ESP8266)
-    //        String directory = "lg";
-    //        auto dir = FileFS.openDir(directory);
-    //        while (dir.next()) {
-    //            String fname = dir.fileName();
-    //#endif
-    //#if defined(ESP32)
-    //            String directory = "/lg";
-    //            File root = FileFS.open(directory);
-    //            directory = String();
-    //            if (root.isDirectory()) {
-    //                File file = root.openNextFile();
-    //                while (file) {
-    //                    String fname = file.name();
-    //                    fname = selectToMarkerLast(fname, "/");
-    //                    file = root.openNextFile();
-    //#endif
-    //                    String idInFileName = selectToMarker(fname, "-");
-    //                    unsigned long fileUnixTime = deleteBeforeDelimiter(deleteToMarkerLast(fname, "."), "-").toInt() + START_DATETIME;
-    //                    if (isItemExist(id)) {
-    //                        //если id в имени файла совпадает с id данного экземпляра, пусть каждый экземпляр класса шлет только свое
-    //                        if (idInFileName == id) {
-    //                            //выбираем только те файлы которые входят в выбранные пользователем сутки
-    //                            // if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
-    //                            SerialPrint("i", F("Loging"), "'" + id + "' matching file found '" + fname + "'");
-    //                            //выгрузка по частям, по одному файлу
-    //                            createJson("/lg/" + fname, i, mqtt);
-    //                            //}
-    //                            //удаление старых файлов
-    //                            if ((fileUnixTime + (points * interval)) < (unixTime - (keepdays * 86400))) {
-    //                                SerialPrint("i", F("Loging"), "'" + id + "' file '" + fname + "' too old, deleted");
-    //                                removeFile(directory + "/" + fname);
-    //                            }
-    //                        }
-    //                    } else {
-    //                        SerialPrint("i", F("Loging"), "'" + id + "' file '" + fname + "' not used, deleted");
-    //                        removeFile(directory + "/" + fname);
-    //                    }
-    //                }
-    //#if defined(ESP32)
-    //            }
-    //#endif
-    //
-    //            SerialPrint("i", F("Loging"), "'" + id + "'--------------'" + String(i) + "'--------------");
-    //        }
-
-    void createJson(String file, int &i, bool mqtt) {
+    void createJson(String file, int &i, int type) {
         File configFile = FileFS.open(file, "r");
         if (!configFile) {
             SerialPrint("E", F("Loging"), "'" + id + "' open file error");
@@ -305,15 +223,51 @@ class Loging : public IoTItem {
         oneSingleJson = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[" + oneSingleJson + "]}";
         oneSingleJson.replace("},]}", "}]}");
 
-        publishJson(oneSingleJson, mqtt);
+        publishJson(oneSingleJson, type);
     }
 
-    void publishJson(String &oneSingleJson, bool mqtt) {
-        if (mqtt) {
+    void publishJson(String &oneSingleJson, int type) {
+        if (type == 1) {
             publishChart(id, oneSingleJson);
-        } else {
+        } else if (type == 2) {
+            publishStatusWsJson(oneSingleJson);
+        } else if (type == 3) {
+            publishChart(id, oneSingleJson);
             publishStatusWsJson(oneSingleJson);
         }
+    }
+
+    String getValue() {
+        return "";
+    }
+
+    void loop() {
+        if (enableDoByInt) {
+            currentMillis = millis();
+            difference = currentMillis - prevMillis;
+            if (difference >= interval) {
+                prevMillis = millis();
+                this->doByInterval();
+            }
+        }
+    }
+
+    void regEvent(String value, String consoleInfo = "") {
+        generateEvent(_id, value);
+        publishStatusMqtt(_id, value);
+        String json = createSingleJson(_id, value);
+        publishStatusWsJson(json);
+        SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
+    }
+
+    String createSingleJson(String id, String value) {
+        String topic = mqttRootDevice + "/" + _id;
+        return "{\"topic\":\"" + topic + "\",\"status\":[{\"x\":" + String(unixTime) + ",\"y1\":" + value + "}]}";
+    }
+
+    String createEmtyJson() {
+        String topic = mqttRootDevice + "/" + _id;
+        return "{\"topic\":\"" + topic + "\",\"status\":[],\"maxCount\":\"0\"}";
     }
 
     //просто максимальное количество точек
@@ -332,6 +286,8 @@ void *getAPI_Loging(String subtype, String param) {
 
 class Date : public IoTItem {
    private:
+    bool firstTime = true;
+
    public:
     String id;
     Date(String parameters) : IoTItem(parameters) {
@@ -350,12 +306,20 @@ class Date : public IoTItem {
         regEvent(value.valS, "");
         for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->getSubtype() == "Loging") {
-                (*it)->sendChart(true);
+                (*it)->sendChart(3);
             }
         }
     }
 
-    void doByInterval() {}
+    void doByInterval() {
+        if (isTimeSynch) {
+            if (firstTime) {
+                setValue(getDateDotFormated());
+                SerialPrint("E", F("Loging"), "today date set " + getDateDotFormated());
+                firstTime = false;
+            }
+        }
+    }
 };
 
 void *getAPI_Date(String param) {

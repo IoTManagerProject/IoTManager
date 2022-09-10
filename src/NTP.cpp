@@ -39,6 +39,10 @@ void synchTime() {
     configTime(0, 0, "pool.ntp.org", "ru.pool.ntp.org", "pool.ntp.org");
 }
 
+unsigned long gmtTimeToLocal(unsigned long gmtTimestamp) {
+    return gmtTimestamp + (jsonReadInt(settingsFlashJson, F("timezone")) * 60 * 60);
+}
+
 time_t getSystemTime() {
     timeval tv{0, 0};
     timezone tz = timezone{0, 0};
@@ -117,6 +121,13 @@ const String getDateTimeDotFormated() {
     return String(buf);
 }
 
+const String getDateDotFormated() {
+    char buf[32];
+    sprintf(buf, "%02d.%02d.%d", _time_local.day_of_month, _time_local.month, _time_local.year + 2000);
+    return String(buf);
+}
+
+// format 22.02.2022
 unsigned long strDateToUnix(String date) {
     int day = selectToMarker(date, ".").toInt();
     date = deleteBeforeDelimiter(date, ".");

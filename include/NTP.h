@@ -11,5 +11,7 @@ extern void synchTime();
 extern const String getTimeLocal_hhmm();
 extern const String getTimeLocal_hhmmss();
 extern const String getDateTimeDotFormated();
+extern const String getDateDotFormated();
 extern unsigned long strDateToUnix(String date);
 const String getDateTimeDotFormatedFromUnix(unsigned long unixTime);
+extern unsigned long gmtTimeToLocal(unsigned long gmtTimestamp);
