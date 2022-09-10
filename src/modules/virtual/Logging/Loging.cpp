@@ -1,18 +1,25 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
+#include "ESPConfiguration.h"
 #include "NTP.h"
 
+void *getAPI_Date(String params);
+
+String date;
 class Loging : public IoTItem {
    private:
     String logid;
     String id;
     String filesList = "";
 
+    bool firstTime = true;
+
     int points;
     int keepdays;
 
+    IoTItem *dateIoTItem;
+
     unsigned long interval;
-    bool firstTime = true;
 
    public:
     Loging(String parameters) : IoTItem(parameters) {
@@ -26,6 +33,10 @@ class Loging : public IoTItem {
         jsonRead(parameters, F("int"), interval);
         interval = interval * 1000 * 60;  //приводим к милисекундам
         jsonRead(parameters, F("keepdays"), keepdays);
+
+        //создадим экземпляр класса даты
+        dateIoTItem = (IoTItem *)getAPI_Date("{\"id\": \"" + id + "-date\"}");
+        IoTItems.push_back(dateIoTItem);
     }
 
     String getValue() {
@@ -46,13 +57,21 @@ class Loging : public IoTItem {
     void regEvent(String value, String consoleInfo = "") {
         generateEvent(_id, value);
         publishStatusMqtt(_id, value);
-        String topic = mqttRootDevice + "/" + _id;
-        String json = "{\"topic\":\"" + topic + "\",\"status\":[{\"x\":" + String(unixTime) + ",\"y1\":" + value + "}]}";
+        String json = createSingleJson(_id, value);
         publishStatusWsJson(json);
         SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
     }
 
+    String createSingleJson(String id, String value) {
+        String topic = mqttRootDevice + "/" + _id;
+        return "{\"topic\":\"" + topic + "\",\"status\":[{\"x\":" + String(unixTime) + ",\"y1\":" + value + "}]}";
+    }
+
     void doByInterval() {
+        if (firstTime) {
+            firstTime = false;
+        }
+
         //если объект логгирования не был создан
         if (!isItemExist(logid)) {
             SerialPrint("E", F("Loging"), "'" + id + "' loging object not exist");
@@ -169,7 +188,13 @@ class Loging : public IoTItem {
                 SerialPrint("i", F("Loging"), "file '" + buf + "' too old, deleted");
                 removeFile(buf);
             } else {
-                createJson(buf, i, mqtt);
+                unsigned long reqUnixTime = strDateToUnix(date);
+                if (fileUnixTime > reqUnixTime && fileUnixTime < reqUnixTime + 86400) {
+                    createJson(buf, i, mqtt);
+                    SerialPrint("i", F("Loging"), "file '" + buf + "' sent, user requested " + date);
+                } else {
+                    SerialPrint("i", F("Loging"), "file '" + buf + "' skipped, user requested " + date);
+                }
             }
 
             SerialPrint("i", F("Loging"), String(f) + ") path: " + buf + ", lines №: " + String(i) + ", created: " + getDateTimeDotFormatedFromUnix(fileUnixTime));
@@ -303,4 +328,36 @@ void *getAPI_Loging(String subtype, String param) {
     } else {
         return nullptr;
     }
+}
+
+class Date : public IoTItem {
+   private:
+   public:
+    String id;
+    Date(String parameters) : IoTItem(parameters) {
+        jsonRead(parameters, F("id"), id);
+        value.isDecimal = false;
+    }
+
+    void setValue(String valStr) {
+        value.valS = valStr;
+        date = valStr;
+        setValue(value);
+    }
+
+    void setValue(IoTValue Value) {
+        value = Value;
+        regEvent(value.valS, "");
+        for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+            if ((*it)->getSubtype() == "Loging") {
+                (*it)->sendChart(true);
+            }
+        }
+    }
+
+    void doByInterval() {}
+};
+
+void *getAPI_Date(String param) {
+    return new Date(param);
 }

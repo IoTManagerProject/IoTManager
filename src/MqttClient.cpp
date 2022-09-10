@@ -287,6 +287,7 @@ void publishWidgets() {
 
 void publishState() {
     String json = getParamsJson();
+    SerialPrint("i", F("DATA"), json);
     json.replace("{", "");
     json.replace("}", "");
     json.replace("\"", "");

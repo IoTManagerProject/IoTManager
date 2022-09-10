@@ -6,7 +6,7 @@
             "type": "Writing",
             "subtype": "Loging",
             "id": "log",
-            "widget": "chart1",
+            "widget": "chart2",
             "page": "Графики",
             "descr": "Температура",
             "int": 1,

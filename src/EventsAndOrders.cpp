@@ -25,10 +25,16 @@ void handleOrder() {
         String order = selectToMarker(orderBuf, ",");
         SerialPrint("i", F("ORDER"), order);
 
+        String id = selectToMarker(order, " ");
+
+        //это модификатор для даты графика
+        // if (id.endsWith("-date")) {
+        //}
+
         //здесь нужно перебрать все методы execute всех векторов и выполнить те id которых совпали с id события
-        IoTItem* item = findIoTItem(selectToMarker(order, " "));
+        IoTItem* item = findIoTItem(id);
         if (item) {
-            SerialPrint("i", F("ORDER"), "order matched " + order);
+            SerialPrint("i", F("ORDER"), "order found " + order);
             String valStr = selectToMarkerLast(order, " ");
             item->setValue(valStr);
         }

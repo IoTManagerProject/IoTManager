@@ -70,7 +70,7 @@ String IoTItem::getValue() {
         return value.valS;
 }
 
-//установить
+//определяем тип прилетевшей величины
 void IoTItem::setValue(String valStr) {
     if (value.isDecimal = isDigitDotCommaStr(valStr)) {
         value.valD = valStr.toFloat();
@@ -80,7 +80,7 @@ void IoTItem::setValue(String valStr) {
     setValue(value);
 }
 
-//установить
+//
 void IoTItem::setValue(IoTValue Value) {
     value = Value;
     if (value.isDecimal) {

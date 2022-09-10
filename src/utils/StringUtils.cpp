@@ -159,7 +159,8 @@ boolean isDigitStr(const String& str) {
 boolean isDigitDotCommaStr(const String& str) {
     for (size_t i = 0; i < str.length(); i++) {
         char latter = str.charAt(i);
-        if (!isDigit(latter) && latter != '.' && latter != '-') {
+        //если символ не цифра и не точка и не тире
+        if (!isDigit(latter) && latter != '.') {
             return false;
         }
     }
@@ -186,9 +187,9 @@ String uint64ToString(uint64_t input) {
         input /= base;
 
         if (c < 10)
-        c +='0';
+            c += '0';
         else
-        c += 'A' - 10;
+            c += 'A' - 10;
         result = c + result;
     } while (input);
     return result;
