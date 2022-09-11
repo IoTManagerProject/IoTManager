@@ -5,7 +5,6 @@
 
 void *getAPI_Date(String params);
 
-String date;
 class Loging : public IoTItem {
    private:
     String logid;
@@ -158,7 +157,7 @@ class Loging : public IoTItem {
             //    SerialPrint("i", F("Loging"), "file '" + buf + "' too old, deleted");
             //    removeFile(buf);
             //} else {
-            unsigned long reqUnixTime = strDateToUnix(date);
+            unsigned long reqUnixTime = strDateToUnix(getItemValue(id + "-date"));
             if (fileUnixTimeLocal > reqUnixTime && fileUnixTimeLocal < reqUnixTime + 86400) {
                 noData = false;
                 createJson(buf, i, type);
@@ -229,12 +228,12 @@ class Loging : public IoTItem {
 
     void publishJson(String &oneSingleJson, int type) {
         if (type == 1) {
-            publishChart(id, oneSingleJson);
+            publishChartMqtt(id, oneSingleJson);
         } else if (type == 2) {
-            publishStatusWsJson(oneSingleJson);
+            publishChartWs(oneSingleJson);
         } else if (type == 3) {
-            publishChart(id, oneSingleJson);
-            publishStatusWsJson(oneSingleJson);
+            publishChartMqtt(id, oneSingleJson);
+            publishChartWs(oneSingleJson);
         }
     }
 
@@ -257,7 +256,7 @@ class Loging : public IoTItem {
         generateEvent(_id, value);
         publishStatusMqtt(_id, value);
         String json = createSingleJson(_id, value);
-        publishStatusWsJson(json);
+        publishChartWs(json);
         SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
     }
 
@@ -298,16 +297,19 @@ class Date : public IoTItem {
 
     void setValue(String valStr) {
         value.valS = valStr;
-        date = valStr;
         setValue(value);
     }
 
     void setValue(IoTValue Value) {
         value = Value;
         regEvent(value.valS, "");
+        //отправка данных при изменении даты
         for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->getSubtype() == "Loging") {
-                (*it)->sendChart(3);
+                //отправляем только свои данные
+                if ((*it)->getID() == selectToMarker(id, "-")) {
+                    (*it)->sendChart(3);
+                }
             }
         }
     }

@@ -222,7 +222,7 @@ boolean publishData(const String& topic, const String& data) {
     return true;
 }
 
-boolean publishChart(const String& topic, const String& data) {
+boolean publishChartMqtt(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     if (!publish(path, data)) {
         SerialPrint("E", F("MQTT"), F("on publish chart"));

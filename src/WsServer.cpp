@@ -59,7 +59,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWs("/layout.json", num, 1024);
                 String json = getParamsJson();
                 standWebSocket.sendTXT(num, json);
-                //отправка данных графиков
+                //отправка данных графиков (нехватает передачи номера сокетов)
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->getSubtype() == "Loging") {
                         (*it)->sendChart(2);
@@ -250,8 +250,8 @@ void publishStatusWs(const String& topic, const String& data) {
 }
 
 //публикация статус сообщений уже готовых
-void publishStatusWsJson(String& json) {
-    standWebSocket.broadcastTXT(json);
+void publishChartWs(String& data) {
+    standWebSocket.broadcastTXT(data);
 }
 
 //данные которые мы отправляем в сокеты переодически

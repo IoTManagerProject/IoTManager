@@ -17,7 +17,7 @@ void mqttSubscribe();
 
 boolean publish(const String& topic, const String& data);
 boolean publishData(const String& topic, const String& data);
-boolean publishChart(const String& topic, const String& data);
+boolean publishChartMqtt(const String& topic, const String& data);
 boolean publishControl(String id, String topic, String state);
 boolean publishChart_test(const String& topic, const String& data);
 boolean publishStatusMqtt(const String& topic, const String& data);
