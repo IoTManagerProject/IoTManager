@@ -35,6 +35,7 @@ class Loging : public IoTItem {
         //создадим экземпляр класса даты
         dateIoTItem = (IoTItem *)getAPI_Date("{\"id\": \"" + id + "-date\",\"int\":\"20\"}");
         IoTItems.push_back(dateIoTItem);
+        SerialPrint("E", F("Loging"), "created date instance " + id);
     }
 
     void doByInterval() {
