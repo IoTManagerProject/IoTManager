@@ -128,7 +128,9 @@ String IoTItem::getSubtype() {
     return _subtype;
 }
 
-void IoTItem::sendChart(int type) {}
+void IoTItem::sendChart() {}
+
+void IoTItem::setPublishType(int publishType, int wsNum){};
 
 void IoTItem::cleanData() {}
 

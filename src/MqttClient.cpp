@@ -137,7 +137,8 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         //отправка данных графиков
         for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->getSubtype() == "Loging") {
-                (*it)->sendChart(1);
+                (*it)->setPublishType(1, -1);
+                (*it)->sendChart();
             }
         }
 

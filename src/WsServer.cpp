@@ -59,10 +59,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWs("/layout.json", num, 1024);
                 String json = getParamsJson();
                 standWebSocket.sendTXT(num, json);
-                //отправка данных графиков (нехватает передачи номера сокетов)
+                //отправка данных графиков только в выбранный сокет
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->getSubtype() == "Loging") {
-                        (*it)->sendChart(2);
+                        (*it)->setPublishType(2, num);
+                        (*it)->sendChart();
                     }
                 }
             }
@@ -240,7 +241,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
     }
 }
 
-//публикация статус сообщений
+//публикация статус сообщений (недостаток в том что делаем бродкаст всем клиентам поднятым в свелте!!!)
 void publishStatusWs(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic;
     String json = "{}";
@@ -249,9 +250,15 @@ void publishStatusWs(const String& topic, const String& data) {
     standWebSocket.broadcastTXT(json);
 }
 
-//публикация статус сообщений уже готовых
-void publishChartWs(String& data) {
-    standWebSocket.broadcastTXT(data);
+//публикация статус сообщений
+void publishChartWs(int num, String& data) {
+    if (num == -1) {
+        Serial.println("broadcastTXT");
+        standWebSocket.broadcastTXT(data);
+    } else {
+        Serial.println("sendTXT");
+        standWebSocket.sendTXT(num, data);
+    }
 }
 
 //данные которые мы отправляем в сокеты переодически

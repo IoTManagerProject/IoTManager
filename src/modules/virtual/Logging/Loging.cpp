@@ -11,6 +11,9 @@ class Loging : public IoTItem {
     String id;
     String filesList = "";
 
+    int _publishType = -2;
+    int _wsNum = -1;
+
     int points;
     int keepdays;
 
@@ -137,7 +140,7 @@ class Loging : public IoTItem {
 #endif
     }
 
-    void sendChart(int type) {
+    void sendChart() {
         getFilesList();
         int f = 0;
 
@@ -160,7 +163,7 @@ class Loging : public IoTItem {
             unsigned long reqUnixTime = strDateToUnix(getItemValue(id + "-date"));
             if (fileUnixTimeLocal > reqUnixTime && fileUnixTimeLocal < reqUnixTime + 86400) {
                 noData = false;
-                createJson(buf, i, type);
+                createJson(buf, i);
                 SerialPrint("i", F("Loging"), String(f) + ")" + buf + ", " + String(i) + ", " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", sent");
             } else {
                 SerialPrint("i", F("Loging"), String(f) + ")" + buf + ", " + String(i) + ", " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", skipped");
@@ -173,7 +176,7 @@ class Loging : public IoTItem {
         if (noData) {
             SerialPrint("i", F("Loging"), "clear chart");
             String cleanJson = createEmtyJson();
-            publishJson(cleanJson, type);
+            publishJson(cleanJson);
         }
     }
 
@@ -191,7 +194,7 @@ class Loging : public IoTItem {
         }
     }
 
-    void createJson(String file, int &i, int type) {
+    void createJson(String file, int &i) {
         File configFile = FileFS.open(file, "r");
         if (!configFile) {
             SerialPrint("E", F("Loging"), "'" + id + "' open file error");
@@ -223,17 +226,26 @@ class Loging : public IoTItem {
         oneSingleJson = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[" + oneSingleJson + "]}";
         oneSingleJson.replace("},]}", "}]}");
 
-        publishJson(oneSingleJson, type);
+        publishJson(oneSingleJson);
     }
 
-    void publishJson(String &oneSingleJson, int type) {
-        if (type == 1) {
+    // publishType 1 - в mqtt, 2 - в ws, 3 - mqtt и ws
+    // wsNum = -1 => broadcast
+    void setPublishType(int publishType, int wsNum) {
+        _publishType = publishType;
+        _wsNum = wsNum;
+    }
+
+    void publishJson(String &oneSingleJson) {
+        if (_publishType == 1) {
             publishChartMqtt(id, oneSingleJson);
-        } else if (type == 2) {
-            publishChartWs(oneSingleJson);
-        } else if (type == 3) {
+        } else if (_publishType == 2) {
+            publishChartWs(_wsNum, oneSingleJson);
+        } else if (_publishType == 3) {
             publishChartMqtt(id, oneSingleJson);
-            publishChartWs(oneSingleJson);
+            publishChartWs(_wsNum, oneSingleJson);
+        } else {
+            SerialPrint("E", F("Loging"), "wrong publishType");
         }
     }
 
@@ -256,7 +268,7 @@ class Loging : public IoTItem {
         generateEvent(_id, value);
         publishStatusMqtt(_id, value);
         String json = createSingleJson(_id, value);
-        publishChartWs(json);
+        publishChartWs(-1, json);
         SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
     }
 
@@ -308,7 +320,8 @@ class Date : public IoTItem {
             if ((*it)->getSubtype() == "Loging") {
                 //отправляем только свои данные
                 if ((*it)->getID() == selectToMarker(id, "-")) {
-                    (*it)->sendChart(3);
+                    (*it)->setPublishType(3, -1);
+                    (*it)->sendChart();
                 }
             }
         }
