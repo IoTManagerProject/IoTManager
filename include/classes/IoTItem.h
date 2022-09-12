@@ -25,6 +25,7 @@ class IoTItem {
 
     String getSubtype();
     virtual void sendChart();
+    virtual void cleanChart();
     virtual void setPublishType(int type, int num);
     virtual void cleanData();
 

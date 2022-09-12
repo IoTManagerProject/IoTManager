@@ -19,6 +19,9 @@ class Loging : public IoTItem {
 
     IoTItem *dateIoTItem;
 
+    String prevDate = "";
+    bool firstTimeDate = true;
+
     unsigned long interval;
 
    public:
@@ -80,11 +83,11 @@ class Loging : public IoTItem {
         int lines = countLines(filePath);
         SerialPrint("i", F("Loging"), "'" + id + "' " + String(lines) + " lines found in file");
 
-        //если количество строк до заданной величины
-        if (lines <= points) {
+        //если количество строк до заданной величины и дата не менялась
+        if (lines <= points && !hasDayChanged()) {
             //просто добавим в существующий файл новые данные
             addNewDataToExistingFile(filePath, logData);
-            //если больше создадим следующий файл
+            //если больше или поменялась дата то создадим следующий файл
         } else {
             createNewFileWithData(logData);
         }
@@ -100,6 +103,20 @@ class Loging : public IoTItem {
     void addNewDataToExistingFile(String &path, String &logData) {
         addFileLn(path, logData);
         SerialPrint("i", F("Loging"), "'" + id + "' loging in file http://" + WiFi.localIP().toString() + path);
+    }
+
+    bool hasDayChanged() {
+        bool changed = false;
+        String currentDate = getDateDotFormated();
+        if (!firstTimeDate) {
+            if (prevDate != currentDate) {
+                changed = true;
+                SerialPrint("i", F("NTP"), "Change day event");
+            }
+        }
+        firstTimeDate = false;
+        prevDate = currentDate;
+        return changed;
     }
 
 #if defined(ESP8266)
@@ -164,9 +181,9 @@ class Loging : public IoTItem {
             if (fileUnixTimeLocal > reqUnixTime && fileUnixTimeLocal < reqUnixTime + 86400) {
                 noData = false;
                 createJson(buf, i);
-                SerialPrint("i", F("Loging"), String(f) + ")" + buf + ", " + String(i) + ", " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", sent");
+                SerialPrint("i", F("Loging"), String(f) + ") " + buf + ", " + String(i) + ", " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", sent");
             } else {
-                SerialPrint("i", F("Loging"), String(f) + ")" + buf + ", " + String(i) + ", " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", skipped");
+                SerialPrint("i", F("Loging"), String(f) + ") " + buf + ", nil, " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", skipped");
             }
             //}
 
@@ -174,10 +191,14 @@ class Loging : public IoTItem {
         }
         //если данных нет отправляем пустой грфик
         if (noData) {
-            SerialPrint("i", F("Loging"), "clear chart");
-            String cleanJson = createEmtyJson();
-            publishJson(cleanJson);
+            cleanChart();
         }
+    }
+
+    void cleanChart() {
+        SerialPrint("i", F("Loging"), "clear chart");
+        String cleanJson = createEmtyJson();
+        publishJson(cleanJson);
     }
 
     void cleanData() {
@@ -265,11 +286,16 @@ class Loging : public IoTItem {
     }
 
     void regEvent(String value, String consoleInfo = "") {
-        generateEvent(_id, value);
-        publishStatusMqtt(_id, value);
-        String json = createSingleJson(_id, value);
-        publishChartWs(-1, json);
-        SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
+        String userDate = getItemValue(id + "-date");
+        String currentDate = getDateDotFormated();
+        //отправляем в график данные только когда выбран сегодняшний день
+        if (userDate == currentDate) {
+            generateEvent(_id, value);
+            publishStatusMqtt(_id, value);
+            String json = createSingleJson(_id, value);
+            publishChartWs(-1, json);
+            SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
+        }
     }
 
     String createSingleJson(String id, String value) {
@@ -321,6 +347,7 @@ class Date : public IoTItem {
                 //отправляем только свои данные
                 if ((*it)->getID() == selectToMarker(id, "-")) {
                     (*it)->setPublishType(3, -1);
+                    (*it)->cleanChart();
                     (*it)->sendChart();
                 }
             }

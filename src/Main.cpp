@@ -1,6 +1,7 @@
 #include "Main.h"
 #include <time.h>
 #include "classes/IoTDB.h"
+#include "utils/Statistic.h"
 
 IoTScenario iotScen;  // объект управления сценарием
 
@@ -70,6 +71,8 @@ void setup() {
     IoTItems.push_back((IoTItem *)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
     generateEvent("onStart", "");
 
+    stInit();
+
     // test
     Serial.println("-------test start--------");
     //=======проверка очереди из структур=================
@@ -86,7 +89,7 @@ void setup() {
     // Serial.println(myDB->front().myword);
     // Serial.println(myDB->front().myword);
 
-    Serial.println(FileList("lg"));
+    // Serial.println(FileList("lg"));
 
     Serial.println("--------test end---------");
 

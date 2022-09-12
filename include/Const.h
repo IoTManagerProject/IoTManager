@@ -27,6 +27,8 @@
 #define MQTT_RECONNECT_INTERVAL 20000
 #define CHANGE_BROKER_AFTER 5
 
+#define TELEMETRY_UPDATE_INTERVAL_MIN 60
+
 #ifdef esp8266_4mb
 #define USE_LITTLEFS true
 #endif
@@ -48,7 +50,9 @@ enum TimerTask_t { WIFI_SCAN,
                    UPTIME,
                    UDP,  // UDPP
                    TIMES,
-                   PTASK };
+                   PTASK,
+                   ST,
+                   END };
 
 //задачи которые надо протащить через loop
 enum NotAsyncActions {

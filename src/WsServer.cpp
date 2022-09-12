@@ -253,10 +253,8 @@ void publishStatusWs(const String& topic, const String& data) {
 //публикация статус сообщений
 void publishChartWs(int num, String& data) {
     if (num == -1) {
-        Serial.println("broadcastTXT");
         standWebSocket.broadcastTXT(data);
     } else {
-        Serial.println("sendTXT");
         standWebSocket.sendTXT(num, data);
     }
 }
