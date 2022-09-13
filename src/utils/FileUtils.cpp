@@ -291,3 +291,36 @@ String FileList(String path) {
     return output;
 }
 #endif
+
+#if defined(ESP8266)
+bool getInfo(FSInfo& info) {
+    return FileFS.info(info);
+}
+// Информация о ФС
+void getFSInfo() {
+    FSInfo buf;
+    if (getInfo(buf)) {
+        size_t totalBytes = buf.totalBytes;  // всего
+        size_t usedBytes = buf.usedBytes;    // использовано
+        // size_t maxOpenFiles = buf.maxOpenFiles;  // лимит на открые файлы
+        // size_t blockSize = buf.blockSize;
+        // size_t pageSize = buf.pageSize;
+        // size_t maxPathLength = buf.maxPathLength;  // лимит на пути и имена файлов
+        size_t freeBytes = totalBytes - usedBytes;
+        float freePer = ((float)freeBytes / totalBytes) * 100;
+        jsonWriteStr(errorsHeapJson, F("freeBytes"), String(freePer) + "% (" + prettyBytes(freeBytes) + ")");
+    } else {
+        SerialPrint("E", F("FS"), F("FS info error"));
+    }
+}
+#endif
+
+#if defined(ESP32)
+void getFSInfo() {
+    size_t totalBytes = FileFS.totalBytes();  // всего
+    size_t usedBytes = FileFS.usedBytes();    // использовано
+    size_t freeBytes = totalBytes - usedBytes;
+    float freePer = ((float)freeBytes / totalBytes) * 100;
+    jsonWriteStr(errorsHeapJson, F("freeBytes"), String(freePer) + "% (" + prettyBytes(freeBytes) + ")");
+}
+#endif

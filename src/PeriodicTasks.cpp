@@ -4,6 +4,8 @@ void periodicTasksInit() {
     //задачи редкого выполнения
     ts.add(
         PTASK, 1000 * 30, [&](void*) {
+            // fs
+            getFSInfo();
             // heap
             String heap = prettyBytes(ESP.getFreeHeap());
             SerialPrint(F("i"), F("HEAP"), heap);

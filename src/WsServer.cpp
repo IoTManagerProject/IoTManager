@@ -171,6 +171,17 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             //----------------------------------------------------------------------//
+            // Страница веб интерфейса dev
+            //----------------------------------------------------------------------//
+            if (headerStr == "/dev|") {
+                standWebSocket.sendTXT(num, errorsHeapJson);
+                sendFileToWs("/layout.json", num, 1024);
+                standWebSocket.sendTXT(num, settingsFlashJson);
+                sendFileToWs("/config.json", num, 1024);
+                sendFileToWs("/items.json", num, 1024);
+            }
+
+            //----------------------------------------------------------------------//
             // отдельные команды веб интерфейса
             //----------------------------------------------------------------------//
 

@@ -24,29 +24,23 @@ void updateDeviceStatus() {
         WiFiClient client;
         HTTPClient http;
         http.begin(client, url);
-        // http.setAuthorization("admin", "admin");
-        http.addHeader("Content-Type", "application/json");
-        // String mac = WiFi.macAddress().c_str();
-        String json = "";
-        jsonWriteStr_(json, "idesp", getChipId());
-        jsonWriteStr_(json, "nameesp", jsonReadStr(settingsFlashJson, F("name")));
-        jsonWriteStr_(json, "firmwarename", String(FIRMWARE_NAME));
-        jsonWriteStr_(json, "firmwarever", String(FIRMWARE_VERSION));
-        jsonWriteStr_(json, "rebootreason", ESP_getResetReason());
-        int httpCode = http.POST(json);
-        // int httpCode = http.POST("?idesp=" + getChipId() +
-        //                          "&nameesp=" + jsonReadStr(settingsFlashJson, F("name")) +
-        //                          "&firmwarename=" + String(FIRMWARE_NAME) +
-        //                          "&firmwarever=" + String(FIRMWARE_VERSION) +
-        //                          "&rebootreason=" + ESP_getResetReason() + "");
-        if (httpCode > 0) {
-            ret = httpCode;
-            if (httpCode == HTTP_CODE_OK) {
+        http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        String httpRequestData = "idesp=" + getChipId() +
+                                 "&nameesp=" + jsonReadStr(settingsFlashJson, F("name")) +
+                                 "&firmwarename=" + String(FIRMWARE_NAME) +
+                                 "&firmwarever=" + String(FIRMWARE_VERSION) +
+                                 "&rebootreason=" + ESP_getResetReason() +
+                                 "&uptime=" + jsonReadStr(errorsHeapJson, F("upt"));
+        int httpResponseCode = http.POST(httpRequestData);
+
+        if (httpResponseCode > 0) {
+            ret = httpResponseCode;
+            if (httpResponseCode == HTTP_CODE_OK) {
                 String payload = http.getString();
                 ret += " " + payload;
             }
         } else {
-            ret = http.errorToString(httpCode).c_str();
+            ret = http.errorToString(httpResponseCode).c_str();
         }
         http.end();
     }

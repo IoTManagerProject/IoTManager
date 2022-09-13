@@ -19,3 +19,8 @@ String readDataDB(String id);
 extern void onFlashWrite();
 
 String FileList(String path);
+
+extern void getFSInfo();
+#ifdef ESP8266
+extern bool getInfo(FSInfo& info);
+#endif
