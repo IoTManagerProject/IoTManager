@@ -157,11 +157,16 @@ boolean isDigitStr(const String& str) {
 }
 
 boolean isDigitDotCommaStr(const String& str) {
+    bool dotCountWas = false;
     for (size_t i = 0; i < str.length(); i++) {
         char latter = str.charAt(i);
         //если символ не цифра и не точка и не тире
-        if (!isDigit(latter) && latter != '.') {
+        if (!isDigit(latter) && latter != '.' && latter != '-') {
             return false;
+        }
+        if (latter == '.') {    // проверяем на две точки, чтоб исключить дату
+            if (dotCountWas) return false;
+            dotCountWas = true;
         }
     }
     return true;

@@ -31,7 +31,10 @@ class ButtonIn : public IoTItem {
 
     
         // TODO: загрузить значение из памяти иначе пока просто считываем значение текущего состояния PIN
-        _lastButtonState = _buttonState = IoTgpio.digitalRead(_pin);
+        value.valD = _buttonState = IoTgpio.digitalRead(_pin);
+        // сообщаем всем о стартовом статусе без генерации события
+        publishStatusMqtt(_id, (String)_buttonState);
+        publishStatusWs(_id, (String)_buttonState);
     }
 
     void loop() {
