@@ -29,7 +29,7 @@ class Bme280t : public IoTItem {
             SerialPrint("E", "Sensor Bme280t", "Error");
     }
 
-    ~Bme280t() {};
+    ~Bme280t(){};
 };
 
 class Bme280h : public IoTItem {
@@ -49,7 +49,7 @@ class Bme280h : public IoTItem {
             SerialPrint("E", "Sensor Bme280h", "Error");
     }
 
-    ~Bme280h() {};
+    ~Bme280h(){};
 };
 
 class Bme280p : public IoTItem {
@@ -70,28 +70,27 @@ class Bme280p : public IoTItem {
             SerialPrint("E", "Sensor Bme280p", "Error");
     }
 
-    ~Bme280p() {};
+    ~Bme280p(){};
 };
 
-
-void* getAPI_Bme280(String subtype, String param) {    
-    if (subtype == F("Bme280t") || subtype == F("Bme280h") || subtype == F("Bme280p")) {
-        String addr;
-        jsonRead(param, "addr", addr);
-
-        if (bmes.find(addr) == bmes.end()) {
-            bmes[addr] = new Adafruit_BME280();
-            bmes[addr]->begin(hexStringToUint8(addr));
-        }
-
-        if (subtype == F("Bme280t")) {
-            return new Bme280t(bmes[addr], param);
-        } else if (subtype == F("Bme280h")) {
-            return new Bme280h(bmes[addr], param);
-        } else if (subtype == F("Bme280p")) {
-            return new Bme280p(bmes[addr], param);
-        }
-    } else {
-        return nullptr;
-    }
+void* getAPI_Bme280(String subtype, String param) {
+    // if (subtype == F("Bme280t") || subtype == F("Bme280h") || subtype == F("Bme280p")) {
+    //     String addr;
+    //     jsonRead(param, "addr", addr);
+    //
+    //    if (bmes.find(addr) == bmes.end()) {
+    //        bmes[addr] = new Adafruit_BME280();
+    //        bmes[addr]->begin(hexStringToUint8(addr));
+    //    }
+    //
+    //    if (subtype == F("Bme280t")) {
+    //        return new Bme280t(bmes[addr], param);
+    //    } else if (subtype == F("Bme280h")) {
+    //        return new Bme280h(bmes[addr], param);
+    //    } else if (subtype == F("Bme280p")) {
+    //        return new Bme280p(bmes[addr], param);
+    //    }
+    //} else {
+    return nullptr;
+    //}
 }

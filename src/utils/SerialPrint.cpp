@@ -12,7 +12,8 @@ void SerialPrint(String errorLevel, String module, String msg) {
 
     if (isNetworkActive()) {
         if (jsonReadInt(settingsFlashJson, F("log")) != 0) {
-            standWebSocket.broadcastTXT("/log|" + tosend);
+            String pl = "/log|" + tosend;
+            standWebSocket.broadcastTXT(pl);
         }
     }
     //}

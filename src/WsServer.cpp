@@ -299,7 +299,8 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
 
 //посылка данных из файла в бинарном виде
 void sendFileToWs(const char* filename, uint8_t num, size_t frameSize) {
-    standWebSocket.sendTXT(num, "/st" + String(filename));
+    String st = "/st" + String(filename);
+    standWebSocket.sendTXT(num, st);
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
     if (!file) {
@@ -315,17 +316,20 @@ void sendFileToWs(const char* filename, uint8_t num, size_t frameSize) {
         countRead = file.read(payload, sizeof(payload));
     }
     file.close();
-    standWebSocket.sendTXT(num, "/end" + String(filename));
+    String end = "/end" + String(filename);
+    standWebSocket.sendTXT(num, end);
 }
 
 //посылка данных из string
 void sendStringToWs(const String& msg, uint8_t num, String name) {
-    standWebSocket.sendTXT(num, "/st" + String(name));
+    String st = "/st" + String(name);
+    standWebSocket.sendTXT(num, st);
     size_t size = msg.length();
     char dataArray[size];
     msg.toCharArray(dataArray, size);
     standWebSocket.sendBIN(num, (uint8_t*)dataArray, size);
-    standWebSocket.sendTXT(num, "/end" + String(name));
+    String end = "/end" + String(name);
+    standWebSocket.sendTXT(num, end);
 }
 
 // void sendMark(const char* filename, const char* mark, uint8_t num) {

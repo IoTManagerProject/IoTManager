@@ -15,45 +15,49 @@ GY21* sensor = nullptr;
 
 class GY21t : public IoTItem {
    public:
-    GY21t(String parameters): IoTItem(parameters) { }
-    
+    GY21t(String parameters) : IoTItem(parameters) {}
+
     void doByInterval() {
-        //wire->read();
+        // wire->read();
         value.valD = sensor->GY21_Temperature();
-        if (value.valD < 300) regEvent(value.valD, "GY21");     // TODO: найти способ понимания ошибки получения данных
-            else SerialPrint("E", "Sensor GY21t", "Error");  
+        if (value.valD < 300)
+            regEvent(value.valD, "GY21");  // TODO: найти способ понимания ошибки получения данных
+        else
+            SerialPrint("E", "Sensor GY21t", "Error");
     }
 
-    ~GY21t() {};
+    ~GY21t(){};
 };
 
 class GY21h : public IoTItem {
    public:
-    GY21h(String parameters): IoTItem(parameters) { }
-    
-    void doByInterval() {
-        //sht->read();
-        value.valD = sensor->GY21_Humidity();
-        if (value.valD != 0) regEvent(value.valD, "GY21h");    // TODO: найти способ понимания ошибки получения данных
-            else SerialPrint("E", "Sensor GY21h", "Error");
-    }   
+    GY21h(String parameters) : IoTItem(parameters) {}
 
-    ~GY21h() {};
+    void doByInterval() {
+        // sht->read();
+        value.valD = sensor->GY21_Humidity();
+        if (value.valD != 0)
+            regEvent(value.valD, "GY21h");  // TODO: найти способ понимания ошибки получения данных
+        else
+            SerialPrint("E", "Sensor GY21h", "Error");
+    }
+
+    ~GY21h(){};
 };
 
 void* getAPI_GY21(String subtype, String param) {
-    if (subtype == F("GY21t") || subtype == F("GY21h")) {
-        if (!sensor) {
-            sensor = new GY21;
-            if (sensor) Wire.begin(SDA, SCL);
-        }
-
-        if (subtype == F("GY21t")) {
-            return new GY21t(param);
-        } else if (subtype == F("GY21h")) {
-            return new GY21h(param);
-        }
-    } else {
-        return nullptr;
-    }
+    // if (subtype == F("GY21t") || subtype == F("GY21h")) {
+    //     if (!sensor) {
+    //         sensor = new GY21;
+    //         if (sensor) Wire.begin(SDA, SCL);
+    //     }
+    //
+    //    if (subtype == F("GY21t")) {
+    //        return new GY21t(param);
+    //    } else if (subtype == F("GY21h")) {
+    //        return new GY21h(param);
+    //    }
+    //} else {
+    return nullptr;
+    //}
 }

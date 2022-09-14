@@ -5,7 +5,6 @@
 #include "utils/FileUtils.h"
 #include "NTP.h"
 
-
 bool isIotScenException = false;  // признак исключения и попытки прекратить выполнение сценария заранее
 
 // Лексический анализатор возвращает токены [0-255], если это неизвестны,
@@ -46,7 +45,7 @@ class NumberExprAST : public ExprAST {
     IoTValue Val;
 
    public:
-    NumberExprAST(String val) { 
+    NumberExprAST(String val) {
         Val.valD = strtod(val.c_str(), 0);
         Val.valS = val;
     }
@@ -147,7 +146,7 @@ class BinaryExprAST : public ExprAST {
         if (RHS == nullptr || LHS == nullptr) return nullptr;
 
         IoTValue *rhs = RHS->exec();  // получаем значение правого операнда для возможного использования в операции присваивания
-        
+
         if (Op == '=' && LHS->setValue(rhs)) {  // если установка значения не поддерживается, т.е. слева не переменная, то работаем по другим комбинациям далее
             return rhs;                         // иначе возвращаем присвоенное значение справа
         }
@@ -470,7 +469,7 @@ class SysCallExprAST : public ExprAST {
     }
 
     IoTValue *exec() {
-        //Serial.printf("Call from  SysCallExprAST exec %d\n", operation);
+        // Serial.printf("Call from  SysCallExprAST exec %d\n", operation);
 
         if (isIotScenException) return nullptr;  // если прерывание, то сразу выходим
 
@@ -594,17 +593,20 @@ int IoTScenario::getLastChar() {
             LastChar = file.read();
             if (LastChar == 10) curLine++;
             return LastChar;
-        } else return EOF;
+        } else
+            return EOF;
     } else if (mode == 1) {
         if (charCount < strFromFile.length()) {
             LastChar = strFromFile.charAt(charCount);
-            //Serial.printf("%d, ", LastChar);
+            // Serial.printf("%d, ", LastChar);
             if (LastChar == 10) curLine++;
             charCount++;
             return LastChar;
-        } else return EOF;
+        } else
+            return EOF;
+    } else {
+        return 0;
     }
-
 }
 
 /// gettok - Возвращает следующий токен из стандартного потока ввода.
@@ -627,12 +629,13 @@ int IoTScenario::gettok() {
         return tok_identifier;
     }
 
-    NumStr="";
+    NumStr = "";
     if (LastChar == '-') {
         LastChar = getLastChar();
-        if (isdigit(LastChar)) NumStr = "-";
-        else return '-';
-        
+        if (isdigit(LastChar))
+            NumStr = "-";
+        else
+            return '-';
     }
     if (isdigit(LastChar)) {  // Число: [0-9.]+
         do {
@@ -703,7 +706,7 @@ int IoTScenario::gettok() {
         } else
             return '>';
     }
-    
+
     // В противном случае просто возвращаем символ как значение ASCII
     int ThisChar = LastChar;
     LastChar = getLastChar();
@@ -776,8 +779,7 @@ ExprAST *IoTScenario::ParseIdentifierExpr(String *IDNames, bool callFromConditio
 
             if (CurTok == ')') break;
 
-            if (CurTok != ','){
-
+            if (CurTok != ',') {
                 return Error("Expected ')' or ',' in argument list");
             }
             getNextToken();
@@ -810,7 +812,7 @@ ExprAST *IoTScenario::ParseParenExpr(String *IDNames, bool callFromCondition) {
 
     if (CurTok != ')')
         return Error("expected ')'");
-    //getNextToken();  // получаем ).
+    // getNextToken();  // получаем ).
     return V;
 }
 
@@ -820,26 +822,24 @@ ExprAST *IoTScenario::ParseBracketsExpr(String *IDNames, bool callFromCondition)
 
     getNextToken();  // получаем {.
     std::vector<ExprAST *> bracketsList;
-    
-        while (CurTok != '}') {
-            ExprAST *Expr = ParseExpression(IDNames, callFromCondition);
-            if (!Expr) return nullptr;
-            bracketsList.push_back(Expr);
-            
-            //if (CurTok == '}') break;
 
-            //Serial.printf("ParseBracketsExpr CurTok = %d \n", CurTok);
+    while (CurTok != '}') {
+        ExprAST *Expr = ParseExpression(IDNames, callFromCondition);
+        if (!Expr) return nullptr;
+        bracketsList.push_back(Expr);
 
+        // if (CurTok == '}') break;
 
+        // Serial.printf("ParseBracketsExpr CurTok = %d \n", CurTok);
 
-            //if (CurTok != ';')
-            //    return Error("Expected ';' in operation list");
-            
-            //int ttok = getNextToken();  
-            if (CurTok == tok_eof) {
-                return Error("Expected '}'");
-            } 
+        // if (CurTok != ';')
+        //     return Error("Expected ';' in operation list");
+
+        // int ttok = getNextToken();
+        if (CurTok == tok_eof) {
+            return Error("Expected '}'");
         }
+    }
 
     getNextToken();  // получаем }.
     return new BracketsExprAST(bracketsList);
@@ -957,7 +957,6 @@ ExprAST *IoTScenario::ParseExpression(String *IDNames, bool callFromCondition) {
     return ParseBinOpRHS(0, LHS, IDNames, callFromCondition);
 }
 
-
 void IoTScenario::loadScenario(String fileName) {  // подготавливаем контекст для чтения и интерпретации файла
     isIotScenException = false;
 
@@ -977,7 +976,7 @@ void IoTScenario::loadScenario(String fileName) {  // подготавливае
         strFromFile = file.readString();
         Serial.printf("strFromFile: %s, %s\n", strFromFile.c_str(), fileName.c_str());
         file.close();
-    } 
+    }
 }
 
 void IoTScenario::exec(String eventIdName) {  // посимвольно считываем и сразу интерпретируем сценарий в дерево AST
@@ -988,11 +987,11 @@ void IoTScenario::exec(String eventIdName) {  // посимвольно счит
     curLine = 1;
     charCount = 0;
 
-    if (mode == 0) file.seek(0); 
-    
+    if (mode == 0) file.seek(0);
+
     if (mode < 2) {
         while (CurTok != EOF) {
-        switch (CurTok) {
+            switch (CurTok) {
                 case tok_if: {
                     IDNames = "";  // сбрасываем накопитель встречающихся идентификаторов в условии
                     ExprAST *tmpAST = ParseIfExpr(&IDNames);
@@ -1001,14 +1000,17 @@ void IoTScenario::exec(String eventIdName) {  // посимвольно счит
                             tmpAST->exec();
                         }
                         delete tmpAST;
-                    } else getNextToken();
-                break;}
-                default: getNextToken(); break;
+                    } else
+                        getNextToken();
+                    break;
+                }
+                default:
+                    getNextToken();
+                    break;
             }
         }
     }
 }
-
 
 IoTScenario::IoTScenario() {
     // Задаём стандартные бинарные операторы.
