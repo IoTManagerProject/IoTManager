@@ -593,19 +593,19 @@ int IoTScenario::getLastChar() {
             LastChar = file.read();
             if (LastChar == 10) curLine++;
             return LastChar;
-        } else
+        } else 
             return EOF;
     } else if (mode == 1) {
         if (charCount < strFromFile.length()) {
             LastChar = strFromFile.charAt(charCount);
-            // Serial.printf("%d, ", LastChar);
+            //Serial.printf("%d, ", LastChar);
             if (LastChar == 10) curLine++;
             charCount++;
             return LastChar;
-        } else
+        } else 
             return EOF;
     } else {
-        return 0;
+        return EOF;
     }
 }
 
