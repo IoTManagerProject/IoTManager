@@ -183,42 +183,37 @@ void removeFile(const String& filename) {
     String path = filepath(filename);
     if (FileFS.exists(path)) {
         if (!FileFS.remove(path)) {
-            // SerialPrint("i", "Files", "remove " + path);
+            SerialPrint("i", "Files", "remove file" + path);
         }
     } else {
-        SerialPrint("E", "Files", "not exist " + path);
+        SerialPrint("E", "Files", "file not exist " + path);
+    }
+}
+
+void removeDirectory(const String& dir) {
+    String path = filepath(dir);
+    if (FileFS.exists(path)) {
+        if (!FileFS.rmdir(path)) {
+            SerialPrint("i", "Files", "remove dir" + path);
+        }
+    } else {
+        SerialPrint("E", "Files", "dir not exist " + path);
     }
 }
 
 //очищаем директорию с файлами
 void cleanDirectory(String path) {
-#if defined(ESP8266)
-    auto dir = FileFS.openDir(path);
-    while (dir.next()) {
-        String fname = dir.fileName();
-        removeFile(path + "/" + fname);
-        SerialPrint("i", "Files", path + "/" + fname + " => deleted");
+    String filesList = getFilesList(path);
+    int i = 0;
+    while (filesList.length()) {
+        String buf = selectToMarker(filesList, ";");
+
+        i++;
+        removeFile(buf);
+        SerialPrint("i", "Files", String(i) + ") " + buf + " => deleted");
+
+        filesList = deleteBeforeDelimiter(filesList, ";");
     }
-    onFlashWrite();
-#endif
-#if defined(ESP32)
-    path = "/" + path;
-    File root = FileFS.open(path);
-    path = String();
-    if (!root) {
-        SerialPrint("E", "Files", "nothing to delete");
-        return;
-    }
-    if (root.isDirectory()) {
-        File file = root.openNextFile();
-        while (file) {
-            String fname = file.name();
-            removeFile(fname);
-            SerialPrint("i", "Files", fname + " => deleted");
-            file = root.openNextFile();
-        }
-    }
-#endif
 }
 
 void saveDataDB(String id, String data) {
@@ -231,7 +226,8 @@ String readDataDB(String id) {
     return readFile(path, 2000);
 }
 
-void cleanLogs() {
+void cleanLogs1() {
+    SerialPrint("i", "Files", "cleanLogs1");
     cleanDirectory("db");
     //очистка данных всех экземпляров графиков
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
@@ -239,6 +235,20 @@ void cleanLogs() {
             (*it)->cleanData();
         }
     }
+}
+
+void cleanLogs2() {
+    SerialPrint("i", "Files", "cleanLogs2");
+
+    String dir1 = "db";
+    SerialPrint("i", "", getFilesList(dir1));
+    removeDirectory(dir1);
+    SerialPrint("i", "", getFilesList(dir1));
+
+    String dir2 = "lg";
+    SerialPrint("i", "", getFilesList(dir2));
+    removeDirectory(dir2);
+    SerialPrint("i", "", getFilesList(dir2));
 }
 
 //счетчик количества записей на флешь за сеанс
@@ -249,48 +259,43 @@ void onFlashWrite() {
 
 // Создаем список файлов каталога, функции от Сергея Третьякова
 #if defined(ESP8266)
-String FileList(String path) {
-    Dir dir = FileFS.openDir(path);
-    path = String();
-    String output = "[";
+String getFilesList8266(String& directory) {
+    String filesList = "";
+    auto dir = FileFS.openDir(directory);
     while (dir.next()) {
-        File entry = dir.openFile("r");
-        if (output != "[") output += ',';
-        bool isDir = false;
-        output += "{\"type\":\"";
-        output += (isDir) ? "dir" : "file";
-        output += "\",\"name\":\"";
-        output += String(entry.name()).substring(1);
-        output += "\"}";
-        entry.close();
+        String fname = dir.fileName();
+        if (fname != "") filesList += directory + "/" + fname + ";";
     }
-    output += "]";
-    return output;
+    return filesList;
 }
-#else
-String FileList(String path) {
-    File root = FileFS.open(path);
-    path = String();
+#endif
 
-    String output = "[";
+#if defined(ESP32)
+String getFilesList32(String& directory) {
+    String filesList = "";
+    String directory = "/" + directory;
+    File root = FileFS.open(directory);
+    directory = String();
     if (root.isDirectory()) {
         File file = root.openNextFile();
         while (file) {
-            if (output != "[") {
-                output += ',';
-            }
-            output += "{\"type\":\"";
-            output += (file.isDirectory()) ? "dir" : "file";
-            output += "\",\"name\":\"";
-            // output += String(file.path()).substring(1);
-            output += "\"}";
+            String fname = file.name();
+            if (fname != "") filesList += fname + ";";
             file = root.openNextFile();
         }
     }
-    output += "]";
-    return output;
+    return filesList;
 }
 #endif
+
+String getFilesList(String& directory) {
+#if defined(ESP8266)
+    return getFilesList8266(directory);
+#endif
+#if defined(ESP32)
+    return getFilesList32(directory);
+#endif
+}
 
 #if defined(ESP8266)
 bool getInfo(FSInfo& info) {

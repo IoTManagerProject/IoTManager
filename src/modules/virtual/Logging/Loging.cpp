@@ -119,46 +119,9 @@ class Loging : public IoTItem {
         return changed;
     }
 
-#if defined(ESP8266)
-    void getFilesList8266() {
-        filesList = "";
-        String directory = "lg/" + id;
-        auto dir = FileFS.openDir(directory);
-        while (dir.next()) {
-            String fname = dir.fileName();
-            if (fname != "") filesList += directory + "/" + fname + ";";
-        }
-    }
-#endif
-
-#if defined(ESP32)
-    void getFilesList32() {
-        filesList = "";
-        String directory = "/lg/" + id;
-        File root = FileFS.open(directory);
-        directory = String();
-        if (root.isDirectory()) {
-            File file = root.openNextFile();
-            while (file) {
-                String fname = file.name();
-                if (fname != "") filesList += fname + ";";
-                file = root.openNextFile();
-            }
-        }
-    }
-#endif
-
-    void getFilesList() {
-#if defined(ESP8266)
-        getFilesList8266();
-#endif
-#if defined(ESP32)
-        getFilesList32();
-#endif
-    }
-
     void sendChart() {
-        getFilesList();
+        String dir = "lg/" + id;
+        filesList = getFilesList(dir);
         int f = 0;
 
         bool noData = true;
@@ -202,7 +165,8 @@ class Loging : public IoTItem {
     }
 
     void cleanData() {
-        getFilesList();
+        String dir = "lg/" + id;
+        filesList = getFilesList(dir);
         int i = 0;
         while (filesList.length()) {
             String buf = selectToMarker(filesList, ";");
