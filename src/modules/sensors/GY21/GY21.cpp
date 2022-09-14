@@ -46,18 +46,18 @@ class GY21h : public IoTItem {
 };
 
 void* getAPI_GY21(String subtype, String param) {
-    // if (subtype == F("GY21t") || subtype == F("GY21h")) {
-    //     if (!sensor) {
-    //         sensor = new GY21;
-    //         if (sensor) Wire.begin(SDA, SCL);
-    //     }
-    //
-    //    if (subtype == F("GY21t")) {
-    //        return new GY21t(param);
-    //    } else if (subtype == F("GY21h")) {
-    //        return new GY21h(param);
-    //    }
-    //} else {
+    if (subtype == F("GY21t") || subtype == F("GY21h")) {
+        if (!sensor) {
+            sensor = new GY21;
+            if (sensor) Wire.begin(SDA, SCL);
+        }
+    
+       if (subtype == F("GY21t")) {
+           return new GY21t(param);
+       } else if (subtype == F("GY21h")) {
+           return new GY21h(param);
+       }
+    }
+
     return nullptr;
-    //}
 }
