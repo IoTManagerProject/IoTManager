@@ -3,7 +3,7 @@
 //данная функция записывает файл из буфера страницами указанного размера
 void writeFileUint8tByFrames(const String& filename, uint8_t*& big_buf, size_t length, size_t headerLenth, size_t frameSize) {
     String path = filepath(filename);
-    auto file = FileFS.open(path, "w");
+    auto file = FileFS.open(path, FILE_WRITE);
     if (!file) {
         Serial.println(F("failed write file uint8tByFrames"));
         return;
@@ -24,42 +24,9 @@ void writeFileUint8tByFrames(const String& filename, uint8_t*& big_buf, size_t l
     onFlashWrite();
 }
 
-// void writeStrValueToJsonFile(const String& filename, String key, String value) {
-//     String tmp = readFile(filename, 4096);
-//     if (!jsonWriteStr_(tmp, key, value)) {
-//         Serial.println(F("failed write json value to file"));
-//     }
-//     writeFile(filename, tmp);
-// }
-
-//данная функция читает из файла страницами указанного размера
-// void readFileUint8tByFrames(const String& filename, size_t frameSize) {
-//    String path = filepath(filename);
-//    auto file = FileFS.open(path, "r");
-//    if (!file) {
-//        Serial.println(F("failed read file Uint8tByFrames"));
-//        return;
-//    }
-//    size_t length = file.size();
-//    size_t read{0};
-//    while (length > read) {
-//        size_t size = length - read;
-//        if (size > frameSize) size = frameSize;
-//        uint8_t p[size];
-//        size_t res = file.read(p, size);
-//        //
-//        if (size != res) {
-//            break;
-//        }
-//        read += res;
-//        yield();
-//    }
-//    file.close();
-//}
-
 void writeFileUint8tByByte(const String& filename, uint8_t*& payload, size_t length, size_t headerLenth) {
     String path = filepath(filename);
-    auto file = FileFS.open(path, "w");
+    auto file = FileFS.open(path, FILE_WRITE);
     if (!file) {
         Serial.println(F("failed write file uint8tByByte"));
         return;
@@ -81,7 +48,7 @@ void writeFileUint8tByByte(const String& filename, uint8_t*& payload, size_t len
 
 File seekFile(const String& filename, size_t position) {
     String path = filepath(filename);
-    auto file = FileFS.open(path, "r");
+    auto file = FileFS.open(path, FILE_READ);
     if (!file) {
         SerialPrint(F("E"), F("FS"), F("seek file error"));
     }
@@ -91,7 +58,12 @@ File seekFile(const String& filename, size_t position) {
 
 const String writeFile(const String& filename, const String& str) {
     String path = filepath(filename);
-    auto file = FileFS.open(path, "w");
+#ifdef ESP32
+    auto file = FileFS.open(path, FILE_WRITE, true);
+#endif
+#ifdef ESP8266
+    auto file = FileFS.open(path, FILE_WRITE);
+#endif
     if (!file) {
         return "failed";
     }
@@ -101,9 +73,25 @@ const String writeFile(const String& filename, const String& str) {
     onFlashWrite();
 }
 
+const String writeEmptyFile(const String& filename) {
+    String path = filepath(filename);
+#ifdef ESP32
+    auto file = FileFS.open(path, FILE_WRITE, true);
+#endif
+#ifdef ESP8266
+    auto file = FileFS.open(path, FILE_WRITE);
+#endif
+    if (!file) {
+        return "failed";
+    }
+    file.close();
+    return "sucсess";
+    onFlashWrite();
+}
+
 const String addFileLn(const String& filename, const String& str) {
     String path = filepath(filename);
-    auto file = FileFS.open(path, "a");
+    auto file = FileFS.open(path, FILE_APPEND);
     if (!file) {
         return "failed";
     }
@@ -115,7 +103,7 @@ const String addFileLn(const String& filename, const String& str) {
 
 const String readFile(const String& filename, size_t max_size) {
     String path = filepath(filename);
-    auto file = FileFS.open(path, "r");
+    auto file = FileFS.open(path, FILE_READ);
     if (!file) {
         return "failed";
     }
@@ -144,8 +132,8 @@ bool cutFile(const String& src, const String& dst) {
     if (FileFS.exists(dstPath)) {
         FileFS.remove(dstPath);
     }
-    auto srcFile = FileFS.open(srcPath, "r");
-    auto dstFile = FileFS.open(dstPath, "w");
+    auto srcFile = FileFS.open(srcPath, FILE_READ);
+    auto dstFile = FileFS.open(dstPath, FILE_WRITE);
     uint8_t buf[512];
     while (srcFile.available()) {
         size_t len = srcFile.read(buf, 512);
@@ -162,7 +150,7 @@ bool cutFile(const String& src, const String& dst) {
 size_t countLines(const String filename) {
     size_t cnt = -1;
     String path = filepath(filename);
-    auto file = FileFS.open(path, "r");
+    auto file = FileFS.open(path, FILE_READ);
     if (!file) {
         return cnt;
     }
@@ -202,24 +190,9 @@ void removeDirectory(const String& dir) {
     }
 }
 
-//очищаем директорию с файлами
-void cleanDirectory(String path) {
-    String filesList = getFilesList(path);
-    int i = 0;
-    while (filesList.length()) {
-        String buf = selectToMarker(filesList, ";");
-
-        i++;
-        removeFile(buf);
-        SerialPrint("i", "Files", String(i) + ") " + buf + " => deleted");
-
-        filesList = deleteBeforeDelimiter(filesList, ";");
-    }
-}
-
-void saveDataDB(String id, String data) {
+String saveDataDB(String id, String data) {
     String path = "/db/" + id + ".txt";
-    writeFile(path, data);
+    return writeFile(path, data);
 }
 
 String readDataDB(String id) {
@@ -229,12 +202,28 @@ String readDataDB(String id) {
 
 void cleanLogs() {
     SerialPrint("i", "Files", "cleanLogs");
-    cleanDirectory("db");
+    cleanDirectory("/db");
     //очистка данных всех экземпляров графиков
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         if ((*it)->getSubtype() == "Loging") {
             (*it)->cleanData();
         }
+    }
+}
+
+//очищаем директорию с файлами
+void cleanDirectory(String path) {
+    String filesList = getFilesList(path);
+    int i = 0;
+    while (filesList.length()) {
+        String buf = selectToMarker(filesList, ";");
+        buf = path + buf;
+        SerialPrint("i", "", buf);
+        i++;
+        removeFile(buf);
+        SerialPrint("i", "Files", String(i) + ") " + buf + " => deleted");
+
+        filesList = deleteBeforeDelimiter(filesList, ";");
     }
 }
 
@@ -260,14 +249,15 @@ String getFilesList8266(String& directory) {
 #if defined(ESP32)
 String getFilesList32(String& directory) {
     String filesList = "";
-    directory = "/" + directory;
     File root = FileFS.open(directory);
-    directory = String();
+    // if (!root) {
+    //     return "";
+    // }
     if (root.isDirectory()) {
         File file = root.openNextFile();
         while (file) {
             String fname = file.name();
-            if (fname != "") filesList += fname + ";";
+            if (fname != "") filesList += "/" + fname + ";";
             file = root.openNextFile();
         }
     }

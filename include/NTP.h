@@ -13,5 +13,6 @@ extern const String getTimeLocal_hhmmss();
 extern const String getDateTimeDotFormated();
 extern const String getDateDotFormated();
 extern unsigned long strDateToUnix(String date);
-const String getDateTimeDotFormatedFromUnix(unsigned long unixTime);
+extern const String getDateTimeDotFormatedFromUnix(unsigned long unixTime);
 extern unsigned long gmtTimeToLocal(unsigned long gmtTimestamp);
+extern const String getDateDotFormatedFromUnix(unsigned long unixTime);

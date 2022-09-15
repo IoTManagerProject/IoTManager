@@ -44,22 +44,23 @@ class Loging : public IoTItem {
     }
 
     void doByInterval() {
+        SerialPrint("E", F("Loging"), "----------------------start loging cycle----------------------------");
         //если объект логгирования не был создан
         if (!isItemExist(logid)) {
-            SerialPrint("E", F("Loging"), "'" + id + "' loging object not exist");
+            SerialPrint("E", F("Loging"), "'" + id + "' loging object not exist, return");
             return;
         }
 
         String value = getItemValue(logid);
         //если значение логгирования пустое
         if (value == "") {
-            SerialPrint("E", F("Loging"), "'" + id + "' loging value is empty");
+            SerialPrint("E", F("Loging"), "'" + id + "' loging value is empty, return");
             return;
         }
 
         //если время не было получено из интернета
         if (!isTimeSynch) {
-            SerialPrint("E", F("Loging"), "'" + id + "' Сant loging - time not synchronized");
+            SerialPrint("E", F("Loging"), "'" + id + "' Сant loging - time not synchronized, return");
             return;
         }
 
@@ -72,9 +73,16 @@ class Loging : public IoTItem {
 
         //если данные о файле отсутствуют, создадим новый
         if (filePath == "failed" || filePath == "") {
-            SerialPrint("E", F("Loging"), "'" + id + "' file path not found");
+            SerialPrint("E", F("Loging"), "'" + id + "' file path not found, start create new file");
             createNewFileWithData(logData);
             return;
+        } else {
+            //если файл все же есть но был создан не сегодня, то создаем сегодняшний
+            if (getDateDotFormated() != getDateDotFormatedFromUnix(getFileUnixLocalTime(filePath))) {
+                SerialPrint("E", F("Loging"), "'" + id + "' file too old, start create new file");
+                createNewFileWithData(logData);
+                return;
+            }
         }
 
         //считаем количество строк
@@ -91,17 +99,34 @@ class Loging : public IoTItem {
         }
         //запускаем процедуру удаления старых файлов если память переполняется
         deleteLastFile();
+        SerialPrint("E", F("Loging"), "----------------------compl loging cycle----------------------------");
     }
 
     void createNewFileWithData(String &logData) {
         String path = "/lg/" + id + "/" + String(unixTimeShort) + ".txt";  //создадим путь вида /lg/id/133256622333.txt
-        addFileLn(path, logData);                                          //запишем файл и данные в него
-        saveDataDB(id, path);                                              //запишем путь к файлу в базу данных
+        //создадим пустой файл
+        if (writeEmptyFile(path) != "sucсess") {
+            SerialPrint("E", F("Loging"), "'" + id + "' file writing error, return");
+            return;
+        }
+        //запишем в него данные
+        if (addFileLn(path, logData) != "sucсess") {
+            SerialPrint("E", F("Loging"), "'" + id + "' data writing error, return");
+            return;
+        }
+        //запишем путь к нему в базу данных
+        if (saveDataDB(id, path) != "sucсess") {
+            SerialPrint("E", F("Loging"), "'" + id + "' db file writing error, return");
+            return;
+        }
         SerialPrint("i", F("Loging"), "'" + id + "' file created http://" + WiFi.localIP().toString() + path);
     }
 
     void addNewDataToExistingFile(String &path, String &logData) {
-        addFileLn(path, logData);
+        if (addFileLn(path, logData) != "sucсess") {
+            SerialPrint("i", F("Loging"), "'" + id + "' file writing error, return");
+            return;
+        };
         SerialPrint("i", F("Loging"), "'" + id + "' loging in file http://" + WiFi.localIP().toString() + path);
     }
 
@@ -120,8 +145,13 @@ class Loging : public IoTItem {
     }
 
     void sendChart() {
-        String dir = "lg/" + id;
+        SerialPrint("E", F("Loging"), "----------------------start send chart----------------------------");
+
+        String dir = "/lg/" + id;
         filesList = getFilesList(dir);
+
+        SerialPrint("i", F("Loging"), "file list: " + filesList);
+
         int f = 0;
 
         bool noData = true;
@@ -129,16 +159,20 @@ class Loging : public IoTItem {
         while (filesList.length()) {
             String buf = selectToMarker(filesList, ";");
 
+            buf = "/lg/" + id + buf;
+
             f++;
             int i = 0;
 
-            unsigned long fileUnixTimeGMT = selectToMarkerLast(deleteToMarkerLast(buf, "."), "/").toInt() + START_DATETIME;
-            unsigned long fileUnixTimeLocal = gmtTimeToLocal(fileUnixTimeGMT);
+            unsigned long fileUnixTimeLocal = getFileUnixLocalTime(buf);
 
             unsigned long reqUnixTime = strDateToUnix(getItemValue(id + "-date"));
             if (fileUnixTimeLocal > reqUnixTime && fileUnixTimeLocal < reqUnixTime + 86400) {
                 noData = false;
-                createJson(buf, i);
+                if (!createJson(buf, i)) {
+                    SerialPrint("E", F("Loging"), buf + " file reading error, json not created, return");
+                    return;
+                }
                 SerialPrint("i", F("Loging"), String(f) + ") " + buf + ", " + String(i) + ", " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", sent");
             } else {
                 SerialPrint("i", F("Loging"), String(f) + ") " + buf + ", nil, " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", skipped");
@@ -150,6 +184,7 @@ class Loging : public IoTItem {
         if (noData) {
             cleanChart();
         }
+        SerialPrint("E", F("Loging"), "----------------------compl send chart----------------------------");
     }
 
     void cleanChart() {
@@ -159,29 +194,21 @@ class Loging : public IoTItem {
     }
 
     void cleanData() {
-        String dir = "lg/" + id;
-        filesList = getFilesList(dir);
-        int i = 0;
-        while (filesList.length()) {
-            String buf = selectToMarker(filesList, ";");
-
-            i++;
-            removeFile(buf);
-            SerialPrint("i", "Files", String(i) + ") " + buf + " => deleted");
-
-            filesList = deleteBeforeDelimiter(filesList, ";");
-        }
+        String dir = "/lg/" + id;
+        cleanDirectory(dir);
     }
 
     void deleteLastFile() {
         IoTFSInfo tmp = getFSInfo();
         SerialPrint("i", "Loging", String(tmp.freePer) + " % free flash remaining");
-        if (tmp.freePer <= 10.00) {
-            String dir = "lg/" + id;
+        if (tmp.freePer <= 20.00) {
+            String dir = "/lg/" + id;
             filesList = getFilesList(dir);
             int i = 0;
             while (filesList.length()) {
                 String buf = selectToMarker(filesList, ";");
+
+                buf = dir + buf;
 
                 i++;
                 if (i == 1) {
@@ -195,11 +222,10 @@ class Loging : public IoTItem {
         }
     }
 
-    void createJson(String file, int &i) {
-        File configFile = FileFS.open(file, "r");
+    bool createJson(String file, int &i) {
+        File configFile = FileFS.open(file, FILE_READ);
         if (!configFile) {
-            SerialPrint("E", F("Loging"), "'" + id + "' open file error");
-            return;
+            return false;
         }
         configFile.seek(0, SeekSet);
         String buf = "{}";
@@ -228,6 +254,7 @@ class Loging : public IoTItem {
         oneSingleJson.replace("},]}", "}]}");
 
         publishJson(oneSingleJson);
+        return true;
     }
 
     // publishType 1 - в mqtt, 2 - в ws, 3 - mqtt и ws
@@ -291,6 +318,11 @@ class Loging : public IoTItem {
     //просто максимальное количество точек
     int calculateMaxCount() {
         return 86400;
+    }
+
+    //путь вида: /lg/log/1231231.txt
+    unsigned long getFileUnixLocalTime(String path) {
+        return gmtTimeToLocal(selectToMarkerLast(deleteToMarkerLast(path, "."), "/").toInt() + START_DATETIME);
     }
 };
 

@@ -5,6 +5,7 @@
 #include <LITTLEFS.h>
 #define FileFS LittleFS
 #define FS_NAME "LittleFS_32"
+#define CONFIG_LITTLEFS_SPIFFS_COMPAT 1
 #else
 #include <SPIFFS.h>
 extern FS* filesystem;
@@ -21,6 +22,9 @@ using littlefs_impl::LittleFSConfig;
 extern FS* filesystem;
 #define FileFS LittleFS
 #define FS_NAME "LittleFS_8266"
+#define FILE_READ "r"
+#define FILE_WRITE "w"
+#define FILE_APPEND "a"
 #else
 extern FS* filesystem;
 #define FileFS SPIFFS

@@ -156,3 +156,11 @@ const String getDateTimeDotFormatedFromUnix(unsigned long unixTime) {
     sprintf(buf, "%02d.%02d.%02d %02d:%02d:%02d", time.day_of_month, time.month, time.year, time.hour, time.minute, time.second);
     return String(buf);
 }
+
+const String getDateDotFormatedFromUnix(unsigned long unixTime) {
+    Time_t time;
+    breakEpochToTime(unixTime, time);
+    char buf[32];
+    sprintf(buf, "%02d.%02d.%d", time.day_of_month, time.month, time.year + 2000);
+    return String(buf);
+}
