@@ -240,7 +240,7 @@ String getFilesList8266(String& directory) {
     auto dir = FileFS.openDir(directory);
     while (dir.next()) {
         String fname = dir.fileName();
-        if (fname != "") filesList += directory + "/" + fname + ";";
+        if (fname != "") filesList += "/" + fname + ";";
     }
     return filesList;
 }
@@ -250,9 +250,6 @@ String getFilesList8266(String& directory) {
 String getFilesList32(String& directory) {
     String filesList = "";
     File root = FileFS.open(directory);
-    // if (!root) {
-    //     return "";
-    // }
     if (root.isDirectory()) {
         File file = root.openNextFile();
         while (file) {
