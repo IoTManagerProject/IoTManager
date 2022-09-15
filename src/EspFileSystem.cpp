@@ -1,4 +1,5 @@
 #include "EspFileSystem.h"
+#include "Global.h"
 
 bool fileSystemInit() {
     if (!FileFS.begin()) {

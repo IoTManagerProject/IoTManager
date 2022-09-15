@@ -23,7 +23,7 @@ bool jsonRead(String& json, String key, unsigned long& value, bool e) {
         ret = false;
     } else if (!doc.containsKey(key)) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), key + " missing");
+            SerialPrint("EE", F("jsonRead"), "json key '" + key + "' missing");
             jsonErrorDetected();
         }
         ret = false;

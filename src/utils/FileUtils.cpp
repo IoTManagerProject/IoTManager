@@ -171,7 +171,8 @@ size_t countLines(const String filename) {
     size_t psn;
     do {
         cnt++;
-        file.readStringUntil('\r\n');
+        // или /n тут один знак
+        file.readStringUntil('\r');
         psn = file.position();
     } while (psn < size);
     file.close();
@@ -226,8 +227,8 @@ String readDataDB(String id) {
     return readFile(path, 2000);
 }
 
-void cleanLogs1() {
-    SerialPrint("i", "Files", "cleanLogs1");
+void cleanLogs() {
+    SerialPrint("i", "Files", "cleanLogs");
     cleanDirectory("db");
     //очистка данных всех экземпляров графиков
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
@@ -235,20 +236,6 @@ void cleanLogs1() {
             (*it)->cleanData();
         }
     }
-}
-
-void cleanLogs2() {
-    SerialPrint("i", "Files", "cleanLogs2");
-
-    String dir1 = "db";
-    SerialPrint("i", "", getFilesList(dir1));
-    removeDirectory(dir1);
-    SerialPrint("i", "", getFilesList(dir1));
-
-    String dir2 = "lg";
-    SerialPrint("i", "", getFilesList(dir2));
-    removeDirectory(dir2);
-    SerialPrint("i", "", getFilesList(dir2));
 }
 
 //счетчик количества записей на флешь за сеанс
@@ -273,7 +260,7 @@ String getFilesList8266(String& directory) {
 #if defined(ESP32)
 String getFilesList32(String& directory) {
     String filesList = "";
-    String directory = "/" + directory;
+    directory = "/" + directory;
     File root = FileFS.open(directory);
     directory = String();
     if (root.isDirectory()) {
@@ -301,31 +288,37 @@ String getFilesList(String& directory) {
 bool getInfo(FSInfo& info) {
     return FileFS.info(info);
 }
+
 // Информация о ФС
-void getFSInfo() {
+IoTFSInfo getFSInfo() {
+    IoTFSInfo myFSInfo;
     FSInfo buf;
     if (getInfo(buf)) {
-        size_t totalBytes = buf.totalBytes;  // всего
-        size_t usedBytes = buf.usedBytes;    // использовано
+        size_t totalBytes = myFSInfo.totalBytes = buf.totalBytes;  // всего
+        size_t usedBytes = buf.usedBytes;                          // использовано
         // size_t maxOpenFiles = buf.maxOpenFiles;  // лимит на открые файлы
         // size_t blockSize = buf.blockSize;
         // size_t pageSize = buf.pageSize;
         // size_t maxPathLength = buf.maxPathLength;  // лимит на пути и имена файлов
         size_t freeBytes = totalBytes - usedBytes;
-        float freePer = ((float)freeBytes / totalBytes) * 100;
+        float freePer = myFSInfo.freePer = ((float)freeBytes / totalBytes) * 100;
         jsonWriteStr(errorsHeapJson, F("freeBytes"), String(freePer) + "% (" + prettyBytes(freeBytes) + ")");
+
     } else {
         SerialPrint("E", F("FS"), F("FS info error"));
     }
+    return myFSInfo;
 }
 #endif
 
 #if defined(ESP32)
-void getFSInfo() {
-    size_t totalBytes = FileFS.totalBytes();  // всего
-    size_t usedBytes = FileFS.usedBytes();    // использовано
+IoTFSInfo getFSInfo() {
+    IoTFSInfo myFSInfo;
+    size_t totalBytes = myFSInfo.totalBytes = FileFS.totalBytes();  // всего
+    size_t usedBytes = FileFS.usedBytes();                          // использовано
     size_t freeBytes = totalBytes - usedBytes;
-    float freePer = ((float)freeBytes / totalBytes) * 100;
+    float freePer = myFSInfo.freePer = ((float)freeBytes / totalBytes) * 100;
     jsonWriteStr(errorsHeapJson, F("freeBytes"), String(freePer) + "% (" + prettyBytes(freeBytes) + ")");
+    return myFSInfo;
 }
 #endif

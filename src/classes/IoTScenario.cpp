@@ -1,4 +1,3 @@
-#pragma once
 #include "Global.h"
 #include "classes/IoTItem.h"
 #include "classes/IoTScenario.h"

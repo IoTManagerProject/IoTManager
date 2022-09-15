@@ -196,12 +196,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             //команда очистки всех логов esp
-            if (headerStr == "/clean1|") {
-                cleanLogs1();
-            }
-
-            if (headerStr == "/clean2|") {
-                cleanLogs2();
+            if (headerStr == "/clean|") {
+                cleanLogs();
             }
 
             //команда обновления прошивки esp

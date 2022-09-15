@@ -38,7 +38,7 @@ class Loging : public IoTItem {
         jsonRead(parameters, F("keepdays"), keepdays);
 
         //создадим экземпляр класса даты
-        dateIoTItem = (IoTItem *)getAPI_Date("{\"id\": \"" + id + "-date\",\"int\":\"20\"}");
+        dateIoTItem = (IoTItem *)getAPI_Date("{\"id\": \"" + id + "-date\",\"int\":\"20\",\"subtype\":\"date\"}");
         IoTItems.push_back(dateIoTItem);
         SerialPrint("E", F("Loging"), "created date instance " + id);
     }
@@ -75,8 +75,6 @@ class Loging : public IoTItem {
             SerialPrint("E", F("Loging"), "'" + id + "' file path not found");
             createNewFileWithData(logData);
             return;
-        } else {
-            // SerialPrint("i", F("Loging"), "'" + id + "' file path found " + filePath);
         }
 
         //считаем количество строк
@@ -91,6 +89,8 @@ class Loging : public IoTItem {
         } else {
             createNewFileWithData(logData);
         }
+        //запускаем процедуру удаления старых файлов если память переполняется
+        deleteLastFile();
     }
 
     void createNewFileWithData(String &logData) {
@@ -135,11 +135,6 @@ class Loging : public IoTItem {
             unsigned long fileUnixTimeGMT = selectToMarkerLast(deleteToMarkerLast(buf, "."), "/").toInt() + START_DATETIME;
             unsigned long fileUnixTimeLocal = gmtTimeToLocal(fileUnixTimeGMT);
 
-            //удаление старых файлов
-            // if ((fileUnixTimeLocal + (points * (interval / 1000))) < (unixTime - (keepdays * 86400))) {
-            //    SerialPrint("i", F("Loging"), "file '" + buf + "' too old, deleted");
-            //    removeFile(buf);
-            //} else {
             unsigned long reqUnixTime = strDateToUnix(getItemValue(id + "-date"));
             if (fileUnixTimeLocal > reqUnixTime && fileUnixTimeLocal < reqUnixTime + 86400) {
                 noData = false;
@@ -148,7 +143,6 @@ class Loging : public IoTItem {
             } else {
                 SerialPrint("i", F("Loging"), String(f) + ") " + buf + ", nil, " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", skipped");
             }
-            //}
 
             filesList = deleteBeforeDelimiter(filesList, ";");
         }
@@ -176,6 +170,28 @@ class Loging : public IoTItem {
             SerialPrint("i", "Files", String(i) + ") " + buf + " => deleted");
 
             filesList = deleteBeforeDelimiter(filesList, ";");
+        }
+    }
+
+    void deleteLastFile() {
+        IoTFSInfo tmp = getFSInfo();
+        SerialPrint("i", "Loging", String(tmp.freePer) + " % free flash remaining");
+        if (tmp.freePer <= 10.00) {
+            String dir = "lg/" + id;
+            filesList = getFilesList(dir);
+            int i = 0;
+            while (filesList.length()) {
+                String buf = selectToMarker(filesList, ";");
+
+                i++;
+                if (i == 1) {
+                    removeFile(buf);
+                    SerialPrint("!", "Loging", String(i) + ") " + buf + " => oldest files been deleted");
+                    return;
+                }
+
+                filesList = deleteBeforeDelimiter(filesList, ";");
+            }
         }
     }
 

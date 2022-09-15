@@ -14,8 +14,7 @@ extern size_t countLines(const String filename);
 void removeFile(const String& filename);
 void removeDirectory(const String& dir);
 void cleanDirectory(String path);
-void cleanLogs1();
-void cleanLogs2();
+void cleanLogs();
 void saveDataDB(String id, String data);
 String readDataDB(String id);
 extern void onFlashWrite();
@@ -23,7 +22,13 @@ extern void onFlashWrite();
 String getFilesList8266(String& directory);
 String getFilesList32(String& directory);
 String getFilesList(String& directory);
-extern void getFSInfo();
+
+struct IoTFSInfo {
+    size_t totalBytes;
+    float freePer;
+};
+
+extern IoTFSInfo getFSInfo();
 #ifdef ESP8266
 extern bool getInfo(FSInfo& info);
 #endif

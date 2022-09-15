@@ -1,11 +1,16 @@
 #pragma once
 #include "Global.h"
-
 #ifdef ESP32
+#if USE_LITTLEFS
+#include <LITTLEFS.h>
+#define FileFS LittleFS
+#define FS_NAME "LittleFS_32"
+#else
 #include <SPIFFS.h>
 extern FS* filesystem;
 #define FileFS SPIFFS
-#define FS_NAME "SPIFFS"
+#define FS_NAME "SPIFFS_32"
+#endif
 #endif
 
 #ifdef ESP8266
@@ -15,11 +20,11 @@ extern FS LittleFS;
 using littlefs_impl::LittleFSConfig;
 extern FS* filesystem;
 #define FileFS LittleFS
-#define FS_NAME "LittleFS"
+#define FS_NAME "LittleFS_8266"
 #else
 extern FS* filesystem;
 #define FileFS SPIFFS
-#define FS_NAME "SPIFFS"
+#define FS_NAME "SPIFFS_8266"
 #endif
 #endif
 
