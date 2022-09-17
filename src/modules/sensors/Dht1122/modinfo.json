@@ -33,6 +33,7 @@
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "Dht1122",
         "moduleVersion": "1.0",
+        "title": "Сенсор температуры и влажности с dht11 или dht22",
         "moduleDesc": "Позволяет получить значения температуры и влажности с dht11 или dht22.",
         "propInfo": {
             "senstype": "Тип сенсора dht11 или dht22.",

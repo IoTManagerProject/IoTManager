@@ -33,6 +33,7 @@
         "specialThanks": "",
         "moduleName": "Aht20",
         "moduleVersion": "1.0",
+        "title": "Сенсор температуры и влажности AHT20",
         "moduleDesc": "Позволяет получить температуру и влажность с Aht20.",
         "propInfo": {
             "pin": "GPIO номер, к которому подключен датчик.",

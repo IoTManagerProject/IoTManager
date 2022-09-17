@@ -21,6 +21,7 @@
         "specialThanks": "",
         "moduleName": "IoTWiegand",
         "moduleVersion": "1.0",
+        "title": "Считыватель Wiegand (в разработке)",
         "moduleDesc": "Позволяет получить коды доступа по протоколу Wiegand с различных считывателей. На данный момент модуль в РАЗРАБОТКЕ",
         "propInfo": {
             "pinD0": "GPIO шины данных",

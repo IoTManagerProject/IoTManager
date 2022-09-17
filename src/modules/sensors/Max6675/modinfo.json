@@ -22,7 +22,8 @@
         "specialThanks": "",
         "moduleName": "Max6675",
         "moduleVersion": "1.0",
-        "moduleDesc": "Позволяет получить значения температуры с Max6675.",
+        "title": "Cенсор температуры MAX6675",
+        "moduleDesc": "Позволяет получить значения температуры с Max6675 и термопары.",
         "propInfo": {
             "DO": "GPIO шины данных",
             "CS": "GPIO шины данных",

@@ -88,6 +88,7 @@
         "specialThanks": "",
         "moduleName": "Mhz19",
         "moduleVersion": "1.0",
+        "title": "Датчик температуры и CO2 с Mhz19",
         "moduleDesc": "Позволяет получить значения температуры и CO2 с Mhz19.",
         "propInfo": {
             "int": "Количество секунд между опросами датчика.",

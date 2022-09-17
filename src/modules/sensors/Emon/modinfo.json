@@ -37,7 +37,8 @@
         "specialThanks": "",
         "moduleName": "Emon",
         "moduleVersion": "1.0",
-        "moduleDesc": ".",
+        "title": "Датчик тока и напряжения",
+        "moduleDesc": "Получение информации о токе и напряжении с использованием трансформатора",
         "propInfo": {
             "pin_U": "",
             "calib_U": "",

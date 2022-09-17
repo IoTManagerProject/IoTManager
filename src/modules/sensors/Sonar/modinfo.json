@@ -23,6 +23,7 @@
         "specialThanks": "",
         "moduleName": "Sonar",
         "moduleVersion": "1.0",
+        "title": "Сонар HC-SR04",
         "moduleDesc": "Позволяет получить значение расстояния до препятствия с использованием ультразвукового датчика (в сантиметрах).",
         "propInfo": {
             "pinTrig": "GPIO контакта Trig",
