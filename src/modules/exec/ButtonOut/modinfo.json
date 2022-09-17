@@ -2,7 +2,7 @@
     "menuSection": "Исполнительные устройства",
     "configItem": [
         {
-            "name": "Кнопка управляющая пином (Реле)",
+            "name": "Управление пином",
             "type": "Writing",
             "subtype": "ButtonOut",
             "id": "btn",
@@ -21,6 +21,7 @@
         "specialThanks": "",
         "moduleName": "ButtonOut",
         "moduleVersion": "1.0",
+        "title": "Управление пином",
         "moduleDesc": "Управляем состоянием конкретного пина по модели реле.",
         "propInfo": {
             "pin": "Укажите GPIO номер пина для управления выходом",

@@ -23,6 +23,7 @@
         "specialThanks": "",
         "moduleName": "Ds18b20",
         "moduleVersion": "1.0",
+        "title": "Cенсор температуры ds18b20",
         "moduleDesc": "Позволяет получить значения температуры с Ds18b20.",
         "propInfo": {
             "pin": "GPIO номер, к которому подключена шина данных датчиков.",

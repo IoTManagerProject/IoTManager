@@ -22,6 +22,7 @@
         "specialThanks": "",
         "moduleName": "Mp3",
         "moduleVersion": "1.0",
+        "title": "MP3 плеер",
         "moduleDesc": "Позволяет управлять модулем проигрывания MP3 файлов с SD-карты по serial интерфейсу (DFplayer mini).",
         "propInfo": {
             "int": "Периодичность в секундах опроса состояния плеера.",

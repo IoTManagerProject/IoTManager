@@ -23,6 +23,7 @@
         "specialThanks": "Oleg @Threedreality, Sergey @Serghei63",
         "moduleName": "IoTServo",
         "moduleVersion": "1.0",
+        "title": "Сервопривод",
         "moduleDesc": "Предназначен для управления сервоприводом по уровню аналогово сигнала.",
         "propInfo": {
             "int": "Пауза в секундах между опросами аналогового входа. Если 0, то читаем постоянно",
