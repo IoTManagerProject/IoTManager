@@ -322,7 +322,8 @@ enum SysOp {
     sysop_gethhmmss,
     sysop_getTime,
     sysop_getIP,
-    sysop_mqttPub
+    sysop_mqttPub,
+    sysop_getUptime
 };
 
 IoTValue sysExecute(SysOp command, std::vector<IoTValue> &param) {
@@ -413,6 +414,10 @@ IoTValue sysExecute(SysOp command, std::vector<IoTValue> &param) {
                 value.valD = mqtt.publish(param[0].valS.c_str(), param[1].valS.c_str(), false);
             }
             break;
+        case sysop_getUptime:
+            value.valS = jsonReadStr(errorsHeapJson, F("upt"));
+            value.isDecimal = false;
+            break;
     }
 
     return value;
@@ -463,6 +468,8 @@ class SysCallExprAST : public ExprAST {
             operation = sysop_gethhmmss;
         else if (Callee == "getTime")
             operation = sysop_getTime;
+        else if (Callee == "getUptime")
+            operation = sysop_getUptime;
         else
             operation = sysop_notfound;
     }
