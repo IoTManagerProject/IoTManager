@@ -33,6 +33,7 @@
         "specialThanks": "",
         "moduleName": "Hdc1080",
         "moduleVersion": "1.0",
+        "subTypes":["Hdc1080t", "Hdc1080h"],
         "title": "Датчик температуры и влажности Hdc1080",
         "moduleDesc": "Позволяет получить значения температуры и влажности с Hdc1080.",
         "propInfo": {

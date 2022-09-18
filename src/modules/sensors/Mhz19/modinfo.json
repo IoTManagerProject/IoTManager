@@ -88,6 +88,7 @@
         "specialThanks": "",
         "moduleName": "Mhz19",
         "moduleVersion": "1.0",
+        "subTypes":["Mhz19uart", "Mhz19pwm", "Mhz19temp", "Mhz19range", "Mhz19ABC"],
         "title": "Датчик температуры и CO2 с Mhz19",
         "moduleDesc": "Позволяет получить значения температуры и CO2 с Mhz19.",
         "propInfo": {

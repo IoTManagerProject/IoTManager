@@ -33,6 +33,7 @@
         "specialThanks": "",
         "moduleName": "Aht20",
         "moduleVersion": "1.0",
+        "subTypes":["Aht20t", "Aht20h"],
         "title": "Сенсор температуры и влажности AHT20",
         "moduleDesc": "Позволяет получить температуру и влажность с Aht20.",
         "propInfo": {
