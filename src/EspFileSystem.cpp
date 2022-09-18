@@ -48,6 +48,14 @@ const String getUniqueId(const char* name) {
     return String(name) + getMacAddress();
 }
 
+const String getWebVersion() {
+    String text = readFile("/index.html", 2000);
+    text = selectFromMarkerToMarker(text, "title", 1);
+    text = selectFromMarkerToMarker(text, " ", 2);
+    text.replace("</", "");
+    return text;
+}
+
 uint32_t ESP_getChipId(void) {
 #ifdef ESP32
     uint32_t id = 0;

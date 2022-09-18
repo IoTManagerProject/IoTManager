@@ -16,10 +16,15 @@ void setup() {
     Serial.println(F("--------------started----------------"));
 
     //создание экземпляров классов
-    myNotAsyncActions = new NotAsync(do_LAST);
+    // myNotAsyncActions = new NotAsync(do_LAST);
 
     //инициализация файловой системы
     fileSystemInit();
+    Serial.println(F("------------------------"));
+    Serial.println("FIRMWARE NAME     " + String(FIRMWARE_NAME));
+    Serial.println("FIRMWARE VERSION  " + String(FIRMWARE_VERSION));
+    Serial.println("WEB VERSION       " + getWebVersion());
+    Serial.println(F("------------------------"));
 
     //получение chip id
     setChipId();

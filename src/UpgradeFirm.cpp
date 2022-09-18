@@ -48,7 +48,8 @@ bool upgradeFS() {
 #endif
 #ifdef ESP32
     httpUpdate.rebootOnUpdate(false);
-    HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, getBinPath("spiffs.bin"));
+    //обновляем little fs с помощью метода обновления spiffs
+    HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, getBinPath("littlefs.bin"));
 #endif
 
     //если FS обновилась успешно

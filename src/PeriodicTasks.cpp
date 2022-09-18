@@ -3,7 +3,7 @@
 void periodicTasksInit() {
     //задачи редкого выполнения
     ts.add(
-        PTASK, 1000 * 30, [&](void*) {
+        PTASK, 1000 * 60, [&](void*) {
             // fs
             getFSInfo();
             // heap
@@ -22,6 +22,7 @@ void periodicTasksInit() {
             // build ver
             jsonWriteStr_(errorsHeapJson, F("bver"), String(FIRMWARE_VERSION));
             jsonWriteStr_(errorsHeapJson, F("bn"), String(FIRMWARE_NAME));
+            jsonWriteStr_(errorsHeapJson, F("wver"), getWebVersion());
             // reset reason
             jsonWriteStr_(errorsHeapJson, F("rst"), ESP_getResetReason());
             periodicWsSend();

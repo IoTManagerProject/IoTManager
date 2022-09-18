@@ -67,7 +67,7 @@ class Loging : public IoTItem {
 
         String logData;
         jsonWriteInt(logData, "x", unixTime);
-        jsonWriteInt(logData, "y1", value.toFloat());
+        jsonWriteFloat(logData, "y1", value.toFloat());
 
         //прочитаем путь к файлу последнего сохранения
         String filePath = readDataDB(id);
