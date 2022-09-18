@@ -44,7 +44,6 @@ class Loging : public IoTItem {
     }
 
     void doByInterval() {
-        SerialPrint("E", F("Loging"), "----------------------start loging cycle----------------------------");
         //если объект логгирования не был создан
         if (!isItemExist(logid)) {
             SerialPrint("E", F("Loging"), "'" + id + "' loging object not exist, return");
@@ -102,7 +101,6 @@ class Loging : public IoTItem {
         }
         //запускаем процедуру удаления старых файлов если память переполняется
         deleteLastFile();
-        SerialPrint("E", F("Loging"), "----------------------compl loging cycle----------------------------");
     }
 
     void createNewFileWithData(String &logData) {
@@ -150,8 +148,6 @@ class Loging : public IoTItem {
     }
 
     void sendChart() {
-        SerialPrint("E", F("Loging"), "----------------------start send chart----------------------------");
-
         String dir = "/lg/" + id;
         filesList = getFilesList(dir);
 
@@ -189,7 +185,6 @@ class Loging : public IoTItem {
         if (noData) {
             cleanChart();
         }
-        SerialPrint("E", F("Loging"), "----------------------compl send chart----------------------------");
     }
 
     void cleanChart() {
