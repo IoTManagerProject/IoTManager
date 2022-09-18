@@ -31,6 +31,8 @@
         "specialThanks": "",
         "moduleName": "Sht20",
         "moduleVersion": "1.0",
+        "usedRam": 15,
+        "subTypes":["Sht20t", "Sht20h"],
         "title": "Сенсор температуры и влажности с Sht20",
         "moduleDesc": "Позволяет получить значения температуры и влажности с Sht20.",
         "propInfo": {

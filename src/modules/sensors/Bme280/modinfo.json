@@ -45,6 +45,8 @@
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "Bme280",
         "moduleVersion": "1.0",
+        "usedRam": 15,
+        "subTypes":["Bme280t", "Bme280p", "Bme280h"],
         "title": "Сенсор температуры, давления и влажности с Bme280",
         "moduleDesc": "Позволяет получить значения температуры, давления и влажности с Bme280.",
         "propInfo": {

@@ -23,6 +23,7 @@
         "specialThanks": "Oleg @Threedreality, Sergey @Serghei63",
         "moduleName": "IoTServo",
         "moduleVersion": "1.0",
+        "usedRam": 15,
         "title": "Сервопривод",
         "moduleDesc": "Предназначен для управления сервоприводом по уровню аналогово сигнала.",
         "propInfo": {

@@ -22,6 +22,7 @@
         "specialThanks": "",
         "moduleName": "Max6675",
         "moduleVersion": "1.0",
+        "usedRam": 15,
         "title": "Cенсор температуры MAX6675",
         "moduleDesc": "Позволяет получить значения температуры с Max6675 и термопары.",
         "propInfo": {
