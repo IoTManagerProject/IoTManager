@@ -136,6 +136,8 @@ void IoTItem::setPublishType(int publishType, int wsNum){};
 
 void IoTItem::cleanData() {}
 
+void IoTItem::setTodayDate() {}
+
 String IoTItem::getID() {
     return _id;
 };

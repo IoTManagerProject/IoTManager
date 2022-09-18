@@ -66,7 +66,9 @@ class Loging : public IoTItem {
 
         regEvent(value, F("Loging"));
 
-        String logData = String(unixTimeShort) + " " + value;
+        String logData;
+        jsonWriteInt(logData, "x", unixTime);
+        jsonWriteInt(logData, "y1", value.toFloat());
 
         //прочитаем путь к файлу последнего сохранения
         String filePath = readDataDB(id);
@@ -78,16 +80,17 @@ class Loging : public IoTItem {
             return;
         } else {
             //если файл все же есть но был создан не сегодня, то создаем сегодняшний
-            if (getDateDotFormated() != getDateDotFormatedFromUnix(getFileUnixLocalTime(filePath))) {
+            if (getTodayDateDotFormated() != getDateDotFormatedFromUnix(getFileUnixLocalTime(filePath))) {
                 SerialPrint("E", F("Loging"), "'" + id + "' file too old, start create new file");
                 createNewFileWithData(logData);
                 return;
             }
         }
 
-        //считаем количество строк
-        int lines = countLines(filePath);
-        SerialPrint("i", F("Loging"), "'" + id + "' " + String(lines) + " lines found in file");
+        //считаем количество строк и определяем размер файла
+        size_t size = 0;
+        int lines = countJsonObj(filePath, size);
+        SerialPrint("i", F("Loging"), "'" + id + "' " + "lines = " + String(lines) + ", size = " + String(size));
 
         //если количество строк до заданной величины и дата не менялась
         if (lines <= points && !hasDayChanged()) {
@@ -103,6 +106,7 @@ class Loging : public IoTItem {
     }
 
     void createNewFileWithData(String &logData) {
+        logData = logData + ",";
         String path = "/lg/" + id + "/" + String(unixTimeShort) + ".txt";  //создадим путь вида /lg/id/133256622333.txt
         //создадим пустой файл
         if (writeEmptyFile(path) != "sucсess") {
@@ -110,7 +114,7 @@ class Loging : public IoTItem {
             return;
         }
         //запишем в него данные
-        if (addFileLn(path, logData) != "sucсess") {
+        if (addFile(path, logData) != "sucсess") {
             SerialPrint("E", F("Loging"), "'" + id + "' data writing error, return");
             return;
         }
@@ -123,7 +127,8 @@ class Loging : public IoTItem {
     }
 
     void addNewDataToExistingFile(String &path, String &logData) {
-        if (addFileLn(path, logData) != "sucсess") {
+        logData = logData + ",";
+        if (addFile(path, logData) != "sucсess") {
             SerialPrint("i", F("Loging"), "'" + id + "' file writing error, return");
             return;
         };
@@ -132,7 +137,7 @@ class Loging : public IoTItem {
 
     bool hasDayChanged() {
         bool changed = false;
-        String currentDate = getDateDotFormated();
+        String currentDate = getTodayDateDotFormated();
         if (!firstTimeDate) {
             if (prevDate != currentDate) {
                 changed = true;
@@ -227,25 +232,8 @@ class Loging : public IoTItem {
         if (!configFile) {
             return false;
         }
-        configFile.seek(0, SeekSet);
-        String buf = "{}";
-        String oneSingleJson;
-        String unix_time;
-        String value;
-        unsigned int psn;
-        unsigned int sz = configFile.size();
-        do {
-            i++;
-            psn = configFile.position();
-            String line = configFile.readStringUntil('\n');
-            unix_time = selectToMarker(line, " ");
-            jsonWriteInt(buf, "x", unix_time.toInt() + START_DATETIME);
-            value = deleteBeforeDelimiter(line, " ");
-            jsonWriteFloat(buf, "y1", value.toFloat());
-            if (unix_time != "" || value != "") {
-                oneSingleJson += buf + ",";
-            }
-        } while (psn < sz);
+
+        String oneSingleJson = configFile.readString();
 
         configFile.close();
 
@@ -253,12 +241,13 @@ class Loging : public IoTItem {
         oneSingleJson = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[" + oneSingleJson + "]}";
         oneSingleJson.replace("},]}", "}]}");
 
+        SerialPrint("i", "Loging", "json size: " + String(oneSingleJson.length()));
+
         publishJson(oneSingleJson);
         return true;
     }
 
-    // publishType 1 - в mqtt, 2 - в ws, 3 - mqtt и ws
-    // wsNum = -1 => broadcast
+    // publishType 1 - в mqtt, 2 - в ws, 3 - mqtt и ws, wsNum = -1 => broadcast
     void setPublishType(int publishType, int wsNum) {
         _publishType = publishType;
         _wsNum = wsNum;
@@ -294,7 +283,7 @@ class Loging : public IoTItem {
 
     void regEvent(String value, String consoleInfo = "") {
         String userDate = getItemValue(id + "-date");
-        String currentDate = getDateDotFormated();
+        String currentDate = getTodayDateDotFormated();
         //отправляем в график данные только когда выбран сегодняшний день
         if (userDate == currentDate) {
             generateEvent(_id, value);
@@ -366,11 +355,15 @@ class Date : public IoTItem {
         }
     }
 
+    void setTodayDate() {
+        setValue(getTodayDateDotFormated());
+        SerialPrint("E", F("Loging"), "today date set " + getTodayDateDotFormated());
+    }
+
     void doByInterval() {
         if (isTimeSynch) {
             if (firstTime) {
-                setValue(getDateDotFormated());
-                SerialPrint("E", F("Loging"), "today date set " + getDateDotFormated());
+                setTodayDate();
                 firstTime = false;
             }
         }

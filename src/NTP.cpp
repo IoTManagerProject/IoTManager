@@ -121,7 +121,7 @@ const String getDateTimeDotFormated() {
     return String(buf);
 }
 
-const String getDateDotFormated() {
+const String getTodayDateDotFormated() {
     char buf[32];
     sprintf(buf, "%02d.%02d.%d", _time_local.day_of_month, _time_local.month, _time_local.year + 2000);
     return String(buf);

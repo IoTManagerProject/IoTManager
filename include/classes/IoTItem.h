@@ -28,6 +28,7 @@ class IoTItem {
     virtual void cleanChart();
     virtual void setPublishType(int type, int num);
     virtual void cleanData();
+    virtual void setTodayDate();
 
     String getID();
     virtual String getValue();

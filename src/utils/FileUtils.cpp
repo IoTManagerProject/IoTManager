@@ -101,6 +101,18 @@ const String addFileLn(const String& filename, const String& str) {
     onFlashWrite();
 }
 
+const String addFile(const String& filename, const String& str) {
+    String path = filepath(filename);
+    auto file = FileFS.open(path, FILE_APPEND);
+    if (!file) {
+        return "failed";
+    }
+    file.print(str);
+    file.close();
+    return "sucсess";
+    onFlashWrite();
+}
+
 const String readFile(const String& filename, size_t max_size) {
     String path = filepath(filename);
     auto file = FileFS.open(path, FILE_READ);
@@ -147,7 +159,7 @@ bool cutFile(const String& src, const String& dst) {
 }
 
 //функция считает количество строк в файле
-size_t countLines(const String filename) {
+size_t countJsonObj(const String filename, size_t& size) {
     size_t cnt = -1;
     String path = filepath(filename);
     auto file = FileFS.open(path, FILE_READ);
@@ -155,12 +167,11 @@ size_t countLines(const String filename) {
         return cnt;
     }
     file.seek(0, SeekSet);
-    size_t size = file.size();
+    size = file.size();
     size_t psn;
     do {
         cnt++;
-        // или /n тут один знак
-        file.readStringUntil('\r');
+        file.readStringUntil('}');
         psn = file.position();
     } while (psn < size);
     file.close();

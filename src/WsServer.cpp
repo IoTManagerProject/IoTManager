@@ -57,10 +57,26 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //отвечаем данными на запрос страницы
             if (headerStr == "/|") {
                 sendFileToWs("/layout.json", num, 1024);
-                String json = getParamsJson();
+            }
+
+            //отвечаем на запрос параметров
+            if (headerStr == "/params|") {
+                String json = "{}";
+                jsonWriteStr(json, "params", "");
+                for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                    if ((*it)->getSubtype() != "Loging") {
+                        if ((*it)->iAmLocal) jsonWriteStr(json, (*it)->getID(), (*it)->getValue());
+                    }
+                }
+
                 standWebSocket.sendTXT(num, json);
+
                 //отправка данных графиков только в выбранный сокет
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                    //сбрасываем даты графиков
+                    // if ((*it)->getID().endsWith("-date")) {
+                    //    (*it)->setTodayDate();
+                    //}
                     if ((*it)->getSubtype() == "Loging") {
                         (*it)->setPublishType(2, num);
                         (*it)->sendChart();
@@ -179,6 +195,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 standWebSocket.sendTXT(num, settingsFlashJson);
                 sendFileToWs("/config.json", num, 1024);
                 sendFileToWs("/items.json", num, 1024);
+                String json = getParamsJson();
+                standWebSocket.sendTXT(num, json);
             }
 
             //----------------------------------------------------------------------//
@@ -263,10 +281,16 @@ void publishStatusWs(const String& topic, const String& data) {
 
 //публикация статус сообщений
 void publishChartWs(int num, String& data) {
+    bool ok = false;
     if (num == -1) {
-        standWebSocket.broadcastTXT(data);
+        ok = standWebSocket.broadcastTXT(data);
     } else {
-        standWebSocket.sendTXT(num, data);
+        ok = standWebSocket.sendTXT(num, data);
+    }
+    if (ok) {
+        SerialPrint(F("i"), F("WS"), F("sent sucsess"));
+    } else {
+        SerialPrint(F("E"), F("WS"), F("sent error"));
     }
 }
 
