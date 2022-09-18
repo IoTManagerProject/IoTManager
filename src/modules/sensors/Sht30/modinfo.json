@@ -31,6 +31,7 @@
         "specialThanks": "",
         "moduleName": "Sht30",
         "moduleVersion": "1.0",
+        "usedRam": 15,
         "subTypes":["Sht30t", "Sht30h"],
         "title": "Сенсор температуры и влажности с Sht30",
         "moduleDesc": "Позволяет получить температуру и влажность с датчика Sht30.",

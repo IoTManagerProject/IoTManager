@@ -23,6 +23,7 @@
         "specialThanks": "",
         "moduleName": "Ds18b20",
         "moduleVersion": "1.0",
+        "usedRam": 15,
         "title": "Cенсор температуры ds18b20",
         "moduleDesc": "Позволяет получить значения температуры с Ds18b20.",
         "propInfo": {

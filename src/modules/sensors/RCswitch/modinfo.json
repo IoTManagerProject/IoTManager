@@ -19,6 +19,7 @@
         "specialThanks": "Valentin Khandriga @Valiuhaaa",
         "moduleName": "RCswitch",
         "moduleVersion": "1.0",
+        "usedRam": 15,
         "title": "Сканер кнопок 433 MHz",
         "moduleDesc": "Позволяет принимать и передавать байт-коды на частоте 433 MHz от и для простых пультов, кнопок, радиореле",
         "propInfo": {

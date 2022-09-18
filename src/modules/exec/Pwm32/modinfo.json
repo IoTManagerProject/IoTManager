@@ -25,6 +25,7 @@
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "Pwm32",
         "moduleVersion": "1.0",
+        "usedRam": 15,
         "title": "PWM ESP32",
         "moduleDesc": "Позволяет управлять Широтно-Импульсной Модуляцией на конкретном пине платы.",
         "retInfo": "Содержит текущее значение ШИМ",

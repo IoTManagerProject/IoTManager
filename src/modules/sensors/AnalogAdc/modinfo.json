@@ -26,6 +26,7 @@
         "specialThanks": "",
         "moduleName": "AnalogAdc",
         "moduleVersion": "1.0",
+        "usedRam": 15,
         "title": "Аналоговый сенсор",
         "moduleDesc": "Позволяет получить текущее значение на аналоговом GPIO или усредненное для avgSteps измерений каждого вызова loop.",
         "propInfo": {

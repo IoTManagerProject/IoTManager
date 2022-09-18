@@ -21,6 +21,7 @@
         "specialThanks": "",
         "moduleName": "ButtonOut",
         "moduleVersion": "1.0",
+        "usedRam": 15,
         "title": "Управление пином",
         "moduleDesc": "Управляем состоянием конкретного пина по модели реле.",
         "propInfo": {

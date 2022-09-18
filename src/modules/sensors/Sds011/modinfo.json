@@ -43,6 +43,7 @@
         "specialThanks": "",
         "moduleName": "Sds011",
         "moduleVersion": "1.0",
+        "usedRam": 15,
         "subTypes":["Sds011_25", "Sds011_10"],
         "title": "Датчик пыли",
         "moduleDesc": "Позволяет получить значения концентрации пыли в воздухе с Sds011.",
