@@ -9,7 +9,7 @@
             "widget": "chart2",
             "page": "Графики",
             "descr": "Температура",
-            "int": 1,
+            "int": 5,
             "logid": "t",
             "num": 1,
             "points": 300,
