@@ -5,9 +5,11 @@ File fsUploadFile;
 
 void standWebServerInit() {
     //  Кэшировать файлы для быстрой работы
-    HTTP.serveStatic("/bundle.js", FileFS, "/", "max-age=31536000");    // кеширование на 1 год
-    HTTP.serveStatic("/bundle.css", FileFS, "/", "max-age=31536000");   // кеширование на 1 год
-    HTTP.serveStatic("/favicon.png", FileFS, "/", "max-age=31536000");  // кеширование на 1 год
+    HTTP.serveStatic("/bundle.js", FileFS, "/", "max-age=31536000");      // кеширование на 1 год
+    HTTP.serveStatic("/bundle.css", FileFS, "/", "max-age=31536000");     // кеширование на 1 год
+    HTTP.serveStatic("/bundle.js.gz", FileFS, "/", "max-age=31536000");   // кеширование на 1 год
+    HTTP.serveStatic("/bundle.css.gz", FileFS, "/", "max-age=31536000");  // кеширование на 1 год
+    HTTP.serveStatic("/favicon.png", FileFS, "/", "max-age=31536000");    // кеширование на 1 год
 
     HTTP.on("/devicelist.json", HTTP_GET, []() {
         HTTP.send(200, "application/json", devListHeapJson);
@@ -207,7 +209,7 @@ void handleFileList() {
         HTTP.send(500, "text/plain", "BAD ARGS");
         return;
     }
-    File dir = FileFS.open(HTTP.arg("list"), "r");
+    File dir = FileFS.open("/", "r");
     String output = "[";
     File entry;
     while (entry = dir.openNextFile()) {
@@ -221,6 +223,7 @@ void handleFileList() {
         entry.close();
     }
     output += "]";
+    Serial.println(output);
     HTTP.send(200, "text/json", output);
 }
 //#endif
