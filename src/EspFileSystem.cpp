@@ -53,6 +53,7 @@ const String getWebVersion() {
     text = selectFromMarkerToMarker(text, "title", 1);
     text = selectFromMarkerToMarker(text, " ", 2);
     text.replace("</", "");
+    text.replace(".", "");
     return text;
 }
 
