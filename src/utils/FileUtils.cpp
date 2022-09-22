@@ -217,7 +217,7 @@ void cleanLogs() {
     //очистка данных всех экземпляров графиков
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         if ((*it)->getSubtype() == "Loging") {
-            (*it)->cleanData();
+            (*it)->clearHistory();
         }
     }
 }

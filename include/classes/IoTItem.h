@@ -24,11 +24,6 @@ class IoTItem {
     virtual void regEvent(float value, String consoleInfo);
 
     String getSubtype();
-    virtual void sendChart();
-    virtual void cleanChart();
-    virtual void setPublishType(int type, int num);
-    virtual void cleanData();
-    virtual void setTodayDate();
 
     String getID();
     virtual String getValue();
@@ -52,6 +47,13 @@ class IoTItem {
     virtual iarduino_RTC_BASE* getRtcDriver();
     virtual void setValue(IoTValue Value);
     virtual void setValue(String valStr);
+
+    //методы для графиков
+    virtual void publishValue();
+    virtual void clearValue();
+    virtual void setPublishDestination(int type, int num);
+    virtual void clearHistory();
+    virtual void setTodayDate();
 
    protected:
     String _subtype;

@@ -78,8 +78,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                     //    (*it)->setTodayDate();
                     //}
                     if ((*it)->getSubtype() == "Loging") {
-                        (*it)->setPublishType(2, num);
-                        (*it)->sendChart();
+                        (*it)->setPublishDestination(2, num);
+                        (*it)->publishValue();
                     }
                 }
             }

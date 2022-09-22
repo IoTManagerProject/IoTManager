@@ -128,13 +128,13 @@ String IoTItem::getSubtype() {
     return _subtype;
 }
 
-void IoTItem::sendChart() {}
+void IoTItem::publishValue() {}
 
-void IoTItem::cleanChart() {}
+void IoTItem::clearValue() {}
 
-void IoTItem::setPublishType(int publishType, int wsNum){};
+void IoTItem::setPublishDestination(int publishType, int wsNum){};
 
-void IoTItem::cleanData() {}
+void IoTItem::clearHistory() {}
 
 void IoTItem::setTodayDate() {}
 

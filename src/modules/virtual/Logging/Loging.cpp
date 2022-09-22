@@ -147,7 +147,7 @@ class Loging : public IoTItem {
         return changed;
     }
 
-    void sendChart() {
+    void publishValue() {
         String dir = "/lg/" + id;
         filesList = getFilesList(dir);
 
@@ -183,17 +183,17 @@ class Loging : public IoTItem {
         }
         //если данных нет отправляем пустой грфик
         if (noData) {
-            cleanChart();
+            clearValue();
         }
     }
 
-    void cleanChart() {
+    void clearValue() {
         SerialPrint("i", F("Loging"), "clear chart");
         String cleanJson = createEmtyJson();
         publishJson(cleanJson);
     }
 
-    void cleanData() {
+    void clearHistory() {
         String dir = "/lg/" + id;
         cleanDirectory(dir);
     }
@@ -243,7 +243,7 @@ class Loging : public IoTItem {
     }
 
     // publishType 1 - в mqtt, 2 - в ws, 3 - mqtt и ws, wsNum = -1 => broadcast
-    void setPublishType(int publishType, int wsNum) {
+    void setPublishDestination(int publishType, int wsNum) {
         _publishType = publishType;
         _wsNum = wsNum;
     }
@@ -342,9 +342,9 @@ class Date : public IoTItem {
             if ((*it)->getSubtype() == "Loging") {
                 //отправляем только свои данные
                 if ((*it)->getID() == selectToMarker(id, "-")) {
-                    (*it)->setPublishType(3, -1);
-                    (*it)->cleanChart();
-                    (*it)->sendChart();
+                    (*it)->setPublishDestination(3, -1);
+                    (*it)->clearValue();
+                    (*it)->publishValue();
                 }
             }
         }
