@@ -78,7 +78,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                     //    (*it)->setTodayDate();
                     //}
                     if ((*it)->getSubtype() == "Loging") {
-                        (*it)->setPublishDestination(2, num);
+                        (*it)->setPublishDestination(TO_WS, num);
                         (*it)->publishValue();
                     }
                 }
@@ -280,18 +280,22 @@ void publishStatusWs(const String& topic, const String& data) {
 }
 
 //публикация статус сообщений
-void publishChartWs(int num, String& data) {
-    bool ok = false;
-    if (num == -1) {
-        ok = standWebSocket.broadcastTXT(data);
-    } else {
-        ok = standWebSocket.sendTXT(num, data);
-    }
-    if (ok) {
-        SerialPrint(F("i"), F("WS"), F("sent sucsess"));
-    } else {
-        SerialPrint(F("E"), F("WS"), F("sent error"));
-    }
+// void publishChartWs2(int num, String& data) {
+//    bool ok = false;
+//    if (num == -1) {
+//        ok = standWebSocket.broadcastTXT(data);
+//    } else {
+//        ok = standWebSocket.sendTXT(num, data);
+//    }
+//    if (ok) {
+//        SerialPrint(F("i"), F("WS"), F("sent sucsess"));
+//    } else {
+//        SerialPrint(F("E"), F("WS"), F("sent error"));
+//    }
+//}
+
+void publishChartWs(int num, String& path) {
+    sendFileToWs(path, num, 1000);
 }
 
 //данные которые мы отправляем в сокеты переодически
@@ -318,9 +322,14 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
 #endif
 
 //посылка данных из файла в бинарном виде
-void sendFileToWs(const char* filename, uint8_t num, size_t frameSize) {
+void sendFileToWs(String filename, int num, size_t frameSize) {
     String st = "/st" + String(filename);
-    standWebSocket.sendTXT(num, st);
+    if (num == -1) {
+        standWebSocket.broadcastTXT(st);
+    } else {
+        standWebSocket.sendTXT(num, st);
+    }
+
     String path = filepath(filename);
     auto file = FileFS.open(path, "r");
     if (!file) {
@@ -332,12 +341,20 @@ void sendFileToWs(const char* filename, uint8_t num, size_t frameSize) {
     uint8_t payload[frameSize];
     int countRead = file.read(payload, sizeof(payload));
     while (countRead > 0) {
-        standWebSocket.sendBIN(num, payload, countRead);
+        if (num == -1) {
+            standWebSocket.broadcastBIN(payload, countRead);
+        } else {
+            standWebSocket.sendBIN(num, payload, countRead);
+        }
         countRead = file.read(payload, sizeof(payload));
     }
     file.close();
     String end = "/end" + String(filename);
-    standWebSocket.sendTXT(num, end);
+    if (num == -1) {
+        standWebSocket.broadcastTXT(end);
+    } else {
+        standWebSocket.sendTXT(num, end);
+    }
 }
 
 //посылка данных из string

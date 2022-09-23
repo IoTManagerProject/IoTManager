@@ -51,7 +51,7 @@ class IoTItem {
     //методы для графиков
     virtual void publishValue();
     virtual void clearValue();
-    virtual void setPublishDestination(int type, int num);
+    virtual void setPublishDestination(int type, int wsNum = -1);
     virtual void clearHistory();
     virtual void setTodayDate();
 

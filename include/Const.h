@@ -71,3 +71,11 @@ enum UpdateStates { NOT_STARTED,
                     UPDATE_BUILD_FAILED,
                     PATH_ERROR
 };
+
+enum distination {
+    TO_MQTT,
+    TO_WS,
+    TO_MQTT_WS,
+};
+
+#define WS_BROADCAST -1
