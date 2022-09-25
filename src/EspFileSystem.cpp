@@ -19,9 +19,8 @@ void globalVarsSync() {
     jsonWriteStr_(settingsFlashJson, "root", mqttRootDevice);
     jsonWriteStr_(settingsFlashJson, "id", chipId);
 
-    jsonWriteStr_(errorsHeapJson, "errors", "");  //метка для парсинга
-    jsonWriteStr_(ssidListHeapJson, "ssid", "");  //метка для парсинга
-    // jsonWriteStr(paramsHeapJson, "params", "");   //метка для парсинга
+    jsonWriteStr_(errorsHeapJson, "errors_", "");   //метка для парсинга
+    jsonWriteStr_(ssidListHeapJson, "ssids_", "");  //метка для парсинга
 }
 
 String getParamsJson() {

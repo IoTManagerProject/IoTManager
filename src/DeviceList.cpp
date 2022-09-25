@@ -2,7 +2,7 @@
 
 const String getThisDevice() {
     String thisDevice = "{}";
-    jsonWriteStr_(thisDevice, F("devicelist"), "");  //метка для парсинга
+    jsonWriteStr_(thisDevice, F("devicelist_"), "");  //метка для парсинга
     jsonWriteStr_(thisDevice, F("ip"), jsonReadStr(settingsFlashJson, F("ip")));
     jsonWriteStr_(thisDevice, F("id"), jsonReadStr(settingsFlashJson, F("id")));
     jsonWriteStr_(thisDevice, F("name"), jsonReadStr(settingsFlashJson, F("name")));
@@ -54,7 +54,7 @@ void asyncUdpInit() {
 
     //будем отправлять каждые 30 секунд презентацию данного устройства
     ts.add(
-        UDP, 60000, [&](void*) {  //UDPP
+        UDP, 60000, [&](void*) {  // UDPP
             if (isNetworkActive()) {
                 SerialPrint("i", F("UDP"), F("Broadcast device presentation"));
                 asyncUdp.broadcastTo(getThisDevice().c_str(), 4210);

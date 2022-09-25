@@ -112,9 +112,8 @@ class Loging : public IoTItem {
             SerialPrint("E", F("Loging"), "'" + id + "' file writing error, return");
             return;
         }
+
         //запишем в него данные
-        String topic = mqttRootDevice + "/" + id;
-        logData = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[" + logData;
         if (addFile(path, logData) != "sucсess") {
             SerialPrint("E", F("Loging"), "'" + id + "' data writing error, return");
             return;
@@ -195,8 +194,7 @@ class Loging : public IoTItem {
 
     void clearValue() {
         SerialPrint("i", F("Loging"), "clear chart");
-        String cleanJson = createEmtyJson();
-        // publishJson(cleanJson);
+        sendChartFileToWs("/empty.txt", -1, 1000);
     }
 
     void clearHistory() {
@@ -238,20 +236,21 @@ class Loging : public IoTItem {
         configFile.close();
         // String topic = mqttRootDevice + "/" + id;
         // oneSingleJson = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[" + oneSingleJson + "]}";
-        // oneSingleJson.replace("},]}", "}]}");
+        oneSingleJson += "]}";
+        oneSingleJson.replace("},]}", "}]}");
         SerialPrint("i", "Loging", "json size: " + String(oneSingleJson.length()));
         publishChartMqtt(id, oneSingleJson);
         return true;
     }
 
     void sendChartFileToWs(String filename, int num, size_t frameSize) {
-        String st = "/st/chart.json";
+        String topic = mqttRootDevice + "/" + id;
+        String st = "/st/chart.json|" + topic;
         if (num == -1) {
             standWebSocket.broadcastTXT(st);
         } else {
             standWebSocket.sendTXT(num, st);
         }
-
         String path = filepath(filename);
         auto file = FileFS.open(path, "r");
         if (!file) {
@@ -271,24 +270,12 @@ class Loging : public IoTItem {
             countRead = file.read(payload, sizeof(payload));
         }
         file.close();
-        String end = "/end/chart.json";
+        String end = "/end/chart.json|" + topic;
         if (num == -1) {
             standWebSocket.broadcastTXT(end);
         } else {
             standWebSocket.sendTXT(num, end);
         }
-    }
-
-    //посылка данных из string
-    void sendStringToWs(const String &msg, uint8_t num, String name) {
-        String st = "/st" + String(name);
-        standWebSocket.sendTXT(num, st);
-        size_t size = msg.length();
-        char dataArray[size];
-        msg.toCharArray(dataArray, size);
-        standWebSocket.sendBIN(num, (uint8_t *)dataArray, size);
-        String end = "/end" + String(name);
-        standWebSocket.sendTXT(num, end);
     }
 
     void setPublishDestination(int publishType, int wsNum = -1) {
@@ -316,11 +303,11 @@ class Loging : public IoTItem {
         String currentDate = getTodayDateDotFormated();
         //отправляем в график данные только когда выбран сегодняшний день
         if (userDate == currentDate) {
-            generateEvent(_id, value);
-            publishStatusMqtt(_id, value);
-            String json = createSingleJson(_id, value);
-            publishChartWs(-1, json);
-            SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
+            // generateEvent(_id, value);
+            // publishStatusMqtt(_id, value);
+            // String json = createSingleJson(_id, value);
+            // publishChartWs(-1, json);
+            // SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
         }
     }
 

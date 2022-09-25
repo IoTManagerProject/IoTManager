@@ -22,7 +22,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
         case WStype_CONNECTED: {
             // IPAddress ip = standWebSocket.remoteIP(num);
             SerialPrint("i", "WS " + String(num), "WS client connected");
-            if (num > 3) {
+            if (num >= 3) {
                 SerialPrint("E", "WS", "Too many clients, connection closed!!!");
                 jsonWriteInt(errorsHeapJson, "wse1", 1);
                 standWebSocket.close();
@@ -61,16 +61,18 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             //отвечаем на запрос параметров
             if (headerStr == "/params|") {
-                String json = "{}";
-                jsonWriteStr(json, "params", "");
+                String params = "{}";
+                jsonWriteStr(params, "params_", "");  //метка для парсинга
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->getSubtype() != "Loging") {
-                        if ((*it)->iAmLocal) jsonWriteStr(json, (*it)->getID(), (*it)->getValue());
+                        if ((*it)->iAmLocal) jsonWriteStr(params, (*it)->getID(), (*it)->getValue());
                     }
                 }
+                standWebSocket.sendTXT(num, params);
+            }
 
-                standWebSocket.sendTXT(num, json);
-
+            //отвечаем на запрос графиков
+            if (headerStr == "/charts|") {
                 //отправка данных графиков только в выбранный сокет
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     //сбрасываем даты графиков
@@ -94,6 +96,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWs("/widgets.json", num, 1024);
                 sendFileToWs("/config.json", num, 1024);
                 sendFileToWs("/scenario.json", num, 1024);
+                //шлется для того что бы получить топик устройства
                 standWebSocket.sendTXT(num, settingsFlashJson);
             }
 
@@ -191,12 +194,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //----------------------------------------------------------------------//
             if (headerStr == "/dev|") {
                 standWebSocket.sendTXT(num, errorsHeapJson);
-                sendFileToWs("/layout.json", num, 1024);
                 standWebSocket.sendTXT(num, settingsFlashJson);
                 sendFileToWs("/config.json", num, 1024);
                 sendFileToWs("/items.json", num, 1024);
-                String json = getParamsJson();
-                standWebSocket.sendTXT(num, json);
             }
 
             //----------------------------------------------------------------------//
