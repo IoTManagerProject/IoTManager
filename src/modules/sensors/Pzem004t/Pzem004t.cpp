@@ -14,12 +14,16 @@ class Pzem004v : public IoTItem {
    public:
     Pzem004v(String parameters) : IoTItem(parameters) {
         addr = jsonReadStr(parameters, "addr");
-        pzem = new PZEMSensor(myUART, hexStringToUint8(addr));
+        if (myUART) {
+            pzem = new PZEMSensor(myUART, hexStringToUint8(addr));
+        }
     }
 
     void doByInterval() {
-        value.valD = pzem->values()->voltage;
-        regEvent(value.valD, "Pzem Voltage");
+        if (pzem) {
+            value.valD = pzem->values()->voltage;
+            regEvent(value.valD, "Pzem Voltage");
+        }
     }
 
     ~Pzem004v(){};

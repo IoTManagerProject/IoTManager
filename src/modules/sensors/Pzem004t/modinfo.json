@@ -27,7 +27,7 @@
             "name": "PZEM 004t Мощность",
             "type": "Reading",
             "subtype": "Pzem004w",
-            "id": "A",
+            "id": "W",
             "widget": "anydataWt",
             "page": "Сенсоры",
             "descr": "Мощность",
