@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "MAX6675 Cенсор температуры",
+            "name": "MAX6675 Температура",
             "type": "Reading",
             "subtype": "Max6675t",
             "id": "maxtmp",

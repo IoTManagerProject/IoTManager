@@ -297,7 +297,7 @@
         "num": 22
     },
     {
-        "name": "23. MAX6675 Cенсор температуры",
+        "name": "23. MAX6675 Температура",
         "type": "Reading",
         "subtype": "Max6675t",
         "id": "maxtmp",
