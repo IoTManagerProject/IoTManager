@@ -5,6 +5,9 @@
             "name": "UART",
             "type": "Reading",
             "subtype": "SoftUART",
+            "page": "",
+            "descr": "",
+            "widget": "nil",
             "id": "u",
             "tx": 15,
             "rx": 16,
@@ -16,21 +19,21 @@
         "authorContact": "https://t.me/Dmitry_Borisenko",
         "authorGit": "https://github.com/DmitryBorisenko33",
         "specialThanks": "Serghei Crasnicov @Serghei63",
-        "moduleName": "Bme280",
+        "moduleName": "SoftUART",
         "moduleVersion": "1.0",
         "usedRam": 15,
         "subTypes": [
             "SoftUART"
         ],
         "title": "Софтовый uart для esp8266 или harware uart для esp32",
-        "moduleDesc": "Используется вместе с Pzem004t",
+        "moduleDesc": "Используется вместе с Pzem004t, в последствии будет доработан для связи с arduino платами",
         "propInfo": {
             "tx": "TX пин",
             "rx": "RX пин",
             "speed": "Скорость UART"
         }
     },
-    "defActive": false,
+    "defActive": true,
     "devices": {
         "esp32_4mb": [
             "plerup/espsoftwareserial"

@@ -311,8 +311,68 @@
         "num": 23
     },
     {
-        "name": "24. Сканер кнопок 433 MHz",
-        "num": 24,
+        "name": "24. PZEM 004t Напряжение",
+        "type": "Reading",
+        "subtype": "Pzem004v",
+        "id": "V",
+        "widget": "anydataVlt",
+        "page": "Сенсоры",
+        "descr": "Напряжение",
+        "int": 15,
+        "addr": "0xF8",
+        "num": 24
+    },
+    {
+        "name": "25. PZEM 004t Сила тока",
+        "type": "Reading",
+        "subtype": "Pzem004a",
+        "id": "A",
+        "widget": "anydataAmp",
+        "page": "Сенсоры",
+        "descr": "Сила тока",
+        "int": 15,
+        "addr": "0xF8",
+        "num": 25
+    },
+    {
+        "name": "26. PZEM 004t Мощность",
+        "type": "Reading",
+        "subtype": "Pzem004w",
+        "id": "A",
+        "widget": "anydataWt",
+        "page": "Сенсоры",
+        "descr": "Мощность",
+        "int": 15,
+        "addr": "0xF8",
+        "num": 26
+    },
+    {
+        "name": "27. PZEM 004t Энергия",
+        "type": "Reading",
+        "subtype": "Pzem004wh",
+        "id": "Wh",
+        "widget": "anydataWth",
+        "page": "Сенсоры",
+        "descr": "Энергия",
+        "int": 15,
+        "addr": "0xF8",
+        "num": 27
+    },
+    {
+        "name": "28. PZEM 004t Частота",
+        "type": "Reading",
+        "subtype": "Pzem004hz",
+        "id": "Hz",
+        "widget": "anydataHtz",
+        "page": "Сенсоры",
+        "descr": "Энергия",
+        "int": 15,
+        "addr": "0x77",
+        "num": 28
+    },
+    {
+        "name": "29. Сканер кнопок 433 MHz",
+        "num": 29,
         "type": "Reading",
         "subtype": "RCswitch",
         "id": "rsw",
@@ -321,7 +381,7 @@
         "pinTx": 12
     },
     {
-        "name": "25. Sht20 Температура",
+        "name": "30. Sht20 Температура",
         "type": "Reading",
         "subtype": "Sht20t",
         "id": "tmp2",
@@ -330,10 +390,10 @@
         "descr": "Температура",
         "int": 15,
         "round": 1,
-        "num": 25
+        "num": 30
     },
     {
-        "name": "26. Sht20 Влажность",
+        "name": "31. Sht20 Влажность",
         "type": "Reading",
         "subtype": "Sht20h",
         "id": "Hum2",
@@ -342,10 +402,10 @@
         "descr": "Влажность",
         "int": 15,
         "round": 1,
-        "num": 26
+        "num": 31
     },
     {
-        "name": "27. Sht30 Температура",
+        "name": "32. Sht30 Температура",
         "type": "Reading",
         "subtype": "Sht30t",
         "id": "tmp30",
@@ -354,10 +414,10 @@
         "descr": "SHT30 Температура",
         "int": 15,
         "round": 1,
-        "num": 27
+        "num": 32
     },
     {
-        "name": "28. Sht30 Влажность",
+        "name": "33. Sht30 Влажность",
         "type": "Reading",
         "subtype": "Sht30h",
         "id": "Hum30",
@@ -366,11 +426,24 @@
         "descr": "SHT30 Влажность",
         "int": 15,
         "round": 1,
-        "num": 28
+        "num": 33
     },
     {
-        "name": "29. HC-SR04 Ультразвуковой дальномер",
-        "num": 29,
+        "name": "34. UART",
+        "type": "Reading",
+        "subtype": "SoftUART",
+        "page": "",
+        "descr": "",
+        "widget": "nil",
+        "id": "u",
+        "tx": 15,
+        "rx": 16,
+        "speed": 9600,
+        "num": 34
+    },
+    {
+        "name": "35. HC-SR04 Ультразвуковой дальномер",
+        "num": 35,
         "type": "Reading",
         "subtype": "Sonar",
         "id": "sonar",
@@ -385,7 +458,7 @@
         "header": "Исполнительные устройства"
     },
     {
-        "name": "30. Кнопка подключенная к пину",
+        "name": "36. Кнопка подключенная к пину",
         "type": "Writing",
         "subtype": "ButtonIn",
         "id": "btn",
@@ -398,10 +471,10 @@
         "pinMode": "INPUT",
         "debounceDelay": 50,
         "fixState": 0,
-        "num": 30
+        "num": 36
     },
     {
-        "name": "31. Управление пином",
+        "name": "37. Управление пином",
         "type": "Writing",
         "subtype": "ButtonOut",
         "id": "btn",
@@ -411,10 +484,10 @@
         "int": 0,
         "inv": 0,
         "pin": 2,
-        "num": 31
+        "num": 37
     },
     {
-        "name": "32. Сервопривод",
+        "name": "38. Сервопривод",
         "type": "Writing",
         "subtype": "IoTServo",
         "id": "servo",
@@ -425,10 +498,10 @@
         "pin": 12,
         "apin": -1,
         "amap": "0, 4096, 0, 180",
-        "num": 32
+        "num": 38
     },
     {
-        "name": "33. Расширитель портов Mcp23017",
+        "name": "39. Расширитель портов Mcp23017",
         "type": "Reading",
         "subtype": "Mcp23017",
         "id": "Mcp",
@@ -438,10 +511,10 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 33
+        "num": 39
     },
     {
-        "name": "34. MP3 плеер",
+        "name": "40. MP3 плеер",
         "type": "Reading",
         "subtype": "Mp3",
         "id": "mp3",
@@ -451,10 +524,10 @@
         "int": 1,
         "pins": "14,12",
         "volume": 20,
-        "num": 34
+        "num": 40
     },
     {
-        "name": "35. PWM ESP8266",
+        "name": "41. PWM ESP8266",
         "type": "Writing",
         "subtype": "Pwm8266",
         "id": "pwm",
@@ -466,10 +539,10 @@
         "freq": 5000,
         "val": 0,
         "apin": -1,
-        "num": 35
+        "num": 41
     },
     {
-        "name": "36. Телеграм-Лайт",
+        "name": "42. Телеграм-Лайт",
         "type": "Writing",
         "subtype": "TelegramLT",
         "id": "tg",
@@ -478,13 +551,13 @@
         "descr": "",
         "token": "",
         "chatID": "",
-        "num": 36
+        "num": 42
     },
     {
         "header": "Экраны"
     },
     {
-        "name": "37. LCD экран 2004",
+        "name": "43. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -496,10 +569,10 @@
         "size": "20,4",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 37
+        "num": 43
     },
     {
-        "name": "38. LCD экран 1602",
+        "name": "44. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -511,6 +584,6 @@
         "size": "16,2",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 38
+        "num": 44
     }
 ]

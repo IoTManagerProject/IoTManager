@@ -217,6 +217,7 @@
         "icon": "speedometer"
     },
     {
+        "name": "nil",
         "label": "Без виджета"
     }
 ]

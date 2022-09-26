@@ -99,7 +99,7 @@
             },
             {
                 "path": "src\\modules\\sensors\\Pzem004t",
-                "active": false
+                "active": true
             },
             {
                 "path": "src\\modules\\sensors\\RCswitch",
@@ -119,7 +119,7 @@
             },
             {
                 "path": "src\\modules\\sensors\\SoftUart",
-                "active": false
+                "active": true
             },
             {
                 "path": "src\\modules\\sensors\\Sonar",

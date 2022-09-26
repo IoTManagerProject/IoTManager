@@ -2,7 +2,8 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 #include <Arduino.h>
-//#include "SoftUART.h"
+
+#include "modules/sensors/SoftUart/SoftUart.h"
 
 #ifdef ESP8266
 SoftwareSerial* myUART = nullptr;
@@ -14,6 +15,7 @@ class SoftUART : public IoTItem {
    private:
     int tx;
     int rx;
+    int speed;
 
    public:
     SoftUART(String parameters) : IoTItem(parameters) {
@@ -36,9 +38,6 @@ class SoftUART : public IoTItem {
 
     void uartHandle() {
         if (myUART) {
-            if (!jsonReadBool(configSetupJson, "uart")) {
-                return;
-            }
             static String incStr;
             if (myUART->available()) {
                 char inc;
