@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "ds18b20 Cенсор температуры",
+            "name": "DS18B20 Температура",
             "type": "Reading",
             "subtype": "Ds18b20",
             "id": "dstmp",

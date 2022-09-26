@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "Bme280 Cенсор температуры",
+            "name": "BME280 Температура",
             "type": "Reading",
             "subtype": "Bme280t",
             "id": "tmp3",
@@ -14,7 +14,7 @@
             "round": 1
         },
         {
-            "name": "Bme280 Cенсор давления",
+            "name": "BME280 Давление",
             "type": "Reading",
             "subtype": "Bme280p",
             "id": "Press3",
@@ -26,7 +26,7 @@
             "round": 1
         },
         {
-            "name": "Bme280 Cенсор влажности",
+            "name": "BME280 Влажность",
             "type": "Reading",
             "subtype": "Bme280h",
             "id": "Hum3",

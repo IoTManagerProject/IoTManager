@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "GY21 Cенсор температуры",
+            "name": "GY21 Температура",
             "type": "Reading",
             "subtype": "GY21t",
             "id": "tmp4",
@@ -13,7 +13,7 @@
             "int": 15
         },
         {
-            "name": "GY21 Cенсор влажности",
+            "name": "GY21 Влажность",
             "type": "Reading",
             "subtype": "GY21h",
             "id": "Hum4",

@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "ADS1115 датчик напряжения ",
+            "name": "ADS1115 Напряжение",
             "type": "Reading",
             "subtype": "Ads1115",
             "id": "Ads3",

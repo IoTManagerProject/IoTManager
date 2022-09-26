@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "MHZ-19 Датчик CO2 UART",
+            "name": "MHZ-19 CO2 (UART)",
             "type": "Reading",
             "subtype": "Mhz19uart",
             "id": "co2uart",
@@ -20,7 +20,7 @@
             "ABC": 1
         },
         {
-            "name": "MHZ-19 Датчик CO2 PWM",
+            "name": "MHZ-19 CO2 (PWM)",
             "type": "Reading",
             "subtype": "Mhz19pwm",
             "id": "co2pwm",

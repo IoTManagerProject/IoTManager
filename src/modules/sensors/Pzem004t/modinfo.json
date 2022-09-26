@@ -2,37 +2,13 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "Cенсор температуры Bme280",
+            "name": "PZEM 004t Напряжение",
             "type": "Reading",
             "subtype": "Bme280t",
             "id": "tmp3",
             "widget": "anydataTmp",
             "page": "Сенсоры",
             "descr": "Температура",
-            "int": 15,
-            "addr": "0x77",
-            "round": 1
-        },
-        {
-            "name": "Cенсор давления Bme280",
-            "type": "Reading",
-            "subtype": "Bme280p",
-            "id": "Press3",
-            "widget": "anydataMm",
-            "page": "Сенсоры",
-            "descr": "Давление",
-            "int": 15,
-            "addr": "0x77",
-            "round": 1
-        },
-        {
-            "name": "Cенсор влажности Bme280",
-            "type": "Reading",
-            "subtype": "Bme280h",
-            "id": "Hum3",
-            "widget": "anydataHum",
-            "page": "Сенсоры",
-            "descr": "Влажность",
             "int": 15,
             "addr": "0x77",
             "round": 1

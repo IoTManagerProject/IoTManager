@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "AHT20 Cенсор температуры",
+            "name": "AHT20 Температура",
             "type": "Reading",
             "subtype": "Aht20t",
             "id": "Temp20",
@@ -14,7 +14,7 @@
             "round": 1
         },
         {
-            "name": "AHT20 Cенсор влажности",
+            "name": "AHT20 Влажность",
             "type": "Reading",
             "subtype": "Aht20h",
             "id": "Hum20",

@@ -1,35 +1,35 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Датчик тока",
-        "type": "Reading",
-        "subtype": "I",
-        "id": "current",
-        "widget": "anydataAmp",
-        "page": "Сенсоры",
-        "descr": "Датчик тока",
-        "int": 10,
-        "pin_I": 34,
-        "calib_I": 111.1,
-        "plus": 0,
-        "multiply": 1
-    },
-    {
-        "name": "Датчик напряжения",
-        "type": "Reading",
-        "subtype": "U",
-        "id": "voltage",
-        "widget": "anydataVlt",
-        "page": "Сенсоры",
-        "descr": "Датчик напряжения",
-        "int": 10,
-        "pin_U": 35,
-        "calib_U": 223.1,
-        "plus": 0,
-        "multiply": 1
-    }],
-    
+    "configItem": [
+        {
+            "name": "EMON Ток",
+            "type": "Reading",
+            "subtype": "I",
+            "id": "current",
+            "widget": "anydataAmp",
+            "page": "Сенсоры",
+            "descr": "Датчик тока",
+            "int": 10,
+            "pin_I": 34,
+            "calib_I": 111.1,
+            "plus": 0,
+            "multiply": 1
+        },
+        {
+            "name": "EMON Напряжение",
+            "type": "Reading",
+            "subtype": "U",
+            "id": "voltage",
+            "widget": "anydataVlt",
+            "page": "Сенсоры",
+            "descr": "Датчик напряжения",
+            "int": 10,
+            "pin_U": 35,
+            "calib_U": 223.1,
+            "plus": 0,
+            "multiply": 1
+        }
+    ],
     "about": {
         "authorName": "Serghei Crasnicov",
         "authorContact": "https://t.me/Serghei63",
@@ -38,7 +38,10 @@
         "moduleName": "Emon",
         "moduleVersion": "1.0",
         "usedRam": 15,
-        "subTypes":["I", "U"],
+        "subTypes": [
+            "I",
+            "U"
+        ],
         "title": "Датчик тока и напряжения",
         "moduleDesc": "Получение информации о токе и напряжении с использованием трансформатора",
         "propInfo": {
@@ -49,9 +52,7 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-
     "defActive": false,
-
     "devices": {
         "esp32_4mb": [
             "openenergymonitor/EmonLib@1.1.0"

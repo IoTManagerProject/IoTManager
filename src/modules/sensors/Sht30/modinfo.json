@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "Sht30 Cенсор температуры",
+            "name": "Sht30 Температура",
             "type": "Reading",
             "subtype": "Sht30t",
             "id": "tmp30",
@@ -13,7 +13,7 @@
             "round": 1
         },
         {
-            "name": "Sht30 Cенсор влажности",
+            "name": "Sht30 Влажность",
             "type": "Reading",
             "subtype": "Sht30h",
             "id": "Hum30",

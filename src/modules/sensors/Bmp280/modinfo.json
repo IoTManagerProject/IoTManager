@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "Bmp280 Cенсор температуры",
+            "name": "BMP280 Температура",
             "type": "Reading",
             "subtype": "Bmp280t",
             "id": "tmp3",
@@ -14,7 +14,7 @@
             "round": 1
         },
         {
-            "name": "Bmp280 Cенсор давления",
+            "name": "BMP280 Давление",
             "type": "Reading",
             "subtype": "Bmp280p",
             "id": "Press3",

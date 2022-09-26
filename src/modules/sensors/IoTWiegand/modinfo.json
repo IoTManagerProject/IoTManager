@@ -1,19 +1,19 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Считыватель Wiegand",
-        "type": "Reading",
-        "subtype": "IoTWiegand",
-        "id": "wg",
-        "widget": "anydataTmp",
-        "page": "Сенсоры",
-        "descr": "Считыватель",
-        "int": 0,
-        "pinD0": 13,
-        "pinD1": 12
-    }],
-    
+    "configItem": [
+        {
+            "name": "Wiegand Считыватель",
+            "type": "Reading",
+            "subtype": "IoTWiegand",
+            "id": "wg",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "Считыватель",
+            "int": 0,
+            "pinD0": 13,
+            "pinD1": 12
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -30,9 +30,7 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-
     "defActive": false,
-
     "devices": {
         "esp32_4mb": [
             "https://github.com/jpliew/Wiegand-NG-Multi-Bit-Wiegand-Library-for-Arduino"

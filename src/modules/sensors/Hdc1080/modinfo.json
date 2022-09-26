@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "HDC1080 Cенсор температуры",
+            "name": "HDC1080 Температура",
             "type": "Reading",
             "subtype": "Hdc1080t",
             "id": "Temp1080",
@@ -14,7 +14,7 @@
             "round": 1
         },
         {
-            "name": "HDC1080 Cенсор влажности",
+            "name": "HDC1080 Влажность",
             "type": "Reading",
             "subtype": "Hdc1080h",
             "id": "Hum1080",
