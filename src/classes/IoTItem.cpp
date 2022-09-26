@@ -150,9 +150,7 @@ bool IoTItem::isGpioDriver() {
     return false;
 }
 
-iarduino_RTC_BASE* IoTItem::getRtcDriver() {
-    return nullptr;
-}
+
 
 //сетевое общение====================================================================================================================================
 

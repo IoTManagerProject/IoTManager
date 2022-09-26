@@ -1,6 +1,5 @@
 #pragma once
 #include "classes/IoTGpio.h"
-#include <iarduino_RTC.h>
 
 struct IoTValue {
     float valD = 0;
@@ -43,8 +42,6 @@ class IoTItem {
     bool enableDoByInt = true;
 
     virtual bool isGpioDriver();
-
-    virtual iarduino_RTC_BASE* getRtcDriver();
     virtual void setValue(IoTValue Value);
     virtual void setValue(String valStr);
 

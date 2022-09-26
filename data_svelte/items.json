@@ -14,11 +14,10 @@
         "widget": "chart2",
         "page": "Графики",
         "descr": "Температура",
+        "num": 1,
         "int": 5,
         "logid": "t",
-        "num": 1,
-        "points": 300,
-        "keepdays": 2
+        "points": 300
     },
     {
         "name": "2. Таймер",
@@ -455,16 +454,18 @@
         "num": 34
     },
     {
-        "name": "35. PWM ESP8266",
+        "name": "35. PWM ESP32",
         "type": "Writing",
-        "subtype": "Pwm8266",
+        "subtype": "Pwm32",
         "id": "pwm",
         "widget": "range",
         "page": "Кнопки",
         "descr": "PWM",
         "int": 0,
-        "pin": 15,
+        "pin": 2,
         "freq": 5000,
+        "ledChannel": 2,
+        "PWM_resolution": 10,
         "val": 0,
         "apin": -1,
         "num": 35
