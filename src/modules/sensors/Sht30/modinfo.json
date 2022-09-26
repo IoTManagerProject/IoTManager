@@ -1,29 +1,29 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Cенсор температуры Sht30",
-        "type": "Reading",
-        "subtype": "Sht30t",
-        "id": "tmp30",
-        "widget": "anydataTmp",
-        "page": "Сенсоры",
-        "descr": "SHT30 Температура",
-        "int": 15,
-        "round": 1
-    },
-    {
-        "name": "Cенсор влажности Sht30",
-        "type": "Reading",
-        "subtype": "Sht30h",
-        "id": "Hum30",
-        "widget": "anydataHum",
-        "page": "Сенсоры",
-        "descr": "SHT30 Влажность",
-        "int": 15,
-        "round": 1
-    }],
-    
+    "configItem": [
+        {
+            "name": "Sht30 Cенсор температуры",
+            "type": "Reading",
+            "subtype": "Sht30t",
+            "id": "tmp30",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "SHT30 Температура",
+            "int": 15,
+            "round": 1
+        },
+        {
+            "name": "Sht30 Cенсор влажности",
+            "type": "Reading",
+            "subtype": "Sht30h",
+            "id": "Hum30",
+            "widget": "anydataHum",
+            "page": "Сенсоры",
+            "descr": "SHT30 Влажность",
+            "int": 15,
+            "round": 1
+        }
+    ],
     "about": {
         "authorName": "Serghei Crasnicov",
         "authorContact": "https://t.me/Serghei63",
@@ -32,16 +32,17 @@
         "moduleName": "Sht30",
         "moduleVersion": "1.0",
         "usedRam": 15,
-        "subTypes":["Sht30t", "Sht30h"],
+        "subTypes": [
+            "Sht30t",
+            "Sht30h"
+        ],
         "title": "Сенсор температуры и влажности с Sht30",
         "moduleDesc": "Позволяет получить температуру и влажность с датчика Sht30.",
         "propInfo": {
             "int": "Количество секунд между опросами датчика."
         }
     },
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [
             "WEMOS SHT3x@1.0.0"

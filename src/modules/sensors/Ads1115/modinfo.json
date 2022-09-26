@@ -1,25 +1,23 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Датчик напряжения ADS1115",
-        "type": "Reading",
-        "subtype": "Ads1115",
-        "id": "Ads3",
-        "widget": "anydataVlt",
-        "page": "Сенсоры",
-        "descr": "ADS_3",
-        
-        "pin": "0",
-        "mode": "volt",
-        "gain": "3/4x",
-
-        "plus": 0,
-        "multiply": 1,
-        "round": 2,
-        "int": 10
-    }],
-    
+    "configItem": [
+        {
+            "name": "ADS1115 датчик напряжения ",
+            "type": "Reading",
+            "subtype": "Ads1115",
+            "id": "Ads3",
+            "widget": "anydataVlt",
+            "page": "Сенсоры",
+            "descr": "ADS_3",
+            "pin": "0",
+            "mode": "volt",
+            "gain": "3/4x",
+            "plus": 0,
+            "multiply": 1,
+            "round": 2,
+            "int": 10
+        }
+    ],
     "about": {
         "authorName": "Serghei Crasnicov",
         "authorContact": "https://t.me/Serghei63",
@@ -37,9 +35,7 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-
     "defActive": false,
-
     "devices": {
         "esp32_4mb": [
             "adafruit/Adafruit ADS1X15 @ ^2.3.0"

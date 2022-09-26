@@ -1,31 +1,31 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Cенсор температуры HDC1080",
-        "type": "Reading",
-        "subtype": "Hdc1080t",
-        "id": "Temp1080",
-        "widget": "anydataTmp",
-        "page": "Сенсоры",
-        "descr": "1080 Температура",
-        "int": 15,
-        "addr": "0x40",
-        "round": 1
-    },
-    {
-        "name": "Cенсор влажности HDC1080",
-        "type": "Reading",
-        "subtype": "Hdc1080h",
-        "id": "Hum1080",
-        "widget": "anydataHum",
-        "page": "Сенсоры",
-        "descr": "1080 Влажность",
-        "int": 15,
-        "addr": "0x40",
-        "round": 1
-    }],
-    
+    "configItem": [
+        {
+            "name": "HDC1080 Cенсор температуры",
+            "type": "Reading",
+            "subtype": "Hdc1080t",
+            "id": "Temp1080",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "1080 Температура",
+            "int": 15,
+            "addr": "0x40",
+            "round": 1
+        },
+        {
+            "name": "HDC1080 Cенсор влажности",
+            "type": "Reading",
+            "subtype": "Hdc1080h",
+            "id": "Hum1080",
+            "widget": "anydataHum",
+            "page": "Сенсоры",
+            "descr": "1080 Влажность",
+            "int": 15,
+            "addr": "0x40",
+            "round": 1
+        }
+    ],
     "about": {
         "authorName": "Serghei Crasnicov",
         "authorContact": "https://t.me/Serghei63",
@@ -34,7 +34,10 @@
         "moduleName": "Hdc1080",
         "moduleVersion": "1.0",
         "usedRam": 15,
-        "subTypes":["Hdc1080t", "Hdc1080h"],
+        "subTypes": [
+            "Hdc1080t",
+            "Hdc1080h"
+        ],
         "title": "Датчик температуры и влажности Hdc1080",
         "moduleDesc": "Позволяет получить значения температуры и влажности с Hdc1080.",
         "propInfo": {
@@ -42,9 +45,7 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [
             "ClosedCube HDC1080"

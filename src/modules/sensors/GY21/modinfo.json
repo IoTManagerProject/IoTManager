@@ -1,29 +1,29 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Cенсор температуры GY21",
-        "type": "Reading",
-        "subtype": "GY21t",
-        "id": "tmp4",
-        "widget": "anydataTmp",
-        "page": "Сенсоры",
-        "descr": "Температура",
-        "round": 1,
-        "int": 15
-    },
-    {
-        "name": "Cенсор влажности GY21",
-        "type": "Reading",
-        "subtype": "GY21h",
-        "id": "Hum4",
-        "widget": "anydataHum",
-        "page": "Сенсоры",
-        "descr": "Влажность",
-        "round": 1,
-        "int": 15
-    }],
-    
+    "configItem": [
+        {
+            "name": "GY21 Cенсор температуры",
+            "type": "Reading",
+            "subtype": "GY21t",
+            "id": "tmp4",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "Температура",
+            "round": 1,
+            "int": 15
+        },
+        {
+            "name": "GY21 Cенсор влажности",
+            "type": "Reading",
+            "subtype": "GY21h",
+            "id": "Hum4",
+            "widget": "anydataHum",
+            "page": "Сенсоры",
+            "descr": "Влажность",
+            "round": 1,
+            "int": 15
+        }
+    ],
     "about": {
         "authorName": "Alecs",
         "authorContact": "https://t.me/Alecs",
@@ -32,16 +32,17 @@
         "moduleName": "GY21",
         "moduleVersion": "1.0",
         "usedRam": 15,
-        "subTypes":["GY21t", "GY21h"],
+        "subTypes": [
+            "GY21t",
+            "GY21h"
+        ],
         "title": "Датчик температуры и влажности GY21",
         "moduleDesc": "Позволяет получить значения температуры и влажности с GY21.",
         "propInfo": {
             "int": "Количество секунд между опросами датчика."
         }
     },
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [
             "https://github.com/JonasGMorsch/GY-21.git"

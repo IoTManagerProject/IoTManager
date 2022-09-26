@@ -1,21 +1,20 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Сонар HC-SR04",
-        "num": 1,
-        "type": "Reading",
-        "subtype": "Sonar",
-        "id": "sonar",
-        "widget": "anydataTmp",
-        "page": "Сенсоры",
-        "descr": "Расстояние (см)",
-        
-        "pinTrig": 5,
-        "pinEcho": 4,
-        "int": 5
-    }],
-    
+    "configItem": [
+        {
+            "name": "HC-SR04 Ультразвуковой дальномер",
+            "num": 1,
+            "type": "Reading",
+            "subtype": "Sonar",
+            "id": "sonar",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "Расстояние (см)",
+            "pinTrig": 5,
+            "pinEcho": 4,
+            "int": 5
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -32,9 +31,7 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [],
         "esp8266_4mb": []

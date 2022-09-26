@@ -1,31 +1,31 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Cенсор температуры dht11",
-        "type": "Reading",
-        "subtype": "Dht1122t",
-        "id": "tmp3",
-        "widget": "anydataTmp",
-        "page": "Сенсоры",
-        "descr": "Температура",
-        "int": 15,
-        "pin": 0,
-        "senstype": "dht11"
-    },
-    {
-        "name": "Cенсор влажности dht11",
-        "type": "Reading",
-        "subtype": "Dht1122h",
-        "id": "Hum3",
-        "widget": "anydataHum",
-        "page": "Сенсоры",
-        "descr": "Влажность",
-        "int": 15,
-        "pin": 0,
-        "senstype": "dht11"
-    }],
-    
+    "configItem": [
+        {
+            "name": "dht11 Cенсор температуры",
+            "type": "Reading",
+            "subtype": "Dht1122t",
+            "id": "tmp3",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "Температура",
+            "int": 15,
+            "pin": 0,
+            "senstype": "dht11"
+        },
+        {
+            "name": "dht11 Cенсор влажности",
+            "type": "Reading",
+            "subtype": "Dht1122h",
+            "id": "Hum3",
+            "widget": "anydataHum",
+            "page": "Сенсоры",
+            "descr": "Влажность",
+            "int": 15,
+            "pin": 0,
+            "senstype": "dht11"
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -34,7 +34,10 @@
         "moduleName": "Dht1122",
         "moduleVersion": "1.0",
         "usedRam": 15,
-        "subTypes":["Dht1122t", "Dht1122h"],
+        "subTypes": [
+            "Dht1122t",
+            "Dht1122h"
+        ],
         "title": "Сенсор температуры и влажности с dht11 или dht22",
         "moduleDesc": "Позволяет получить значения температуры и влажности с dht11 или dht22.",
         "propInfo": {
@@ -42,9 +45,7 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [
             "beegee-tokyo/DHT sensor library for ESPx"

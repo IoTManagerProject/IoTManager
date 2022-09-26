@@ -1,41 +1,41 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Датчик пыли SDS011 PM25",
-        "type": "Reading",
-        "subtype": "Sds011_25",
-        "id": "pmuart25",
-        "widget": "anydataPpm",
-        "page": "Сенсоры",
-        "descr": "PM-2.5",
-        "plus": 0,
-        "multiply": 1,
-        "round": 10,
-        "rxPin": 13,
-        "txPin": 12,
-        "int": 15,
-        "warmUp": 30,
-        "period": 300
-    },
-    {
-        "name": "Датчик пыли SDS011 PM10",
-        "type": "Reading",
-        "subtype": "Sds011_10",
-        "id": "pmuart10",
-        "widget": "anydataPpm",
-        "page": "Сенсоры",
-        "descr": "PM-10",
-        "plus": 0,
-        "multiply": 1,
-        "round": 10,
-        "rxPin": 13,
-        "txPin": 12,
-        "int": 15,
-        "warmUp": 30,
-        "period": 300
-    }],
-    
+    "configItem": [
+        {
+            "name": "SDS011 PM25 Датчик пыли",
+            "type": "Reading",
+            "subtype": "Sds011_25",
+            "id": "pmuart25",
+            "widget": "anydataPpm",
+            "page": "Сенсоры",
+            "descr": "PM-2.5",
+            "plus": 0,
+            "multiply": 1,
+            "round": 10,
+            "rxPin": 13,
+            "txPin": 12,
+            "int": 15,
+            "warmUp": 30,
+            "period": 300
+        },
+        {
+            "name": "SDS011 PM10 Датчик пыли",
+            "type": "Reading",
+            "subtype": "Sds011_10",
+            "id": "pmuart10",
+            "widget": "anydataPpm",
+            "page": "Сенсоры",
+            "descr": "PM-10",
+            "plus": 0,
+            "multiply": 1,
+            "round": 10,
+            "rxPin": 13,
+            "txPin": 12,
+            "int": 15,
+            "warmUp": 30,
+            "period": 300
+        }
+    ],
     "about": {
         "authorName": "Alex K",
         "authorContact": "https://t.me/cmche",
@@ -44,7 +44,10 @@
         "moduleName": "Sds011",
         "moduleVersion": "1.0",
         "usedRam": 15,
-        "subTypes":["Sds011_25", "Sds011_10"],
+        "subTypes": [
+            "Sds011_25",
+            "Sds011_10"
+        ],
         "title": "Датчик пыли",
         "moduleDesc": "Позволяет получить значения концентрации пыли в воздухе с Sds011.",
         "propInfo": {
@@ -55,9 +58,7 @@
             "period": ""
         }
     },
-
     "defActive": false,
-
     "devices": {
         "esp32_4mb": [
             "Nova Fitness Sds dust sensors library@1.5.1"

@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "Bme280 Cенсор температуры",
+            "name": "Cенсор температуры Bme280",
             "type": "Reading",
             "subtype": "Bme280t",
             "id": "tmp3",
@@ -14,7 +14,7 @@
             "round": 1
         },
         {
-            "name": "Bme280 Cенсор давления",
+            "name": "Cенсор давления Bme280",
             "type": "Reading",
             "subtype": "Bme280p",
             "id": "Press3",
@@ -26,7 +26,7 @@
             "round": 1
         },
         {
-            "name": "Bme280 Cенсор влажности",
+            "name": "Cенсор влажности Bme280",
             "type": "Reading",
             "subtype": "Bme280h",
             "id": "Hum3",
@@ -39,32 +39,30 @@
         }
     ],
     "about": {
-        "authorName": "Ilya Belyakov",
-        "authorContact": "https://t.me/Biveraxe",
-        "authorGit": "https://github.com/biveraxe",
+        "authorName": "Dmitry Borisenko",
+        "authorContact": "https://t.me/Dmitry_Borisenko",
+        "authorGit": "https://github.com/DmitryBorisenko33",
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "Bme280",
         "moduleVersion": "1.0",
         "usedRam": 15,
         "subTypes": [
-            "Bme280t",
-            "Bme280p",
-            "Bme280h"
+            "Pzem004v",
+            "Pzem004a",
+            "Pzem004w",
+            "Pzem004hz",
+            "Pzem004wh"
         ],
-        "title": "Сенсор температуры, давления и влажности с Bme280",
-        "moduleDesc": "Позволяет получить значения температуры, давления и влажности с Bme280.",
+        "title": "Счетчик электроэнергии PZEM 004t версии 3.0 (с модбасом)",
+        "moduleDesc": "Считает потраченную электроэнергию, измеряет напряжение, частоту, силу тока и прочие параметры",
         "propInfo": {
-            "addr": "Адрес датчика на шине, обычно 0x77.",
-            "int": "Количество секунд между опросами датчика."
+            "addr": "Адрес modbus",
+            "int": "Количество секунд между опросами датчика"
         }
     },
-    "defActive": true,
+    "defActive": false,
     "devices": {
-        "esp32_4mb": [
-            "adafruit/Adafruit BME280 Library"
-        ],
-        "esp8266_4mb": [
-            "adafruit/Adafruit BME280 Library"
-        ]
+        "esp32_4mb": [],
+        "esp8266_4mb": []
     }
 }

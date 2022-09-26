@@ -1,86 +1,86 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Датчик CO2 MHZ-19 UART",
-        "type": "Reading",
-        "subtype": "Mhz19uart",
-        "id": "co2uart",
-        "widget": "anydataPpm",
-        "page": "Сенсоры",
-        "descr": "CO2uart",
-        "plus": 0,
-        "multiply": 1,
-        "round": 1,
-        "pin": 0,
-        "rxPin": 13,
-        "txPin": 12,
-        "int": 15,
-        "range": 5000,
-        "ABC": 1
-    },
-    {
-        "name": "Датчик CO2 MHZ-19 PWM",
-        "type": "Reading",
-        "subtype": "Mhz19pwm",
-        "id": "co2pwm",
-        "widget": "anydataPpm",
-        "page": "Сенсоры",
-        "descr": "CO2pwm",
-        "plus": 0,
-        "multiply": 1,
-        "round": 1,
-        "pin": 15, 
-        "int": 300
-    },
-    {
-        "name": "Cенсор температуры от MHZ-19 UART",
-        "type": "Reading",
-        "subtype": "Mhz19temp",
-        "id": "Mhz19temp",
-        "widget": "anydataTmp",
-        "page": "Сенсоры",
-        "descr": "Температура",
-        "plus": 0,
-        "multiply": 1,
-        "round": 1,
-        "rxPin": 13,
-        "txPin": 12,
-        "ABC": 1,
-        "int": 30
-    },
-    {
-        "name": "Рабочий диапазон от MHZ-19 UART",
-        "type": "Reading",
-        "subtype": "Mhz19range",
-        "id": "Mhz19range",
-        "widget": "anydataPpm",
-        "page": "Сенсоры",
-        "descr": "Диапазон",
-        "plus": 0,
-        "multiply": 1,
-        "round": 1,
-        "rxPin": 13,
-        "txPin": 12,
-        "range": 5000,
-        "ABC": 1,
-        "int": 30
-    },
-    {
-        "name": "Автокалибровка от MHZ-19 UART",
-        "type": "Reading",
-        "subtype": "Mhz19ABC",
-        "id": "Mhz19ABC",
-        "widget": "anydataDef",
-        "page": "Сенсоры",
-        "descr": "ABC",
-        "rxPin": 13,
-        "txPin": 12,
-        "range": 5000,
-        "ABC": 1,
-        "int": 30
-    }],
-    
+    "configItem": [
+        {
+            "name": "MHZ-19 Датчик CO2 UART",
+            "type": "Reading",
+            "subtype": "Mhz19uart",
+            "id": "co2uart",
+            "widget": "anydataPpm",
+            "page": "Сенсоры",
+            "descr": "CO2uart",
+            "plus": 0,
+            "multiply": 1,
+            "round": 1,
+            "pin": 0,
+            "rxPin": 13,
+            "txPin": 12,
+            "int": 15,
+            "range": 5000,
+            "ABC": 1
+        },
+        {
+            "name": "MHZ-19 Датчик CO2 PWM",
+            "type": "Reading",
+            "subtype": "Mhz19pwm",
+            "id": "co2pwm",
+            "widget": "anydataPpm",
+            "page": "Сенсоры",
+            "descr": "CO2pwm",
+            "plus": 0,
+            "multiply": 1,
+            "round": 1,
+            "pin": 15,
+            "int": 300
+        },
+        {
+            "name": "Cенсор температуры от MHZ-19 UART",
+            "type": "Reading",
+            "subtype": "Mhz19temp",
+            "id": "Mhz19temp",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "Температура",
+            "plus": 0,
+            "multiply": 1,
+            "round": 1,
+            "rxPin": 13,
+            "txPin": 12,
+            "ABC": 1,
+            "int": 30
+        },
+        {
+            "name": "Рабочий диапазон от MHZ-19 UART",
+            "type": "Reading",
+            "subtype": "Mhz19range",
+            "id": "Mhz19range",
+            "widget": "anydataPpm",
+            "page": "Сенсоры",
+            "descr": "Диапазон",
+            "plus": 0,
+            "multiply": 1,
+            "round": 1,
+            "rxPin": 13,
+            "txPin": 12,
+            "range": 5000,
+            "ABC": 1,
+            "int": 30
+        },
+        {
+            "name": "Автокалибровка от MHZ-19 UART",
+            "type": "Reading",
+            "subtype": "Mhz19ABC",
+            "id": "Mhz19ABC",
+            "widget": "anydataDef",
+            "page": "Сенсоры",
+            "descr": "ABC",
+            "rxPin": 13,
+            "txPin": 12,
+            "range": 5000,
+            "ABC": 1,
+            "int": 30
+        }
+    ],
     "about": {
         "authorName": "Alex K",
         "authorContact": "https://t.me/cmche",
@@ -89,7 +89,13 @@
         "moduleName": "Mhz19",
         "moduleVersion": "1.0",
         "usedRam": 15,
-        "subTypes":["Mhz19uart", "Mhz19pwm", "Mhz19temp", "Mhz19range", "Mhz19ABC"],
+        "subTypes": [
+            "Mhz19uart",
+            "Mhz19pwm",
+            "Mhz19temp",
+            "Mhz19range",
+            "Mhz19ABC"
+        ],
         "title": "Датчик температуры и CO2 с Mhz19",
         "moduleDesc": "Позволяет получить значения температуры и CO2 с Mhz19.",
         "propInfo": {
@@ -100,9 +106,7 @@
             "ABC": ""
         }
     },
-
     "defActive": false,
-
     "devices": {
         "esp32_4mb": [],
         "esp8266_4mb": []

@@ -98,7 +98,7 @@
         "header": "Сенсоры"
     },
     {
-        "name": "8. Cенсор температуры AHT20",
+        "name": "8. AHT20 Cенсор температуры",
         "type": "Reading",
         "subtype": "Aht20t",
         "id": "Temp20",
@@ -111,7 +111,7 @@
         "num": 8
     },
     {
-        "name": "9. Cенсор влажности AHT20",
+        "name": "9. AHT20 Cенсор влажности",
         "type": "Reading",
         "subtype": "Aht20h",
         "id": "Hum20",
@@ -141,7 +141,7 @@
         "num": 10
     },
     {
-        "name": "11. Cенсор температуры Bme280",
+        "name": "11. Bme280 Cенсор температуры",
         "type": "Reading",
         "subtype": "Bme280t",
         "id": "tmp3",
@@ -154,7 +154,7 @@
         "num": 11
     },
     {
-        "name": "12. Cенсор давления Bme280",
+        "name": "12. Bme280 Cенсор давления",
         "type": "Reading",
         "subtype": "Bme280p",
         "id": "Press3",
@@ -167,7 +167,7 @@
         "num": 12
     },
     {
-        "name": "13. Cенсор влажности Bme280",
+        "name": "13. Bme280 Cенсор влажности",
         "type": "Reading",
         "subtype": "Bme280h",
         "id": "Hum3",
@@ -180,7 +180,7 @@
         "num": 13
     },
     {
-        "name": "14. Cенсор температуры Bmp280",
+        "name": "14. Bmp280 Cенсор температуры",
         "type": "Reading",
         "subtype": "Bmp280t",
         "id": "tmp3",
@@ -193,7 +193,7 @@
         "num": 14
     },
     {
-        "name": "15. Cенсор давления Bmp280",
+        "name": "15. Bmp280 Cенсор давления",
         "type": "Reading",
         "subtype": "Bmp280p",
         "id": "Press3",
@@ -206,7 +206,7 @@
         "num": 15
     },
     {
-        "name": "16. Cенсор температуры dht11",
+        "name": "16. dht11 Cенсор температуры",
         "type": "Reading",
         "subtype": "Dht1122t",
         "id": "tmp3",
@@ -219,7 +219,7 @@
         "num": 16
     },
     {
-        "name": "17. Cенсор влажности dht11",
+        "name": "17. dht11 Cенсор влажности",
         "type": "Reading",
         "subtype": "Dht1122h",
         "id": "Hum3",
@@ -232,7 +232,7 @@
         "num": 17
     },
     {
-        "name": "18. Cенсор температуры ds18b20",
+        "name": "18. ds18b20 Cенсор температуры",
         "type": "Reading",
         "subtype": "Ds18b20",
         "id": "dstmp",
@@ -247,7 +247,7 @@
         "num": 18
     },
     {
-        "name": "19. Cенсор температуры GY21",
+        "name": "19. GY21 Cенсор температуры",
         "type": "Reading",
         "subtype": "GY21t",
         "id": "tmp4",
@@ -259,7 +259,7 @@
         "num": 19
     },
     {
-        "name": "20. Cенсор влажности GY21",
+        "name": "20. GY21 Cенсор влажности",
         "type": "Reading",
         "subtype": "GY21h",
         "id": "Hum4",
@@ -271,7 +271,7 @@
         "num": 20
     },
     {
-        "name": "21. Cенсор температуры HDC1080",
+        "name": "21. HDC1080 Cенсор температуры",
         "type": "Reading",
         "subtype": "Hdc1080t",
         "id": "Temp1080",
@@ -284,7 +284,7 @@
         "num": 21
     },
     {
-        "name": "22. Cенсор влажности HDC1080",
+        "name": "22. HDC1080 Cенсор влажности",
         "type": "Reading",
         "subtype": "Hdc1080h",
         "id": "Hum1080",
@@ -297,7 +297,7 @@
         "num": 22
     },
     {
-        "name": "23. Cенсор температуры MAX6675",
+        "name": "23. MAX6675 Cенсор температуры",
         "type": "Reading",
         "subtype": "Max6675t",
         "id": "maxtmp",
@@ -321,7 +321,7 @@
         "pinTx": 12
     },
     {
-        "name": "25. Cенсор температуры Sht20",
+        "name": "25. Sht20 Cенсор температуры",
         "type": "Reading",
         "subtype": "Sht20t",
         "id": "tmp2",
@@ -333,7 +333,7 @@
         "num": 25
     },
     {
-        "name": "26. Cенсор влажности Sht20",
+        "name": "26. Sht20 Cенсор влажности",
         "type": "Reading",
         "subtype": "Sht20h",
         "id": "Hum2",
@@ -345,7 +345,7 @@
         "num": 26
     },
     {
-        "name": "27. Cенсор температуры Sht30",
+        "name": "27. Sht30 Cенсор температуры",
         "type": "Reading",
         "subtype": "Sht30t",
         "id": "tmp30",
@@ -357,7 +357,7 @@
         "num": 27
     },
     {
-        "name": "28. Cенсор влажности Sht30",
+        "name": "28. Sht30 Cенсор влажности",
         "type": "Reading",
         "subtype": "Sht30h",
         "id": "Hum30",
@@ -369,7 +369,7 @@
         "num": 28
     },
     {
-        "name": "29. Сонар HC-SR04",
+        "name": "29. HC-SR04 Ультразвуковой дальномер",
         "num": 29,
         "type": "Reading",
         "subtype": "Sonar",

@@ -1,31 +1,31 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Cенсор температуры Bmp280",
-        "type": "Reading",
-        "subtype": "Bmp280t",
-        "id": "tmp3",
-        "widget": "anydataTmp",
-        "page": "Сенсоры",
-        "descr": "280 Температура",
-        "int": 15,
-        "addr": "0x77",
-        "round": 1
-    },
-    {
-        "name": "Cенсор давления Bmp280",
-        "type": "Reading",
-        "subtype": "Bmp280p",
-        "id": "Press3",
-        "widget": "anydataMm",
-        "page": "Сенсоры",
-        "descr": "280 Давление",
-        "int": 15,
-        "addr": "0x77",
-        "round": 1
-    }],
-    
+    "configItem": [
+        {
+            "name": "Bmp280 Cенсор температуры",
+            "type": "Reading",
+            "subtype": "Bmp280t",
+            "id": "tmp3",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "280 Температура",
+            "int": 15,
+            "addr": "0x77",
+            "round": 1
+        },
+        {
+            "name": "Bmp280 Cенсор давления",
+            "type": "Reading",
+            "subtype": "Bmp280p",
+            "id": "Press3",
+            "widget": "anydataMm",
+            "page": "Сенсоры",
+            "descr": "280 Давление",
+            "int": 15,
+            "addr": "0x77",
+            "round": 1
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -34,7 +34,10 @@
         "moduleName": "Bmp280",
         "moduleVersion": "1.0",
         "usedRam": 15,
-        "subTypes":["Bmp280t", "Bmp280p"],
+        "subTypes": [
+            "Bmp280t",
+            "Bmp280p"
+        ],
         "title": "Сенсор температуры, давления с Bmp280",
         "moduleDesc": "Позволяет получить значения температуры и давления с Bmp280.",
         "propInfo": {
@@ -42,9 +45,7 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [
             "adafruit/Adafruit BMP280 Library"

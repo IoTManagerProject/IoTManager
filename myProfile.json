@@ -98,6 +98,10 @@
                 "active": false
             },
             {
+                "path": "src\\modules\\sensors\\Pzem004t",
+                "active": false
+            },
+            {
                 "path": "src\\modules\\sensors\\RCswitch",
                 "active": true
             },

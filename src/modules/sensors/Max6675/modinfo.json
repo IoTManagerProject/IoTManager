@@ -1,20 +1,20 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Cенсор температуры MAX6675",
-        "type": "Reading",
-        "subtype": "Max6675t",
-        "id": "maxtmp",
-        "widget": "anydataTmp",
-        "page": "Сенсоры",
-        "descr": "MAX Температура",
-        "int": 15,
-        "DO": 12,
-        "CS": 13,
-        "CLK": 14
-    }],
-    
+    "configItem": [
+        {
+            "name": "MAX6675 Cенсор температуры",
+            "type": "Reading",
+            "subtype": "Max6675t",
+            "id": "maxtmp",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "MAX Температура",
+            "int": 15,
+            "DO": 12,
+            "CS": 13,
+            "CLK": 14
+        }
+    ],
     "about": {
         "authorName": "Serghei Crasnicov",
         "authorContact": "https://t.me/Serghei63",
@@ -32,9 +32,7 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [
             "adafruit/MAX6675 library"

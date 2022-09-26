@@ -1,21 +1,21 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Cенсор температуры ds18b20",
-        "type": "Reading",
-        "subtype": "Ds18b20",
-        "id": "dstmp",
-        "widget": "anydataTmp",
-        "page": "Сенсоры",
-        "descr": "DS Температура",
-        "int": 15,
-        "pin": 2,
-        "index": 0,
-        "addr": "",
-        "round": 1
-    }],
-    
+    "configItem": [
+        {
+            "name": "ds18b20 Cенсор температуры",
+            "type": "Reading",
+            "subtype": "Ds18b20",
+            "id": "dstmp",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "DS Температура",
+            "int": 15,
+            "pin": 2,
+            "index": 0,
+            "addr": "",
+            "round": 1
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -33,9 +33,7 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [
             "milesburton/DallasTemperature@^3.9.1"
