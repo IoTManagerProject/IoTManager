@@ -23,17 +23,38 @@
         "icon": ""
     },
     {
+        "name": "anydataVlt",
+        "label": "Вольты",
+        "widget": "anydata",
+        "after": "V",
+        "icon": "speedometer"
+    },
+    {
         "name": "anydataAmp",
         "label": "Амперы",
         "widget": "anydata",
-        "after": "Amp",
+        "after": "A",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataWt",
+        "label": "Ватты",
+        "widget": "anydata",
+        "after": "Wt",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataWth",
+        "label": "Энергия",
+        "widget": "anydata",
+        "after": "Wt/hr",
         "icon": "speedometer"
     },
     {
         "name": "anydataHtz",
         "label": "Герцы",
         "widget": "anydata",
-        "after": "Htz",
+        "after": "Hz",
         "icon": "speedometer"
     },
     {

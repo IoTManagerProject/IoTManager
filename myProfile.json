@@ -21,7 +21,7 @@
     },
     "projectProp": {
         "platformio": {
-            "default_envs": "esp32_4mb",
+            "default_envs": "esp8266_4mb",
             "data_dir": "data_svelte"
         }
     },
@@ -116,6 +116,10 @@
             {
                 "path": "src\\modules\\sensors\\Sht30",
                 "active": true
+            },
+            {
+                "path": "src\\modules\\sensors\\SoftUart",
+                "active": false
             },
             {
                 "path": "src\\modules\\sensors\\Sonar",
