@@ -54,6 +54,10 @@ class SoftUART : public IoTItem {
     void parse(String& incStr) {
         SerialPrint("I", "=>UART", incStr);
     }
+
+    void uartPrint(String msg) {
+        myUART->print(msg);
+    }
 };
 
 void* getAPI_SoftUART(String subtype, String param) {
