@@ -118,11 +118,11 @@
                 "active": true
             },
             {
-                "path": "src\\modules\\sensors\\SoftUart",
+                "path": "src\\modules\\sensors\\Sonar",
                 "active": true
             },
             {
-                "path": "src\\modules\\sensors\\Sonar",
+                "path": "src\\modules\\sensors\\UART",
                 "active": true
             }
         ],

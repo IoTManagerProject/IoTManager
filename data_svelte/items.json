@@ -429,21 +429,8 @@
         "num": 33
     },
     {
-        "name": "34. UART",
-        "type": "Reading",
-        "subtype": "SoftUART",
-        "page": "",
-        "descr": "",
-        "widget": "nil",
-        "id": "u",
-        "tx": 12,
-        "rx": 13,
-        "speed": 9600,
-        "num": 34
-    },
-    {
-        "name": "35. HC-SR04 Ультразвуковой дальномер",
-        "num": 35,
+        "name": "34. HC-SR04 Ультразвуковой дальномер",
+        "num": 34,
         "type": "Reading",
         "subtype": "Sonar",
         "id": "sonar",
@@ -453,6 +440,19 @@
         "pinTrig": 5,
         "pinEcho": 4,
         "int": 5
+    },
+    {
+        "name": "35. UART",
+        "type": "Reading",
+        "subtype": "UART",
+        "page": "",
+        "descr": "",
+        "widget": "nil",
+        "id": "u",
+        "tx": 12,
+        "rx": 13,
+        "speed": 9600,
+        "num": 35
     },
     {
         "header": "Исполнительные устройства"

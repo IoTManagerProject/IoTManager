@@ -3,7 +3,7 @@
 #include "classes/IoTItem.h"
 
 #include "PZEMSensor.h"
-#include "modules/sensors/SoftUart/SoftUart.h"
+#include "modules/sensors/UART/Uart.h"
 
 PZEMSensor* pzem;
 
