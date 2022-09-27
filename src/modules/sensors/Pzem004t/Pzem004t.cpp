@@ -5,11 +5,10 @@
 #include "PZEMSensor.h"
 #include "modules/sensors/UART/Uart.h"
 
-PZEMSensor* pzem;
-
 class Pzem004v : public IoTItem {
    private:
     String addr;
+    PZEMSensor* pzem;
 
    public:
     Pzem004v(String parameters) : IoTItem(parameters) {
