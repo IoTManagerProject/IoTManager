@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Arduino.h>
-
 #include <SoftwareSerial.h>
 
 #define PZEM_DEFAULT_ADDR 0xF8
@@ -22,13 +21,13 @@ class PZEMSensor {
     PZEMSensor(Stream *serial, uint16_t addr = PZEM_DEFAULT_ADDR);
 
     ~PZEMSensor();
-    PZEM_Info* values();
+    PZEM_Info *values(bool &online);
     bool setAddress(uint8_t addr);
     uint8_t getAddress();
     bool setPowerAlarm(uint16_t watts);
     bool getPowerAlarm();
     bool reset();
-    void search();
+    bool search();
     // Get most up to date values from device registers and cache them
     bool refresh();
 

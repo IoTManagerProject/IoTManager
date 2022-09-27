@@ -54,7 +54,7 @@
             "page": "Сенсоры",
             "descr": "Частота",
             "int": 15,
-            "addr": "0x77"
+            "addr": "0xF8"
         }
     ],
     "about": {
@@ -81,7 +81,11 @@
     },
     "defActive": true,
     "devices": {
-        "esp32_4mb": [],
-        "esp8266_4mb": []
+        "esp32_4mb": [
+            "mandulaj/PZEM-004T-v30"
+        ],
+        "esp8266_4mb": [
+            "mandulaj/PZEM-004T-v30"
+        ]
     }
 }

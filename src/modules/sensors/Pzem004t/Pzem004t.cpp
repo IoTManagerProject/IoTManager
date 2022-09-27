@@ -20,8 +20,13 @@ class Pzem004v : public IoTItem {
 
     void doByInterval() {
         if (pzem) {
-            value.valD = pzem->values()->voltage;
-            regEvent(value.valD, "Pzem Voltage");
+            bool online = false;
+            value.valD = pzem->values(online)->voltage;
+            if (online) {
+                regEvent(value.valD, "Pzem V");
+            } else {
+                SerialPrint("E", "Pzem", "V error");
+            }
         }
     }
 
@@ -43,8 +48,13 @@ class Pzem004a : public IoTItem {
 
     void doByInterval() {
         if (pzem) {
-            value.valD = pzem->values()->current;
-            regEvent(value.valD, "Pzem Ampere");
+            bool online = false;
+            value.valD = pzem->values(online)->current;
+            if (online) {
+                regEvent(value.valD, "Pzem A");
+            } else {
+                SerialPrint("E", "Pzem", "A error");
+            }
         }
     }
 
@@ -66,8 +76,13 @@ class Pzem004w : public IoTItem {
 
     void doByInterval() {
         if (pzem) {
-            value.valD = pzem->values()->power;
-            regEvent(value.valD, "Pzem Watt");
+            bool online = false;
+            value.valD = pzem->values(online)->power;
+            if (online) {
+                regEvent(value.valD, "Pzem W");
+            } else {
+                SerialPrint("E", "Pzem", "W error");
+            }
         }
     }
 
@@ -89,8 +104,13 @@ class Pzem004wh : public IoTItem {
 
     void doByInterval() {
         if (pzem) {
-            value.valD = pzem->values()->energy;
-            regEvent(value.valD, "Pzem Watt/hr");
+            bool online = false;
+            value.valD = pzem->values(online)->energy;
+            if (online) {
+                regEvent(value.valD, "Pzem Wh");
+            } else {
+                SerialPrint("E", "Pzem", "Wh error");
+            }
         }
     }
 
@@ -112,8 +132,13 @@ class Pzem004hz : public IoTItem {
 
     void doByInterval() {
         if (pzem) {
-            value.valD = pzem->values()->freq;
-            regEvent(value.valD, "Pzem Hz");
+            bool online = false;
+            value.valD = pzem->values(online)->freq;
+            if (online) {
+                regEvent(value.valD, "Pzem Hz");
+            } else {
+                SerialPrint("E", "Pzem", "Hz error");
+            }
         }
     }
 
