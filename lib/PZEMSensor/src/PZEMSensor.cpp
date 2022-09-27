@@ -48,8 +48,9 @@ PZEM_Info *PZEMSensor::values(bool &online) {
     if (!refresh()) {
         _values = PZEM_Info();
         online = false;
+    } else {
+        online = true;
     }
-    online = true;
     return &_values;
 }
 
