@@ -365,7 +365,7 @@
         "id": "hz",
         "widget": "anydataHtz",
         "page": "Сенсоры",
-        "descr": "Энергия",
+        "descr": "Частота",
         "int": 15,
         "addr": "0x77",
         "num": 28
