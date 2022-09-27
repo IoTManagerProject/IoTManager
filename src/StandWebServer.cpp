@@ -11,42 +11,36 @@ void standWebServerInit() {
     HTTP.serveStatic("/bundle.css.gz", FileFS, "/", "max-age=31536000");  // кеширование на 1 год
     HTTP.serveStatic("/favicon.png", FileFS, "/", "max-age=31536000");    // кеширование на 1 год
 
-    HTTP.on("/devicelist.json", HTTP_GET, []() {
-        HTTP.send(200, "application/json", devListHeapJson);
-    });
-
-    HTTP.on("/settings.h.json", HTTP_GET, []() {
-        HTTP.send(200, "application/json", settingsFlashJson);
-    });
-
-    HTTP.on("/settings.f.json", HTTP_GET, []() {
-        HTTP.send(200, "application/json", readFile(F("settings.json"), 20000));
-    });
-
-    HTTP.on("/params.json", HTTP_GET, []() {
-        String json = getParamsJson();
-        HTTP.send(200, "application/json", json);
-    });
-
-    HTTP.on("/errors.json", HTTP_GET, []() {
-        HTTP.send(200, "application/json", errorsHeapJson);
-    });
-
-    HTTP.on("/config.json", HTTP_GET, []() {
-        HTTP.send(200, "application/json", readFile(F("config.json"), 20000));
-    });
-
-    HTTP.on("/layout.json", HTTP_GET, []() {
-        HTTP.send(200, "application/json", readFile(F("layout.json"), 20000));
-    });
-
-    HTTP.on("/restart", HTTP_GET, []() {
-        // ESP.restart();
-        HTTP.send(200, "text/plain", "ok");
-    });
+    // HTTP.on("/devicelist.json", HTTP_GET, []() {
+    //     HTTP.send(200, "application/json", devListHeapJson);
+    // });
+    // HTTP.on("/settings.h.json", HTTP_GET, []() {
+    //     HTTP.send(200, "application/json", settingsFlashJson);
+    // });
+    // HTTP.on("/settings.f.json", HTTP_GET, []() {
+    //     HTTP.send(200, "application/json", readFile(F("settings.json"), 20000));
+    // });
+    // HTTP.on("/params.json", HTTP_GET, []() {
+    //     String json = getParamsJson();
+    //     HTTP.send(200, "application/json", json);
+    // });
+    // HTTP.on("/errors.json", HTTP_GET, []() {
+    //     HTTP.send(200, "application/json", errorsHeapJson);
+    // });
+    // HTTP.on("/config.json", HTTP_GET, []() {
+    //     HTTP.send(200, "application/json", readFile(F("config.json"), 20000));
+    // });
+    // HTTP.on("/layout.json", HTTP_GET, []() {
+    //     HTTP.send(200, "application/json", readFile(F("layout.json"), 20000));
+    // });
+    // HTTP.on("/restart", HTTP_GET, []() {
+    //     // ESP.restart();
+    //     HTTP.send(200, "text/plain", "ok");
+    // });
 
     //  Добавляем функцию Update для перезаписи прошивки по WiFi при 1М(256K FileFS) и выше
     //  httpUpdater.setup(&HTTP);
+
     //  Запускаем HTTP сервер
     HTTP.begin();
 
@@ -95,7 +89,6 @@ void standWebServerInit() {
             HTTP.send(200, "text/plain", "");
         },
         handleFileUpload);
-    //#endif
 
     // called when the url is not defined here
     HTTP.onNotFound([]() {
@@ -155,7 +148,6 @@ String getContentType(String filename) {
     return "text/plain";
 }
 
-//#ifdef REST_FILE_OPERATIONS
 // Здесь функции для работы с файловой системой
 void handleFileUpload() {
     if (HTTP.uri() != "/edit") return;
@@ -205,10 +197,6 @@ void handleFileCreate() {
 }
 
 void handleFileList() {
-    if (!HTTP.hasArg("list")) {
-        HTTP.send(500, "text/plain", "BAD ARGS");
-        return;
-    }
     File dir = FileFS.open("/", "r");
     String output = "[";
     File entry;
@@ -226,5 +214,22 @@ void handleFileList() {
     Serial.println(output);
     HTTP.send(200, "text/json", output);
 }
-//#endif
+
+void printDirectory(File dir, String& out) {
+    while (true) {
+        File entry = dir.openNextFile();
+        if (!entry) {
+            break;
+        }
+        if (entry.isDirectory()) {
+            out += entry.name();
+            out += "/";
+            printDirectory(entry, out);
+        } else {
+            out += entry.name();
+            out += "\r\n";
+        }
+    }
+}
+
 #endif
