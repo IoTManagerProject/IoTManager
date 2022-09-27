@@ -25,6 +25,7 @@ class Pzem004v : public IoTItem {
             if (online) {
                 regEvent(value.valD, "Pzem V");
             } else {
+                regEvent(NAN, "Pzem V");
                 SerialPrint("E", "Pzem", "V error");
             }
         }
@@ -53,6 +54,7 @@ class Pzem004a : public IoTItem {
             if (online) {
                 regEvent(value.valD, "Pzem A");
             } else {
+                regEvent(NAN, "Pzem A");
                 SerialPrint("E", "Pzem", "A error");
             }
         }
@@ -81,6 +83,7 @@ class Pzem004w : public IoTItem {
             if (online) {
                 regEvent(value.valD, "Pzem W");
             } else {
+                regEvent(NAN, "Pzem W");
                 SerialPrint("E", "Pzem", "W error");
             }
         }
@@ -109,6 +112,7 @@ class Pzem004wh : public IoTItem {
             if (online) {
                 regEvent(value.valD, "Pzem Wh");
             } else {
+                regEvent(NAN, "Pzem Wh");
                 SerialPrint("E", "Pzem", "Wh error");
             }
         }
@@ -137,6 +141,7 @@ class Pzem004hz : public IoTItem {
             if (online) {
                 regEvent(value.valD, "Pzem Hz");
             } else {
+                regEvent(NAN, "Pzem Hz");
                 SerialPrint("E", "Pzem", "Hz error");
             }
         }
