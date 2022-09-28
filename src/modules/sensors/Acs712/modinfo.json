@@ -1,0 +1,36 @@
+{
+    "menuSection": "Сенсоры",
+    "configItem": [
+        {
+            "name": "Acs712 Ток",
+            "type": "Reading",
+            "subtype": "Acs712",
+            "id": "amp",
+            "widget": "anydataAmp",
+            "page": "Сенсоры",
+            "descr": "Ток",
+            "round": 3,
+            "pin": 39,
+            "int": 5
+        }
+    ],
+    "about": {
+        "authorName": "Yuriy Kuneev",
+        "authorContact": "https://t.me/Kuneev07",
+        "authorGit": "",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "",
+        "moduleName": "Acs712",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет получить текущее значение тока на аналоговом пине с помощью модуля Acs712.",
+        "propInfo": {
+            "pin": "Аналоговый GPIO номер, к которому подключен датчик.",
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+    "defActive": true,
+    "devices": {
+        "esp32_4mb": [],
+        "esp8266_4mb": []
+    }
+}

@@ -96,7 +96,7 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
     publishStatusMqtt(_id, value);
 
     publishStatusWs(_id, value);
-    SerialPrint("i", "Sensor " + consoleInfo, "'" + _id + "' data: " + value + "'");
+    SerialPrint("i", "Sensor", consoleInfo + " '" + _id + "' data: " + value + "'");
 
     //  проверка если global установлен то шлем всем о событии
     // if (_global) {
@@ -149,8 +149,6 @@ void IoTItem::setInterval(unsigned long interval) {
 bool IoTItem::isGpioDriver() {
     return false;
 }
-
-
 
 //сетевое общение====================================================================================================================================
 

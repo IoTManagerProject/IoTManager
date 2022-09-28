@@ -47,7 +47,7 @@
         "name": "anydataWth",
         "label": "Энергия",
         "widget": "anydata",
-        "after": "Wt/hr",
+        "after": "kWt/Hr",
         "icon": "speedometer"
     },
     {
@@ -103,33 +103,26 @@
     },
     {
         "name": "chart1",
-        "label": "График1",
+        "label": "График без точек",
         "widget": "chart",
         "dateFormat": "HH:mm",
-        "maxCount": 255,
+        "maxCount": 86400,
         "pointRadius": 0
     },
     {
         "name": "chart2",
-        "label": "График2",
+        "label": "График с точками",
         "widget": "chart",
-        "maxCount": 255,
+        "maxCount": 86400,
         "dateFormat": "HH:mm"
     },
     {
         "name": "chart3",
-        "label": "График3",
+        "label": "График Дневной",
         "widget": "chart",
         "dateFormat": "DD.MM.YYYY",
-        "maxCount": 255,
+        "maxCount": 86400,
         "type": "bar"
-    },
-    {
-        "name": "chart4",
-        "label": "График4",
-        "widget": "chart",
-        "maxCount": 255,
-        "dateFormat": "DD.MM.YYYY"
     },
     {
         "name": "fillgauge",
@@ -210,10 +203,10 @@
         "status": 0
     },
     {
-        "name": "anydataVlt",
-        "label": "Вольты",
+        "name": "anydataPpm",
+        "label": "PPM",
         "widget": "anydata",
-        "after": "Vlt",
+        "after": "ppm",
         "icon": "speedometer"
     },
     {

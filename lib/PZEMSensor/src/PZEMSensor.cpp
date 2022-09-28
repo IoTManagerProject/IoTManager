@@ -43,10 +43,13 @@ PZEMSensor::PZEMSensor(Stream *port, uint16_t addr) {
     init();
 }
 
-PZEM_Info *PZEMSensor::values() {
+PZEM_Info *PZEMSensor::values(bool &online) {
     // Update vales if necessary
     if (!refresh()) {
         _values = PZEM_Info();
+        online = false;
+    } else {
+        online = true;
     }
     return &_values;
 }
@@ -62,7 +65,7 @@ PZEM_Info *PZEMSensor::values() {
  * @param[in] check - perform a simple read check after write
  *
  * @return success
-*/
+ */
 bool PZEMSensor::sendCmd8(uint8_t cmd, uint16_t rAddr, uint16_t val, bool check, uint16_t slave_addr) {
     uint8_t sendBuffer[8];  // Send buffer
     uint8_t respBuffer[8];  // Response buffer (only used when check is true)
@@ -295,7 +298,8 @@ uint16_t PZEMSensor::CRC16(const uint8_t *data, uint16_t len) {
     return crc;
 }
 
-void PZEMSensor::search() {
+bool PZEMSensor::search() {
+    bool ret = false;
     static uint8_t response[7];
     for (uint16_t addr = 0x01; addr <= 0xF8; addr++) {
         sendCmd8(CMD_RIR, 0x00, 0x01, false, addr);
@@ -303,8 +307,9 @@ void PZEMSensor::search() {
             // Something went wrong
             continue;
         } else {
-            Serial.print("Device on addr: ");
-            Serial.print(addr);
+            Serial.println("Pzem " + String(addr));
+            ret = true;
         }
     }
+    return ret;
 }

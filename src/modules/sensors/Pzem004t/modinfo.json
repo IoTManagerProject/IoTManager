@@ -5,7 +5,7 @@
             "name": "PZEM 004t Напряжение",
             "type": "Reading",
             "subtype": "Pzem004v",
-            "id": "V",
+            "id": "v",
             "widget": "anydataVlt",
             "page": "Сенсоры",
             "descr": "Напряжение",
@@ -16,7 +16,7 @@
             "name": "PZEM 004t Сила тока",
             "type": "Reading",
             "subtype": "Pzem004a",
-            "id": "A",
+            "id": "a",
             "widget": "anydataAmp",
             "page": "Сенсоры",
             "descr": "Сила тока",
@@ -27,7 +27,7 @@
             "name": "PZEM 004t Мощность",
             "type": "Reading",
             "subtype": "Pzem004w",
-            "id": "W",
+            "id": "w",
             "widget": "anydataWt",
             "page": "Сенсоры",
             "descr": "Мощность",
@@ -38,7 +38,7 @@
             "name": "PZEM 004t Энергия",
             "type": "Reading",
             "subtype": "Pzem004wh",
-            "id": "Wh",
+            "id": "wh",
             "widget": "anydataWth",
             "page": "Сенсоры",
             "descr": "Энергия",
@@ -49,12 +49,12 @@
             "name": "PZEM 004t Частота",
             "type": "Reading",
             "subtype": "Pzem004hz",
-            "id": "Hz",
+            "id": "hz",
             "widget": "anydataHtz",
             "page": "Сенсоры",
-            "descr": "Энергия",
+            "descr": "Частота",
             "int": 15,
-            "addr": "0x77"
+            "addr": "0xF8"
         }
     ],
     "about": {
@@ -72,16 +72,20 @@
             "Pzem004wh",
             "Pzem004hz"
         ],
-        "title": "Счетчик электроэнергии PZEM 004t версии 3.0 (с модбасом)",
+        "title": "Счетчик электроэнергии PZEM 004 t версии 3.0 (с модбасом). Возможно подключение трех счетчиков к одной esp для трехфазных сетей. Для этого нужно настроить разные адреса modbus в платах pzem",
         "moduleDesc": "Считает потраченную электроэнергию, измеряет напряжение, частоту, силу тока и прочие параметры",
         "propInfo": {
             "addr": "Адрес modbus",
-            "int": "Количество секунд между опросами датчика"
+            "int": "Количество секунд между опросами датчика. Желателно устанавливать разные интервалы для параметров что бы опросы происходили в разное время."
         }
     },
     "defActive": true,
     "devices": {
-        "esp32_4mb": [],
-        "esp8266_4mb": []
+        "esp32_4mb": [
+            "mandulaj/PZEM-004T-v30"
+        ],
+        "esp8266_4mb": [
+            "mandulaj/PZEM-004T-v30"
+        ]
     }
 }

@@ -28,7 +28,11 @@
     "modules": {
         "Виртуальные элементы": [
             {
-                "path": "src\\modules\\virtual\\Logging",
+                "path": "src\\modules\\virtual\\Loging",
+                "active": true
+            },
+            {
+                "path": "src\\modules\\virtual\\LogingDaily",
                 "active": true
             },
             {
@@ -45,6 +49,10 @@
             }
         ],
         "Сенсоры": [
+            {
+                "path": "src\\modules\\sensors\\Acs712",
+                "active": true
+            },
             {
                 "path": "src\\modules\\sensors\\Ads1115",
                 "active": false

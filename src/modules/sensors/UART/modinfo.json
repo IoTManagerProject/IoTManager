@@ -25,8 +25,8 @@
         "subTypes": [
             "SoftUART"
         ],
-        "title": "Софтовый uart для esp8266 или harware uart для esp32",
-        "moduleDesc": "Используется вместе с Pzem004t, в последствии будет доработан для связи с arduino платами",
+        "title": "Software uart для esp8266 или hardware uart для esp32",
+        "moduleDesc": "Используется вместе с Pzem004t или с другими работающими по uart сенсорами, в последствии будет доработан для связи с arduino платами",
         "propInfo": {
             "tx": "TX пин",
             "rx": "RX пин",

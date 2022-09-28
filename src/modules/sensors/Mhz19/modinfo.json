@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "MHZ-19 CO2 (UART)",
+            "name": "MHZ-19 CO2 UART",
             "type": "Reading",
             "subtype": "Mhz19uart",
             "id": "co2uart",
@@ -12,7 +12,7 @@
             "plus": 0,
             "multiply": 1,
             "round": 1,
-            "pin": 0,
+            "warmUp": 120,
             "rxPin": 13,
             "txPin": 12,
             "int": 15,
@@ -20,7 +20,7 @@
             "ABC": 1
         },
         {
-            "name": "MHZ-19 CO2 (PWM)",
+            "name": "MHZ-19 CO2 PWM",
             "type": "Reading",
             "subtype": "Mhz19pwm",
             "id": "co2pwm",
@@ -30,11 +30,13 @@
             "plus": 0,
             "multiply": 1,
             "round": 1,
+            "warmUp": 120,
             "pin": 15,
+            "maxRetriesNotAvailable": 10,
             "int": 300
         },
         {
-            "name": "Cенсор температуры от MHZ-19 UART",
+            "name": "MHZ-19 Температура UART",
             "type": "Reading",
             "subtype": "Mhz19temp",
             "id": "Mhz19temp",
@@ -46,64 +48,28 @@
             "round": 1,
             "rxPin": 13,
             "txPin": 12,
-            "ABC": 1,
-            "int": 30
-        },
-        {
-            "name": "Рабочий диапазон от MHZ-19 UART",
-            "type": "Reading",
-            "subtype": "Mhz19range",
-            "id": "Mhz19range",
-            "widget": "anydataPpm",
-            "page": "Сенсоры",
-            "descr": "Диапазон",
-            "plus": 0,
-            "multiply": 1,
-            "round": 1,
-            "rxPin": 13,
-            "txPin": 12,
-            "range": 5000,
-            "ABC": 1,
-            "int": 30
-        },
-        {
-            "name": "Автокалибровка от MHZ-19 UART",
-            "type": "Reading",
-            "subtype": "Mhz19ABC",
-            "id": "Mhz19ABC",
-            "widget": "anydataDef",
-            "page": "Сенсоры",
-            "descr": "ABC",
-            "rxPin": 13,
-            "txPin": 12,
-            "range": 5000,
-            "ABC": 1,
             "int": 30
         }
     ],
     "about": {
         "authorName": "Alex K",
         "authorContact": "https://t.me/cmche",
-        "authorGit": "",
+        "authorGit": "https://github.com/CHE77/Mhz19forIotManager",
         "specialThanks": "",
         "moduleName": "Mhz19",
-        "moduleVersion": "1.0",
-        "usedRam": 15,
-        "subTypes": [
-            "Mhz19uart",
-            "Mhz19pwm",
-            "Mhz19temp",
-            "Mhz19range",
-            "Mhz19ABC"
-        ],
-        "title": "Датчик температуры и CO2 с Mhz19",
-        "moduleDesc": "Позволяет получить значения температуры и CO2 с Mhz19.",
+        "moduleVersion": "2.0  - можно переназначать пины",
+        "moduleDesc": "Позволяет получить значения уровня концетрации CO2 с Mhz19 по UART и/или ШИМ. Замер по ШИМ может производить 1-2 сек. задержки",
         "propInfo": {
+            "plus": "поправочный коэффиент +c",
+            "multiply": "поправочный коэффиент k*",
+            "round": "округление",
             "int": "Количество секунд между опросами датчика.",
-            "rxPin": "",
-            "txPin": "",
-            "range": "",
-            "ABC": ""
+            "rxPin": "Esp8266: GPIO 13 - D7, ESP32: GPIO 19 - RX1, > MHZ19: TXD зеленый провод",
+            "txPin": "Esp8266: GPIO 12 - D6, ESP32: GPIO 18 - TX1, > MHZ19: RXD синий провод",
+            "range": "Шкала по умолчанию 0-5000ppm. Также можно выбрать 2000",
+            "ABC": "Автокалибровка. По умолчанию включена. Раз в сутки на 20 мин. надо выставлять на свежий воздух.",
+            "pin": "пин получения значений по ШИМ. Esp8266: GPIO 15 - D8, ESP32: GPIO 21, > MHZ19: PWM желтый провод",
+            "maxRetriesNotAvailable": "Максимальное количество попыток опроса сенсора по ШИМ. (может задерживать контроллер)"
         }
     },
     "defActive": false,

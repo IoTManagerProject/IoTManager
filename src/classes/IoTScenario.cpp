@@ -205,11 +205,11 @@ class BinaryExprAST : public ExprAST {
 
             if (!lhs->isDecimal || !rhs->isDecimal) {
                 if (lhs->isDecimal)
-                    lhsStr = lhs->valD;
+                    lhsStr = (String)lhs->valD;
                 else
                     lhsStr = lhs->valS;
                 if (rhs->isDecimal)
-                    rhsStr = rhs->valD;
+                    rhsStr = (String)rhs->valD;
                 else
                     rhsStr = rhs->valS;
                 switch (Op) {

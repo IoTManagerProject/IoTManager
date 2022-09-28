@@ -2,7 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
-            "name": "SDS011 PM25 Датчик пыли",
+            "name": "SDS011 PM25 Пыль",
             "type": "Reading",
             "subtype": "Sds011_25",
             "id": "pmuart25",
@@ -12,14 +12,16 @@
             "plus": 0,
             "multiply": 1,
             "round": 10,
-            "rxPin": 13,
-            "txPin": 12,
-            "int": 15,
-            "warmUp": 30,
-            "period": 300
+            "rxPin": 14,
+            "txPin": 16,
+            "int": 270,
+            "purge": 30,
+            "continuousMode": 0,
+            "maxRetriesNotAvailable": 100,
+            "retryDelayMs": 5
         },
         {
-            "name": "SDS011 PM10 Датчик пыли",
+            "name": "SDS011 PM10 Пыль",
             "type": "Reading",
             "subtype": "Sds011_10",
             "id": "pmuart10",
@@ -29,33 +31,34 @@
             "plus": 0,
             "multiply": 1,
             "round": 10,
-            "rxPin": 13,
-            "txPin": 12,
-            "int": 15,
-            "warmUp": 30,
-            "period": 300
+            "rxPin": 14,
+            "txPin": 16,
+            "int": 270,
+            "purge": 30,
+            "continuousMode": 0,
+            "maxRetriesNotAvailable": 100,
+            "retryDelayMs": 5
         }
     ],
     "about": {
         "authorName": "Alex K",
         "authorContact": "https://t.me/cmche",
-        "authorGit": "",
+        "authorGit": "https://github.com/CHE77/SDS011forIotManager",
         "specialThanks": "",
         "moduleName": "Sds011",
-        "moduleVersion": "1.0",
-        "usedRam": 15,
-        "subTypes": [
-            "Sds011_25",
-            "Sds011_10"
-        ],
-        "title": "Датчик пыли",
+        "moduleVersion": "2.0 - можно переназначать пины, за один опрос - обновляются два элемента",
         "moduleDesc": "Позволяет получить значения концентрации пыли в воздухе с Sds011.",
         "propInfo": {
-            "int": "Количество секунд между опросами датчика.",
-            "rxPin": "",
-            "txPin": "",
-            "warmUp": "",
-            "period": ""
+            "plus": "поправочный коэффиент +c",
+            "multiply": "поправочный коэффиент k*",
+            "round": "округление",
+            "rxPin": "Esp8266: GPIO 14 - D5, ESP32: GPIO 16 - RX2, > подключаем к TXD сенсора",
+            "txPin": "Esp8266: GPIO 16 - D0, ESP32: GPIO 17 - TX2, > подключаем к RXD сенсора",
+            "int": "Количество секунд между опросами датчика",
+            "purge": "Время продувки сенсора перед замером. Cек.",
+            "continuousMode": "1 - Непрерывный режим, 0 - Режим с остановкой (щедящий)",
+            "maxRetriesNotAvailable": "Количество попыток ожидания ответа сенсора при опросе (не нужно менять)",
+            "retryDelayMs": "Задержка между попытками, миллисекунды (не нужно менять)"
         }
     },
     "defActive": false,

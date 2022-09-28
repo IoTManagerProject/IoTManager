@@ -80,6 +80,12 @@ void setup() {
 
     // test
     Serial.println("-------test start--------");
+
+    // File dir = FileFS.open("/", "r");
+    // String out;
+    // printDirectory(dir, out);
+    // Serial.println(out);
+
     //=======проверка очереди из структур=================
 
     // myDB = new IoTDB;
