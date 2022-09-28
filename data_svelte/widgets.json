@@ -210,6 +210,13 @@
         "status": 0
     },
     {
+        "name": "anydataPpm",
+        "label": "PPM",
+        "widget": "anydata",
+        "after": "ppm",
+        "icon": "speedometer"
+    },
+    {
         "name": "nil",
         "label": "Без виджета"
     }
