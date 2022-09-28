@@ -1,0 +1,39 @@
+{
+    "menuSection": "Виртуальные элементы",
+    "configItem": [
+        {
+            "name": "График дневного расхода",
+            "type": "Writing",
+            "subtype": "LogingDaily",
+            "id": "log",
+            "widget": "chart3",
+            "page": "Графики",
+            "descr": "Температура",
+            "num": 1,
+            "int": 1,
+            "logid": "t",
+            "points": 365
+        }
+    ],
+    "about": {
+        "authorName": "Dmitry Borisenko",
+        "authorContact": "https://t.me/Dmitry_Borisenko",
+        "authorGit": "https://github.com/DmitryBorisenko33",
+        "specialThanks": "@itsid1 @Valiuhaaa Serg",
+        "moduleName": "LogingDaily",
+        "moduleVersion": "3.0",
+        "usedRam": 15,
+        "title": "График дневного расхода",
+        "moduleDesc": "Расширение позволяющее логировать накопительные величины и видеть их дневное изменение. Графики доступны в мобильном приложении и в веб интерфейсе. Данные графиков хранятся в встроенной памяти esp",
+        "propInfo": {
+            "int": "Интервал логирования в мнутах, частота проверки смены суток в минутах. Не рекомендуется менять",
+            "logid": "ID накопительной величины которую будем логировать",
+            "points": "Максимальное количество точек"
+        }
+    },
+    "defActive": true,
+    "devices": {
+        "esp32_4mb": [],
+        "esp8266_4mb": []
+    }
+}

@@ -214,9 +214,10 @@ String readDataDB(String id) {
 void cleanLogs() {
     SerialPrint("i", "Files", "cleanLogs");
     cleanDirectory("/db");
+    //обращение к логированию из ядра
     //очистка данных всех экземпляров графиков
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-        if ((*it)->getSubtype() == "Loging") {
+        if ((*it)->getSubtype() == "Loging" || "LogingDaily") {
             (*it)->clearHistory();
         }
     }

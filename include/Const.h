@@ -1,7 +1,7 @@
 #pragma once
 
 //Версия прошивки
-#define FIRMWARE_VERSION 426
+#define FIRMWARE_VERSION 427
 
 #ifdef esp8266_4mb
 #define FIRMWARE_NAME "esp8266_4mb"

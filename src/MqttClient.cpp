@@ -134,9 +134,10 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         publishWidgets();
         publishState();
 
+        //обращение к логированию из ядра
         //отправка данных графиков
         for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-            if ((*it)->getSubtype() == "Loging") {
+            if ((*it)->getSubtype() == "Loging" || "LogingDaily") {
                 (*it)->setPublishDestination(TO_MQTT);
                 (*it)->publishValue();
             }

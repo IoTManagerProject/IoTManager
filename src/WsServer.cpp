@@ -73,13 +73,14 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             //отвечаем на запрос графиков
             if (headerStr == "/charts|") {
+                //обращение к логированию из ядра
                 //отправка данных графиков только в выбранный сокет
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     //сбрасываем даты графиков
                     // if ((*it)->getID().endsWith("-date")) {
                     //    (*it)->setTodayDate();
                     //}
-                    if ((*it)->getSubtype() == "Loging") {
+                    if ((*it)->getSubtype() == "Loging" || "LogingDaily") {
                         (*it)->setPublishDestination(TO_WS, num);
                         (*it)->publishValue();
                     }
