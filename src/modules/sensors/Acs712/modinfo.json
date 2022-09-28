@@ -1,19 +1,19 @@
-{   
+{
     "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "Аналоговый датчик тока Acs712",
-        "type": "Reading",
-        "subtype": "Acs712",
-        "id": "amp",
-        "widget": "anydataAmp",
-        "page": "Сенсоры",
-        "descr": "Ток",
-        "round": 3,
-        "pin": 39,
-        "int": 5
-    }],
-    
+    "configItem": [
+        {
+            "name": "Acs712 Ток",
+            "type": "Reading",
+            "subtype": "Acs712",
+            "id": "amp",
+            "widget": "anydataAmp",
+            "page": "Сенсоры",
+            "descr": "Ток",
+            "round": 3,
+            "pin": 39,
+            "int": 5
+        }
+    ],
     "about": {
         "authorName": "Yuriy Kuneev",
         "authorContact": "https://t.me/Kuneev07",
@@ -28,14 +28,9 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-
-    
-
     "defActive": true,
-
     "devices": {
         "esp32_4mb": [],
         "esp8266_4mb": []
     }
 }
-

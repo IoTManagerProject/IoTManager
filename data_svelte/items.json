@@ -98,7 +98,7 @@
         "header": "Сенсоры"
     },
     {
-        "name": "8. Аналоговый датчик тока Acs712",
+        "name": "8. Acs712 Ток",
         "type": "Reading",
         "subtype": "Acs712",
         "id": "amp",
