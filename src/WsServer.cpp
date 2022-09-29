@@ -96,7 +96,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWs("/items.json", num, 1024);
                 sendFileToWs("/widgets.json", num, 1024);
                 sendFileToWs("/config.json", num, 1024);
-                sendFileToWs("/scenario.json", num, 1024);
+                sendFileToWs("/scenario.txt", num, 1024);
                 //шлется для того что бы получить топик устройства
                 standWebSocket.sendTXT(num, settingsFlashJson);
             }
@@ -109,24 +109,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
             }
             if (headerStr == "/oiranecs|") {
-                writeFileUint8tByFrames("scenario.json", payload, length, headerLenth, 256);
-
-                String strFromFile;
-                File myfile = seekFile("/scenario.json");
-                if (myfile.available()) {
-                    strFromFile = myfile.readString();
-
-                    strFromFile.replace("{\"scen\":\"", "");
-                    strFromFile.replace("\\n", "\n");
-                    strFromFile.replace("\\\"", "\"");
-                    strFromFile.replace(";", " ");
-                    strFromFile.replace("\\t", " ");
-                    strFromFile.remove(strFromFile.length() - 2, 2);
-                }
-                myfile.close();
-
-                writeFile("/scenario.txt", strFromFile);
-
+                writeFileUint8tByFrames("scenario.txt", payload, length, headerLenth, 256);
                 clearConfigure();
                 configure("/config.json");
                 iotScen.loadScenario("/scenario.txt");
