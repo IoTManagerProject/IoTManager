@@ -11,6 +11,7 @@ struct updateFirm {
     String settingsFlashJson;
     String configJson;
     String layoutJson;
+    String scenarioTxt;
 };
 
 extern void upgradeInit();

@@ -9,6 +9,8 @@ void writeFileUint8tByFrames(const String& filename, uint8_t*& big_buf, size_t l
         return;
     }
     size_t written{headerLenth};
+    // SerialPrint("i", "test", filename + ": length=" + String(length) + ", written=" + String(written));
+    if (length == written) file.print(" ");
     while (length > written) {
         size_t size = length - written;
         if (size > frameSize) size = frameSize;

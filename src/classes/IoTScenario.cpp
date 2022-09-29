@@ -980,12 +980,12 @@ void IoTScenario::loadScenario(String fileName) {  // подготавливае
             return;
         }
         strFromFile = file.readString();
-        strFromFile.replace("{\"scen\":\"", "");
-        strFromFile.replace("\\n", "\n");
-        strFromFile.replace("\\\"", "\"");
-        strFromFile.replace(";", " ");
-        strFromFile.replace("\\t", " ");
-        strFromFile.remove(strFromFile.length() - 2, 2);
+        // strFromFile.replace("{\"scen\":\"", "");
+        // strFromFile.replace("\\n", "\n");
+        // strFromFile.replace("\\\"", "\"");
+        // strFromFile.replace(";", " ");
+        // strFromFile.replace("\\t", " ");
+        // strFromFile.remove(strFromFile.length() - 2, 2);
         Serial.printf("strFromFile: %s, %s\n", strFromFile.c_str(), fileName.c_str());
         file.close();
     }
