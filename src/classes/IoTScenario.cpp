@@ -618,7 +618,7 @@ int IoTScenario::getLastChar() {
 /// gettok - Возвращает следующий токен из стандартного потока ввода.
 int IoTScenario::gettok() {
     // Пропускаем пробелы.
-    while (isspace(LastChar))
+    while (isspace(LastChar) || LastChar == ';')
         LastChar = getLastChar();
 
     if (isalpha(LastChar) || LastChar == '_') {  // идентификатор: [a-zA-Z][a-zA-Z0-9]*
