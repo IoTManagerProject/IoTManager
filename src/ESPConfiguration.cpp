@@ -26,8 +26,9 @@ void configure(String path) {
                 //(IoTItem*) - getAPI вернула ссылку, что бы ее привести к классу IoTItem используем
                 myIoTItem = (IoTItem*)getAPI(subtype, jsonArrayElement);
                 if (myIoTItem) {
+                    void* driver;
                     // пробуем спросить драйвер GPIO
-                    if (myIoTItem->isGpioDriver()) IoTgpio.regDriver((IoTGpio*)myIoTItem);
+                    if (driver = myIoTItem->getGpioDriver()) IoTgpio.regDriver((IoTGpio*)driver);
 
                     IoTItems.push_back(myIoTItem);
                 }
