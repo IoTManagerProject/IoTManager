@@ -36,12 +36,12 @@
 
     "devices": {
         "esp32_4mb": [
-            "adafruit/Adafruit MCP23017 Arduino Library@^2.0.2",
-            "adafruit/Adafruit BusIO @ ^1.13.0"
+            "adafruit/Adafruit MCP23017 Arduino Library@^2.1.0",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
         "esp8266_4mb": [
-            "adafruit/Adafruit MCP23017 Arduino Library@^2.0.2",
-            "adafruit/Adafruit BusIO @ ^1.13.0"
+            "adafruit/Adafruit MCP23017 Arduino Library@^2.1.0",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ]
     }
 }
