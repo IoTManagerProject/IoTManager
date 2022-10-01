@@ -49,8 +49,12 @@ class Timer : public IoTItem {
         } else if (command == "continue") {
             _pause = false;
         } else if (command == "int") {
-            if (param.size()) {
+            if (param.size() == 1) {
                 setInterval(param[0].valD);
+            }
+        } else if (command == "setInitCountDown") {
+            if (param.size() == 1) {
+                _initValue = param[0].valD;
             }
         }
 

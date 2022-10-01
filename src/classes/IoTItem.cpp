@@ -146,8 +146,8 @@ void IoTItem::setInterval(unsigned long interval) {
     _interval = interval;
 }
 
-bool IoTItem::isGpioDriver() {
-    return false;
+IoTGpio* IoTItem::getGpioDriver() {
+    return nullptr;
 }
 
 //сетевое общение====================================================================================================================================
