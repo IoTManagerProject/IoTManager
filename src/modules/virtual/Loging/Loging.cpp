@@ -177,12 +177,12 @@ class Loging : public IoTItem {
             if (fileUnixTimeLocal > reqUnixTime && fileUnixTimeLocal < reqUnixTime + 86400) {
                 noData = false;
                 if (_publishType == TO_MQTT) {
-                    publishChartFileToMqtt(path);
+                    publishChartFileToMqtt(path, id, calculateMaxCount());
                 } else if (_publishType == TO_WS) {
-                    publishChartToWs(path, _wsNum, 1000);
+                    publishChartToWs(path, _wsNum, 1000, calculateMaxCount(), id);
                 } else if (_publishType == TO_MQTT_WS) {
-                    publishChartFileToMqtt(path);
-                    publishChartToWs(path, _wsNum, 1000);
+                    publishChartFileToMqtt(path, id, calculateMaxCount());
+                    publishChartToWs(path, _wsNum, 1000, calculateMaxCount(), id);
                 }
                 SerialPrint("i", F("Loging"), String(f) + ") " + path + ", " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", sent");
             } else {
@@ -221,61 +221,6 @@ class Loging : public IoTItem {
 
                 filesList = deleteBeforeDelimiter(filesList, ";");
             }
-        }
-    }
-
-    bool publishChartFileToMqtt(String path) {
-        File configFile = FileFS.open(path, FILE_READ);
-        if (!configFile) {
-            SerialPrint("E", F("Loging"), path + " file reading error, json not created, return");
-            return false;
-        }
-        String oneSingleJson = configFile.readString();
-        configFile.close();
-        String topic = mqttRootDevice + "/" + id;
-        oneSingleJson = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[" + oneSingleJson + "]}";
-        oneSingleJson.replace("},]}", "}]}");
-        SerialPrint("i", "Loging", "json size: " + String(oneSingleJson.length()));
-        publishChartMqtt(id, oneSingleJson);
-        return true;
-    }
-
-    //особая функция отправки графиков в веб
-    void publishChartToWs(String filename, int num, size_t frameSize) {
-        String json;
-        jsonWriteStr(json, "topic", mqttRootDevice + "/" + id);
-        jsonWriteInt(json, "maxCount", calculateMaxCount());
-
-        String st = "/st/chart.json|";
-        if (num == -1) {
-            standWebSocket.broadcastTXT(st);
-        } else {
-            standWebSocket.sendTXT(num, st);
-        }
-        String path = filepath(filename);
-        auto file = FileFS.open(path, "r");
-        if (!file) {
-            SerialPrint(F("E"), F("FS"), F("reed file error"));
-            return;
-        }
-        size_t fileSize = file.size();
-        SerialPrint(F("i"), F("FS"), "Send file '" + String(filename) + "', file size: " + String(fileSize));
-        uint8_t payload[frameSize];
-        int countRead = file.read(payload, sizeof(payload));
-        while (countRead > 0) {
-            if (num == -1) {
-                standWebSocket.broadcastBIN(payload, countRead);
-            } else {
-                standWebSocket.sendBIN(num, payload, countRead);
-            }
-            countRead = file.read(payload, sizeof(payload));
-        }
-        file.close();
-        String end = "/end/chart.json|" + json;
-        if (num == -1) {
-            standWebSocket.broadcastTXT(end);
-        } else {
-            standWebSocket.sendTXT(num, end);
         }
     }
 

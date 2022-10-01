@@ -80,28 +80,6 @@ void setup() {
 
     // test
     Serial.println("-------test start--------");
-
-    // File dir = FileFS.open("/", "r");
-    // String out;
-    // printDirectory(dir, out);
-    // Serial.println(out);
-
-    //=======проверка очереди из структур=================
-
-    // myDB = new IoTDB;
-    // QueueItems myItem;
-    // myItem.myword = "word1";
-    // myDB->push(myItem);
-    // myItem.myword = "word2";
-    // myDB->push(myItem);
-    // myItem.myword = "word3";
-    // myDB->push(myItem);
-    // Serial.println(myDB->front().myword);
-    // Serial.println(myDB->front().myword);
-    // Serial.println(myDB->front().myword);
-
-    // Serial.println(FileList("lg"));
-
     Serial.println("--------test end---------");
 
     // симуляция добавления внешних событий
@@ -191,3 +169,24 @@ void loop() {
     //    }
     //}
 }
+
+// File dir = FileFS.open("/", "r");
+// String out;
+// printDirectory(dir, out);
+// Serial.println(out);
+
+//=======проверка очереди из структур=================
+
+// myDB = new IoTDB;
+// QueueItems myItem;
+// myItem.myword = "word1";
+// myDB->push(myItem);
+// myItem.myword = "word2";
+// myDB->push(myItem);
+// myItem.myword = "word3";
+// myDB->push(myItem);
+// Serial.println(myDB->front().myword);
+// Serial.println(myDB->front().myword);
+// Serial.println(myDB->front().myword);
+
+// Serial.println(FileList("lg"));

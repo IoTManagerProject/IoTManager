@@ -101,6 +101,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 standWebSocket.sendTXT(num, settingsFlashJson);
             }
 
+            //отправляем все графики в веб для экспорта
+            if (headerStr == "/expcharts|") {
+            }
+
             //обработка кнопки сохранить
             if (headerStr == "/gifnoc|") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
@@ -351,6 +355,45 @@ void sendStringToWs(const String& msg, uint8_t num, String name) {
     standWebSocket.sendBIN(num, (uint8_t*)dataArray, size);
     String end = "/end" + String(name);
     standWebSocket.sendTXT(num, end);
+}
+
+//особая функция отправки графиков в веб
+void publishChartToWs(String filename, int num, size_t frameSize, int maxCount, String id) {
+    String json;
+    jsonWriteStr(json, "topic", mqttRootDevice + "/" + id);
+    jsonWriteInt(json, "maxCount", maxCount);
+
+    String st = "/st/chart.json|" + json;
+    if (num == -1) {
+        standWebSocket.broadcastTXT(st);
+    } else {
+        standWebSocket.sendTXT(num, st);
+    }
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "r");
+    if (!file) {
+        SerialPrint(F("E"), F("FS"), F("reed file error"));
+        return;
+    }
+    size_t fileSize = file.size();
+    SerialPrint(F("i"), F("FS"), "Send file '" + String(filename) + "', file size: " + String(fileSize));
+    uint8_t payload[frameSize];
+    int countRead = file.read(payload, sizeof(payload));
+    while (countRead > 0) {
+        if (num == -1) {
+            standWebSocket.broadcastBIN(payload, countRead);
+        } else {
+            standWebSocket.sendBIN(num, payload, countRead);
+        }
+        countRead = file.read(payload, sizeof(payload));
+    }
+    file.close();
+    String end = "/end/chart.json|" + json;
+    if (num == -1) {
+        standWebSocket.broadcastTXT(end);
+    } else {
+        standWebSocket.sendTXT(num, end);
+    }
 }
 
 // void sendMark(const char* filename, const char* mark, uint8_t num) {

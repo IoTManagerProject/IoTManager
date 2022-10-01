@@ -14,6 +14,8 @@ class LogingDaily : public IoTItem {
 
     int points;
 
+    int testMode;
+
     IoTItem *dateIoTItem;
 
     String prevDate = "";
@@ -26,6 +28,7 @@ class LogingDaily : public IoTItem {
         jsonRead(parameters, F("logid"), logid);
         jsonRead(parameters, F("id"), id);
         jsonRead(parameters, F("points"), points);
+        jsonRead(parameters, F("test"), testMode);
 
         if (points > 365) {
             points = 365;
@@ -36,7 +39,7 @@ class LogingDaily : public IoTItem {
     }
 
     void doByInterval() {
-        if (hasDayChanged()) {
+        if (hasDayChanged() || testMode == 1) {
             execute();
         }
     }
@@ -72,7 +75,7 @@ class LogingDaily : public IoTItem {
 
         float difference = currentValue - prevValue;
 
-        jsonWriteInt(logData, "x", unixTime);
+        jsonWriteInt(logData, "x", unixTime - 120);
         jsonWriteFloat(logData, "y1", difference);
 
         //прочитаем путь к файлу последнего сохранения
@@ -167,12 +170,12 @@ class LogingDaily : public IoTItem {
             f++;
 
             if (_publishType == TO_MQTT) {
-                publishChartFileToMqtt(path);
+                publishChartFileToMqtt(path, id, calculateMaxCount());
             } else if (_publishType == TO_WS) {
-                publishChartToWs(path, _wsNum, 1000);
+                publishChartToWs(path, _wsNum, 1000, calculateMaxCount(), id);
             } else if (_publishType == TO_MQTT_WS) {
-                publishChartFileToMqtt(path);
-                publishChartToWs(path, _wsNum, 1000);
+                publishChartFileToMqtt(path, id, calculateMaxCount());
+                publishChartToWs(path, _wsNum, 1000, calculateMaxCount(), id);
             }
             SerialPrint("i", F("LogingDaily"), String(f) + ") " + path + ", sent");
 
@@ -183,61 +186,6 @@ class LogingDaily : public IoTItem {
     void clearHistory() {
         String dir = "/lgd/" + id;
         cleanDirectory(dir);
-    }
-
-    bool publishChartFileToMqtt(String path) {
-        File configFile = FileFS.open(path, FILE_READ);
-        if (!configFile) {
-            SerialPrint("E", F("LogingDaily"), path + " file reading error, json not created, return");
-            return false;
-        }
-        String oneSingleJson = configFile.readString();
-        configFile.close();
-        String topic = mqttRootDevice + "/" + id;
-        oneSingleJson = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[" + oneSingleJson + "]}";
-        oneSingleJson.replace("},]}", "}]}");
-        SerialPrint("i", "LogingDaily", "json size: " + String(oneSingleJson.length()));
-        publishChartMqtt(id, oneSingleJson);
-        return true;
-    }
-
-    //особая функция отправки графиков в веб
-    void publishChartToWs(String filename, int num, size_t frameSize) {
-        String json;
-        jsonWriteStr(json, "topic", mqttRootDevice + "/" + id);
-        jsonWriteInt(json, "maxCount", calculateMaxCount());
-
-        String st = "/st/chart.json|";
-        if (num == -1) {
-            standWebSocket.broadcastTXT(st);
-        } else {
-            standWebSocket.sendTXT(num, st);
-        }
-        String path = filepath(filename);
-        auto file = FileFS.open(path, "r");
-        if (!file) {
-            SerialPrint(F("E"), F("FS"), F("reed file error"));
-            return;
-        }
-        size_t fileSize = file.size();
-        SerialPrint(F("i"), F("FS"), "Send file '" + String(filename) + "', file size: " + String(fileSize));
-        uint8_t payload[frameSize];
-        int countRead = file.read(payload, sizeof(payload));
-        while (countRead > 0) {
-            if (num == -1) {
-                standWebSocket.broadcastBIN(payload, countRead);
-            } else {
-                standWebSocket.sendBIN(num, payload, countRead);
-            }
-            countRead = file.read(payload, sizeof(payload));
-        }
-        file.close();
-        String end = "/end/chart.json|" + json;
-        if (num == -1) {
-            standWebSocket.broadcastTXT(end);
-        } else {
-            standWebSocket.sendTXT(num, end);
-        }
     }
 
     void publishChartToWsSinglePoint(String value) {

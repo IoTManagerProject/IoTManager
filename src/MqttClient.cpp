@@ -305,6 +305,22 @@ void publishState() {
     }
 }
 
+bool publishChartFileToMqtt(String path, String id, int maxCount) {
+    File configFile = FileFS.open(path, FILE_READ);
+    if (!configFile) {
+        SerialPrint("E", F("Loging"), path + " file reading error, json not created, return");
+        return false;
+    }
+    String oneSingleJson = configFile.readString();
+    configFile.close();
+    String topic = mqttRootDevice + "/" + id;
+    oneSingleJson = "{\"maxCount\":" + String(maxCount) + ",\"topic\":\"" + topic + "\",\"status\":[" + oneSingleJson + "]}";
+    oneSingleJson.replace("},]}", "}]}");
+    SerialPrint("i", "Loging", "json size: " + String(oneSingleJson.length()));
+    publishChartMqtt(id, oneSingleJson);
+    return true;
+}
+
 void handleMqttStatus(bool send) {
     String stateStr = getStateStr(mqtt.state());
     // Serial.println(stateStr);

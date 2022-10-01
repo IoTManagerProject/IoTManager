@@ -30,7 +30,8 @@
         "num": 2,
         "int": 1,
         "logid": "t",
-        "points": 365
+        "points": 365,
+        "test": 0
     },
     {
         "name": "3. Таймер",

@@ -323,3 +323,30 @@ IoTFSInfo getFSInfo() {
     return myFSInfo;
 }
 #endif
+
+String createDataBaseSting() {
+    String out;
+    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if ((*it)->getSubtype() == "LogingDaily") {
+            String id = (*it)->getID();
+            id = "/lgd/" + id + "/" + id + ".txt";
+            String fileContent = readFile(id, 10000);
+            if (fileContent == "failed") {
+                SerialPrint("i", "Export", "file not exist " + id);
+            } else {
+                out += "=>" + fileContent + "\r\n";
+            }
+        }
+    }
+    return out;
+}
+
+void writeDataBaseSting(String input) {
+    while (input.length()) {
+        String line = selectToMarker(input, "\r\n");
+        String path = selectToMarker(line, "=>");
+        String content = deleteBeforeDelimiter(line, "=>");
+        writeFile(path, content);
+        input = deleteBeforeDelimiter(input, "\r\n");
+    }
+}
