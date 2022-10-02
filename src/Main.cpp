@@ -2,6 +2,7 @@
 #include <time.h>
 #include "classes/IoTDB.h"
 #include "utils/Statistic.h"
+#include <Wire.h>
 
 IoTScenario iotScen;  // объект управления сценарием
 
@@ -56,6 +57,22 @@ void setup() {
 
     //инициализация mqtt
     mqttInit();
+
+    // настраиваем i2c шину
+    int pinSCL, pinSDA, i2cFreq;
+    jsonRead(settingsFlashJson, "pinSCL", pinSCL, false);
+    jsonRead(settingsFlashJson, "pinSDA", pinSDA, false);
+    jsonRead(settingsFlashJson, "i2cFreq", i2cFreq, false);
+    if (pinSCL && pinSDA && i2cFreq) {
+#ifdef esp32_4mb
+        Wire.end();
+        Wire.begin(pinSDA, pinSCL, (uint32_t)i2cFreq);
+#else
+        Wire.begin(pinSDA, pinSCL);
+        Wire.setClock(i2cFreq);
+#endif
+    }
+    
 
     //настраиваем микроконтроллер
     configure("/config.json");
