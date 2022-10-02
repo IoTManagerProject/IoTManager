@@ -1,0 +1,44 @@
+{   
+    "menuSection": "Исполнительные устройства",
+
+    "configItem": [{
+        "name": "Расширитель портов Pcf8574",
+        "type": "Reading",
+        "subtype": "Pcf8574",
+        "id": "Pcf",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "int": "0",
+        "addr": "0x20",
+        "index": 1
+    }],
+    
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "Ilya Belyakov @Biveraxe , @AEV_LAB ",
+        "moduleName": "Pcf8574",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Добавляет в систему дополнительные GPIO для элементов, которые поддерживают такую функцию.",
+        "propInfo": {
+            "int": "Не используется",
+            "addr": "Адрес устройства на шине, обычно 0x20",
+            "index": "Значения от 1 до 4, где при выборе 1 будет нумерация pin 100-115, при выборе 2 200-215 и т.д."
+        }
+    },
+
+    "defActive": true,
+
+    "devices": {
+        "esp32_4mb": [
+            "adafruit/Adafruit PCF8574@^1.0.0",
+            "adafruit/Adafruit BusIO @ ^1.13.0"
+        ],
+        "esp8266_4mb": [
+            "adafruit/Adafruit PCF8574@^1.0.0",
+            "adafruit/Adafruit BusIO @ ^1.13.0"
+        ]
+    }
+}
