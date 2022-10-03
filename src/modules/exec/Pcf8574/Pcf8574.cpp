@@ -1,22 +1,73 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 #include "classes/IoTGpio.h"
-#include <Adafruit_PCF8574.h>
 
-/* Example for 8 input buttons that are connected from the GPIO expander pins to ground.
- * Note the buttons must be connected with the other side of the switch to GROUND. There is
- * a built in pull-up 'resistor' on each input, but no pull-down resistor capability.
- */
+#include <Adafruit_BusIO_Register.h>
+#include <Adafruit_I2CDevice.h>
+
+#define PCF8574_I2CADDR_DEFAULT 0x20 ///< DS3502 default I2C address
 
 void scanI2C();
 
+class Adafruit_PCF8574_mod {
+   public:
+    Adafruit_PCF8574_mod() {};
+    bool begin(uint8_t i2c_address = PCF8574_I2CADDR_DEFAULT, TwoWire *wire = &Wire) {
+        i2c_dev = new Adafruit_I2CDevice(i2c_address, wire);
+
+        if (!i2c_dev->begin()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool digitalWriteByte(uint8_t d) {
+        _writebuf = d;
+        return i2c_dev->write(&_writebuf, 1);
+    }
+
+    uint8_t digitalReadByte(void) {
+        i2c_dev->read(&_readbuf, 1);
+        return _readbuf;
+    }
+
+    bool digitalWrite(uint8_t pinnum, bool val) {
+        if (val) {
+            _writebuf |= 1 << pinnum;
+        } else {
+            _writebuf &= ~(1 << pinnum);
+        }
+        return i2c_dev->write(&_writebuf, 1);         
+    }
+
+    bool pinMode(uint8_t pinnum, uint8_t val) {
+        if ((val == INPUT) || (val == INPUT_PULLUP)) {
+            _writebuf |= 1 << pinnum;
+        } else {
+            _writebuf &= ~(1 << pinnum);
+        }
+        return i2c_dev->write(&_writebuf, 1);
+    }
+
+    bool digitalRead(uint8_t pinnum) {
+        i2c_dev->read(&_readbuf, 1);
+        return (_readbuf >> pinnum) & 0x1;
+    }
+
+   private:
+    uint8_t _readbuf = 0, _writebuf = 0;
+
+    Adafruit_I2CDevice *i2c_dev;
+};
+
 class Pcf8574Driver : public IoTGpio {
    private:
-    Adafruit_PCF8574 _pcf;
+    Adafruit_PCF8574_mod _pcf;
 
    public:
     Pcf8574Driver(int index, String addr) : IoTGpio(index) {
-        if (!_pcf.begin(hexStringToUint8(addr))) {
+        if (!_pcf.begin(hexStringToUint8(addr), &Wire)) {
             Serial.println("PCF8574 Init Error.");
         }
     }
@@ -31,6 +82,7 @@ class Pcf8574Driver : public IoTGpio {
 
     int digitalRead(uint8_t pin) {
         return _pcf.digitalRead(pin);
+        //return 0;
     }
 
     void digitalInvert(uint8_t pin) {
