@@ -1,7 +1,7 @@
 #include "NTP.h"
 
 #include "Global.h"
-#include "Utils\SerialPrint.h"
+#include "utils/SerialPrint.h"
 
 void ntpInit() {
     synchTime();

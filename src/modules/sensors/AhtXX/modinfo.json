@@ -1,0 +1,61 @@
+{
+    "menuSection": "Сенсоры",
+    "configItem": [
+        {
+            "name": "AHTXX Температура",
+            "type": "Reading",
+            "subtype": "AhtXXt",
+            "id": "Temp20",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "AHTXX Температура",
+            "int": 15,
+            "addr": "0x38",
+            "shtType":1,
+            "round": 1
+        },
+        {
+            "name": "AHTXX Влажность",
+            "type": "Reading",
+            "subtype": "AhtXXh",
+            "id": "Hum20",
+            "widget": "anydataHum",
+            "page": "Сенсоры",
+            "descr": "AHTXX Влажность",
+            "int": 15,
+            "addr": "0x38",
+            "shtType":1,
+            "round": 1
+        }
+    ],
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "Sergey @Serghei63, @avaks_dev",
+        "moduleName": "AhtXX",
+        "moduleVersion": "1.0",
+        "usedRam": 15,
+        "subTypes": [
+            "AhtXXt",
+            "AhtXXh"
+        ],
+        "title": "Сенсор температуры и влажности AHTXX",
+        "moduleDesc": "Позволяет получить температуру и влажность с AhtXX.",
+        "propInfo": {
+            "pin": "GPIO номер, к которому подключен датчик.",
+            "addr": "Адрес датчика на шине, обычно 0x38.",
+            "int": "Количество секунд между опросами датчика.",
+            "shtType": "Модель датчика. 0 - AHT1x, 1 - AHT2x"
+        }
+    },
+    "defActive": true,
+    "devices": {
+        "esp32_4mb": [
+            "https://github.com/enjoyneering/AHTxx.git"
+        ],
+        "esp8266_4mb": [
+            "https://github.com/enjoyneering/AHTxx.git"
+        ]
+    }
+}

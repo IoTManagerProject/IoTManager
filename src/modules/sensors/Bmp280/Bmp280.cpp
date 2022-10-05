@@ -23,7 +23,7 @@ class Bmp280t : public IoTItem {
 
     void doByInterval() {
         value.valD = _bmp->readTemperature();
-        if (String(value.valD) != "nan")
+        if (value.valD != NAN && value.valD < 150)
             regEvent(value.valD, "Bmp280t");
         else
             SerialPrint("E", "Sensor Bmp280t", "Error");
@@ -43,7 +43,7 @@ class Bmp280p : public IoTItem {
 
     void doByInterval() {
         value.valD = _bmp->readPressure();
-        if (String(value.valD) != "nan") {
+        if (value.valD != NAN && value.valD > 0) {
             value.valD = value.valD / 1.333224 / 100;
             regEvent(value.valD, "Bmp280p");
         } else
@@ -57,6 +57,10 @@ void* getAPI_Bmp280(String subtype, String param) {
     if (subtype == F("Bmp280t") || subtype == F("Bmp280p")) {
         String addr;
         jsonRead(param, "addr", addr);
+        if (addr == "") {
+            scanI2C();
+            return nullptr;
+        }
     
        if (bmps.find(addr) == bmps.end()) {
            bmps[addr] = new Adafruit_BMP280();

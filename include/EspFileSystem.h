@@ -2,7 +2,7 @@
 #include "Global.h"
 #ifdef ESP32
 #if USE_LITTLEFS
-#include <LITTLEFS.h>
+#include <LittleFS.h>
 #define FileFS LittleFS
 #define FS_NAME "LittleFS_32"
 #define CONFIG_LITTLEFS_SPIFFS_COMPAT 1

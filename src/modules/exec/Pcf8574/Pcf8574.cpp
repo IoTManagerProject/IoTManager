@@ -7,8 +7,6 @@
 
 #define PCF8574_I2CADDR_DEFAULT 0x20 ///< DS3502 default I2C address
 
-void scanI2C();
-
 class Adafruit_PCF8574_mod {
    public:
     Adafruit_PCF8574_mod() {};
@@ -82,7 +80,6 @@ class Pcf8574Driver : public IoTGpio {
 
     int digitalRead(uint8_t pin) {
         return _pcf.digitalRead(pin);
-        //return 0;
     }
 
     void digitalInvert(uint8_t pin) {
