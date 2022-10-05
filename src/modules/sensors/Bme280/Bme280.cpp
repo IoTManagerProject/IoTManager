@@ -23,7 +23,7 @@ class Bme280t : public IoTItem {
 
     void doByInterval() {
         value.valD = _bme->readTemperature();
-        if (value.valD < 145)
+        if (value.valD != NAN && value.valD < 145)
             regEvent(value.valD, "Bme280t");
         else
             SerialPrint("E", "Sensor Bme280t", "Error");
@@ -43,7 +43,7 @@ class Bme280h : public IoTItem {
 
     void doByInterval() {
         value.valD = _bme->readHumidity();
-        if (value.valD < 100)
+        if (value.valD != NAN && value.valD < 100)
             regEvent(value.valD, "Bme280h");
         else
             SerialPrint("E", "Sensor Bme280h", "Error");
@@ -63,7 +63,7 @@ class Bme280p : public IoTItem {
 
     void doByInterval() {
         value.valD = _bme->readPressure();
-        if (value.valD > 0) {
+        if (value.valD != NAN && value.valD > 0) {
             value.valD = value.valD / 1.333224 / 100;
             regEvent(value.valD, "Bme280p");
         } else
@@ -77,19 +77,23 @@ void* getAPI_Bme280(String subtype, String param) {
     if (subtype == F("Bme280t") || subtype == F("Bme280h") || subtype == F("Bme280p")) {
         String addr;
         jsonRead(param, "addr", addr);
+        if (addr == "") {
+            scanI2C();
+            return nullptr;
+        }
     
-       if (bmes.find(addr) == bmes.end()) {
-           bmes[addr] = new Adafruit_BME280();
-           bmes[addr]->begin(hexStringToUint8(addr));
-       }
-    
-       if (subtype == F("Bme280t")) {
-           return new Bme280t(bmes[addr], param);
-       } else if (subtype == F("Bme280h")) {
-           return new Bme280h(bmes[addr], param);
-       } else if (subtype == F("Bme280p")) {
-           return new Bme280p(bmes[addr], param);
-       }
+        if (bmes.find(addr) == bmes.end()) {
+            bmes[addr] = new Adafruit_BME280();
+            bmes[addr]->begin(hexStringToUint8(addr));
+        }
+        
+        if (subtype == F("Bme280t")) {
+            return new Bme280t(bmes[addr], param);
+        } else if (subtype == F("Bme280h")) {
+            return new Bme280h(bmes[addr], param);
+        } else if (subtype == F("Bme280p")) {
+            return new Bme280p(bmes[addr], param);
+        }
     }
     
     return nullptr;
