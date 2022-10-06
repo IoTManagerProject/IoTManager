@@ -26,7 +26,10 @@
         "specialThanks": "",
         "moduleName": "AnalogAdc",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Аналоговый сенсор",
         "moduleDesc": "Позволяет получить текущее значение на аналоговом GPIO или усредненное для avgSteps измерений каждого вызова loop.",
         "propInfo": {
@@ -40,7 +43,7 @@
 
     "defActive": true,
 
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [],
         "esp8266_4mb": []
     }

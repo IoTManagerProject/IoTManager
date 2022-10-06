@@ -25,7 +25,10 @@
         "specialThanks": "",
         "moduleName": "Ads1115",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Датчик напряжения ADS1115",
         "moduleDesc": "Позволяет получить относительную величину напряжения на понижающем трансформаторе.",
         "propInfo": {
@@ -36,7 +39,7 @@
         }
     },
     "defActive": false,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "adafruit/Adafruit ADS1X15 @ ^2.3.0"
         ],

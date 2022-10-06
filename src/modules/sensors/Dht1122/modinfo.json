@@ -33,7 +33,10 @@
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "Dht1122",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "subTypes": [
             "Dht1122t",
             "Dht1122h"
@@ -46,7 +49,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "beegee-tokyo/DHT sensor library for ESPx"
         ],

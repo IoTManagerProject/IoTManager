@@ -21,7 +21,10 @@
         "specialThanks": "",
         "moduleName": "IoTWiegand",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Считыватель Wiegand (в разработке)",
         "moduleDesc": "Позволяет получить коды доступа по протоколу Wiegand с различных считывателей. На данный момент модуль в РАЗРАБОТКЕ",
         "propInfo": {
@@ -31,7 +34,7 @@
         }
     },
     "defActive": false,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "https://github.com/jpliew/Wiegand-NG-Multi-Bit-Wiegand-Library-for-Arduino"
         ],

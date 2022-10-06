@@ -35,7 +35,10 @@
         "specialThanks": "Sergey @Serghei63, @avaks_dev",
         "moduleName": "AhtXX",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "subTypes": [
             "AhtXXt",
             "AhtXXh"
@@ -50,7 +53,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "https://github.com/enjoyneering/AHTxx.git"
         ],

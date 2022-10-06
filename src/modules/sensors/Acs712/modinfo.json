@@ -29,7 +29,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [],
         "esp8266_4mb": []
     }

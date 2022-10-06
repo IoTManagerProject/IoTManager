@@ -64,7 +64,10 @@
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "Pzem004",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "subTypes": [
             "Pzem004v",
             "Pzem004a",
@@ -80,7 +83,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "mandulaj/PZEM-004T-v30"
         ],
