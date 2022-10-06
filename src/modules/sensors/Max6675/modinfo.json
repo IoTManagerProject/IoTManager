@@ -22,7 +22,10 @@
         "specialThanks": "",
         "moduleName": "Max6675",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Cенсор температуры MAX6675",
         "moduleDesc": "Позволяет получить значения температуры с Max6675 и термопары.",
         "propInfo": {
@@ -33,7 +36,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "adafruit/MAX6675 library"
         ],

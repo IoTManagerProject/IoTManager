@@ -23,7 +23,10 @@
         "specialThanks": "",
         "moduleName": "EspCam",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Camera OV2640 (ESPcam)",
         "moduleDesc": "Предназначен для специальной платы esp32 со встроенной камерой. Добавляет в прошивку функцию создания фото и сохранения в оперативную память. Для сброса на флешкарту необходимо использовать парный модуль SDcard. Это экспериментальные модули и в будущем планируется пересобрать их.",
         "propInfo": {
@@ -43,7 +46,7 @@
 
     "defActive": false,
 
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "espressif/esp32-camera @ ^2.0.0"
         ]

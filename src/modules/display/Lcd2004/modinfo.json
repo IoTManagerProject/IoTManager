@@ -39,7 +39,10 @@
         "specialThanks": "Sergey @Serghei63",
         "moduleName": "Lcd2004",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "moduleDesc": "Позволяет выводить на символьные экраны по указанным позициям значения других элементов конфигурации.",
         "propInfo": {
             "int": "Период времени в секундах обновления информации на экране по конкретному элементу.",
@@ -99,7 +102,7 @@
 
     "defActive": true,
 
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
         ],

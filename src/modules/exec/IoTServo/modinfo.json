@@ -23,7 +23,10 @@
         "specialThanks": "Oleg @Threedreality, Sergey @Serghei63",
         "moduleName": "IoTServo",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Сервопривод",
         "moduleDesc": "Предназначен для управления сервоприводом по уровню аналогово сигнала.",
         "propInfo": {
@@ -44,7 +47,7 @@
 
     "defActive": true,
 
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "https://github.com/RoboticsBrno/ServoESP32"
         ],

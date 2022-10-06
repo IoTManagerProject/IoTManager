@@ -22,7 +22,10 @@
     "specialThanks": "",
     "moduleName": "TelegramLT",
     "moduleVersion": "1.0",
-    "usedRam": 15,
+    "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
     "title": "Телеграм-извещатель",
     "moduleDesc": "Только отправка уведомлений в телеграм о событиях. Модуль занимает значительно меньше памяти в ESP по сравнению со стандартным. Внимание! для отправки сообщений используется промежуточный сервер http://live-control.com",
     "propInfo": {
@@ -46,7 +49,7 @@
 
   "defActive": true,
 
-  "devices": {
+  "usedLibs": {
     "esp32_4mb": [],
     "esp8266_4mb": []
   }

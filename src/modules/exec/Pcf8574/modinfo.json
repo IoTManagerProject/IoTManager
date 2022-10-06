@@ -31,7 +31,7 @@
 
     "defActive": true,
 
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "adafruit/Adafruit BusIO @ ^1.13.2"
         ],

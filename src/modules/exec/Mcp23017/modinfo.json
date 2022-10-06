@@ -22,7 +22,10 @@
         "specialThanks": "",
         "moduleName": "Mcp23017",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Расширитель портов Mcp23017",
         "moduleDesc": "Добавляет в систему дополнительные GPIO для элементов, которые поддерживают такую функцию.",
         "propInfo": {
@@ -34,7 +37,7 @@
 
     "defActive": true,
 
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "adafruit/Adafruit MCP23017 Arduino Library@^2.1.0",
             "adafruit/Adafruit BusIO @ ^1.13.2"

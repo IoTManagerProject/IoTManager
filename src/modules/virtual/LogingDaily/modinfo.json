@@ -23,7 +23,10 @@
         "specialThanks": "@itsid1 @Valiuhaaa Serg",
         "moduleName": "LogingDaily",
         "moduleVersion": "3.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "График дневного расхода",
         "moduleDesc": "Расширение позволяющее логировать накопительные величины и видеть их дневное изменение. Графики доступны в мобильном приложении и в веб интерфейсе. Данные графиков хранятся в встроенной памяти esp",
         "propInfo": {
@@ -34,7 +37,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [],
         "esp8266_4mb": []
     }

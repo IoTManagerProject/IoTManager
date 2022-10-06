@@ -57,7 +57,10 @@
         "specialThanks": "",
         "moduleName": "Variable",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Переменные",
         "moduleDesc": "Специальный системный модуль для использования переменных в процессе автоматизации как элементов конфигурации.",
         "propInfo": {
@@ -66,7 +69,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [],
         "esp8266_4mb": []
     }

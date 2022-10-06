@@ -33,7 +33,10 @@
         "specialThanks": "",
         "moduleName": "Hdc1080",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "subTypes": [
             "Hdc1080t",
             "Hdc1080h"
@@ -46,7 +49,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "ClosedCube HDC1080"
         ],

@@ -135,10 +135,10 @@ for section, modules in profJson['modules'].items():
         if module['active']:
             with open(module['path'] + "/modinfo.json", "r", encoding='utf-8') as read_file:
                 moduleJson = json.load(read_file)
-                if deviceName in moduleJson['devices']:   # проверяем поддерживает ли модуль текущее устройство
+                if deviceName in moduleJson['usedLibs']:   # проверяем поддерживает ли модуль текущее устройство
                     activeModulesName.append(moduleJson['about']['moduleName'])     # запоминаем имена для использования на след шагах
                     includeDirs = includeDirs + "\n+<" + module['path'].replace("src/", "") + ">"  # запоминаем пути к модулям для компиляции
-                    for libPath in moduleJson['devices'][deviceName]:               # запоминаем библиотеки необходимые модулю для текущей платы
+                    for libPath in moduleJson['usedLibs'][deviceName]:               # запоминаем библиотеки необходимые модулю для текущей платы
                         allLibs = allLibs + "\n" + libPath       
                     for configItemsJson in moduleJson['configItem']:
                         configItemsJson['num'] = itemsCount
