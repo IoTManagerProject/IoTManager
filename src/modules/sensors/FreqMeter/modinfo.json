@@ -1,0 +1,91 @@
+{
+    "menuSection": "Сенсоры",
+    "configItem": [
+        {
+            "name": "Частотомер на ADC, Частота",
+            "type": "Reading",
+            "subtype": "FreqMeterF",
+            "id": "freq",
+            "widget": "anydataHtz",
+            "page": "Частотомер",
+            "descr": "Частота",
+            "plus": 0,
+            "multiply": 1,
+            "round": 1,
+            "pin-Esp32": 33,
+            "samples": 512,
+            "samplingFrequency": 5000,
+            "int": 5
+        },
+        {
+            "name": "Частотомер на ADC, Процент Пульсации",
+            "type": "Reading",
+            "subtype": "FreqMeterPcFl",
+            "id": "pctFlicker",
+            "widget": "anydataPct",
+            "page": "Частотомер",
+            "descr": "Процент Пульсации",
+            "plus": 0,
+            "multiply": 1,
+            "round": 1,
+            "pin-Esp32": 33,
+            "samples": 512,
+            "samplingFrequency": 5000,
+            "int": 5
+        },
+        {
+            "name": "Частотомер на ADC, Индекс Пульсации",
+            "type": "Reading",
+            "subtype": "FreqMeterFlIn",
+            "id": "flickerIndex",
+            "widget": "anydataDef",
+            "page": "Частотомер",
+            "descr": "Индекс Пульсации",
+            "plus": 0,
+            "multiply": 1,
+            "round": 10,
+            "pin-Esp32": 33,
+            "samples": 512,
+            "samplingFrequency": 5000,
+            "int": 5
+        }
+    ],
+    "about": {
+        "authorName": "Alex K",
+        "authorContact": "https://t.me/cmche",
+        "authorGit": "https://github.com/CHE77/FrequencyMeter_IotManager",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "",
+        "moduleName": "FreqMeter",
+        "moduleVersion": "1.0 - Процент Пульсации и Индекс Пульсации определяется без перевода в Люксы, то есть через попугаев ADC",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "subTypes": [
+            "FreqMeterF",
+            "FreqMeterPcFl",
+            "FreqMeterFlIn"
+        ],
+        "title": "Измерение пульсаций света",
+        "moduleDesc": "Позволяет получить частоту на аналогового GPIO, а также Процент Пульсации и Индекс Пульсации для источников света",
+        "propInfo": {
+            "plus": "поправочный коэффиент +c",
+            "multiply": "поправочный коэффиент k*",
+            "round": "округление",
+            "samples": "Количество замеров за опрос: 64, 128, 256, 512, 1024",
+            "samplingFrequency": "Частота замеров. Должна быть в несколько раз больше частоты измеряемого сигнала.",
+            "pin-Esp32": "Esp32: Аналоговый GPIO номер, к которому подключен датчик:32, 33, 34, 35, 36, 39. Для Esp8266 указывать не надо.",
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+    "defActive": true,
+    "usedLibs": {
+        "esp32_4mb": [
+            "kosme/arduinoFFT@^1.5.6"
+        ],
+        "esp8266_4mb": [
+            "kosme/arduinoFFT@^1.5.6"
+        ]
+    }
+}
