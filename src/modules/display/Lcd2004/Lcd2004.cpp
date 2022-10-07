@@ -36,9 +36,11 @@ class Lcd2004 : public IoTItem {
             LCDI2C = new LiquidCrystal_I2C(hexStringToUint8(addr), w, h);
             if (LCDI2C != nullptr) {
                 LCDI2C->init();
-                LCDI2C->backlight();
             }
         }
+            
+        LCDI2C->clear();
+        LCDI2C->backlight();
 
         jsonRead(parameters, "coord", xy);
         _x = selectFromMarkerToMarker(xy, ",", 0).toInt();
@@ -52,14 +54,13 @@ class Lcd2004 : public IoTItem {
         if (LCDI2C != nullptr) {
             printBlankStr(_prevStrSize);
             
-            String tmpStr = "";
-            if (_descr != "none") tmpStr = _descr + " " + getItemValue(_id2show);
-                else tmpStr = getItemValue(_id2show);
+            String tmpStr = getItemValue(_id2show);
+            if (_descr != "none") tmpStr = _descr + " " + tmpStr;
             LCDI2C->setCursor(_x, _y);
             LCDI2C->print(tmpStr);
             
             //LCDI2C->print("Helloy,Manager 404 !");
-
+            //Serial.printf("ffff %s\n", _id2show);
             _prevStrSize = tmpStr.length();
         }
     }
@@ -113,7 +114,10 @@ class Lcd2004 : public IoTItem {
         LCDI2C->print(tmpStr);
     }
 
-    ~Lcd2004(){};
+    ~Lcd2004(){
+        if (LCDI2C) delete LCDI2C;
+        LCDI2C = nullptr;
+    };
 };
 
 void *getAPI_Lcd2004(String subtype, String param) {
