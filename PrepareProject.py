@@ -19,6 +19,7 @@ import configparser
 import os, json, sys, getopt
 from pathlib import Path
 
+
 config = configparser.ConfigParser()  # создаём объекта парсера INI
 
 def printHelp():
@@ -31,10 +32,10 @@ def printHelp():
 
 def updateModulesInProfile(profJson):
     profJson["modules"] = {}
-    for root,d_names,f_names in os.walk("src\\modules"):
+    for root,d_names,f_names in os.walk("src/modules"):
         for fname in f_names:
             if fname == "modinfo.json":
-                with open(root + "\\" + fname, "r", encoding='utf-8') as read_file:
+                with open(os.path.join(root, fname), "r", encoding='utf-8') as read_file:
                     modinfoJson = json.load(read_file)
                     # проверяем есть ли уже узловой элемент и если нет, то создаем
                     if not modinfoJson['menuSection'] in profJson["modules"]:
@@ -43,7 +44,7 @@ def updateModulesInProfile(profJson):
                         profJson["modules"] = listFromFirstElement
                     # добавляем информацию о модуле в узловой элемент
                     profJson["modules"][modinfoJson['menuSection']].append({
-                        'path': root,
+                        'path': os.path.normpath(root).replace("\\", "/"),
                         'active': modinfoJson['defActive']
                     })
 
@@ -132,12 +133,12 @@ for section, modules in profJson['modules'].items():
     itemsJson.append({"header": section})
     for module in modules:
         if module['active']:
-            with open(module['path'] + "\\modinfo.json", "r", encoding='utf-8') as read_file:
+            with open(module['path'] + "/modinfo.json", "r", encoding='utf-8') as read_file:
                 moduleJson = json.load(read_file)
-                if deviceName in moduleJson['devices']:   # проверяем поддерживает ли модуль текущее устройство
+                if deviceName in moduleJson['usedLibs']:   # проверяем поддерживает ли модуль текущее устройство
                     activeModulesName.append(moduleJson['about']['moduleName'])     # запоминаем имена для использования на след шагах
-                    includeDirs = includeDirs + "\n+<" + module['path'].replace("src\\", "") + ">"  # запоминаем пути к модулям для компиляции
-                    for libPath in moduleJson['devices'][deviceName]:               # запоминаем библиотеки необходимые модулю для текущей платы
+                    includeDirs = includeDirs + "\n+<" + module['path'].replace("src/", "") + ">"  # запоминаем пути к модулям для компиляции
+                    for libPath in moduleJson['usedLibs'][deviceName]:               # запоминаем библиотеки необходимые модулю для текущей платы
                         allLibs = allLibs + "\n" + libPath       
                     for configItemsJson in moduleJson['configItem']:
                         configItemsJson['num'] = itemsCount
@@ -182,12 +183,20 @@ config["platformio"]["default_envs"] = deviceName
 config["platformio"]["data_dir"] = profJson['projectProp']['platformio']['data_dir']
 with open("platformio.ini", 'w') as configFile:
     config.write(configFile)
-    
-import ctypes  # An included library with Python install.   
-if update:    
-    ctypes.windll.user32.MessageBoxW(0, "Модули профиля " + profile + " обновлены, а сам профиль применен, можно запускать компиляцию и прошивку.", "Операция завершена.", 0)
-else:
-    ctypes.windll.user32.MessageBoxW(0, "Профиль " + profile + " применен, можно запускать компиляцию и прошивку.", "Операция завершена.", 0)
 
+    
+# import ctypes  # An included library with Python install.   
+# if update:    
+#     ctypes.windll.user32.MessageBoxW(0, "Модули профиля " + profile + " обновлены, а сам профиль применен, можно запускать компиляцию и прошивку.", "Операция завершена.", 0)
+# else:
+#     ctypes.windll.user32.MessageBoxW(0, "Профиль " + profile + " применен, можно запускать компиляцию и прошивку.", "Операция завершена.", 0)
+
+if update:    
+    print(f"\x1b[1;31;42m Модули профиля " + profile + " обновлены, а сам профиль применен, можно запускать компиляцию и прошивку.\x1b[0m")
+    
+else:
+    print(f"\x1b[1;31;42m Профиль ", profile, " применен, можно запускать компиляцию и прошивку.\x1b[0m")
+
+# print(f"\x1b[1;32;41m Операция завершена. \x1b[0m")
 
         

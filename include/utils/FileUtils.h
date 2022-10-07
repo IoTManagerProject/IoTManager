@@ -24,6 +24,8 @@ extern void onFlashWrite();
 String getFilesList8266(String& directory);
 String getFilesList32(String& directory);
 String getFilesList(String& directory);
+String createDataBaseSting();
+void writeDataBaseSting(String input);
 
 struct IoTFSInfo {
     size_t totalBytes;

@@ -7,10 +7,11 @@
             "subtype": "Pzem004v",
             "id": "v",
             "widget": "anydataVlt",
-            "page": "Сенсоры",
+            "page": "PZEM",
             "descr": "Напряжение",
             "int": 15,
-            "addr": "0xF8"
+            "addr": "0xF8",
+            "round": 1
         },
         {
             "name": "PZEM 004t Сила тока",
@@ -18,10 +19,11 @@
             "subtype": "Pzem004a",
             "id": "a",
             "widget": "anydataAmp",
-            "page": "Сенсоры",
+            "page": "PZEM",
             "descr": "Сила тока",
             "int": 15,
-            "addr": "0xF8"
+            "addr": "0xF8",
+            "round": 1
         },
         {
             "name": "PZEM 004t Мощность",
@@ -29,10 +31,11 @@
             "subtype": "Pzem004w",
             "id": "w",
             "widget": "anydataWt",
-            "page": "Сенсоры",
+            "page": "PZEM",
             "descr": "Мощность",
             "int": 15,
-            "addr": "0xF8"
+            "addr": "0xF8",
+            "round": 1
         },
         {
             "name": "PZEM 004t Энергия",
@@ -40,10 +43,11 @@
             "subtype": "Pzem004wh",
             "id": "wh",
             "widget": "anydataWth",
-            "page": "Сенсоры",
+            "page": "PZEM",
             "descr": "Энергия",
             "int": 15,
-            "addr": "0xF8"
+            "addr": "0xF8",
+            "round": 1
         },
         {
             "name": "PZEM 004t Частота",
@@ -51,10 +55,23 @@
             "subtype": "Pzem004hz",
             "id": "hz",
             "widget": "anydataHtz",
-            "page": "Сенсоры",
+            "page": "PZEM",
             "descr": "Частота",
             "int": 15,
-            "addr": "0xF8"
+            "addr": "0xF8",
+            "round": 1
+        },
+        {
+            "name": "PZEM 004t Косинус",
+            "type": "Reading",
+            "subtype": "Pzem004pf",
+            "id": "pf",
+            "widget": "anydata",
+            "page": "PZEM",
+            "descr": "Косинус F",
+            "int": 15,
+            "addr": "0xF8",
+            "round": 1
         }
     ],
     "about": {
@@ -64,13 +81,17 @@
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "Pzem004",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "subTypes": [
             "Pzem004v",
             "Pzem004a",
             "Pzem004w",
             "Pzem004wh",
-            "Pzem004hz"
+            "Pzem004hz",
+            "Pzem004pf"
         ],
         "title": "Счетчик электроэнергии PZEM 004 t версии 3.0 (с модбасом). Возможно подключение трех счетчиков к одной esp для трехфазных сетей. Для этого нужно настроить разные адреса modbus в платах pzem",
         "moduleDesc": "Считает потраченную электроэнергию, измеряет напряжение, частоту, силу тока и прочие параметры",
@@ -80,12 +101,12 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
-            "mandulaj/PZEM-004T-v30"
+            "https://github.com/mandulaj/PZEM-004T-v30"
         ],
         "esp8266_4mb": [
-            "mandulaj/PZEM-004T-v30"
+            "https://github.com/mandulaj/PZEM-004T-v30"
         ]
     }
 }

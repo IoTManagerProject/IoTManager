@@ -118,12 +118,16 @@ void putUserDataToRam() {
     update.configJson = readFile("config.json", 4096);
     update.settingsFlashJson = readFile("settings.json", 4096);
     update.layoutJson = readFile("layout.json", 4096);
+    update.scenarioTxt = readFile("scenario.txt", 4096);
+    update.chartsData = createDataBaseSting();
 }
 
 void saveUserDataToFlash() {
     writeFile("/config.json", update.configJson);
     writeFile("/settings.json", update.settingsFlashJson);
     writeFile("/layout.json", update.layoutJson);
+    writeFile("/scenario.txt", update.scenarioTxt);
+    writeDataBaseSting(update.chartsData);
 }
 
 void handleUpdateStatus(bool send, int state) {

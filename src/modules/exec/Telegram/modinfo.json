@@ -24,7 +24,10 @@
         "specialThanks": "",
         "moduleName": "Telegram",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Телеграм-Бот",
         "moduleDesc": "Добавляет возможность отправлять сообщения от имени бота контакту в Телеграм-чате и получать команды.",
         "propInfo": {
@@ -49,7 +52,7 @@
 
     "defActive": false,
 
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "CTBot @2.1.9"
         ],

@@ -22,7 +22,10 @@
         "specialThanks": "",
         "moduleName": "Mp3",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "MP3 плеер",
         "moduleDesc": "Позволяет управлять модулем проигрывания MP3 файлов с SD-карты по serial интерфейсу (DFplayer mini).",
         "propInfo": {
@@ -82,7 +85,7 @@
 
     "defActive": true,
 
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "dfrobot/DFRobotDFPlayerMini @ ^1.0.5"
         ],

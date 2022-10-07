@@ -37,7 +37,10 @@
         "specialThanks": "",
         "moduleName": "Emon",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "subTypes": [
             "I",
             "U"
@@ -53,7 +56,7 @@
         }
     },
     "defActive": false,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "openenergymonitor/EmonLib@1.1.0"
         ],

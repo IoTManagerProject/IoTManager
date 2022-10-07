@@ -41,7 +41,7 @@ class IoTItem {
     bool needSave = false;
     bool enableDoByInt = true;
 
-    virtual bool isGpioDriver();
+    virtual IoTGpio* getGpioDriver();
     virtual void setValue(IoTValue Value);
     virtual void setValue(String valStr);
 

@@ -24,6 +24,7 @@ boolean publishStatusMqtt(const String& topic, const String& data);
 boolean publishEvent(const String& topic, const String& data);
 boolean publishInfo(const String& topic, const String& data);
 boolean publishAnyJsonKey(const String& topic, const String& key, const String& data);
+bool publishChartFileToMqtt(String path, String id, int maxCount);
 
 void publishWidgets();
 void publishState();

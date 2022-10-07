@@ -20,7 +20,10 @@
         "specialThanks": "",
         "moduleName": "VButton",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Виртуальная кнопка",
         "moduleDesc": "Специальный системный модуль для добавления виртуальной кнопки. Существует только в интерфейсе управления.",
         "propInfo": {
@@ -29,7 +32,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [],
         "esp8266_4mb": []
     }

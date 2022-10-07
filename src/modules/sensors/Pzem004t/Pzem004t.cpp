@@ -150,6 +150,35 @@ class Pzem004hz : public IoTItem {
     ~Pzem004hz(){};
 };
 
+class Pzem004pf : public IoTItem {
+   private:
+    String addr;
+    PZEMSensor* pzem;
+
+   public:
+    Pzem004pf(String parameters) : IoTItem(parameters) {
+        addr = jsonReadStr(parameters, "addr");
+        if (myUART) {
+            pzem = new PZEMSensor(myUART, hexStringToUint8(addr));
+        }
+    }
+
+    void doByInterval() {
+        if (pzem) {
+            bool online = false;
+            value.valD = pzem->values(online)->pf;
+            if (online) {
+                regEvent(value.valD, "Pzem Pf");
+            } else {
+                regEvent(NAN, "Pzem Pf");
+                SerialPrint("E", "Pzem", "Pf error");
+            }
+        }
+    }
+
+    ~Pzem004pf(){};
+};
+
 void* getAPI_Pzem004(String subtype, String param) {
     if (subtype == F("Pzem004v")) {
         return new Pzem004v(param);
@@ -161,6 +190,8 @@ void* getAPI_Pzem004(String subtype, String param) {
         return new Pzem004wh(param);
     } else if (subtype == F("Pzem004hz")) {
         return new Pzem004hz(param);
+    } else if (subtype == F("Pzem004pf")) {
+        return new Pzem004pf(param);   
     } else {
         return nullptr;
     }

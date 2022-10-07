@@ -599,16 +599,16 @@ int IoTScenario::getLastChar() {
             LastChar = file.read();
             if (LastChar == 10) curLine++;
             return LastChar;
-        } else 
+        } else
             return EOF;
     } else if (mode == 1) {
         if (charCount < strFromFile.length()) {
             LastChar = strFromFile.charAt(charCount);
-            //Serial.printf("%d, ", LastChar);
+            // Serial.printf("%d, ", LastChar);
             if (LastChar == 10) curLine++;
             charCount++;
             return LastChar;
-        } else 
+        } else
             return EOF;
     } else {
         return EOF;
@@ -618,7 +618,7 @@ int IoTScenario::getLastChar() {
 /// gettok - Возвращает следующий токен из стандартного потока ввода.
 int IoTScenario::gettok() {
     // Пропускаем пробелы.
-    while (isspace(LastChar))
+    while (isspace(LastChar) || LastChar == ';')
         LastChar = getLastChar();
 
     if (isalpha(LastChar) || LastChar == '_') {  // идентификатор: [a-zA-Z][a-zA-Z0-9]*
@@ -980,6 +980,12 @@ void IoTScenario::loadScenario(String fileName) {  // подготавливае
             return;
         }
         strFromFile = file.readString();
+        // strFromFile.replace("{\"scen\":\"", "");
+        // strFromFile.replace("\\n", "\n");
+        // strFromFile.replace("\\\"", "\"");
+        // strFromFile.replace(";", " ");
+        // strFromFile.replace("\\t", " ");
+        // strFromFile.remove(strFromFile.length() - 2, 2);
         Serial.printf("strFromFile: %s, %s\n", strFromFile.c_str(), fileName.c_str());
         file.close();
     }

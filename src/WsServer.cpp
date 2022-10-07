@@ -96,9 +96,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWs("/items.json", num, 1024);
                 sendFileToWs("/widgets.json", num, 1024);
                 sendFileToWs("/config.json", num, 1024);
-                sendFileToWs("/scenario.json", num, 1024);
+                sendFileToWs("/scenario.txt", num, 1024);
                 //шлется для того что бы получить топик устройства
                 standWebSocket.sendTXT(num, settingsFlashJson);
+            }
+
+            //отправляем все графики в веб для экспорта
+            if (headerStr == "/expcharts|") {
             }
 
             //обработка кнопки сохранить
@@ -109,24 +113,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
             }
             if (headerStr == "/oiranecs|") {
-                writeFileUint8tByFrames("scenario.json", payload, length, headerLenth, 256);
-
-                String strFromFile;
-                File myfile = seekFile("/scenario.json");
-                if (myfile.available()) {
-                    strFromFile = myfile.readString();
-
-                    strFromFile.replace("{\"scen\":\"", "");
-                    strFromFile.replace("\\n", "\n");
-                    strFromFile.replace("\\\"", "\"");
-                    strFromFile.replace(";", " ");
-                    strFromFile.replace("\\t", " ");
-                    strFromFile.remove(strFromFile.length() - 2, 2);
-                }
-                myfile.close();
-
-                writeFile("/scenario.txt", strFromFile);
-
+                writeFileUint8tByFrames("scenario.txt", payload, length, headerLenth, 256);
                 clearConfigure();
                 configure("/config.json");
                 iotScen.loadScenario("/scenario.txt");
@@ -368,6 +355,45 @@ void sendStringToWs(const String& msg, uint8_t num, String name) {
     standWebSocket.sendBIN(num, (uint8_t*)dataArray, size);
     String end = "/end" + String(name);
     standWebSocket.sendTXT(num, end);
+}
+
+//особая функция отправки графиков в веб
+void publishChartToWs(String filename, int num, size_t frameSize, int maxCount, String id) {
+    String json;
+    jsonWriteStr(json, "topic", mqttRootDevice + "/" + id);
+    jsonWriteInt(json, "maxCount", maxCount);
+
+    String st = "/st/chart.json|" + json;
+    if (num == -1) {
+        standWebSocket.broadcastTXT(st);
+    } else {
+        standWebSocket.sendTXT(num, st);
+    }
+    String path = filepath(filename);
+    auto file = FileFS.open(path, "r");
+    if (!file) {
+        SerialPrint(F("E"), F("FS"), F("reed file error"));
+        return;
+    }
+    size_t fileSize = file.size();
+    SerialPrint(F("i"), F("FS"), "Send file '" + String(filename) + "', file size: " + String(fileSize));
+    uint8_t payload[frameSize];
+    int countRead = file.read(payload, sizeof(payload));
+    while (countRead > 0) {
+        if (num == -1) {
+            standWebSocket.broadcastBIN(payload, countRead);
+        } else {
+            standWebSocket.sendBIN(num, payload, countRead);
+        }
+        countRead = file.read(payload, sizeof(payload));
+    }
+    file.close();
+    String end = "/end/chart.json|" + json;
+    if (num == -1) {
+        standWebSocket.broadcastTXT(end);
+    } else {
+        standWebSocket.sendTXT(num, end);
+    }
 }
 
 // void sendMark(const char* filename, const char* mark, uint8_t num) {

@@ -31,7 +31,10 @@
         "specialThanks": "",
         "moduleName": "Sht30",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "subTypes": [
             "Sht30t",
             "Sht30h"
@@ -43,7 +46,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "WEMOS SHT3x@1.0.0"
         ],

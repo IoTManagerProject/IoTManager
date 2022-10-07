@@ -31,7 +31,10 @@
         "specialThanks": "",
         "moduleName": "GY21",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "subTypes": [
             "GY21t",
             "GY21h"
@@ -43,7 +46,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "https://github.com/JonasGMorsch/GY-21.git"
         ],

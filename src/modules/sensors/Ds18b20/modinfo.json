@@ -23,7 +23,10 @@
         "specialThanks": "",
         "moduleName": "Ds18b20",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Cенсор температуры ds18b20",
         "moduleDesc": "Позволяет получить значения температуры с Ds18b20.",
         "propInfo": {
@@ -34,7 +37,7 @@
         }
     },
     "defActive": true,
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "milesburton/DallasTemperature@^3.9.1"
         ],

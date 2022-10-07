@@ -140,3 +140,5 @@ extern bool _time_isTrust;
 // extern DynamicJsonDocument settingsFlashJsonDoc;
 // extern DynamicJsonDocument paramsFlashJsonDoc;
 // extern DynamicJsonDocument paramsHeapJsonDoc;
+
+void scanI2C();

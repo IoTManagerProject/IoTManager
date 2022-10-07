@@ -19,7 +19,10 @@
         "specialThanks": "Valentin Khandriga @Valiuhaaa",
         "moduleName": "RCswitch",
         "moduleVersion": "1.0",
-        "usedRam": 15,
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
         "title": "Сканер кнопок 433 MHz",
         "moduleDesc": "Позволяет принимать и передавать байт-коды на частоте 433 MHz от и для простых пультов, кнопок, радиореле",
         "propInfo": {
@@ -49,7 +52,7 @@
 
     "defActive": true,
 
-    "devices": {
+    "usedLibs": {
         "esp32_4mb": [
             "rc-switch @ ^2.6.4"
         ],
