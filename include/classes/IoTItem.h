@@ -44,6 +44,7 @@ class IoTItem {
     virtual IoTGpio* getGpioDriver();
     virtual void setValue(IoTValue Value);
     virtual void setValue(String valStr);
+    String getRoundValue();
 
     //методы для графиков
     virtual void publishValue();
