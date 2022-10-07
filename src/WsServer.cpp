@@ -433,15 +433,23 @@ void sendBlobToWsStrHeader(const String& filename, const String& header, uint8_t
         size_t payloadSize = file.read(payloadBuf, maxPayloadSize);
         if (payloadSize) {
             size_t size = headerSize + payloadSize;
+
             bool fin = false;
-            if (i == 16) {
-                fin = true;
-            } else {
+            if (size == frameSize) {
                 fin = false;
+            } else {
+                fin = true;
             }
 
-            SerialPrint("I", "FS", String(size) + " " + String(fin) + " " + String(i));
-            standWebSocket.sendBIN(client_id, frameBuf, size, fin);
+            bool continuation = false;
+            if (i == 0) {
+                continuation = false;
+            } else {
+                continuation = true;
+            }
+
+            SerialPrint("I", "FS", String(i) + ") sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
+            standWebSocket.sendBIN(client_id, frameBuf, size, fin, continuation);
         }
         i++;
     }

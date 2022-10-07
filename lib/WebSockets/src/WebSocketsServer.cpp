@@ -225,13 +225,17 @@ bool WebSocketsServerCore::broadcastTXT(String & payload) {
  * @param headerToPayload bool  (see sendFrame for more details)
  * @return true if ok
  */
-bool WebSocketsServerCore::sendBIN(uint8_t num, uint8_t * payload, size_t length, bool fin, bool headerToPayload) {
+bool WebSocketsServerCore::sendBIN(uint8_t num, uint8_t * payload, size_t length, bool fin, bool continuation, bool headerToPayload) {
     if(num >= WEBSOCKETS_SERVER_CLIENT_MAX) {
         return false;
     }
     WSclient_t * client = &_clients[num];
     if(clientIsConnected(client)) {
-        return sendFrame(client, WSop_binary, payload, length, fin, headerToPayload);
+        if(continuation) {
+            return sendFrame(client, WSop_continuation, payload, length, fin, headerToPayload);
+        } else {
+            return sendFrame(client, WSop_binary, payload, length, fin, headerToPayload);
+        }
     }
     return false;
 }
