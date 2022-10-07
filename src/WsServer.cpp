@@ -181,10 +181,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса dev
             //----------------------------------------------------------------------//
             if (headerStr == "/dev|") {
-                standWebSocket.sendTXT(num, errorsHeapJson);
-                standWebSocket.sendTXT(num, settingsFlashJson);
-                sendFileToWs("/config.json", num, 1024);
-                sendFileToWs("/items.json", num, 1024);
+                // standWebSocket.sendTXT(num, errorsHeapJson);
+                // standWebSocket.sendTXT(num, settingsFlashJson);
+                // sendFileToWs("/config.json", num, 1024);
+                // sendFileToWs("/items.json", num, 1024);
             }
 
             //----------------------------------------------------------------------//
@@ -222,7 +222,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             if (headerStr == "/test|") {
-                sendBlobToWsStrHeader("/layout.json", "layout|0000|", num, 1024);
+                sendBlobToWsStrHeader("/items.json", "layout|0000|", num, 2048);
             }
         } break;
 
@@ -264,11 +264,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
 //публикация статус сообщений (недостаток в том что делаем бродкаст всем клиентам поднятым в свелте!!!)
 void publishStatusWs(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic;
-    String json = "{}";
-    jsonWriteStr(json, "status", data);
-    jsonWriteStr(json, "topic", path);
-    standWebSocket.broadcastTXT(json);
+    // String path = mqttRootDevice + "/" + topic;
+    // String json = "{}";
+    // jsonWriteStr(json, "status", data);
+    // jsonWriteStr(json, "topic", path);
+    // standWebSocket.broadcastTXT(json);
 }
 
 //публикация статус сообщений
@@ -292,9 +292,9 @@ void publishChartWs(int num, String& path) {
 
 //данные которые мы отправляем в сокеты переодически
 void periodicWsSend() {
-    standWebSocket.broadcastTXT(devListHeapJson);
-    standWebSocket.broadcastTXT(ssidListHeapJson);
-    standWebSocket.broadcastTXT(errorsHeapJson);
+    // standWebSocket.broadcastTXT(devListHeapJson);
+    // standWebSocket.broadcastTXT(ssidListHeapJson);
+    // standWebSocket.broadcastTXT(errorsHeapJson);
 }
 
 #ifdef ESP32
@@ -427,14 +427,23 @@ void sendBlobToWsStrHeader(const String& filename, const String& header, uint8_t
     auto payloadBuf = &frameBuf[headerSize];
     // и сколько осталось места для нее
     auto maxPayloadSize = frameSize - headerSize;
-
+    int i = 0;
     while (file.available()) {
         // прочитаем кусок в буфер
         size_t payloadSize = file.read(payloadBuf, maxPayloadSize);
         if (payloadSize) {
-            // отправим фрейм
-            standWebSocket.sendBIN(client_id, frameBuf, headerSize + payloadSize, true);
+            size_t size = headerSize + payloadSize;
+            bool fin = false;
+            if (i == 16) {
+                fin = true;
+            } else {
+                fin = false;
+            }
+
+            SerialPrint("I", "FS", String(size) + " " + String(fin) + " " + String(i));
+            standWebSocket.sendBIN(client_id, frameBuf, size, fin);
         }
+        i++;
     }
 }
 

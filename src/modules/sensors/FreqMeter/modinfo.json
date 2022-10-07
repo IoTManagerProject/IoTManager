@@ -79,7 +79,7 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-    "defActive": true,
+    "defActive": false,
     "usedLibs": {
         "esp32_4mb": [
             "kosme/arduinoFFT@^1.5.6"

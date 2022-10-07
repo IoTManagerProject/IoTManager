@@ -90,7 +90,7 @@
             },
             {
                 "path": "src/modules/sensors/FreqMeter",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/GY21",

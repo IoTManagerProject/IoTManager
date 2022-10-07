@@ -247,7 +247,7 @@ bool WebSocketsServerCore::sendBIN(uint8_t num, const uint8_t * payload, size_t 
  * @param headerToPayload bool  (see sendFrame for more details)
  * @return true if ok
  */
-bool WebSocketsServerCore::broadcastBIN(uint8_t * payload, size_t length, bool headerToPayload) {
+bool WebSocketsServerCore::broadcastBIN(uint8_t * payload, size_t length, bool fin, bool headerToPayload) {
     WSclient_t * client;
     bool ret = true;
     for(uint8_t i = 0; i < WEBSOCKETS_SERVER_CLIENT_MAX; i++) {
