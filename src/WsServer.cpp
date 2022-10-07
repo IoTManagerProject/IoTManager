@@ -222,7 +222,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             if (headerStr == "/test|") {
-                //sendBlobToWsStrHeader("/layout.json", "header", num, 1024);
+                sendBlobToWsStrHeader("/layout.json", "layout|0000|", num, 1024);
             }
         } break;
 

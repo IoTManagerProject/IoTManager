@@ -65,7 +65,7 @@ class WebSocketsServerCore : protected WebSockets {
     bool broadcastTXT(const char * payload, size_t length = 0);
     bool broadcastTXT(String & payload);
 
-    bool sendBIN(uint8_t num, uint8_t * payload, size_t length, bool headerToPayload = false);
+    bool sendBIN(uint8_t num, uint8_t * payload, size_t length, bool fin = true, bool headerToPayload = false);
     bool sendBIN(uint8_t num, const uint8_t * payload, size_t length);
 
     bool broadcastBIN(uint8_t * payload, size_t length, bool headerToPayload = false);
@@ -228,7 +228,8 @@ class WebSocketsServer : public WebSocketsServerCore {
     void loop(void);    // handle incoming client and client data
 #else
     // Async interface not need a loop call
-    void loop(void) __attribute__((deprecated)) {}
+    void loop(void) __attribute__((deprecated)) {
+    }
 #endif
 
   protected:
