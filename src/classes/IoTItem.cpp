@@ -52,20 +52,7 @@ void IoTItem::loop() {
 //получить
 String IoTItem::getValue() {
     if (value.isDecimal) {
-        if (_multiply) value.valD = value.valD * _multiply;
-        if (_plus) value.valD = value.valD + _plus;
-        if (_round >= 0 && _round <= 6) {
-            int sot = _round ? pow(10, (int)_round) : 1;
-            value.valD = round(value.valD * sot) / sot;
-        }
-        if (_map1 != _map2) value.valD = map(value.valD, _map1, _map2, _map3, _map4);
-
-        if (_round >= 0 && _round <= 6) {
-            char buf[15];
-            sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
-            return value.valS = buf;
-        } else
-            return (String)value.valD;
+        return getRoundValue();
     } else
         return value.valS;
 }
@@ -114,9 +101,27 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
     //========================================================================
 }
 
+String IoTItem::getRoundValue() {
+    if (_round >= 0 && _round <= 6) {
+        int sot = _round ? pow(10, (int)_round) : 1;
+        value.valD = round(value.valD * sot) / sot;
+        
+        char buf[15];
+        sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
+        return (String)buf;
+    } else {
+        return (String)value.valD;
+    }
+}
+
 void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
     value.valD = regvalue;
-    regEvent(getValue(), consoleInfo);
+
+    if (_multiply) value.valD = value.valD * _multiply;
+    if (_plus) value.valD = value.valD + _plus;
+    if (_map1 != _map2) value.valD = map(value.valD, _map1, _map2, _map3, _map4);
+    
+    regEvent(getRoundValue(), consoleInfo);
 }
 
 void IoTItem::doByInterval() {}
