@@ -20,6 +20,9 @@ void periodicWsSend();
 void sendStringToWs(const String& msg, uint8_t num, String name);
 void publishChartToWs(String filename, int num, size_t frameSize, int maxCount, String id);
 
+
+void sendBlobToWsStrHeader(const String& filename, const String& header, uint8_t client_id, size_t frameSize);
+
 // void sendMark(const char* filename, const char* mark, uint8_t num);
 // void sendFileToWs3(const String& filename, uint8_t num);
 // void sendFileToWs4(const String& filename, uint8_t num);

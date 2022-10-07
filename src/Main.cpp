@@ -72,7 +72,6 @@ void setup() {
         Wire.setClock(i2cFreq);
 #endif
     }
-    
 
     //настраиваем микроконтроллер
     configure("/config.json");

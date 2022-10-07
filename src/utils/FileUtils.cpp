@@ -329,10 +329,10 @@ String createDataBaseSting() {
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         if ((*it)->getSubtype() == "LogingDaily") {
             String id = (*it)->getID();
-            id = "/lgd/" + id + "/" + id + ".txt";
-            String fileContent = readFile(id, 10000);
+            String path = "/lgd/" + id + "/" + id + ".txt";
+            String fileContent = readFile(path, 10000);
             if (fileContent == "failed") {
-                SerialPrint("i", "Export", "file not exist " + id);
+                SerialPrint("i", "Export", "file not exist " + path);
             } else {
                 out += "=>" + fileContent + "\r\n";
             }

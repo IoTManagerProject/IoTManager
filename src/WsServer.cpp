@@ -220,6 +220,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 generateOrder(key, value);
                 SerialPrint("i", F("=>WS"), "Msg from svelte web, WS No: " + String(num) + ", msg: " + msg);
             }
+
+            if (headerStr == "/test|") {
+                //sendBlobToWsStrHeader("/layout.json", "header", num, 1024);
+            }
         } break;
 
         case WStype_BIN: {
@@ -393,6 +397,44 @@ void publishChartToWs(String filename, int num, size_t frameSize, int maxCount, 
         standWebSocket.broadcastTXT(end);
     } else {
         standWebSocket.sendTXT(num, end);
+    }
+}
+
+//    6    4
+// layout|0120|{status:12}|...from file...
+// layout|0000|...from file...
+// layout|0000|...from file...
+
+void sendBlobToWsStrHeader(const String& filename, const String& header, uint8_t client_id, size_t frameSize) {
+    // откроем файл
+    auto path = filepath(filename);
+    auto file = FileFS.open(path, "r");
+    if (!file) {
+        SerialPrint("E", "FS", F("reed file error"));
+        return;
+    }
+
+    size_t totalSize = file.size();
+    SerialPrint("I", "FS", "Send file '" + String(filename) + "', file size: " + String(totalSize));
+
+    // размер заголовка
+    auto headerSize = header.length();
+    // выделим буфер размером с фрейм
+    auto frameBuf = new uint8_t[frameSize];
+    // заголовок у нас не меняется, запием его в начало буфера
+    header.toCharArray((char*)frameBuf, frameSize);
+    // указатель на начало полезной нагрузки
+    auto payloadBuf = &frameBuf[headerSize];
+    // и сколько осталось места для нее
+    auto maxPayloadSize = frameSize - headerSize;
+
+    while (file.available()) {
+        // прочитаем кусок в буфер
+        size_t payloadSize = file.read(payloadBuf, maxPayloadSize);
+        if (payloadSize) {
+            // отправим фрейм
+            standWebSocket.sendBIN(client_id, frameBuf, headerSize + payloadSize, true);
+        }
     }
 }
 
