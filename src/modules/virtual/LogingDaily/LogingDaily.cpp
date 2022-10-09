@@ -168,14 +168,14 @@ class LogingDaily : public IoTItem {
             path = "/lgd/" + id + path;
 
             f++;
-
+            String json = getAdditionalJson();
             if (_publishType == TO_MQTT) {
                 publishChartFileToMqtt(path, id, calculateMaxCount());
             } else if (_publishType == TO_WS) {
-                publishChartToWs(path, _wsNum, 1000, calculateMaxCount(), id);
+                sendFileToWsByFrames(path, "charta", json, _wsNum, WEB_SOCKETS_FRAME_SIZE);
             } else if (_publishType == TO_MQTT_WS) {
                 publishChartFileToMqtt(path, id, calculateMaxCount());
-                publishChartToWs(path, _wsNum, 1000, calculateMaxCount(), id);
+                sendFileToWsByFrames(path, "charta", json, _wsNum, WEB_SOCKETS_FRAME_SIZE);
             }
             SerialPrint("i", F("LogingDaily"), String(f) + ") " + path + ", sent");
 
@@ -183,17 +183,23 @@ class LogingDaily : public IoTItem {
         }
     }
 
+    String getAdditionalJson() {
+        String topic = mqttRootDevice + "/" + id;
+        String json = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\"}";
+        return json;
+    }
+
     void clearHistory() {
         String dir = "/lgd/" + id;
         cleanDirectory(dir);
     }
 
-    void publishChartToWsSinglePoint(String value) {
-        String topic = mqttRootDevice + "/" + id;
-        String json = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[{\"x\":" + String(unixTime) + ",\"y1\":" + value + "}]}";
-        String pk = "/string/chart.json|" + json;
-        //standWebSocket.broadcastTXT(pk);
-    }
+    // void publishChartToWsSinglePoint(String value) {
+    //     String topic = mqttRootDevice + "/" + id;
+    //     String json = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[{\"x\":" + String(unixTime) + ",\"y1\":" + value + "}]}";
+    //     String pk = "/string/chart.json|" + json;
+    //     standWebSocket.broadcastTXT(pk);
+    // }
 
     void setPublishDestination(int publishType, int wsNum = -1) {
         _publishType = publishType;

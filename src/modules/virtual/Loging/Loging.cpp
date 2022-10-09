@@ -181,10 +181,9 @@ class Loging : public IoTItem {
                     publishChartFileToMqtt(path, id, calculateMaxCount());
                 } else if (_publishType == TO_WS) {
                     sendFileToWsByFrames(path, "charta", json, _wsNum, WEB_SOCKETS_FRAME_SIZE);
-
                 } else if (_publishType == TO_MQTT_WS) {
-                    publishChartFileToMqtt(path, id, calculateMaxCount());
                     sendFileToWsByFrames(path, "charta", json, _wsNum, WEB_SOCKETS_FRAME_SIZE);
+                    publishChartFileToMqtt(path, id, calculateMaxCount());
                 }
                 SerialPrint("i", F("Loging"), String(f) + ") " + path + ", " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", sent");
             } else {
@@ -208,15 +207,13 @@ class Loging : public IoTItem {
     void publishChartToWsSinglePoint(String value) {
         String topic = mqttRootDevice + "/" + id;
         String json = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[{\"x\":" + String(unixTime) + ",\"y1\":" + value + "}]}";
-        String pk = "/string/chart.json|" + json;
-        // standWebSocket.broadcastTXT(pk);
+        sendStringToWs("chartb", json, -1);
     }
 
     void clearValue() {
         String topic = mqttRootDevice + "/" + id;
         String json = "{\"maxCount\":0,\"topic\":\"" + topic + "\",\"status\":[]}";
-        String pk = "/string/chart.json|" + json;
-        // standWebSocket.broadcastTXT(pk);
+        sendStringToWs("chartb", json, -1);
     }
 
     void clearHistory() {
@@ -246,7 +243,7 @@ class Loging : public IoTItem {
         }
     }
 
-    void setPublishDestination(int publishType, int wsNum = -1) {
+    void setPublishDestination(int publishType, int wsNum) {
         _publishType = publishType;
         _wsNum = wsNum;
     }
@@ -321,8 +318,7 @@ class Date : public IoTItem {
         for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->getSubtype() == "Loging") {
                 if ((*it)->getID() == selectToMarker(id, "-")) {
-                    (*it)->setPublishDestination(TO_MQTT_WS);
-                    (*it)->clearValue();
+                    (*it)->setPublishDestination(TO_MQTT_WS, -1);
                     (*it)->publishValue();
                 }
             }

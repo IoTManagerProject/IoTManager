@@ -2,7 +2,7 @@
 
 const String getThisDevice() {
     String thisDevice = "{}";
-    jsonWriteStr_(thisDevice, F("devicelist_"), "");  //метка для парсинга нужна для udp валидации
+    jsonWriteStr_(thisDevice, F("devicelist_"), "");  //метка для парсинга нужна для udp валидации может быть рабочей группой в последствии
     jsonWriteStr_(thisDevice, F("ip"), jsonReadStr(settingsFlashJson, F("ip")));
     jsonWriteStr_(thisDevice, F("id"), jsonReadStr(settingsFlashJson, F("id")));
     jsonWriteStr_(thisDevice, F("name"), jsonReadStr(settingsFlashJson, F("name")));
