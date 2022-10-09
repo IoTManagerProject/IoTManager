@@ -56,19 +56,19 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             //отвечаем данными на запрос страницы
             if (headerStr == "/|") {
-                sendFileToWs("/layout.json", num, 1024);
+                sendFileToWsByFrames("/layout.json", "layout", "", num, WEB_SOCKETS_FRAME_SIZE);
             }
 
             //отвечаем на запрос параметров
             if (headerStr == "/params|") {
                 String params = "{}";
-                jsonWriteStr(params, "params_", "");  //метка для парсинга
+                // jsonWriteStr(params, "params_", "");  //метка для парсинга
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->getSubtype() != "Loging") {
                         if ((*it)->iAmLocal) jsonWriteStr(params, (*it)->getID(), (*it)->getValue());
                     }
                 }
-                standWebSocket.sendTXT(num, params);
+                sendStringToWs("params", params, num);
             }
 
             //отвечаем на запрос графиков
