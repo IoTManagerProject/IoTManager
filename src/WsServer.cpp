@@ -62,7 +62,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //отвечаем на запрос параметров
             if (headerStr == "/params|") {
                 String params = "{}";
-                // jsonWriteStr(params, "params_", "");  //метка для парсинга
+                // jsonWriteStr(params, "params_", "");  //метка для парсинга удалить
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->getSubtype() != "Loging") {
                         if ((*it)->iAmLocal) jsonWriteStr(params, (*it)->getID(), (*it)->getValue());
@@ -258,27 +258,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
 //публикация статус сообщений (недостаток в том что делаем бродкаст всем клиентам поднятым в свелте!!!)
 void publishStatusWs(const String& topic, const String& data) {
-    // String path = mqttRootDevice + "/" + topic;
-    // String json = "{}";
-    // jsonWriteStr(json, "status", data);
-    // jsonWriteStr(json, "topic", path);
-    // standWebSocket.broadcastTXT(json);
+    String path = mqttRootDevice + "/" + topic;
+    String json = "{}";
+    jsonWriteStr(json, "status", data);
+    jsonWriteStr(json, "topic", path);
+    sendStringToWs("status", json, -1);
 }
-
-//публикация статус сообщений
-// void publishChartWs2(int num, String& data) {
-//    bool ok = false;
-//    if (num == -1) {
-//        ok = standWebSocket.broadcastTXT(data);
-//    } else {
-//        ok = standWebSocket.sendTXT(num, data);
-//    }
-//    if (ok) {
-//        SerialPrint(F("i"), F("WS"), F("sent sucsess"));
-//    } else {
-//        SerialPrint(F("E"), F("WS"), F("sent error"));
-//    }
-//}
 
 void publishChartWs(int num, String& path) {
     sendFileToWs(path, num, 1000);
@@ -407,8 +392,8 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
         return;
     }
 
-    size_t totalSize = file.size();
-    // Serial.println("Send file '" + String(filename) + "', file size: " + String(totalSize));
+    // size_t totalSize = file.size();
+    //  Serial.println("Send file '" + String(filename) + "', file size: " + String(totalSize));
 
     char buf[32];
     sprintf(buf, "%04d", json.length() + 12);
