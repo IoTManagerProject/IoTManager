@@ -13,6 +13,7 @@
 
 //Размер буфера json
 #define JSON_BUFFER_SIZE 2048
+#define WEB_SOCKETS_FRAME_SIZE 2048
 
 //выбор сервера
 //#define ASYNC_WEB_SERVER

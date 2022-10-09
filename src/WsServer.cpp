@@ -93,12 +93,14 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             //отвечаем данными на запрос страницы
             if (headerStr == "/config|") {
-                sendFileToWs("/items.json", num, 1024);
-                sendFileToWs("/widgets.json", num, 1024);
-                sendFileToWs("/config.json", num, 1024);
-                sendFileToWs("/scenario.txt", num, 1024);
+                sendFileToWsByFrames("/items.json", "itemsj", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/widgets.json", "widget", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/scenario.txt", "scenar", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendStringToWs("settin", settingsFlashJson, num);
+
                 //шлется для того что бы получить топик устройства
-                standWebSocket.sendTXT(num, settingsFlashJson);
+                // standWebSocket.sendTXT(num, settingsFlashJson);
             }
 
             //отправляем все графики в веб для экспорта
@@ -222,7 +224,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             if (headerStr == "/test|") {
-                sendBlobToWsStrHeader("/items.json", "layout|0000|", num, 2048);
+                sendFileToWsByFrames("/items.json", "itemsj", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/widgets.json", "widget", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/scenario.txt", "scenar", "", num, WEB_SOCKETS_FRAME_SIZE);
             }
         } break;
 
@@ -350,16 +355,16 @@ void sendFileToWs(String filename, int num, size_t frameSize) {
 }
 
 //посылка данных из string
-void sendStringToWs(const String& msg, uint8_t num, String name) {
-    String st = "/st" + String(name);
-    standWebSocket.sendTXT(num, st);
-    size_t size = msg.length();
-    char dataArray[size];
-    msg.toCharArray(dataArray, size);
-    standWebSocket.sendBIN(num, (uint8_t*)dataArray, size);
-    String end = "/end" + String(name);
-    standWebSocket.sendTXT(num, end);
-}
+// void sendStringToWs(const String& msg, uint8_t num, String name) {
+//    String st = "/st" + String(name);
+//    standWebSocket.sendTXT(num, st);
+//    size_t size = msg.length();
+//    char dataArray[size];
+//    msg.toCharArray(dataArray, size);
+//    standWebSocket.sendBIN(num, (uint8_t*)dataArray, size);
+//    String end = "/end" + String(name);
+//    standWebSocket.sendTXT(num, end);
+//}
 
 //особая функция отправки графиков в веб
 void publishChartToWs(String filename, int num, size_t frameSize, int maxCount, String id) {
@@ -400,13 +405,12 @@ void publishChartToWs(String filename, int num, size_t frameSize, int maxCount, 
     }
 }
 
-//    6    4
-// layout|0120|{status:12}|...from file...
-// layout|0000|...from file...
-// layout|0000|...from file...
+void sendFileToWsByFrames(const String& filename, const String& header, const String& json, uint8_t client_id, size_t frameSize) {
+    if (header.length() != 6) {
+        SerialPrint("E", "FS", F("wrong header size"));
+        return;
+    }
 
-void sendBlobToWsStrHeader(const String& filename, const String& header, uint8_t client_id, size_t frameSize) {
-    // откроем файл
     auto path = filepath(filename);
     auto file = FileFS.open(path, "r");
     if (!file) {
@@ -417,19 +421,26 @@ void sendBlobToWsStrHeader(const String& filename, const String& header, uint8_t
     size_t totalSize = file.size();
     SerialPrint("I", "FS", "Send file '" + String(filename) + "', file size: " + String(totalSize));
 
-    // размер заголовка
-    auto headerSize = header.length();
-    // выделим буфер размером с фрейм
+    char buf[32];
+    sprintf(buf, "%04d", json.length() + 12);
+    String data = header + "|" + String(buf) + "|" + json;
+
+    size_t headerSize = data.length();
     auto frameBuf = new uint8_t[frameSize];
-    // заголовок у нас не меняется, запием его в начало буфера
-    header.toCharArray((char*)frameBuf, frameSize);
-    // указатель на начало полезной нагрузки
-    auto payloadBuf = &frameBuf[headerSize];
-    // и сколько осталось места для нее
-    auto maxPayloadSize = frameSize - headerSize;
+    size_t maxPayloadSize = frameSize - headerSize;
+    uint8_t* payloadBuf = nullptr;
+
     int i = 0;
     while (file.available()) {
-        // прочитаем кусок в буфер
+        if (i == 0) {
+            data.toCharArray((char*)frameBuf, frameSize);
+            payloadBuf = &frameBuf[headerSize];
+        } else {
+            maxPayloadSize = frameSize;
+            headerSize = 0;
+            payloadBuf = &frameBuf[0];
+        }
+
         size_t payloadSize = file.read(payloadBuf, maxPayloadSize);
         if (payloadSize) {
             size_t size = headerSize + payloadSize;
@@ -448,12 +459,89 @@ void sendBlobToWsStrHeader(const String& filename, const String& header, uint8_t
                 continuation = true;
             }
 
-            SerialPrint("I", "FS", String(i) + ") sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
+            SerialPrint("I", "FS", String(i) + ") fr sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
             standWebSocket.sendBIN(client_id, frameBuf, size, fin, continuation);
         }
         i++;
     }
+    payloadBuf = &frameBuf[0];
+    delete[] payloadBuf;
+    file.close();
 }
+
+void sendStringToWs(const String& header, String& payload, uint8_t client_id) {
+    if (header.length() != 6) {
+        SerialPrint("E", "FS", F("wrong header size"));
+        return;
+    }
+
+    String msg = header + "|0012|" + payload;
+    size_t totalSize = msg.length();
+    SerialPrint("I", "FS", "Send string '" + header + "', str size: " + String(totalSize));
+
+    char dataArray[totalSize];
+    msg.toCharArray(dataArray, totalSize + 1);
+    standWebSocket.sendBIN(client_id, (uint8_t*)dataArray, totalSize);
+}
+
+// void sendFileToWsByFrames(const String& filename, const String& header, const String& json, uint8_t client_id, size_t frameSize) {
+//     if (header.length() != 6) {
+//         SerialPrint("E", "FS", F("wrong header size"));
+//         return;
+//     }
+//     // откроем файл
+//     auto path = filepath(filename);
+//     auto file = FileFS.open(path, "r");
+//     if (!file) {
+//         SerialPrint("E", "FS", F("reed file error"));
+//         return;
+//     }
+//
+//     size_t totalSize = file.size();
+//     SerialPrint("I", "FS", "Send file '" + String(filename) + "', file size: " + String(totalSize));
+//
+//     char buf[32];
+//     sprintf(buf, "%04d", json.length() + 12);
+//
+//     String data = header + "|" + String(buf) + "|" + json;
+//
+//     // размер заголовка
+//     auto headerSize = data.length();
+//     // выделим буфер размером с фрейм
+//     auto frameBuf = new uint8_t[frameSize];
+//     // заголовок у нас не меняется, запием его в начало буфера
+//     data.toCharArray((char*)frameBuf, frameSize);
+//     // указатель на начало полезной нагрузки
+//     auto payloadBuf = &frameBuf[headerSize];
+//     // и сколько осталось места для нее
+//     auto maxPayloadSize = frameSize - headerSize;
+//     int i = 0;
+//     while (file.available()) {
+//         // прочитаем кусок в буфер
+//         size_t payloadSize = file.read(payloadBuf, maxPayloadSize);
+//         if (payloadSize) {
+//             size_t size = headerSize + payloadSize;
+//
+//             bool fin = false;
+//             if (size == frameSize) {
+//                 fin = false;
+//             } else {
+//                 fin = true;
+//             }
+//
+//             bool continuation = false;
+//             if (i == 0) {
+//                 continuation = false;
+//             } else {
+//                 continuation = true;
+//             }
+//
+//             SerialPrint("I", "FS", String(i) + ") sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
+//             standWebSocket.sendBIN(client_id, frameBuf, size, fin, continuation);
+//         }
+//         i++;
+//     }
+// }
 
 // void sendMark(const char* filename, const char* mark, uint8_t num) {
 //     char outChar[strlen(filename) + strlen(mark) + 1];

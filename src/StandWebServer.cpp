@@ -14,9 +14,9 @@ void standWebServerInit() {
     // HTTP.on("/devicelist.json", HTTP_GET, []() {
     //     HTTP.send(200, "application/json", devListHeapJson);
     // });
-    // HTTP.on("/settings.h.json", HTTP_GET, []() {
-    //     HTTP.send(200, "application/json", settingsFlashJson);
-    // });
+    HTTP.on("/settings.h.json", HTTP_GET, []() {
+        HTTP.send(200, "application/json", settingsFlashJson);
+    });
     // HTTP.on("/settings.f.json", HTTP_GET, []() {
     //     HTTP.send(200, "application/json", readFile(F("settings.json"), 20000));
     // });
