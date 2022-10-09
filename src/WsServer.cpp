@@ -217,10 +217,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             if (headerStr == "/test|") {
-                sendFileToWsByFrames("/items.json", "itemsj", "", num, WEB_SOCKETS_FRAME_SIZE);
-                sendFileToWsByFrames("/widgets.json", "widget", "", num, WEB_SOCKETS_FRAME_SIZE);
-                sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
-                sendFileToWsByFrames("/scenario.txt", "scenar", "", num, WEB_SOCKETS_FRAME_SIZE);
             }
         } break;
 
@@ -313,38 +309,38 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
 
 //посылка данных из файла в бинарном виде
 void sendFileToWs(String filename, int num, size_t frameSize) {
-    String st = "/st" + String(filename);
-    if (num == -1) {
-        standWebSocket.broadcastTXT(st);
-    } else {
-        standWebSocket.sendTXT(num, st);
-    }
-
-    String path = filepath(filename);
-    auto file = FileFS.open(path, "r");
-    if (!file) {
-        SerialPrint(F("E"), F("FS"), F("reed file error"));
-        return;
-    }
-    size_t fileSize = file.size();
-    SerialPrint(F("i"), F("FS"), "Send file '" + String(filename) + "', file size: " + String(fileSize));
-    uint8_t payload[frameSize];
-    int countRead = file.read(payload, sizeof(payload));
-    while (countRead > 0) {
-        if (num == -1) {
-            standWebSocket.broadcastBIN(payload, countRead);
-        } else {
-            standWebSocket.sendBIN(num, payload, countRead);
-        }
-        countRead = file.read(payload, sizeof(payload));
-    }
-    file.close();
-    String end = "/end" + String(filename);
-    if (num == -1) {
-        standWebSocket.broadcastTXT(end);
-    } else {
-        standWebSocket.sendTXT(num, end);
-    }
+    // String st = "/st" + String(filename);
+    // if (num == -1) {
+    //     standWebSocket.broadcastTXT(st);
+    // } else {
+    //     standWebSocket.sendTXT(num, st);
+    // }
+    //
+    // String path = filepath(filename);
+    // auto file = FileFS.open(path, "r");
+    // if (!file) {
+    //    SerialPrint(F("E"), F("FS"), F("reed file error"));
+    //    return;
+    //}
+    // size_t fileSize = file.size();
+    // SerialPrint(F("i"), F("FS"), "Send file '" + String(filename) + "', file size: " + String(fileSize));
+    // uint8_t payload[frameSize];
+    // int countRead = file.read(payload, sizeof(payload));
+    // while (countRead > 0) {
+    //    if (num == -1) {
+    //        standWebSocket.broadcastBIN(payload, countRead);
+    //    } else {
+    //        standWebSocket.sendBIN(num, payload, countRead);
+    //    }
+    //    countRead = file.read(payload, sizeof(payload));
+    //}
+    // file.close();
+    // String end = "/end" + String(filename);
+    // if (num == -1) {
+    //    standWebSocket.broadcastTXT(end);
+    //} else {
+    //    standWebSocket.sendTXT(num, end);
+    //}
 }
 
 //посылка данных из string
@@ -361,41 +357,41 @@ void sendFileToWs(String filename, int num, size_t frameSize) {
 
 //особая функция отправки графиков в веб
 void publishChartToWs(String filename, int num, size_t frameSize, int maxCount, String id) {
-    String json;
-    jsonWriteStr(json, "topic", mqttRootDevice + "/" + id);
-    jsonWriteInt(json, "maxCount", maxCount);
-
-    String st = "/st/chart.json|" + json;
-    if (num == -1) {
-        standWebSocket.broadcastTXT(st);
-    } else {
-        standWebSocket.sendTXT(num, st);
-    }
-    String path = filepath(filename);
-    auto file = FileFS.open(path, "r");
-    if (!file) {
-        SerialPrint(F("E"), F("FS"), F("reed file error"));
-        return;
-    }
-    size_t fileSize = file.size();
-    SerialPrint(F("i"), F("FS"), "Send file '" + String(filename) + "', file size: " + String(fileSize));
-    uint8_t payload[frameSize];
-    int countRead = file.read(payload, sizeof(payload));
-    while (countRead > 0) {
-        if (num == -1) {
-            standWebSocket.broadcastBIN(payload, countRead);
-        } else {
-            standWebSocket.sendBIN(num, payload, countRead);
-        }
-        countRead = file.read(payload, sizeof(payload));
-    }
-    file.close();
-    String end = "/end/chart.json|" + json;
-    if (num == -1) {
-        standWebSocket.broadcastTXT(end);
-    } else {
-        standWebSocket.sendTXT(num, end);
-    }
+    // String json;
+    // jsonWriteStr(json, "topic", mqttRootDevice + "/" + id);
+    // jsonWriteInt(json, "maxCount", maxCount);
+    //
+    // String st = "/st/chart.json|" + json;
+    // if (num == -1) {
+    //    standWebSocket.broadcastTXT(st);
+    //} else {
+    //    standWebSocket.sendTXT(num, st);
+    //}
+    // String path = filepath(filename);
+    // auto file = FileFS.open(path, "r");
+    // if (!file) {
+    //    SerialPrint(F("E"), F("FS"), F("reed file error"));
+    //    return;
+    //}
+    // size_t fileSize = file.size();
+    // SerialPrint(F("i"), F("FS"), "Send file '" + String(filename) + "', file size: " + String(fileSize));
+    // uint8_t payload[frameSize];
+    // int countRead = file.read(payload, sizeof(payload));
+    // while (countRead > 0) {
+    //    if (num == -1) {
+    //        standWebSocket.broadcastBIN(payload, countRead);
+    //    } else {
+    //        standWebSocket.sendBIN(num, payload, countRead);
+    //    }
+    //    countRead = file.read(payload, sizeof(payload));
+    //}
+    // file.close();
+    // String end = "/end/chart.json|" + json;
+    // if (num == -1) {
+    //    standWebSocket.broadcastTXT(end);
+    //} else {
+    //    standWebSocket.sendTXT(num, end);
+    //}
 }
 
 void sendFileToWsByFrames(const String& filename, const String& header, const String& json, uint8_t client_id, size_t frameSize) {
@@ -412,7 +408,7 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
     }
 
     size_t totalSize = file.size();
-    SerialPrint("I", "FS", "Send file '" + String(filename) + "', file size: " + String(totalSize));
+    // Serial.println("Send file '" + String(filename) + "', file size: " + String(totalSize));
 
     char buf[32];
     sprintf(buf, "%04d", json.length() + 12);
@@ -452,7 +448,7 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
                 continuation = true;
             }
 
-            SerialPrint("I", "FS", String(i) + ") fr sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
+            // Serial.println(String(i) + ") fr sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
             standWebSocket.sendBIN(client_id, frameBuf, size, fin, continuation);
         }
         i++;
@@ -470,7 +466,7 @@ void sendStringToWs(const String& header, String& payload, int client_id) {
 
     String msg = header + "|0012|" + payload;
     size_t totalSize = msg.length();
-    SerialPrint("I", "FS", "Send string '" + header + "', str size: " + String(totalSize));
+    // Serial.println("Send string '" + header + "', str size: " + String(totalSize));
 
     char dataArray[totalSize];
     msg.toCharArray(dataArray, totalSize + 1);

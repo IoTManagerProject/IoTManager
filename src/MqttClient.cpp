@@ -325,14 +325,15 @@ void handleMqttStatus(bool send) {
     String stateStr = getStateStr(mqtt.state());
     // Serial.println(stateStr);
     jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);
-    if (!send) standWebSocket.broadcastTXT(errorsHeapJson);
+
+    if (!send) sendStringToWs("errors", errorsHeapJson, -1);
 }
 
 void handleMqttStatus(bool send, int state) {
     String stateStr = getStateStr(state);
     // Serial.println(stateStr);
     jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);
-    if (!send) standWebSocket.broadcastTXT(errorsHeapJson);
+    if (!send) sendStringToWs("errors", errorsHeapJson, -1);
 }
 
 // log-20384820.txt

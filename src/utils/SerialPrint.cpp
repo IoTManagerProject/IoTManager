@@ -6,15 +6,14 @@ void SerialPrint(String errorLevel, String module, String msg) {
 
     tosend = prettyMillis(millis());
 
-    // if (module == "Loging") {
     tosend = tosend + " [" + errorLevel + "] [" + module + "] " + msg;
     Serial.println(tosend);
 
     if (isNetworkActive()) {
         if (jsonReadInt(settingsFlashJson, F("log")) != 0) {
-            String pl = "/log|" + tosend;
-            standWebSocket.broadcastTXT(pl);
+            // String pl = "/log|" + tosend;
+            // standWebSocket.broadcastTXT(pl);
+            sendStringToWs("corelg", tosend, -1);
         }
     }
-    //}
 }

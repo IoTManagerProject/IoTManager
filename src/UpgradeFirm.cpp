@@ -132,5 +132,5 @@ void saveUserDataToFlash() {
 
 void handleUpdateStatus(bool send, int state) {
     jsonWriteInt_(errorsHeapJson, F("upd"), state);
-    if (!send) standWebSocket.broadcastTXT(errorsHeapJson);
+    if (!send) sendStringToWs("errors", errorsHeapJson, -1);
 }

@@ -228,14 +228,14 @@ class Loging : public IoTItem {
         String topic = mqttRootDevice + "/" + id;
         String json = "{\"maxCount\":0,\"topic\":\"" + topic + "\",\"status\":[]}";
         String pk = "/string/chart.json|" + json;
-        standWebSocket.broadcastTXT(pk);
+        //standWebSocket.broadcastTXT(pk);
     }
 
     void publishChartToWsSinglePoint(String value) {
         String topic = mqttRootDevice + "/" + id;
         String json = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[{\"x\":" + String(unixTime) + ",\"y1\":" + value + "}]}";
         String pk = "/string/chart.json|" + json;
-        standWebSocket.broadcastTXT(pk);
+        //standWebSocket.broadcastTXT(pk);
     }
 
     void setPublishDestination(int publishType, int wsNum = -1) {
