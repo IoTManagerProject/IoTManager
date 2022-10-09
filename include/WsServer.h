@@ -21,7 +21,7 @@ void periodicWsSend();
 void publishChartToWs(String filename, int num, size_t frameSize, int maxCount, String id);
 
 void sendFileToWsByFrames(const String& filename, const String& header, const String& json, uint8_t client_id, size_t frameSize);
-void sendStringToWs(const String& header, String& payload, uint8_t client_id);
+void sendStringToWs(const String& header, String& payload, int client_id);
 
 // void sendMark(const char* filename, const char* mark, uint8_t num);
 // void sendFileToWs3(const String& filename, uint8_t num);

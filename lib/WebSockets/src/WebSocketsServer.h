@@ -68,7 +68,7 @@ class WebSocketsServerCore : protected WebSockets {
     bool sendBIN(uint8_t num, uint8_t * payload, size_t length, bool fin = true, bool continuation = false, bool headerToPayload = false);
     bool sendBIN(uint8_t num, const uint8_t * payload, size_t length);
 
-    bool broadcastBIN(uint8_t * payload, size_t length, bool fin = true, bool headerToPayload = false);
+    bool broadcastBIN(uint8_t * payload, size_t length, bool fin = true, bool continuation = false, bool headerToPayload = false);
     bool broadcastBIN(const uint8_t * payload, size_t length);
 
     bool sendPing(uint8_t num, uint8_t * payload = NULL, size_t length = 0);

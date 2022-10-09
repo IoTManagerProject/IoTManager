@@ -98,13 +98,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
                 sendFileToWsByFrames("/scenario.txt", "scenar", "", num, WEB_SOCKETS_FRAME_SIZE);
                 sendStringToWs("settin", settingsFlashJson, num);
-
-                //шлется для того что бы получить топик устройства
-                // standWebSocket.sendTXT(num, settingsFlashJson);
-            }
-
-            //отправляем все графики в веб для экспорта
-            if (headerStr == "/expcharts|") {
             }
 
             //обработка кнопки сохранить
@@ -130,9 +123,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             //отвечаем данными на запрос страницы
             if (headerStr == "/connection|") {
-                standWebSocket.sendTXT(num, settingsFlashJson);
-                standWebSocket.sendTXT(num, ssidListHeapJson);
-                standWebSocket.sendTXT(num, errorsHeapJson);
+                sendStringToWs("settin", settingsFlashJson, num);
+                sendStringToWs("ssidli", ssidListHeapJson, num);
+                sendStringToWs("errors", errorsHeapJson, num);
                 // запуск асинхронного сканирования wifi сетей при переходе на страницу соединений
                 // RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
             }
@@ -166,7 +159,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             //отвечаем данными на запрос страницы
             if (headerStr == "/list|") {
-                standWebSocket.sendTXT(num, devListHeapJson);
+                sendStringToWs("devlis", devListHeapJson, num);
             }
 
             //----------------------------------------------------------------------//
@@ -175,8 +168,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             //отвечаем данными на запрос страницы
             if (headerStr == "/system|") {
-                standWebSocket.sendTXT(num, errorsHeapJson);
-                standWebSocket.sendTXT(num, settingsFlashJson);
+                sendStringToWs("errors", errorsHeapJson, num);
+                sendStringToWs("settin", settingsFlashJson, num);
             }
 
             //----------------------------------------------------------------------//
@@ -297,9 +290,9 @@ void publishChartWs(int num, String& path) {
 
 //данные которые мы отправляем в сокеты переодически
 void periodicWsSend() {
-    // standWebSocket.broadcastTXT(devListHeapJson);
-    // standWebSocket.broadcastTXT(ssidListHeapJson);
-    // standWebSocket.broadcastTXT(errorsHeapJson);
+    sendStringToWs("ssidli", ssidListHeapJson, -1);
+    sendStringToWs("errors", errorsHeapJson, -1);
+    sendStringToWs("devlis", devListHeapJson, -1);
 }
 
 #ifdef ESP32
@@ -469,7 +462,7 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
     file.close();
 }
 
-void sendStringToWs(const String& header, String& payload, uint8_t client_id) {
+void sendStringToWs(const String& header, String& payload, int client_id) {
     if (header.length() != 6) {
         SerialPrint("E", "FS", F("wrong header size"));
         return;
@@ -481,7 +474,11 @@ void sendStringToWs(const String& header, String& payload, uint8_t client_id) {
 
     char dataArray[totalSize];
     msg.toCharArray(dataArray, totalSize + 1);
-    standWebSocket.sendBIN(client_id, (uint8_t*)dataArray, totalSize);
+    if (client_id == -1) {
+        standWebSocket.broadcastBIN((uint8_t*)dataArray, totalSize);
+    } else {
+        standWebSocket.sendBIN(client_id, (uint8_t*)dataArray, totalSize);
+    }
 }
 
 // void sendFileToWsByFrames(const String& filename, const String& header, const String& json, uint8_t client_id, size_t frameSize) {
