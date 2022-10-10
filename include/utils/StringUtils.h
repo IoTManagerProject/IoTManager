@@ -40,4 +40,4 @@ boolean isDigitDotCommaStr(const String& str);
 
 String prettyBytes(size_t size);
 
-String uint64ToString(uint64_t input);
+String uint64ToString(uint64_t input, uint8_t base = 10);

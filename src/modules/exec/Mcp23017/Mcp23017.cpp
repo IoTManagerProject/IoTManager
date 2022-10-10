@@ -3,8 +3,6 @@
 #include "classes/IoTGpio.h"
 #include <Adafruit_MCP23X17.h>
 
-void scanI2C();
-
 class Mcp23017Driver : public IoTGpio {
    private:
     Adafruit_MCP23X17 _mcp;
@@ -39,14 +37,14 @@ class Mcp23017Driver : public IoTGpio {
 class Mcp23017 : public IoTItem {
    private:
     Mcp23017Driver* _driver;
+    String _addr;
 
    public:
     Mcp23017(String parameters) : IoTItem(parameters) {
         _driver = nullptr;
         
-        String addr;
-        jsonRead(parameters, "addr", addr);
-        if (addr == "") {
+        jsonRead(parameters, "addr", _addr);
+        if (_addr == "") {
             scanI2C();
             return;
         }
@@ -58,10 +56,15 @@ class Mcp23017 : public IoTItem {
             return;
         }
         
-        _driver = new Mcp23017Driver(index, addr);        
+        _driver = new Mcp23017Driver(index, _addr);        
     }
 
-    void doByInterval() {}
+    void doByInterval() {
+        if (_addr == "") {
+            scanI2C();
+            return;
+        }
+    }
 
     //возвращает ссылку на экземпляр класса Mcp23017Driver
     IoTGpio* getGpioDriver() {

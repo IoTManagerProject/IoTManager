@@ -15,16 +15,17 @@ class Lcd2004 : public IoTItem {
     String _id2show;
     String _descr;
     int _prevStrSize;
+    String _addr;
 
     bool _isShow = true;    // экран показывает
 
    public:
     Lcd2004(String parameters) : IoTItem(parameters) {
-        String addr, size, xy;
+        String size, xy;
         _prevStrSize = 0;
 
-        jsonRead(parameters, "addr", addr);
-        if (addr == "") {
+        jsonRead(parameters, "addr", _addr);
+        if (_addr == "") {
             scanI2C();
             return;
         }
@@ -33,7 +34,7 @@ class Lcd2004 : public IoTItem {
         int w = selectFromMarkerToMarker(size, ",", 0).toInt();  //количество столбцов
         int h = selectFromMarkerToMarker(size, ",", 1).toInt();  //количество строк
         if (LCDI2C == nullptr) {                                 //инициализации экрана еще не было
-            LCDI2C = new LiquidCrystal_I2C(hexStringToUint8(addr), w, h);
+            LCDI2C = new LiquidCrystal_I2C(hexStringToUint8(_addr), w, h);
             if (LCDI2C != nullptr) {
                 LCDI2C->init();
             }
@@ -62,6 +63,8 @@ class Lcd2004 : public IoTItem {
             //LCDI2C->print("Helloy,Manager 404 !");
             //Serial.printf("ffff %s\n", _id2show);
             _prevStrSize = tmpStr.length();
+        } else {
+            scanI2C();
         }
     }
 
