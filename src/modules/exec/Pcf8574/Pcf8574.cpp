@@ -93,14 +93,14 @@ class Pcf8574Driver : public IoTGpio {
 class Pcf8574 : public IoTItem {
    private:
     Pcf8574Driver* _driver;
+    String _addr;
 
    public:
     Pcf8574(String parameters) : IoTItem(parameters) {
         _driver = nullptr;
         
-        String addr;
-        jsonRead(parameters, "addr", addr);
-        if (addr == "") {
+        jsonRead(parameters, "addr", _addr);
+        if (_addr == "") {
             scanI2C();
             return;
         }
@@ -112,10 +112,15 @@ class Pcf8574 : public IoTItem {
             return;
         }
         
-        _driver = new Pcf8574Driver(index, addr);        
+        _driver = new Pcf8574Driver(index, _addr);        
     }
 
-    void doByInterval() {}
+    void doByInterval() {
+        if (_addr == "") {
+            scanI2C();
+            return;
+        }
+    }
 
     //возвращает ссылку на экземпляр класса Pcf8574Driver
     IoTGpio* getGpioDriver() {
