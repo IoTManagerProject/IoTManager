@@ -17,5 +17,5 @@ void publishStatusWs(const String& topic, const String& data);
 void publishChartWs(int num, String& path);
 void periodicWsSend();
 
-void sendFileToWsByFrames(const String& filename, const String& header, const String& json, uint8_t client_id, size_t frameSize);
+void sendFileToWsByFrames(const String& filename, const String& header, const String& json, int client_id, size_t frameSize);
 void sendStringToWs(const String& header, String& payload, int client_id);

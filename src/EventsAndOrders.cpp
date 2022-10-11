@@ -27,10 +27,6 @@ void handleOrder() {
 
         String id = selectToMarker(order, " ");
 
-        //это модификатор для даты графика
-        // if (id.endsWith("-date")) {
-        //}
-
         //здесь нужно перебрать все методы execute всех векторов и выполнить те id которых совпали с id события
         IoTItem* item = findIoTItem(id);
         if (item) {

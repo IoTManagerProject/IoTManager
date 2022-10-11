@@ -292,7 +292,7 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
 #endif
 #endif
 
-void sendFileToWsByFrames(const String& filename, const String& header, const String& json, uint8_t client_id, size_t frameSize) {
+void sendFileToWsByFrames(const String& filename, const String& header, const String& json, int client_id, size_t frameSize) {
     if (header.length() != 6) {
         SerialPrint("E", "FS", F("wrong header size"));
         return;
@@ -305,8 +305,8 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
         return;
     }
 
-    // size_t totalSize = file.size();
-    //  Serial.println("Send file '" + String(filename) + "', file size: " + String(totalSize));
+    size_t totalSize = file.size();
+    Serial.println("Send file '" + String(filename) + "', file size: " + String(totalSize));
 
     char buf[32];
     sprintf(buf, "%04d", json.length() + 12);
@@ -346,9 +346,11 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
                 continuation = true;
             }
 
-            // Serial.println(String(i) + ") fr sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
+            Serial.println(String(i) + ") " + "ws: " + String(client_id) + " fr sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
+
             if (client_id == -1) {
                 standWebSocket.broadcastBIN(frameBuf, size, fin, continuation);
+
             } else {
                 standWebSocket.sendBIN(client_id, frameBuf, size, fin, continuation);
             }

@@ -18,5 +18,6 @@
     "mqttin": 0,
     "pinSCL": 0,
     "pinSDA": 0,
-    "i2cFreq": 100000
+    "i2cFreq": 100000,
+    "settings_": ""
 }
