@@ -134,23 +134,23 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (headerStr == "/sgnittes|") {
                 writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
-                standWebSocket.sendTXT(num, errorsHeapJson);
+                sendStringToWs("errors", errorsHeapJson, num);
                 addThisDeviceToList();
             }
 
             //обработка кнопки сохранить настройки mqtt
             if (headerStr == "/mqtt|") {
-                standWebSocket.sendTXT(num, settingsFlashJson);  //отправляем в ответ новые полученные настройки
-                handleMqttStatus(false, 8);                      //меняем статус на неопределенный
-                mqttReconnect();                                 //начинаем переподключение
-                standWebSocket.sendTXT(num, errorsHeapJson);     //отправляем что статус неопределен
-                standWebSocket.sendTXT(num, ssidListHeapJson);
+                sendStringToWs("settin", settingsFlashJson, num);  //отправляем в ответ новые полученные настройки
+                handleMqttStatus(false, 8);                        //меняем статус на неопределенный
+                mqttReconnect();                                   //начинаем переподключение
+                sendStringToWs("errors", errorsHeapJson, num);     //отправляем что статус неопределен
+                sendStringToWs("ssidli", ssidListHeapJson, num);
             }
 
             //запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
             if (headerStr == "/scan|") {
                 RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
-                standWebSocket.sendTXT(num, ssidListHeapJson);
+                sendStringToWs("ssidli", ssidListHeapJson, num);
             }
 
             //----------------------------------------------------------------------//
