@@ -24,7 +24,7 @@
     },
     "projectProp": {
         "platformio": {
-            "default_envs": "esp8266_4mb"
+            "default_envs": "esp8266_1mb_ota"
         }
     },
     "modules": {
