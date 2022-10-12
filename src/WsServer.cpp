@@ -176,10 +176,14 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса dev
             //----------------------------------------------------------------------//
             if (headerStr == "/dev|") {
-                // standWebSocket.sendTXT(num, errorsHeapJson);
-                // standWebSocket.sendTXT(num, settingsFlashJson);
-                // sendFileToWs("/config.json", num, 1024);
-                // sendFileToWs("/items.json", num, 1024);
+                sendStringToWs("errors", errorsHeapJson, num);
+                sendStringToWs("settin", settingsFlashJson, num);
+                sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/items.json", "itemsj", "", num, WEB_SOCKETS_FRAME_SIZE);
+                // sendFileToWsByFrames("/layout.json", "layout", "", num, WEB_SOCKETS_FRAME_SIZE);
+            }
+
+            if (headerStr == "/test|") {
             }
 
             //----------------------------------------------------------------------//
@@ -216,8 +220,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 SerialPrint("i", F("=>WS"), "Msg from svelte web, WS No: " + String(num) + ", msg: " + msg);
             }
 
-            if (headerStr == "/test|") {
-            }
         } break;
 
         case WStype_BIN: {
@@ -306,7 +308,7 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
     }
 
     size_t totalSize = file.size();
-    Serial.println("Send file '" + String(filename) + "', file size: " + String(totalSize));
+    // Serial.println("Send file '" + String(filename) + "', file size: " + String(totalSize));
 
     char buf[32];
     sprintf(buf, "%04d", json.length() + 12);
@@ -346,7 +348,7 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
                 continuation = true;
             }
 
-            Serial.println(String(i) + ") " + "ws: " + String(client_id) + " fr sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
+            // Serial.println(String(i) + ") " + "ws: " + String(client_id) + " fr sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
 
             if (client_id == -1) {
                 standWebSocket.broadcastBIN(frameBuf, size, fin, continuation);

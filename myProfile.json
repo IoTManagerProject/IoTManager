@@ -20,7 +20,8 @@
         "mqttin": 0,
         "pinSCL": 0,
         "pinSDA": 0,
-        "i2cFreq": 100000
+        "i2cFreq": 100000,
+        "wg": "group1"
     },
     "projectProp": {
         "platformio": {
@@ -90,7 +91,7 @@
             },
             {
                 "path": "src/modules/sensors/FreqMeter",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/GY21",

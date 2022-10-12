@@ -318,8 +318,9 @@ String jsonWriteFloat(String& json, String name, float value, bool e) {
 }
 
 void jsonErrorDetected() {
-    jsonWriteInt(errorsHeapJson, F("jse2"), 1);
-    int number = jsonReadInt(errorsHeapJson, F("jse2n"));
-    number++;
-    jsonWriteInt(errorsHeapJson, F("jse2n"), number);
+    // пример как отправить ошибку с количеством
+    // jsonWriteInt(errorsHeapJson, F("jse2"), 1);
+    // int number = jsonReadInt(errorsHeapJson, F("jse2n"));
+    // number++;
+    // jsonWriteInt(errorsHeapJson, F("jse2n"), number);
 }

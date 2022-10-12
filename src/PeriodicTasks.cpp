@@ -31,14 +31,6 @@ void periodicTasksInit() {
     SerialPrint("i", "Task", "Periodic tasks init");
 }
 
-void handleError(String errorId, String errorValue) {
-    jsonWriteStr_(errorsHeapJson, errorId, errorValue);
-}
-
-void handleError(String errorId, int errorValue) {
-    jsonWriteInt_(errorsHeapJson, errorId, errorValue);
-}
-
 void printGlobalVarSize() {
     size_t settingsFlashJsonSize = settingsFlashJson.length();
     // SerialPrint(F("i"), F("settingsFlashJson"), String(settingsFlashJsonSize));

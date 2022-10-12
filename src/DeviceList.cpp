@@ -2,7 +2,8 @@
 
 const String getThisDevice() {
     String thisDevice = "{}";
-    jsonWriteStr_(thisDevice, F("devicelist_"), "");  //метка для парсинга нужна для udp валидации может быть рабочей группой в последствии
+    jsonWriteStr_(thisDevice, F("devicelist_"), "");                              //метка для парсинга
+    jsonWriteStr_(thisDevice, F("wg"), jsonReadStr(settingsFlashJson, F("wg")));  //рабочая группа
     jsonWriteStr_(thisDevice, F("ip"), jsonReadStr(settingsFlashJson, F("ip")));
     jsonWriteStr_(thisDevice, F("id"), jsonReadStr(settingsFlashJson, F("id")));
     jsonWriteStr_(thisDevice, F("name"), jsonReadStr(settingsFlashJson, F("name")));
@@ -52,7 +53,7 @@ void asyncUdpInit() {
         });
     }
 
-    //будем отправлять каждые 30 секунд презентацию данного устройства
+    //будем отправлять каждые 60 секунд презентацию данного устройства
     ts.add(
         UDP, 60000, [&](void*) {  // UDPP
             if (isNetworkActive()) {
@@ -68,7 +69,9 @@ void asyncUdpInit() {
 }
 
 bool udpPacketValidation(String& data) {
-    if (data.indexOf("devicelist_") != -1) {
+    // SerialPrint("i", F("UDP"), data);
+    String workgroup = jsonReadStr(settingsFlashJson, "wg");
+    if (workgroup != "" && data.indexOf(workgroup) != -1) {
         return true;
     } else {
         return false;
