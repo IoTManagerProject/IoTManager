@@ -220,6 +220,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 SerialPrint("i", F("=>WS"), "Msg from svelte web, WS No: " + String(num) + ", msg: " + msg);
             }
 
+            if (headerStr == "/tst|") {
+                standWebSocket.sendTXT(num, "/tstr|");
+            }
+
         } break;
 
         case WStype_BIN: {
