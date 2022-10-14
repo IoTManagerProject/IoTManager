@@ -116,37 +116,21 @@ void setup() {
 }
 
 void loop() {
-    // if(millis()%2000==0){
-    //     //watch->settimeUnix(time(&iotTimeNow));
-    //     Serial.println(watch->gettime("d-m-Y, H:i:s, M"));
-    //     delay(1);
-    // }
-
-    //обновление задач таскера
-    ts.update();
-
-//отправка json
-#ifdef QUEUE_FROM_STR
-    if (sendJsonFiles) sendJsonFiles->loop();
+#ifdef LOOP_DEBUG
+    unsigned long st = millis();
 #endif
 
+    ts.update();
+
 #ifdef STANDARD_WEB_SERVER
-    //обработка web сервера 1
     HTTP.handleClient();
 #endif
 
 #ifdef STANDARD_WEB_SOCKETS
-    //обработка web сокетов
     standWebSocket.loop();
 #endif
 
-    //обновление mqtt
     mqttLoop();
-
-#ifdef STANDARD_WEB_SERVER
-    //обработка web сервера 2
-    // HTTP.handleClient();
-#endif
 
     // передаем управление каждому элементу конфигурации для выполнения своих функций
     for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
@@ -159,32 +143,42 @@ void loop() {
     }
 
     handleOrder();
-
     handleEvent();
 
-#ifdef STANDARD_WEB_SERVER
-    //обработка web сервера 3
-    // HTTP.handleClient();
+#ifdef LOOP_DEBUG
+    loopPeriod = millis() - st;
+    if (loopPeriod > 2) Serial.println(loopPeriod);
 #endif
-
-    // сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
-    // currentMillis = millis();
-    // if (currentMillis - prevMillis >= 1000) {
-    //    prevMillis = millis();
-    //    volStrForSave = "";
-    //    for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-    //        if ((*it)->needSave) {
-    //            (*it)->needSave = false;
-    //            volStrForSave = volStrForSave + (*it)->getID() + "=" + (*it)->getValue() + ";";
-    //        }
-    //    }
-    //
-    //    if (volStrForSave != "") {
-    //        Serial.print("volStrForSave: ");
-    //        Serial.println(volStrForSave.c_str());
-    //    }
-    //}
 }
+
+//отправка json
+//#ifdef QUEUE_FROM_STR
+//    if (sendJsonFiles) sendJsonFiles->loop();
+//#endif
+
+// if(millis()%2000==0){
+//     //watch->settimeUnix(time(&iotTimeNow));
+//     Serial.println(watch->gettime("d-m-Y, H:i:s, M"));
+//     delay(1);
+// }
+
+// сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
+// currentMillis = millis();
+// if (currentMillis - prevMillis >= 1000) {
+//    prevMillis = millis();
+//    volStrForSave = "";
+//    for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+//        if ((*it)->needSave) {
+//            (*it)->needSave = false;
+//            volStrForSave = volStrForSave + (*it)->getID() + "=" + (*it)->getValue() + ";";
+//        }
+//    }
+//
+//    if (volStrForSave != "") {
+//        Serial.print("volStrForSave: ");
+//        Serial.println(volStrForSave.c_str());
+//    }
+//}
 
 // File dir = FileFS.open("/", "r");
 // String out;

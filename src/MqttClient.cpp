@@ -278,7 +278,7 @@ void publishWidgets() {
     DeserializationError error = deserializeJson(doc, file);
     if (error) {
         SerialPrint("E", F("MQTT"), error.f_str());
-        handleError("jse3", 1);
+        jsonWriteInt(errorsHeapJson, F("jse3"), 1);  //Ошибка чтения json файла с виджетами при отправки в mqtt
     }
     JsonArray arr = doc.as<JsonArray>();
     for (JsonVariant value : arr) {

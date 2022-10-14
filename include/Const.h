@@ -23,6 +23,8 @@
 #define JSON_BUFFER_SIZE 2048
 #define WEB_SOCKETS_FRAME_SIZE 2048
 
+//#define LOOP_DEBUG
+
 //выбор сервера
 //#define ASYNC_WEB_SERVER
 //#define ASYNC_WEB_SOCKETS

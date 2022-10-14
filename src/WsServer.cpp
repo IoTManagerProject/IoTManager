@@ -134,23 +134,23 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (headerStr == "/sgnittes|") {
                 writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
-                standWebSocket.sendTXT(num, errorsHeapJson);
+                sendStringToWs("errors", errorsHeapJson, num);
                 addThisDeviceToList();
             }
 
             //обработка кнопки сохранить настройки mqtt
             if (headerStr == "/mqtt|") {
-                standWebSocket.sendTXT(num, settingsFlashJson);  //отправляем в ответ новые полученные настройки
-                handleMqttStatus(false, 8);                      //меняем статус на неопределенный
-                mqttReconnect();                                 //начинаем переподключение
-                standWebSocket.sendTXT(num, errorsHeapJson);     //отправляем что статус неопределен
-                standWebSocket.sendTXT(num, ssidListHeapJson);
+                sendStringToWs("settin", settingsFlashJson, num);  //отправляем в ответ новые полученные настройки
+                handleMqttStatus(false, 8);                        //меняем статус на неопределенный
+                mqttReconnect();                                   //начинаем переподключение
+                sendStringToWs("errors", errorsHeapJson, num);     //отправляем что статус неопределен
+                sendStringToWs("ssidli", ssidListHeapJson, num);
             }
 
             //запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
             if (headerStr == "/scan|") {
                 RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
-                standWebSocket.sendTXT(num, ssidListHeapJson);
+                sendStringToWs("ssidli", ssidListHeapJson, num);
             }
 
             //----------------------------------------------------------------------//
@@ -176,10 +176,14 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса dev
             //----------------------------------------------------------------------//
             if (headerStr == "/dev|") {
-                // standWebSocket.sendTXT(num, errorsHeapJson);
-                // standWebSocket.sendTXT(num, settingsFlashJson);
-                // sendFileToWs("/config.json", num, 1024);
-                // sendFileToWs("/items.json", num, 1024);
+                sendStringToWs("errors", errorsHeapJson, num);
+                sendStringToWs("settin", settingsFlashJson, num);
+                sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/items.json", "itemsj", "", num, WEB_SOCKETS_FRAME_SIZE);
+                // sendFileToWsByFrames("/layout.json", "layout", "", num, WEB_SOCKETS_FRAME_SIZE);
+            }
+
+            if (headerStr == "/test|") {
             }
 
             //----------------------------------------------------------------------//
@@ -216,8 +220,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 SerialPrint("i", F("=>WS"), "Msg from svelte web, WS No: " + String(num) + ", msg: " + msg);
             }
 
-            if (headerStr == "/test|") {
+            if (headerStr == "/tst|") {
+                standWebSocket.sendTXT(num, "/tstr|");
             }
+
         } break;
 
         case WStype_BIN: {
@@ -292,7 +298,7 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
 #endif
 #endif
 
-void sendFileToWsByFrames(const String& filename, const String& header, const String& json, uint8_t client_id, size_t frameSize) {
+void sendFileToWsByFrames(const String& filename, const String& header, const String& json, int client_id, size_t frameSize) {
     if (header.length() != 6) {
         SerialPrint("E", "FS", F("wrong header size"));
         return;
@@ -305,8 +311,8 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
         return;
     }
 
-    // size_t totalSize = file.size();
-    //  Serial.println("Send file '" + String(filename) + "', file size: " + String(totalSize));
+    size_t totalSize = file.size();
+    // Serial.println("Send file '" + String(filename) + "', file size: " + String(totalSize));
 
     char buf[32];
     sprintf(buf, "%04d", json.length() + 12);
@@ -346,9 +352,11 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
                 continuation = true;
             }
 
-            // Serial.println(String(i) + ") fr sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
+            // Serial.println(String(i) + ") " + "ws: " + String(client_id) + " fr sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
+
             if (client_id == -1) {
                 standWebSocket.broadcastBIN(frameBuf, size, fin, continuation);
+
             } else {
                 standWebSocket.sendBIN(client_id, frameBuf, size, fin, continuation);
             }

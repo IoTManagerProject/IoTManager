@@ -19,5 +19,6 @@
     "pinSCL": 0,
     "pinSDA": 0,
     "i2cFreq": 100000,
+    "wg": "group1",
     "settings_": ""
 }

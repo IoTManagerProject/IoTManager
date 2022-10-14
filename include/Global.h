@@ -137,6 +137,8 @@ extern Time_t _time_local;
 extern Time_t _time_utc;
 extern bool _time_isTrust;
 
+extern unsigned long loopPeriod;
+
 // extern DynamicJsonDocument settingsFlashJsonDoc;
 // extern DynamicJsonDocument paramsFlashJsonDoc;
 // extern DynamicJsonDocument paramsHeapJsonDoc;
