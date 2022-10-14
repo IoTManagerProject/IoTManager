@@ -21,12 +21,12 @@
         "pinSCL": 0,
         "pinSDA": 0,
         "i2cFreq": 100000,
+        "settings_": ""
         "wg": "group1"
     },
     "projectProp": {
         "platformio": {
-            "default_envs": "esp8266_4mb",
-            "data_dir": "data_svelte"
+            "default_envs": "esp8266_1mb_ota"
         }
     },
     "modules": {

@@ -1,0 +1,216 @@
+[
+    {
+        "name": "anydataRed",
+        "label": "Сообщение1",
+        "widget": "anydata",
+        "icon": "body",
+        "color": "red",
+        "descrColor": "red"
+    },
+    {
+        "name": "anydataDgr",
+        "label": "Сообщение2",
+        "widget": "anydata",
+        "after": "",
+        "color": "red",
+        "icon": "walk"
+    },
+    {
+        "name": "anydataDef",
+        "label": "Текст",
+        "widget": "anydata",
+        "after": "",
+        "icon": ""
+    },
+    {
+        "name": "anydataVlt",
+        "label": "Вольты",
+        "widget": "anydata",
+        "after": "V",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataAmp",
+        "label": "Амперы",
+        "widget": "anydata",
+        "after": "A",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataWt",
+        "label": "Ватты",
+        "widget": "anydata",
+        "after": "Wt",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataWth",
+        "label": "Энергия",
+        "widget": "anydata",
+        "after": "kWt/Hr",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataHtz",
+        "label": "Герцы",
+        "widget": "anydata",
+        "after": "Hz",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataTmp",
+        "label": "Температура",
+        "widget": "anydata",
+        "after": "°С",
+        "icon": "thermometer"
+    },
+    {
+        "name": "anydataMm",
+        "label": "Давление",
+        "widget": "anydata",
+        "after": "mm",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataHum",
+        "label": "Влажность",
+        "widget": "anydata",
+        "after": "%",
+        "icon": "water",
+        "color": "#88AADF"
+    },
+    {
+        "name": "anydataTm",
+        "label": "Время",
+        "widget": "anydata",
+        "after": "",
+        "icon": "speedometer"
+    },
+    {
+        "name": "button",
+        "label": "Кнопка",
+        "widget": "btn",
+        "size": "large",
+        "color": "green",
+        "send": "test"
+    },
+    {
+        "name": "toggle",
+        "label": "Переключатель",
+        "widget": "toggle",
+        "icon": "",
+        "iconOff": ""
+    },
+    {
+        "name": "chart1",
+        "label": "График без точек",
+        "widget": "chart",
+        "dateFormat": "HH:mm",
+        "maxCount": 86400,
+        "pointRadius": 0
+    },
+    {
+        "name": "chart2",
+        "label": "График с точками",
+        "widget": "chart",
+        "maxCount": 86400,
+        "dateFormat": "HH:mm"
+    },
+    {
+        "name": "chart3",
+        "label": "График Дневной",
+        "widget": "chart",
+        "dateFormat": "DD.MM.YYYY",
+        "maxCount": 86400,
+        "type": "bar"
+    },
+    {
+        "name": "fillgauge",
+        "label": "Бочка",
+        "widget": "fillgauge",
+        "circleColor": "#00FFFF",
+        "textColor": "#FFFFFF",
+        "waveTextColor": "#000000",
+        "waveColor": "#00FFFF"
+    },
+    {
+        "name": "inputDate",
+        "label": "Ввод даты",
+        "widget": "input",
+        "size": "small",
+        "color": "orange",
+        "type": "date"
+    },
+    {
+        "name": "inputDgt",
+        "label": "Ввод числа",
+        "widget": "input",
+        "color": "blue",
+        "type": "number"
+    },
+    {
+        "name": "inputTxt",
+        "label": "Ввод текста",
+        "widget": "input",
+        "size": "small",
+        "color": "orange",
+        "type": "text"
+    },
+    {
+        "name": "inputTm",
+        "label": "Ввод времени",
+        "widget": "input",
+        "color": "blue",
+        "type": "time"
+    },
+    {
+        "name": "progressLine",
+        "label": "Статус линия",
+        "widget": "progress-line",
+        "icon": "sunny",
+        "max": "100",
+        "stroke": "10"
+    },
+    {
+        "name": "progressRound",
+        "label": "Статус круг",
+        "widget": "progress-round",
+        "max": "100",
+        "stroke": "20",
+        "color": "#45ccce",
+        "background": "#777",
+        "semicircle": "1"
+    },
+    {
+        "name": "range",
+        "label": "Ползунок",
+        "widget": "range",
+        "descrColor": "red",
+        "after": "%",
+        "k": 0.0977,
+        "min": 0,
+        "max": 100,
+        "debounce": 500
+    },
+    {
+        "name": "select",
+        "label": "Выпадающий",
+        "widget": "select",
+        "options": [
+            "Выключен",
+            "Включен"
+        ],
+        "status": 0
+    },
+    {
+        "name": "anydataPpm",
+        "label": "PPM",
+        "widget": "anydata",
+        "after": "ppm",
+        "icon": "speedometer"
+    },
+    {
+        "name": "nil",
+        "label": "Без виджета"
+    }
+]

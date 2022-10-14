@@ -3,6 +3,14 @@
 //Версия прошивки
 #define FIRMWARE_VERSION 431
 
+#ifdef esp8266_1mb_ota
+#define FIRMWARE_NAME "esp8266_1mb_ota"
+#endif
+
+#ifdef esp8266_1mb
+#define FIRMWARE_NAME "esp8266_1mb"
+#endif
+
 #ifdef esp8266_4mb
 #define FIRMWARE_NAME "esp8266_4mb"
 #endif
@@ -32,13 +40,7 @@
 
 #define TELEMETRY_UPDATE_INTERVAL_MIN 60
 
-#ifdef esp8266_4mb
 #define USE_LITTLEFS true
-#endif
-
-#ifdef esp32_4mb
-#define USE_LITTLEFS true
-#endif
 
 #define START_DATETIME 1661990400  // 01.09.2022 00:00:00 константа для сокращения unix time
 
