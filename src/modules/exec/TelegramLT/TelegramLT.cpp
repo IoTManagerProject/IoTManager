@@ -7,7 +7,7 @@ class TelegramLT : public IoTItem
 public:
     String _prevMsg = "";
     String _token;
-    unsigned long _chatID;
+    String _chatID;
 
     TelegramLT(String parameters) : IoTItem(parameters) {
         jsonRead(parameters, "token", _token);
@@ -21,11 +21,11 @@ public:
             HTTPClient http;
             http.begin(client, "http://live-control.com/iotm/telegram.php");
             http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-            String httpRequestData = "url=https://api.telegram.org/bot" + _token + "/sendmessage?chat_id=" + uint64ToString(_chatID) + "&text=" + msg;
+            String httpRequestData = "url=https://api.telegram.org/bot" + _token + "/sendmessage?chat_id=" + _chatID + "&text=" + msg;
             int httpResponseCode = http.POST(httpRequestData);
             String payload = http.getString();
-            SerialPrint("<-", F("Telegram"), "chat ID: " + uint64ToString(_chatID) + ", msg: " + msg);
-            SerialPrint("->", F("Telegram"), "chat ID: " + uint64ToString(_chatID) + ", server: " + httpResponseCode);
+            SerialPrint("<-", F("Telegram"), "chat ID: " + _chatID + ", msg: " + msg);
+            SerialPrint("->", F("Telegram"), "chat ID: " + _chatID + ", server: " + httpResponseCode);
 
             if (!strstr(payload.c_str(), "{\"ok\":true")) {
                 value.valD = 1;
