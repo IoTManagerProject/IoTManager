@@ -149,6 +149,14 @@ void loop() {
     loopPeriod = millis() - st;
     if (loopPeriod > 2) Serial.println(loopPeriod);
 #endif
+
+    // сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
+    if (needSaveValues && millis()%1000 == 0) {
+        syncValuesFlashJson();
+        needSaveValues = false;
+        delay(1);
+        Serial.println("syncValuesFlashJson()");
+    }
 }
 
 //отправка json
@@ -161,24 +169,6 @@ void loop() {
 //     Serial.println(watch->gettime("d-m-Y, H:i:s, M"));
 //     delay(1);
 // }
-
-// сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
-// currentMillis = millis();
-// if (currentMillis - prevMillis >= 1000) {
-//    prevMillis = millis();
-//    volStrForSave = "";
-//    for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-//        if ((*it)->needSave) {
-//            (*it)->needSave = false;
-//            volStrForSave = volStrForSave + (*it)->getID() + "=" + (*it)->getValue() + ";";
-//        }
-//    }
-//
-//    if (volStrForSave != "") {
-//        Serial.print("volStrForSave: ");
-//        Serial.println(volStrForSave.c_str());
-//    }
-//}
 
 // File dir = FileFS.open("/", "r");
 // String out;

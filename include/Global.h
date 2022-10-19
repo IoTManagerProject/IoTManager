@@ -83,7 +83,9 @@ extern WebSocketsServer standWebSocket;
 ***********************************************глобальные переменные**************************************************
 **********************************************************************************************************************/
 extern String settingsFlashJson;
+extern String valuesFlashJson;
 extern String errorsHeapJson;
+extern bool needSaveValues;
 
 // buf
 extern String orderBuf;
