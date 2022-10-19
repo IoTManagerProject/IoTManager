@@ -6,6 +6,7 @@
             "type": "Reading",
             "subtype": "Variable",
             "id": "value",
+            "needSave": 0,
             "widget": "inputDgt",
             "page": "Ввод",
             "descr": "Введите число",
@@ -18,6 +19,7 @@
             "type": "Reading",
             "subtype": "Variable",
             "id": "time",
+            "needSave": 0,
             "widget": "inputTm",
             "page": "Ввод",
             "descr": "Введите время",
@@ -30,6 +32,7 @@
             "type": "Reading",
             "subtype": "Variable",
             "id": "time",
+            "needSave": 0,
             "widget": "inputDate",
             "page": "Ввод",
             "descr": "Введите дату",
@@ -42,6 +45,7 @@
             "type": "Reading",
             "subtype": "Variable",
             "id": "txt",
+            "needSave": 0,
             "widget": "inputTxt",
             "page": "Ввод",
             "descr": "Введите текст",
@@ -65,7 +69,7 @@
         "moduleDesc": "Специальный системный модуль для использования переменных в процессе автоматизации как элементов конфигурации.",
         "propInfo": {
             "int": "Не используется",
-            "val": "Не используется"
+            "val": "Значение при старте"
         }
     },
     "defActive": true,

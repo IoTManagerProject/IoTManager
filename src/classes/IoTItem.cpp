@@ -20,11 +20,11 @@ IoTItem::IoTItem(String parameters) {
 
     String valAsStr;
     if (jsonRead(parameters, F("val"), valAsStr, false))  // значение переменной или датчика при инициализации если есть в конфигурации
-        if (value.isDecimal = isDigitDotCommaStr(valAsStr)) {
-            value.valD = valAsStr.toFloat();
-        } else {
-            value.valS = valAsStr;
-        }
+        setValue(valAsStr, false);
+    
+    jsonRead(parameters, F("needSave"), _needSave, false);
+    if (_needSave && jsonRead(valuesFlashJson, _id, valAsStr, false)) // пробуем достать из сохранения значение элемента, если указано, что нужно сохранять
+        setValue(valAsStr, false);
 
     String map;
     jsonRead(parameters, F("map"), map, false);
@@ -58,27 +58,33 @@ String IoTItem::getValue() {
 }
 
 //определяем тип прилетевшей величины
-void IoTItem::setValue(String valStr) {
+void IoTItem::setValue(String valStr, bool generateEvent) {
     if (value.isDecimal = isDigitDotCommaStr(valStr)) {
         value.valD = valStr.toFloat();
     } else {
         value.valS = valStr;
     }
-    setValue(value);
+    if (generateEvent) setValue(value, generateEvent);
 }
 
 //
-void IoTItem::setValue(IoTValue Value) {
+void IoTItem::setValue(IoTValue Value, bool generateEvent) {
     value = Value;
-    if (value.isDecimal) {
-        regEvent(value.valD, "");
-    } else {
-        regEvent(value.valS, "");
-    }
+    if (generateEvent)
+        if (value.isDecimal) {
+            regEvent(value.valD, "");
+        } else {
+            regEvent(value.valS, "");
+        }
 }
 
 //когда событие случилось
 void IoTItem::regEvent(String value, String consoleInfo = "") {
+    if (_needSave) {
+        jsonWriteStr_(valuesFlashJson, _id, value);
+        needSaveValues = true;
+    }
+
     generateEvent(_id, value);
     publishStatusMqtt(_id, value);
 

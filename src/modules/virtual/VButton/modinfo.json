@@ -6,6 +6,7 @@
             "type": "Reading",
             "subtype": "VButton",
             "id": "vbtn",
+            "needSave": 0,
             "widget": "toggle",
             "page": "Кнопки",
             "descr": "Кнопка",

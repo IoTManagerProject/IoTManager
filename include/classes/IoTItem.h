@@ -6,9 +6,6 @@ struct IoTValue {
     String valS = "";
 
     bool isDecimal = true;
-
-    uint8_t* extBinInfo = NULL;  // дополнительные бинарные данные из модуля
-    size_t extBinInfoSize = 0;   // размер дополнительных данных в байтах
 };
 
 class IoTItem {
@@ -38,12 +35,11 @@ class IoTItem {
     bool iAmDead = false;  // признак необходимости удалить объект из базы
     bool iAmLocal = true;  // признак того, что айтем был создан локально
 
-    bool needSave = false;
     bool enableDoByInt = true;
 
     virtual IoTGpio* getGpioDriver();
-    virtual void setValue(IoTValue Value);
-    virtual void setValue(String valStr);
+    virtual void setValue(IoTValue Value, bool generateEvent = true);
+    virtual void setValue(String valStr, bool generateEvent = true);
     String getRoundValue();
 
     //методы для графиков
@@ -54,6 +50,7 @@ class IoTItem {
     virtual void setTodayDate();
 
    protected:
+    bool _needSave = false;  // признак необходимости сохранять и загружать значение элемента на flash
     String _subtype;
     String _id;
     unsigned long _interval;

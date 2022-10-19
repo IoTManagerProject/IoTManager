@@ -9,6 +9,7 @@
             "widget": "toggle",
             "page": "Кнопки",
             "descr": "Освещение",
+            "needSave": 0,
             "int": 0,
             "pin": 16,
             "execLevel": "1",

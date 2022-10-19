@@ -5,6 +5,7 @@
             "name": "Управление пином",
             "type": "Writing",
             "subtype": "ButtonOut",
+            "needSave": 0,
             "id": "btn",
             "widget": "toggle",
             "page": "Кнопки",
