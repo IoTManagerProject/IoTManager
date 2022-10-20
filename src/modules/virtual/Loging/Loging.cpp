@@ -311,7 +311,7 @@ class Date : public IoTItem {
         setValue(value);
     }
 
-    void setValue(IoTValue Value) {
+    void setValue(IoTValue Value, bool generateEvent = true) {
         value = Value;
         regEvent(value.valS, "");
         //отправка данных при изменении даты

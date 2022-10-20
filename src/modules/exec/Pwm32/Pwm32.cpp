@@ -54,7 +54,7 @@ class Pwm32 : public IoTItem {
         }
     }
  
-    void setValue(IoTValue Value) {
+    void setValue(IoTValue Value, bool generateEvent = true) {
         value = Value;
         ledcWrite(_ledChannel, value.valD);
         regEvent(value.valD, "Pwm32");

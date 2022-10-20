@@ -52,7 +52,7 @@ class IoTServo : public IoTItem {
             return {}; 
         }
 
-        void setValue(IoTValue Value) {
+        void setValue(IoTValue Value, bool generateEvent = true) {
             value = Value;
             if (value.isDecimal & (_oldValue != value.valD)) {
                 _oldValue = value.valD;

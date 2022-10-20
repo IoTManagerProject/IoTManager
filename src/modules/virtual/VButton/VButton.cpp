@@ -6,7 +6,7 @@ class VButton : public IoTItem {
    public:
     VButton(String parameters): IoTItem(parameters) { }
 
-    void setValue(IoTValue Value) {
+    void setValue(IoTValue Value, bool generateEvent = true) {
         value = Value;
         regEvent((String)(int)value.valD, "VButton");
     }
