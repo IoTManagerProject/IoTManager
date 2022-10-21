@@ -14,9 +14,7 @@ class ButtonOut : public IoTItem {
         jsonRead(parameters, "inv", _inv);
 
         IoTgpio.pinMode(_pin, OUTPUT);
-        //TODO: прочитать состояние из памяти
-        IoTgpio.digitalWrite(_pin, _inv?HIGH:LOW);    // пока нет памяти, устанавливаем значение в ноль
-        value.valD = 0;
+        IoTgpio.digitalWrite(_pin, value.valD?HIGH:LOW);
     }
 
     void doByInterval() {

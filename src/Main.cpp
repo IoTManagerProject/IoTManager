@@ -154,8 +154,6 @@ void loop() {
     if (needSaveValues && millis()%1000 == 0) {
         syncValuesFlashJson();
         needSaveValues = false;
-        delay(1);
-        Serial.println("syncValuesFlashJson()");
     }
 }
 

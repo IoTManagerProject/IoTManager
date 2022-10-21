@@ -652,5 +652,24 @@
         "coord": "0,0",
         "id2show": "id датчика",
         "num": 48
+    },
+    {
+        "name": "49. Strip ws2812b",
+        "type": "Reading",
+        "subtype": "Ws2812b",
+        "id": "strip",
+        "widget": "range",
+        "page": "Кнопки",
+        "descr": "Лента",
+        "int": 15,
+        "needSave": 0,
+        "pin": "4",
+        "numLeds": "8",
+        "brightness": "100",
+        "mode": "1",
+        "min": "15",
+        "max": "30",
+        "idshow": "t",
+        "num": 49
     }
 ]

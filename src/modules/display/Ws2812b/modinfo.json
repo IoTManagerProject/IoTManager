@@ -1,0 +1,96 @@
+{   
+    "menuSection": "Экраны",
+    "configItem": [
+        {
+        "name": "Strip ws2812b",
+        "type": "Reading",
+        "subtype": "Ws2812b",
+        "id": "strip",
+        "widget": "range",
+        "page": "Кнопки",
+        "descr": "Лента",
+        "int": 15,
+        "needSave": 0,
+        "pin": "4",
+        "numLeds": "8",
+        "brightness": "100",
+        "mode": "1",
+        "min": "15",
+        "max": "30",
+        "idshow": "t"
+    }],
+    
+    "about": {
+        "authorName": "Yuriy Kuneev",
+        "authorContact": "https://t.me/Kuneev07",
+        "authorGit": "",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "",
+        "moduleName": "Ws2812b",
+        "moduleVersion": "1.0.1",
+        "moduleDesc": "Позволяет визуализировать наполнение бака или температуру нагрева. В зависимост от показаний которые везуализируем нужно редактировать min и max.",
+        "propInfo": {
+            "int": "Период времени в секундах обновления.",
+            "pin": "Пин к которому подключена лента.",
+            "numLeds": "Количество пикселей в ленте.",
+            "needSave": "Запись яркости в энергонезависимую память",
+            "brightness": "Яркость ленты можно менять из сценария.",
+            "min": "Минимальный порог индикатора на который реагировать.",
+            "max": "Максимальный порог индикатора на который реагировать.",
+            "idshow": "id элемента конфигурации который нужно повесить индикацию."
+        },
+        "funcInfo": [
+            {
+                "name": "noShow",
+                "descr": "Выключить ленту",
+                "params": ["номер пикселя"]
+            },
+            {
+                "name": "noShowOne",
+                "descr": "Выключить один светодиод на ленте",
+                "params": []
+            },
+            {
+                "name": "test",
+                "descr": "для проверки всех светодиодов ленты",
+                "params": []
+            },
+            {
+                "name": "showLed",
+                "descr": "Зажечь один диод",
+                "params": ["номер пикселя","цвет 255,255,255 или red,green"]
+            },
+            {
+                "name": "showLedAll",
+                "descr": "Зажечь все диоды",
+                "params": ["Цвет красного светодиода от 0 до 255","Цвет зеленого светодиода от 0 до 255","Цвет синего светодиода от 0 до 255"]
+            },
+            {
+                "name": "Brightness",
+                "descr": "Устанавливает общую яркость ленты от 0 до 255",
+                "params": ["яркость от 0 до 255"]
+            },
+            {
+                "name": "enableIndication",
+                "descr": "Включает работу индикации по idshow по дэфолту включено всегда",
+                "params": []
+            },
+            {
+                "name": "disableIndication",
+                "descr": "Выключает работу индикации по idshow",
+                "params": []
+            }
+        ]
+    },
+
+    "defActive": true,
+
+    "usedLibs": {
+        "esp32_4mb": [
+            "adafruit/Adafruit NeoPixel@^1.10.6"
+        ],
+        "esp8266_4mb": [
+            "adafruit/Adafruit NeoPixel@^1.10.6"  
+        ]
+    }
+}
