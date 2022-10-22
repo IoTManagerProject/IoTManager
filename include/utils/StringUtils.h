@@ -32,7 +32,7 @@ size_t itemsCount2(String str, const String& separator);
 
 char* stringToChar(String& str);
 
-size_t itemsCount(String& str, const char* delim);
+//size_t itemsCount(String& str, const char* delim);
 
 boolean isDigitStr(const String& str);
 
@@ -41,3 +41,5 @@ boolean isDigitDotCommaStr(const String& str);
 String prettyBytes(size_t size);
 
 String uint64ToString(uint64_t input, uint8_t base = 10);
+
+String cleanString(String str);
