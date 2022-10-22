@@ -96,7 +96,7 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
     //     SerialPrint("i", F("=>ALLMQTT"), "Broadcast event: ");
     // }
     //отправка события другим устройствам в сети==============================
-    if (jsonReadBool(settingsFlashJson, "mqttin")) {
+    if (jsonReadBool(settingsFlashJson, "mqttin") && _global) {
        String json = "{}";
        jsonWriteStr_(json, "id", _id);
        jsonWriteStr_(json, "val", value);
