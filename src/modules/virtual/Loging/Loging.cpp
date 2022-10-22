@@ -263,7 +263,7 @@ class Loging : public IoTItem {
         }
     }
 
-    void regEvent(String value, String consoleInfo = "") {
+    void regEvent(String value, String consoleInfo, bool error = false) {
         String userDate = getItemValue(id + "-date");
         String currentDate = getTodayDateDotFormated();
         //отправляем в график данные только когда выбран сегодняшний день

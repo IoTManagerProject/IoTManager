@@ -79,7 +79,7 @@ void IoTItem::setValue(IoTValue Value, bool generateEvent) {
 }
 
 //когда событие случилось
-void IoTItem::regEvent(String value, String consoleInfo = "") {
+void IoTItem::regEvent(String value, String consoleInfo, bool error) {
     if (_needSave) {
         jsonWriteStr_(valuesFlashJson, _id, value);
         needSaveValues = true;
@@ -95,8 +95,8 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
     // if (_global) {
     //     SerialPrint("i", F("=>ALLMQTT"), "Broadcast event: ");
     // }
-    //отправка события другим устройствам в сети==============================
-    if (jsonReadBool(settingsFlashJson, "mqttin") && _global) {
+    //отправка события другим устройствам в сети если не было ошибки==============================
+    if (jsonReadBool(settingsFlashJson, "mqttin") && _global && !error) {
        String json = "{}";
        jsonWriteStr_(json, "id", _id);
        jsonWriteStr_(json, "val", value);
@@ -120,14 +120,14 @@ String IoTItem::getRoundValue() {
     }
 }
 
-void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
+void IoTItem::regEvent(float regvalue, String consoleInfo, bool error) {
     value.valD = regvalue;
 
     if (_multiply) value.valD = value.valD * _multiply;
     if (_plus) value.valD = value.valD + _plus;
     if (_map1 != _map2) value.valD = map(value.valD, _map1, _map2, _map3, _map4);
     
-    regEvent(getRoundValue(), consoleInfo);
+    regEvent(getRoundValue(), consoleInfo, error);
 }
 
 void IoTItem::doByInterval() {}

@@ -16,8 +16,8 @@ class IoTItem {
     virtual void doByInterval();
     virtual IoTValue execute(String command, std::vector<IoTValue>& param);
 
-    virtual void regEvent(String value, String consoleInfo);
-    virtual void regEvent(float value, String consoleInfo);
+    virtual void regEvent(String value, String consoleInfo, bool error = false);
+    virtual void regEvent(float value, String consoleInfo, bool error = false);
 
     String getSubtype();
 
