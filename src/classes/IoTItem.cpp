@@ -10,7 +10,7 @@ IoTItem::IoTItem(String parameters) {
     jsonRead(parameters, F("int"), _interval);
     if (_interval == 0) enableDoByInt = false;
     _interval = _interval * 1000;
-    jsonRead(parameters, F("subtype"), _subtype);
+    jsonRead(parameters, F("subtype"), _subtype, false);
     jsonRead(parameters, F("id"), _id);
     if (!jsonRead(parameters, F("multiply"), _multiply, false)) _multiply = 1;
     if (!jsonRead(parameters, F("plus"), _plus, false)) _plus = 0;
