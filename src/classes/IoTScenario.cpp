@@ -321,6 +321,7 @@ enum SysOp {
     sysop_gethhmm,
     sysop_gethhmmss,
     sysop_getTime,
+    sysop_getRSSI,
     sysop_getIP,
     sysop_mqttPub,
     sysop_getUptime
@@ -404,6 +405,10 @@ IoTValue sysExecute(SysOp command, std::vector<IoTValue> &param) {
 #endif
             }
             break;
+        case sysop_getRSSI:
+            value.valD = WiFi.RSSI();
+            value.isDecimal = true;
+            break;
         case sysop_getIP:
             value.valS = jsonReadStr(settingsFlashJson, F("ip"));
             value.isDecimal = false;
@@ -460,6 +465,8 @@ class SysCallExprAST : public ExprAST {
             operation = sysop_getMonth;
         else if (Callee == "getDay")
             operation = sysop_getDay;
+        else if (Callee == "getRSSI")
+            operation = sysop_getRSSI;
         else if (Callee == "getIP")
             operation = sysop_getIP;
         else if (Callee == "mqttPub")
