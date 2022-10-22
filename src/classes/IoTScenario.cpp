@@ -411,7 +411,9 @@ IoTValue sysExecute(SysOp command, std::vector<IoTValue> &param) {
         case sysop_mqttPub:
             if (param.size() == 2) {
                 // Serial.printf("Call from  sysExecute %s %s\n", param[0].valS.c_str(), param[1].valS.c_str());
-                value.valD = mqtt.publish(param[0].valS.c_str(), param[1].valS.c_str(), false);
+                String tmpStr = param[1].valS;
+                if (param[1].isDecimal) tmpStr = param[1].valD;
+                value.valD = mqtt.publish(param[0].valS.c_str(),  tmpStr.c_str(), false);
             }
             break;
         case sysop_getUptime:
