@@ -40,7 +40,7 @@ class ButtonOut : public IoTItem {
     void setValue(IoTValue Value, bool generateEvent = true) {
         value = Value;
         IoTgpio.digitalWrite(_pin, _inv?!value.valD:value.valD);
-        regEvent((String)(int)value.valD, "ButtonOut");
+        if (generateEvent) regEvent((String)(int)value.valD, "ButtonOut");
     }
 
     String getValue() {

@@ -8,7 +8,7 @@ class VButton : public IoTItem {
 
     void setValue(IoTValue Value, bool generateEvent = true) {
         value = Value;
-        regEvent((String)(int)value.valD, "VButton");
+        if (generateEvent) regEvent((String)(int)value.valD, "VButton");
     }
 
     String getValue() {

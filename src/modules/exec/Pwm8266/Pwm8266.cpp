@@ -47,7 +47,7 @@ class Pwm8266 : public IoTItem {
     void setValue(IoTValue Value, bool generateEvent = true) {
         value = Value;
         IoTgpio.analogWrite(_pin, value.valD);
-        regEvent(value.valD, "Pwm8266");
+        if (generateEvent) regEvent(value.valD, "Pwm8266");
     }
     //=======================================================================================================
 

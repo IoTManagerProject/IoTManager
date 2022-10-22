@@ -70,7 +70,7 @@ class ButtonIn : public IoTItem {
 
     void setValue(IoTValue Value, bool generateEvent = true) {
         value = Value;
-        regEvent((String)(int)value.valD, "ButtonIn");
+        if (generateEvent) regEvent((String)(int)value.valD, "ButtonIn");
     }
 
     String getValue() {

@@ -178,7 +178,7 @@ public:
         int b =  map(value.valD, 1,1024,1,255);
         _strip->setBrightness(b);
         _strip->show(); 
-        regEvent(value.valD, "Ws2812b");
+        if (generateEvent) regEvent(value.valD, "Ws2812b");
     }
 
     ~Ws2812b(){};
