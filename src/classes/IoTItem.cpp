@@ -134,7 +134,6 @@ void IoTItem::doByInterval() {}
 
 IoTValue IoTItem::execute(String command, std::vector<IoTValue>& param) { return {}; }
 
-//захрена эта хрень? - самому пригодилась сорян Илья
 String IoTItem::getSubtype() {
     return _subtype;
 }
@@ -166,7 +165,7 @@ IoTGpio* IoTItem::getGpioDriver() {
 externalVariable::externalVariable(String parameters) : IoTItem(parameters) {
     prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
     iAmLocal = false;       // указываем, что это сущность прилетела из сети
-    Serial.printf("Call from  externalVariable: parameters %s %d\n", parameters.c_str(), _interval);
+    //Serial.printf("Call from  externalVariable: parameters %s %d\n", parameters.c_str(), _interval);
 }
 
 externalVariable::~externalVariable() {
