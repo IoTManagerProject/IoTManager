@@ -64,7 +64,7 @@ void IoTItem::setValue(String valStr, bool generateEvent) {
     } else {
         value.valS = valStr;
     }
-    if (generateEvent) setValue(value, generateEvent);
+    setValue(value, generateEvent);
 }
 
 //
@@ -96,14 +96,14 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
     //     SerialPrint("i", F("=>ALLMQTT"), "Broadcast event: ");
     // }
     //отправка события другим устройствам в сети==============================
-    // if (jsonReadBool(settingsFlashJson, "mqttin")) {
-    //    String json = "{}";
-    //    jsonWriteStr_(json, "id", _id);
-    //    jsonWriteStr_(json, "val", value);
-    //    jsonWriteInt_(json, "int", _interval + 5000);  // 5 секунд про запас
-    //    publishEvent(_id, json);
-    //    SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
-    //}
+    if (jsonReadBool(settingsFlashJson, "mqttin")) {
+       String json = "{}";
+       jsonWriteStr_(json, "id", _id);
+       jsonWriteStr_(json, "val", value);
+       jsonWriteInt_(json, "int", _interval/1000 + 5);  // 5 секунд про запас
+       publishEvent(_id, json);
+       SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
+    }
     //========================================================================
 }
 
