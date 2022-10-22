@@ -10,7 +10,7 @@ IoTItem::IoTItem(String parameters) {
     jsonRead(parameters, F("int"), _interval);
     if (_interval == 0) enableDoByInt = false;
     _interval = _interval * 1000;
-    jsonRead(parameters, F("subtype"), _subtype);
+    jsonRead(parameters, F("subtype"), _subtype, false);
     jsonRead(parameters, F("id"), _id);
     if (!jsonRead(parameters, F("multiply"), _multiply, false)) _multiply = 1;
     if (!jsonRead(parameters, F("plus"), _plus, false)) _plus = 0;
@@ -79,7 +79,7 @@ void IoTItem::setValue(IoTValue Value, bool generateEvent) {
 }
 
 //когда событие случилось
-void IoTItem::regEvent(String value, String consoleInfo = "") {
+void IoTItem::regEvent(String value, String consoleInfo, bool error) {
     if (_needSave) {
         jsonWriteStr_(valuesFlashJson, _id, value);
         needSaveValues = true;
@@ -95,8 +95,8 @@ void IoTItem::regEvent(String value, String consoleInfo = "") {
     // if (_global) {
     //     SerialPrint("i", F("=>ALLMQTT"), "Broadcast event: ");
     // }
-    //отправка события другим устройствам в сети==============================
-    if (jsonReadBool(settingsFlashJson, "mqttin")) {
+    //отправка события другим устройствам в сети если не было ошибки==============================
+    if (jsonReadBool(settingsFlashJson, "mqttin") && _global && !error) {
        String json = "{}";
        jsonWriteStr_(json, "id", _id);
        jsonWriteStr_(json, "val", value);
@@ -120,21 +120,20 @@ String IoTItem::getRoundValue() {
     }
 }
 
-void IoTItem::regEvent(float regvalue, String consoleInfo = "") {
+void IoTItem::regEvent(float regvalue, String consoleInfo, bool error) {
     value.valD = regvalue;
 
     if (_multiply) value.valD = value.valD * _multiply;
     if (_plus) value.valD = value.valD + _plus;
     if (_map1 != _map2) value.valD = map(value.valD, _map1, _map2, _map3, _map4);
     
-    regEvent(getRoundValue(), consoleInfo);
+    regEvent(getRoundValue(), consoleInfo, error);
 }
 
 void IoTItem::doByInterval() {}
 
 IoTValue IoTItem::execute(String command, std::vector<IoTValue>& param) { return {}; }
 
-//захрена эта хрень? - самому пригодилась сорян Илья
 String IoTItem::getSubtype() {
     return _subtype;
 }
@@ -166,7 +165,7 @@ IoTGpio* IoTItem::getGpioDriver() {
 externalVariable::externalVariable(String parameters) : IoTItem(parameters) {
     prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
     iAmLocal = false;       // указываем, что это сущность прилетела из сети
-    Serial.printf("Call from  externalVariable: parameters %s %d\n", parameters.c_str(), _interval);
+    //Serial.printf("Call from  externalVariable: parameters %s %d\n", parameters.c_str(), _interval);
 }
 
 externalVariable::~externalVariable() {

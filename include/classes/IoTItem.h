@@ -16,8 +16,8 @@ class IoTItem {
     virtual void doByInterval();
     virtual IoTValue execute(String command, std::vector<IoTValue>& param);
 
-    virtual void regEvent(String value, String consoleInfo);
-    virtual void regEvent(float value, String consoleInfo);
+    virtual void regEvent(String value, String consoleInfo, bool error = false);
+    virtual void regEvent(float value, String consoleInfo, bool error = false);
 
     String getSubtype();
 
@@ -69,7 +69,7 @@ class IoTItem {
 IoTItem* findIoTItem(String name);                            // поиск экземпляра элемента модуля по имени
 String getItemValue(String name);                             // поиск плюс получение значения
 bool isItemExist(String name);                                // существует ли айтем
-StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных занчений Items
+StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных значений Items
 
 class externalVariable : IoTItem {  // объект, создаваемый при получении информации о событии на другом контроллере для хранения информации о событии указанное время
 
