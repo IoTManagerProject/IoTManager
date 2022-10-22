@@ -104,6 +104,7 @@ class VariableExprAST : public ExprAST {
             return &(Item->value);
         }
 
+        SerialPrint("E", Name, "Элемент не найден или соединение потеряно", Name);
         return nullptr;  // Item не найден.
     }
 };
@@ -145,90 +146,92 @@ class BinaryExprAST : public ExprAST {
         if (RHS == nullptr || LHS == nullptr) return nullptr;
 
         IoTValue *rhs = RHS->exec();  // получаем значение правого операнда для возможного использования в операции присваивания
+        if (rhs == nullptr) return nullptr;
 
         if (Op == '=' && LHS->setValue(rhs)) {  // если установка значения не поддерживается, т.е. слева не переменная, то работаем по другим комбинациям далее
             return rhs;                         // иначе возвращаем присвоенное значение справа
         }
 
         IoTValue *lhs = LHS->exec();  // если присваивания не произошло, значит операция иная и необходимо значение левого операнда
+        if (lhs == nullptr) return nullptr;
 
-        if (lhs != nullptr && rhs != nullptr) {
-            if (lhs->isDecimal && rhs->isDecimal) {
-                switch (Op) {
-                    case '>':
-                        val.valD = lhs->valD > rhs->valD;
-                        break;
-                    case '<':
-                        val.valD = lhs->valD < rhs->valD;
-                        break;
-                    case tok_lesseq:
-                        val.valD = lhs->valD <= rhs->valD;
-                        break;
-                    case tok_greateq:
-                        val.valD = lhs->valD >= rhs->valD;
-                        break;
-                    case tok_equal:
-                        val.valD = lhs->valD == rhs->valD;
-                        break;
-                    case tok_notequal:
-                        val.valD = lhs->valD != rhs->valD;
-                        break;
+        
+        if (lhs->isDecimal && rhs->isDecimal) {
+            switch (Op) {
+                case '>':
+                    val.valD = lhs->valD > rhs->valD;
+                    break;
+                case '<':
+                    val.valD = lhs->valD < rhs->valD;
+                    break;
+                case tok_lesseq:
+                    val.valD = lhs->valD <= rhs->valD;
+                    break;
+                case tok_greateq:
+                    val.valD = lhs->valD >= rhs->valD;
+                    break;
+                case tok_equal:
+                    val.valD = lhs->valD == rhs->valD;
+                    break;
+                case tok_notequal:
+                    val.valD = lhs->valD != rhs->valD;
+                    break;
 
-                    case '+':
-                        val.valD = lhs->valD + rhs->valD;
-                        break;
-                    case '-':
-                        val.valD = lhs->valD - rhs->valD;
-                        break;
-                    case '*':
-                        val.valD = lhs->valD * rhs->valD;
-                        break;
-                    case '/':
-                        if (rhs->valD != 0)
-                            val.valD = lhs->valD / rhs->valD;
-                        else
-                            val.valD = 3.4E+38;
-                        break;
+                case '+':
+                    val.valD = lhs->valD + rhs->valD;
+                    break;
+                case '-':
+                    val.valD = lhs->valD - rhs->valD;
+                    break;
+                case '*':
+                    val.valD = lhs->valD * rhs->valD;
+                    break;
+                case '/':
+                    if (rhs->valD != 0)
+                        val.valD = lhs->valD / rhs->valD;
+                    else
+                        val.valD = 3.4E+38;
+                    break;
 
-                    case '|':
-                        val.valD = lhs->valD || rhs->valD;
-                        break;
-                    case '&':
-                        val.valD = lhs->valD && rhs->valD;
-                        break;
+                case '|':
+                    val.valD = lhs->valD || rhs->valD;
+                    break;
+                case '&':
+                    val.valD = lhs->valD && rhs->valD;
+                    break;
 
-                    default:
-                        break;
-                }
-                return &val;
+                default:
+                    break;
             }
-
-            if (!lhs->isDecimal || !rhs->isDecimal) {
-                if (lhs->isDecimal)
-                    lhsStr = (String)lhs->valD;
-                else
-                    lhsStr = lhs->valS;
-                if (rhs->isDecimal)
-                    rhsStr = (String)rhs->valD;
-                else
-                    rhsStr = rhs->valS;
-                switch (Op) {
-                    case tok_equal:
-                        val.valD = compStr(lhsStr, rhsStr);
-                        break;
-
-                    case '+':
-                        val.valS = lhsStr + rhsStr;
-                        val.valD = 1;
-                        val.isDecimal = false;
-                        break;
-
-                    default:
-                        break;
-                }
-                return &val;
-            }
+            return &val;
         }
+
+        if (!lhs->isDecimal || !rhs->isDecimal) {
+            if (lhs->isDecimal)
+                lhsStr = (String)lhs->valD;
+            else
+                lhsStr = lhs->valS;
+            if (rhs->isDecimal)
+                rhsStr = (String)rhs->valD;
+            else
+                rhsStr = rhs->valS;
+            switch (Op) {
+                case tok_equal:
+                    val.valD = compStr(lhsStr, rhsStr);
+                    break;
+
+                case '+':
+                    val.valS = lhsStr + rhsStr;
+                    val.valD = 1;
+                    val.isDecimal = false;
+                    break;
+
+                default:
+                    break;
+            }
+            return &val;
+        }
+        
         return &val;
     }
 
@@ -544,7 +547,8 @@ class IfExprAST : public ExprAST {
             return nullptr;  //&zeroIotVal;
         }
 
-        if (cond_ret->isDecimal && cond_ret->valD) {
+        // если число больше нуля или строка не равна пустой, то считаем условие выполненным
+        if (cond_ret->isDecimal && cond_ret->valD || !(cond_ret->isDecimal) && cond_ret->valS != "") {
             if (Then == nullptr) return nullptr;
             res_ret = Then->exec();
         } else {
