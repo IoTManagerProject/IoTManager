@@ -57,7 +57,7 @@ class IoTServo : public IoTItem {
             if (value.isDecimal & (_oldValue != value.valD)) {
                 _oldValue = value.valD;
                 servObj.write(_oldValue);
-                regEvent(value.valD, "IoTServo");
+                if (generateEvent) regEvent(value.valD, "IoTServo");
             }
         }
 

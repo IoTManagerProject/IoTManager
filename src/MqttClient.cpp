@@ -161,29 +161,33 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     else if (topicStr.indexOf("event") != -1) {
         //пока не работает сетевой обмен этот код будет закомментирован
 
-        // if (!jsonReadBool(settingsFlashJson, "mqttin")) {
-        //     return;
-        // }
-        // if (topicStr.indexOf(chipId) == -1) {
-        //     String devId = selectFromMarkerToMarker(topicStr, "/", 2);
-        //     String id = selectFromMarkerToMarker(topicStr, "/", 3);
-        //     IoTItem* itemExist = findIoTItem(id);
-        //     if (itemExist) {
-        //         String valAsStr;
-        //         if (jsonRead(payloadStr, F("val"), valAsStr, false)) {
-        //             itemExist->setValue(valAsStr);
-        //             unsigned long interval;
-        //             jsonRead(payloadStr, F("int"), interval);
-        //             itemExist->setInterval(interval);
-        //         }
-        //     } else {
-        //         //добавим событие в базу
-        //         // IoTItems.push_back((IoTItem*)new externalVariable(payloadStr));
-        //     }
-        //     //запустим проверку его в сценариях
-        //     generateEvent(id, payloadStr);
-        //     SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + payloadStr);
-        // }
+        if (!jsonReadBool(settingsFlashJson, "mqttin")) {
+            return;
+        }
+        if (topicStr.indexOf(chipId) == -1) {
+            String devId = selectFromMarkerToMarker(topicStr, "/", 2);
+            String id = selectFromMarkerToMarker(topicStr, "/", 3);
+            String valAsStr;
+            jsonRead(payloadStr, F("val"), valAsStr, false);
+
+            IoTItem* itemExist = findIoTItem(id);
+            if (itemExist) {
+                unsigned long interval;
+                jsonRead(payloadStr, F("int"), interval);
+                itemExist->setInterval(interval);
+                itemExist->setValue(valAsStr, false);
+            } else {
+                //добавим событие в базу
+                itemExist = (IoTItem*)new externalVariable(payloadStr);
+                IoTItems.push_back(itemExist);
+            }
+            //запустим проверку его в сценариях
+            generateEvent(id, valAsStr);
+            publishStatusMqtt(id, valAsStr);
+            publishStatusWs(id, valAsStr);
+            //itemExist->regEvent(valAsStr, "");
+            SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + valAsStr);
+        }
     }
 
     //здесь мы получаем прямые команды которые сразу выполнятся на этом устройстве

@@ -313,7 +313,7 @@ class Date : public IoTItem {
 
     void setValue(IoTValue Value, bool generateEvent = true) {
         value = Value;
-        regEvent(value.valS, "");
+        if (generateEvent) regEvent(value.valS, "");
         //отправка данных при изменении даты
         for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->getSubtype() == "Loging") {
