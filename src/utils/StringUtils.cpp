@@ -128,18 +128,18 @@ size_t itemsCount2(String str, const String& separator) {
     return cnt;
 }
 
-size_t itemsCount(String& str, const char* delim) {
-    size_t cnt = 0;
-    char* cstr = new char[str.length() + 1];
-    strcpy(cstr, str.c_str());
-    char* token;
-    while ((token = strtok_r(cstr, delim, &cstr))) {
-        cnt++;
-        // printf("%s\n", token);
-    }
-    delete[] cstr;
-    return cnt;
-}
+// size_t itemsCount(String& str, const char* delim) {
+//     size_t cnt = 0;
+//     char* cstr = new char[str.length() + 1];
+//     strcpy(cstr, str.c_str());
+//     char* token;
+//     while ((token = strtok_r(cstr, delim, &cstr))) {
+//         cnt++;
+//         // printf("%s\n", token);
+//     }
+//     delete[] cstr;
+//     return cnt;
+// }
 
 char* stringToChar(String& str) {
     char* mychar = new char[str.length() + 1];
@@ -197,4 +197,13 @@ String uint64ToString(uint64_t input, uint8_t base) {
         result = c + result;
     } while (input);
     return result;
+}
+
+String cleanString(String str) {
+    String clearStr = "";
+    const String allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя.!-+ ";
+    for (size_t i = 0; i < str.length(); i++) {
+        if (allowedChars.indexOf(str.charAt(i)) != -1) clearStr += str.charAt(i);
+    }
+    return clearStr;
 }
