@@ -7,6 +7,7 @@
         "header": "Виртуальные элементы"
     },
     {
+        "global": 0,
         "name": "1. График",
         "type": "Writing",
         "subtype": "Loging",
@@ -20,6 +21,7 @@
         "points": 300
     },
     {
+        "global": 0,
         "name": "2. График дневного расхода",
         "type": "Writing",
         "subtype": "LogingDaily",
@@ -34,6 +36,7 @@
         "test": 0
     },
     {
+        "global": 0,
         "name": "3. Таймер",
         "type": "Writing",
         "subtype": "Timer",
@@ -49,6 +52,7 @@
         "num": 3
     },
     {
+        "global": 0,
         "name": "4. Окно ввода числа (переменная)",
         "type": "Reading",
         "subtype": "Variable",
@@ -62,6 +66,7 @@
         "num": 4
     },
     {
+        "global": 0,
         "name": "5. Окно ввода времени",
         "type": "Reading",
         "subtype": "Variable",
@@ -75,6 +80,7 @@
         "num": 5
     },
     {
+        "global": 0,
         "name": "6. Окно ввода даты",
         "type": "Reading",
         "subtype": "Variable",
@@ -88,6 +94,7 @@
         "num": 6
     },
     {
+        "global": 0,
         "name": "7. Окно ввода текста",
         "type": "Reading",
         "subtype": "Variable",
@@ -101,6 +108,7 @@
         "num": 7
     },
     {
+        "global": 0,
         "name": "8. Виртуальная кнопка",
         "type": "Reading",
         "subtype": "VButton",
@@ -130,6 +138,7 @@
         "num": 9
     },
     {
+        "global": 0,
         "name": "10. AHTXX Температура",
         "type": "Reading",
         "subtype": "AhtXXt",
@@ -144,6 +153,7 @@
         "num": 10
     },
     {
+        "global": 0,
         "name": "11. AHTXX Влажность",
         "type": "Reading",
         "subtype": "AhtXXh",
@@ -158,6 +168,7 @@
         "num": 11
     },
     {
+        "global": 0,
         "name": "12. Аналоговый сенсор",
         "type": "Reading",
         "subtype": "AnalogAdc",
@@ -175,6 +186,7 @@
         "num": 12
     },
     {
+        "global": 0,
         "name": "13. BME280 Температура",
         "type": "Reading",
         "subtype": "Bme280t",
@@ -188,6 +200,7 @@
         "num": 13
     },
     {
+        "global": 0,
         "name": "14. BME280 Давление",
         "type": "Reading",
         "subtype": "Bme280p",
@@ -201,6 +214,7 @@
         "num": 14
     },
     {
+        "global": 0,
         "name": "15. BME280 Влажность",
         "type": "Reading",
         "subtype": "Bme280h",
@@ -214,6 +228,7 @@
         "num": 15
     },
     {
+        "global": 0,
         "name": "16. BMP280 Температура",
         "type": "Reading",
         "subtype": "Bmp280t",
@@ -227,6 +242,7 @@
         "num": 16
     },
     {
+        "global": 0,
         "name": "17. BMP280 Давление",
         "type": "Reading",
         "subtype": "Bmp280p",
@@ -240,6 +256,7 @@
         "num": 17
     },
     {
+        "global": 0,
         "name": "18. DHT11 Температура",
         "type": "Reading",
         "subtype": "Dht1122t",
@@ -253,6 +270,7 @@
         "num": 18
     },
     {
+        "global": 0,
         "name": "19. DHT11 Влажность",
         "type": "Reading",
         "subtype": "Dht1122h",
@@ -266,6 +284,7 @@
         "num": 19
     },
     {
+        "global": 0,
         "name": "20. DS18B20 Температура",
         "type": "Reading",
         "subtype": "Ds18b20",
@@ -281,6 +300,7 @@
         "num": 20
     },
     {
+        "global": 0,
         "name": "21. GY21 Температура",
         "type": "Reading",
         "subtype": "GY21t",
@@ -293,6 +313,7 @@
         "num": 21
     },
     {
+        "global": 0,
         "name": "22. GY21 Влажность",
         "type": "Reading",
         "subtype": "GY21h",
@@ -305,6 +326,7 @@
         "num": 22
     },
     {
+        "global": 0,
         "name": "23. HDC1080 Температура",
         "type": "Reading",
         "subtype": "Hdc1080t",
@@ -318,6 +340,7 @@
         "num": 23
     },
     {
+        "global": 0,
         "name": "24. HDC1080 Влажность",
         "type": "Reading",
         "subtype": "Hdc1080h",
@@ -331,6 +354,7 @@
         "num": 24
     },
     {
+        "global": 0,
         "name": "25. MAX6675 Температура",
         "type": "Reading",
         "subtype": "Max6675t",
@@ -345,6 +369,7 @@
         "num": 25
     },
     {
+        "global": 0,
         "name": "26. PZEM 004t Напряжение",
         "type": "Reading",
         "subtype": "Pzem004v",
@@ -358,6 +383,7 @@
         "num": 26
     },
     {
+        "global": 0,
         "name": "27. PZEM 004t Сила тока",
         "type": "Reading",
         "subtype": "Pzem004a",
@@ -371,6 +397,7 @@
         "num": 27
     },
     {
+        "global": 0,
         "name": "28. PZEM 004t Мощность",
         "type": "Reading",
         "subtype": "Pzem004w",
@@ -384,6 +411,7 @@
         "num": 28
     },
     {
+        "global": 0,
         "name": "29. PZEM 004t Энергия",
         "type": "Reading",
         "subtype": "Pzem004wh",
@@ -397,6 +425,7 @@
         "num": 29
     },
     {
+        "global": 0,
         "name": "30. PZEM 004t Частота",
         "type": "Reading",
         "subtype": "Pzem004hz",
@@ -410,6 +439,7 @@
         "num": 30
     },
     {
+        "global": 0,
         "name": "31. PZEM 004t Косинус",
         "type": "Reading",
         "subtype": "Pzem004pf",
@@ -423,6 +453,7 @@
         "num": 31
     },
     {
+        "global": 0,
         "name": "32. Сканер кнопок 433 MHz",
         "num": 32,
         "type": "Reading",
@@ -433,6 +464,7 @@
         "pinTx": 12
     },
     {
+        "global": 0,
         "name": "33. Sht20 Температура",
         "type": "Reading",
         "subtype": "Sht20t",
@@ -445,6 +477,7 @@
         "num": 33
     },
     {
+        "global": 0,
         "name": "34. Sht20 Влажность",
         "type": "Reading",
         "subtype": "Sht20h",
@@ -457,6 +490,7 @@
         "num": 34
     },
     {
+        "global": 0,
         "name": "35. Sht30 Температура",
         "type": "Reading",
         "subtype": "Sht30t",
@@ -469,6 +503,7 @@
         "num": 35
     },
     {
+        "global": 0,
         "name": "36. Sht30 Влажность",
         "type": "Reading",
         "subtype": "Sht30h",
@@ -481,6 +516,7 @@
         "num": 36
     },
     {
+        "global": 0,
         "name": "37. HC-SR04 Ультразвуковой дальномер",
         "num": 37,
         "type": "Reading",
@@ -494,6 +530,7 @@
         "int": 5
     },
     {
+        "global": 0,
         "name": "38. UART",
         "type": "Reading",
         "subtype": "UART",
@@ -510,6 +547,7 @@
         "header": "Исполнительные устройства"
     },
     {
+        "global": 0,
         "name": "39. Кнопка подключенная к пину",
         "type": "Writing",
         "subtype": "ButtonIn",
@@ -527,6 +565,7 @@
         "num": 39
     },
     {
+        "global": 0,
         "name": "40. Управление пином",
         "type": "Writing",
         "subtype": "ButtonOut",
@@ -541,6 +580,7 @@
         "num": 40
     },
     {
+        "global": 0,
         "name": "41. Сервопривод",
         "type": "Writing",
         "subtype": "IoTServo",
@@ -555,6 +595,7 @@
         "num": 41
     },
     {
+        "global": 0,
         "name": "42. Расширитель портов Mcp23017",
         "type": "Reading",
         "subtype": "Mcp23017",
@@ -568,6 +609,7 @@
         "num": 42
     },
     {
+        "global": 0,
         "name": "43. MP3 плеер",
         "type": "Reading",
         "subtype": "Mp3",
@@ -581,6 +623,7 @@
         "num": 43
     },
     {
+        "global": 0,
         "name": "44. Расширитель портов Pcf8574",
         "type": "Reading",
         "subtype": "Pcf8574",
@@ -594,6 +637,7 @@
         "num": 44
     },
     {
+        "global": 0,
         "name": "45. PWM ESP8266",
         "type": "Writing",
         "subtype": "Pwm8266",
@@ -609,6 +653,7 @@
         "num": 45
     },
     {
+        "global": 0,
         "name": "46. Телеграм-Лайт",
         "type": "Writing",
         "subtype": "TelegramLT",
@@ -624,6 +669,7 @@
         "header": "Экраны"
     },
     {
+        "global": 0,
         "name": "47. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
@@ -654,6 +700,7 @@
         "num": 48
     },
     {
+        "global": 0,
         "name": "49. Strip ws2812b",
         "type": "Reading",
         "subtype": "Ws2812b",

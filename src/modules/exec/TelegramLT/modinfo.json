@@ -3,6 +3,7 @@
 
   "configItem": [
     {
+      "global": 0,
       "name": "Телеграм-Лайт",
       "type": "Writing",
       "subtype": "TelegramLT",

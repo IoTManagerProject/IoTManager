@@ -2,6 +2,7 @@
     "menuSection": "Исполнительные устройства",
 
     "configItem": [{
+        "global": 0,
         "name": "SD карта",
         "type": "Writing",
         "subtype": "SDcard",

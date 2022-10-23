@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "DS18B20 Температура",
             "type": "Reading",
             "subtype": "Ds18b20",

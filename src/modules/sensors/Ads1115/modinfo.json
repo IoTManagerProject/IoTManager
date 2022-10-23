@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "ADS1115 Напряжение",
             "type": "Reading",
             "subtype": "Ads1115",

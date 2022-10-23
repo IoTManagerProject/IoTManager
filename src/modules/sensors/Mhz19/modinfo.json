@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "MHZ-19 CO2 UART",
             "type": "Reading",
             "subtype": "Mhz19uart",
@@ -20,6 +21,7 @@
             "ABC": 1
         },
         {
+            "global": 0,
             "name": "MHZ-19 CO2 PWM",
             "type": "Reading",
             "subtype": "Mhz19pwm",
@@ -36,6 +38,7 @@
             "int": 300
         },
         {
+            "global": 0,
             "name": "MHZ-19 Температура UART",
             "type": "Reading",
             "subtype": "Mhz19temp",

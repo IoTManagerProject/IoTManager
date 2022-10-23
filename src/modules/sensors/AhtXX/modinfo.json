@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "AHTXX Температура",
             "type": "Reading",
             "subtype": "AhtXXt",
@@ -15,6 +16,7 @@
             "round": 1
         },
         {
+            "global": 0,
             "name": "AHTXX Влажность",
             "type": "Reading",
             "subtype": "AhtXXh",

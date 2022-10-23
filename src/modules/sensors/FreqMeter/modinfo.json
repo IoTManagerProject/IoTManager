@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "Частотомер на ADC, Частота",
             "type": "Reading",
             "subtype": "FreqMeterF",
@@ -18,6 +19,7 @@
             "int": 5
         },
         {
+            "global": 0,
             "name": "Частотомер на ADC, Процент Пульсации",
             "type": "Reading",
             "subtype": "FreqMeterPcFl",
@@ -34,6 +36,7 @@
             "int": 5
         },
         {
+            "global": 0,
             "name": "Частотомер на ADC, Индекс Пульсации",
             "type": "Reading",
             "subtype": "FreqMeterFlIn",

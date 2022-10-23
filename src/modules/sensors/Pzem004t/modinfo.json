@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "PZEM 004t Напряжение",
             "type": "Reading",
             "subtype": "Pzem004v",
@@ -14,6 +15,7 @@
             "round": 1
         },
         {
+            "global": 0,
             "name": "PZEM 004t Сила тока",
             "type": "Reading",
             "subtype": "Pzem004a",
@@ -26,6 +28,7 @@
             "round": 1
         },
         {
+            "global": 0,
             "name": "PZEM 004t Мощность",
             "type": "Reading",
             "subtype": "Pzem004w",
@@ -38,6 +41,7 @@
             "round": 1
         },
         {
+            "global": 0,
             "name": "PZEM 004t Энергия",
             "type": "Reading",
             "subtype": "Pzem004wh",
@@ -50,6 +54,7 @@
             "round": 1
         },
         {
+            "global": 0,
             "name": "PZEM 004t Частота",
             "type": "Reading",
             "subtype": "Pzem004hz",
@@ -62,6 +67,7 @@
             "round": 1
         },
         {
+            "global": 0,
             "name": "PZEM 004t Косинус",
             "type": "Reading",
             "subtype": "Pzem004pf",

@@ -2,6 +2,7 @@
     "menuSection": "Исполнительные устройства",
 
     "configItem": [{
+        "global": 0,
         "name": "Расширитель портов Mcp23017",
         "type": "Reading",
         "subtype": "Mcp23017",

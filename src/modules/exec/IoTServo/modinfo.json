@@ -2,6 +2,7 @@
     "menuSection": "Исполнительные устройства",
 
     "configItem": [{
+        "global": 0,
         "name": "Сервопривод",
         "type": "Writing",
         "subtype": "IoTServo",

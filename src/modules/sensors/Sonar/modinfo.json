@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "HC-SR04 Ультразвуковой дальномер",
             "num": 1,
             "type": "Reading",

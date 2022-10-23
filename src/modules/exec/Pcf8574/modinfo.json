@@ -2,6 +2,7 @@
     "menuSection": "Исполнительные устройства",
 
     "configItem": [{
+        "global": 0,
         "name": "Расширитель портов Pcf8574",
         "type": "Reading",
         "subtype": "Pcf8574",

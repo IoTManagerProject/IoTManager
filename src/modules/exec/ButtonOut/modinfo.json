@@ -2,6 +2,7 @@
     "menuSection": "Исполнительные устройства",
     "configItem": [
         {
+            "global": 0,
             "name": "Управление пином",
             "type": "Writing",
             "subtype": "ButtonOut",
