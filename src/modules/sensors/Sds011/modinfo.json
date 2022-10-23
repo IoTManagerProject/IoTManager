@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "SDS011 PM25 Пыль",
             "type": "Reading",
             "subtype": "Sds011_25",
@@ -21,6 +22,7 @@
             "retryDelayMs": 5
         },
         {
+            "global": 0,
             "name": "SDS011 PM10 Пыль",
             "type": "Reading",
             "subtype": "Sds011_10",

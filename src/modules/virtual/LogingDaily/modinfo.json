@@ -2,6 +2,7 @@
     "menuSection": "Виртуальные элементы",
     "configItem": [
         {
+            "global": 0,
             "name": "График дневного расхода",
             "type": "Writing",
             "subtype": "LogingDaily",

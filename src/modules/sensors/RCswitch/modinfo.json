@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
 
     "configItem": [{
+        "global": 0,
         "name": "Сканер кнопок 433 MHz",
         "num": 31,
         "type": "Reading",

@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "BME280 Температура",
             "type": "Reading",
             "subtype": "Bme280t",
@@ -14,6 +15,7 @@
             "round": 1
         },
         {
+            "global": 0,
             "name": "BME280 Давление",
             "type": "Reading",
             "subtype": "Bme280p",
@@ -26,6 +28,7 @@
             "round": 1
         },
         {
+            "global": 0,
             "name": "BME280 Влажность",
             "type": "Reading",
             "subtype": "Bme280h",

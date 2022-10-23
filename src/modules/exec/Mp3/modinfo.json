@@ -2,6 +2,7 @@
     "menuSection": "Исполнительные устройства",
 
     "configItem": [{
+        "global": 0,
         "name": "MP3 плеер",
         "type": "Reading",
         "subtype": "Mp3",

@@ -1,7 +1,8 @@
 {   
     "menuSection": "Экраны",
     "configItem": [
-        {
+    {
+        "global": 0,
         "name": "Strip ws2812b",
         "type": "Reading",
         "subtype": "Ws2812b",

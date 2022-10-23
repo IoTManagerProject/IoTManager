@@ -2,6 +2,7 @@
     "menuSection": "Исполнительные устройства",
     "configItem": [
         {
+            "global": 0,
             "name": "Кнопка подключенная к пину",
             "type": "Writing",
             "subtype": "ButtonIn",

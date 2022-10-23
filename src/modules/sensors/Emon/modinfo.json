@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "EMON Ток",
             "type": "Reading",
             "subtype": "I",
@@ -16,6 +17,7 @@
             "multiply": 1
         },
         {
+            "global": 0,
             "name": "EMON Напряжение",
             "type": "Reading",
             "subtype": "U",

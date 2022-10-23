@@ -2,6 +2,7 @@
     "menuSection": "Экраны",
 
     "configItem": [{
+        "global": 0,
         "name": "LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",

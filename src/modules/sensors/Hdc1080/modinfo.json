@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "HDC1080 Температура",
             "type": "Reading",
             "subtype": "Hdc1080t",
@@ -14,6 +15,7 @@
             "round": 1
         },
         {
+            "global": 0,
             "name": "HDC1080 Влажность",
             "type": "Reading",
             "subtype": "Hdc1080h",

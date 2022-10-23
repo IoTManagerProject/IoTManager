@@ -2,6 +2,7 @@
     "menuSection": "Виртуальные элементы",
     "configItem": [
         {
+            "global": 0,
             "name": "Окно ввода числа (переменная)",
             "type": "Reading",
             "subtype": "Variable",
@@ -15,6 +16,7 @@
             "num": 2
         },
         {
+            "global": 0,
             "name": "Окно ввода времени",
             "type": "Reading",
             "subtype": "Variable",
@@ -28,6 +30,7 @@
             "num": 3
         },
         {
+            "global": 0,
             "name": "Окно ввода даты",
             "type": "Reading",
             "subtype": "Variable",
@@ -41,6 +44,7 @@
             "num": 4
         },
         {
+            "global": 0,
             "name": "Окно ввода текста",
             "type": "Reading",
             "subtype": "Variable",
