@@ -21,6 +21,7 @@ enum Token {
     tok_notequal = -9,
     tok_lesseq = -10,
     tok_greateq = -11,
+    tok_silentset = -12,
 
     // управление
     tok_if = -6,
@@ -35,7 +36,7 @@ enum Token {
 /// ExprAST - Базовый класс для всех узлов выражений.
 ExprAST::~ExprAST() {}
 IoTValue *ExprAST::exec() { return nullptr; }
-int ExprAST::setValue(IoTValue *val) { return 0; }                  // 0 - установка значения не поддерживается наследником
+int ExprAST::setValue(IoTValue *val, bool generateEvent) { return 0; }                  // 0 - установка значения не поддерживается наследником
 bool ExprAST::hasEventIdName(String eventIdName) { return false; }  // по умолчанию все узлы не связаны с ИД события, для которого выполняется сценарий
 // struct IoTValue zeroIotVal;
 
@@ -84,10 +85,10 @@ class VariableExprAST : public ExprAST {
         if (item) ItemIsLocal = item->iAmLocal;
     }
 
-    int setValue(IoTValue *val) {
+    int setValue(IoTValue *val, bool generateEvent) {
         if (!ItemIsLocal) Item = findIoTItem(Name);
         if (Item)
-            Item->setValue(*val);
+            Item->setValue(*val, generateEvent);
         else
             return 0;
 
@@ -148,7 +149,11 @@ class BinaryExprAST : public ExprAST {
         IoTValue *rhs = RHS->exec();  // получаем значение правого операнда для возможного использования в операции присваивания
         if (rhs == nullptr) return nullptr;
 
-        if (Op == '=' && LHS->setValue(rhs)) {  // если установка значения не поддерживается, т.е. слева не переменная, то работаем по другим комбинациям далее
+        if (Op == '=' && LHS->setValue(rhs, true)) {  // если установка значения не поддерживается, т.е. слева не переменная, то работаем по другим комбинациям далее
+            return rhs;                         // иначе возвращаем присвоенное значение справа
+        }
+
+        if (Op == tok_silentset && LHS->setValue(rhs, false)) {  // если установка значения не поддерживается, т.е. слева не переменная, то работаем по другим комбинациям далее
             return rhs;                         // иначе возвращаем присвоенное значение справа
         }
 
@@ -211,10 +216,12 @@ class BinaryExprAST : public ExprAST {
                 lhsStr = (String)lhs->valD;
             else
                 lhsStr = lhs->valS;
+            
             if (rhs->isDecimal)
                 rhsStr = (String)rhs->valD;
             else
                 rhsStr = rhs->valS;
+            
             switch (Op) {
                 case tok_equal:
                     val.valD = compStr(lhsStr, rhsStr);
@@ -699,6 +706,15 @@ int IoTScenario::gettok() {
             return '=';
     }
 
+    if (LastChar == ':') {
+        LastChar = getLastChar();
+        if (LastChar == '=') {
+            LastChar = getLastChar();
+            return tok_silentset;
+        } else
+            return ':';
+    }
+
     if (LastChar == '!') {
         LastChar = getLastChar();
         if (LastChar == '=') {
@@ -1040,7 +1056,8 @@ void IoTScenario::exec(String eventIdName) {  // посимвольно счит
 IoTScenario::IoTScenario() {
     // Задаём стандартные бинарные операторы.
     // 1 - наименьший приоритет.
-    BinopPrecedence['='] = 1;
+    BinopPrecedence[tok_silentset] = 1;
+    BinopPrecedence['='] = 2;
     BinopPrecedence['|'] = 5;
     BinopPrecedence['&'] = 6;
     BinopPrecedence[tok_equal] = 10;     // ==
