@@ -7,7 +7,7 @@ class ExprAST {
    public:
     virtual ~ExprAST();
     virtual IoTValue *exec();
-    virtual int setValue(IoTValue *val);  // ret 0 - установка значения не поддерживается наследником
+    virtual int setValue(IoTValue *val, bool generateEvent);  // ret 0 - установка значения не поддерживается наследником
     virtual bool hasEventIdName(String eventIdName);
 };
 
