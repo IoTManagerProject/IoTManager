@@ -566,7 +566,7 @@ class IfExprAST : public ExprAST {
         // if (!res_ret) Serial.printf("Call from  IfExprAST: Cond result = %f, no body result\n", cond_ret->valD);
         // else if (res_ret->isDecimal) Serial.printf("Call from  IfExprAST: Cond result = %f, result = %f\n", cond_ret->valD, res_ret->valD);
         // else Serial.printf("Call from  IfExprAST: Cond result = %f, result = %s\n", cond_ret->valD, res_ret->valS.c_str());
-        Serial.printf("\n");
+        //Serial.printf("\n");
         return cond_ret;
     }
 
