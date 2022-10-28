@@ -9,7 +9,7 @@ class Variable : public IoTItem {
     }
 
     // особенность данного модуля - просто хранение значения для сценария, нет событий
-    // void setValue(IoTValue Value, bool generateEvent = true) {
+    // void setValue(const IoTValue& Value, bool generateEvent = true) {
     //     value = Value;
     // }
 

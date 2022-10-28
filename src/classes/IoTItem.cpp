@@ -6,7 +6,7 @@
 #include "EventsAndOrders.h"
 
 //получение параметров в экземпляр класса
-IoTItem::IoTItem(String parameters) {
+IoTItem::IoTItem(const String& parameters) {
     jsonRead(parameters, F("int"), _interval);
     if (_interval == 0) enableDoByInt = false;
     _interval = _interval * 1000;
@@ -58,7 +58,7 @@ String IoTItem::getValue() {
 }
 
 //определяем тип прилетевшей величины
-void IoTItem::setValue(String valStr, bool generateEvent) {
+void IoTItem::setValue(const String& valStr, bool generateEvent) {
     if (value.isDecimal = isDigitDotCommaStr(valStr)) {
         value.valD = valStr.toFloat();
     } else {
@@ -68,7 +68,7 @@ void IoTItem::setValue(String valStr, bool generateEvent) {
 }
 
 //
-void IoTItem::setValue(IoTValue Value, bool generateEvent) {
+void IoTItem::setValue(const IoTValue& Value, bool generateEvent) {
     value = Value;
     if (generateEvent)
         if (value.isDecimal) {
@@ -79,22 +79,17 @@ void IoTItem::setValue(IoTValue Value, bool generateEvent) {
 }
 
 //когда событие случилось
-void IoTItem::regEvent(String value, String consoleInfo, bool error) {
+void IoTItem::regEvent(const String& value, const String& consoleInfo, bool error) {
     if (_needSave) {
         jsonWriteStr_(valuesFlashJson, _id, value);
         needSaveValues = true;
     }
-
-    generateEvent(_id, value);
     publishStatusMqtt(_id, value);
-
     publishStatusWs(_id, value);
     SerialPrint("i", "Sensor", consoleInfo + " '" + _id + "' data: " + value + "'");
 
-    //  проверка если global установлен то шлем всем о событии
-    // if (_global) {
-    //     SerialPrint("i", F("=>ALLMQTT"), "Broadcast event: ");
-    // }
+    generateEvent(_id, value);
+
     //отправка события другим устройствам в сети если не было ошибки==============================
     if (jsonReadBool(settingsFlashJson, "mqttin") && _global && !error) {
        String json = "{}";
@@ -120,7 +115,7 @@ String IoTItem::getRoundValue() {
     }
 }
 
-void IoTItem::regEvent(float regvalue, String consoleInfo, bool error) {
+void IoTItem::regEvent(float regvalue, const String& consoleInfo, bool error) {
     value.valD = regvalue;
 
     if (_multiply) value.valD = value.valD * _multiply;
@@ -162,7 +157,7 @@ IoTGpio* IoTItem::getGpioDriver() {
 
 //сетевое общение====================================================================================================================================
 
-externalVariable::externalVariable(String parameters) : IoTItem(parameters) {
+externalVariable::externalVariable(const String& parameters) : IoTItem(parameters) {
     prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
     iAmLocal = false;       // указываем, что это сущность прилетела из сети
     //Serial.printf("Call from  externalVariable: parameters %s %d\n", parameters.c_str(), _interval);
@@ -181,7 +176,7 @@ void externalVariable::doByInterval() {  // для данного класса d
 IoTItem* myIoTItem;
 
 // поиск элемента модуля в существующей конфигурации
-IoTItem* findIoTItem(String name) {
+IoTItem* findIoTItem(const String& name) {
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         if ((*it)->getID() == name) return *it;
     }
@@ -189,7 +184,7 @@ IoTItem* findIoTItem(String name) {
     return nullptr;
 }
 // поиск плюс получение значения
-String getItemValue(String name) {
+String getItemValue(const String& name) {
     IoTItem* tmp = findIoTItem(name);
     if (tmp)
         return tmp->getValue();
@@ -198,7 +193,7 @@ String getItemValue(String name) {
 }
 
 // существует ли айтем
-bool isItemExist(String name) {
+bool isItemExist(const String& name) {
     IoTItem* tmp = findIoTItem(name);
     if (tmp)
         return true;

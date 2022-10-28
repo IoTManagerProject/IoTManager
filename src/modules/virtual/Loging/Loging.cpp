@@ -263,7 +263,7 @@ class Loging : public IoTItem {
         }
     }
 
-    void regEvent(String value, String consoleInfo, bool error = false) {
+    void regEvent(const String& value, const String& consoleInfo, bool error = false) {
         String userDate = getItemValue(id + "-date");
         String currentDate = getTodayDateDotFormated();
         //отправляем в график данные только когда выбран сегодняшний день
@@ -306,12 +306,12 @@ class Date : public IoTItem {
         value.isDecimal = false;
     }
 
-    void setValue(String valStr) {
+    void setValue(const String& valStr) {
         value.valS = valStr;
         setValue(value);
     }
 
-    void setValue(IoTValue Value, bool generateEvent = true) {
+    void setValue(const IoTValue& Value, bool generateEvent = true) {
         value = Value;
         if (generateEvent) regEvent(value.valS, "");
         //отправка данных при изменении даты

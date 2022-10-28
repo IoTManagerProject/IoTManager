@@ -10,14 +10,14 @@ struct IoTValue {
 
 class IoTItem {
    public:
-    IoTItem(String parameters);
+    IoTItem(const String &parameters);
     virtual ~IoTItem() {}
     virtual void loop();
     virtual void doByInterval();
     virtual IoTValue execute(String command, std::vector<IoTValue>& param);
 
-    virtual void regEvent(String value, String consoleInfo, bool error = false);
-    virtual void regEvent(float value, String consoleInfo, bool error = false);
+    virtual void regEvent(const String& value, const String& consoleInfo, bool error = false);
+    virtual void regEvent(float value, const String& consoleInfo, bool error = false);
 
     String getSubtype();
 
@@ -38,8 +38,8 @@ class IoTItem {
     bool enableDoByInt = true;
 
     virtual IoTGpio* getGpioDriver();
-    virtual void setValue(IoTValue Value, bool generateEvent = true);
-    virtual void setValue(String valStr, bool generateEvent = true);
+    virtual void setValue(const IoTValue& Value, bool generateEvent = true);
+    virtual void setValue(const String& valStr, bool generateEvent = true);
     String getRoundValue();
 
     //методы для графиков
@@ -66,15 +66,15 @@ class IoTItem {
     bool _global = false;  // характеристика айтема, что ему нужно слать и принимать события из внешнего мира
 };
 
-IoTItem* findIoTItem(String name);                            // поиск экземпляра элемента модуля по имени
-String getItemValue(String name);                             // поиск плюс получение значения
-bool isItemExist(String name);                                // существует ли айтем
+IoTItem* findIoTItem(const String& name);                            // поиск экземпляра элемента модуля по имени
+String getItemValue(const String& name);                             // поиск плюс получение значения
+bool isItemExist(const String& name);                                // существует ли айтем
 StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных значений Items
 
 class externalVariable : IoTItem {  // объект, создаваемый при получении информации о событии на другом контроллере для хранения информации о событии указанное время
 
    public:
-    externalVariable(String parameters);
+    externalVariable(const String& parameters);
     ~externalVariable();
     void doByInterval();  // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
 };

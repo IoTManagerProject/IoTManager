@@ -68,7 +68,7 @@ class ButtonIn : public IoTItem {
         _lastButtonState = _reading;
     }
 
-    void setValue(IoTValue Value, bool generateEvent = true) {
+    void setValue(const IoTValue& Value, bool generateEvent = true) {
         value = Value;
         if (generateEvent) regEvent((String)(int)value.valD, "ButtonIn");
     }
