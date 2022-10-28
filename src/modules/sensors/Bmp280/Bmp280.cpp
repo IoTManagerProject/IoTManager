@@ -26,7 +26,7 @@ class Bmp280t : public IoTItem {
         if (value.valD != NAN && value.valD < 150)
             regEvent(value.valD, "Bmp280t");
         else
-            SerialPrint("E", "Sensor Bmp280t", "Error");
+            SerialPrint("E", "Sensor Bmp280t", "Error", _id);
     }
 
     ~Bmp280t(){};
@@ -47,7 +47,7 @@ class Bmp280p : public IoTItem {
             value.valD = value.valD / 1.333224 / 100;
             regEvent(value.valD, "Bmp280p");
         } else
-            SerialPrint("E", "Sensor Bmp280p", "Error");
+            SerialPrint("E", "Sensor Bmp280p", "Error", _id);
     }
 
     ~Bmp280p(){};

@@ -26,7 +26,7 @@ class Sht30t : public IoTItem {
         SerialPrint("E", "Sensor Sht30t", "OK");
 
         if (value.valD < -46.85F) regEvent(value.valD, "Sht30t");     // TODO: найти способ понимания ошибки получения данных
-            else SerialPrint("E", "Sensor Sht30t", "Error");  
+            else SerialPrint("E", "Sensor Sht30t", "Error", _id);  
         }
     }
     ~Sht30t() {};
@@ -42,7 +42,7 @@ class Sht30h : public IoTItem {
 
         SerialPrint("E", "Sensor Sht30h", "OK");
         if (value.valD != -6) regEvent(value.valD, "Sht30h");    // TODO: найти способ понимания ошибки получения данных
-            else SerialPrint("E", "Sensor Sht30h", "Error");
+            else SerialPrint("E", "Sensor Sht30h", "Error", _id);
         }   
     }
     ~Sht30h() {};

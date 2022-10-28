@@ -24,7 +24,7 @@ class Hdc1080t : public IoTItem {
         if (value.valD < 124)
             regEvent(value.valD, "Hdc1080t");
         else
-            SerialPrint("E", "Sensor Hdc1080t", "Error");
+            SerialPrint("E", "Sensor Hdc1080t", "Error", _id);
     }
 
     ~Hdc1080t(){};
@@ -39,7 +39,7 @@ class Hdc1080h : public IoTItem {
         if (value.valD < 99)
             regEvent(value.valD, "Hdc1080h");
         else
-            SerialPrint("E", "Sensor Hdc1080h", "Error");
+            SerialPrint("E", "Sensor Hdc1080h", "Error", _id);
     }
 
     ~Hdc1080h(){};

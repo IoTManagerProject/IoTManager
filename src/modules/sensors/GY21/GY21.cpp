@@ -23,7 +23,7 @@ class GY21t : public IoTItem {
         if (value.valD < 300)
             regEvent(value.valD, "GY21");  // TODO: найти способ понимания ошибки получения данных
         else
-            SerialPrint("E", "Sensor GY21t", "Error");
+            SerialPrint("E", "Sensor GY21t", "Error", _id);
     }
 
     ~GY21t(){};
@@ -39,7 +39,7 @@ class GY21h : public IoTItem {
         if (value.valD != 0)
             regEvent(value.valD, "GY21h");  // TODO: найти способ понимания ошибки получения данных
         else
-            SerialPrint("E", "Sensor GY21h", "Error");
+            SerialPrint("E", "Sensor GY21h", "Error", _id);
     }
 
     ~GY21h(){};
