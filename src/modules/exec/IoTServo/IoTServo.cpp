@@ -52,12 +52,12 @@ class IoTServo : public IoTItem {
             return {}; 
         }
 
-        void setValue(const IoTValue& Value, bool generateEvent = true) {
+        void setValue(const IoTValue& Value, bool genEvent = true) {
             value = Value;
             if (value.isDecimal & (_oldValue != value.valD)) {
                 _oldValue = value.valD;
                 servObj.write(_oldValue);
-                if (generateEvent) regEvent(value.valD, "IoTServo");
+                regEvent(value.valD, "IoTServo", false, genEvent);
             }
         }
 

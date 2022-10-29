@@ -171,14 +171,14 @@ public:
         return {};
     }
 
-    void setValue(IoTValue Value, bool generateEvent = true){
+    void setValue(const IoTValue& Value, bool genEvent = true){
         if (!_strip) return;
 
         value = Value;
         int b =  map(value.valD, 1,1024,1,255);
         _strip->setBrightness(b);
         _strip->show(); 
-        if (generateEvent) regEvent(value.valD, "Ws2812b");
+        regEvent(value.valD, "Ws2812b", false, genEvent);
     }
 
     ~Ws2812b(){};

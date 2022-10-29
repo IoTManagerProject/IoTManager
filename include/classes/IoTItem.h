@@ -16,8 +16,8 @@ class IoTItem {
     virtual void doByInterval();
     virtual IoTValue execute(String command, std::vector<IoTValue>& param);
 
-    virtual void regEvent(const String& value, const String& consoleInfo, bool error = false);
-    virtual void regEvent(float value, const String& consoleInfo, bool error = false);
+    virtual void regEvent(const String& value, const String& consoleInfo, bool error = false, bool genEvent = true);
+    virtual void regEvent(float value, const String& consoleInfo, bool error = false, bool genEvent = true);
 
     String getSubtype();
 
@@ -38,8 +38,8 @@ class IoTItem {
     bool enableDoByInt = true;
 
     virtual IoTGpio* getGpioDriver();
-    virtual void setValue(const IoTValue& Value, bool generateEvent = true);
-    virtual void setValue(const String& valStr, bool generateEvent = true);
+    virtual void setValue(const IoTValue& Value, bool genEvent = true);
+    virtual void setValue(const String& valStr, bool genEvent = true);
     String getRoundValue();
 
     //методы для графиков
@@ -51,17 +51,17 @@ class IoTItem {
 
    protected:
     bool _needSave = false;  // признак необходимости сохранять и загружать значение элемента на flash
-    String _subtype;
-    String _id;
-    unsigned long _interval;
+    String _subtype = "";
+    String _id = "";
+    unsigned long _interval = 1000;
 
     float _multiply;  // умножаем на значение
     float _plus;      // увеличиваем на значение
-    int _map1;
-    int _map2;
-    int _map3;
-    int _map4;
-    int _round;  // 1, 10, 100, 1000, 10000
+    int _map1 = 0;
+    int _map2 = 0;
+    int _map3 = 0;
+    int _map4 = 0;
+    int _round = 1;  // 1, 10, 100, 1000, 10000
 
     bool _global = false;  // характеристика айтема, что ему нужно слать и принимать события из внешнего мира
 };

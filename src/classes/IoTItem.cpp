@@ -18,14 +18,6 @@ IoTItem::IoTItem(const String& parameters) {
 
     if (!jsonRead(parameters, F("global"), _global, false)) _global = false;
 
-    String valAsStr;
-    if (jsonRead(parameters, F("val"), valAsStr, false))  // значение переменной или датчика при инициализации если есть в конфигурации
-        setValue(valAsStr, false);
-    
-    jsonRead(parameters, F("needSave"), _needSave, false);
-    if (_needSave && jsonRead(valuesFlashJson, _id, valAsStr, false)) // пробуем достать из сохранения значение элемента, если указано, что нужно сохранять
-        setValue(valAsStr, false);
-
     String map;
     jsonRead(parameters, F("map"), map, false);
     if (map != "") {
@@ -35,6 +27,14 @@ IoTItem::IoTItem(const String& parameters) {
         _map4 = selectFromMarkerToMarker(map, ",", 3).toInt();
     } else
         _map1 = _map2 = _map3 = _map4 = 0;
+
+    String valAsStr = "";
+    if (jsonRead(parameters, F("val"), valAsStr, false))  // значение переменной или датчика при инициализации если есть в конфигурации
+        setValue(valAsStr, false);
+
+    jsonRead(parameters, F("needSave"), _needSave, false);
+    if (_needSave && jsonRead(valuesFlashJson, _id, valAsStr, false)) // пробуем достать из сохранения значение элемента, если указано, что нужно сохранять
+        setValue(valAsStr, false);
 }
 
 //луп выполняющий переодическое дерганье
@@ -58,48 +58,52 @@ String IoTItem::getValue() {
 }
 
 //определяем тип прилетевшей величины
-void IoTItem::setValue(const String& valStr, bool generateEvent) {
-    if (value.isDecimal = isDigitDotCommaStr(valStr)) {
+void IoTItem::setValue(const String& valStr, bool genEvent) {
+    value.isDecimal = isDigitDotCommaStr(valStr);
+    
+    if (value.isDecimal) {
         value.valD = valStr.toFloat();
     } else {
         value.valS = valStr;
     }
-    setValue(value, generateEvent);
+    setValue(value, genEvent);
 }
 
 //
-void IoTItem::setValue(const IoTValue& Value, bool generateEvent) {
+void IoTItem::setValue(const IoTValue& Value, bool genEvent) {
     value = Value;
-    if (generateEvent)
-        if (value.isDecimal) {
-            regEvent(value.valD, "");
-        } else {
-            regEvent(value.valS, "");
-        }
+    
+    if (value.isDecimal) {
+        regEvent(value.valD, "", false, genEvent);
+    } else {
+        regEvent(value.valS, "", false, genEvent);
+    }
 }
 
 //когда событие случилось
-void IoTItem::regEvent(const String& value, const String& consoleInfo, bool error) {
+void IoTItem::regEvent(const String& value, const String& consoleInfo, bool error, bool genEvent) {
     if (_needSave) {
         jsonWriteStr_(valuesFlashJson, _id, value);
         needSaveValues = true;
     }
     publishStatusMqtt(_id, value);
     publishStatusWs(_id, value);
-    SerialPrint("i", "Sensor", consoleInfo + " '" + _id + "' data: " + value + "'");
+    //SerialPrint("i", "Sensor", consoleInfo + " '" + _id + "' data: " + value + "'");
 
-    generateEvent(_id, value);
+    if (genEvent) {
+        generateEvent(_id, value);
 
-    //отправка события другим устройствам в сети если не было ошибки==============================
-    if (jsonReadBool(settingsFlashJson, "mqttin") && _global && !error) {
-       String json = "{}";
-       jsonWriteStr_(json, "id", _id);
-       jsonWriteStr_(json, "val", value);
-       jsonWriteInt_(json, "int", _interval/1000 + 5);  // 5 секунд про запас
-       publishEvent(_id, json);
-       SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
+        //отправка события другим устройствам в сети если не было ошибки==============================
+        if (jsonReadBool(settingsFlashJson, "mqttin") && _global && !error) {
+            String json = "{}";
+            jsonWriteStr_(json, "id", _id);
+            jsonWriteStr_(json, "val", value);
+            jsonWriteInt_(json, "int", _interval/1000 + 5);  // 5 секунд про запас
+            publishEvent(_id, json);
+            SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
+        }
+        //========================================================================
     }
-    //========================================================================
 }
 
 String IoTItem::getRoundValue() {
@@ -115,14 +119,14 @@ String IoTItem::getRoundValue() {
     }
 }
 
-void IoTItem::regEvent(float regvalue, const String& consoleInfo, bool error) {
+void IoTItem::regEvent(float regvalue, const String& consoleInfo, bool error, bool genEvent) {
     value.valD = regvalue;
 
     if (_multiply) value.valD = value.valD * _multiply;
     if (_plus) value.valD = value.valD + _plus;
     if (_map1 != _map2) value.valD = map(value.valD, _map1, _map2, _map3, _map4);
-    
-    regEvent(getRoundValue(), consoleInfo, error);
+
+    regEvent(getRoundValue(), consoleInfo, error, genEvent);
 }
 
 void IoTItem::doByInterval() {}

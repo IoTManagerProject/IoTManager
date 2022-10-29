@@ -263,7 +263,7 @@ class Loging : public IoTItem {
         }
     }
 
-    void regEvent(const String& value, const String& consoleInfo, bool error = false) {
+    void regEvent(const String& value, const String& consoleInfo, bool error = false, bool genEvent = true) {
         String userDate = getItemValue(id + "-date");
         String currentDate = getTodayDateDotFormated();
         //отправляем в график данные только когда выбран сегодняшний день
@@ -306,14 +306,14 @@ class Date : public IoTItem {
         value.isDecimal = false;
     }
 
-    void setValue(const String& valStr) {
+    void setValue(const String& valStr, bool genEvent = true) {
         value.valS = valStr;
-        setValue(value);
+        setValue(value, genEvent);
     }
 
-    void setValue(const IoTValue& Value, bool generateEvent = true) {
+    void setValue(const IoTValue& Value, bool genEvent = true) {
         value = Value;
-        if (generateEvent) regEvent(value.valS, "");
+        regEvent(value.valS, "", false, genEvent);
         //отправка данных при изменении даты
         for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->getSubtype() == "Loging") {

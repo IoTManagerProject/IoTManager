@@ -37,10 +37,10 @@ class ButtonOut : public IoTItem {
         return {};  // команда поддерживает возвращаемое значения. Т.е. по итогу выполнения команды или общения с внешней системой, можно вернуть значение в сценарий для дальнейшей обработки
     }
 
-    void setValue(const IoTValue& Value, bool generateEvent = true) {
+    void setValue(const IoTValue& Value, bool genEvent = true) {
         value = Value;
         IoTgpio.digitalWrite(_pin, _inv?!value.valD:value.valD);
-        if (generateEvent) regEvent((String)(int)value.valD, "ButtonOut");
+        regEvent((String)(int)value.valD, "ButtonOut", false, genEvent);
     }
 
     String getValue() {
