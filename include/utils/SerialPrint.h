@@ -3,4 +3,4 @@
 #include "utils/TimeUtils.h"
 #include "classes/IoTItem.h"
 
-void SerialPrint(String errorLevel, String module, String msg,  String itemId = "");
+void SerialPrint(const String& errorLevel, const String& module, const String& msg, const String& itemId = "");

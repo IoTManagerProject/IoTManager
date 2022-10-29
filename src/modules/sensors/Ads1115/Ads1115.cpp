@@ -12,13 +12,12 @@
 #include "Wire.h"
 #include <Adafruit_ADS1X15.h>  // Библиотека для работы с модулями ADS1115 и ADS1015
 
-// to do убрать глобальный экземпляр
-Adafruit_ADS1115 ads;
 
 class Ads1115 : public IoTItem {
     int _pin;
     bool _isRaw;
     bool _isInited = false;
+    Adafruit_ADS1115 ads;
 
    public:
     Ads1115(String parameters) : IoTItem(parameters) {

@@ -71,7 +71,7 @@ class Ds18b20 : public IoTItem {
         if (value.valD != DEVICE_DISCONNECTED_C)
             regEvent(value.valD, "");  //обязательный вызов для отправки результата работы
         else
-            SerialPrint("E", "Sensor Ds18b20", "Error");
+            SerialPrint("E", "Sensor Ds18b20", "Error", _id);
     }
     //=======================================================================================================
 
