@@ -12,108 +12,82 @@ void jsonWriteStrDoc(DynamicJsonDocument& doc, String name, String value) {
 
 // new==============================================================================
 bool jsonRead(const String& json, String key, unsigned long& value, bool e) {
-    bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
-        if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
-            jsonErrorDetected();
-        }
-        ret = false;
+        SerialPrint("EE", F("jsonRead"), error.f_str());
+        jsonErrorDetected();
+        return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), "json key '" + key + "' missing");
+            SerialPrint("EE", F("jsonRead"), key + " missing");
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     }
     value = doc[key].as<unsigned long>();
-    return ret;
+    return true;
 }
 
 bool jsonRead(const String& json, String key, float& value, bool e) {
-    bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
-        if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
-            jsonErrorDetected();
-        }
-        ret = false;
+        SerialPrint("EE", F("jsonRead"), error.f_str());
+        jsonErrorDetected();
+        return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
             SerialPrint("EE", F("jsonRead"), key + " missing");
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     }
     value = doc[key].as<float>();
-    return ret;
+    return true;
 }
 
 bool jsonRead(const String& json, String key, String& value, bool e) {
-    bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
-        if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
-            jsonErrorDetected();
-        }
-        ret = false;
+        SerialPrint("EE", F("jsonRead"), error.f_str());
+        jsonErrorDetected();
+        return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
             SerialPrint("EE", F("jsonRead"), key + " missing");
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     }
     value = doc[key].as<String>();
-    return ret;
+    return true;
 }
 
 bool jsonRead(const String& json, String key, bool& value, bool e) {
-    bool ret = true;
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) {
-        if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
-            jsonErrorDetected();
-        }
-        ret = false;
-    } else if (!doc.containsKey(key)) {
-        if (e) {
-            SerialPrint("EE", F("jsonRead"), key + " missing");
-            jsonErrorDetected();
-        }
-        ret = false;
-    }
-    value = doc[key].as<int>();
+    int lvalue = value;
+    bool ret = jsonRead(json, key, lvalue, e);
+    value = lvalue;
     return ret;
 }
 
 bool jsonRead(const String& json, String key, int& value, bool e) {
-    bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
-        if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
-            jsonErrorDetected();
-        }
-        ret = false;
+        SerialPrint("EE", F("jsonRead"), error.f_str());
+        jsonErrorDetected();
+        return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
             SerialPrint("EE", F("jsonRead"), key + " missing");
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     }
     value = doc[key].as<int>();
-    return ret;
+    return true;
 }
 
 // new==============================================================================
