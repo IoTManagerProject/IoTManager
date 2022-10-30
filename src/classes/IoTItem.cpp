@@ -98,7 +98,7 @@ void IoTItem::regEvent(const String& value, const String& consoleInfo, bool erro
             String json = "{}";
             jsonWriteStr_(json, "id", _id);
             jsonWriteStr_(json, "val", value);
-            jsonWriteInt_(json, "int", _interval/1000 + 5);  // 5 секунд про запас
+            jsonWriteInt_(json, "int", _interval/1000);
             publishEvent(_id, json);
             SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
         }
@@ -135,6 +135,23 @@ IoTValue IoTItem::execute(String command, std::vector<IoTValue>& param) { return
 
 String IoTItem::getSubtype() {
     return _subtype;
+}
+
+int IoTItem::getIntFromNet() {
+    return _intFromNet;
+}
+
+void IoTItem::setIntFromNet(int interval) {
+    _intFromNet = interval;
+}
+
+void IoTItem::checkIntFromNet() {
+    if (_intFromNet >= 0) {
+        if (_intFromNet == 0) {
+            SerialPrint("E", "SYS", "The new data did not come from the network. The level of trust is low.", _id);
+        }
+        _intFromNet--;
+    }
 }
 
 void IoTItem::publishValue() {}
