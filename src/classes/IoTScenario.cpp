@@ -286,6 +286,12 @@ class CallExprAST : public ExprAST {
         if (!ItemIsLocal) Item = findIoTItem(Callee);  // пробуем найти переменную если она не локальная (могла придти по сети в процессе)
         if (!Item) return nullptr;                     // ret = zeroIotVal;  // если все же не пришла, то либо опечатка, либо уже стерлась - выходим
 
+        if (Cmd == "getIntFromNet") {
+            ret.valD = Item->getIntFromNet();
+            ret.isDecimal = true;
+            return &ret;
+        }
+
         // если все же все ок, то готовим параметры для передачи в модуль
         std::vector<IoTValue> ArgsAsIoTValue;
         for (unsigned int i = 0; i < Args.size(); i++) {

@@ -160,7 +160,6 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     //здесь мы получаем события с других устройств, которые потом проверяются в сценариях этого устройства
     else if (topicStr.indexOf("event") != -1) {
         //пока не работает сетевой обмен этот код будет закомментирован
-
         if (!jsonReadBool(settingsFlashJson, "mqttin")) {
             return;
         }
@@ -174,24 +173,24 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
             if (itemExist) {
                 unsigned long interval;
                 jsonRead(payloadStr, F("int"), interval);
-                itemExist->setInterval(interval);
-                itemExist->setValue(valAsStr, false);
+                itemExist->setInterval(interval);     // устанавливаем такой же интервал как на источнике события
+                itemExist->setValue(valAsStr, false);  // только регистрируем изменения в интерфейсе без создания цикла сетевых событий
+                if (interval) itemExist->setIntFromNet(interval+5);  // если пришедший интервал =0, значит не нужно контролировать доверие, иначе даем фору в 5 сек
+
+                // запустим проверку его в сценариях
+                generateEvent(id, valAsStr);
+                SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + valAsStr);
             } else {
-                //добавим событие в базу
-                itemExist = (IoTItem*)new externalVariable(payloadStr);
-                IoTItems.push_back(itemExist);
+                // зафиксируем данные в базе, если локально элемент отсутствует
+                //itemExist = (IoTItem*)new externalVariable(payloadStr);
+                //IoTItems.push_back(itemExist);
             }
-            //запустим проверку его в сценариях
-            generateEvent(id, valAsStr);
-            publishStatusMqtt(id, valAsStr);
-            publishStatusWs(id, valAsStr);
-            //itemExist->regEvent(valAsStr, "");
-            SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + valAsStr);
+            
         }
     }
 
-    //здесь мы получаем прямые команды которые сразу выполнятся на этом устройстве
-    //необходимо для тех кто хочет управлять своим устройством из mqtt
+    // здесь мы получаем прямые команды которые сразу выполнятся на этом устройстве
+    // необходимо для тех кто хочет управлять своим устройством из mqtt
     else if (topicStr.indexOf("order") != -1) {
         if (!jsonReadBool(settingsFlashJson, "mqttin")) {
             return;

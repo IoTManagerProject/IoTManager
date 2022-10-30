@@ -150,10 +150,17 @@ void loop() {
     if (loopPeriod > 2) Serial.println(loopPeriod);
 #endif
 
-    // сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
-    if (needSaveValues && millis()%1000 == 0) {
-        syncValuesFlashJson();
-        needSaveValues = false;
+    if (millis()%1000 == 0) {
+        // сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
+        if (needSaveValues) {
+            syncValuesFlashJson();
+            needSaveValues = false;
+        }
+        
+        // проверяем все элементы на тухлость
+        for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+            (*it)->checkIntFromNet();
+        }
     }
 }
 

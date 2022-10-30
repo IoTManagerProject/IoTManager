@@ -16,15 +16,19 @@ class IoTItem {
     virtual void doByInterval();
     virtual IoTValue execute(String command, std::vector<IoTValue>& param);
 
+    void checkIntFromNet();
+
     virtual void regEvent(const String& value, const String& consoleInfo, bool error = false, bool genEvent = true);
     virtual void regEvent(float value, const String& consoleInfo, bool error = false, bool genEvent = true);
 
     String getSubtype();
 
     String getID();
+    int getIntFromNet();
     virtual String getValue();
-
+    
     void setInterval(unsigned long interval);
+    void setIntFromNet(int interval);
 
     unsigned long currentMillis;
     unsigned long prevMillis;
@@ -54,6 +58,9 @@ class IoTItem {
     String _subtype = "";
     String _id = "";
     unsigned long _interval = 1000;
+    int _intFromNet = -2;   // количество секунд доверия, пришедших из сети вместе с данными для текущего ИД
+                            // -2 - данные не приходили, скорее всего, элемент локальный, доверие есть
+                            // -1 - данные приходили и обратный отсчет дошел до нуля, значит доверия нет 
 
     float _multiply;  // умножаем на значение
     float _plus;      // увеличиваем на значение
