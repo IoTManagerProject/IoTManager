@@ -29,12 +29,9 @@ class ButtonIn : public IoTItem {
         if (_pinMode == "INPUT_PULLUP") IoTgpio.digitalWrite(_pin, HIGH);
         else if (_pinMode == "INPUT_PULLDOWN") IoTgpio.digitalWrite(_pin, LOW);
 
-    
-        // TODO: загрузить значение из памяти иначе пока просто считываем значение текущего состояния PIN
         value.valD = _buttonState = IoTgpio.digitalRead(_pin);
         // сообщаем всем о стартовом статусе без генерации события
-        publishStatusMqtt(_id, (String)_buttonState);
-        publishStatusWs(_id, (String)_buttonState);
+        regEvent(_buttonState, "", false, false);
     }
 
     void loop() {
