@@ -167,11 +167,11 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
             String devId = selectFromMarkerToMarker(topicStr, "/", 2);
             String id = selectFromMarkerToMarker(topicStr, "/", 3);
             String valAsStr;
-            jsonRead(payloadStr, F("val"), valAsStr, false);
+            if (!jsonRead(payloadStr, F("val"), valAsStr, false)) valAsStr = payloadStr;
 
             IoTItem* itemExist = findIoTItem(id);
             if (itemExist) {
-                unsigned long interval;
+                unsigned long interval = 0;
                 jsonRead(payloadStr, F("int"), interval);
                 itemExist->setInterval(interval);     // устанавливаем такой же интервал как на источнике события
                 itemExist->setValue(valAsStr, false);  // только регистрируем изменения в интерфейсе без создания цикла сетевых событий

@@ -94,6 +94,22 @@ void setup() {
 
     stInit();
 
+    // настраиваем секундные обслуживания системы
+    ts.add(
+        TIMES, 1000, [&](void*) {
+            // сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
+            if (needSaveValues) {
+                syncValuesFlashJson();
+                needSaveValues = false;
+            }
+            
+            // проверяем все элементы на тухлость
+            for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                (*it)->checkIntFromNet();
+            } 
+        },
+    nullptr, true);
+
     // test
     Serial.println("-------test start--------");
     Serial.println("--------test end---------");
@@ -149,19 +165,6 @@ void loop() {
     loopPeriod = millis() - st;
     if (loopPeriod > 2) Serial.println(loopPeriod);
 #endif
-
-    if (millis()%1000 == 0) {
-        // сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
-        if (needSaveValues) {
-            syncValuesFlashJson();
-            needSaveValues = false;
-        }
-        
-        // проверяем все элементы на тухлость
-        for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-            (*it)->checkIntFromNet();
-        }
-    }
 }
 
 //отправка json

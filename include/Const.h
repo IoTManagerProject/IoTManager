@@ -54,10 +54,10 @@ enum TimerTask_t { WIFI_SCAN,
                    TIME_SYNC,
                    UPTIME,
                    UDP,  // UDPP
-                   TIMES,
+                   TIMES, // периодические секундные проверки
                    PTASK,
                    ST,
-                   END };
+                   END};
 
 //задачи которые надо протащить через loop
 enum NotAsyncActions {
