@@ -98,6 +98,7 @@ void standWebServerInit() {
 }
 
 bool handleFileRead(String path) {
+    path = "/" + path;
     if (path.endsWith("/")) path += "index.html";
     String contentType = getContentType(path);
     String pathWithGz = path + ".gz";
@@ -211,7 +212,7 @@ void handleFileList() {
         entry.close();
     }
     output += "]";
-    Serial.println(output);
+    //Serial.println(output);
     HTTP.send(200, "text/json", output);
 }
 

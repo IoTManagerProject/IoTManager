@@ -68,6 +68,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/sensors/Ble",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/Bme280",
                 "active": true
             },

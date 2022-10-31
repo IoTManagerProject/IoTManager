@@ -1,0 +1,64 @@
+{
+  "menuSection": "Сенсоры",
+  "configItem": [
+    {
+      "name": "bluetooth сканер",
+      "num": 1,
+      "type": "Reading",
+      "subtype": "BleScan",
+      "id": "BleScan",
+      "widget": "na",
+      "page": "",
+      "descr": "",
+      "int": 135,
+      "scanDuration": 10,
+      "filter": "servicedatauuid"
+    },
+    {
+      "name": "bluetooth датчик",
+      "num": 1,
+      "type": "Reading",
+      "subtype": "BleSens",
+      "id": "BleSens",
+      "widget": "anydataDef",
+      "page": "Сенсоры",
+      "descr": "",
+      "needSave": 0,
+      "global": 0,
+      "round": 1,
+      "int": 60,
+      "MAC": "",
+      "sensor": ""
+    }
+  ],
+  "about": {
+    "authorName": "AVAKS",
+    "authorContact": "https://t.me/@avaks_dev",
+    "authorGit": "https://github.com/avaksru",
+    "specialThanks": "@Serghei63",
+    "moduleName": "Ble",
+    "moduleVersion": "1.0",
+    "usedRam": {
+      "esp32_4mb": 1261449,
+      "esp8266_4mb": 0
+    },
+    "subTypes": ["BleSens", "BleScan"],
+    "title": "Сканер Bluetooth",
+    "moduleDesc": "Позволяет получить данные с Bluetooth часов и термометров Mijia, Xiaomi, Cleargrass, ...",
+    "propInfo": {
+      "round": "Округление после запятой.",
+      "int": "Интервал сканирования BLE окружения (BleScan) / Интервал отправки собранной телеметрии в MQTT (BleSens)",
+      "scanDuration": "Длительность сканирования ",
+      "filter": "Позволяет установить фильтр по параметру передаваемому датчиком. Данные будут считываться только с датчиков у которых есть передаваемый параметр указанный в фильтре",
+      "MAC": "MAC адрес беспроводного датчика",
+      "sensor": "Тип сенсора: температура / влажность / время / ...   "
+    }
+  },
+  "defActive": false,
+  "usedLibs": {
+    "esp32_4mb": [
+      "https://github.com/h2zero/NimBLE-Arduino.git",
+      "https://github.com/avaksru/decoder.git"
+    ]
+  }
+}
