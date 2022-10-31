@@ -1,5 +1,6 @@
 #include "ESPConfiguration.h"
 
+void* getAPI_Cron(String subtype, String params);
 void* getAPI_Loging(String subtype, String params);
 void* getAPI_LogingDaily(String subtype, String params);
 void* getAPI_Timer(String subtype, String params);
@@ -34,6 +35,7 @@ void* getAPI_Ws2812b(String subtype, String params);
 
 void* getAPI(String subtype, String params) {
 void* tmpAPI;
+if ((tmpAPI = getAPI_Cron(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Loging(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_LogingDaily(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Timer(subtype, params)) != nullptr) return tmpAPI;

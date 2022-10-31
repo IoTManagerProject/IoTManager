@@ -1,0 +1,57 @@
+{
+    "menuSection": "Виртуальные элементы",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Будильник (Cron)",
+            "type": "Writing",
+            "subtype": "Cron",
+            "id": "cron",
+            "widget": "anydataDef",
+            "page": "Таймеры",
+            "descr": "Будильник",
+            "int": 1,
+            "val": "*/15 * * * * *",
+            "formatNextAlarm": "%H:%M:%S",
+            "needSave": 0
+        }
+    ],
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "Cron",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "Будильник типа Cron",
+        "moduleDesc": "Планировщик времени для периодического выполнения заданий в определённое время. Генерирует событие в указанное время по формату Cron https://ru.wikipedia.org/wiki/Cron ",
+        "propInfo": {
+            "formatNextAlarm": "Формат представления даты и времени срабатывания следующего уведомления. http://cppstudio.com/post/621/",
+            "needSave": "Требуется сохранять(1) или нет(0) состояние в энерго независимую память."
+        },
+        "retInfo": "Содержит время следующего срабатывания.",
+        "funcInfo": [
+            {
+                "name": "stop",
+                "descr": "Поставить процесс на паузу, при этом не будет событий.",
+                "params": []
+            },
+            {
+                "name": "continue",
+                "descr": "Продолжить выполнение с момента остановки.",
+                "params": []
+            }
+        ]
+    },
+    "defActive": true,
+    "usedLibs": {
+        "esp32_4mb": [],
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": []
+    }
+}
