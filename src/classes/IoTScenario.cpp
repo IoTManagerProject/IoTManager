@@ -78,15 +78,15 @@ class StringExprAST : public ExprAST {
 class VariableExprAST : public ExprAST {
     String Name;
     IoTItem *Item;  // ссылка на объект модуля (прямой доступ к идентификатору указанному в сценарии), если получилось найти модуль по ID
-    bool ItemIsLocal = false;
+    //bool ItemIsLocal = false;
 
    public:
     VariableExprAST(const String &name, IoTItem *item) : Name(name), Item(item) {
-        if (item) ItemIsLocal = item->iAmLocal;
+        //if (item) ItemIsLocal = item->iAmLocal;
     }
 
     int setValue(IoTValue *val, bool generateEvent) {
-        if (!ItemIsLocal) Item = findIoTItem(Name);
+        //if (!ItemIsLocal) Item = findIoTItem(Name);
         if (Item)
             Item->setValue(*val, generateEvent);
         else
@@ -97,7 +97,7 @@ class VariableExprAST : public ExprAST {
 
     IoTValue *exec() {
         if (isIotScenException) return nullptr;
-        if (!ItemIsLocal) Item = findIoTItem(Name);
+        //if (!ItemIsLocal) Item = findIoTItem(Name);
         if (Item) {
             // if (Item->value.isDecimal)
             //   Serial.printf("Call from  VariableExprAST: %s = %f\n", Name.c_str(), Item->value.valD);
@@ -105,7 +105,7 @@ class VariableExprAST : public ExprAST {
             return &(Item->value);
         }
 
-        SerialPrint("E", Name, "Элемент не найден или соединение потеряно", Name);
+        SerialPrint("E", Name, "The element is not found or the connection is lost", Name);
         return nullptr;  // Item не найден.
     }
 };
@@ -260,12 +260,12 @@ class CallExprAST : public ExprAST {
     std::vector<ExprAST *> Args;
     IoTItem *Item;  // ссылка на объект модуля (прямой доступ к идентификатору указанному в сценарии), если получилось найти модуль по ID
     IoTValue ret;   // хранение возвращаемого значения, т.к. возврат по ссылке осуществляется
-    bool ItemIsLocal = false;
+    //bool ItemIsLocal = false;
 
    public:
     CallExprAST(const String &callee, String &cmd, std::vector<ExprAST *> &args, IoTItem *item)
         : Callee(callee), Cmd(cmd), Args(args), Item(item) {
-        if (item) ItemIsLocal = item->iAmLocal;
+        //if (item) ItemIsLocal = item->iAmLocal;
     }
 
     IoTValue *exec() {
@@ -283,7 +283,7 @@ class CallExprAST : public ExprAST {
             return nullptr;
         }
 
-        if (!ItemIsLocal) Item = findIoTItem(Callee);  // пробуем найти переменную если она не локальная (могла придти по сети в процессе)
+        //if (!ItemIsLocal) Item = findIoTItem(Callee);  // пробуем найти переменную если она не локальная (могла придти по сети в процессе)
         if (!Item) return nullptr;                     // ret = zeroIotVal;  // если все же не пришла, то либо опечатка, либо уже стерлась - выходим
 
         if (Cmd == "getIntFromNet") {

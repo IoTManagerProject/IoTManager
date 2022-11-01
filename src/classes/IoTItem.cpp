@@ -146,9 +146,12 @@ void IoTItem::setIntFromNet(int interval) {
 }
 
 void IoTItem::checkIntFromNet() {
+    // проверяем элемент на доверие данным.
     if (_intFromNet >= 0) {
-        if (_intFromNet == 0) {
-            SerialPrint("E", "SYS", "The new data did not come from the network. The level of trust is low.", _id);
+        // если время жизни истекло, то удаляем элемент
+        // если это было уведомление не об ошибке или начале работы, то сообщаем, что сетевое событие давно не приходило
+        if (_intFromNet == 0 && _id.indexOf("onError") == -1 && _id.indexOf("onStart") == -1) {
+            SerialPrint("E", _id, "The new data did not come from the network. The level of trust is low.", _id);
         }
         _intFromNet--;
     }
@@ -178,19 +181,19 @@ IoTGpio* IoTItem::getGpioDriver() {
 
 //сетевое общение====================================================================================================================================
 
-externalVariable::externalVariable(const String& parameters) : IoTItem(parameters) {
-    prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
-    iAmLocal = false;       // указываем, что это сущность прилетела из сети
-    //Serial.printf("Call from  externalVariable: parameters %s %d\n", parameters.c_str(), _interval);
-}
+// externalVariable::externalVariable(const String& parameters) : IoTItem(parameters) {
+//     prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
+//     iAmLocal = false;       // указываем, что это сущность прилетела из сети
+//     //Serial.printf("Call from  externalVariable: parameters %s %d\n", parameters.c_str(), _interval);
+// }
 
-externalVariable::~externalVariable() {
-    Serial.printf("Call from  ~externalVariable: Im dead\n");
-}
+// externalVariable::~externalVariable() {
+//     Serial.printf("Call from  ~externalVariable: Im dead\n");
+// }
 
-void externalVariable::doByInterval() {  // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
-    iAmDead = true;
-}
+// void externalVariable::doByInterval() {  // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
+//     iAmDead = true;
+// }
 
 //=========================================================================================================================================
 
@@ -220,6 +223,23 @@ bool isItemExist(const String& name) {
         return true;
     else
         return false;
+}
+
+IoTItem* createItemFromNet(const String& itemId, const String& value, int interval) {
+    String jsonStr = "{\"id\":\"";
+    jsonStr += itemId;
+    jsonStr += "\",\"val\":\"";
+    jsonStr += value;
+    jsonStr += "\",\"int\":";
+    jsonStr += interval;
+    jsonStr += "}";
+    
+    IoTItem *tmpp = new IoTItem(jsonStr);
+    tmpp->setIntFromNet(interval);     // устанавливаем время жизни 3 сек
+    tmpp->iAmLocal = false;
+    IoTItems.push_back(tmpp);
+    generateEvent(itemId, "1");
+    return tmpp;
 }
 
 StaticJsonDocument<JSON_BUFFER_SIZE> docForExport;

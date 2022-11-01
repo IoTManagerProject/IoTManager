@@ -30,6 +30,10 @@
     "modules": {
         "Виртуальные элементы": [
             {
+                "path": "src/modules/virtual/Cron",
+                "active": true
+            },
+            {
                 "path": "src/modules/virtual/Loging",
                 "active": true
             },

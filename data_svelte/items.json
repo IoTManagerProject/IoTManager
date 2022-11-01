@@ -17,7 +17,7 @@
         "descr": "Будильник",
         "int": 1,
         "val": "*/15 * * * * *",
-        "formatNextAlarm": "dd.mm.yy hh:mm:ss",
+        "formatNextAlarm": "%H:%M:%S",
         "needSave": 0,
         "num": 1
     },
