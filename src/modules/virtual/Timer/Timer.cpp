@@ -33,7 +33,7 @@ class Timer : public IoTItem {
             if (value.valD == 0) {
                 regEvent(value.valD, "Time's up");
             }
-            if (!_ticker) regEvent(getValue(), "Timer tick", false, false);  // только регистрируем изменения без генерации тиков
+            //if (!_ticker) regEvent(getValue(), "Timer tick", false, false);  // только регистрируем изменения без генерации тиков
         }
 
         if (_ticker && (value.valD > 0 || _unfin) && !_pause) regEvent(value.valD, "Timer tick");
