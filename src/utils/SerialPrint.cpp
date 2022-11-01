@@ -23,11 +23,9 @@ void SerialPrint(const String& errorLevel, const String& module, const String& m
         cleanString(tosend);
         // создаем событие об ошибке для возможной реакции в сценарии
         if (itemId != "") {
-            IoTItems.push_back((IoTItem *)new externalVariable("{\"id\":\"" + itemId + "_onError\",\"val\":\"" + tosend + "\",\"int\":1}"));
-            generateEvent(itemId + "_onError", "1");
+            createItemFromNet(itemId + "_onError", tosend, 2);
         } else {
-            IoTItems.push_back((IoTItem *)new externalVariable("{\"id\":\"onError\",\"val\":\"" + module + " " + tosend + "\",\"int\":1}"));
-            generateEvent("onError", "1");
+            createItemFromNet("onError", tosend, 2);
         }
     } 
 

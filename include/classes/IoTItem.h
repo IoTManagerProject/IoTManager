@@ -36,7 +36,7 @@ class IoTItem {
 
     IoTValue value;  // хранение основного значения, которое обновляется из сценария, execute(), loop() или doByInterval()
 
-    bool iAmDead = false;  // признак необходимости удалить объект из базы
+    //bool iAmDead = false;  // признак необходимости удалить объект из базы
     bool iAmLocal = true;  // признак того, что айтем был создан локально
 
     bool enableDoByInt = true;
@@ -78,10 +78,12 @@ String getItemValue(const String& name);                             // поис
 bool isItemExist(const String& name);                                // существует ли айтем
 StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных значений Items
 
-class externalVariable : IoTItem {  // объект, создаваемый при получении информации о событии на другом контроллере для хранения информации о событии указанное время
+IoTItem* createItemFromNet(const String& itemId, const String& value, int interval);
 
-   public:
-    externalVariable(const String& parameters);
-    ~externalVariable();
-    void doByInterval();  // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
-};
+// class externalVariable : IoTItem {  // объект, создаваемый при получении информации о событии на другом контроллере для хранения информации о событии указанное время
+
+//    public:
+//     externalVariable(const String& parameters);
+//     ~externalVariable();
+//     void doByInterval();  // для данного класса doByInterval+int выполняет роль счетчика обратного отсчета до уничтожения
+// };

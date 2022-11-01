@@ -89,8 +89,7 @@ void setup() {
     iotScen.loadScenario("/scenario.txt");
 
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
-    IoTItems.push_back((IoTItem *)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
-    generateEvent("onStart", "");
+    createItemFromNet("onStart", "1", 1);
 
     stInit();
 
@@ -151,7 +150,9 @@ void loop() {
     // передаем управление каждому элементу конфигурации для выполнения своих функций
     for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         (*it)->loop();
-        if ((*it)->iAmDead) {
+        
+        //if ((*it)->iAmDead) {
+        if (!((*it)->iAmLocal) && (*it)->getIntFromNet() == -1) {
             delete *it;
             IoTItems.erase(it);
             break;
