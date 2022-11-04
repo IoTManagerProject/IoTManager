@@ -67,12 +67,21 @@ class UART : public IoTItem {
         if (_myUART->available()) {
             static String inStr = "";
             char inc;
+            
             inc = _myUART->read();
-            inStr += inc;
+            if (inc == 0xFF) {
+                inc = _myUART->read();
+                inc = _myUART->read();
+                inStr = "";
+                return;
+            }
+
+            if (inc == '\r') return;
+            
             if (inc == '\n') {
                 analyzeString(inStr);
                 inStr = "";
-            }
+            } else inStr += inc;
         }
     }
 
