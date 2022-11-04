@@ -26,8 +26,9 @@ class IoTItem {
     String getID();
     int getIntFromNet();
     virtual String getValue();
+    long getInterval();
     
-    void setInterval(unsigned long interval);
+    void setInterval(long interval);
     void setIntFromNet(int interval);
 
     unsigned long currentMillis;
@@ -45,6 +46,10 @@ class IoTItem {
     virtual void setValue(const IoTValue& Value, bool genEvent = true);
     virtual void setValue(const String& valStr, bool genEvent = true);
     String getRoundValue();
+    void getNetEvent(String& event);
+
+    // хуки для системных событий
+    virtual void onRegEvent(IoTItem* item);
 
     //методы для графиков
     virtual void publishValue();
@@ -56,8 +61,8 @@ class IoTItem {
    protected:
     bool _needSave = false;  // признак необходимости сохранять и загружать значение элемента на flash
     String _subtype = "";
-    String _id = "";
-    unsigned long _interval = 1000;
+    String _id = "errorId";     // если будет попытка создания Item без указания id, то элемент оставит это значение
+    long _interval = 0;
     int _intFromNet = -2;   // количество секунд доверия, пришедших из сети вместе с данными для текущего ИД
                             // -2 - данные не приходили, скорее всего, элемент локальный, доверие есть
                             // -1 - данные приходили и обратный отсчет дошел до нуля, значит доверия нет 
@@ -79,6 +84,8 @@ bool isItemExist(const String& name);                                // суще
 StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных значений Items
 
 IoTItem* createItemFromNet(const String& itemId, const String& value, int interval);
+IoTItem* createItemFromNet(const String& msgFromNet);
+void analyzeMsgFromNet(const String& msg, String altId = "");
 
 // class externalVariable : IoTItem {  // объект, создаваемый при получении информации о событии на другом контроллере для хранения информации о событии указанное время
 
