@@ -7,7 +7,7 @@
 
 //получение параметров в экземпляр класса
 IoTItem::IoTItem(const String& parameters) {
-    jsonRead(parameters, F("int"), _interval);
+    jsonRead(parameters, F("int"), _interval, false);
     if (_interval <= 0) enableDoByInt = false;
     _interval = _interval * 1000;
     jsonRead(parameters, F("subtype"), _subtype, false);
