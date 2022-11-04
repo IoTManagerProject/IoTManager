@@ -89,7 +89,7 @@ void setup() {
     iotScen.loadScenario("/scenario.txt");
 
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
-    createItemFromNet("onStart", "1", 1);
+    createItemFromNet("onStart", "1", -4);
 
     stInit();
 
@@ -105,6 +105,8 @@ void setup() {
             // проверяем все элементы на тухлость
             for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                 (*it)->checkIntFromNet();
+                
+                Serial.printf("[ITEM] size: %d, id: %s, int: %d, intnet: %d\n", sizeof(**it), (*it)->getID(), (*it)->getInterval(), (*it)->getIntFromNet());
             } 
         },
     nullptr, true);
@@ -162,10 +164,10 @@ void loop() {
     handleOrder();
     handleEvent();
 
-#ifdef LOOP_DEBUG
-    loopPeriod = millis() - st;
-    if (loopPeriod > 2) Serial.println(loopPeriod);
-#endif
+// #ifdef LOOP_DEBUG
+//     loopPeriod = millis() - st;
+//     if (loopPeriod > 2) Serial.println(loopPeriod);
+// #endif
 }
 
 //отправка json
