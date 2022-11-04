@@ -54,11 +54,9 @@ class UART : public IoTItem {
             
             case 2:             // формат команд от Nextion ID=Value
                 String id = selectToMarker(msg, "=");
-                IoTItem *item = findIoTItem(id);
-                if (!item) return;
                 String valStr = selectToMarkerLast(msg, "=");
                 valStr.replace("\"", "");
-                item->setValue(valStr);
+                generateOrder(id, valStr);
             break;
         }
     }
@@ -69,12 +67,21 @@ class UART : public IoTItem {
         if (_myUART->available()) {
             static String inStr = "";
             char inc;
+            
             inc = _myUART->read();
-            inStr += inc;
+            if (inc == 0xFF) {
+                inc = _myUART->read();
+                inc = _myUART->read();
+                inStr = "";
+                return;
+            }
+
+            if (inc == '\r') return;
+            
             if (inc == '\n') {
                 analyzeString(inStr);
                 inStr = "";
-            }
+            } else inStr += inc;
         }
     }
 
