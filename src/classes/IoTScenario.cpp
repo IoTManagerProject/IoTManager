@@ -37,7 +37,7 @@ enum Token {
 ExprAST::~ExprAST() {}
 IoTValue *ExprAST::exec() { return nullptr; }
 int ExprAST::setValue(IoTValue *val, bool generateEvent) { return 0; }                  // 0 - установка значения не поддерживается наследником
-bool ExprAST::hasEventIdName(String eventIdName) { return false; }  // по умолчанию все узлы не связаны с ИД события, для которого выполняется сценарий
+bool ExprAST::hasEventIdName(const String& eventIdName) { return false; }  // по умолчанию все узлы не связаны с ИД события, для которого выполняется сценарий
 // struct IoTValue zeroIotVal;
 
 /// NumberExprAST - Класс узла выражения для числовых литералов (Например, "1.0").
@@ -543,7 +543,7 @@ class IfExprAST : public ExprAST {
             _IDNames = "";
     }
 
-    bool hasEventIdName(String eventIdName) {
+    bool hasEventIdName(const String& eventIdName) {
         // Serial.printf("Call from  BinaryExprAST _IDNames:%s\n", _IDNames.c_str());
         return _IDNames.indexOf(" " + eventIdName + " ") >= 0;  // определяем встречался ли ИД, для которого исполняем сценарий в выражении IF
     }
@@ -1026,7 +1026,7 @@ void IoTScenario::loadScenario(String fileName) {  // подготавливае
     }
 }
 
-void IoTScenario::exec(String eventIdName) {  // посимвольно считываем и сразу интерпретируем сценарий в дерево AST
+void IoTScenario::exec(const String& eventIdName) {  // посимвольно считываем и сразу интерпретируем сценарий в дерево AST
     if (mode == 0 && !file) return;
 
     LastChar = 0;

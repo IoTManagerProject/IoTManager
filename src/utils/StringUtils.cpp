@@ -79,7 +79,7 @@ void hex2string(byte array[], unsigned int len, char buffer[]) {
     buffer[len * 2] = '\0';
 }
 
-inline unsigned char ChartoHex(char ch) {
+unsigned char ChartoHex(char ch) {
     return ((ch >= 'A') ? (ch - 'A' + 0xA) : (ch - '0')) & 0x0F;
 }
 

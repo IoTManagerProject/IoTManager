@@ -10,7 +10,7 @@ extern String jsonWriteInt(String& json, String name, int value, bool e = true);
 extern String jsonWriteFloat(String& json, String name, float value, bool e = true);
 extern String jsonWriteBool(String& json, String name, boolean value, bool e = true);
 
-extern bool jsonRead(const String& json, String key, unsigned long& value, bool e = true);
+extern bool jsonRead(const String& json, String key, long& value, bool e = true);
 extern bool jsonRead(const String& json, String key, float& value, bool e = true);
 extern bool jsonRead(const String& json, String key, String& value, bool e = true);
 extern bool jsonRead(const String& json, String key, bool& value, bool e = true);

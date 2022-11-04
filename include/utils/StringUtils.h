@@ -43,3 +43,5 @@ String prettyBytes(size_t size);
 String uint64ToString(uint64_t input, uint8_t base = 10);
 
 void cleanString(String& str);
+
+unsigned char ChartoHex(char ch);

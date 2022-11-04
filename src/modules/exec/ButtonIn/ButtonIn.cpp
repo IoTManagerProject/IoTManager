@@ -12,7 +12,7 @@ class ButtonIn : public IoTItem {
     String _pinMode;
     int _lastButtonState = LOW;
     unsigned long _lastDebounceTime = 0;
-    unsigned long _debounceDelay = 50;
+    long _debounceDelay = 50;
     int _buttonState;
     int _reading;
 

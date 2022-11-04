@@ -166,30 +166,8 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         if (topicStr.indexOf(chipId) == -1) {
             String devId = selectFromMarkerToMarker(topicStr, "/", 2);
             String id = selectFromMarkerToMarker(topicStr, "/", 3);
-            String valAsStr;
-            if (!jsonRead(payloadStr, F("val"), valAsStr, false)) valAsStr = payloadStr;
-
-            unsigned long interval = 0;
-            jsonRead(payloadStr, F("int"), interval);
-            IoTItem* itemExist = findIoTItem(id);
-            if (itemExist) {
-                itemExist->setInterval(interval);     // устанавливаем такой же интервал как на источнике события
-                itemExist->setValue(valAsStr, false);  // только регистрируем изменения в интерфейсе без создания цикла сетевых событий
-                if (interval) itemExist->setIntFromNet(interval+5);  // если пришедший интервал =0, значит не нужно контролировать доверие, иначе даем фору в 5 сек
-            } else {
-                // зафиксируем данные в базе, если локально элемент отсутствует
-                //itemExist = (IoTItem*)new externalVariable(payloadStr);
-                //IoTItems.push_back(itemExist);
-
-                itemExist = new IoTItem(payloadStr);
-                itemExist->setIntFromNet(interval+5);     // устанавливаем время жизни 3 сек
-                itemExist->iAmLocal = false;
-                IoTItems.push_back(itemExist);
-            }
-            // запустим проверку его в сценариях
-            generateEvent(id, valAsStr);
-            SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + valAsStr);
-            
+            analyzeMsgFromNet(payloadStr, id);
+            //SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + valAsStr);
         }
     }
 

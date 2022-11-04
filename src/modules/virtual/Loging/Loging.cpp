@@ -22,7 +22,7 @@ class Loging : public IoTItem {
     String prevDate = "";
     bool firstTimeDate = true;
 
-    unsigned long interval;
+    long interval;
 
    public:
     Loging(String parameters) : IoTItem(parameters) {

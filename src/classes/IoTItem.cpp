@@ -7,8 +7,8 @@
 
 //получение параметров в экземпляр класса
 IoTItem::IoTItem(const String& parameters) {
-    jsonRead(parameters, F("int"), _interval);
-    if (_interval == 0) enableDoByInt = false;
+    jsonRead(parameters, F("int"), _interval, false);
+    if (_interval <= 0) enableDoByInt = false;
     _interval = _interval * 1000;
     jsonRead(parameters, F("subtype"), _subtype, false);
     jsonRead(parameters, F("id"), _id);
@@ -57,6 +57,8 @@ String IoTItem::getValue() {
         return value.valS;
 }
 
+long IoTItem::getInterval() { return _interval; }
+
 //определяем тип прилетевшей величины
 void IoTItem::setValue(const String& valStr, bool genEvent) {
     value.isDecimal = isDigitDotCommaStr(valStr);
@@ -89,9 +91,14 @@ void IoTItem::regEvent(const String& value, const String& consoleInfo, bool erro
     publishStatusMqtt(_id, value);
     publishStatusWs(_id, value);
     //SerialPrint("i", "Sensor", consoleInfo + " '" + _id + "' data: " + value + "'");
-
+    
     if (genEvent) {
         generateEvent(_id, value);
+
+        // распространяем событие через хуки
+        for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+            (*it)->onRegEvent(this);
+        } 
 
         //отправка события другим устройствам в сети если не было ошибки==============================
         if (jsonReadBool(settingsFlashJson, "mqttin") && _global && !error) {
@@ -141,6 +148,13 @@ int IoTItem::getIntFromNet() {
     return _intFromNet;
 }
 
+void IoTItem::getNetEvent(String& event) {
+    event = "{}";
+    jsonWriteStr_(event, "id", _id);
+    jsonWriteStr_(event, "val", getValue());
+    jsonWriteInt_(event, "int", _interval/1000);
+}
+
 void IoTItem::setIntFromNet(int interval) {
     _intFromNet = interval;
 }
@@ -157,6 +171,8 @@ void IoTItem::checkIntFromNet() {
     }
 }
 
+void IoTItem::onRegEvent(IoTItem* item) {}
+
 void IoTItem::publishValue() {}
 
 void IoTItem::clearValue() {}
@@ -171,13 +187,14 @@ String IoTItem::getID() {
     return _id;
 };
 
-void IoTItem::setInterval(unsigned long interval) {
+void IoTItem::setInterval(long interval) {
     _interval = interval;
 }
 
 IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
 }
+
 
 //сетевое общение====================================================================================================================================
 
@@ -201,6 +218,7 @@ IoTItem* myIoTItem;
 
 // поиск элемента модуля в существующей конфигурации
 IoTItem* findIoTItem(const String& name) {
+    if (name == "") return nullptr;
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         if ((*it)->getID() == name) return *it;
     }
@@ -225,6 +243,7 @@ bool isItemExist(const String& name) {
         return false;
 }
 
+// создаем временную копию элемента из сети на основе события
 IoTItem* createItemFromNet(const String& itemId, const String& value, int interval) {
     String jsonStr = "{\"id\":\"";
     jsonStr += itemId;
@@ -234,12 +253,36 @@ IoTItem* createItemFromNet(const String& itemId, const String& value, int interv
     jsonStr += interval;
     jsonStr += "}";
     
-    IoTItem *tmpp = new IoTItem(jsonStr);
-    tmpp->setIntFromNet(interval);     // устанавливаем время жизни 3 сек
+    return createItemFromNet(jsonStr);
+}
+
+// создаем временную копию элемента из сети на основе события
+IoTItem* createItemFromNet(const String& msgFromNet) {
+    IoTItem *tmpp = new IoTItem(msgFromNet);
+    if (tmpp->getInterval()) tmpp->setIntFromNet(tmpp->getInterval()/1000 + 5);    
     tmpp->iAmLocal = false;
     IoTItems.push_back(tmpp);
-    generateEvent(itemId, "1");
+    generateEvent(tmpp->getID(), tmpp->getValue());
     return tmpp;
+}
+
+void analyzeMsgFromNet(const String& msg, String altId) {
+    if (!jsonRead(msg, F("id"), altId, altId == "") && altId == "") return;     // ничего не предпринимаем, если ошибка и altId = "", вообще данная конструкция нужна для совместимости с форматом данных 3 версией
+    IoTItem* itemExist = findIoTItem(altId);
+    if (itemExist) {
+        String valAsStr = msg;
+        jsonRead(msg, F("val"), valAsStr, false);
+        long interval = 0;
+        jsonRead(msg, F("int"), interval, false);
+
+        itemExist->setInterval(interval);     // устанавливаем такой же интервал как на источнике события
+        itemExist->setValue(valAsStr, false);  // только регистрируем изменения в интерфейсе без создания цикла сетевых событий
+        if (interval) itemExist->setIntFromNet(interval+5);  // если пришедший интервал =0, значит не нужно контролировать доверие, иначе даем фору в 5 сек
+        generateEvent(altId, valAsStr);
+    } else {
+        // временно зафиксируем данные в базе, если локально элемент отсутствует
+        createItemFromNet(msg);
+    }
 }
 
 StaticJsonDocument<JSON_BUFFER_SIZE> docForExport;
