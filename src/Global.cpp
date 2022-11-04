@@ -70,7 +70,7 @@ String mqttRootDevice = "";
 unsigned long unixTime = 0;
 unsigned long unixTimeShort = 0;
 
-unsigned long loopPeriod;
+//unsigned long loopPeriod;
 
 bool isTimeSynch = false;
 Time_t _time_local;

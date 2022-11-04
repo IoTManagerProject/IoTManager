@@ -21,7 +21,7 @@ class LogingDaily : public IoTItem {
     String prevDate = "";
     bool firstTimeDate = true;
 
-    unsigned long interval;
+    long interval;
 
    public:
     LogingDaily(String parameters) : IoTItem(parameters) {
