@@ -54,11 +54,9 @@ class UART : public IoTItem {
             
             case 2:             // формат команд от Nextion ID=Value
                 String id = selectToMarker(msg, "=");
-                IoTItem *item = findIoTItem(id);
-                if (!item) return;
                 String valStr = selectToMarkerLast(msg, "=");
                 valStr.replace("\"", "");
-                item->setValue(valStr);
+                generateOrder(id, valStr);
             break;
         }
     }
