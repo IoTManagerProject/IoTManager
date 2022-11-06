@@ -20,6 +20,7 @@ class Pwm8266 : public IoTItem {
         
         IoTgpio.pinMode(_pin, OUTPUT);
         analogWriteFreq(_freq);
+        analogWriteResolution(10);
         IoTgpio.analogWrite(_pin, value.valD);
 
         jsonRead(parameters, "apin", _apin);
