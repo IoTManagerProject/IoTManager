@@ -37,7 +37,7 @@ class UART : public IoTItem {
 #endif
 #ifdef ESP32
         _myUART = new HardwareSerial(2);
-        _myUART->begin(speed, SERIAL_8N1, rx, tx);
+        _myUART->begin(_speed, SERIAL_8N1, _rx, _tx);
 #endif
     }
 
