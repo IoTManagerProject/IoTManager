@@ -53,6 +53,10 @@ class UART : public IoTItem {
             break;
             
             case 2:             // формат команд от Nextion ID=Value
+                if (msg.indexOf("=") == -1) {   // если входящее сообщение не по формату, то работаем как в режиме 0
+                    setValue(msg);
+                    break;
+                }
                 String id = selectToMarker(msg, "=");
                 String valStr = selectToMarkerLast(msg, "=");
                 valStr.replace("\"", "");
@@ -100,7 +104,7 @@ class UART : public IoTItem {
                 printStr += eventItem->getID();
                 printStr += "=";
                 if (eventItem->value.isDecimal)
-                    printStr += eventItem->value.valD;
+                    printStr += eventItem->getRoundValue();
                 else {
                     printStr += "\"";
                     printStr += eventItem->value.valS;
