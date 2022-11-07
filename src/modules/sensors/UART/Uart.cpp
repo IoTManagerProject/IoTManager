@@ -90,30 +90,31 @@ class UART : public IoTItem {
     }
 
     void onRegEvent(IoTItem* eventItem) {
-        if (!_myUART) return; 
+        if (!_myUART || !eventItem) return; 
 
         String printStr = "";
         switch (_eventFormat) {
             case 0: return;     // не указан формат, значит не следим за событиями
             case 1:             // формат событий IoTM с использованием json
-                eventItem->getNetEvent(printStr);
-                _myUART->println(printStr);
+                if (eventItem->isGlobal()) {
+                    eventItem->getNetEvent(printStr);
+                    _myUART->println(printStr);
+                }
             break;
             
             case 2:             // формат событий для Nextion ID=Value0xFF0xFF0xFF
                 printStr += eventItem->getID();
-                printStr += "=";
-                if (eventItem->value.isDecimal)
-                    printStr += eventItem->getRoundValue();
-                else {
+                if (printStr.indexOf("_") == -1) return;  // пропускаем событие, если нет используемого признака типа данных - _txt или _vol
+                if (printStr.indexOf("_val") > 0) {
+                    printStr.replace("_val", ".val=");
+                    printStr += eventItem->getValue();
+                } else if (printStr.indexOf("_txt") > 0) {
+                    printStr.replace("_txt", ".txt=");
                     printStr += "\"";
-                    printStr += eventItem->value.valS;
+                    printStr += eventItem->getValue();
                     printStr += "\"";
-                }
-                _myUART->print(printStr);
-                _myUART->write(0xff);
-                _myUART->write(0xff);
-                _myUART->write(0xff);
+                } else return;
+                uartPrintFFF(printStr);
             break;
         }
     }
@@ -122,9 +123,24 @@ class UART : public IoTItem {
         uartHandle();
     }
 
-    void uartPrint(const String& msg) {
+    void uartPrintFFF(const String& msg) {
+        if (_myUART) {
+            _myUART->print(msg);
+            _myUART->write(0xff);
+            _myUART->write(0xff);
+            _myUART->write(0xff);
+        }
+    }
+
+    void uartPrintln(const String& msg) {
         if (_myUART) {
             _myUART->println(msg);
+        }
+    }
+
+    void uartPrint(const String& msg) {
+        if (_myUART) {
+            _myUART->print(msg);
         }
     }
 
@@ -141,13 +157,32 @@ class UART : public IoTItem {
     }
 
     IoTValue execute(String command, std::vector<IoTValue> &param) {
-        if (command == "print") { 
+        if (command == "println") { 
             if (param.size() == 1) {
-                uartPrint(param[0].valS);
+                if (param[0].isDecimal) uartPrintln((String)param[0].valD);
+                else uartPrintln(param[0].valS);
+            }
+        } else if (command == "print") { 
+            if (param.size() == 1) {
+                if (param[0].isDecimal) uartPrint((String)param[0].valD);
+                else uartPrint(param[0].valS);
             }
         } else if (command == "printHex") {
             if (param.size() == 1) {
                 uartPrintHex(param[0].valS);
+            }
+        } else if (command == "printFFF") {
+            if (param.size() == 2) {
+                String strToUart = "";
+                if (param[0].isDecimal) 
+                    strToUart = param[0].valD;  
+                else 
+                    strToUart = param[0].valS;
+
+                if (param[1].valD) 
+                    uartPrintFFF("\"" + strToUart + "\"");
+                else
+                    uartPrintFFF(strToUart);
             }
         } 
 
