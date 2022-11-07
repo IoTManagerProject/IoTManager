@@ -12,6 +12,7 @@ class ButtonOut : public IoTItem {
     ButtonOut(String parameters): IoTItem(parameters) {
         jsonRead(parameters, "pin", _pin);
         jsonRead(parameters, "inv", _inv);
+        _round = 0;
 
         IoTgpio.pinMode(_pin, OUTPUT);
         IoTgpio.digitalWrite(_pin, value.valD?HIGH:LOW);

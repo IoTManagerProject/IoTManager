@@ -23,6 +23,7 @@ class ButtonIn : public IoTItem {
         jsonRead(parameters, "pinMode", _pinMode);
         jsonRead(parameters, "debounceDelay", _debounceDelay);
         jsonRead(parameters, "fixState", _fixState);
+        _round = 0;
         //Serial.printf("vvvvvvvvvvvvvvvv =%d \n", _fixState);
         
         IoTgpio.pinMode(_pin, INPUT);
