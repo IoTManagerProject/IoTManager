@@ -100,7 +100,7 @@ class UART : public IoTItem {
                 printStr += eventItem->getID();
                 printStr += "=";
                 if (eventItem->value.isDecimal)
-                    printStr += eventItem->value.valD;
+                    printStr += eventItem->getRoundValue();
                 else {
                     printStr += "\"";
                     printStr += eventItem->value.valS;
