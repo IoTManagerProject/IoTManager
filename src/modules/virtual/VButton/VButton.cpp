@@ -4,7 +4,9 @@
 
 class VButton : public IoTItem {
    public:
-    VButton(String parameters): IoTItem(parameters) { }
+    VButton(String parameters): IoTItem(parameters) {
+        _round = 0;
+    }
 
     void setValue(const IoTValue& Value, bool genEvent = true) {
         value = Value;
