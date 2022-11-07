@@ -59,6 +59,8 @@ String IoTItem::getValue() {
 
 long IoTItem::getInterval() { return _interval; }
 
+bool IoTItem::isGlobal() { return _global;}
+
 //определяем тип прилетевшей величины
 void IoTItem::setValue(const String& valStr, bool genEvent) {
     value.isDecimal = isDigitDotCommaStr(valStr);

@@ -27,6 +27,7 @@ class IoTItem {
     int getIntFromNet();
     virtual String getValue();
     long getInterval();
+    bool isGlobal();
     
     void setInterval(long interval);
     void setIntFromNet(int interval);
