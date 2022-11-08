@@ -36,7 +36,7 @@ class UART : public IoTItem {
         _myUART->begin(_speed);
 #endif
 #ifdef ESP32
-        _myUART = new HardwareSerial(2);
+        myUART = _myUART = new HardwareSerial(2);
         _myUART->begin(_speed, SERIAL_8N1, _rx, _tx);
 #endif
     }
@@ -60,6 +60,8 @@ class UART : public IoTItem {
                 String id = selectToMarker(msg, "=");
                 String valStr = selectToMarkerLast(msg, "=");
                 valStr.replace("\"", "");
+                id.replace(".val", "_val");
+                id.replace(".txt", "_txt");
                 generateOrder(id, valStr);
             break;
         }
