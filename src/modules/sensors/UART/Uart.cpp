@@ -13,9 +13,6 @@
 
 class UART : public IoTItem {
    private:
-    int _tx;
-    int _rx;
-    int _speed;
     int _eventFormat = 0;   // 0 - нет приема, 1 - json IoTM, 2 - Nextion
 
 #ifdef ESP8266
@@ -26,17 +23,19 @@ class UART : public IoTItem {
 
    public:
     UART(String parameters) : IoTItem(parameters) {
+        int _tx, _rx, _speed, _line;
         jsonRead(parameters,  "tx", _tx);
         jsonRead(parameters,  "rx", _rx);
         jsonRead(parameters,  "speed", _speed);
+        jsonRead(parameters,  "line", _line);
         jsonRead(parameters,  "eventFormat", _eventFormat);
 
 #ifdef ESP8266
-        myUART = _myUART = new SoftwareSerial(_tx, _rx);
+        myUART = _myUART = new SoftwareSerial(_rx, _tx);
         _myUART->begin(_speed);
 #endif
 #ifdef ESP32
-        myUART = _myUART = new HardwareSerial(2);
+        myUART = _myUART = new HardwareSerial(_line);
         _myUART->begin(_speed, SERIAL_8N1, _rx, _tx);
 #endif
     }
