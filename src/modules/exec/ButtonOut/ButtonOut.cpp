@@ -15,7 +15,7 @@ class ButtonOut : public IoTItem {
         _round = 0;
 
         IoTgpio.pinMode(_pin, OUTPUT);
-        IoTgpio.digitalWrite(_pin, value.valD?HIGH:LOW);
+        IoTgpio.digitalWrite(_pin, _inv?!value.valD:value.valD);
     }
 
     void doByInterval() {
