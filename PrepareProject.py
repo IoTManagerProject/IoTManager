@@ -13,7 +13,11 @@
 # python PrepareProject.py --profile <ИмяФайла>
 # python PrepareProject.py -p <ИмяФайла>
 # 
-#
+# поддерживаемые контроллеры (профили):
+# esp8266_4mb
+# esp32_4mb
+# esp8266_1mb
+# esp8266_1mb_ota
 
 import configparser
 import os, json, sys, getopt

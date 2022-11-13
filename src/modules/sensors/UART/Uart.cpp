@@ -106,15 +106,17 @@ class UART : public IoTItem {
             case 2:             // формат событий для Nextion ID=Value0xFF0xFF0xFF
                 printStr += eventItem->getID();
                 if (printStr.indexOf("_") == -1) return;  // пропускаем событие, если нет используемого признака типа данных - _txt или _vol
-                if (printStr.indexOf("_val") > 0) {
-                    printStr.replace("_val", ".val=");
-                    printStr += eventItem->getValue();
-                } else if (printStr.indexOf("_txt") > 0) {
-                    printStr.replace("_txt", ".txt=");
-                    printStr += "\"";
+                
+                if (printStr.indexOf("_txt") > 0) {
+                    printStr.replace("_txt", ".txt=\"");
                     printStr += eventItem->getValue();
                     printStr += "\"";
-                } else return;
+                } else {
+                    printStr.replace("_", ".");
+                    printStr += "=";
+                    printStr += eventItem->getValue();
+                }
+
                 uartPrintFFF(printStr);
             break;
         }
