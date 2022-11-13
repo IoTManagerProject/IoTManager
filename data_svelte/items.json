@@ -545,7 +545,6 @@
         "int": 5
     },
     {
-        "global": 0,
         "name": "39. UART",
         "type": "Reading",
         "subtype": "UART",
@@ -556,6 +555,7 @@
         "tx": 12,
         "rx": 13,
         "speed": 9600,
+        "eventFormat": 0,
         "num": 39
     },
     {
@@ -639,7 +639,25 @@
     },
     {
         "global": 0,
-        "name": "45. Расширитель портов Pcf8574",
+        "name": "45. Сенсорная кнопка",
+        "type": "Writing",
+        "subtype": "Multitouch",
+        "id": "impulse",
+        "widget": "anydataDef",
+        "page": "Кнопки",
+        "descr": "Количество нажаний",
+        "needSave": 0,
+        "int": 300,
+        "inv": 1,
+        "pin": 16,
+        "pinMode": "INPUT",
+        "debounceDelay": 50,
+        "PWMDelay": 500,
+        "num": 45
+    },
+    {
+        "global": 0,
+        "name": "46. Расширитель портов Pcf8574",
         "type": "Reading",
         "subtype": "Pcf8574",
         "id": "Pcf",
@@ -649,11 +667,11 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 45
+        "num": 46
     },
     {
         "global": 0,
-        "name": "46. PWM ESP8266",
+        "name": "47. PWM ESP8266",
         "type": "Writing",
         "subtype": "Pwm8266",
         "id": "pwm",
@@ -665,11 +683,11 @@
         "freq": 5000,
         "val": 0,
         "apin": -1,
-        "num": 46
+        "num": 47
     },
     {
         "global": 0,
-        "name": "47. Телеграм-Лайт",
+        "name": "48. Телеграм-Лайт",
         "type": "Writing",
         "subtype": "TelegramLT",
         "id": "tg",
@@ -678,14 +696,14 @@
         "descr": "",
         "token": "",
         "chatID": "",
-        "num": 47
+        "num": 48
     },
     {
         "header": "Экраны"
     },
     {
         "global": 0,
-        "name": "48. LCD экран 2004",
+        "name": "49. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -697,10 +715,10 @@
         "size": "20,4",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 48
+        "num": 49
     },
     {
-        "name": "49. LCD экран 1602",
+        "name": "50. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -712,11 +730,11 @@
         "size": "16,2",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 49
+        "num": 50
     },
     {
         "global": 0,
-        "name": "50. Strip ws2812b",
+        "name": "51. Strip ws2812b",
         "type": "Reading",
         "subtype": "Ws2812b",
         "id": "strip",
@@ -732,6 +750,6 @@
         "min": "15",
         "max": "30",
         "idshow": "t",
-        "num": 50
+        "num": 51
     }
 ]
