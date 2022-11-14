@@ -210,6 +210,27 @@
         "icon": "speedometer"
     },
     {
+        "name": "anydatamAmp",
+        "label": "миллиАмперы",
+        "widget": "anydata",
+        "after": "mAmp",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydatamVlt",
+        "label": "миллиВольты",
+        "widget": "anydata",
+        "after": "mVlt",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydatamWt",
+        "label": "миллиВатты",       
+        "widget": "anydata",
+        "after": "mWt",
+        "icon": "speedometer"
+    },
+    {
         "name": "nil",
         "label": "Без виджета"
     }
