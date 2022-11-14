@@ -9,6 +9,7 @@ class Loging : public IoTItem {
    private:
     String logid;
     String id;
+    String tmpValue;
     String filesList = "";
 
     int _publishType = -2;
@@ -103,7 +104,56 @@ class Loging : public IoTItem {
         //запускаем процедуру удаления старых файлов если память переполняется
         deleteLastFile();
     }
+void SetDoByInterval(String valse) {
+        String value = valse;
+        //если значение логгирования пустое
+        if (value == "") {
+            SerialPrint("E", F("LogingEvent"), "'" + id + "' loging value is empty, return");
+            return;
+        }
+        //если время не было получено из интернета
+        if (!isTimeSynch) {
+            SerialPrint("E", F("LogingEvent"), "'" + id + "' Сant loging - time not synchronized, return");
+            return;
+        }
+        regEvent(value, F("LogingEvent"));
+        String logData;
+        jsonWriteInt(logData, "x", unixTime);
+        jsonWriteFloat(logData, "y1", value.toFloat());
+        //прочитаем путь к файлу последнего сохранения
+        String filePath = readDataDB(id);
 
+        //если данные о файле отсутствуют, создадим новый
+        if (filePath == "failed" || filePath == "") {
+            SerialPrint("E", F("LogingEvent"), "'" + id + "' file path not found, start create new file");
+            createNewFileWithData(logData);
+            return;
+        } else {
+            //если файл все же есть но был создан не сегодня, то создаем сегодняшний
+            if (getTodayDateDotFormated() != getDateDotFormatedFromUnix(getFileUnixLocalTime(filePath))) {
+                SerialPrint("E", F("LogingEvent"), "'" + id + "' file too old, start create new file");
+                createNewFileWithData(logData);
+                return;
+            }
+        }
+
+        //считаем количество строк и определяем размер файла
+        size_t size = 0;
+        int lines = countJsonObj(filePath, size);
+        SerialPrint("i", F("LogingEvent"), "'" + id + "' " + "lines = " + String(lines) + ", size = " + String(size));
+
+        //если количество строк до заданной величины и дата не менялась
+        if (lines <= points && !hasDayChanged()) {
+            //просто добавим в существующий файл новые данные
+            addNewDataToExistingFile(filePath, logData);
+            //если больше или поменялась дата то создадим следующий файл
+        } else {
+            createNewFileWithData(logData);
+        }
+        //запускаем процедуру удаления старых файлов если память переполняется
+        deleteLastFile();
+
+    }
     void createNewFileWithData(String &logData) {
         logData = logData + ",";
         String path = "/lg/" + id + "/" + String(unixTimeShort) + ".txt";  //создадим путь вида /lg/id/133256622333.txt
@@ -258,7 +308,9 @@ class Loging : public IoTItem {
             difference = currentMillis - prevMillis;
             if (difference >= interval) {
                 prevMillis = millis();
-                this->doByInterval();
+                if(interval != 0){
+                    this->doByInterval();
+                }
             }
         }
     }
@@ -284,6 +336,12 @@ class Loging : public IoTItem {
     //путь вида: /lg/log/1231231.txt
     unsigned long getFileUnixLocalTime(String path) {
         return gmtTimeToLocal(selectToMarkerLast(deleteToMarkerLast(path, "."), "/").toInt() + START_DATETIME);
+    }
+    void setValue(const IoTValue& Value, bool genEvent = true){
+        value = Value;
+        this->SetDoByInterval(String(value.valD));
+        SerialPrint("i", "Loging", "setValue:" + String(value.valD));
+        regEvent(value.valS, "Loging", false, genEvent);
     }
 };
 
