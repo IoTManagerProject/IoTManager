@@ -14,6 +14,19 @@
             "int": 5,
             "logid": "t",
             "points": 300
+        },
+        {
+            "global": 0,
+            "name": "График по событию",
+            "type": "Writing",
+            "subtype": "Loging",
+            "id": "log",
+            "widget": "chart2",
+            "page": "Графики",
+            "descr": "Температура",
+            "int": 0,
+            "num": 1,
+            "points": 300
         }
     ],
     "about": {
