@@ -47,7 +47,7 @@
         "name": "anydataWth",
         "label": "Энергия",
         "widget": "anydata",
-        "after": "kWt/Hr",
+        "after": "kWh",
         "icon": "speedometer"
     },
     {
