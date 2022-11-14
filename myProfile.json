@@ -108,6 +108,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/sensors/Ina219",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/IoTWiegand",
                 "active": false
             },
@@ -171,6 +175,10 @@
             },
             {
                 "path": "src/modules/exec/Mp3",
+                "active": true
+            },
+            {
+                "path": "src/modules/exec/Multitouch",
                 "active": true
             },
             {
