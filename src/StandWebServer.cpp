@@ -38,6 +38,22 @@ void standWebServerInit() {
     //     HTTP.send(200, "text/plain", "ok");
     // });
 
+
+    HTTP.on("/set", HTTP_GET, []() {
+        if (HTTP.hasArg(F("routerssid")) && WiFi.getMode() == WIFI_AP) {
+            jsonWriteStr(settingsFlashJson, F("routerssid"), HTTP.arg(F("routerssid")));
+            syncSettingsFlashJson();
+            HTTP.send(200, "text/plain", "ok");
+        }
+
+        if (HTTP.hasArg(F("routerpass")) && WiFi.getMode() == WIFI_AP) {
+            jsonWriteStr(settingsFlashJson, F("routerpass"), HTTP.arg(F("routerpass")));
+            syncSettingsFlashJson();
+            HTTP.send(200, "text/plain", "ok");
+        }
+
+    });
+
     //  Добавляем функцию Update для перезаписи прошивки по WiFi при 1М(256K FileFS) и выше
     //  httpUpdater.setup(&HTTP);
 
