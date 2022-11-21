@@ -1,0 +1,71 @@
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
+        "name": "HX711 Cенсор весов",
+        "type": "Reading",
+        "subtype": "Hx711",
+        "id": "hx",
+        "widget": "anydataDef",
+        "page": "Весы",
+        "descr": "HX вес",
+        "int": 15,
+        "map": "1024,1024,1,100",
+        "plus": 0,
+        "multiply": 1,
+        "round": 1,
+        "data": 3,
+        "clock": 2,
+        "chan": 2
+    }],
+    
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "",
+        "moduleName": "Hx711",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "HX711 Cенсор весов",
+        "moduleDesc": "Позволяет получить вес в килограммах с датчика Hx711",
+        "propInfo": {
+            "clock": "GPIO шины данных",
+            "data": "GPIO шины данных",
+            "chan": "Канал и усиление: =0 (HX_GAIN128_A) - канал А усиление 128, =1 (HX_GAIN32_B) - канал B усиление 32, =2 (HX_GAIN64_A) - канал А усиление 64",
+            "int": "Количество секунд между опросами датчика."
+        },
+        "retInfo": "Содержит RAW значение датчика, необходима калибровка",
+        "funcInfo": [
+            {
+                "name": "tare",
+                "descr": "Авто установка нуля",
+                "params": []
+            },
+            {
+                "name": "sleepMode",
+                "descr": "Перевести в режим сна",
+                "params": ["=1 режим сна, =0 проснуться"]
+            },
+            {
+                "name": "read",
+                "descr": "Прочитать текущее значение. Полезно использовать при Int=0 и считывать вес по событию.",
+                "params": []
+            }
+        ]
+    },
+
+    "defActive": true,
+
+    "usedLibs": {
+        "esp32_4mb": [
+            "GyverHX711@1.2"
+        ],
+        "esp8266_4mb": [
+            "GyverHX711@1.2"
+        ]
+    }
+}
