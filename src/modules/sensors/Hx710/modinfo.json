@@ -1,0 +1,58 @@
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
+        "name": "HX710 Cенсор давления",
+        "type": "Reading",
+        "subtype": "Hx710",
+        "id": "hxp",
+        "widget": "anydataDef",
+        "page": "Давление",
+        "descr": "HX press",
+        "int": 15,
+        "plus": 0,
+        "multiply": 1,
+        "round": 1,
+        "data": 14,
+        "clock": 15
+    }],
+    
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "",
+        "moduleName": "Hx710",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "HX710 Cенсор давления",
+        "moduleDesc": "Позволяет получить давление с датчика Hx710",
+        "propInfo": {
+            "clock": "GPIO шины данных",
+            "data": "GPIO шины данных",
+            "int": "Количество секунд между опросами датчика."
+        },
+        "retInfo": "Содержит mmHg значение датчика, необходима калибровка",
+        "funcInfo": [
+            {
+                "name": "read",
+                "descr": "Прочитать текущее значение. Полезно использовать при Int=0 и считывать RAW-data по событию.",
+                "params": []
+            }
+        ]
+    },
+
+    "defActive": false,
+
+    "usedLibs": {
+        "esp32_4mb": [
+            "https://github.com/kurimawxx00/hx710B_pressure_sensor"
+        ],
+        "esp8266_4mb": [
+            "https://github.com/kurimawxx00/hx710B_pressure_sensor"
+        ]
+    }
+}
