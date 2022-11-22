@@ -159,7 +159,6 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
 
     //здесь мы получаем события с других устройств, которые потом проверяются в сценариях этого устройства
     else if (topicStr.indexOf("event") != -1) {
-        //пока не работает сетевой обмен этот код будет закомментирован
         if (!jsonReadBool(settingsFlashJson, "mqttin")) {
             return;
         }
@@ -167,7 +166,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
             String devId = selectFromMarkerToMarker(topicStr, "/", 2);
             String id = selectFromMarkerToMarker(topicStr, "/", 3);
             analyzeMsgFromNet(payloadStr, id);
-            //SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + valAsStr);
+            // SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + valAsStr);
         }
     }
 

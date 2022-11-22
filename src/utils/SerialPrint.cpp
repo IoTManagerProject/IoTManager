@@ -17,13 +17,13 @@ void SerialPrint(const String& errorLevel, const String& module, const String& m
         }
     }
 
-    // if (errorLevel == "E") {
-    //     cleanString(tosend);
-    //     // создаем событие об ошибке для возможной реакции в сценарии
-    //     if (itemId != "") {
-    //         createItemFromNet(itemId + "_onError", tosend, -4);
-    //     } else {
-    //         createItemFromNet("onError", tosend, -4);
-    //     }
-    // }
+    if (errorLevel == "E") {
+        cleanString(tosend);
+        // создаем событие об ошибке для возможной реакции в сценарии
+        if (itemId != "") {
+            createItemFromNet(itemId + "_onError", tosend, -4);
+        } else {
+            // createItemFromNet("onError", tosend, -4);
+        }
+    }
 }
