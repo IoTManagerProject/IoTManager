@@ -13,21 +13,17 @@ void SerialPrint(const String& errorLevel, const String& module, const String& m
 
     if (isNetworkActive()) {
         if (jsonReadInt(settingsFlashJson, F("log")) != 0) {
-            // String pl = "/log|" + tosend;
-            // standWebSocket.broadcastTXT(pl);
             sendStringToWs("corelg", tosend, -1);
         }
     }
 
-    if (errorLevel == "E") {
-        cleanString(tosend);
-        // создаем событие об ошибке для возможной реакции в сценарии
-        if (itemId != "") {
-            createItemFromNet(itemId + "_onError", tosend, -4);
-        } else {
-            createItemFromNet("onError", tosend, -4);
-        }
-    } 
-
-    
+    // if (errorLevel == "E") {
+    //     cleanString(tosend);
+    //     // создаем событие об ошибке для возможной реакции в сценарии
+    //     if (itemId != "") {
+    //         createItemFromNet(itemId + "_onError", tosend, -4);
+    //     } else {
+    //         createItemFromNet("onError", tosend, -4);
+    //     }
+    // }
 }

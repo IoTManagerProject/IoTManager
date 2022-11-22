@@ -16,6 +16,7 @@
     "serverip": "http://iotmanager.org",
     "log": 0,
     "mqttin": 0,
+    "i2c": 0,
     "pinSCL": 0,
     "pinSDA": 0,
     "i2cFreq": 100000,

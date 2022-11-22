@@ -59,11 +59,12 @@ void setup() {
     mqttInit();
 
     // настраиваем i2c шину
-    int pinSCL, pinSDA, i2cFreq;
+    int i2c, pinSCL, pinSDA, i2cFreq;
     jsonRead(settingsFlashJson, "pinSCL", pinSCL, false);
     jsonRead(settingsFlashJson, "pinSDA", pinSDA, false);
     jsonRead(settingsFlashJson, "i2cFreq", i2cFreq, false);
-    if (pinSCL && pinSDA && i2cFreq) {
+    jsonRead(settingsFlashJson, "i2c", i2c, false);
+    if (i2c != 0) {
 #ifdef esp32_4mb
         Wire.end();
         Wire.begin(pinSDA, pinSCL, (uint32_t)i2cFreq);
@@ -71,6 +72,7 @@ void setup() {
         Wire.begin(pinSDA, pinSCL);
         Wire.setClock(i2cFreq);
 #endif
+        SerialPrint("i", "i2c", F("i2c pins overriding done"));
     }
 
     //настраиваем микроконтроллер
@@ -95,21 +97,21 @@ void setup() {
 
     // настраиваем секундные обслуживания системы
     ts.add(
-        TIMES, 1000, [&](void*) {
+        TIMES, 1000, [&](void *) {
             // сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
             if (needSaveValues) {
                 syncValuesFlashJson();
                 needSaveValues = false;
             }
-            
+
             // проверяем все элементы на тухлость
             for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                 (*it)->checkIntFromNet();
-                
-                //Serial.printf("[ITEM] size: %d, id: %s, int: %d, intnet: %d\n", sizeof(**it), (*it)->getID(), (*it)->getInterval(), (*it)->getIntFromNet());
-            } 
+
+                // Serial.printf("[ITEM] size: %d, id: %s, int: %d, intnet: %d\n", sizeof(**it), (*it)->getID(), (*it)->getInterval(), (*it)->getIntFromNet());
+            }
         },
-    nullptr, true);
+        nullptr, true);
 
     // test
     Serial.println("-------test start--------");
@@ -152,8 +154,8 @@ void loop() {
     // передаем управление каждому элементу конфигурации для выполнения своих функций
     for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         (*it)->loop();
-        
-        //if ((*it)->iAmDead) {
+
+        // if ((*it)->iAmDead) {
         if (!((*it)->iAmLocal) && (*it)->getIntFromNet() == -1) {
             delete *it;
             IoTItems.erase(it);
@@ -164,10 +166,10 @@ void loop() {
     handleOrder();
     handleEvent();
 
-// #ifdef LOOP_DEBUG
-//     loopPeriod = millis() - st;
-//     if (loopPeriod > 2) Serial.println(loopPeriod);
-// #endif
+    // #ifdef LOOP_DEBUG
+    //     loopPeriod = millis() - st;
+    //     if (loopPeriod > 2) Serial.println(loopPeriod);
+    // #endif
 }
 
 //отправка json

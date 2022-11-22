@@ -1,7 +1,7 @@
 #pragma once
 
 //Версия прошивки
-#define FIRMWARE_VERSION 431
+#define FIRMWARE_VERSION 432
 
 #ifdef esp8266_1mb_ota
 #define FIRMWARE_NAME "esp8266_1mb_ota"
@@ -53,11 +53,11 @@ enum TimerTask_t { WIFI_SCAN,
                    TIME,
                    TIME_SYNC,
                    UPTIME,
-                   UDP,  // UDPP
-                   TIMES, // периодические секундные проверки
+                   UDP,    // UDPP
+                   TIMES,  // периодические секундные проверки
                    PTASK,
                    ST,
-                   END};
+                   END };
 
 //задачи которые надо протащить через loop
 enum NotAsyncActions {
