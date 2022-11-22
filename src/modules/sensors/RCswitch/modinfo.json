@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
 
     "configItem": [{
+        "global": 0,
         "name": "Сканер кнопок 433 MHz",
         "num": 31,
         "type": "Reading",
@@ -57,6 +58,9 @@
             "rc-switch @ ^2.6.4"
         ],
         "esp8266_1mb": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8266_1mb_ota": [
             "rc-switch @ ^2.6.4"
         ],
         "esp8266_4mb": [

@@ -15,16 +15,17 @@ class Lcd2004 : public IoTItem {
     String _id2show;
     String _descr;
     int _prevStrSize;
+    String _addr;
 
     bool _isShow = true;    // экран показывает
 
    public:
     Lcd2004(String parameters) : IoTItem(parameters) {
-        String addr, size, xy;
+        String size, xy;
         _prevStrSize = 0;
 
-        jsonRead(parameters, "addr", addr);
-        if (addr == "") {
+        jsonRead(parameters, "addr", _addr);
+        if (_addr == "") {
             scanI2C();
             return;
         }
@@ -33,12 +34,14 @@ class Lcd2004 : public IoTItem {
         int w = selectFromMarkerToMarker(size, ",", 0).toInt();  //количество столбцов
         int h = selectFromMarkerToMarker(size, ",", 1).toInt();  //количество строк
         if (LCDI2C == nullptr) {                                 //инициализации экрана еще не было
-            LCDI2C = new LiquidCrystal_I2C(hexStringToUint8(addr), w, h);
+            LCDI2C = new LiquidCrystal_I2C(hexStringToUint8(_addr), w, h);
             if (LCDI2C != nullptr) {
                 LCDI2C->init();
-                LCDI2C->backlight();
             }
         }
+            
+        LCDI2C->clear();
+        LCDI2C->backlight();
 
         jsonRead(parameters, "coord", xy);
         _x = selectFromMarkerToMarker(xy, ",", 0).toInt();
@@ -52,15 +55,16 @@ class Lcd2004 : public IoTItem {
         if (LCDI2C != nullptr) {
             printBlankStr(_prevStrSize);
             
-            String tmpStr = "";
-            if (_descr != "none") tmpStr = _descr + " " + getItemValue(_id2show);
-                else tmpStr = getItemValue(_id2show);
+            String tmpStr = getItemValue(_id2show);
+            if (_descr != "none") tmpStr = _descr + " " + tmpStr;
             LCDI2C->setCursor(_x, _y);
             LCDI2C->print(tmpStr);
             
             //LCDI2C->print("Helloy,Manager 404 !");
-
+            //Serial.printf("ffff %s\n", _id2show);
             _prevStrSize = tmpStr.length();
+        } else {
+            scanI2C();
         }
     }
 
@@ -113,7 +117,10 @@ class Lcd2004 : public IoTItem {
         LCDI2C->print(tmpStr);
     }
 
-    ~Lcd2004(){};
+    ~Lcd2004(){
+        if (LCDI2C) delete LCDI2C;
+        LCDI2C = nullptr;
+    };
 };
 
 void *getAPI_Lcd2004(String subtype, String param) {

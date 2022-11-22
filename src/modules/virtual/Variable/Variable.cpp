@@ -8,11 +8,6 @@ class Variable : public IoTItem {
     Variable(String parameters) : IoTItem(parameters) {
     }
 
-    // особенность данного модуля - просто хранение значения для сценария, нет событий
-    // void setValue(IoTValue Value) {
-    //     value = Value;
-    // }
-
     void doByInterval() {
     }
 };

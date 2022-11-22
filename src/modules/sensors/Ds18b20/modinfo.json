@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "DS18B20 Температура",
             "type": "Reading",
             "subtype": "Ds18b20",
@@ -28,7 +29,7 @@
             "esp8266_4mb": 15
         },
         "title": "Cенсор температуры ds18b20",
-        "moduleDesc": "Позволяет получить значения температуры с Ds18b20.",
+        "moduleDesc": "Позволяет получить значения температуры с Ds18b20. О подделках: https://github.com/cpetrich/counterfeit_DS18B20",
         "propInfo": {
             "pin": "GPIO номер, к которому подключена шина данных датчиков.",
             "index": "Порядковый номер датчика на шине.",
@@ -42,6 +43,12 @@
             "milesburton/DallasTemperature@^3.9.1"
         ],
         "esp8266_4mb": [
+            "milesburton/DallasTemperature@^3.9.1"
+        ],
+        "esp8266_1mb": [
+            "milesburton/DallasTemperature@^3.9.1"
+        ],
+        "esp8266_1mb_ota": [
             "milesburton/DallasTemperature@^3.9.1"
         ]
     }

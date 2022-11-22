@@ -2,6 +2,7 @@
     "menuSection": "Исполнительные устройства",
 
     "configItem": [{
+        "global": 0,
         "name": "PWM ESP8266",
         "type": "Writing",
         "subtype": "Pwm8266",
@@ -41,6 +42,8 @@
     "defActive": true,
 
     "usedLibs": {
-        "esp8266_4mb": []
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": []
     }
 }

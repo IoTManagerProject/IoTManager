@@ -11,119 +11,101 @@ void jsonWriteStrDoc(DynamicJsonDocument& doc, String name, String value) {
 }
 
 // new==============================================================================
-bool jsonRead(String& json, String key, unsigned long& value, bool e) {
-    bool ret = true;
+bool jsonRead(const String& json, String key, long& value, bool e) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
+            SerialPrint("E", F("jsonRead"), error.f_str());
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), "json key '" + key + "' missing");
+            SerialPrint("E", F("jsonRead"), key + " missing");
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     }
-    value = doc[key].as<unsigned long>();
-    return ret;
+    value = doc[key].as<long>();
+    return true;
 }
 
-bool jsonRead(String& json, String key, float& value, bool e) {
-    bool ret = true;
+bool jsonRead(const String& json, String key, float& value, bool e) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
+            SerialPrint("E", F("jsonRead"), error.f_str());
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), key + " missing");
+            SerialPrint("E", F("jsonRead"), key + " missing");
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     }
     value = doc[key].as<float>();
-    return ret;
+    return true;
 }
 
-bool jsonRead(String& json, String key, String& value, bool e) {
-    bool ret = true;
+bool jsonRead(const String& json, String key, String& value, bool e) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
+            SerialPrint("E", F("jsonRead"), error.f_str());
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), key + " missing");
+            SerialPrint("E", F("jsonRead"), key + " missing");
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     }
     value = doc[key].as<String>();
+    return true;
+}
+
+bool jsonRead(const String& json, String key, bool& value, bool e) {
+    int lvalue = value;
+    bool ret = jsonRead(json, key, lvalue, e);
+    value = lvalue;
     return ret;
 }
 
-bool jsonRead(String& json, String key, bool& value, bool e) {
-    bool ret = true;
+bool jsonRead(const String& json, String key, int& value, bool e) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
+            SerialPrint("E", F("jsonRead"), error.f_str());
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), key + " missing");
+            SerialPrint("E", F("jsonRead"), key + " missing");
             jsonErrorDetected();
         }
-        ret = false;
+        return false;
     }
     value = doc[key].as<int>();
-    return ret;
-}
-
-bool jsonRead(String& json, String key, int& value, bool e) {
-    bool ret = true;
-    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) {
-        if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
-            jsonErrorDetected();
-        }
-        ret = false;
-    } else if (!doc.containsKey(key)) {
-        if (e) {
-            SerialPrint("EE", F("jsonRead"), key + " missing");
-            jsonErrorDetected();
-        }
-        ret = false;
-    }
-    value = doc[key].as<int>();
-    return ret;
+    return true;
 }
 
 // new==============================================================================
-bool jsonWriteStr_(String& json, String key, String value, bool e) {
+bool jsonWriteStr_(String& json, const String& key, const String& value, bool e) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonWrite"), error.f_str());
+            SerialPrint("E", F("jsonWrite"), error.f_str());
             jsonErrorDetected();
         }
         ret = false;
@@ -134,13 +116,13 @@ bool jsonWriteStr_(String& json, String key, String value, bool e) {
     return ret;
 }
 
-bool jsonWriteBool_(String& json, String key, bool value, bool e) {
+bool jsonWriteBool_(String& json, const String& key, bool value, bool e) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonWrite"), error.f_str());
+            SerialPrint("E", F("jsonWrite"), error.f_str());
             jsonErrorDetected();
         }
         ret = false;
@@ -151,13 +133,13 @@ bool jsonWriteBool_(String& json, String key, bool value, bool e) {
     return ret;
 }
 
-bool jsonWriteInt_(String& json, String key, int value, bool e) {
+bool jsonWriteInt_(String& json, const String& key, int value, bool e) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonWrite"), error.f_str());
+            SerialPrint("E", F("jsonWrite"), error.f_str());
             jsonErrorDetected();
         }
         ret = false;
@@ -168,13 +150,13 @@ bool jsonWriteInt_(String& json, String key, int value, bool e) {
     return ret;
 }
 
-bool jsonWriteFloat_(String& json, String key, float value, bool e) {
+bool jsonWriteFloat_(String& json, const String &key, float value, bool e) {
     bool ret = true;
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonWrite"), error.f_str());
+            SerialPrint("E", F("jsonWrite"), error.f_str());
             jsonErrorDetected();
         }
         ret = false;
@@ -203,7 +185,7 @@ bool jsonMergeObjects(String& json1, String& json2, bool e) {
     jsonMergeDocs(doc1.as<JsonObject>(), doc2.as<JsonObject>());
     if (error1 || error2) {
         if (e) {
-            SerialPrint("EE", F("json"), "jsonMergeObjects error");
+            SerialPrint("E", F("json"), "jsonMergeObjects error");
             jsonErrorDetected();
         }
         ret = false;
@@ -220,36 +202,36 @@ void jsonMergeDocs(JsonObject dest, JsonObjectConst src) {
 }
 
 // depricated======================================================================
-String jsonReadStr(String& json, String name, bool e) {
+String jsonReadStr(const String& json, String name, bool e) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
+            SerialPrint("E", F("jsonRead"), error.f_str());
             jsonErrorDetected();
         }
     }
     return doc[name].as<String>();
 }
 
-boolean jsonReadBool(String& json, String name, bool e) {
+boolean jsonReadBool(const String& json, String name, bool e) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
+            SerialPrint("E", F("jsonRead"), error.f_str());
             jsonErrorDetected();
         }
     }
     return doc[name].as<bool>();
 }
 
-int jsonReadInt(String& json, String name, bool e) {
+int jsonReadInt(const String& json, String name, bool e) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonRead"), error.f_str());
+            SerialPrint("E", F("jsonRead"), error.f_str());
             jsonErrorDetected();
         }
     }
@@ -262,7 +244,7 @@ String jsonWriteStr(String& json, String name, String value, bool e) {
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonWrite"), error.f_str());
+            SerialPrint("E", F("jsonWrite"), error.f_str());
             jsonErrorDetected();
         }
     }
@@ -277,7 +259,7 @@ String jsonWriteBool(String& json, String name, boolean value, bool e) {
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonWrite"), error.f_str());
+            SerialPrint("E", F("jsonWrite"), error.f_str());
             jsonErrorDetected();
         }
     }
@@ -292,7 +274,7 @@ String jsonWriteInt(String& json, String name, int value, bool e) {
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonWrite"), error.f_str());
+            SerialPrint("E", F("jsonWrite"), error.f_str());
             jsonErrorDetected();
         }
     }
@@ -307,7 +289,7 @@ String jsonWriteFloat(String& json, String name, float value, bool e) {
     DeserializationError error = deserializeJson(doc, json);
     if (error) {
         if (e) {
-            SerialPrint("EE", F("jsonWrite"), error.f_str());
+            SerialPrint("E", F("jsonWrite"), error.f_str());
             jsonErrorDetected();
         }
     }
@@ -318,8 +300,9 @@ String jsonWriteFloat(String& json, String name, float value, bool e) {
 }
 
 void jsonErrorDetected() {
-    jsonWriteInt(errorsHeapJson, F("jse2"), 1);
-    int number = jsonReadInt(errorsHeapJson, F("jse2n"));
-    number++;
-    jsonWriteInt(errorsHeapJson, F("jse2n"), number);
+    // пример как отправить ошибку с количеством
+    // jsonWriteInt(errorsHeapJson, F("jse2"), 1);
+    // int number = jsonReadInt(errorsHeapJson, F("jse2n"));
+    // number++;
+    // jsonWriteInt(errorsHeapJson, F("jse2n"), number);
 }

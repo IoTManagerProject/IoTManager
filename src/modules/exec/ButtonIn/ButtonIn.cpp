@@ -12,7 +12,7 @@ class ButtonIn : public IoTItem {
     String _pinMode;
     int _lastButtonState = LOW;
     unsigned long _lastDebounceTime = 0;
-    unsigned long _debounceDelay = 50;
+    long _debounceDelay = 50;
     int _buttonState;
     int _reading;
 
@@ -23,18 +23,16 @@ class ButtonIn : public IoTItem {
         jsonRead(parameters, "pinMode", _pinMode);
         jsonRead(parameters, "debounceDelay", _debounceDelay);
         jsonRead(parameters, "fixState", _fixState);
+        _round = 0;
         //Serial.printf("vvvvvvvvvvvvvvvv =%d \n", _fixState);
         
         IoTgpio.pinMode(_pin, INPUT);
         if (_pinMode == "INPUT_PULLUP") IoTgpio.digitalWrite(_pin, HIGH);
         else if (_pinMode == "INPUT_PULLDOWN") IoTgpio.digitalWrite(_pin, LOW);
 
-    
-        // TODO: загрузить значение из памяти иначе пока просто считываем значение текущего состояния PIN
         value.valD = _buttonState = IoTgpio.digitalRead(_pin);
         // сообщаем всем о стартовом статусе без генерации события
-        publishStatusMqtt(_id, (String)_buttonState);
-        publishStatusWs(_id, (String)_buttonState);
+        regEvent(_buttonState, "", false, false);
     }
 
     void loop() {
@@ -68,9 +66,9 @@ class ButtonIn : public IoTItem {
         _lastButtonState = _reading;
     }
 
-    void setValue(IoTValue Value) {
+    void setValue(const IoTValue& Value, bool genEvent = true) {
         value = Value;
-        regEvent((String)(int)value.valD, "ButtonIn");
+        regEvent((String)(int)value.valD, "ButtonIn", false, genEvent);
     }
 
     String getValue() {

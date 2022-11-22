@@ -4,11 +4,13 @@
 
 class VButton : public IoTItem {
    public:
-    VButton(String parameters): IoTItem(parameters) { }
+    VButton(String parameters): IoTItem(parameters) {
+        _round = 0;
+    }
 
-    void setValue(IoTValue Value) {
+    void setValue(const IoTValue& Value, bool genEvent = true) {
         value = Value;
-        regEvent((String)(int)value.valD, "VButton");
+        regEvent((String)(int)value.valD, "VButton", false, genEvent);
     }
 
     String getValue() {

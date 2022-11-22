@@ -2,6 +2,7 @@
     "menuSection": "Исполнительные устройства",
 
     "configItem": [{
+        "global": 0,
         "name": "Camera OV2640 (ESPcam)",
         "type": "Reading",
         "subtype": "EspCam",

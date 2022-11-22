@@ -2,10 +2,12 @@
     "menuSection": "Виртуальные элементы",
     "configItem": [
         {
+            "global": 0,
             "name": "Виртуальная кнопка",
             "type": "Reading",
             "subtype": "VButton",
             "id": "vbtn",
+            "needSave": 0,
             "widget": "toggle",
             "page": "Кнопки",
             "descr": "Кнопка",
@@ -34,6 +36,8 @@
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [],
-        "esp8266_4mb": []
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": []
     }
 }

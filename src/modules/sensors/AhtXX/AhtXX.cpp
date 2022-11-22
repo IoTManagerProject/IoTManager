@@ -7,30 +7,30 @@
 
 std::map<String, AHTxx*> ahts;
 
-void printStatus(AHTxx *aht) {
+String getStatus(AHTxx *aht) {
   switch (aht->getStatus()) {
     case AHTXX_NO_ERROR:
-      Serial.println(F("no error"));
+      return F("no error");
       break;
 
     case AHTXX_BUSY_ERROR:
-      Serial.println(F("sensor AHT busy, increase polling time"));
+      return F("sensor AHT busy, increase polling time");
       break;
 
     case AHTXX_ACK_ERROR:
-      Serial.println(F("sensor AHT didn't return ACK, not connected, broken, long wires (reduce speed), bus locked by slave (increase stretch limit)"));
+      return F("sensor AHT didn't return ACK, not connected, broken, long wires (reduce speed), bus locked by slave (increase stretch limit)");
       break;
 
     case AHTXX_DATA_ERROR:
-      Serial.println(F(" AHT: received data smaller than expected, not connected, broken, long wires (reduce speed), bus locked by slave (increase stretch limit)"));
+      return F(" AHT: received data smaller than expected, not connected, broken, long wires (reduce speed), bus locked by slave (increase stretch limit)");
       break;
 
     case AHTXX_CRC8_ERROR:
-      Serial.println(F("AHT: computed CRC8 not match received CRC8, this feature supported only by AHT2x sensors"));
+      return F("AHT: computed CRC8 not match received CRC8, this feature supported only by AHT2x sensors");
       break;
 
     default:
-      Serial.println(F("AHT: unknown status"));    
+      return F("AHT: unknown status");    
       break;
   }
 }
@@ -49,7 +49,7 @@ class AhtXXt : public IoTItem {
         if (value.valD != AHTXX_ERROR) {
             regEvent(value.valD, "AhtXXt");
         } else {
-            printStatus(_aht); //print temperature command status
+            SerialPrint("E", "Sensor AHTXX", getStatus(_aht), _id);
         }
     }
 
@@ -70,7 +70,7 @@ class AhtXXh : public IoTItem {
         if (value.valD != AHTXX_ERROR) {
             regEvent(value.valD, "AhtXXh");
         } else {
-            printStatus(_aht); //print temperature command status
+            SerialPrint("E", "Sensor AHTXX", getStatus(_aht), _id);
         }
     }
 

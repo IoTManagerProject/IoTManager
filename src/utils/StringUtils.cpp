@@ -8,12 +8,12 @@ void writeUint8tToString(uint8_t* payload, size_t length, size_t headerLenth, St
     }
 }
 
-String selectToMarkerLast(String str, String found) {
+String selectToMarkerLast(String str, const String& found) {
     int p = str.lastIndexOf(found);
     return str.substring(p + found.length());
 }
 
-String selectToMarker(String str, String found) {
+String selectToMarker(String str, const String& found) {
     int p = str.indexOf(found);
     return str.substring(0, p);
 }
@@ -24,32 +24,32 @@ String extractInner(String str) {
     return str.substring(p1 + 1, p2);
 }
 
-String deleteAfterDelimiter(String str, String found) {
+String deleteAfterDelimiter(String str, const String& found) {
     int p = str.indexOf(found);
     return str.substring(0, p);
 }
 
-String deleteBeforeDelimiter(String str, String found) {
+String deleteBeforeDelimiter(String str, const String& found) {
     int p = str.indexOf(found) + found.length();
     return str.substring(p);
 }
 
-String deleteBeforeDelimiterTo(String str, String found) {
+String deleteBeforeDelimiterTo(String str, const String& found) {
     int p = str.indexOf(found);
     return str.substring(p);
 }
 
-String deleteToMarkerLast(String str, String found) {
+String deleteToMarkerLast(String str, const String& found) {
     int p = str.lastIndexOf(found);
     return str.substring(0, p);
 }
 
-String selectToMarkerPlus(String str, String found, int plus) {
+String selectToMarkerPlus(String str, const String& found, int plus) {
     int p = str.indexOf(found);
     return str.substring(0, p + plus);
 }
 
-String selectFromMarkerToMarker(String str, String tofind, int number) {
+String selectFromMarkerToMarker(String str, const String& tofind, int number) {
     if (str.indexOf(tofind) == -1) {
         return "not found";
     }
@@ -79,7 +79,7 @@ void hex2string(byte array[], unsigned int len, char buffer[]) {
     buffer[len * 2] = '\0';
 }
 
-inline unsigned char ChartoHex(char ch) {
+unsigned char ChartoHex(char ch) {
     return ((ch >= 'A') ? (ch - 'A' + 0xA) : (ch - '0')) & 0x0F;
 }
 
@@ -98,14 +98,14 @@ int string2hex(const char* str, unsigned char* bytes) {
     return i;
 }
 
-uint8_t hexStringToUint8(String hex) {
+uint8_t hexStringToUint8(const String& hex) {
     uint8_t tmp = strtol(hex.c_str(), NULL, 0);
     if (tmp >= 0x00 && tmp <= 0xFF) {
         return tmp;
     }
 }
 
-uint16_t hexStringToUint16(String hex) {
+uint16_t hexStringToUint16(const String& hex) {
     uint16_t tmp = strtol(hex.c_str(), NULL, 0);
     if (tmp >= 0x0000 && tmp <= 0xFFFF) {
         return tmp;
@@ -128,20 +128,20 @@ size_t itemsCount2(String str, const String& separator) {
     return cnt;
 }
 
-size_t itemsCount(String& str, const char* delim) {
-    size_t cnt = 0;
-    char* cstr = new char[str.length() + 1];
-    strcpy(cstr, str.c_str());
-    char* token;
-    while ((token = strtok_r(cstr, delim, &cstr))) {
-        cnt++;
-        // printf("%s\n", token);
-    }
-    delete[] cstr;
-    return cnt;
-}
+// size_t itemsCount(String& str, const char* delim) {
+//     size_t cnt = 0;
+//     char* cstr = new char[str.length() + 1];
+//     strcpy(cstr, str.c_str());
+//     char* token;
+//     while ((token = strtok_r(cstr, delim, &cstr))) {
+//         cnt++;
+//         // printf("%s\n", token);
+//     }
+//     delete[] cstr;
+//     return cnt;
+// }
 
-char* stringToChar(String& str) {
+char* stringToChar(const String& str) {
     char* mychar = new char[str.length() + 1];
     strcpy(mychar, str.c_str());
     return mychar;
@@ -183,9 +183,8 @@ String prettyBytes(size_t size) {
         return String(size / 1024.0 / 1024.0 / 1024.0) + "GB";
 }
 
-String uint64ToString(uint64_t input) {
+String uint64ToString(uint64_t input, uint8_t base) {
     String result = "";
-    uint8_t base = 10;
 
     do {
         char c = input % base;
@@ -198,4 +197,11 @@ String uint64ToString(uint64_t input) {
         result = c + result;
     } while (input);
     return result;
+}
+
+void cleanString(String& str) {
+    const String allowedChars = F("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя.!-+ ");
+    for (size_t i = 0; i < str.length(); i++) {
+        if (allowedChars.indexOf(str.charAt(i)) == -1) str.setCharAt(i, ' ');
+    }
 }

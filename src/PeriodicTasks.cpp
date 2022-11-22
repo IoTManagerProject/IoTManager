@@ -31,27 +31,21 @@ void periodicTasksInit() {
     SerialPrint("i", "Task", "Periodic tasks init");
 }
 
-void handleError(String errorId, String errorValue) {
-    jsonWriteStr_(errorsHeapJson, errorId, errorValue);
-}
-
-void handleError(String errorId, int errorValue) {
-    jsonWriteInt_(errorsHeapJson, errorId, errorValue);
-}
-
 void printGlobalVarSize() {
     size_t settingsFlashJsonSize = settingsFlashJson.length();
     // SerialPrint(F("i"), F("settingsFlashJson"), String(settingsFlashJsonSize));
+    size_t valuesFlashJsonSize = valuesFlashJson.length();
     size_t errorsHeapJsonSize = errorsHeapJson.length();
     // SerialPrint(F("i"), F("errorsHeapJson"), String(errorsHeapJsonSize));
     size_t devListHeapJsonSize = devListHeapJson.length();
     // SerialPrint(F("i"), F("devListHeapJson"), String(devListHeapJsonSize));
 
-    SerialPrint(F("i"), F("Var summ sz"), String(settingsFlashJsonSize + errorsHeapJsonSize + devListHeapJsonSize));
+    SerialPrint(F("i"), F("Var summ sz"), String(settingsFlashJsonSize + valuesFlashJsonSize + errorsHeapJsonSize + devListHeapJsonSize));
 
     size_t halfBuffer = JSON_BUFFER_SIZE / 2;
 
     if (settingsFlashJsonSize > halfBuffer ||
+        valuesFlashJsonSize > halfBuffer ||
         errorsHeapJsonSize > halfBuffer ||
         devListHeapJsonSize > halfBuffer) {
         SerialPrint(F("EE"), F("Json"), F("Insufficient buffer size!!!"));

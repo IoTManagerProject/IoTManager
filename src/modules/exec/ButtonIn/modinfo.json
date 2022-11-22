@@ -2,6 +2,7 @@
     "menuSection": "Исполнительные устройства",
     "configItem": [
         {
+            "global": 0,
             "name": "Кнопка подключенная к пину",
             "type": "Writing",
             "subtype": "ButtonIn",
@@ -9,6 +10,7 @@
             "widget": "toggle",
             "page": "Кнопки",
             "descr": "Освещение",
+            "needSave": 0,
             "int": 0,
             "pin": 16,
             "execLevel": "1",
@@ -42,6 +44,8 @@
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [],
-        "esp8266_4mb": []
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": []
     }
 }

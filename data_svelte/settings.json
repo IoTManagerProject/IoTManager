@@ -1,5 +1,4 @@
 {
-    "settings_": "",
     "name": "IoTmanagerVer4",
     "apssid": "IoTmanager",
     "appass": "",
@@ -17,7 +16,10 @@
     "serverip": "http://iotmanager.org",
     "log": 0,
     "mqttin": 0,
+    "i2c": 0,
     "pinSCL": 0,
     "pinSDA": 0,
-    "i2cFreq": 100000
+    "i2cFreq": 100000,
+    "wg": "group1",
+    "settings_": ""
 }

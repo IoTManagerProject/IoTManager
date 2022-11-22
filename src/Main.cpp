@@ -59,11 +59,12 @@ void setup() {
     mqttInit();
 
     // настраиваем i2c шину
-    int pinSCL, pinSDA, i2cFreq;
+    int i2c, pinSCL, pinSDA, i2cFreq;
     jsonRead(settingsFlashJson, "pinSCL", pinSCL, false);
     jsonRead(settingsFlashJson, "pinSDA", pinSDA, false);
     jsonRead(settingsFlashJson, "i2cFreq", i2cFreq, false);
-    if (pinSCL && pinSDA && i2cFreq) {
+    jsonRead(settingsFlashJson, "i2c", i2c, false);
+    if (i2c != 0) {
 #ifdef esp32_4mb
         Wire.end();
         Wire.begin(pinSDA, pinSCL, (uint32_t)i2cFreq);
@@ -71,8 +72,8 @@ void setup() {
         Wire.begin(pinSDA, pinSCL);
         Wire.setClock(i2cFreq);
 #endif
+        SerialPrint("i", "i2c", F("i2c pins overriding done"));
     }
-    
 
     //настраиваем микроконтроллер
     configure("/config.json");
@@ -90,10 +91,27 @@ void setup() {
     iotScen.loadScenario("/scenario.txt");
 
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
-    IoTItems.push_back((IoTItem *)new externalVariable("{\"id\":\"onStart\",\"val\":1,\"int\":60}"));
-    generateEvent("onStart", "");
+    createItemFromNet("onStart", "1", -4);
 
     stInit();
+
+    // настраиваем секундные обслуживания системы
+    ts.add(
+        TIMES, 1000, [&](void *) {
+            // сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
+            if (needSaveValues) {
+                syncValuesFlashJson();
+                needSaveValues = false;
+            }
+
+            // проверяем все элементы на тухлость
+            for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                (*it)->checkIntFromNet();
+
+                // Serial.printf("[ITEM] size: %d, id: %s, int: %d, intnet: %d\n", sizeof(**it), (*it)->getID(), (*it)->getInterval(), (*it)->getIntFromNet());
+            }
+        },
+        nullptr, true);
 
     // test
     Serial.println("-------test start--------");
@@ -117,42 +135,28 @@ void setup() {
 }
 
 void loop() {
-    // if(millis()%2000==0){
-    //     //watch->settimeUnix(time(&iotTimeNow));
-    //     Serial.println(watch->gettime("d-m-Y, H:i:s, M"));
-    //     delay(1);
-    // }
-
-    //обновление задач таскера
-    ts.update();
-
-//отправка json
-#ifdef QUEUE_FROM_STR
-    if (sendJsonFiles) sendJsonFiles->loop();
+#ifdef LOOP_DEBUG
+    unsigned long st = millis();
 #endif
 
+    ts.update();
+
 #ifdef STANDARD_WEB_SERVER
-    //обработка web сервера 1
     HTTP.handleClient();
 #endif
 
 #ifdef STANDARD_WEB_SOCKETS
-    //обработка web сокетов
     standWebSocket.loop();
 #endif
 
-    //обновление mqtt
     mqttLoop();
-
-#ifdef STANDARD_WEB_SERVER
-    //обработка web сервера 2
-    // HTTP.handleClient();
-#endif
 
     // передаем управление каждому элементу конфигурации для выполнения своих функций
     for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         (*it)->loop();
-        if ((*it)->iAmDead) {
+
+        // if ((*it)->iAmDead) {
+        if (!((*it)->iAmLocal) && (*it)->getIntFromNet() == -1) {
             delete *it;
             IoTItems.erase(it);
             break;
@@ -160,32 +164,24 @@ void loop() {
     }
 
     handleOrder();
-
     handleEvent();
 
-#ifdef STANDARD_WEB_SERVER
-    //обработка web сервера 3
-    // HTTP.handleClient();
-#endif
-
-    // сохраняем значения IoTItems в файл каждую секунду, если были изменения (установлены маркеры на сохранение)
-    // currentMillis = millis();
-    // if (currentMillis - prevMillis >= 1000) {
-    //    prevMillis = millis();
-    //    volStrForSave = "";
-    //    for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-    //        if ((*it)->needSave) {
-    //            (*it)->needSave = false;
-    //            volStrForSave = volStrForSave + (*it)->getID() + "=" + (*it)->getValue() + ";";
-    //        }
-    //    }
-    //
-    //    if (volStrForSave != "") {
-    //        Serial.print("volStrForSave: ");
-    //        Serial.println(volStrForSave.c_str());
-    //    }
-    //}
+    // #ifdef LOOP_DEBUG
+    //     loopPeriod = millis() - st;
+    //     if (loopPeriod > 2) Serial.println(loopPeriod);
+    // #endif
 }
+
+//отправка json
+//#ifdef QUEUE_FROM_STR
+//    if (sendJsonFiles) sendJsonFiles->loop();
+//#endif
+
+// if(millis()%2000==0){
+//     //watch->settimeUnix(time(&iotTimeNow));
+//     Serial.println(watch->gettime("d-m-Y, H:i:s, M"));
+//     delay(1);
+// }
 
 // File dir = FileFS.open("/", "r");
 // String out;

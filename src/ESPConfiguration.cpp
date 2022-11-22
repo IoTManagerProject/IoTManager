@@ -46,4 +46,6 @@ void clearConfigure() {
         if (*it) delete *it;
     }
     IoTItems.clear();
+
+    valuesFlashJson.clear();
 }

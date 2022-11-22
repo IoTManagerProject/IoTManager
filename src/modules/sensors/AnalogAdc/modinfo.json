@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
 
     "configItem": [{
+        "global": 0,
         "name": "Аналоговый сенсор",
         "type": "Reading",
         "subtype": "AnalogAdc",

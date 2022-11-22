@@ -2,6 +2,7 @@
     "menuSection": "Исполнительные устройства",
 
     "configItem": [{
+        "global": 0,
         "name": "PWM ESP32",
         "type": "Writing",
         "subtype": "Pwm32",

@@ -83,7 +83,9 @@ extern WebSocketsServer standWebSocket;
 ***********************************************глобальные переменные**************************************************
 **********************************************************************************************************************/
 extern String settingsFlashJson;
+extern String valuesFlashJson;
 extern String errorsHeapJson;
+extern bool needSaveValues;
 
 // buf
 extern String orderBuf;
@@ -136,6 +138,8 @@ extern bool isTimeSynch;
 extern Time_t _time_local;
 extern Time_t _time_utc;
 extern bool _time_isTrust;
+
+//extern unsigned long loopPeriod;
 
 // extern DynamicJsonDocument settingsFlashJsonDoc;
 // extern DynamicJsonDocument paramsFlashJsonDoc;

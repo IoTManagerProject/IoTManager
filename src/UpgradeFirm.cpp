@@ -72,7 +72,7 @@ bool upgradeBuild() {
         handleUpdateStatus(true, PATH_ERROR);
         return ret;
     }
-#ifdef esp8266_4mb
+#if defined (esp8266_4mb) || defined (esp8266_1mb) || defined (esp8266_1mb_ota)
     ESPhttpUpdate.rebootOnUpdate(false);
     t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, getBinPath("firmware.bin"));
 #endif
@@ -132,5 +132,5 @@ void saveUserDataToFlash() {
 
 void handleUpdateStatus(bool send, int state) {
     jsonWriteInt_(errorsHeapJson, F("upd"), state);
-    if (!send) standWebSocket.broadcastTXT(errorsHeapJson);
+    if (!send) sendStringToWs("errors", errorsHeapJson, -1);
 }

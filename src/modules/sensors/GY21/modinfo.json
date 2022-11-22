@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "GY21 Температура",
             "type": "Reading",
             "subtype": "GY21t",
@@ -13,6 +14,7 @@
             "int": 15
         },
         {
+            "global": 0,
             "name": "GY21 Влажность",
             "type": "Reading",
             "subtype": "GY21h",

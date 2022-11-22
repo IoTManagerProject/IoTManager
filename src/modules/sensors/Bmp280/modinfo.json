@@ -2,6 +2,7 @@
     "menuSection": "Сенсоры",
     "configItem": [
         {
+            "global": 0,
             "name": "BMP280 Температура",
             "type": "Reading",
             "subtype": "Bmp280t",
@@ -14,6 +15,7 @@
             "round": 1
         },
         {
+            "global": 0,
             "name": "BMP280 Давление",
             "type": "Reading",
             "subtype": "Bmp280p",

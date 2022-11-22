@@ -21,6 +21,7 @@ enum Token {
     tok_notequal = -9,
     tok_lesseq = -10,
     tok_greateq = -11,
+    tok_silentset = -12,
 
     // управление
     tok_if = -6,
@@ -35,8 +36,8 @@ enum Token {
 /// ExprAST - Базовый класс для всех узлов выражений.
 ExprAST::~ExprAST() {}
 IoTValue *ExprAST::exec() { return nullptr; }
-int ExprAST::setValue(IoTValue *val) { return 0; }                  // 0 - установка значения не поддерживается наследником
-bool ExprAST::hasEventIdName(String eventIdName) { return false; }  // по умолчанию все узлы не связаны с ИД события, для которого выполняется сценарий
+int ExprAST::setValue(IoTValue *val, bool generateEvent) { return 0; }                  // 0 - установка значения не поддерживается наследником
+bool ExprAST::hasEventIdName(const String& eventIdName) { return false; }  // по умолчанию все узлы не связаны с ИД события, для которого выполняется сценарий
 // struct IoTValue zeroIotVal;
 
 /// NumberExprAST - Класс узла выражения для числовых литералов (Например, "1.0").
@@ -77,17 +78,17 @@ class StringExprAST : public ExprAST {
 class VariableExprAST : public ExprAST {
     String Name;
     IoTItem *Item;  // ссылка на объект модуля (прямой доступ к идентификатору указанному в сценарии), если получилось найти модуль по ID
-    bool ItemIsLocal = false;
+    //bool ItemIsLocal = false;
 
    public:
     VariableExprAST(const String &name, IoTItem *item) : Name(name), Item(item) {
-        if (item) ItemIsLocal = item->iAmLocal;
+        //if (item) ItemIsLocal = item->iAmLocal;
     }
 
-    int setValue(IoTValue *val) {
-        if (!ItemIsLocal) Item = findIoTItem(Name);
+    int setValue(IoTValue *val, bool generateEvent) {
+        //if (!ItemIsLocal) Item = findIoTItem(Name);
         if (Item)
-            Item->setValue(*val);
+            Item->setValue(*val, generateEvent);
         else
             return 0;
 
@@ -96,7 +97,7 @@ class VariableExprAST : public ExprAST {
 
     IoTValue *exec() {
         if (isIotScenException) return nullptr;
-        if (!ItemIsLocal) Item = findIoTItem(Name);
+        //if (!ItemIsLocal) Item = findIoTItem(Name);
         if (Item) {
             // if (Item->value.isDecimal)
             //   Serial.printf("Call from  VariableExprAST: %s = %f\n", Name.c_str(), Item->value.valD);
@@ -104,6 +105,7 @@ class VariableExprAST : public ExprAST {
             return &(Item->value);
         }
 
+        SerialPrint("E", Name, "The element is not found or the connection is lost", Name);
         return nullptr;  // Item не найден.
     }
 };
@@ -145,90 +147,98 @@ class BinaryExprAST : public ExprAST {
         if (RHS == nullptr || LHS == nullptr) return nullptr;
 
         IoTValue *rhs = RHS->exec();  // получаем значение правого операнда для возможного использования в операции присваивания
+        if (rhs == nullptr) return nullptr;
 
-        if (Op == '=' && LHS->setValue(rhs)) {  // если установка значения не поддерживается, т.е. слева не переменная, то работаем по другим комбинациям далее
+        if (Op == '=' && LHS->setValue(rhs, true)) {  // если установка значения не поддерживается, т.е. слева не переменная, то работаем по другим комбинациям далее
+            return rhs;                         // иначе возвращаем присвоенное значение справа
+        }
+
+        if (Op == tok_silentset && LHS->setValue(rhs, false)) {  // если установка значения не поддерживается, т.е. слева не переменная, то работаем по другим комбинациям далее
             return rhs;                         // иначе возвращаем присвоенное значение справа
         }
 
         IoTValue *lhs = LHS->exec();  // если присваивания не произошло, значит операция иная и необходимо значение левого операнда
+        if (lhs == nullptr) return nullptr;
 
-        if (lhs != nullptr && rhs != nullptr) {
-            if (lhs->isDecimal && rhs->isDecimal) {
-                switch (Op) {
-                    case '>':
-                        val.valD = lhs->valD > rhs->valD;
-                        break;
-                    case '<':
-                        val.valD = lhs->valD < rhs->valD;
-                        break;
-                    case tok_lesseq:
-                        val.valD = lhs->valD <= rhs->valD;
-                        break;
-                    case tok_greateq:
-                        val.valD = lhs->valD >= rhs->valD;
-                        break;
-                    case tok_equal:
-                        val.valD = lhs->valD == rhs->valD;
-                        break;
-                    case tok_notequal:
-                        val.valD = lhs->valD != rhs->valD;
-                        break;
+        
+        if (lhs->isDecimal && rhs->isDecimal) {
+            switch (Op) {
+                case '>':
+                    val.valD = lhs->valD > rhs->valD;
+                    break;
+                case '<':
+                    val.valD = lhs->valD < rhs->valD;
+                    break;
+                case tok_lesseq:
+                    val.valD = lhs->valD <= rhs->valD;
+                    break;
+                case tok_greateq:
+                    val.valD = lhs->valD >= rhs->valD;
+                    break;
+                case tok_equal:
+                    val.valD = lhs->valD == rhs->valD;
+                    break;
+                case tok_notequal:
+                    val.valD = lhs->valD != rhs->valD;
+                    break;
 
-                    case '+':
-                        val.valD = lhs->valD + rhs->valD;
-                        break;
-                    case '-':
-                        val.valD = lhs->valD - rhs->valD;
-                        break;
-                    case '*':
-                        val.valD = lhs->valD * rhs->valD;
-                        break;
-                    case '/':
-                        if (rhs->valD != 0)
-                            val.valD = lhs->valD / rhs->valD;
-                        else
-                            val.valD = 3.4E+38;
-                        break;
+                case '+':
+                    val.valD = lhs->valD + rhs->valD;
+                    break;
+                case '-':
+                    val.valD = lhs->valD - rhs->valD;
+                    break;
+                case '*':
+                    val.valD = lhs->valD * rhs->valD;
+                    break;
+                case '/':
+                    if (rhs->valD != 0)
+                        val.valD = lhs->valD / rhs->valD;
+                    else
+                        val.valD = 3.4E+38;
+                    break;
 
-                    case '|':
-                        val.valD = lhs->valD || rhs->valD;
-                        break;
-                    case '&':
-                        val.valD = lhs->valD && rhs->valD;
-                        break;
+                case '|':
+                    val.valD = lhs->valD || rhs->valD;
+                    break;
+                case '&':
+                    val.valD = lhs->valD && rhs->valD;
+                    break;
 
-                    default:
-                        break;
-                }
-                return &val;
+                default:
+                    break;
             }
-
-            if (!lhs->isDecimal || !rhs->isDecimal) {
-                if (lhs->isDecimal)
-                    lhsStr = (String)lhs->valD;
-                else
-                    lhsStr = lhs->valS;
-                if (rhs->isDecimal)
-                    rhsStr = (String)rhs->valD;
-                else
-                    rhsStr = rhs->valS;
-                switch (Op) {
-                    case tok_equal:
-                        val.valD = compStr(lhsStr, rhsStr);
-                        break;
-
-                    case '+':
-                        val.valS = lhsStr + rhsStr;
-                        val.valD = 1;
-                        val.isDecimal = false;
-                        break;
-
-                    default:
-                        break;
-                }
-                return &val;
-            }
+            return &val;
         }
+
+        if (!lhs->isDecimal || !rhs->isDecimal) {
+            if (lhs->isDecimal)
+                lhsStr = (String)lhs->valD;
+            else
+                lhsStr = lhs->valS;
+            
+            if (rhs->isDecimal)
+                rhsStr = (String)rhs->valD;
+            else
+                rhsStr = rhs->valS;
+            
+            switch (Op) {
+                case tok_equal:
+                    val.valD = compStr(lhsStr, rhsStr);
+                    break;
+
+                case '+':
+                    val.valS = lhsStr + rhsStr;
+                    val.valD = 1;
+                    val.isDecimal = false;
+                    break;
+
+                default:
+                    break;
+            }
+            return &val;
+        }
+        
         return &val;
     }
 
@@ -250,12 +260,12 @@ class CallExprAST : public ExprAST {
     std::vector<ExprAST *> Args;
     IoTItem *Item;  // ссылка на объект модуля (прямой доступ к идентификатору указанному в сценарии), если получилось найти модуль по ID
     IoTValue ret;   // хранение возвращаемого значения, т.к. возврат по ссылке осуществляется
-    bool ItemIsLocal = false;
+    //bool ItemIsLocal = false;
 
    public:
     CallExprAST(const String &callee, String &cmd, std::vector<ExprAST *> &args, IoTItem *item)
         : Callee(callee), Cmd(cmd), Args(args), Item(item) {
-        if (item) ItemIsLocal = item->iAmLocal;
+        //if (item) ItemIsLocal = item->iAmLocal;
     }
 
     IoTValue *exec() {
@@ -273,8 +283,14 @@ class CallExprAST : public ExprAST {
             return nullptr;
         }
 
-        if (!ItemIsLocal) Item = findIoTItem(Callee);  // пробуем найти переменную если она не локальная (могла придти по сети в процессе)
+        //if (!ItemIsLocal) Item = findIoTItem(Callee);  // пробуем найти переменную если она не локальная (могла придти по сети в процессе)
         if (!Item) return nullptr;                     // ret = zeroIotVal;  // если все же не пришла, то либо опечатка, либо уже стерлась - выходим
+
+        if (Cmd == "getIntFromNet") {
+            ret.valD = Item->getIntFromNet();
+            ret.isDecimal = true;
+            return &ret;
+        }
 
         // если все же все ок, то готовим параметры для передачи в модуль
         std::vector<IoTValue> ArgsAsIoTValue;
@@ -321,6 +337,7 @@ enum SysOp {
     sysop_gethhmm,
     sysop_gethhmmss,
     sysop_getTime,
+    sysop_getRSSI,
     sysop_getIP,
     sysop_mqttPub,
     sysop_getUptime
@@ -404,6 +421,10 @@ IoTValue sysExecute(SysOp command, std::vector<IoTValue> &param) {
 #endif
             }
             break;
+        case sysop_getRSSI:
+            value.valD = WiFi.RSSI();
+            value.isDecimal = true;
+            break;
         case sysop_getIP:
             value.valS = jsonReadStr(settingsFlashJson, F("ip"));
             value.isDecimal = false;
@@ -411,7 +432,9 @@ IoTValue sysExecute(SysOp command, std::vector<IoTValue> &param) {
         case sysop_mqttPub:
             if (param.size() == 2) {
                 // Serial.printf("Call from  sysExecute %s %s\n", param[0].valS.c_str(), param[1].valS.c_str());
-                value.valD = mqtt.publish(param[0].valS.c_str(), param[1].valS.c_str(), false);
+                String tmpStr = param[1].valS;
+                if (param[1].isDecimal) tmpStr = param[1].valD;
+                value.valD = mqtt.publish(param[0].valS.c_str(),  tmpStr.c_str(), false);
             }
             break;
         case sysop_getUptime:
@@ -458,6 +481,8 @@ class SysCallExprAST : public ExprAST {
             operation = sysop_getMonth;
         else if (Callee == "getDay")
             operation = sysop_getDay;
+        else if (Callee == "getRSSI")
+            operation = sysop_getRSSI;
         else if (Callee == "getIP")
             operation = sysop_getIP;
         else if (Callee == "mqttPub")
@@ -518,7 +543,7 @@ class IfExprAST : public ExprAST {
             _IDNames = "";
     }
 
-    bool hasEventIdName(String eventIdName) {
+    bool hasEventIdName(const String& eventIdName) {
         // Serial.printf("Call from  BinaryExprAST _IDNames:%s\n", _IDNames.c_str());
         return _IDNames.indexOf(" " + eventIdName + " ") >= 0;  // определяем встречался ли ИД, для которого исполняем сценарий в выражении IF
     }
@@ -535,7 +560,8 @@ class IfExprAST : public ExprAST {
             return nullptr;  //&zeroIotVal;
         }
 
-        if (cond_ret->isDecimal && cond_ret->valD) {
+        // если число больше нуля или строка не равна пустой, то считаем условие выполненным
+        if (cond_ret->isDecimal && cond_ret->valD || !(cond_ret->isDecimal) && cond_ret->valS != "") {
             if (Then == nullptr) return nullptr;
             res_ret = Then->exec();
         } else {
@@ -546,7 +572,7 @@ class IfExprAST : public ExprAST {
         // if (!res_ret) Serial.printf("Call from  IfExprAST: Cond result = %f, no body result\n", cond_ret->valD);
         // else if (res_ret->isDecimal) Serial.printf("Call from  IfExprAST: Cond result = %f, result = %f\n", cond_ret->valD, res_ret->valD);
         // else Serial.printf("Call from  IfExprAST: Cond result = %f, result = %s\n", cond_ret->valD, res_ret->valS.c_str());
-        Serial.printf("\n");
+        //Serial.printf("\n");
         return cond_ret;
     }
 
@@ -684,6 +710,15 @@ int IoTScenario::gettok() {
             return tok_equal;
         } else
             return '=';
+    }
+
+    if (LastChar == ':') {
+        LastChar = getLastChar();
+        if (LastChar == '=') {
+            LastChar = getLastChar();
+            return tok_silentset;
+        } else
+            return ':';
     }
 
     if (LastChar == '!') {
@@ -991,7 +1026,7 @@ void IoTScenario::loadScenario(String fileName) {  // подготавливае
     }
 }
 
-void IoTScenario::exec(String eventIdName) {  // посимвольно считываем и сразу интерпретируем сценарий в дерево AST
+void IoTScenario::exec(const String& eventIdName) {  // посимвольно считываем и сразу интерпретируем сценарий в дерево AST
     if (mode == 0 && !file) return;
 
     LastChar = 0;
@@ -1027,7 +1062,8 @@ void IoTScenario::exec(String eventIdName) {  // посимвольно счит
 IoTScenario::IoTScenario() {
     // Задаём стандартные бинарные операторы.
     // 1 - наименьший приоритет.
-    BinopPrecedence['='] = 1;
+    BinopPrecedence[tok_silentset] = 1;
+    BinopPrecedence['='] = 2;
     BinopPrecedence['|'] = 5;
     BinopPrecedence['&'] = 6;
     BinopPrecedence[tok_equal] = 10;     // ==

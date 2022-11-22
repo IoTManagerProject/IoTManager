@@ -160,34 +160,19 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     //здесь мы получаем события с других устройств, которые потом проверяются в сценариях этого устройства
     else if (topicStr.indexOf("event") != -1) {
         //пока не работает сетевой обмен этот код будет закомментирован
-
-        // if (!jsonReadBool(settingsFlashJson, "mqttin")) {
-        //     return;
-        // }
-        // if (topicStr.indexOf(chipId) == -1) {
-        //     String devId = selectFromMarkerToMarker(topicStr, "/", 2);
-        //     String id = selectFromMarkerToMarker(topicStr, "/", 3);
-        //     IoTItem* itemExist = findIoTItem(id);
-        //     if (itemExist) {
-        //         String valAsStr;
-        //         if (jsonRead(payloadStr, F("val"), valAsStr, false)) {
-        //             itemExist->setValue(valAsStr);
-        //             unsigned long interval;
-        //             jsonRead(payloadStr, F("int"), interval);
-        //             itemExist->setInterval(interval);
-        //         }
-        //     } else {
-        //         //добавим событие в базу
-        //         // IoTItems.push_back((IoTItem*)new externalVariable(payloadStr));
-        //     }
-        //     //запустим проверку его в сценариях
-        //     generateEvent(id, payloadStr);
-        //     SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + payloadStr);
-        // }
+        if (!jsonReadBool(settingsFlashJson, "mqttin")) {
+            return;
+        }
+        if (topicStr.indexOf(chipId) == -1) {
+            String devId = selectFromMarkerToMarker(topicStr, "/", 2);
+            String id = selectFromMarkerToMarker(topicStr, "/", 3);
+            analyzeMsgFromNet(payloadStr, id);
+            //SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + valAsStr);
+        }
     }
 
-    //здесь мы получаем прямые команды которые сразу выполнятся на этом устройстве
-    //необходимо для тех кто хочет управлять своим устройством из mqtt
+    // здесь мы получаем прямые команды которые сразу выполнятся на этом устройстве
+    // необходимо для тех кто хочет управлять своим устройством из mqtt
     else if (topicStr.indexOf("order") != -1) {
         if (!jsonReadBool(settingsFlashJson, "mqttin")) {
             return;
@@ -278,7 +263,7 @@ void publishWidgets() {
     DeserializationError error = deserializeJson(doc, file);
     if (error) {
         SerialPrint("E", F("MQTT"), error.f_str());
-        handleError("jse3", 1);
+        jsonWriteInt(errorsHeapJson, F("jse3"), 1);  //Ошибка чтения json файла с виджетами при отправки в mqtt
     }
     JsonArray arr = doc.as<JsonArray>();
     for (JsonVariant value : arr) {
@@ -325,14 +310,15 @@ void handleMqttStatus(bool send) {
     String stateStr = getStateStr(mqtt.state());
     // Serial.println(stateStr);
     jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);
-    if (!send) standWebSocket.broadcastTXT(errorsHeapJson);
+
+    if (!send) sendStringToWs("errors", errorsHeapJson, -1);
 }
 
 void handleMqttStatus(bool send, int state) {
     String stateStr = getStateStr(state);
     // Serial.println(stateStr);
     jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);
-    if (!send) standWebSocket.broadcastTXT(errorsHeapJson);
+    if (!send) sendStringToWs("errors", errorsHeapJson, -1);
 }
 
 // log-20384820.txt

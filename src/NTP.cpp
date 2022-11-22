@@ -13,9 +13,11 @@ void ntpInit() {
             if (unixTime < MIN_DATETIME) {
                 isTimeSynch = false;
                 // SerialPrint("E", "NTP", "Time not synched");
+                jsonWriteInt(errorsHeapJson, F("tme1"), 1);
                 synchTime();
                 return;
             }
+            jsonWriteInt(errorsHeapJson, F("tme1"), 0);
             breakEpochToTime(unixTime + jsonReadInt(settingsFlashJson, F("timezone")) * 60 * 60, _time_local);
             breakEpochToTime(unixTime, _time_utc);
             isTimeSynch = true;

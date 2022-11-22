@@ -14,9 +14,9 @@ void standWebServerInit() {
     // HTTP.on("/devicelist.json", HTTP_GET, []() {
     //     HTTP.send(200, "application/json", devListHeapJson);
     // });
-    // HTTP.on("/settings.h.json", HTTP_GET, []() {
-    //     HTTP.send(200, "application/json", settingsFlashJson);
-    // });
+    HTTP.on("/settings.h.json", HTTP_GET, []() {
+        HTTP.send(200, "application/json", settingsFlashJson);
+    });
     // HTTP.on("/settings.f.json", HTTP_GET, []() {
     //     HTTP.send(200, "application/json", readFile(F("settings.json"), 20000));
     // });
@@ -37,6 +37,22 @@ void standWebServerInit() {
     //     // ESP.restart();
     //     HTTP.send(200, "text/plain", "ok");
     // });
+
+
+    HTTP.on("/set", HTTP_GET, []() {
+        if (HTTP.hasArg(F("routerssid")) && WiFi.getMode() == WIFI_AP) {
+            jsonWriteStr(settingsFlashJson, F("routerssid"), HTTP.arg(F("routerssid")));
+            syncSettingsFlashJson();
+            HTTP.send(200, "text/plain", "ok");
+        }
+
+        if (HTTP.hasArg(F("routerpass")) && WiFi.getMode() == WIFI_AP) {
+            jsonWriteStr(settingsFlashJson, F("routerpass"), HTTP.arg(F("routerpass")));
+            syncSettingsFlashJson();
+            HTTP.send(200, "text/plain", "ok");
+        }
+
+    });
 
     //  Добавляем функцию Update для перезаписи прошивки по WiFi при 1М(256K FileFS) и выше
     //  httpUpdater.setup(&HTTP);
@@ -98,6 +114,7 @@ void standWebServerInit() {
 }
 
 bool handleFileRead(String path) {
+    path = "/" + path;
     if (path.endsWith("/")) path += "index.html";
     String contentType = getContentType(path);
     String pathWithGz = path + ".gz";
@@ -211,7 +228,7 @@ void handleFileList() {
         entry.close();
     }
     output += "]";
-    Serial.println(output);
+    //Serial.println(output);
     HTTP.send(200, "text/json", output);
 }
 

@@ -3,4 +3,6 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+/myProfile_wm.json
+/myProfile.json
 data_svelte/settings.json

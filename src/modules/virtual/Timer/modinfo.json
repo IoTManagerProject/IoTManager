@@ -2,6 +2,7 @@
     "menuSection": "Виртуальные элементы",
     "configItem": [
         {
+            "global": 0,
             "name": "Таймер",
             "type": "Writing",
             "subtype": "Timer",
@@ -69,6 +70,8 @@
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [],
-        "esp8266_4mb": []
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": []
     }
 }

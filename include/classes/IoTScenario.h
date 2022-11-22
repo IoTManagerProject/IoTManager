@@ -7,8 +7,8 @@ class ExprAST {
    public:
     virtual ~ExprAST();
     virtual IoTValue *exec();
-    virtual int setValue(IoTValue *val);  // ret 0 - установка значения не поддерживается наследником
-    virtual bool hasEventIdName(String eventIdName);
+    virtual int setValue(IoTValue *val, bool generateEvent);  // ret 0 - установка значения не поддерживается наследником
+    virtual bool hasEventIdName(const String& eventIdName);
 };
 
 class IoTScenario {
@@ -93,7 +93,7 @@ class IoTScenario {
 
    public:
     void loadScenario(String fileName);
-    void exec(String eventIdName);
+    void exec(const String& eventIdName);
 
     IoTScenario();
     ~IoTScenario();

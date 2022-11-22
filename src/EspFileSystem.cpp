@@ -14,13 +14,17 @@ void globalVarsSync() {
     settingsFlashJson = readFile(F("settings.json"), 4096);
     settingsFlashJson.replace("\r\n", "");
 
+    valuesFlashJson = readFile(F("values.json"), 4096);
+    valuesFlashJson.replace("\r\n", "");
+
+
     mqttPrefix = jsonReadStr(settingsFlashJson, F("mqttPrefix"));
     mqttRootDevice = mqttPrefix + "/" + chipId;
     jsonWriteStr_(settingsFlashJson, "root", mqttRootDevice);
     jsonWriteStr_(settingsFlashJson, "id", chipId);
 
-    jsonWriteStr_(errorsHeapJson, "errors_", "");   //метка для парсинга
-    jsonWriteStr_(ssidListHeapJson, "ssids_", "");  //метка для парсинга
+    // jsonWriteStr_(errorsHeapJson, "errors_", "");   //метка для парсинга удалить
+    // jsonWriteStr_(ssidListHeapJson, "ssids_", "");  //метка для парсинга удалить
 }
 
 String getParamsJson() {
@@ -32,6 +36,10 @@ String getParamsJson() {
 
 void syncSettingsFlashJson() {
     writeFile(F("settings.json"), settingsFlashJson);
+}
+
+void syncValuesFlashJson() {
+    writeFile(F("values.json"), valuesFlashJson);
 }
 
 const String getChipId() {

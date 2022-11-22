@@ -9,7 +9,6 @@ class Timer : public IoTItem {
     bool _unfin = false;
     bool _ticker = false;
     bool _repeat = false;
-    bool _needSave = false;
     bool _pause = false; 
     int _initValue;
 
@@ -17,23 +16,24 @@ class Timer : public IoTItem {
     Timer(String parameters): IoTItem(parameters) {
         jsonRead(parameters, "countDown", _initValue);
         _unfin = !_initValue;
-        value.valD = _initValue;                    
-        if (_initValue) value.valD = value.valD + 1;        // +1 - компенсируем ранний вычет счетчика, ранний вычет, чтоб после события значение таймера не исказилось.     
-                                                // +0 - если изначально установили бесконечный счет
+        
+        if (!_needSave) {
+            value.valD = _initValue;                    
+            if (_initValue) value.valD = value.valD + 1;        // +1 - компенсируем ранний вычет счетчика, ранний вычет, чтоб после события значение таймера не исказилось.     
+        }
         
         jsonRead(parameters, "ticker", _ticker);
         jsonRead(parameters, "repeat", _repeat);
-        jsonRead(parameters, "needSave", _needSave);    // нужно сохранять счетчик в постоянную память
     }
 
     void doByInterval() {
         if (!_unfin && value.valD >= 0 && !_pause) {
             if (_repeat && value.valD == 0) value.valD = _initValue;
             value.valD--;
-            if (_needSave) needSave = true;
             if (value.valD == 0) {
                 regEvent(value.valD, "Time's up");
             }
+            //if (!_ticker) regEvent(getValue(), "Timer tick", false, false);  // только регистрируем изменения без генерации тиков
         }
 
         if (_ticker && (value.valD > 0 || _unfin) && !_pause) regEvent(value.valD, "Timer tick");

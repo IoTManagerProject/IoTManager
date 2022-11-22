@@ -13,7 +13,11 @@
 # python PrepareProject.py --profile <ИмяФайла>
 # python PrepareProject.py -p <ИмяФайла>
 # 
-#
+# поддерживаемые контроллеры (профили):
+# esp8266_4mb
+# esp32_4mb
+# esp8266_1mb
+# esp8266_1mb_ota
 
 import configparser
 import os, json, sys, getopt
@@ -98,8 +102,7 @@ else:
     # устанавливаем параметры сборки
     profJson['projectProp'] = {
         'platformio': {
-            'default_envs': 'esp8266_4mb',
-            'data_dir': 'data_svelte'
+            'default_envs': 'esp8266_4mb'
         }
     }
     # загружаем список модулей для сборки
@@ -107,23 +110,35 @@ else:
     # сохраняем новый профиль
     with open(profile, "w", encoding='utf-8') as write_file:
         json.dump(profJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
-    
+
+
+# определяем какое устройство используется в профиле
+deviceName = profJson['projectProp']['platformio']['default_envs']  
+
+# назначаем папку с файлами прошивки в зависимости от устройства и запоминаем в профиле
+dataDir = 'data_svelte'
+if deviceName == 'esp8266_1mb_ota': 
+    dataDir = 'data_svelte_lite'
+profJson['projectProp'] = {
+    'platformio': {
+        'data_dir': dataDir
+    }
+}
     
 # генерируем файлы проекта на основе подготовленного профиля
 # заполняем конфигурационный файл прошивки параметрами из профиля
-with open("data_svelte/settings.json", "r", encoding='utf-8') as read_file:
+with open(dataDir + "/settings.json", "r", encoding='utf-8') as read_file:
     iotmJson = json.load(read_file)
 for key, value in profJson['iotmSettings'].items():
     iotmJson[key] = value
-with open("data_svelte/settings.json", "w", encoding='utf-8') as write_file:
+with open(dataDir + "/settings.json", "w", encoding='utf-8') as write_file:
     json.dump(iotmJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
 
-# определяем какое устройство используется в профиле
-deviceName = profJson['projectProp']['platformio']['default_envs']
+
         
 # собираем меню прошивки из модулей
 # параллельно формируем список имен активных модулей
-# параллельно собираем необходимые активным модулям библиотеки для включения в компиляцию для текущего типа устройства (esp8266_4m, esp32_4mb) 
+# параллельно собираем необходимые активным модулям библиотеки для включения в компиляцию для текущего типа устройства (esp8266_4m, esp32_4mb, esp8266_1m, esp8266_1m_ota) 
 activeModulesName = []  # список имен активных модулей
 allLibs = ""            # подборка всех библиотек необходимых модулям для дальнейшей записи в конфигурацию platformio
 itemsCount = 1;
@@ -145,7 +160,7 @@ for section, modules in profJson['modules'].items():
                         configItemsJson['name'] = str(itemsCount) + ". " + configItemsJson['name']
                         itemsCount = itemsCount + 1
                         itemsJson.append(configItemsJson)        
-with open("data_svelte/items.json", "w", encoding='utf-8') as write_file:
+with open(dataDir + "/items.json", "w", encoding='utf-8') as write_file:
     json.dump(itemsJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
 
 

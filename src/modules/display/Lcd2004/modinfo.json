@@ -2,6 +2,7 @@
     "menuSection": "Экраны",
 
     "configItem": [{
+        "global": 0,
         "name": "LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
@@ -107,6 +108,12 @@
             "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
         ],
         "esp8266_4mb": [
+            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
+        ],
+        "esp8266_1mb": [
+            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
+        ],
+        "esp8266_1mb_ota": [
             "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
         ]
     }

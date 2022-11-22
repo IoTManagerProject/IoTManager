@@ -9,6 +9,7 @@ class Loging : public IoTItem {
    private:
     String logid;
     String id;
+    String tmpValue;
     String filesList = "";
 
     int _publishType = -2;
@@ -22,7 +23,7 @@ class Loging : public IoTItem {
     String prevDate = "";
     bool firstTimeDate = true;
 
-    unsigned long interval;
+    long interval;
 
    public:
     Loging(String parameters) : IoTItem(parameters) {
@@ -103,7 +104,56 @@ class Loging : public IoTItem {
         //запускаем процедуру удаления старых файлов если память переполняется
         deleteLastFile();
     }
+void SetDoByInterval(String valse) {
+        String value = valse;
+        //если значение логгирования пустое
+        if (value == "") {
+            SerialPrint("E", F("LogingEvent"), "'" + id + "' loging value is empty, return");
+            return;
+        }
+        //если время не было получено из интернета
+        if (!isTimeSynch) {
+            SerialPrint("E", F("LogingEvent"), "'" + id + "' Сant loging - time not synchronized, return");
+            return;
+        }
+        regEvent(value, F("LogingEvent"));
+        String logData;
+        jsonWriteInt(logData, "x", unixTime);
+        jsonWriteFloat(logData, "y1", value.toFloat());
+        //прочитаем путь к файлу последнего сохранения
+        String filePath = readDataDB(id);
 
+        //если данные о файле отсутствуют, создадим новый
+        if (filePath == "failed" || filePath == "") {
+            SerialPrint("E", F("LogingEvent"), "'" + id + "' file path not found, start create new file");
+            createNewFileWithData(logData);
+            return;
+        } else {
+            //если файл все же есть но был создан не сегодня, то создаем сегодняшний
+            if (getTodayDateDotFormated() != getDateDotFormatedFromUnix(getFileUnixLocalTime(filePath))) {
+                SerialPrint("E", F("LogingEvent"), "'" + id + "' file too old, start create new file");
+                createNewFileWithData(logData);
+                return;
+            }
+        }
+
+        //считаем количество строк и определяем размер файла
+        size_t size = 0;
+        int lines = countJsonObj(filePath, size);
+        SerialPrint("i", F("LogingEvent"), "'" + id + "' " + "lines = " + String(lines) + ", size = " + String(size));
+
+        //если количество строк до заданной величины и дата не менялась
+        if (lines <= points && !hasDayChanged()) {
+            //просто добавим в существующий файл новые данные
+            addNewDataToExistingFile(filePath, logData);
+            //если больше или поменялась дата то создадим следующий файл
+        } else {
+            createNewFileWithData(logData);
+        }
+        //запускаем процедуру удаления старых файлов если память переполняется
+        deleteLastFile();
+
+    }
     void createNewFileWithData(String &logData) {
         logData = logData + ",";
         String path = "/lg/" + id + "/" + String(unixTimeShort) + ".txt";  //создадим путь вида /lg/id/133256622333.txt
@@ -176,13 +226,14 @@ class Loging : public IoTItem {
             unsigned long reqUnixTime = strDateToUnix(getItemValue(id + "-date"));
             if (fileUnixTimeLocal > reqUnixTime && fileUnixTimeLocal < reqUnixTime + 86400) {
                 noData = false;
+                String json = getAdditionalJson();
                 if (_publishType == TO_MQTT) {
                     publishChartFileToMqtt(path, id, calculateMaxCount());
                 } else if (_publishType == TO_WS) {
-                    publishChartToWs(path, _wsNum, 1000, calculateMaxCount(), id);
+                    sendFileToWsByFrames(path, "charta", json, _wsNum, WEB_SOCKETS_FRAME_SIZE);
                 } else if (_publishType == TO_MQTT_WS) {
+                    sendFileToWsByFrames(path, "charta", json, _wsNum, WEB_SOCKETS_FRAME_SIZE);
                     publishChartFileToMqtt(path, id, calculateMaxCount());
-                    publishChartToWs(path, _wsNum, 1000, calculateMaxCount(), id);
                 }
                 SerialPrint("i", F("Loging"), String(f) + ") " + path + ", " + getDateTimeDotFormatedFromUnix(fileUnixTimeLocal) + ", sent");
             } else {
@@ -195,6 +246,24 @@ class Loging : public IoTItem {
         if (noData) {
             clearValue();
         }
+    }
+
+    String getAdditionalJson() {
+        String topic = mqttRootDevice + "/" + id;
+        String json = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\"}";
+        return json;
+    }
+
+    void publishChartToWsSinglePoint(String value) {
+        String topic = mqttRootDevice + "/" + id;
+        String json = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[{\"x\":" + String(unixTime) + ",\"y1\":" + value + "}]}";
+        sendStringToWs("chartb", json, -1);
+    }
+
+    void clearValue() {
+        String topic = mqttRootDevice + "/" + id;
+        String json = "{\"maxCount\":0,\"topic\":\"" + topic + "\",\"status\":[]}";
+        sendStringToWs("chartb", json, -1);
     }
 
     void clearHistory() {
@@ -224,21 +293,7 @@ class Loging : public IoTItem {
         }
     }
 
-    void clearValue() {
-        String topic = mqttRootDevice + "/" + id;
-        String json = "{\"maxCount\":0,\"topic\":\"" + topic + "\",\"status\":[]}";
-        String pk = "/string/chart.json|" + json;
-        standWebSocket.broadcastTXT(pk);
-    }
-
-    void publishChartToWsSinglePoint(String value) {
-        String topic = mqttRootDevice + "/" + id;
-        String json = "{\"maxCount\":" + String(calculateMaxCount()) + ",\"topic\":\"" + topic + "\",\"status\":[{\"x\":" + String(unixTime) + ",\"y1\":" + value + "}]}";
-        String pk = "/string/chart.json|" + json;
-        standWebSocket.broadcastTXT(pk);
-    }
-
-    void setPublishDestination(int publishType, int wsNum = -1) {
+    void setPublishDestination(int publishType, int wsNum) {
         _publishType = publishType;
         _wsNum = wsNum;
     }
@@ -253,12 +308,14 @@ class Loging : public IoTItem {
             difference = currentMillis - prevMillis;
             if (difference >= interval) {
                 prevMillis = millis();
-                this->doByInterval();
+                if(interval != 0){
+                    this->doByInterval();
+                }
             }
         }
     }
 
-    void regEvent(String value, String consoleInfo = "") {
+    void regEvent(const String& value, const String& consoleInfo, bool error = false, bool genEvent = true) {
         String userDate = getItemValue(id + "-date");
         String currentDate = getTodayDateDotFormated();
         //отправляем в график данные только когда выбран сегодняшний день
@@ -279,6 +336,12 @@ class Loging : public IoTItem {
     //путь вида: /lg/log/1231231.txt
     unsigned long getFileUnixLocalTime(String path) {
         return gmtTimeToLocal(selectToMarkerLast(deleteToMarkerLast(path, "."), "/").toInt() + START_DATETIME);
+    }
+    void setValue(const IoTValue& Value, bool genEvent = true){
+        value = Value;
+        this->SetDoByInterval(String(value.valD));
+        SerialPrint("i", "Loging", "setValue:" + String(value.valD));
+        regEvent(value.valS, "Loging", false, genEvent);
     }
 };
 
@@ -301,20 +364,19 @@ class Date : public IoTItem {
         value.isDecimal = false;
     }
 
-    void setValue(String valStr) {
+    void setValue(const String& valStr, bool genEvent = true) {
         value.valS = valStr;
-        setValue(value);
+        setValue(value, genEvent);
     }
 
-    void setValue(IoTValue Value) {
+    void setValue(const IoTValue& Value, bool genEvent = true) {
         value = Value;
-        regEvent(value.valS, "");
+        regEvent(value.valS, "", false, genEvent);
         //отправка данных при изменении даты
         for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->getSubtype() == "Loging") {
                 if ((*it)->getID() == selectToMarker(id, "-")) {
-                    (*it)->setPublishDestination(TO_MQTT_WS);
-                    (*it)->clearValue();
+                    (*it)->setPublishDestination(TO_MQTT_WS, -1);
                     (*it)->publishValue();
                 }
             }

@@ -12,11 +12,10 @@ class ButtonOut : public IoTItem {
     ButtonOut(String parameters): IoTItem(parameters) {
         jsonRead(parameters, "pin", _pin);
         jsonRead(parameters, "inv", _inv);
+        _round = 0;
 
         IoTgpio.pinMode(_pin, OUTPUT);
-        //TODO: прочитать состояние из памяти
-        IoTgpio.digitalWrite(_pin, _inv?HIGH:LOW);    // пока нет памяти, устанавливаем значение в ноль
-        value.valD = 0;
+        IoTgpio.digitalWrite(_pin, _inv?!value.valD:value.valD);
     }
 
     void doByInterval() {
@@ -39,10 +38,10 @@ class ButtonOut : public IoTItem {
         return {};  // команда поддерживает возвращаемое значения. Т.е. по итогу выполнения команды или общения с внешней системой, можно вернуть значение в сценарий для дальнейшей обработки
     }
 
-    void setValue(IoTValue Value) {
+    void setValue(const IoTValue& Value, bool genEvent = true) {
         value = Value;
         IoTgpio.digitalWrite(_pin, _inv?!value.valD:value.valD);
-        regEvent((String)(int)value.valD, "ButtonOut");
+        regEvent((String)(int)value.valD, "ButtonOut", false, genEvent);
     }
 
     String getValue() {

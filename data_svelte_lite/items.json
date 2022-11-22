@@ -1,0 +1,243 @@
+[
+    {
+        "name": "Выберите элемент",
+        "num": 0
+    },
+    {
+        "header": "Виртуальные элементы"
+    },
+    {
+        "name": "1. Таймер",
+        "type": "Writing",
+        "subtype": "Timer",
+        "id": "timer",
+        "widget": "anydataDef",
+        "page": "Таймеры",
+        "descr": "Таймер",
+        "int": 1,
+        "countDown": 15,
+        "ticker": 1,
+        "repeat": 1,
+        "needSave": 0,
+        "num": 1
+    },
+    {
+        "name": "2. Окно ввода числа (переменная)",
+        "type": "Reading",
+        "subtype": "Variable",
+        "id": "value",
+        "widget": "inputDgt",
+        "page": "Ввод",
+        "descr": "Введите число",
+        "int": "0",
+        "val": "0.0",
+        "num": 2
+    },
+    {
+        "name": "3. Окно ввода времени",
+        "type": "Reading",
+        "subtype": "Variable",
+        "id": "time",
+        "widget": "inputTm",
+        "page": "Ввод",
+        "descr": "Введите время",
+        "int": "0",
+        "val": "02:00",
+        "num": 3
+    },
+    {
+        "name": "4. Окно ввода даты",
+        "type": "Reading",
+        "subtype": "Variable",
+        "id": "time",
+        "widget": "inputDate",
+        "page": "Ввод",
+        "descr": "Введите дату",
+        "int": "0",
+        "val": "24.05.2022",
+        "num": 4
+    },
+    {
+        "name": "5. Окно ввода текста",
+        "type": "Reading",
+        "subtype": "Variable",
+        "id": "txt",
+        "widget": "inputTxt",
+        "page": "Ввод",
+        "descr": "Введите текст",
+        "int": "0",
+        "val": "текст",
+        "num": 5
+    },
+    {
+        "name": "6. Виртуальная кнопка",
+        "type": "Reading",
+        "subtype": "VButton",
+        "id": "vbtn",
+        "widget": "toggle",
+        "page": "Кнопки",
+        "descr": "Кнопка",
+        "int": "0",
+        "val": "0",
+        "num": 6
+    },
+    {
+        "header": "Сенсоры"
+    },
+    {
+        "name": "7. DS18B20 Температура",
+        "type": "Reading",
+        "subtype": "Ds18b20",
+        "id": "dstmp",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "DS Температура",
+        "int": 15,
+        "pin": 2,
+        "index": 0,
+        "addr": "",
+        "round": 1,
+        "num": 7
+    },
+    {
+        "name": "8. Сканер кнопок 433 MHz",
+        "num": 8,
+        "type": "Reading",
+        "subtype": "RCswitch",
+        "id": "rsw",
+        "int": 500,
+        "pinRx": 12,
+        "pinTx": 12
+    },
+    {
+        "name": "9. HC-SR04 Ультразвуковой дальномер",
+        "num": 9,
+        "type": "Reading",
+        "subtype": "Sonar",
+        "id": "sonar",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Расстояние (см)",
+        "pinTrig": 5,
+        "pinEcho": 4,
+        "int": 5
+    },
+    {
+        "header": "Исполнительные устройства"
+    },
+    {
+        "name": "10. Кнопка подключенная к пину",
+        "type": "Writing",
+        "subtype": "ButtonIn",
+        "id": "btn",
+        "widget": "toggle",
+        "page": "Кнопки",
+        "descr": "Освещение",
+        "int": 0,
+        "pin": 16,
+        "execLevel": "1",
+        "pinMode": "INPUT",
+        "debounceDelay": 50,
+        "fixState": 0,
+        "num": 10
+    },
+    {
+        "name": "11. Управление пином",
+        "type": "Writing",
+        "subtype": "ButtonOut",
+        "id": "btn",
+        "widget": "toggle",
+        "page": "Кнопки",
+        "descr": "Освещение",
+        "int": 0,
+        "inv": 0,
+        "pin": 2,
+        "num": 11
+    },
+    {
+        "name": "12. Расширитель портов Mcp23017",
+        "type": "Reading",
+        "subtype": "Mcp23017",
+        "id": "Mcp",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "int": "0",
+        "addr": "0x20",
+        "index": 1,
+        "num": 12
+    },
+    {
+        "name": "13. Расширитель портов Pcf8574",
+        "type": "Reading",
+        "subtype": "Pcf8574",
+        "id": "Pcf",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "int": "0",
+        "addr": "0x20",
+        "index": 1,
+        "num": 13
+    },
+    {
+        "name": "14. PWM ESP8266",
+        "type": "Writing",
+        "subtype": "Pwm8266",
+        "id": "pwm",
+        "widget": "range",
+        "page": "Кнопки",
+        "descr": "PWM",
+        "int": 0,
+        "pin": 15,
+        "freq": 5000,
+        "val": 0,
+        "apin": -1,
+        "num": 14
+    },
+    {
+        "name": "15. Телеграм-Лайт",
+        "type": "Writing",
+        "subtype": "TelegramLT",
+        "id": "tg",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "token": "",
+        "chatID": "",
+        "num": 15
+    },
+    {
+        "header": "Экраны"
+    },
+    {
+        "name": "16. LCD экран 2004",
+        "type": "Reading",
+        "subtype": "Lcd2004",
+        "id": "Lcd",
+        "widget": "",
+        "page": "",
+        "descr": "T",
+        "int": 15,
+        "addr": "0x27",
+        "size": "20,4",
+        "coord": "0,0",
+        "id2show": "id датчика",
+        "num": 16
+    },
+    {
+        "name": "17. LCD экран 1602",
+        "type": "Reading",
+        "subtype": "Lcd2004",
+        "id": "Lcd",
+        "widget": "",
+        "page": "",
+        "descr": "T",
+        "int": 15,
+        "addr": "0x27",
+        "size": "16,2",
+        "coord": "0,0",
+        "id2show": "id датчика",
+        "num": 17
+    }
+]

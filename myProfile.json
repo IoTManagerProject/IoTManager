@@ -1,6 +1,5 @@
 {
     "iotmSettings": {
-        "settings_": "",
         "name": "IoTmanagerVer4",
         "apssid": "IoTmanager",
         "appass": "",
@@ -20,16 +19,20 @@
         "mqttin": 0,
         "pinSCL": 0,
         "pinSDA": 0,
-        "i2cFreq": 100000
+        "i2cFreq": 100000,
+        "wg": "group1"
     },
     "projectProp": {
         "platformio": {
-            "default_envs": "esp8266_4mb",
-            "data_dir": "data_svelte"
+            "default_envs": "esp8266_4mb"
         }
     },
     "modules": {
         "Виртуальные элементы": [
+            {
+                "path": "src/modules/virtual/Cron",
+                "active": true
+            },
             {
                 "path": "src/modules/virtual/Loging",
                 "active": true
@@ -69,6 +72,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/sensors/Ble",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/Bme280",
                 "active": true
             },
@@ -90,7 +97,7 @@
             },
             {
                 "path": "src/modules/sensors/FreqMeter",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/GY21",
@@ -99,6 +106,10 @@
             {
                 "path": "src/modules/sensors/Hdc1080",
                 "active": true
+            },
+            {
+                "path": "src/modules/sensors/Ina219",
+                "active": false
             },
             {
                 "path": "src/modules/sensors/IoTWiegand",
@@ -167,6 +178,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/exec/Multitouch",
+                "active": true
+            },
+            {
                 "path": "src/modules/exec/Pcf8574",
                 "active": true
             },
@@ -198,6 +213,10 @@
         "Экраны": [
             {
                 "path": "src/modules/display/Lcd2004",
+                "active": true
+            },
+            {
+                "path": "src/modules/display/Ws2812b",
                 "active": true
             }
         ]

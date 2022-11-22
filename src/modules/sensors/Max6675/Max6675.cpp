@@ -29,7 +29,7 @@ class MAX6675t : public IoTItem {
         if (String(value.valD) != "nan") {
             regEvent(value.valD, "Max6675t");
         } else {
-            SerialPrint("E", "Sensor Max6675t", "Error");
+            SerialPrint("E", "Sensor Max6675t", "Error", _id);
         }
     }
 

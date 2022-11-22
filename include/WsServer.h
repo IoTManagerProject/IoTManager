@@ -13,13 +13,9 @@ extern void hexdump(const void* mem, uint32_t len, uint8_t cols);
 #endif
 #endif
 
-void sendFileToWs(String filename, int num, size_t frameSize);
 void publishStatusWs(const String& topic, const String& data);
 void publishChartWs(int num, String& path);
 void periodicWsSend();
-void sendStringToWs(const String& msg, uint8_t num, String name);
-void publishChartToWs(String filename, int num, size_t frameSize, int maxCount, String id);
 
-// void sendMark(const char* filename, const char* mark, uint8_t num);
-// void sendFileToWs3(const String& filename, uint8_t num);
-// void sendFileToWs4(const String& filename, uint8_t num);
+void sendFileToWsByFrames(const String& filename, const String& header, const String& json, int client_id, size_t frameSize);
+void sendStringToWs(const String& header, String& payload, int client_id);

@@ -1,7 +1,15 @@
 #pragma once
 
 //Версия прошивки
-#define FIRMWARE_VERSION 430
+#define FIRMWARE_VERSION 432
+
+#ifdef esp8266_1mb_ota
+#define FIRMWARE_NAME "esp8266_1mb_ota"
+#endif
+
+#ifdef esp8266_1mb
+#define FIRMWARE_NAME "esp8266_1mb"
+#endif
 
 #ifdef esp8266_4mb
 #define FIRMWARE_NAME "esp8266_4mb"
@@ -13,6 +21,9 @@
 
 //Размер буфера json
 #define JSON_BUFFER_SIZE 2048
+#define WEB_SOCKETS_FRAME_SIZE 2048
+
+//#define LOOP_DEBUG
 
 //выбор сервера
 //#define ASYNC_WEB_SERVER
@@ -29,13 +40,7 @@
 
 #define TELEMETRY_UPDATE_INTERVAL_MIN 60
 
-#ifdef esp8266_4mb
 #define USE_LITTLEFS true
-#endif
-
-#ifdef esp32_4mb
-#define USE_LITTLEFS true
-#endif
 
 #define START_DATETIME 1661990400  // 01.09.2022 00:00:00 константа для сокращения unix time
 
@@ -48,8 +53,8 @@ enum TimerTask_t { WIFI_SCAN,
                    TIME,
                    TIME_SYNC,
                    UPTIME,
-                   UDP,  // UDPP
-                   TIMES,
+                   UDP,    // UDPP
+                   TIMES,  // периодические секундные проверки
                    PTASK,
                    ST,
                    END };
