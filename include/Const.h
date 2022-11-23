@@ -20,15 +20,15 @@
 #endif
 
 //Размер буфера json
-#define JSON_BUFFER_SIZE 2048
+#define JSON_BUFFER_SIZE 2048  //держим 2 кб не меняем
 #define WEB_SOCKETS_FRAME_SIZE 2048
 
 //#define LOOP_DEBUG
 
 //выбор сервера
-#define ASYNC_WEB_SERVER
+//#define ASYNC_WEB_SERVER
 //#define ASYNC_WEB_SOCKETS
-//#define STANDARD_WEB_SERVER
+#define STANDARD_WEB_SERVER
 #define STANDARD_WEB_SOCKETS
 
 #define UDP_ENABLED
