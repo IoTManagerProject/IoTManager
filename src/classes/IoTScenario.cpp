@@ -4,6 +4,16 @@
 #include "utils/FileUtils.h"
 #include "NTP.h"
 
+
+// вызываем все нужное пока зависаем в сценариях
+void scenario_yield() {
+    yield();
+
+    #ifdef STANDARD_WEB_SERVER
+    HTTP.handleClient();
+    #endif
+}
+
 bool isIotScenException = false;  // признак исключения и попытки прекратить выполнение сценария заранее
 
 // Лексический анализатор возвращает токены [0-255], если это неизвестны,
@@ -573,6 +583,9 @@ class IfExprAST : public ExprAST {
         // else if (res_ret->isDecimal) Serial.printf("Call from  IfExprAST: Cond result = %f, result = %f\n", cond_ret->valD, res_ret->valD);
         // else Serial.printf("Call from  IfExprAST: Cond result = %f, result = %s\n", cond_ret->valD, res_ret->valS.c_str());
         //Serial.printf("\n");
+
+        scenario_yield();
+
         return cond_ret;
     }
 
@@ -762,6 +775,7 @@ int IoTScenario::gettok() {
 /// токен, просматриваемый парсером. getNextToken получает следующий токен от
 /// лексического анализатора и обновляет CurTok.
 int IoTScenario::getNextToken() {
+    scenario_yield();
     return CurTok = gettok();
 }
 
