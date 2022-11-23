@@ -26,9 +26,9 @@
 //#define LOOP_DEBUG
 
 //выбор сервера
-//#define ASYNC_WEB_SERVER
+#define ASYNC_WEB_SERVER
 //#define ASYNC_WEB_SOCKETS
-#define STANDARD_WEB_SERVER
+//#define STANDARD_WEB_SERVER
 #define STANDARD_WEB_SOCKETS
 
 #define UDP_ENABLED

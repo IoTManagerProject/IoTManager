@@ -1,26 +1,26 @@
-{   
+{
     "menuSection": "Экраны",
     "configItem": [
-    {
-        "global": 0,
-        "name": "Strip ws2812b",
-        "type": "Reading",
-        "subtype": "Ws2812b",
-        "id": "strip",
-        "widget": "range",
-        "page": "Кнопки",
-        "descr": "Лента",
-        "int": 15,
-        "needSave": 0,
-        "pin": "4",
-        "numLeds": "8",
-        "brightness": "100",
-        "mode": "1",
-        "min": "15",
-        "max": "30",
-        "idshow": "t"
-    }],
-    
+        {
+            "global": 0,
+            "name": "Strip ws2812b",
+            "type": "Reading",
+            "subtype": "Ws2812b",
+            "id": "strip",
+            "widget": "range",
+            "page": "Кнопки",
+            "descr": "Лента",
+            "int": 15,
+            "needSave": 0,
+            "pin": "4",
+            "numLeds": "8",
+            "brightness": "100",
+            "mode": "1",
+            "min": "15",
+            "max": "30",
+            "idshow": "t"
+        }
+    ],
     "about": {
         "authorName": "Yuriy Kuneev",
         "authorContact": "https://t.me/Kuneev07",
@@ -44,7 +44,9 @@
             {
                 "name": "noShow",
                 "descr": "Выключить ленту",
-                "params": ["номер пикселя"]
+                "params": [
+                    "номер пикселя"
+                ]
             },
             {
                 "name": "noShowOne",
@@ -59,17 +61,26 @@
             {
                 "name": "showLed",
                 "descr": "Зажечь один диод",
-                "params": ["номер пикселя","цвет 255,255,255 или red,green"]
+                "params": [
+                    "номер пикселя",
+                    "цвет 255,255,255 или red,green"
+                ]
             },
             {
                 "name": "showLedAll",
                 "descr": "Зажечь все диоды",
-                "params": ["Цвет красного светодиода от 0 до 255","Цвет зеленого светодиода от 0 до 255","Цвет синего светодиода от 0 до 255"]
+                "params": [
+                    "Цвет красного светодиода от 0 до 255",
+                    "Цвет зеленого светодиода от 0 до 255",
+                    "Цвет синего светодиода от 0 до 255"
+                ]
             },
             {
                 "name": "Brightness",
                 "descr": "Устанавливает общую яркость ленты от 0 до 255",
-                "params": ["яркость от 0 до 255"]
+                "params": [
+                    "яркость от 0 до 255"
+                ]
             },
             {
                 "name": "enableIndication",
@@ -83,15 +94,13 @@
             }
         ]
     },
-
-    "defActive": true,
-
+    "defActive": false,
     "usedLibs": {
         "esp32_4mb": [
             "adafruit/Adafruit NeoPixel@^1.10.6"
         ],
         "esp8266_4mb": [
-            "adafruit/Adafruit NeoPixel@^1.10.6"  
+            "adafruit/Adafruit NeoPixel@^1.10.6"
         ]
     }
 }
