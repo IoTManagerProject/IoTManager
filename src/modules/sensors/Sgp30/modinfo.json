@@ -1,0 +1,64 @@
+{
+    "menuSection": "Сенсоры",
+    "configItem": [
+        {
+		 "global": 0,
+         "name": "SGP30 Cенсор качества воздуха",
+         "num": 3,
+         "type": "Reading",
+         "subtype": "Sgp30t",
+         "id": "sgp30t",
+         "widget": "anydatappm",
+         "page": "Сенсоры",
+         "descr": "TVOC",
+         "int": 30,
+         "round": 1
+        },
+        {
+		 "global": 0,
+         "name": "SGP30 Cенсор газа",
+         "num": 4,
+         "type": "Reading",
+         "subtype": "Sgp30e",
+         "id": "sgp30e",
+         "widget": "anydatappm",
+         "page": "Сенсоры",
+         "descr": "eCO2",
+         "int": 30,
+         "round": 1
+        }
+    ],
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "Ilya Belyakov",
+        "moduleName": "Sgp30",
+        "moduleVersion": "1.0",
+        "usedRam": 15,
+        "subTypes": [
+            "Sgp30t",
+            "Sgp30e"
+        ],
+        "title": "Датчик качества воздуха SGP30",
+        "moduleDesc": "Измеряет параметвы воздуха.",
+        "propInfo": {
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8266_4mb": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8266_1mb": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8266_1mb_ota": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ]
+    }
+}

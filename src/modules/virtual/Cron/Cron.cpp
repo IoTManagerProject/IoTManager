@@ -13,11 +13,12 @@ class Cron : public IoTItem {
     String _format = "";
     cron_expr _expr;
     time_t _nextAlarm = 0;
+    bool _isInit = false;
 
    public:
     Cron(String parameters): IoTItem(parameters) {
         jsonRead(parameters, F("formatNextAlarm"), _format);
-        initCron();
+        if (_time_isTrust) initCron();
     }
 
     void initCron() {
@@ -39,6 +40,7 @@ class Cron : public IoTItem {
             if (forced || (_nextAlarm <= gmtTimeToLocal(unixTime))) {
                 // update alarm if next trigger is not yet in the future
                 _nextAlarm = cron_next(&_expr, gmtTimeToLocal(unixTime));
+                _isInit = true;
             }
         }
     }
@@ -58,6 +60,8 @@ class Cron : public IoTItem {
     }
 
     void setValue(const IoTValue& Value, bool genEvent) {
+        if (!_time_isTrust) return;
+
         value = Value;
         _pause = false;
         initCron();
@@ -74,6 +78,7 @@ class Cron : public IoTItem {
     }
 
     void doByInterval() {
+        if (!_isInit && _time_isTrust) initCron();
         if (!_pause && _time_isTrust && (gmtTimeToLocal(unixTime) >= _nextAlarm)) {
             updateNextAlarm(true);
             bool _needSaveBak = _needSave;
