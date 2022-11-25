@@ -117,11 +117,6 @@ void mqttSubscribe() {
 }
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length) {
-    // распространяем принятое сообщение через хуки
-    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-        (*it)->onMqttRecive(topic, payload, length);
-    }
-
     String topicStr = String(topic);
     // SerialPrint("i", "=>MQTT", topicStr);
     String payloadStr;
@@ -130,9 +125,10 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         payloadStr += (char)payload[i];
     }
 
-    // SerialPrint("i", "=>MQTT", payloadStr);
-
-    // SerialPrint("i", F("=>MQTT"), "Msg from iotmanager: " + topicStr);
+    // распространяем принятое сообщение через хуки
+    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        (*it)->onMqttRecive(topicStr, payloadStr);
+    }
 
     if (payloadStr.startsWith("HELLO")) {
         SerialPrint("i", F("MQTT"), F("Full update"));
