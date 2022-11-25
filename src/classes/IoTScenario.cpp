@@ -775,7 +775,6 @@ int IoTScenario::gettok() {
 /// токен, просматриваемый парсером. getNextToken получает следующий токен от
 /// лексического анализатора и обновляет CurTok.
 int IoTScenario::getNextToken() {
-    scenario_yield();
     return CurTok = gettok();
 }
 
