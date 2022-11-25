@@ -51,7 +51,7 @@ class IoTScenario {
     int GetTokPrecedence();
 
     /// Error* - Это небольшие вспомогательные функции для обработки ошибок.
-    ExprAST *Error(const char *Str);
+    ExprAST *Error(const String& Str);
 
     /// identifierexpr
     ///   ::= identifier

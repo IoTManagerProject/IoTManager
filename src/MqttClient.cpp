@@ -117,6 +117,11 @@ void mqttSubscribe() {
 }
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length) {
+    // распространяем принятое сообщение через хуки
+    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        (*it)->onMqttRecive(topic, payload, length);
+    }
+
     String topicStr = String(topic);
     // SerialPrint("i", "=>MQTT", topicStr);
     String payloadStr;
@@ -188,7 +193,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     //        loadScenario();
     //        SerialPrint("i", F("=>MQTT"), F("Scenario received"));
     //    }
-    //}
+    //} 
 }
 
 boolean publish(const String& topic, const String& data) {
