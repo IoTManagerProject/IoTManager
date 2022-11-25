@@ -51,6 +51,7 @@ class IoTItem {
 
     // хуки для системных событий
     virtual void onRegEvent(IoTItem* item);
+    virtual void onMqttRecive(char* topic, uint8_t* payload, size_t length);
 
     //методы для графиков
     virtual void publishValue();
