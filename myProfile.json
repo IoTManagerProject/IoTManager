@@ -9,7 +9,7 @@
         "ntp": "pool.ntp.org",
         "weblogin": "admin",
         "webpass": "admin",
-        "mqttServer": "m2.wqtt.ru",
+        "mqttServer": "",
         "mqttPort": 8021,
         "mqttPrefix": "/risenew",
         "mqttUser": "rise",
