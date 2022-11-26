@@ -4,6 +4,16 @@
 #include "utils/FileUtils.h"
 #include "NTP.h"
 
+
+// вызываем все нужное пока зависаем в сценариях
+void scenario_yield() {
+    yield();
+
+    #ifdef STANDARD_WEB_SERVER
+    HTTP.handleClient();
+    #endif
+}
+
 bool isIotScenException = false;  // признак исключения и попытки прекратить выполнение сценария заранее
 
 // Лексический анализатор возвращает токены [0-255], если это неизвестны,
@@ -286,7 +296,7 @@ class CallExprAST : public ExprAST {
         //if (!ItemIsLocal) Item = findIoTItem(Callee);  // пробуем найти переменную если она не локальная (могла придти по сети в процессе)
         if (!Item) return nullptr;                     // ret = zeroIotVal;  // если все же не пришла, то либо опечатка, либо уже стерлась - выходим
 
-        if (Cmd == "getIntFromNet") {
+        if (Cmd == F("getIntFromNet")) {
             ret.valD = Item->getIntFromNet();
             ret.isDecimal = true;
             return &ret;
@@ -457,43 +467,43 @@ class SysCallExprAST : public ExprAST {
    public:
     SysCallExprAST(const String &callee, std::vector<ExprAST *> &args)
         : Callee(callee), Args(args) {
-        if (Callee == "reboot")
+        if (Callee == F("reboot"))
             operation = sysop_reboot;
-        else if (Callee == "digitalRead")
+        else if (Callee == F("digitalRead"))
             operation = sysop_digitalRead;
-        else if (Callee == "analogRead")
+        else if (Callee == F("analogRead"))
             operation = sysop_analogRead;
-        else if (Callee == "digitalWrite")
+        else if (Callee == F("digitalWrite"))
             operation = sysop_digitalWrite;
-        else if (Callee == "digitalInvert")
+        else if (Callee == F("digitalInvert"))
             operation = sysop_digitalInvert;
-        else if (Callee == "deepSleep")
+        else if (Callee == F("deepSleep"))
             operation = sysop_deepSleep;
-        else if (Callee == "getTime")
+        else if (Callee == F("getTime"))
             operation = sysop_getTime;
-        else if (Callee == "getHours")
+        else if (Callee == F("getHours"))
             operation = sysop_getHours;
-        else if (Callee == "getMinutes")
+        else if (Callee == F("getMinutes"))
             operation = sysop_getMinutes;
-        else if (Callee == "getSeconds")
+        else if (Callee == F("getSeconds"))
             operation = sysop_getSeconds;
-        else if (Callee == "getMonth")
+        else if (Callee == F("getMonth"))
             operation = sysop_getMonth;
-        else if (Callee == "getDay")
+        else if (Callee == F("getDay"))
             operation = sysop_getDay;
-        else if (Callee == "getRSSI")
+        else if (Callee == F("getRSSI"))
             operation = sysop_getRSSI;
-        else if (Callee == "getIP")
+        else if (Callee == F("getIP"))
             operation = sysop_getIP;
-        else if (Callee == "mqttPub")
+        else if (Callee == F("mqttPub"))
             operation = sysop_mqttPub;
-        else if (Callee == "gethhmm")
+        else if (Callee == F("gethhmm"))
             operation = sysop_gethhmm;
-        else if (Callee == "gethhmmss")
+        else if (Callee == F("gethhmmss"))
             operation = sysop_gethhmmss;
-        else if (Callee == "getTime")
+        else if (Callee == F("getTime"))
             operation = sysop_getTime;
-        else if (Callee == "getUptime")
+        else if (Callee == F("getUptime"))
             operation = sysop_getUptime;
         else
             operation = sysop_notfound;
@@ -573,6 +583,9 @@ class IfExprAST : public ExprAST {
         // else if (res_ret->isDecimal) Serial.printf("Call from  IfExprAST: Cond result = %f, result = %f\n", cond_ret->valD, res_ret->valD);
         // else Serial.printf("Call from  IfExprAST: Cond result = %f, result = %s\n", cond_ret->valD, res_ret->valS.c_str());
         //Serial.printf("\n");
+
+        scenario_yield();
+
         return cond_ret;
     }
 
@@ -777,8 +790,8 @@ int IoTScenario::GetTokPrecedence() {
 }
 
 /// Error* - Это небольшие вспомогательные функции для обработки ошибок.
-ExprAST *IoTScenario::Error(const char *Str) {
-    Serial.printf("Scenario error in line %d: %s\n", curLine, Str);
+ExprAST *IoTScenario::Error(const String& Str) {
+    Serial.printf("Scenario error in line %d: %s\n", curLine, Str.c_str());
     isIotScenException = true;
     return nullptr;
 }
@@ -821,7 +834,7 @@ ExprAST *IoTScenario::ParseIdentifierExpr(String *IDNames, bool callFromConditio
             if (CurTok == ')') break;
 
             if (CurTok != ',') {
-                return Error("Expected ')' or ',' in argument list");
+                return Error(F("Expected ')' or ',' in argument list"));
             }
             getNextToken();
         }
@@ -878,7 +891,7 @@ ExprAST *IoTScenario::ParseBracketsExpr(String *IDNames, bool callFromCondition)
 
         // int ttok = getNextToken();
         if (CurTok == tok_eof) {
-            return Error("Expected '}'");
+            return Error(F("Expected '}'"));
         }
     }
 
@@ -933,7 +946,7 @@ ExprAST *IoTScenario::ParsePrimary(String *IDNames, bool callFromCondition) {
     switch (CurTok) {
         default:
             Serial.println(CurTok);
-            return Error("unknown token when expecting an expression");
+            return Error(F("unknown token when expecting an expression"));
         case tok_identifier: {
             if (callFromCondition && IDNames) {
                 String tmpstr = *IDNames;
@@ -1005,13 +1018,13 @@ void IoTScenario::loadScenario(String fileName) {  // подготавливае
         if (file) file.close();
         file = FileFS.open(fileName.c_str(), "r");
         if (!file) {
-            Error("Open file scenario error");
+            Error(F("Open file scenario error"));
             return;
         }
     } else if (mode == 1) {
         file = FileFS.open(fileName.c_str(), "r");
         if (!file) {
-            Error("Open file scenario error");
+            Error(F("Open file scenario error"));
             return;
         }
         strFromFile = file.readString();

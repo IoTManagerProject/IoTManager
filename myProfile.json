@@ -9,7 +9,7 @@
         "ntp": "pool.ntp.org",
         "weblogin": "admin",
         "webpass": "admin",
-        "mqttServer": "m2.wqtt.ru",
+        "mqttServer": "",
         "mqttPort": 8021,
         "mqttPrefix": "/risenew",
         "mqttUser": "rise",
@@ -101,11 +101,19 @@
             },
             {
                 "path": "src/modules/sensors/GY21",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Hdc1080",
-                "active": true
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/Hx710",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/Hx711",
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Ina219",
@@ -117,7 +125,7 @@
             },
             {
                 "path": "src/modules/sensors/Max6675",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Mhz19",
@@ -129,10 +137,14 @@
             },
             {
                 "path": "src/modules/sensors/RCswitch",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Sds011",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/Sgp30",
                 "active": false
             },
             {
@@ -217,7 +229,7 @@
             },
             {
                 "path": "src/modules/display/Ws2812b",
-                "active": true
+                "active": false
             }
         ]
     }

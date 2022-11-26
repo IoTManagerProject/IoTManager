@@ -56,6 +56,23 @@
             "descr": "Введите текст",
             "int": "0",
             "val": "текст"
+        },
+        {
+            "global": 0,
+            "name": "Вывод значения",
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "vout",
+            "needSave": 0,
+            "widget": "anydataDef",
+            "page": "Вывод",
+            "descr": "Значение",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
         }
     ],
     "about": {

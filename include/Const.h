@@ -1,7 +1,7 @@
 #pragma once
 
 //Версия прошивки
-#define FIRMWARE_VERSION 432
+#define FIRMWARE_VERSION 433
 
 #ifdef esp8266_1mb_ota
 #define FIRMWARE_NAME "esp8266_1mb_ota"
@@ -20,7 +20,7 @@
 #endif
 
 //Размер буфера json
-#define JSON_BUFFER_SIZE 2048
+#define JSON_BUFFER_SIZE 2048  //держим 2 кб не меняем
 #define WEB_SOCKETS_FRAME_SIZE 2048
 
 //#define LOOP_DEBUG
@@ -36,7 +36,6 @@
 //#define REST_FILE_OPERATIONS
 
 #define MQTT_RECONNECT_INTERVAL 20000
-#define CHANGE_BROKER_AFTER 5
 
 #define TELEMETRY_UPDATE_INTERVAL_MIN 60
 

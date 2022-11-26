@@ -175,6 +175,8 @@ void IoTItem::checkIntFromNet() {
 
 void IoTItem::onRegEvent(IoTItem* item) {}
 
+void IoTItem::onMqttRecive(String& topic, String& msg) {}
+
 void IoTItem::publishValue() {}
 
 void IoTItem::clearValue() {}
