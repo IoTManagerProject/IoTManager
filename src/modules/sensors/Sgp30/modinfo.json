@@ -59,6 +59,12 @@
         ],
         "esp8266_1mb_ota": [
             "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8285_1mb": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8285_1mb_ota": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
         ]
     }
 }

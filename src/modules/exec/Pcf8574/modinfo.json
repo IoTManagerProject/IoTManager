@@ -44,6 +44,12 @@
         ],
         "esp8266_1mb_ota": [
             "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8285_1mb": [
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8285_1mb_ota": [
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ]
     }
 }

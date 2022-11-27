@@ -115,6 +115,12 @@
         ],
         "esp8266_1mb_ota": [
             "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
+        ],
+        "esp8285_1mb": [
+            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
+        ],
+        "esp8285_1mb_ota": [
+            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
         ]
     }
 }
