@@ -18,6 +18,8 @@
 # esp32_4mb
 # esp8266_1mb
 # esp8266_1mb_ota
+# esp8285_1mb
+# esp8285_1mb_ota
 
 import configparser
 import os, json, sys, getopt
@@ -117,7 +119,7 @@ deviceName = profJson['projectProp']['platformio']['default_envs']
 
 # назначаем папку с файлами прошивки в зависимости от устройства и запоминаем в профиле
 dataDir = 'data_svelte'
-if deviceName == 'esp8266_1mb_ota': 
+if deviceName == 'esp8266_1mb_ota' or deviceName == 'esp8285_1mb_ota': 
     dataDir = 'data_svelte_lite'
 profJson['projectProp'] = {
     'platformio': {

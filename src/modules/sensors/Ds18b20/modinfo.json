@@ -50,6 +50,12 @@
         ],
         "esp8266_1mb_ota": [
             "milesburton/DallasTemperature@^3.9.1"
+        ],
+        "esp8285_1mb": [
+            "milesburton/DallasTemperature@^3.9.1"
+        ],
+        "esp8285_1mb_ota": [
+            "milesburton/DallasTemperature@^3.9.1"
         ]
     }
 }

@@ -62,13 +62,19 @@
         "esp32_4mb": [
             "rc-switch @ ^2.6.4"
         ],
+        "esp8266_4mb": [
+            "rc-switch @ ^2.6.4"
+        ],
         "esp8266_1mb": [
             "rc-switch @ ^2.6.4"
         ],
         "esp8266_1mb_ota": [
             "rc-switch @ ^2.6.4"
         ],
-        "esp8266_4mb": [
+        "esp8285_1mb": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8285_1mb_ota": [
             "rc-switch @ ^2.6.4"
         ]
     }

@@ -7,7 +7,23 @@
         "header": "Виртуальные элементы"
     },
     {
-        "name": "1. Таймер",
+        "global": 0,
+        "name": "1. Будильник (Cron)",
+        "type": "Writing",
+        "subtype": "Cron",
+        "id": "cron",
+        "widget": "anydataDef",
+        "page": "Таймеры",
+        "descr": "Будильник",
+        "int": 1,
+        "val": "*/15 * * * * *",
+        "formatNextAlarm": "%H:%M:%S",
+        "needSave": 0,
+        "num": 1
+    },
+    {
+        "global": 0,
+        "name": "2. Таймер",
         "type": "Writing",
         "subtype": "Timer",
         "id": "timer",
@@ -19,73 +35,106 @@
         "ticker": 1,
         "repeat": 1,
         "needSave": 0,
-        "num": 1
+        "num": 2
     },
     {
-        "name": "2. Окно ввода числа (переменная)",
+        "global": 0,
+        "name": "3. Окно ввода числа (переменная)",
         "type": "Reading",
         "subtype": "Variable",
         "id": "value",
+        "needSave": 0,
         "widget": "inputDgt",
         "page": "Ввод",
         "descr": "Введите число",
         "int": "0",
         "val": "0.0",
-        "num": 2
+        "map": "1024,1024,1,100",
+        "plus": 0,
+        "multiply": 1,
+        "round": 0,
+        "num": 3
     },
     {
-        "name": "3. Окно ввода времени",
+        "global": 0,
+        "name": "4. Окно ввода времени",
         "type": "Reading",
         "subtype": "Variable",
         "id": "time",
+        "needSave": 0,
         "widget": "inputTm",
         "page": "Ввод",
         "descr": "Введите время",
         "int": "0",
         "val": "02:00",
-        "num": 3
+        "num": 4
     },
     {
-        "name": "4. Окно ввода даты",
+        "global": 0,
+        "name": "5. Окно ввода даты",
         "type": "Reading",
         "subtype": "Variable",
         "id": "time",
+        "needSave": 0,
         "widget": "inputDate",
         "page": "Ввод",
         "descr": "Введите дату",
         "int": "0",
         "val": "24.05.2022",
-        "num": 4
+        "num": 5
     },
     {
-        "name": "5. Окно ввода текста",
+        "global": 0,
+        "name": "6. Окно ввода текста",
         "type": "Reading",
         "subtype": "Variable",
         "id": "txt",
+        "needSave": 0,
         "widget": "inputTxt",
         "page": "Ввод",
         "descr": "Введите текст",
         "int": "0",
         "val": "текст",
-        "num": 5
+        "num": 6
     },
     {
-        "name": "6. Виртуальная кнопка",
+        "global": 0,
+        "name": "7. Вывод значения",
+        "type": "Reading",
+        "subtype": "Variable",
+        "id": "vout",
+        "needSave": 0,
+        "widget": "anydataDef",
+        "page": "Вывод",
+        "descr": "Значение",
+        "int": "0",
+        "val": "0.0",
+        "map": "1024,1024,1,100",
+        "plus": 0,
+        "multiply": 1,
+        "round": 0,
+        "num": 7
+    },
+    {
+        "global": 0,
+        "name": "8. Виртуальная кнопка",
         "type": "Reading",
         "subtype": "VButton",
         "id": "vbtn",
+        "needSave": 0,
         "widget": "toggle",
         "page": "Кнопки",
         "descr": "Кнопка",
         "int": "0",
         "val": "0",
-        "num": 6
+        "num": 8
     },
     {
         "header": "Сенсоры"
     },
     {
-        "name": "7. DS18B20 Температура",
+        "global": 0,
+        "name": "9. DS18B20 Температура",
         "type": "Reading",
         "subtype": "Ds18b20",
         "id": "dstmp",
@@ -97,21 +146,12 @@
         "index": 0,
         "addr": "",
         "round": 1,
-        "num": 7
+        "num": 9
     },
     {
-        "name": "8. Сканер кнопок 433 MHz",
-        "num": 8,
-        "type": "Reading",
-        "subtype": "RCswitch",
-        "id": "rsw",
-        "int": 500,
-        "pinRx": 12,
-        "pinTx": 12
-    },
-    {
-        "name": "9. HC-SR04 Ультразвуковой дальномер",
-        "num": 9,
+        "global": 0,
+        "name": "10. HC-SR04 Ультразвуковой дальномер",
+        "num": 10,
         "type": "Reading",
         "subtype": "Sonar",
         "id": "sonar",
@@ -126,25 +166,29 @@
         "header": "Исполнительные устройства"
     },
     {
-        "name": "10. Кнопка подключенная к пину",
+        "global": 0,
+        "name": "11. Кнопка подключенная к пину",
         "type": "Writing",
         "subtype": "ButtonIn",
         "id": "btn",
         "widget": "toggle",
         "page": "Кнопки",
         "descr": "Освещение",
+        "needSave": 0,
         "int": 0,
         "pin": 16,
         "execLevel": "1",
         "pinMode": "INPUT",
         "debounceDelay": 50,
         "fixState": 0,
-        "num": 10
+        "num": 11
     },
     {
-        "name": "11. Управление пином",
+        "global": 0,
+        "name": "12. Управление пином",
         "type": "Writing",
         "subtype": "ButtonOut",
+        "needSave": 0,
         "id": "btn",
         "widget": "toggle",
         "page": "Кнопки",
@@ -152,10 +196,11 @@
         "int": 0,
         "inv": 0,
         "pin": 2,
-        "num": 11
+        "num": 12
     },
     {
-        "name": "12. Расширитель портов Mcp23017",
+        "global": 0,
+        "name": "13. Расширитель портов Mcp23017",
         "type": "Reading",
         "subtype": "Mcp23017",
         "id": "Mcp",
@@ -165,10 +210,29 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 12
+        "num": 13
     },
     {
-        "name": "13. Расширитель портов Pcf8574",
+        "global": 0,
+        "name": "14. Сенсорная кнопка",
+        "type": "Writing",
+        "subtype": "Multitouch",
+        "id": "impulse",
+        "widget": "anydataDef",
+        "page": "Кнопки",
+        "descr": "Количество нажаний",
+        "needSave": 0,
+        "int": 300,
+        "inv": 1,
+        "pin": 16,
+        "pinMode": "INPUT",
+        "debounceDelay": 50,
+        "PWMDelay": 500,
+        "num": 14
+    },
+    {
+        "global": 0,
+        "name": "15. Расширитель портов Pcf8574",
         "type": "Reading",
         "subtype": "Pcf8574",
         "id": "Pcf",
@@ -178,10 +242,11 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 13
+        "num": 15
     },
     {
-        "name": "14. PWM ESP8266",
+        "global": 0,
+        "name": "16. PWM ESP8266",
         "type": "Writing",
         "subtype": "Pwm8266",
         "id": "pwm",
@@ -193,10 +258,11 @@
         "freq": 5000,
         "val": 0,
         "apin": -1,
-        "num": 14
+        "num": 16
     },
     {
-        "name": "15. Телеграм-Лайт",
+        "global": 0,
+        "name": "17. Телеграм-Лайт",
         "type": "Writing",
         "subtype": "TelegramLT",
         "id": "tg",
@@ -205,13 +271,14 @@
         "descr": "",
         "token": "",
         "chatID": "",
-        "num": 15
+        "num": 17
     },
     {
         "header": "Экраны"
     },
     {
-        "name": "16. LCD экран 2004",
+        "global": 0,
+        "name": "18. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -223,10 +290,10 @@
         "size": "20,4",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 16
+        "num": 18
     },
     {
-        "name": "17. LCD экран 1602",
+        "name": "19. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -238,6 +305,6 @@
         "size": "16,2",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 17
+        "num": 19
     }
 ]
