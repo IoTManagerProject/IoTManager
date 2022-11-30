@@ -104,7 +104,7 @@ class Loging : public IoTItem {
         //запускаем процедуру удаления старых файлов если память переполняется
         deleteLastFile();
     }
-void SetDoByInterval(String valse) {
+    void SetDoByInterval(String valse) {
         String value = valse;
         //если значение логгирования пустое
         if (value == "") {
@@ -152,7 +152,6 @@ void SetDoByInterval(String valse) {
         }
         //запускаем процедуру удаления старых файлов если память переполняется
         deleteLastFile();
-
     }
     void createNewFileWithData(String &logData) {
         logData = logData + ",";
@@ -308,14 +307,14 @@ void SetDoByInterval(String valse) {
             difference = currentMillis - prevMillis;
             if (difference >= interval) {
                 prevMillis = millis();
-                if(interval != 0){
+                if (interval != 0) {
                     this->doByInterval();
                 }
             }
         }
     }
 
-    void regEvent(const String& value, const String& consoleInfo, bool error = false, bool genEvent = true) {
+    void regEvent(const String &value, const String &consoleInfo, bool error = false, bool genEvent = true) {
         String userDate = getItemValue(id + "-date");
         String currentDate = getTodayDateDotFormated();
         //отправляем в график данные только когда выбран сегодняшний день
@@ -337,7 +336,7 @@ void SetDoByInterval(String valse) {
     unsigned long getFileUnixLocalTime(String path) {
         return gmtTimeToLocal(selectToMarkerLast(deleteToMarkerLast(path, "."), "/").toInt() + START_DATETIME);
     }
-    void setValue(const IoTValue& Value, bool genEvent = true){
+    void setValue(const IoTValue &Value, bool genEvent = true) {
         value = Value;
         this->SetDoByInterval(String(value.valD));
         SerialPrint("i", "Loging", "setValue:" + String(value.valD));
@@ -364,12 +363,12 @@ class Date : public IoTItem {
         value.isDecimal = false;
     }
 
-    void setValue(const String& valStr, bool genEvent = true) {
+    void setValue(const String &valStr, bool genEvent = true) {
         value.valS = valStr;
         setValue(value, genEvent);
     }
 
-    void setValue(const IoTValue& Value, bool genEvent = true) {
+    void setValue(const IoTValue &Value, bool genEvent = true) {
         value = Value;
         regEvent(value.valS, "", false, genEvent);
         //отправка данных при изменении даты

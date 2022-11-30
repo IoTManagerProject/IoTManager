@@ -31,14 +31,15 @@ WebSocketsServer standWebSocket = WebSocketsServer(81);
 **********************************************************************************************************************/
 IoTGpio IoTgpio(0);
 
-String settingsFlashJson = "{}";    // переменная в которой хранятся все настройки, находится в оперативной памяти и синхронизированна с flash памятью
-String valuesFlashJson = "{}";      // переменная в которой хранятся все значения элементов, которые необходимо сохранить на flash. Находится в оперативной памяти и синхронизированна с flash памятью
-String errorsHeapJson = "{}";       // переменная в которой хранятся все ошибки, находится в оперативной памяти только
-bool needSaveValues = false;        // признак необходимости сбросить значения элементов на flash
+String settingsFlashJson = "{}";  // переменная в которой хранятся все настройки, находится в оперативной памяти и синхронизированна с flash памятью
+String valuesFlashJson = "{}";    // переменная в которой хранятся все значения элементов, которые необходимо сохранить на flash. Находится в оперативной памяти и синхронизированна с flash памятью
+String errorsHeapJson = "{}";     // переменная в которой хранятся все ошибки, находится в оперативной памяти только
+bool needSaveValues = false;      // признак необходимости сбросить значения элементов на flash
 
 // buf
 String orderBuf = "";
 String eventBuf = "";
+String mysensorBuf = "";
 
 // wifi
 String ssidListHeapJson = "{}";
@@ -70,7 +71,7 @@ String mqttRootDevice = "";
 unsigned long unixTime = 0;
 unsigned long unixTimeShort = 0;
 
-//unsigned long loopPeriod;
+// unsigned long loopPeriod;
 
 bool isTimeSynch = false;
 Time_t _time_local;

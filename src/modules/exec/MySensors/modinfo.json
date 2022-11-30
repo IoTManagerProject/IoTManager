@@ -1,0 +1,42 @@
+{
+    "menuSection": "Исполнительные устройства",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "MySensorsGate",
+            "type": "Reading",
+            "subtype": "MySensorsGate",
+            "id": "t",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "Температура",
+            "map": "1,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 1
+        }
+    ],
+    "about": {
+        "authorName": "Dmitry Borisenko",
+        "authorContact": "https://t.me/Dmitry_Borisenko",
+        "authorGit": "https://github.com/DmitryBorisenko33",
+        "specialThanks": "",
+        "moduleName": "MySensorsGate",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "My Sensors Gate",
+        "moduleDesc": "",
+        "retInfo": "",
+        "propInfo": {
+            "int": "",
+            "pin": ""
+        }
+    },
+    "defActive": true,
+    "usedLibs": {
+        "esp32_4mb": []
+    }
+}
