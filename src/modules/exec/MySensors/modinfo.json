@@ -37,6 +37,8 @@
     },
     "defActive": true,
     "usedLibs": {
-        "esp32_4mb": []
+        "esp32_4mb": [
+            "MySensors@2.3.2"
+        ]
     }
 }
