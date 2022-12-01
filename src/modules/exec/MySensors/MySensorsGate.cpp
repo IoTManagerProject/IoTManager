@@ -11,7 +11,7 @@ void receive(const MyMessage& message) {
                    String(message.getCommand()) + "," +  // command
                    parseToString(message) + ";";         // value
 
-    Serial.println("=>" + inMsg);
+    // Serial.println("=>" + inMsg);
 
     mysensorBuf += inMsg;
 }
