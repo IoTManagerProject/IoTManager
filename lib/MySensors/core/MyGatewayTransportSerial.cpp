@@ -26,57 +26,53 @@
 // global variables
 extern MyMessage _msgTmp;
 
-char _serialInputString[MY_GATEWAY_MAX_RECEIVE_LENGTH];    // A buffer for incoming commands from serial interface
+char _serialInputString[MY_GATEWAY_MAX_RECEIVE_LENGTH];  // A buffer for incoming commands from serial interface
 uint8_t _serialInputPos;
 MyMessage _serialMsg;
 
-bool gatewayTransportSend(MyMessage &message)
-{
-	setIndication(INDICATION_GW_TX);
-	MY_SERIALDEVICE.print(protocolMyMessage2Serial(message));
-	// Serial print is always successful
-	return true;
+bool gatewayTransportSend(MyMessage &message) {
+    setIndication(INDICATION_GW_TX);
+    // MY_SERIALDEVICE.print(protocolMyMessage2Serial(message));
+    //  Serial print is always successful
+    return true;
 }
 
-bool gatewayTransportInit(void)
-{
-	(void)gatewayTransportSend(buildGw(_msgTmp, I_GATEWAY_READY).set(MSG_GW_STARTUP_COMPLETE));
-	// Send presentation of locally attached sensors (and node if applicable)
-	presentNode();
-	return true;
+bool gatewayTransportInit(void) {
+    (void)gatewayTransportSend(buildGw(_msgTmp, I_GATEWAY_READY).set(MSG_GW_STARTUP_COMPLETE));
+    // Send presentation of locally attached sensors (and node if applicable)
+    presentNode();
+    return true;
 }
 
-bool gatewayTransportAvailable(void)
-{
-	while (MY_SERIALDEVICE.available()) {
-		// get the new byte:
-		const char inChar = (char)MY_SERIALDEVICE.read();
-		// if the incoming character is a newline, set a flag
-		// so the main loop can do something about it:
-		if (_serialInputPos < MY_GATEWAY_MAX_RECEIVE_LENGTH - 1) {
-			if (inChar == '\n') {
-				_serialInputString[_serialInputPos] = 0;
-				const bool ok = protocolSerial2MyMessage(_serialMsg, _serialInputString);
-				if (ok) {
-					setIndication(INDICATION_GW_RX);
-				}
-				_serialInputPos = 0;
-				return ok;
-			} else {
-				// add it to the inputString:
-				_serialInputString[_serialInputPos] = inChar;
-				_serialInputPos++;
-			}
-		} else {
-			// Incoming message too long. Throw away
-			_serialInputPos = 0;
-		}
-	}
-	return false;
+bool gatewayTransportAvailable(void) {
+    while (MY_SERIALDEVICE.available()) {
+        // get the new byte:
+        const char inChar = (char)MY_SERIALDEVICE.read();
+        // if the incoming character is a newline, set a flag
+        // so the main loop can do something about it:
+        if (_serialInputPos < MY_GATEWAY_MAX_RECEIVE_LENGTH - 1) {
+            if (inChar == '\n') {
+                _serialInputString[_serialInputPos] = 0;
+                const bool ok = protocolSerial2MyMessage(_serialMsg, _serialInputString);
+                if (ok) {
+                    setIndication(INDICATION_GW_RX);
+                }
+                _serialInputPos = 0;
+                return ok;
+            } else {
+                // add it to the inputString:
+                _serialInputString[_serialInputPos] = inChar;
+                _serialInputPos++;
+            }
+        } else {
+            // Incoming message too long. Throw away
+            _serialInputPos = 0;
+        }
+    }
+    return false;
 }
 
-MyMessage & gatewayTransportReceive(void)
-{
-	// Return the last parsed message
-	return _serialMsg;
+MyMessage &gatewayTransportReceive(void) {
+    // Return the last parsed message
+    return _serialMsg;
 }
