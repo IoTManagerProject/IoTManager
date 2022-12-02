@@ -112,6 +112,7 @@ class VariableExprAST : public ExprAST {
             // if (Item->value.isDecimal)
             //   Serial.printf("Call from  VariableExprAST: %s = %f\n", Name.c_str(), Item->value.valD);
             // else Serial.printf("Call from  VariableExprAST: %s = %s\n", Name.c_str(), Item->value.valS.c_str());
+            Item->getRoundValue();
             return &(Item->value);
         }
 
@@ -222,15 +223,17 @@ class BinaryExprAST : public ExprAST {
         }
 
         if (!lhs->isDecimal || !rhs->isDecimal) {
-            if (lhs->isDecimal)
-                lhsStr = (String)lhs->valD;
-            else
-                lhsStr = lhs->valS;
+            // if (lhs->isDecimal)
+            //     lhsStr = (String)lhs->valD;
+            // else
+            //     lhsStr = lhs->valS;
             
-            if (rhs->isDecimal)
-                rhsStr = (String)rhs->valD;
-            else
-                rhsStr = rhs->valS;
+            // if (rhs->isDecimal)
+            //     rhsStr = (String)rhs->valD;
+            // else
+            //     rhsStr = rhs->valS;
+            lhsStr = lhs->valS;
+            rhsStr = rhs->valS;
             
             switch (Op) {
                 case tok_equal:

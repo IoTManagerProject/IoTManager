@@ -122,7 +122,8 @@ String IoTItem::getRoundValue() {
         
         char buf[15];
         sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
-        return (String)buf;
+        value.valS = (String)buf;
+        return value.valS;
     } else {
         return (String)value.valD;
     }
