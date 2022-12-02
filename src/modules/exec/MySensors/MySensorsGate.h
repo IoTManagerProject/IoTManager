@@ -28,7 +28,7 @@
 // в файле MyGatewayTransportSerial.cpp в строчке 35
 #define MY_GATEWAY_SERIAL
 
-#define CHILD_ID 1
+//#define CHILD_ID 1
 
 #include <MySensors.h>
 

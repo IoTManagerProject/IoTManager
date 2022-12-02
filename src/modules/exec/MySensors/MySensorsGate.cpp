@@ -50,12 +50,8 @@ String parseToString(const MyMessage& message) {
 
 class MySensorsGate : public IoTItem {
    private:
-    int _pin;
-
    public:
     MySensorsGate(String parameters) : IoTItem(parameters) {
-        jsonRead(parameters, "pin", _pin);
-        // init place
         SerialPrint("i", "MySensors", "Gate initialized");
     }
 
@@ -64,12 +60,6 @@ class MySensorsGate : public IoTItem {
 
     void loop() {
         loopMySensorsExecute();
-    }
-
-    void setValue(const IoTValue& Value, bool genEvent = true) {
-        value = Value;
-        // set value place
-        regEvent(value.valD, "MySensorsGate", false, genEvent);
     }
 
     ~MySensorsGate(){};
@@ -92,16 +82,10 @@ class MySensorsGate : public IoTItem {
             if (childSensorId == "255") {
                 if (command == "3") {    //это особое внутреннее сообщение
                     if (type == "11") {  //название ноды
-                        SerialPrint("i", "MySensors", "Node name: " + value);
-                        //*
-                        // publishAnyJsonKey("MySensors", "Node name:", value);
-                        // publishAnyJsonKeyWS("MySensors", "Node name:", value);
+                        SerialPrint("i", "MySensors", "===================== " + value + " =====================");
                     }
                     if (type == "12") {  //версия ноды
                         SerialPrint("i", "MySensors", "Node version: " + value);
-                        //*
-                        // publishAnyJsonKey("MySensors", "Node version: ", value);
-                        // publishAnyJsonKeyWS("MySensors", "Node version: ", value);
                     }
                 }
             } else {
@@ -111,48 +95,29 @@ class MySensorsGate : public IoTItem {
                     String widget;
                     String descr;
                     sensorType(type.toInt(), num, widget, descr);
-                    // if (jsonReadBool(settingsFlashJson, "gateAuto")) {
-                    //     if (!isItemAdded(key)) {
-                    //         addItemAuto(num, key, widget, descr);
-                    //         descr.replace("#", " ");
-                    //         SerialPrint("i", "MySensors", "Add new item: " + key + ": " + descr);
-                    //         //*
-                    //         //publishAnyJsonKey("MySensors", key, descr);
-                    //         //publishAnyJsonKeyWS("MySensors", key, descr);
-                    //
-                    //    } else {
-                    //        descr.replace("#", " ");
-                    //        SerialPrint("i", "MySensors", "Item already exist: " + key + ": " + descr);
-                    //
-                    //        //*
-                    //        //publishAnyJsonKey("MySensors", key, descr);
-                    //        //publishAnyJsonKeyWS("MySensors", key, descr);
-                    //    }
-                    //} else {
+
                     descr.replace("#", " ");
                     SerialPrint("i", "MySensors", "Presentation: " + key + ": " + descr);
-
-                    //*
-                    // publishAnyJsonKey("MySensors", key, descr);
-                    // publishAnyJsonKeyWS("MySensors", key, descr);
-                    //}
                 }
                 if (command == "1") {  //это данные
                     if (value != "") {
                         if (presentBeenStarted) {
                             presentBeenStarted = false;
-                            SerialPrint("i", "MySensors", "!!!Presentation of node: " + nodeId + " completed successfully!!!");
-                            // myNotAsyncActions->make(do_deviceInit);
+                            SerialPrint("i", "MySensors", "===================== " + nodeId + " =====================");
                         }
-                        // if (mySensorNode != nullptr) {
-                        //     for (unsigned int i = 0; i < mySensorNode->size(); i++) {
-                        //         mySensorNode->at(i).onChange(value, key);  //вызываем поочередно все экземпляры, там где подойдет там и выполнится
-                        //                                                    //*
-                        //         publishAnyJsonKey("MySensors", key, value);
-                        //         publishAnyJsonKeyWS("MySensors", key, value);
-                        //     }
-                        // }
-                        SerialPrint("i", "MySensors", "node: " + nodeId + ", sensor: " + childSensorId + ", command: " + command + ", type: " + type + ", val: " + value);
+
+                        String incommingID = nodeId + "-" + childSensorId;
+
+                        bool found = false;
+
+                        for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                            if ((*it)->getID() == incommingID) {
+                                found = true;
+                                (*it)->setValue(value, true);
+                            }
+                        }
+
+                        SerialPrint("i", "MySensors", "node: " + nodeId + ", sensor: " + childSensorId + ", command: " + command + ", type: " + type + ", val: " + value + ", found: " + String(found));
                     }
                 }
                 if (command == "2") {  //это запрос значения переменной
@@ -377,23 +342,33 @@ class MySensorsGate : public IoTItem {
     }
 };
 
+class MySensorsNode : public IoTItem {
+   private:
+   public:
+    MySensorsNode(String parameters) : IoTItem(parameters) {
+        SerialPrint("i", "MySensors", "Node initialized");
+    }
+
+    void setValue(const IoTValue& Value, bool genEvent = true) {
+        value = Value;
+        regEvent(value.valD, "MySensorsNode", false, genEvent);
+    }
+
+    void doByInterval() {
+    }
+
+    void loop() {
+    }
+
+    ~MySensorsNode(){};
+};
+
 void* getAPI_MySensorsGate(String subtype, String param) {
     if (subtype == F("MySensorsGate")) {
         return new MySensorsGate(param);
+    } else if (subtype == F("MySensorsNode")) {
+        return new MySensorsNode(param);
     } else {
         return nullptr;
     }
 }
-
-//для того что бы выключить оригинальный лог нужно перейти в файл библиотеки MyGatewayTransportSerial.cpp
-//и заккоментировать строку 36 MY_SERIALDEVICE.print(protocolMyMessage2Serial(message))
-
-// boolean publishAnyJsonKeyWS(const String& topic, const String& key, const String& data) {
-//     String path = mqttRootDevice + "/" + topic + "/status";
-//     String json = "{}";
-//     jsonWriteStr(json, key, data);
-//     //добавляем топик, выводим в ws
-//     String MyJson = json;
-//     jsonWriteStr(MyJson, "topic", path);
-//     ws.textAll(MyJson);
-// }

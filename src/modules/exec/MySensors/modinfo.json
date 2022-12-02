@@ -6,13 +6,20 @@
             "name": "MySensorsGate",
             "type": "Reading",
             "subtype": "MySensorsGate",
-            "id": "t",
+            "id": "gt",
+            "widget": "nil",
+            "page": "",
+            "descr": ""
+        },
+        {
+            "global": 0,
+            "name": "MySensorsNode",
+            "type": "Reading",
+            "subtype": "MySensorsNode",
+            "id": "nd",
             "widget": "anydataTmp",
-            "page": "Сенсоры",
+            "page": "MySensors",
             "descr": "Температура",
-            "map": "1,1024,1,100",
-            "plus": 0,
-            "multiply": 1,
             "round": 1
         }
     ],
