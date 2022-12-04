@@ -104,6 +104,7 @@ class Loging : public IoTItem {
         //запускаем процедуру удаления старых файлов если память переполняется
         deleteLastFile();
     }
+
     void SetDoByInterval(String valse) {
         String value = valse;
         //если значение логгирования пустое

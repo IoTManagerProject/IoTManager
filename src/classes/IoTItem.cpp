@@ -79,14 +79,12 @@ void IoTItem::setValue(const IoTValue& Value, bool genEvent) {
     }
 }
 
-//метод отправки из модуля дополнительных json полей виджета в приложение и веб интерфейс, необходимый для изменения виджетов "на лету" из модуля
+//метод отправки из модуля дополнительных json полей виджета в приложение и веб интерфейс,
+//необходимый для изменения виджетов "на лету" из модуля
 void IoTItem::sendSubWidgetsValues(String& id, String& json) {
     publishJsonMqtt(id, json);
-    // to do publishJsonWs
+    publishJsonWs(id, json);
 }
-
-//событие когда пользователь подключается приложением или веб интерфейсом к усройству
-void IoTItem::onMqttWsAppConnectEvent() {}
 
 //когда событие случилось
 void IoTItem::regEvent(const String& value, const String& consoleInfo, bool error, bool genEvent) {
@@ -115,7 +113,6 @@ void IoTItem::regEvent(const String& value, const String& consoleInfo, bool erro
             publishEvent(_id, json);
             SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
         }
-        //========================================================================
     }
 }
 
@@ -177,18 +174,16 @@ void IoTItem::checkIntFromNet() {
     }
 }
 
+// хуки для системных событий (должны начинаться с "on")
 void IoTItem::onRegEvent(IoTItem* item) {}
-
 void IoTItem::onMqttRecive(String& topic, String& msg) {}
+void IoTItem::onMqttWsAppConnectEvent() {}
 
+//методы для графиков (будет упрощено)
 void IoTItem::publishValue() {}
-
 void IoTItem::clearValue() {}
-
 void IoTItem::setPublishDestination(int publishType, int wsNum){};
-
 void IoTItem::clearHistory() {}
-
 void IoTItem::setTodayDate() {}
 
 String IoTItem::getID() {

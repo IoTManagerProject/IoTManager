@@ -54,21 +54,25 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса dashboard
             //----------------------------------------------------------------------//
 
-            //отвечаем данными на запрос страницы
+            //публикация всех виджетов
             if (headerStr == "/|") {
                 sendFileToWsByFrames("/layout.json", "layout", "", num, WEB_SOCKETS_FRAME_SIZE);
             }
 
-            //отвечаем на запрос параметров
             if (headerStr == "/params|") {
+                //публикация всех статус сообщений при подключении svelte приложения
                 String params = "{}";
-                // jsonWriteStr(params, "params_", "");  //метка для парсинга удалить
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->getSubtype() != "Loging") {
                         if ((*it)->iAmLocal) jsonWriteStr(params, (*it)->getID(), (*it)->getValue());
                     }
                 }
                 sendStringToWs("params", params, num);
+
+                //генерация события подключения в модулях
+                for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                    if ((*it)->iAmLocal) (*it)->onMqttWsAppConnectEvent();
+                }
             }
 
             //отвечаем на запрос графиков
@@ -261,7 +265,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
     }
 }
 
-//публикация статус сообщений (недостаток в том что делаем бродкаст всем клиентам поднятым в свелте!!!)
+//публикация статус сообщений в ws (недостаток в том что делаем бродкаст всем клиентам поднятым в свелте!!!)
 void publishStatusWs(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic;
     String json = "{}";
@@ -270,8 +274,12 @@ void publishStatusWs(const String& topic, const String& data) {
     sendStringToWs("status", json, -1);
 }
 
-void publishChartWs(int num, String& path) {
-    // sendFileToWs(path, num, 1000);
+//публикация дополнительных json сообщений в ws
+void publishJsonWs(const String& topic, String& json) {
+    String path = mqttRootDevice + "/" + topic;
+    jsonWriteStr(json, "topic", path);
+    // TO DO отправка полей в веб
+    // sendStringToWs("status", json, -1);
 }
 
 //данные которые мы отправляем в сокеты переодически
@@ -375,7 +383,6 @@ void sendStringToWs(const String& header, String& payload, int client_id) {
 
     String msg = header + "|0012|" + payload;
     size_t totalSize = msg.length();
-    // Serial.println("Send string '" + header + "', str size: " + String(totalSize));
 
     char dataArray[totalSize];
     msg.toCharArray(dataArray, totalSize + 1);

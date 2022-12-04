@@ -30,7 +30,6 @@ class IoTItem {
     bool isGlobal();
 
     void sendSubWidgetsValues(String& id, String& json);
-    virtual void onMqttWsAppConnectEvent();
 
     void setInterval(long interval);
     void setIntFromNet(int interval);
@@ -52,11 +51,12 @@ class IoTItem {
     String getRoundValue();
     void getNetEvent(String& event);
 
-    // хуки для системных событий
+    // хуки для системных событий (должны начинаться с "on")
     virtual void onRegEvent(IoTItem* item);
     virtual void onMqttRecive(String& topic, String& msg);
+    virtual void onMqttWsAppConnectEvent();
 
-    //методы для графиков
+    //методы для графиков (будет упрощено)
     virtual void publishValue();
     virtual void clearValue();
     virtual void setPublishDestination(int type, int wsNum = -1);
