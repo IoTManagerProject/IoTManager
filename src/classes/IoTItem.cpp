@@ -5,7 +5,6 @@
 #include "ESPConfiguration.h"
 #include "EventsAndOrders.h"
 
-//получение параметров в экземпляр класса
 IoTItem::IoTItem(const String& parameters) {
     jsonRead(parameters, F("int"), _interval, false);
     if (_interval <= 0) enableDoByInt = false;
@@ -33,11 +32,10 @@ IoTItem::IoTItem(const String& parameters) {
         setValue(valAsStr, false);
 
     jsonRead(parameters, F("needSave"), _needSave, false);
-    if (_needSave && jsonRead(valuesFlashJson, _id, valAsStr, false)) // пробуем достать из сохранения значение элемента, если указано, что нужно сохранять
+    if (_needSave && jsonRead(valuesFlashJson, _id, valAsStr, false))  // пробуем достать из сохранения значение элемента, если указано, что нужно сохранять
         setValue(valAsStr, false);
 }
 
-//луп выполняющий переодическое дерганье
 void IoTItem::loop() {
     if (enableDoByInt) {
         currentMillis = millis();
@@ -49,7 +47,6 @@ void IoTItem::loop() {
     }
 }
 
-//получить
 String IoTItem::getValue() {
     if (value.isDecimal) {
         return getRoundValue();
@@ -59,12 +56,11 @@ String IoTItem::getValue() {
 
 long IoTItem::getInterval() { return _interval; }
 
-bool IoTItem::isGlobal() { return _global;}
+bool IoTItem::isGlobal() { return _global; }
 
-//определяем тип прилетевшей величины
 void IoTItem::setValue(const String& valStr, bool genEvent) {
     value.isDecimal = isDigitDotCommaStr(valStr);
-    
+
     if (value.isDecimal) {
         value.valD = valStr.toFloat();
     } else {
@@ -73,16 +69,24 @@ void IoTItem::setValue(const String& valStr, bool genEvent) {
     setValue(value, genEvent);
 }
 
-//
 void IoTItem::setValue(const IoTValue& Value, bool genEvent) {
     value = Value;
-    
+
     if (value.isDecimal) {
         regEvent(value.valD, "", false, genEvent);
     } else {
         regEvent(value.valS, "", false, genEvent);
     }
 }
+
+//метод отправки из модуля дополнительных json полей виджета в приложение и веб интерфейс, необходимый для изменения виджетов "на лету" из модуля
+void IoTItem::sendSubWidgetsValues(String& id, String& json) {
+    publishJsonMqtt(id, json);
+    // to do publishJsonWs
+}
+
+//метод который нужен что бы из ядра заставить модуль отправить его дополнительные json поля виджета
+void IoTItem::handleSendSubWidgetsValues() {}
 
 //когда событие случилось
 void IoTItem::regEvent(const String& value, const String& consoleInfo, bool error, bool genEvent) {
@@ -92,22 +96,22 @@ void IoTItem::regEvent(const String& value, const String& consoleInfo, bool erro
     }
     publishStatusMqtt(_id, value);
     publishStatusWs(_id, value);
-    //SerialPrint("i", "Sensor", consoleInfo + " '" + _id + "' data: " + value + "'");
-    
+    // SerialPrint("i", "Sensor", consoleInfo + " '" + _id + "' data: " + value + "'");
+
     if (genEvent) {
         generateEvent(_id, value);
 
         // распространяем событие через хуки
         for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             (*it)->onRegEvent(this);
-        } 
+        }
 
         //отправка события другим устройствам в сети если не было ошибки==============================
         if (jsonReadBool(settingsFlashJson, "mqttin") && _global && !error) {
             String json = "{}";
             jsonWriteStr_(json, "id", _id);
             jsonWriteStr_(json, "val", value);
-            jsonWriteInt_(json, "int", _interval/1000);
+            jsonWriteInt_(json, "int", _interval / 1000);
             publishEvent(_id, json);
             SerialPrint("i", F("<=MQTT"), "Broadcast event: " + json);
         }
@@ -119,7 +123,7 @@ String IoTItem::getRoundValue() {
     if (_round >= 0 && _round <= 6) {
         int sot = _round ? pow(10, (int)_round) : 1;
         value.valD = round(value.valD * sot) / sot;
-        
+
         char buf[15];
         sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
         return (String)buf;
@@ -154,7 +158,7 @@ void IoTItem::getNetEvent(String& event) {
     event = "{}";
     jsonWriteStr_(event, "id", _id);
     jsonWriteStr_(event, "val", getValue());
-    jsonWriteInt_(event, "int", _interval/1000);
+    jsonWriteInt_(event, "int", _interval / 1000);
 }
 
 void IoTItem::setIntFromNet(int interval) {
@@ -198,7 +202,6 @@ void IoTItem::setInterval(long interval) {
 IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
 }
-
 
 //сетевое общение====================================================================================================================================
 
@@ -256,14 +259,14 @@ IoTItem* createItemFromNet(const String& itemId, const String& value, int interv
     jsonStr += "\",\"int\":";
     jsonStr += interval;
     jsonStr += "}";
-    
+
     return createItemFromNet(jsonStr);
 }
 
 // создаем временную копию элемента из сети на основе события
 IoTItem* createItemFromNet(const String& msgFromNet) {
-    IoTItem *tmpp = new IoTItem(msgFromNet);
-    if (tmpp->getInterval()) tmpp->setIntFromNet(tmpp->getInterval()/1000 + 5);    
+    IoTItem* tmpp = new IoTItem(msgFromNet);
+    if (tmpp->getInterval()) tmpp->setIntFromNet(tmpp->getInterval() / 1000 + 5);
     tmpp->iAmLocal = false;
     IoTItems.push_back(tmpp);
     generateEvent(tmpp->getID(), tmpp->getValue());
@@ -271,7 +274,7 @@ IoTItem* createItemFromNet(const String& msgFromNet) {
 }
 
 void analyzeMsgFromNet(const String& msg, String altId) {
-    if (!jsonRead(msg, F("id"), altId, altId == "") && altId == "") return;     // ничего не предпринимаем, если ошибка и altId = "", вообще данная конструкция нужна для совместимости с форматом данных 3 версией
+    if (!jsonRead(msg, F("id"), altId, altId == "") && altId == "") return;  // ничего не предпринимаем, если ошибка и altId = "", вообще данная конструкция нужна для совместимости с форматом данных 3 версией
     IoTItem* itemExist = findIoTItem(altId);
     if (itemExist) {
         String valAsStr = msg;
@@ -279,9 +282,9 @@ void analyzeMsgFromNet(const String& msg, String altId) {
         long interval = 0;
         jsonRead(msg, F("int"), interval, false);
 
-        itemExist->setInterval(interval);     // устанавливаем такой же интервал как на источнике события
-        itemExist->setValue(valAsStr, false);  // только регистрируем изменения в интерфейсе без создания цикла сетевых событий
-        if (interval) itemExist->setIntFromNet(interval+5);  // если пришедший интервал =0, значит не нужно контролировать доверие, иначе даем фору в 5 сек
+        itemExist->setInterval(interval);                      // устанавливаем такой же интервал как на источнике события
+        itemExist->setValue(valAsStr, false);                  // только регистрируем изменения в интерфейсе без создания цикла сетевых событий
+        if (interval) itemExist->setIntFromNet(interval + 5);  // если пришедший интервал =0, значит не нужно контролировать доверие, иначе даем фору в 5 сек
         generateEvent(altId, valAsStr);
     } else {
         // временно зафиксируем данные в базе, если локально элемент отсутствует

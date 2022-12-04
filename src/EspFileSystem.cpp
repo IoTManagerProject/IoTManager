@@ -17,7 +17,6 @@ void globalVarsSync() {
     valuesFlashJson = readFile(F("values.json"), 4096);
     valuesFlashJson.replace("\r\n", "");
 
-
     mqttPrefix = jsonReadStr(settingsFlashJson, F("mqttPrefix"));
     mqttRootDevice = mqttPrefix + "/" + chipId;
     jsonWriteStr_(settingsFlashJson, "root", mqttRootDevice);
@@ -27,6 +26,7 @@ void globalVarsSync() {
     // jsonWriteStr_(ssidListHeapJson, "ssids_", "");  //метка для парсинга удалить
 }
 
+//к удалению. не используется
 String getParamsJson() {
     String json;
     serializeJson(*getLocalItemsAsJSON(), json);

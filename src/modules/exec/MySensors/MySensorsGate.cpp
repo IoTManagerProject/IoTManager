@@ -3,6 +3,7 @@
 #include "Arduino.h"
 #include "MySensorsGate.h"
 
+#ifdef MYSENSORS
 // callback библиотеки mysensors
 void receive(const MyMessage& message) {
     String inMsg = String(message.getSender()) + "," +   // node-id
@@ -48,6 +49,7 @@ String parseToString(const MyMessage& message) {
     }
 }
 
+#endif
 class MySensorsGate : public IoTItem {
    private:
    public:
@@ -344,20 +346,57 @@ class MySensorsGate : public IoTItem {
 
 class MySensorsNode : public IoTItem {
    private:
+    String id;
+    int _minutesPassed = 0;
+    String json = "{}";
+    bool dataFromNode = false;
+
    public:
     MySensorsNode(String parameters) : IoTItem(parameters) {
         SerialPrint("i", "MySensors", "Node initialized");
+        jsonRead(parameters, F("id"), id);
+        dataFromNode = false;
     }
 
     void setValue(const IoTValue& Value, bool genEvent = true) {
         value = Value;
         regEvent(value.valD, "MySensorsNode", false, genEvent);
+        _minutesPassed = 0;
+        prevMillis = millis();
+        dataFromNode = true;
+        setNewWidgetAttributes();
     }
 
     void doByInterval() {
+        _minutesPassed++;
+        setNewWidgetAttributes();
     }
 
     void loop() {
+        currentMillis = millis();
+        difference = currentMillis - prevMillis;
+        if (difference > 60000) {
+            prevMillis = millis();
+            this->doByInterval();
+        }
+    }
+
+    void handleSendSubWidgetsValues() {
+        setNewWidgetAttributes();
+    }
+
+    void setNewWidgetAttributes() {
+        if (dataFromNode) {
+            jsonWriteStr(json, "info", String(_minutesPassed) + " min");
+            if (_minutesPassed >= 60) {
+                jsonWriteStr(json, "color", "orange");  //сделаем виджет оранжевым когда более 60 минут нода не выходила на связь
+            } else if (_minutesPassed >= 120) {
+                jsonWriteStr(json, "color", "red");  //сделаем виджет красным когда более 120 минут нода не выходила на связь
+            }
+        } else {
+            jsonWriteStr(json, "info", "awaiting");
+        }
+        sendSubWidgetsValues(id, json);
     }
 
     ~MySensorsNode(){};

@@ -133,7 +133,8 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     if (payloadStr.startsWith("HELLO")) {
         SerialPrint("i", F("MQTT"), F("Full update"));
         publishWidgets();
-        publishState();
+        publishMainWidgetsValues();
+        publishSubWidgetsValues();
 
         //обращение к логированию из ядра
         //отправка данных графиков
@@ -189,7 +190,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     //        loadScenario();
     //        SerialPrint("i", F("=>MQTT"), F("Scenario received"));
     //    }
-    //} 
+    //}
 }
 
 boolean publish(const String& topic, const String& data) {
@@ -223,9 +224,9 @@ boolean publishControl(String id, String topic, String state) {
     return mqtt.publish(path.c_str(), state.c_str(), false);
 }
 
-boolean publishChart_test(const String& topic, const String& data) {
+boolean publishJsonMqtt(const String& topic, const String& json) {
     String path = mqttRootDevice + "/" + topic + "/status";
-    return mqtt.publish(path.c_str(), data.c_str(), false);
+    return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
 boolean publishStatusMqtt(const String& topic, const String& data) {
@@ -235,7 +236,7 @@ boolean publishStatusMqtt(const String& topic, const String& data) {
     return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
-boolean publishAnyJsonKey(const String& topic, const String& key, const String& data) {
+boolean publishAnyJsonKeyMqtt(const String& topic, const String& key, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     String json = "{}";
     jsonWriteStr(json, key, data);
@@ -272,21 +273,35 @@ void publishWidgets() {
     file.close();
 }
 
-void publishState() {
-    String json = getParamsJson();
-    SerialPrint("i", F("DATA"), json);
-    json.replace("{", "");
-    json.replace("}", "");
-    json.replace("\"", "");
-    json += ",";
-    while (json.length() != 0) {
-        String tmp = selectToMarker(json, ",");
-        String topic = selectToMarker(tmp, ":");
-        String state = deleteBeforeDelimiter(tmp, ":");
-        if (topic != "" && state != "") {
-            publishStatusMqtt(topic, state);
-        }
-        json = deleteBeforeDelimiter(json, ",");
+//устаревшая версия к удалению
+// void publishMainWidgetsValues() {
+//    String json = getParamsJson();
+//    SerialPrint("i", F("DATA"), json);
+//    json.replace("{", "");
+//    json.replace("}", "");
+//    json.replace("\"", "");
+//    json += ",";
+//    while (json.length() != 0) {
+//        String tmp = selectToMarker(json, ",");
+//        String topic = selectToMarker(tmp, ":");
+//        String state = deleteBeforeDelimiter(tmp, ":");
+//        if (topic != "" && state != "") {
+//            publishStatusMqtt(topic, state);
+//        }
+//        json = deleteBeforeDelimiter(json, ",");
+//    }
+//}
+
+//оптимизированная версия
+void publishMainWidgetsValues() {
+    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if ((*it)->iAmLocal) publishStatusMqtt((*it)->getID(), (*it)->getValue());
+    }
+}
+
+void publishSubWidgetsValues() {
+    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if ((*it)->iAmLocal) (*it)->handleSendSubWidgetsValues();
     }
 }
 

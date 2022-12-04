@@ -19,15 +19,16 @@ boolean publish(const String& topic, const String& data);
 boolean publishData(const String& topic, const String& data);
 boolean publishChartMqtt(const String& topic, const String& data);
 boolean publishControl(String id, String topic, String state);
-boolean publishChart_test(const String& topic, const String& data);
+boolean publishJsonMqtt(const String& topic, const String& json);
 boolean publishStatusMqtt(const String& topic, const String& data);
 boolean publishEvent(const String& topic, const String& data);
 boolean publishInfo(const String& topic, const String& data);
-boolean publishAnyJsonKey(const String& topic, const String& key, const String& data);
+boolean publishAnyJsonKeyMqtt(const String& topic, const String& key, const String& data);
 bool publishChartFileToMqtt(String path, String id, int maxCount);
 
 void publishWidgets();
-void publishState();
+void publishMainWidgetsValues();
+void publishSubWidgetsValues();
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length);
 void handleMqttStatus(bool send);
