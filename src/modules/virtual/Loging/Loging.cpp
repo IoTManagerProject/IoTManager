@@ -21,7 +21,7 @@ class Loging : public IoTItem {
     IoTItem *dateIoTItem;
 
     String prevDate = "";
-    bool firstTimeDate = true;
+    bool firstTimeInit = true;
 
     long interval;
 
@@ -188,12 +188,10 @@ class Loging : public IoTItem {
     bool hasDayChanged() {
         bool changed = false;
         String currentDate = getTodayDateDotFormated();
-        if (!firstTimeDate) {
+        if (!firstTimeInit) {
             if (prevDate != currentDate) {
                 changed = true;
-                SerialPrint("i", F("NTP"), "Change day event");
-                //установим дату на изменившуюся при смене суток
-                dateIoTItem->setTodayDate();
+                SerialPrint("i", F("NTP"), F("Change day event"));
 #if defined(ESP8266)
                 FileFS.gc();
 #endif
@@ -201,7 +199,7 @@ class Loging : public IoTItem {
 #endif
             }
         }
-        firstTimeDate = false;
+        firstTimeInit = false;
         prevDate = currentDate;
         return changed;
     }

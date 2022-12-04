@@ -70,6 +70,8 @@ String mqttRootDevice = "";
 // Time
 unsigned long unixTime = 0;
 unsigned long unixTimeShort = 0;
+String prevDate = "";
+bool firstTimeInit = true;
 
 // unsigned long loopPeriod;
 

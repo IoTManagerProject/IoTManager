@@ -19,7 +19,7 @@ class LogingDaily : public IoTItem {
     IoTItem *dateIoTItem;
 
     String prevDate = "";
-    bool firstTimeDate = true;
+    bool firstTimeInit = true;
 
     long interval;
 
@@ -138,7 +138,7 @@ class LogingDaily : public IoTItem {
     bool hasDayChanged() {
         bool changed = false;
         String currentDate = getTodayDateDotFormated();
-        if (!firstTimeDate) {
+        if (!firstTimeInit) {
             if (prevDate != currentDate) {
                 changed = true;
                 SerialPrint("i", F("NTP"), "Change day event");
@@ -149,7 +149,7 @@ class LogingDaily : public IoTItem {
 #endif
             }
         }
-        firstTimeDate = false;
+        firstTimeInit = false;
         prevDate = currentDate;
         return changed;
     }

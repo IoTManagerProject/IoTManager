@@ -134,6 +134,8 @@ struct Time_t {
 
 extern unsigned long unixTime;
 extern unsigned long unixTimeShort;
+extern String prevDate;
+extern bool firstTimeInit;
 
 extern bool isTimeSynch;
 extern Time_t _time_local;

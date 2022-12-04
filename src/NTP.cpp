@@ -29,6 +29,7 @@ void ntpInit() {
                 dateAndTime = deleteToMarkerLast(dateAndTime, ":");
                 jsonWriteStr_(errorsHeapJson, F("timenow"), dateAndTime);
                 SerialPrint("I", F("NTP"), "✔ " + dateAndTime);
+                onDayChange();
             }
             _time_isTrust = true;  // доверяем значению времени
         },
@@ -39,6 +40,25 @@ void ntpInit() {
 
 void synchTime() {
     configTime(0, 0, "pool.ntp.org", "ru.pool.ntp.org", "pool.ntp.org");
+}
+
+//событие смены даты
+bool onDayChange() {
+    bool changed = false;
+    String currentDate = getTodayDateDotFormated();
+    if (!firstTimeInit) {
+        if (prevDate != currentDate) {
+            changed = true;
+            SerialPrint("i", F("NTP"), F("Change day core event"));
+            //установим новую дату во всех графиках системы
+            for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                (*it)->setTodayDate();
+            }
+        }
+    }
+    firstTimeInit = false;
+    prevDate = currentDate;
+    return changed;
 }
 
 unsigned long gmtTimeToLocal(unsigned long gmtTimestamp) {
