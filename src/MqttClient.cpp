@@ -301,7 +301,7 @@ void publishMainWidgetsValues() {
 
 void publishSubWidgetsValues() {
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-        if ((*it)->iAmLocal) (*it)->handleSendSubWidgetsValues();
+        if ((*it)->iAmLocal) (*it)->onMqttWsAppConnectEvent();
     }
 }
 

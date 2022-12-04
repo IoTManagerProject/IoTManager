@@ -30,7 +30,7 @@ class IoTItem {
     bool isGlobal();
 
     void sendSubWidgetsValues(String& id, String& json);
-    virtual void handleSendSubWidgetsValues();
+    virtual void onMqttWsAppConnectEvent();
 
     void setInterval(long interval);
     void setIntFromNet(int interval);

@@ -381,7 +381,8 @@ class MySensorsNode : public IoTItem {
         }
     }
 
-    void handleSendSubWidgetsValues() {
+    //событие когда пользователь подключается приложением или веб интерфейсом к усройству
+    void onMqttWsAppConnectEvent() {
         setNewWidgetAttributes();
     }
 

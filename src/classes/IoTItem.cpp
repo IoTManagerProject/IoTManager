@@ -85,8 +85,8 @@ void IoTItem::sendSubWidgetsValues(String& id, String& json) {
     // to do publishJsonWs
 }
 
-//метод который нужен что бы из ядра заставить модуль отправить его дополнительные json поля виджета
-void IoTItem::handleSendSubWidgetsValues() {}
+//событие когда пользователь подключается приложением или веб интерфейсом к усройству
+void IoTItem::onMqttWsAppConnectEvent() {}
 
 //когда событие случилось
 void IoTItem::regEvent(const String& value, const String& consoleInfo, bool error, bool genEvent) {
