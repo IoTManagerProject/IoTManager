@@ -192,6 +192,8 @@ class Loging : public IoTItem {
             if (prevDate != currentDate) {
                 changed = true;
                 SerialPrint("i", F("NTP"), "Change day event");
+                //установим дату на изменившуюся при смене суток
+                dateIoTItem->setTodayDate();
 #if defined(ESP8266)
                 FileFS.gc();
 #endif
