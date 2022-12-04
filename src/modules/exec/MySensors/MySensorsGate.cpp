@@ -389,7 +389,9 @@ class MySensorsNode : public IoTItem {
     void setNewWidgetAttributes() {
         if (dataFromNode) {
             jsonWriteStr(json, "info", String(_minutesPassed) + " min");
-            if (_minutesPassed >= 60) {
+            if (_minutesPassed < 60) {
+                jsonWriteStr(json, "color", "");
+            } else if (_minutesPassed >= 60) {
                 jsonWriteStr(json, "color", "orange");  //сделаем виджет оранжевым когда более 60 минут нода не выходила на связь
             } else if (_minutesPassed >= 120) {
                 jsonWriteStr(json, "color", "red");  //сделаем виджет красным когда более 120 минут нода не выходила на связь
