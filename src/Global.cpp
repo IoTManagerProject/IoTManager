@@ -7,7 +7,7 @@
 TickerScheduler ts(END + 1);
 WiFiClient espClient;
 PubSubClient mqtt(espClient);
-StringCommand sCmd;
+
 #ifdef ASYNC_WEB_SERVER
 AsyncWebServer server(80);
 #endif

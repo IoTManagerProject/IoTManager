@@ -185,6 +185,7 @@ class Loging : public IoTItem {
         SerialPrint("i", F("Loging"), "'" + id + "' loging in file http://" + WiFi.localIP().toString() + path);
     }
 
+    //данная функция уже перенесена в ядро и будет удалена в последствии
     bool hasDayChanged() {
         bool changed = false;
         String currentDate = getTodayDateDotFormated();

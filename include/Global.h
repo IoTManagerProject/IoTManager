@@ -7,7 +7,6 @@
 #include <ArduinoJson.h>
 #include <TickerScheduler.h>
 #include <PubSubClient.h>
-#include <StringCommand.h>
 #include <list>
 
 #ifdef ESP32
@@ -60,7 +59,7 @@ extern IoTGpio IoTgpio;
 extern TickerScheduler ts;
 extern WiFiClient espClient;
 extern PubSubClient mqtt;
-extern StringCommand sCmd;
+
 #ifdef ASYNC_WEB_SERVER
 extern AsyncWebServer server;
 #endif
