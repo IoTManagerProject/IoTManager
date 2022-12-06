@@ -345,6 +345,9 @@ class MySensorsGate : public IoTItem {
 class MySensorsNode : public IoTItem {
    private:
     String id;
+    int orange;
+    int red;
+    int offline;
     int _minutesPassed = 0;
     String json = "{}";
     bool dataFromNode = false;
@@ -353,6 +356,9 @@ class MySensorsNode : public IoTItem {
     MySensorsNode(String parameters) : IoTItem(parameters) {
         SerialPrint("i", "MySensors", "Node initialized");
         jsonRead(parameters, F("id"), id);
+        orange = jsonReadInt(parameters, F("orange"));
+        red = jsonReadInt(parameters, F("red"));
+        offline = jsonReadInt(parameters, F("offline"));
         dataFromNode = false;
     }
 
@@ -386,16 +392,18 @@ class MySensorsNode : public IoTItem {
 
     void setNewWidgetAttributes() {
         if (dataFromNode) {
-            jsonWriteStr(json, "info", String(_minutesPassed) + " min");
-            if (_minutesPassed < 60) {
-                jsonWriteStr(json, "color", "");
-            } else if (_minutesPassed >= 60) {
-                jsonWriteStr(json, "color", "orange");  //сделаем виджет оранжевым когда более 60 минут нода не выходила на связь
-            } else if (_minutesPassed >= 120) {
-                jsonWriteStr(json, "color", "red");  //сделаем виджет красным когда более 120 минут нода не выходила на связь
+            jsonWriteStr(json, F("info"), String(_minutesPassed) + " min");
+            if (_minutesPassed < orange) {
+                jsonWriteStr(json, F("color"), "");
+            } else if (_minutesPassed >= orange) {
+                jsonWriteStr(json, F("color"), F("orange"));  //сделаем виджет оранжевым
+            } else if (_minutesPassed >= red) {
+                jsonWriteStr(json, F("color"), F("red"));  //сделаем виджет красным
+            } else if (_minutesPassed >= offline) {
+                jsonWriteStr(json, F("info"), F("offline"));
             }
         } else {
-            jsonWriteStr(json, "info", "awaiting");
+            jsonWriteStr(json, F("info"), F("awaiting"));
         }
         sendSubWidgetsValues(id, json);
     }

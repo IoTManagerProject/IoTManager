@@ -16,10 +16,13 @@
             "name": "MySensorsNode",
             "type": "Reading",
             "subtype": "MySensorsNode",
-            "id": "nd",
+            "id": "n",
             "widget": "anydataTmp",
             "page": "MySensors",
             "descr": "Температура",
+            "orange": 60,
+            "red": 120,
+            "offline": 180,
             "round": 1
         }
     ],
