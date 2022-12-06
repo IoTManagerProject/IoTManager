@@ -78,7 +78,7 @@ class MySensorsGate : public IoTItem {
 
             static bool presentBeenStarted = false;
 
-            String key = nodeId + "-" + childSensorId;
+            String ID = "n" + nodeId + "s" + childSensorId;
             static String infoJson = "{}";
 
             if (childSensorId == "255") {
@@ -99,7 +99,7 @@ class MySensorsGate : public IoTItem {
                     sensorType(type.toInt(), num, widget, descr);
 
                     descr.replace("#", " ");
-                    SerialPrint("i", "MySensors", "Presentation: " + key + ": " + descr);
+                    SerialPrint("i", "MySensors", "Presentation: " + ID + ": " + descr);
                 }
                 if (command == "1") {  //это данные
                     if (value != "") {
@@ -108,12 +108,10 @@ class MySensorsGate : public IoTItem {
                             SerialPrint("i", "MySensors", "===================== " + nodeId + " =====================");
                         }
 
-                        String incommingID = nodeId + "-" + childSensorId;
-
                         bool found = false;
 
                         for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-                            if ((*it)->getID() == incommingID) {
+                            if ((*it)->getID() == ID) {
                                 found = true;
                                 (*it)->setValue(value, true);
                             }
