@@ -344,22 +344,24 @@ class MySensorsGate : public IoTItem {
 
 class MySensorsNode : public IoTItem {
    private:
-    String id;
-    int orange;
-    int red;
-    int offline;
+    String id = "";
+    int orange = 0;
+    int red = 0;
+    int offline = 0;
     int _minutesPassed = 0;
     String json = "{}";
     bool dataFromNode = false;
 
    public:
     MySensorsNode(String parameters) : IoTItem(parameters) {
-        SerialPrint("i", "MySensors", "Node initialized");
         jsonRead(parameters, F("id"), id);
-        orange = jsonReadInt(parameters, F("orange"));
-        red = jsonReadInt(parameters, F("red"));
-        offline = jsonReadInt(parameters, F("offline"));
+
+        jsonRead(parameters, F("orange"), orange);
+        jsonRead(parameters, F("red"), red);
+        jsonRead(parameters, F("offline"), offline);
+
         dataFromNode = false;
+        SerialPrint("i", "MySensors", "Node initialized");
     }
 
     void setValue(const IoTValue& Value, bool genEvent = true) {
@@ -393,14 +395,16 @@ class MySensorsNode : public IoTItem {
     void setNewWidgetAttributes() {
         if (dataFromNode) {
             jsonWriteStr(json, F("info"), String(_minutesPassed) + " min");
-            if (_minutesPassed < orange) {
-                jsonWriteStr(json, F("color"), "");
-            } else if (_minutesPassed >= orange) {
-                jsonWriteStr(json, F("color"), F("orange"));  //сделаем виджет оранжевым
-            } else if (_minutesPassed >= red) {
-                jsonWriteStr(json, F("color"), F("red"));  //сделаем виджет красным
-            } else if (_minutesPassed >= offline) {
-                jsonWriteStr(json, F("info"), F("offline"));
+            if (orange != 0 && red != 0 && offline != 0) {
+                if (_minutesPassed < orange) {
+                    jsonWriteStr(json, F("color"), "");
+                } else if (_minutesPassed >= orange) {
+                    jsonWriteStr(json, F("color"), F("orange"));  //сделаем виджет оранжевым
+                } else if (_minutesPassed >= red) {
+                    jsonWriteStr(json, F("color"), F("red"));  //сделаем виджет красным
+                } else if (_minutesPassed >= offline) {
+                    jsonWriteStr(json, F("info"), F("offline"));
+                }
             }
         } else {
             jsonWriteStr(json, F("info"), F("awaiting"));
