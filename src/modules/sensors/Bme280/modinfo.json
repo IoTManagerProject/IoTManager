@@ -67,22 +67,22 @@
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [
-            "adafruit/Adafruit BMP280 Library"
+            "adafruit/Adafruit BME280 Library"
         ],
         "esp8266_4mb": [
-            "adafruit/Adafruit BMP280 Library"
+            "adafruit/Adafruit BME280 Library"
         ],
         "esp8266_1mb": [
-            "adafruit/Adafruit BMP280 Library"
+            "adafruit/Adafruit BME280 Library"
         ],
         "esp8266_1mb_ota": [
-            "adafruit/Adafruit BMP280 Library"
+            "adafruit/Adafruit BME280 Library"
         ],
         "esp8285_1mb": [
-            "adafruit/Adafruit BMP280 Library"
+            "adafruit/Adafruit BME280 Library"
         ],
         "esp8285_1mb_ota": [
-            "adafruit/Adafruit BMP280 Library"
+            "adafruit/Adafruit BME280 Library"
         ]
     }
 }
