@@ -67,22 +67,22 @@
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "adafruit/Adafruit BMP280 Library"
         ],
         "esp8266_4mb": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "adafruit/Adafruit BMP280 Library"
         ],
         "esp8266_1mb": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "adafruit/Adafruit BMP280 Library"
         ],
         "esp8266_1mb_ota": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "adafruit/Adafruit BMP280 Library"
         ],
         "esp8285_1mb": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "adafruit/Adafruit BMP280 Library"
         ],
         "esp8285_1mb_ota": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "adafruit/Adafruit BMP280 Library"
         ]
     }
 }
