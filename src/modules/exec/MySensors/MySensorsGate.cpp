@@ -398,11 +398,14 @@ class MySensorsNode : public IoTItem {
             if (orange != 0 && red != 0 && offline != 0) {
                 if (_minutesPassed < orange) {
                     jsonWriteStr(json, F("color"), "");
-                } else if (_minutesPassed >= orange) {
+                }
+                if (_minutesPassed >= orange && _minutesPassed < red) {
                     jsonWriteStr(json, F("color"), F("orange"));  //сделаем виджет оранжевым
-                } else if (_minutesPassed >= red) {
+                }
+                if (_minutesPassed >= red && _minutesPassed < offline) {
                     jsonWriteStr(json, F("color"), F("red"));  //сделаем виджет красным
-                } else if (_minutesPassed >= offline) {
+                }
+                if (_minutesPassed >= offline) {
                     jsonWriteStr(json, F("info"), F("offline"));
                 }
             }
