@@ -15,6 +15,8 @@ class Pzem004v : public IoTItem {
         addr = jsonReadStr(parameters, "addr");
         if (myUART) {
             pzem = new PZEMSensor(myUART, hexStringToUint8(addr));
+            // раскомментируйте эту строку если нужно поменять адрес pzem
+            // SerialPrint("i", "Pzem", String(pzem->setAddress(0x03)));
         }
     }
 
@@ -191,7 +193,7 @@ void* getAPI_Pzem004(String subtype, String param) {
     } else if (subtype == F("Pzem004hz")) {
         return new Pzem004hz(param);
     } else if (subtype == F("Pzem004pf")) {
-        return new Pzem004pf(param);   
+        return new Pzem004pf(param);
     } else {
         return nullptr;
     }
