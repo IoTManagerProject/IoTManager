@@ -82,16 +82,16 @@ class MySensorsGate : public IoTItem {
             static String infoJson = "{}";
 
             if (childSensorId == "255") {
-                if (command == "3") {    //это особое внутреннее сообщение
-                    if (type == "11") {  //название ноды
+                if (command == "3") {    // это особое внутреннее сообщение
+                    if (type == "11") {  // название ноды
                         SerialPrint("i", "MySensors", "===================== " + value + " =====================");
                     }
-                    if (type == "12") {  //версия ноды
+                    if (type == "12") {  // версия ноды
                         SerialPrint("i", "MySensors", "Node version: " + value);
                     }
                 }
             } else {
-                if (command == "0") {  //это презентация
+                if (command == "0") {  // это презентация
                     presentBeenStarted = true;
                     int num;
                     String widget;
@@ -101,7 +101,7 @@ class MySensorsGate : public IoTItem {
                     descr.replace("#", " ");
                     SerialPrint("i", "MySensors", "Presentation: " + ID + ": " + descr);
                 }
-                if (command == "1") {  //это данные
+                if (command == "1") {  // это данные
                     if (value != "") {
                         if (presentBeenStarted) {
                             presentBeenStarted = false;
@@ -120,7 +120,7 @@ class MySensorsGate : public IoTItem {
                         SerialPrint("i", "MySensors", "node: " + nodeId + ", sensor: " + childSensorId + ", command: " + command + ", type: " + type + ", val: " + value + ", found: " + String(found));
                     }
                 }
-                if (command == "2") {  //это запрос значения переменной
+                if (command == "2") {  // это запрос значения переменной
                     SerialPrint("i", "MySensors", "Request a variable value");
                 }
             }
@@ -387,23 +387,23 @@ class MySensorsNode : public IoTItem {
         }
     }
 
-    //событие когда пользователь подключается приложением или веб интерфейсом к усройству
+    // событие когда пользователь подключается приложением или веб интерфейсом к усройству
     void onMqttWsAppConnectEvent() {
         setNewWidgetAttributes();
     }
 
     void setNewWidgetAttributes() {
         if (dataFromNode) {
-            jsonWriteStr(json, F("info"), String(_minutesPassed) + " min");
+            jsonWriteStr(json, F("info"), prettyMinutsTimeout(_minutesPassed));
             if (orange != 0 && red != 0 && offline != 0) {
                 if (_minutesPassed < orange) {
                     jsonWriteStr(json, F("color"), "");
                 }
                 if (_minutesPassed >= orange && _minutesPassed < red) {
-                    jsonWriteStr(json, F("color"), F("orange"));  //сделаем виджет оранжевым
+                    jsonWriteStr(json, F("color"), F("orange"));  // сделаем виджет оранжевым
                 }
                 if (_minutesPassed >= red && _minutesPassed < offline) {
-                    jsonWriteStr(json, F("color"), F("red"));  //сделаем виджет красным
+                    jsonWriteStr(json, F("color"), F("red"));  // сделаем виджет красным
                 }
                 if (_minutesPassed >= offline) {
                     jsonWriteStr(json, F("info"), F("offline"));
