@@ -82,7 +82,7 @@ class LogingDaily : public IoTItem {
         float difference = currentValue - prevValue;
 
         if (telegram == 1) {
-            String msg = descr + " " + String(currentValue) + " " + String(difference);
+            String msg = descr + ": total " + String(currentValue) + ", consumed " + String(difference);
             for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                 if ((*it)->getSubtype() == "TelegramLT" || "Telegram") {
                     (*it)->sendTelegramMsg(false, msg);
