@@ -1,6 +1,6 @@
 #include "utils/FileUtils.h"
 
-//данная функция записывает файл из буфера страницами указанного размера
+// данная функция записывает файл из буфера страницами указанного размера
 void writeFileUint8tByFrames(const String& filename, uint8_t*& big_buf, size_t length, size_t headerLenth, size_t frameSize) {
     String path = filepath(filename);
     auto file = FileFS.open(path, FILE_WRITE);
@@ -71,7 +71,7 @@ const String writeFile(const String& filename, const String& str) {
     }
     file.print(str);
     file.close();
-    return "sucсess";
+    return "success";
     onFlashWrite();
 }
 
@@ -87,7 +87,7 @@ const String writeEmptyFile(const String& filename) {
         return "failed";
     }
     file.close();
-    return "sucсess";
+    return "success";
     onFlashWrite();
 }
 
@@ -99,7 +99,7 @@ const String addFileLn(const String& filename, const String& str) {
     }
     file.println(str);
     file.close();
-    return "sucсess";
+    return "success";
     onFlashWrite();
 }
 
@@ -111,7 +111,7 @@ const String addFile(const String& filename, const String& str) {
     }
     file.print(str);
     file.close();
-    return "sucсess";
+    return "success";
     onFlashWrite();
 }
 
@@ -160,7 +160,7 @@ bool cutFile(const String& src, const String& dst) {
     return true;
 }
 
-//функция считает количество строк в файле
+// функция считает количество строк в файле
 size_t countJsonObj(const String filename, size_t& size) {
     size_t cnt = -1;
     String path = filepath(filename);
@@ -180,7 +180,7 @@ size_t countJsonObj(const String filename, size_t& size) {
     return cnt;
 }
 
-//удаляем файл
+// удаляем файл
 void removeFile(const String& filename) {
     String path = filepath(filename);
     if (FileFS.exists(path)) {
@@ -216,8 +216,8 @@ String readDataDB(String id) {
 void cleanLogs() {
     SerialPrint("i", "Files", "cleanLogs");
     cleanDirectory("/db");
-    //обращение к логированию из ядра
-    //очистка данных всех экземпляров графиков
+    // обращение к логированию из ядра
+    // очистка данных всех экземпляров графиков
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         if ((*it)->getSubtype() == "Loging" || "LogingDaily") {
             (*it)->clearHistory();
@@ -225,7 +225,7 @@ void cleanLogs() {
     }
 }
 
-//очищаем директорию с файлами
+// очищаем директорию с файлами
 void cleanDirectory(String path) {
     String filesList = getFilesList(path);
     int i = 0;
@@ -241,7 +241,7 @@ void cleanDirectory(String path) {
     }
 }
 
-//счетчик количества записей на флешь за сеанс
+// счетчик количества записей на флешь за сеанс
 void onFlashWrite() {
     flashWriteNumber++;
     // SerialPrint(F("->"), F("FS"), F("write data on flash"));
