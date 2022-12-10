@@ -56,7 +56,10 @@ class IoTItem {
     virtual void onMqttRecive(String& topic, String& msg);
     virtual void onMqttWsAppConnectEvent();
 
-    //методы для графиков (будет упрощено)
+    // делаем доступным модулям отправку сообщений в телеграм
+    virtual void sendTelegramMsg(bool often, String msg);
+
+    // методы для графиков (будет упрощено)
     virtual void publishValue();
     virtual void clearValue();
     virtual void setPublishDestination(int type, int wsNum = -1);

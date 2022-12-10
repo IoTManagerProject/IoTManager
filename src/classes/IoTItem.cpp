@@ -79,14 +79,14 @@ void IoTItem::setValue(const IoTValue& Value, bool genEvent) {
     }
 }
 
-//метод отправки из модуля дополнительных json полей виджета в приложение и веб интерфейс,
-//необходимый для изменения виджетов "на лету" из модуля
+// метод отправки из модуля дополнительных json полей виджета в приложение и веб интерфейс,
+// необходимый для изменения виджетов "на лету" из модуля
 void IoTItem::sendSubWidgetsValues(String& id, String& json) {
     publishJsonMqtt(id, json);
     publishJsonWs(id, json);
 }
 
-//когда событие случилось
+// когда событие случилось
 void IoTItem::regEvent(const String& value, const String& consoleInfo, bool error, bool genEvent) {
     if (_needSave) {
         jsonWriteStr_(valuesFlashJson, _id, value);
@@ -104,7 +104,7 @@ void IoTItem::regEvent(const String& value, const String& consoleInfo, bool erro
             (*it)->onRegEvent(this);
         }
 
-        //отправка события другим устройствам в сети если не было ошибки==============================
+        // отправка события другим устройствам в сети если не было ошибки
         if (jsonReadBool(settingsFlashJson, "mqttin") && _global && !error) {
             String json = "{}";
             jsonWriteStr_(json, "id", _id);
@@ -179,7 +179,10 @@ void IoTItem::onRegEvent(IoTItem* item) {}
 void IoTItem::onMqttRecive(String& topic, String& msg) {}
 void IoTItem::onMqttWsAppConnectEvent() {}
 
-//методы для графиков (будет упрощено)
+// делаем доступным модулям отправку сообщений в телеграм
+void IoTItem::sendTelegramMsg(bool often, String msg) {}
+
+// методы для графиков (будет упрощено)
 void IoTItem::publishValue() {}
 void IoTItem::clearValue() {}
 void IoTItem::setPublishDestination(int publishType, int wsNum){};
@@ -198,7 +201,7 @@ IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
 }
 
-//сетевое общение====================================================================================================================================
+// сетевое общение====================================================================================================================================
 
 // externalVariable::externalVariable(const String& parameters) : IoTItem(parameters) {
 //     prevMillis = millis();  // запоминаем текущее значение таймера для выполения doByInterval после int сек
