@@ -221,21 +221,24 @@ class Pzem004cmd : public IoTItem {
     }
 
     ~Pzem004cmd(){};
+};
 
-    void* getAPI_Pzem004(String subtype, String param) {
-        if (subtype == F("Pzem004v")) {
-            return new Pzem004v(param);
-        } else if (subtype == F("Pzem004a")) {
-            return new Pzem004a(param);
-        } else if (subtype == F("Pzem004w")) {
-            return new Pzem004w(param);
-        } else if (subtype == F("Pzem004wh")) {
-            return new Pzem004wh(param);
-        } else if (subtype == F("Pzem004hz")) {
-            return new Pzem004hz(param);
-        } else if (subtype == F("Pzem004pf")) {
-            return new Pzem004pf(param);
-        } else {
-            return nullptr;
-        }
+void* getAPI_Pzem004(String subtype, String param) {
+    if (subtype == F("Pzem004v")) {
+        return new Pzem004v(param);
+    } else if (subtype == F("Pzem004a")) {
+        return new Pzem004a(param);
+    } else if (subtype == F("Pzem004w")) {
+        return new Pzem004w(param);
+    } else if (subtype == F("Pzem004wh")) {
+        return new Pzem004wh(param);
+    } else if (subtype == F("Pzem004hz")) {
+        return new Pzem004hz(param);
+    } else if (subtype == F("Pzem004pf")) {
+        return new Pzem004pf(param);
+    } else if (subtype == F("Pzem004cmd")) {
+        return new Pzem004cmd(param);
+    } else {
+        return nullptr;
     }
+}

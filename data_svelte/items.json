@@ -438,7 +438,7 @@
         "global": 0,
         "name": "30. PZEM настройка",
         "type": "Reading",
-        "subtype": "Pzem004smd",
+        "subtype": "Pzem004cmd",
         "id": "set",
         "widget": "nil",
         "page": "",
