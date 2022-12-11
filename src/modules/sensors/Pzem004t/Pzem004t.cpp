@@ -181,20 +181,61 @@ class Pzem004pf : public IoTItem {
     ~Pzem004pf(){};
 };
 
-void* getAPI_Pzem004(String subtype, String param) {
-    if (subtype == F("Pzem004v")) {
-        return new Pzem004v(param);
-    } else if (subtype == F("Pzem004a")) {
-        return new Pzem004a(param);
-    } else if (subtype == F("Pzem004w")) {
-        return new Pzem004w(param);
-    } else if (subtype == F("Pzem004wh")) {
-        return new Pzem004wh(param);
-    } else if (subtype == F("Pzem004hz")) {
-        return new Pzem004hz(param);
-    } else if (subtype == F("Pzem004pf")) {
-        return new Pzem004pf(param);
-    } else {
-        return nullptr;
+class Pzem004cmd : public IoTItem {
+   private:
+    String addr;
+    int changeaddr;
+    String setaddr;
+    int reset;
+    PZEMSensor* pzem;
+
+   public:
+    Pzem004cmd(String parameters) : IoTItem(parameters) {
+        jsonRead(parameters, F("addr"), addr);
+        jsonRead(parameters, F("changeaddr"), changeaddr);
+        jsonRead(parameters, F("setaddr"), setaddr);
+        jsonRead(parameters, F("reset"), reset);
+
+        if (myUART) {
+            pzem = new PZEMSensor(myUART, hexStringToUint8(addr));
+            if (changeaddr == 1) {
+                if (pzem->setAddress(hexStringToUint8(setaddr))) {
+                    SerialPrint("i", "Pzem", "address set: " + setaddr);
+                } else {
+                    SerialPrint("i", "Pzem", "set adress error");
+                }
+            }
+            if (reset == 1) {
+                if (pzem->reset()) {
+                    SerialPrint("i", "Pzem", "reset done");
+                } else {
+                    SerialPrint("i", "Pzem", "reset error");
+                }
+            }
+        }
     }
-}
+
+    void doByInterval() {
+        if (pzem) {
+        }
+    }
+
+    ~Pzem004cmd(){};
+
+    void* getAPI_Pzem004(String subtype, String param) {
+        if (subtype == F("Pzem004v")) {
+            return new Pzem004v(param);
+        } else if (subtype == F("Pzem004a")) {
+            return new Pzem004a(param);
+        } else if (subtype == F("Pzem004w")) {
+            return new Pzem004w(param);
+        } else if (subtype == F("Pzem004wh")) {
+            return new Pzem004wh(param);
+        } else if (subtype == F("Pzem004hz")) {
+            return new Pzem004hz(param);
+        } else if (subtype == F("Pzem004pf")) {
+            return new Pzem004pf(param);
+        } else {
+            return nullptr;
+        }
+    }

@@ -61,7 +61,8 @@
         "int": 1,
         "logid": "t",
         "points": 365,
-        "column": 0
+        "telegram": 0,
+        "test": 0
     },
     {
         "global": 0,
@@ -435,7 +436,23 @@
     },
     {
         "global": 0,
-        "name": "30. Sht20 Температура",
+        "name": "30. PZEM настройка",
+        "type": "Reading",
+        "subtype": "Pzem004smd",
+        "id": "set",
+        "widget": "nil",
+        "page": "",
+        "descr": "",
+        "int": 15,
+        "addr": "0xF8",
+        "changeaddr": 0,
+        "setaddr": "0x01",
+        "reset": 0,
+        "num": 30
+    },
+    {
+        "global": 0,
+        "name": "31. Sht20 Температура",
         "type": "Reading",
         "subtype": "Sht20t",
         "id": "tmp2",
@@ -444,11 +461,11 @@
         "descr": "Температура",
         "int": 15,
         "round": 1,
-        "num": 30
+        "num": 31
     },
     {
         "global": 0,
-        "name": "31. Sht20 Влажность",
+        "name": "32. Sht20 Влажность",
         "type": "Reading",
         "subtype": "Sht20h",
         "id": "Hum2",
@@ -457,11 +474,11 @@
         "descr": "Влажность",
         "int": 15,
         "round": 1,
-        "num": 31
+        "num": 32
     },
     {
         "global": 0,
-        "name": "32. Sht30 Температура",
+        "name": "33. Sht30 Температура",
         "type": "Reading",
         "subtype": "Sht30t",
         "id": "tmp30",
@@ -470,11 +487,11 @@
         "descr": "SHT30 Температура",
         "int": 15,
         "round": 1,
-        "num": 32
+        "num": 33
     },
     {
         "global": 0,
-        "name": "33. Sht30 Влажность",
+        "name": "34. Sht30 Влажность",
         "type": "Reading",
         "subtype": "Sht30h",
         "id": "Hum30",
@@ -483,12 +500,12 @@
         "descr": "SHT30 Влажность",
         "int": 15,
         "round": 1,
-        "num": 33
+        "num": 34
     },
     {
         "global": 0,
-        "name": "34. HC-SR04 Ультразвуковой дальномер",
-        "num": 34,
+        "name": "35. HC-SR04 Ультразвуковой дальномер",
+        "num": 35,
         "type": "Reading",
         "subtype": "Sonar",
         "id": "sonar",
@@ -500,7 +517,7 @@
         "int": 5
     },
     {
-        "name": "35. UART",
+        "name": "36. UART",
         "type": "Reading",
         "subtype": "UART",
         "page": "",
@@ -512,14 +529,14 @@
         "line": 2,
         "speed": 9600,
         "eventFormat": 0,
-        "num": 35
+        "num": 36
     },
     {
         "header": "Исполнительные устройства"
     },
     {
         "global": 0,
-        "name": "36. Кнопка подключенная к пину",
+        "name": "37. Кнопка подключенная к пину",
         "type": "Writing",
         "subtype": "ButtonIn",
         "id": "btn",
@@ -533,11 +550,11 @@
         "pinMode": "INPUT",
         "debounceDelay": 50,
         "fixState": 0,
-        "num": 36
+        "num": 37
     },
     {
         "global": 0,
-        "name": "37. Управление пином",
+        "name": "38. Управление пином",
         "type": "Writing",
         "subtype": "ButtonOut",
         "needSave": 0,
@@ -548,11 +565,11 @@
         "int": 0,
         "inv": 0,
         "pin": 2,
-        "num": 37
+        "num": 38
     },
     {
         "global": 0,
-        "name": "38. Сервопривод",
+        "name": "39. Сервопривод",
         "type": "Writing",
         "subtype": "IoTServo",
         "id": "servo",
@@ -563,11 +580,11 @@
         "pin": 12,
         "apin": -1,
         "amap": "0, 4096, 0, 180",
-        "num": 38
+        "num": 39
     },
     {
         "global": 0,
-        "name": "39. Расширитель портов Mcp23017",
+        "name": "40. Расширитель портов Mcp23017",
         "type": "Reading",
         "subtype": "Mcp23017",
         "id": "Mcp",
@@ -577,11 +594,11 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 39
+        "num": 40
     },
     {
         "global": 0,
-        "name": "40. MP3 плеер",
+        "name": "41. MP3 плеер",
         "type": "Reading",
         "subtype": "Mp3",
         "id": "mp3",
@@ -591,11 +608,11 @@
         "int": 1,
         "pins": "14,12",
         "volume": 20,
-        "num": 40
+        "num": 41
     },
     {
         "global": 0,
-        "name": "41. Сенсорная кнопка",
+        "name": "42. Сенсорная кнопка",
         "type": "Writing",
         "subtype": "Multitouch",
         "id": "impulse",
@@ -609,11 +626,11 @@
         "pinMode": "INPUT",
         "debounceDelay": 50,
         "PWMDelay": 500,
-        "num": 41
+        "num": 42
     },
     {
         "global": 0,
-        "name": "42. Расширитель портов Pcf8574",
+        "name": "43. Расширитель портов Pcf8574",
         "type": "Reading",
         "subtype": "Pcf8574",
         "id": "Pcf",
@@ -623,11 +640,11 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 42
+        "num": 43
     },
     {
         "global": 0,
-        "name": "43. PWM ESP8266",
+        "name": "44. PWM ESP8266",
         "type": "Writing",
         "subtype": "Pwm8266",
         "id": "pwm",
@@ -639,11 +656,11 @@
         "freq": 5000,
         "val": 0,
         "apin": -1,
-        "num": 43
+        "num": 44
     },
     {
         "global": 0,
-        "name": "44. Телеграм-Лайт",
+        "name": "45. Телеграм-Лайт",
         "type": "Writing",
         "subtype": "TelegramLT",
         "id": "tg",
@@ -652,14 +669,14 @@
         "descr": "",
         "token": "",
         "chatID": "",
-        "num": 44
+        "num": 45
     },
     {
         "header": "Экраны"
     },
     {
         "global": 0,
-        "name": "45. LCD экран 2004",
+        "name": "46. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -671,10 +688,10 @@
         "size": "20,4",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 45
+        "num": 46
     },
     {
-        "name": "46. LCD экран 1602",
+        "name": "47. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -686,6 +703,6 @@
         "size": "16,2",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 46
+        "num": 47
     }
 ]
