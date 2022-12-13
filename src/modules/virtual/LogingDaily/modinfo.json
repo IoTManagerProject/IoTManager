@@ -15,7 +15,9 @@
             "logid": "t",
             "points": 365,
             "telegram": 0,
-            "test": 0
+            "test": 0,
+            "btn-defvalue": 0,
+            "btn-reset": "nil"
         }
     ],
     "about": {

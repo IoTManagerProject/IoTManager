@@ -55,6 +55,7 @@ class IoTItem {
     virtual void onRegEvent(IoTItem* item);
     virtual void onMqttRecive(String& topic, String& msg);
     virtual void onMqttWsAppConnectEvent();
+    virtual void onModuleOrder(String& key, String& value);
 
     // делаем доступным модулям отправку сообщений в телеграм
     virtual void sendTelegramMsg(bool often, String msg);

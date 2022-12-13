@@ -240,6 +240,13 @@ class LogingDaily : public IoTItem {
     int calculateMaxCount() {
         return 86400;
     }
+
+    void onModuleOrder(String &key, String &value) {
+        if (key == "defvalue") {
+        } else if (key == "reset") {
+        }
+        SerialPrint("i", F("LogingDaily"), "key " + key + ", value " + value);
+    }
 };
 
 void *getAPI_LogingDaily(String subtype, String param) {

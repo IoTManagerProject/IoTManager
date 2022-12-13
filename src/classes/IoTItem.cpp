@@ -178,6 +178,7 @@ void IoTItem::checkIntFromNet() {
 void IoTItem::onRegEvent(IoTItem* item) {}
 void IoTItem::onMqttRecive(String& topic, String& msg) {}
 void IoTItem::onMqttWsAppConnectEvent() {}
+void IoTItem::onModuleOrder(String& key, String& value) {}
 
 // делаем доступным модулям отправку сообщений в телеграм
 void IoTItem::sendTelegramMsg(bool often, String msg) {}
