@@ -229,7 +229,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             // получаем команду посланную из модуля
             if (headerStr == "/order|") {
-                SerialPrint("i", F("=>WS"), "Msg from module");
                 String json;
                 writeUint8tToString(payload, length, headerLenth, json);
 
@@ -237,6 +236,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 jsonRead(json, "id", id);
                 jsonRead(json, "key", key);
                 jsonRead(json, "value", value);
+
+                SerialPrint("i", F("=>WS"), "Msg from module, id: " + id);
 
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->getID() == id) {

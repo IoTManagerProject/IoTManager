@@ -243,9 +243,12 @@ class LogingDaily : public IoTItem {
 
     void onModuleOrder(String &key, String &value) {
         if (key == "defvalue") {
+            saveDataDB(id + "-v", value);
+            SerialPrint("i", F("LogingDaily"), "User set default value: " + value);
         } else if (key == "reset") {
+            clearHistory();
+            SerialPrint("i", F("LogingDaily"), F("User clean chart history"));
         }
-        SerialPrint("i", F("LogingDaily"), "key " + key + ", value " + value);
     }
 };
 
