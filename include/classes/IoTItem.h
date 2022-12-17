@@ -10,7 +10,7 @@ struct IoTValue {
 
 class IoTItem {
    public:
-    IoTItem(const String &parameters);
+    IoTItem(const String& parameters);
     virtual ~IoTItem() {}
     virtual void loop();
     virtual void doByInterval();
@@ -28,7 +28,9 @@ class IoTItem {
     virtual String getValue();
     long getInterval();
     bool isGlobal();
-    
+
+    void sendSubWidgetsValues(String& id, String& json);
+
     void setInterval(long interval);
     void setIntFromNet(int interval);
 
@@ -38,7 +40,7 @@ class IoTItem {
 
     IoTValue value;  // хранение основного значения, которое обновляется из сценария, execute(), loop() или doByInterval()
 
-    //bool iAmDead = false;  // признак необходимости удалить объект из базы
+    // bool iAmDead = false;  // признак необходимости удалить объект из базы
     bool iAmLocal = true;  // признак того, что айтем был создан локально
 
     bool enableDoByInt = true;
@@ -49,11 +51,16 @@ class IoTItem {
     String getRoundValue();
     void getNetEvent(String& event);
 
-    // хуки для системных событий
+    // хуки для системных событий (должны начинаться с "on")
     virtual void onRegEvent(IoTItem* item);
     virtual void onMqttRecive(String& topic, String& msg);
+    virtual void onMqttWsAppConnectEvent();
+    virtual void onModuleOrder(String& key, String& value);
 
-    //методы для графиков
+    // делаем доступным модулям отправку сообщений в телеграм
+    virtual void sendTelegramMsg(bool often, String msg);
+
+    // методы для графиков (будет упрощено)
     virtual void publishValue();
     virtual void clearValue();
     virtual void setPublishDestination(int type, int wsNum = -1);
@@ -63,11 +70,11 @@ class IoTItem {
    protected:
     bool _needSave = false;  // признак необходимости сохранять и загружать значение элемента на flash
     String _subtype = "";
-    String _id = "errorId";     // если будет попытка создания Item без указания id, то элемент оставит это значение
+    String _id = "errorId";  // если будет попытка создания Item без указания id, то элемент оставит это значение
     long _interval = 0;
-    int _intFromNet = -2;   // количество секунд доверия, пришедших из сети вместе с данными для текущего ИД
-                            // -2 - данные не приходили, скорее всего, элемент локальный, доверие есть
-                            // -1 - данные приходили и обратный отсчет дошел до нуля, значит доверия нет 
+    int _intFromNet = -2;  // количество секунд доверия, пришедших из сети вместе с данными для текущего ИД
+                           // -2 - данные не приходили, скорее всего, элемент локальный, доверие есть
+                           // -1 - данные приходили и обратный отсчет дошел до нуля, значит доверия нет
 
     float _multiply;  // умножаем на значение
     float _plus;      // увеличиваем на значение
@@ -80,9 +87,9 @@ class IoTItem {
     bool _global = false;  // характеристика айтема, что ему нужно слать и принимать события из внешнего мира
 };
 
-IoTItem* findIoTItem(const String& name);                            // поиск экземпляра элемента модуля по имени
-String getItemValue(const String& name);                             // поиск плюс получение значения
-bool isItemExist(const String& name);                                // существует ли айтем
+IoTItem* findIoTItem(const String& name);                     // поиск экземпляра элемента модуля по имени
+String getItemValue(const String& name);                      // поиск плюс получение значения
+bool isItemExist(const String& name);                         // существует ли айтем
 StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных значений Items
 
 IoTItem* createItemFromNet(const String& itemId, const String& value, int interval);

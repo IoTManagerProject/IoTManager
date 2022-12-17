@@ -21,7 +21,7 @@ class Loging : public IoTItem {
     IoTItem *dateIoTItem;
 
     String prevDate = "";
-    bool firstTimeDate = true;
+    bool firstTimeInit = true;
 
     long interval;
 
@@ -35,30 +35,30 @@ class Loging : public IoTItem {
             SerialPrint("E", F("Loging"), "'" + id + "' user set more points than allowed, value reset to 300");
         }
         jsonRead(parameters, F("int"), interval);
-        interval = interval * 1000 * 60;  //приводим к милисекундам
+        interval = interval * 1000 * 60;  // приводим к милисекундам
         jsonRead(parameters, F("keepdays"), keepdays);
 
-        //создадим экземпляр класса даты
+        // создадим экземпляр класса даты
         dateIoTItem = (IoTItem *)getAPI_Date("{\"id\": \"" + id + "-date\",\"int\":\"20\",\"subtype\":\"date\"}");
         IoTItems.push_back(dateIoTItem);
         SerialPrint("E", F("Loging"), "created date instance " + id);
     }
 
     void doByInterval() {
-        //если объект логгирования не был создан
+        // если объект логгирования не был создан
         if (!isItemExist(logid)) {
             SerialPrint("E", F("Loging"), "'" + id + "' loging object not exist, return");
             return;
         }
 
         String value = getItemValue(logid);
-        //если значение логгирования пустое
+        // если значение логгирования пустое
         if (value == "") {
             SerialPrint("E", F("Loging"), "'" + id + "' loging value is empty, return");
             return;
         }
 
-        //если время не было получено из интернета
+        // если время не было получено из интернета
         if (!isTimeSynch) {
             SerialPrint("E", F("Loging"), "'" + id + "' Сant loging - time not synchronized, return");
             return;
@@ -71,16 +71,16 @@ class Loging : public IoTItem {
         jsonWriteInt(logData, "x", unixTime);
         jsonWriteFloat(logData, "y1", value.toFloat());
 
-        //прочитаем путь к файлу последнего сохранения
+        // прочитаем путь к файлу последнего сохранения
         String filePath = readDataDB(id);
 
-        //если данные о файле отсутствуют, создадим новый
+        // если данные о файле отсутствуют, создадим новый
         if (filePath == "failed" || filePath == "") {
             SerialPrint("E", F("Loging"), "'" + id + "' file path not found, start create new file");
             createNewFileWithData(logData);
             return;
         } else {
-            //если файл все же есть но был создан не сегодня, то создаем сегодняшний
+            // если файл все же есть но был создан не сегодня, то создаем сегодняшний
             if (getTodayDateDotFormated() != getDateDotFormatedFromUnix(getFileUnixLocalTime(filePath))) {
                 SerialPrint("E", F("Loging"), "'" + id + "' file too old, start create new file");
                 createNewFileWithData(logData);
@@ -88,30 +88,31 @@ class Loging : public IoTItem {
             }
         }
 
-        //считаем количество строк и определяем размер файла
+        // считаем количество строк и определяем размер файла
         size_t size = 0;
         int lines = countJsonObj(filePath, size);
         SerialPrint("i", F("Loging"), "'" + id + "' " + "lines = " + String(lines) + ", size = " + String(size));
 
-        //если количество строк до заданной величины и дата не менялась
+        // если количество строк до заданной величины и дата не менялась
         if (lines <= points && !hasDayChanged()) {
-            //просто добавим в существующий файл новые данные
+            // просто добавим в существующий файл новые данные
             addNewDataToExistingFile(filePath, logData);
-            //если больше или поменялась дата то создадим следующий файл
+            // если больше или поменялась дата то создадим следующий файл
         } else {
             createNewFileWithData(logData);
         }
-        //запускаем процедуру удаления старых файлов если память переполняется
+        // запускаем процедуру удаления старых файлов если память переполняется
         deleteLastFile();
     }
-void SetDoByInterval(String valse) {
+
+    void SetDoByInterval(String valse) {
         String value = valse;
-        //если значение логгирования пустое
+        // если значение логгирования пустое
         if (value == "") {
             SerialPrint("E", F("LogingEvent"), "'" + id + "' loging value is empty, return");
             return;
         }
-        //если время не было получено из интернета
+        // если время не было получено из интернета
         if (!isTimeSynch) {
             SerialPrint("E", F("LogingEvent"), "'" + id + "' Сant loging - time not synchronized, return");
             return;
@@ -120,16 +121,16 @@ void SetDoByInterval(String valse) {
         String logData;
         jsonWriteInt(logData, "x", unixTime);
         jsonWriteFloat(logData, "y1", value.toFloat());
-        //прочитаем путь к файлу последнего сохранения
+        // прочитаем путь к файлу последнего сохранения
         String filePath = readDataDB(id);
 
-        //если данные о файле отсутствуют, создадим новый
+        // если данные о файле отсутствуют, создадим новый
         if (filePath == "failed" || filePath == "") {
             SerialPrint("E", F("LogingEvent"), "'" + id + "' file path not found, start create new file");
             createNewFileWithData(logData);
             return;
         } else {
-            //если файл все же есть но был создан не сегодня, то создаем сегодняшний
+            // если файл все же есть но был создан не сегодня, то создаем сегодняшний
             if (getTodayDateDotFormated() != getDateDotFormatedFromUnix(getFileUnixLocalTime(filePath))) {
                 SerialPrint("E", F("LogingEvent"), "'" + id + "' file too old, start create new file");
                 createNewFileWithData(logData);
@@ -137,39 +138,38 @@ void SetDoByInterval(String valse) {
             }
         }
 
-        //считаем количество строк и определяем размер файла
+        // считаем количество строк и определяем размер файла
         size_t size = 0;
         int lines = countJsonObj(filePath, size);
         SerialPrint("i", F("LogingEvent"), "'" + id + "' " + "lines = " + String(lines) + ", size = " + String(size));
 
-        //если количество строк до заданной величины и дата не менялась
+        // если количество строк до заданной величины и дата не менялась
         if (lines <= points && !hasDayChanged()) {
-            //просто добавим в существующий файл новые данные
+            // просто добавим в существующий файл новые данные
             addNewDataToExistingFile(filePath, logData);
-            //если больше или поменялась дата то создадим следующий файл
+            // если больше или поменялась дата то создадим следующий файл
         } else {
             createNewFileWithData(logData);
         }
-        //запускаем процедуру удаления старых файлов если память переполняется
+        // запускаем процедуру удаления старых файлов если память переполняется
         deleteLastFile();
-
     }
     void createNewFileWithData(String &logData) {
         logData = logData + ",";
-        String path = "/lg/" + id + "/" + String(unixTimeShort) + ".txt";  //создадим путь вида /lg/id/133256622333.txt
-        //создадим пустой файл
-        if (writeEmptyFile(path) != "sucсess") {
+        String path = "/lg/" + id + "/" + String(unixTimeShort) + ".txt";  // создадим путь вида /lg/id/133256622333.txt
+        // создадим пустой файл
+        if (writeEmptyFile(path) != "success") {
             SerialPrint("E", F("Loging"), "'" + id + "' file writing error, return");
             return;
         }
 
-        //запишем в него данные
-        if (addFile(path, logData) != "sucсess") {
+        // запишем в него данные
+        if (addFile(path, logData) != "success") {
             SerialPrint("E", F("Loging"), "'" + id + "' data writing error, return");
             return;
         }
-        //запишем путь к нему в базу данных
-        if (saveDataDB(id, path) != "sucсess") {
+        // запишем путь к нему в базу данных
+        if (saveDataDB(id, path) != "success") {
             SerialPrint("E", F("Loging"), "'" + id + "' db file writing error, return");
             return;
         }
@@ -178,20 +178,21 @@ void SetDoByInterval(String valse) {
 
     void addNewDataToExistingFile(String &path, String &logData) {
         logData = logData + ",";
-        if (addFile(path, logData) != "sucсess") {
+        if (addFile(path, logData) != "success") {
             SerialPrint("i", F("Loging"), "'" + id + "' file writing error, return");
             return;
         };
         SerialPrint("i", F("Loging"), "'" + id + "' loging in file http://" + WiFi.localIP().toString() + path);
     }
 
+    // данная функция уже перенесена в ядро и будет удалена в последствии
     bool hasDayChanged() {
         bool changed = false;
         String currentDate = getTodayDateDotFormated();
-        if (!firstTimeDate) {
+        if (!firstTimeInit) {
             if (prevDate != currentDate) {
                 changed = true;
-                SerialPrint("i", F("NTP"), "Change day event");
+                SerialPrint("i", F("NTP"), F("Change day event"));
 #if defined(ESP8266)
                 FileFS.gc();
 #endif
@@ -199,7 +200,7 @@ void SetDoByInterval(String valse) {
 #endif
             }
         }
-        firstTimeDate = false;
+        firstTimeInit = false;
         prevDate = currentDate;
         return changed;
     }
@@ -242,7 +243,7 @@ void SetDoByInterval(String valse) {
 
             filesList = deleteBeforeDelimiter(filesList, ";");
         }
-        //если данных нет отправляем пустой грфик
+        // если данных нет отправляем пустой грфик
         if (noData) {
             clearValue();
         }
@@ -308,17 +309,17 @@ void SetDoByInterval(String valse) {
             difference = currentMillis - prevMillis;
             if (difference >= interval) {
                 prevMillis = millis();
-                if(interval != 0){
+                if (interval != 0) {
                     this->doByInterval();
                 }
             }
         }
     }
 
-    void regEvent(const String& value, const String& consoleInfo, bool error = false, bool genEvent = true) {
+    void regEvent(const String &value, const String &consoleInfo, bool error = false, bool genEvent = true) {
         String userDate = getItemValue(id + "-date");
         String currentDate = getTodayDateDotFormated();
-        //отправляем в график данные только когда выбран сегодняшний день
+        // отправляем в график данные только когда выбран сегодняшний день
         if (userDate == currentDate) {
             // generateEvent(_id, value);
             // publishStatusMqtt(_id, value);
@@ -328,16 +329,16 @@ void SetDoByInterval(String valse) {
         }
     }
 
-    //просто максимальное количество точек
+    // просто максимальное количество точек
     int calculateMaxCount() {
         return 86400;
     }
 
-    //путь вида: /lg/log/1231231.txt
+    // путь вида: /lg/log/1231231.txt
     unsigned long getFileUnixLocalTime(String path) {
         return gmtTimeToLocal(selectToMarkerLast(deleteToMarkerLast(path, "."), "/").toInt() + START_DATETIME);
     }
-    void setValue(const IoTValue& Value, bool genEvent = true){
+    void setValue(const IoTValue &Value, bool genEvent = true) {
         value = Value;
         this->SetDoByInterval(String(value.valD));
         SerialPrint("i", "Loging", "setValue:" + String(value.valD));
@@ -364,15 +365,15 @@ class Date : public IoTItem {
         value.isDecimal = false;
     }
 
-    void setValue(const String& valStr, bool genEvent = true) {
+    void setValue(const String &valStr, bool genEvent = true) {
         value.valS = valStr;
         setValue(value, genEvent);
     }
 
-    void setValue(const IoTValue& Value, bool genEvent = true) {
+    void setValue(const IoTValue &Value, bool genEvent = true) {
         value = Value;
         regEvent(value.valS, "", false, genEvent);
-        //отправка данных при изменении даты
+        // отправка данных при изменении даты
         for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->getSubtype() == "Loging") {
                 if ((*it)->getID() == selectToMarker(id, "-")) {

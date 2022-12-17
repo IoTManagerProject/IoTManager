@@ -7,7 +7,6 @@
 #include <ArduinoJson.h>
 #include <TickerScheduler.h>
 #include <PubSubClient.h>
-#include <StringCommand.h>
 #include <list>
 
 #ifdef ESP32
@@ -60,7 +59,7 @@ extern IoTGpio IoTgpio;
 extern TickerScheduler ts;
 extern WiFiClient espClient;
 extern PubSubClient mqtt;
-extern StringCommand sCmd;
+
 #ifdef ASYNC_WEB_SERVER
 extern AsyncWebServer server;
 #endif
@@ -90,6 +89,7 @@ extern bool needSaveValues;
 // buf
 extern String orderBuf;
 extern String eventBuf;
+extern String mysensorBuf;
 
 // wifi
 extern String ssidListHeapJson;
@@ -133,13 +133,15 @@ struct Time_t {
 
 extern unsigned long unixTime;
 extern unsigned long unixTimeShort;
+extern String prevDate;
+extern bool firstTimeInit;
 
 extern bool isTimeSynch;
 extern Time_t _time_local;
 extern Time_t _time_utc;
 extern bool _time_isTrust;
 
-//extern unsigned long loopPeriod;
+// extern unsigned long loopPeriod;
 
 // extern DynamicJsonDocument settingsFlashJsonDoc;
 // extern DynamicJsonDocument paramsFlashJsonDoc;

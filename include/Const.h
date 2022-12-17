@@ -1,7 +1,7 @@
 #pragma once
 
 //Версия прошивки
-#define FIRMWARE_VERSION 433
+#define FIRMWARE_VERSION 434
 
 #ifdef esp8266_1mb_ota
 #define FIRMWARE_NAME "esp8266_1mb_ota"
@@ -18,6 +18,13 @@
 #ifdef esp32_4mb
 #define FIRMWARE_NAME "esp32_4mb"
 #endif
+
+#define MYSENSORS
+
+//#ifdef esp32_4mb_ms
+//#define FIRMWARE_NAME "esp32_4mb_ms"
+//#define MYSENSORS
+//#endif
 
 //Размер буфера json
 #define JSON_BUFFER_SIZE 2048  //держим 2 кб не меняем

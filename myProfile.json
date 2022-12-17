@@ -195,6 +195,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/exec/MySensors",
+                "active": false
+            },
+            {
                 "path": "src/modules/exec/Pcf8574",
                 "active": true
             },
