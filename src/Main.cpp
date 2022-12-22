@@ -16,10 +16,10 @@ void setup() {
     Serial.println();
     Serial.println(F("--------------started----------------"));
 
-    //создание экземпляров классов
-    // myNotAsyncActions = new NotAsync(do_LAST);
+    // создание экземпляров классов
+    //  myNotAsyncActions = new NotAsync(do_LAST);
 
-    //инициализация файловой системы
+    // инициализация файловой системы
     fileSystemInit();
     Serial.println(F("------------------------"));
     Serial.println("FIRMWARE NAME     " + String(FIRMWARE_NAME));
@@ -27,16 +27,16 @@ void setup() {
     Serial.println("WEB VERSION       " + getWebVersion());
     Serial.println(F("------------------------"));
 
-    //получение chip id
+    // получение chip id
     setChipId();
 
-    //синхронизация глобальных переменных с flash
+    // синхронизация глобальных переменных с flash
     globalVarsSync();
 
-    //подключаемся к роутеру
+    // подключаемся к роутеру
     routerConnect();
 
-//инициализация асинхронного веб сервера и веб сокетов
+// инициализация асинхронного веб сервера и веб сокетов
 #ifdef ASYNC_WEB_SERVER
     asyncWebServerInit();
 #endif
@@ -44,7 +44,7 @@ void setup() {
     asyncWebSocketsInit();
 #endif
 
-//инициализация стандартного веб сервера и веб сокетов
+// инициализация стандартного веб сервера и веб сокетов
 #ifdef STANDARD_WEB_SERVER
     standWebServerInit();
 #endif
@@ -55,7 +55,7 @@ void setup() {
     // NTP
     ntpInit();
 
-    //инициализация mqtt
+    // инициализация mqtt
     mqttInit();
 
     // настраиваем i2c шину
@@ -75,19 +75,19 @@ void setup() {
         SerialPrint("i", "i2c", F("i2c pins overriding done"));
     }
 
-    //настраиваем микроконтроллер
+    // настраиваем микроконтроллер
     configure("/config.json");
 
-    //инициализация задач переодического выполнения
+    // инициализация задач переодического выполнения
     periodicTasksInit();
 
-    //синхронизация списка устройств
+    // синхронизация списка устройств
     addThisDeviceToList();
 
-    //запуск работы udp
+    // запуск работы udp
     asyncUdpInit();
 
-    //подготавливаем сценарии
+    // подготавливаем сценарии
     iotScen.loadScenario("/scenario.txt");
 
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
@@ -122,9 +122,9 @@ void setup() {
     // IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"rel4\",\"val\":34,\"int\":30}"));
     // пример получения JSON всех Items
     // Serial.println(getParamsJson());
-    //чтение одного параметра
+    // чтение одного параметра
     // Serial.println(findIoTItem("t1")->getValue());
-    //тест перебора пинов из расширения
+    // тест перебора пинов из расширения
     // for (int i = 109; i < 112; i++) {
     //     IoTgpio.pinMode(i, OUTPUT);
     //     IoTgpio.digitalWrite(i, !IoTgpio.digitalRead(i));
@@ -172,10 +172,10 @@ void loop() {
     // #endif
 }
 
-//отправка json
-//#ifdef QUEUE_FROM_STR
-//    if (sendJsonFiles) sendJsonFiles->loop();
-//#endif
+// отправка json
+// #ifdef QUEUE_FROM_STR
+//     if (sendJsonFiles) sendJsonFiles->loop();
+// #endif
 
 // if(millis()%2000==0){
 //     //watch->settimeUnix(time(&iotTimeNow));

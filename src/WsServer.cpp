@@ -34,7 +34,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
         case WStype_TEXT: {
             bool endOfHeaderFound = false;
-            size_t maxAllowedHeaderSize = 15;  //максимальное количество символов заголовка
+            size_t maxAllowedHeaderSize = 15;  // максимальное количество символов заголовка
             size_t headerLenth = 0;
             String headerStr;
             for (size_t i = 0; i <= maxAllowedHeaderSize; i++) {
@@ -54,32 +54,38 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса dashboard
             //----------------------------------------------------------------------//
 
-            //отвечаем данными на запрос страницы
+            // публикация всех виджетов
             if (headerStr == "/|") {
                 sendFileToWsByFrames("/layout.json", "layout", "", num, WEB_SOCKETS_FRAME_SIZE);
             }
 
-            //отвечаем на запрос параметров
             if (headerStr == "/params|") {
+                // публикация всех статус сообщений при подключении svelte приложения
                 String params = "{}";
-                // jsonWriteStr(params, "params_", "");  //метка для парсинга удалить
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->getSubtype() != "Loging") {
-                        if ((*it)->iAmLocal) jsonWriteStr(params, (*it)->getID(), (*it)->getValue());
+                        if ((*it)->getSubtype() != "LogingDaily") {
+                            if ((*it)->iAmLocal) jsonWriteStr(params, (*it)->getID(), (*it)->getValue());
+                        }
                     }
                 }
                 sendStringToWs("params", params, num);
+
+                // генерация события подключения в модулях
+                for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                    if ((*it)->iAmLocal) (*it)->onMqttWsAppConnectEvent();
+                }
             }
 
-            //отвечаем на запрос графиков
+            // отвечаем на запрос графиков
             if (headerStr == "/charts|") {
-                //обращение к логированию из ядра
-                //отправка данных графиков только в выбранный сокет
+                // обращение к логированию из ядра
+                // отправка данных графиков только в выбранный сокет
                 for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-                    //сбрасываем даты графиков
-                    // if ((*it)->getID().endsWith("-date")) {
-                    //    (*it)->setTodayDate();
-                    //}
+                    // сбрасываем даты графиков
+                    //  if ((*it)->getID().endsWith("-date")) {
+                    //     (*it)->setTodayDate();
+                    // }
                     if ((*it)->getSubtype() == "Loging" || "LogingDaily") {
                         (*it)->setPublishDestination(TO_WS, num);
                         (*it)->publishValue();
@@ -91,7 +97,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса configutation
             //----------------------------------------------------------------------//
 
-            //отвечаем данными на запрос страницы
+            // отвечаем данными на запрос страницы
             if (headerStr == "/config|") {
                 sendFileToWsByFrames("/items.json", "itemsj", "", num, WEB_SOCKETS_FRAME_SIZE);
                 sendFileToWsByFrames("/widgets.json", "widget", "", num, WEB_SOCKETS_FRAME_SIZE);
@@ -100,7 +106,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendStringToWs("settin", settingsFlashJson, num);
             }
 
-            //обработка кнопки сохранить
+            // обработка кнопки сохранить
             if (headerStr == "/gifnoc|") {
                 writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
             }
@@ -120,7 +126,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса connection
             //----------------------------------------------------------------------//
 
-            //отвечаем данными на запрос страницы
+            // отвечаем данными на запрос страницы
             if (headerStr == "/connection|") {
                 sendStringToWs("settin", settingsFlashJson, num);
                 sendStringToWs("ssidli", ssidListHeapJson, num);
@@ -129,7 +135,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 // RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
             }
 
-            //обработка кнопки сохранить настройки wifi
+            // обработка кнопки сохранить настройки wifi
             if (headerStr == "/sgnittes|") {
                 writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
@@ -137,16 +143,16 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 addThisDeviceToList();
             }
 
-            //обработка кнопки сохранить настройки mqtt
+            // обработка кнопки сохранить настройки mqtt
             if (headerStr == "/mqtt|") {
-                sendStringToWs("settin", settingsFlashJson, num);  //отправляем в ответ новые полученные настройки
-                handleMqttStatus(false, 8);                        //меняем статус на неопределенный
-                mqttReconnect();                                   //начинаем переподключение
-                sendStringToWs("errors", errorsHeapJson, num);     //отправляем что статус неопределен
+                sendStringToWs("settin", settingsFlashJson, num);  // отправляем в ответ новые полученные настройки
+                handleMqttStatus(false, 8);                        // меняем статус на неопределенный
+                mqttReconnect();                                   // начинаем переподключение
+                sendStringToWs("errors", errorsHeapJson, num);     // отправляем что статус неопределен
                 sendStringToWs("ssidli", ssidListHeapJson, num);
             }
 
-            //запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
+            // запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
             if (headerStr == "/scan|") {
                 RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
                 sendStringToWs("ssidli", ssidListHeapJson, num);
@@ -156,7 +162,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса list
             //----------------------------------------------------------------------//
 
-            //отвечаем данными на запрос страницы
+            // отвечаем данными на запрос страницы
             if (headerStr == "/list|") {
                 sendStringToWs("devlis", devListHeapJson, num);
             }
@@ -165,7 +171,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса system
             //----------------------------------------------------------------------//
 
-            //отвечаем данными на запрос страницы
+            // отвечаем данными на запрос страницы
             if (headerStr == "/system|") {
                 sendStringToWs("errors", errorsHeapJson, num);
                 sendStringToWs("settin", settingsFlashJson, num);
@@ -189,27 +195,27 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // отдельные команды веб интерфейса
             //----------------------------------------------------------------------//
 
-            //переписать любое поле в errors json
+            // переписать любое поле в errors json
             if (headerStr == "/rorre|") {
                 writeUint8tValueToJsonString(payload, length, headerLenth, errorsHeapJson);
             }
 
-            //команда перезагрузки esp
+            // команда перезагрузки esp
             if (headerStr == "/reboot|") {
                 ESP.restart();
             }
 
-            //команда очистки всех логов esp
+            // команда очистки всех логов esp
             if (headerStr == "/clean|") {
                 cleanLogs();
             }
 
-            //команда обновления прошивки esp
+            // команда обновления прошивки esp
             if (headerStr == "/update|") {
                 upgrade_firmware(3);
             }
 
-            //Прием команд control c dashboard
+            // Прием команд control c dashboard
             if (headerStr == "/control|") {
                 String msg;
                 writeUint8tToString(payload, length, headerLenth, msg);
@@ -221,6 +227,25 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             if (headerStr == "/tst|") {
                 standWebSocket.sendTXT(num, "/tstr|");
+            }
+
+            // получаем команду посланную из модуля
+            if (headerStr == "/order|") {
+                String json;
+                writeUint8tToString(payload, length, headerLenth, json);
+
+                String id, key, value;
+                jsonRead(json, "id", id);
+                jsonRead(json, "key", key);
+                jsonRead(json, "value", value);
+
+                SerialPrint("i", F("=>WS"), "Msg from module, id: " + id);
+
+                for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                    if ((*it)->getID() == id) {
+                        (*it)->onModuleOrder(key, value);
+                    }
+                }
             }
 
         } break;
@@ -261,7 +286,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
     }
 }
 
-//публикация статус сообщений (недостаток в том что делаем бродкаст всем клиентам поднятым в свелте!!!)
+// публикация статус сообщений в ws (недостаток в том что делаем бродкаст всем клиентам поднятым в свелте!!!)
 void publishStatusWs(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic;
     String json = "{}";
@@ -270,11 +295,15 @@ void publishStatusWs(const String& topic, const String& data) {
     sendStringToWs("status", json, -1);
 }
 
-void publishChartWs(int num, String& path) {
-    // sendFileToWs(path, num, 1000);
+// публикация дополнительных json сообщений в ws
+void publishJsonWs(const String& topic, String& json) {
+    String path = mqttRootDevice + "/" + topic;
+    jsonWriteStr(json, "topic", path);
+    // TO DO отправка полей в веб
+    // sendStringToWs("status", json, -1);
 }
 
-//данные которые мы отправляем в сокеты переодически
+// данные которые мы отправляем в сокеты переодически
 void periodicWsSend() {
     sendStringToWs("ssidli", ssidListHeapJson, -1);
     sendStringToWs("errors", errorsHeapJson, -1);
@@ -375,7 +404,6 @@ void sendStringToWs(const String& header, String& payload, int client_id) {
 
     String msg = header + "|0012|" + payload;
     size_t totalSize = msg.length();
-    // Serial.println("Send string '" + header + "', str size: " + String(totalSize));
 
     char dataArray[totalSize];
     msg.toCharArray(dataArray, totalSize + 1);

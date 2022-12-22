@@ -125,18 +125,26 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         payloadStr += (char)payload[i];
     }
 
-    // распространяем принятое сообщение через хуки
+    // генерация события прихода mqtt сообщения в модуле
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         (*it)->onMqttRecive(topicStr, payloadStr);
     }
 
     if (payloadStr.startsWith("HELLO")) {
         SerialPrint("i", F("MQTT"), F("Full update"));
-        publishWidgets();
-        publishState();
 
-        //обращение к логированию из ядра
-        //отправка данных графиков
+        //публикация всех виджетов
+        publishWidgets();
+
+        //публикация всех статус сообщений при подключении приложения и генерация события подключения приложения в модулях
+        for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+            if ((*it)->iAmLocal) {
+                publishStatusMqtt((*it)->getID(), (*it)->getValue());
+                (*it)->onMqttWsAppConnectEvent();
+            }
+        }
+
+        //отправка данных графиков - данный код будет оптимизирован после завершения написания приложения с новыми графиками
         for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->getSubtype() == "Loging" || "LogingDaily") {
                 (*it)->setPublishDestination(TO_MQTT);
@@ -182,14 +190,6 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         generateOrder(id, payloadStr);
         SerialPrint("i", F("=>MQTT"), "Received direct order " + id + " " + payloadStr);
     }
-
-    // else if (topicStr.indexOf("info") != -1) {
-    //    if (topicStr.indexOf("scen") != -1) {
-    //        writeFile(String(DEVICE_SCENARIO_FILE), payloadStr);
-    //        loadScenario();
-    //        SerialPrint("i", F("=>MQTT"), F("Scenario received"));
-    //    }
-    //} 
 }
 
 boolean publish(const String& topic, const String& data) {
@@ -218,16 +218,6 @@ boolean publishChartMqtt(const String& topic, const String& data) {
     return true;
 }
 
-boolean publishControl(String id, String topic, String state) {
-    String path = mqttPrefix + "/" + id + "/" + topic + "/control";
-    return mqtt.publish(path.c_str(), state.c_str(), false);
-}
-
-boolean publishChart_test(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic + "/status";
-    return mqtt.publish(path.c_str(), data.c_str(), false);
-}
-
 boolean publishStatusMqtt(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/status";
     String json = "{}";
@@ -235,20 +225,13 @@ boolean publishStatusMqtt(const String& topic, const String& data) {
     return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
-boolean publishAnyJsonKey(const String& topic, const String& key, const String& data) {
+boolean publishJsonMqtt(const String& topic, const String& json) {
     String path = mqttRootDevice + "/" + topic + "/status";
-    String json = "{}";
-    jsonWriteStr(json, key, data);
     return mqtt.publish(path.c_str(), json.c_str(), false);
 }
 
 boolean publishEvent(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic + "/event";
-    return mqtt.publish(path.c_str(), data.c_str(), false);
-}
-
-boolean publishInfo(const String& topic, const String& data) {
-    String path = mqttRootDevice + "/" + topic + "/info";
     return mqtt.publish(path.c_str(), data.c_str(), false);
 }
 
@@ -272,24 +255,6 @@ void publishWidgets() {
     file.close();
 }
 
-void publishState() {
-    String json = getParamsJson();
-    SerialPrint("i", F("DATA"), json);
-    json.replace("{", "");
-    json.replace("}", "");
-    json.replace("\"", "");
-    json += ",";
-    while (json.length() != 0) {
-        String tmp = selectToMarker(json, ",");
-        String topic = selectToMarker(tmp, ":");
-        String state = deleteBeforeDelimiter(tmp, ":");
-        if (topic != "" && state != "") {
-            publishStatusMqtt(topic, state);
-        }
-        json = deleteBeforeDelimiter(json, ",");
-    }
-}
-
 bool publishChartFileToMqtt(String path, String id, int maxCount) {
     File configFile = FileFS.open(path, FILE_READ);
     if (!configFile) {
@@ -310,7 +275,6 @@ void handleMqttStatus(bool send) {
     String stateStr = getStateStr(mqtt.state());
     // Serial.println(stateStr);
     jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);
-
     if (!send) sendStringToWs("errors", errorsHeapJson, -1);
 }
 
@@ -320,8 +284,6 @@ void handleMqttStatus(bool send, int state) {
     jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);
     if (!send) sendStringToWs("errors", errorsHeapJson, -1);
 }
-
-// log-20384820.txt
 
 const String getStateStr(int e) {
     switch (e) {
