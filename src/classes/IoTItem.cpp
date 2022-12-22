@@ -106,7 +106,7 @@ void IoTItem::regEvent(const String& value, const String& consoleInfo, bool erro
         }
 
         // отправка события другим устройствам в сети если не было ошибки
-        if (jsonReadBool(settingsFlashJson, "mqttin") && _global && !error) {
+        if (_global && !error) {
             String json = "{}";
             jsonWriteStr_(json, "id", _id);
             jsonWriteStr_(json, "val", value);
