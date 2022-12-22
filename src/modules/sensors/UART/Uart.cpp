@@ -169,13 +169,15 @@ class UART : public IoTItem {
     IoTValue execute(String command, std::vector<IoTValue> &param) {
         if (command == "println") { 
             if (param.size() == 1) {
-                if (param[0].isDecimal) uartPrintln((String)param[0].valD);
-                else uartPrintln(param[0].valS);
+                //if (param[0].isDecimal) uartPrintln((String)param[0].valD);
+                //else uartPrintln(param[0].valS);
+                uartPrintln(param[0].valS);
             }
         } else if (command == "print") { 
             if (param.size() == 1) {
-                if (param[0].isDecimal) uartPrint((String)param[0].valD);
-                else uartPrint(param[0].valS);
+                //if (param[0].isDecimal) uartPrint((String)param[0].valD);
+                //else uartPrint(param[0].valS);
+                uartPrintln(param[0].valS);
             }
         } else if (command == "printHex") {
             if (param.size() == 1) {
@@ -184,10 +186,11 @@ class UART : public IoTItem {
         } else if (command == "printFFF") {
             if (param.size() == 2) {
                 String strToUart = "";
-                if (param[0].isDecimal) 
-                    strToUart = param[0].valD;  
-                else 
-                    strToUart = param[0].valS;
+                // if (param[0].isDecimal) 
+                //     strToUart = param[0].valD;  
+                // else 
+                //     strToUart = param[0].valS;
+                strToUart = param[0].valS;
 
                 if (param[1].valD) 
                     uartPrintFFF("\"" + strToUart + "\"");

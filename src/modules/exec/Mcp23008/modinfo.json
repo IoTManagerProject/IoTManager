@@ -1,0 +1,67 @@
+{   
+    "menuSection": "Исполнительные устройства",
+
+    "configItem": [{
+        "global": 0,
+        "name": "Расширитель портов Mcp23008",
+        "type": "Reading",
+        "subtype": "Mcp23008",
+        "id": "Mcp",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        
+        "int": "0",
+        "addr": "0x20",
+        "index": 1
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "Mcp23008",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "Расширитель портов Mcp23008",
+        "moduleDesc": "Добавляет в систему дополнительные GPIO для элементов, которые поддерживают такую функцию.",
+        "propInfo": {
+            "int": "Не используется",
+            "addr": "Адрес устройства на шине, обычно 0x20",
+            "index": "Значения от 1 до 4, где при выборе 1 будет нумерация pin 100-115, при выборе 2 200-215 и т.д."
+        }
+    },
+
+    "defActive": false,
+
+    "usedLibs": {
+        "esp32_4mb": [
+            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8266_4mb": [
+            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8266_1mb": [
+            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8266_1mb_ota": [
+            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8285_1mb": [
+            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8285_1mb_ota": [
+            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ]
+    }
+}

@@ -63,6 +63,7 @@ void IoTItem::setValue(const String& valStr, bool genEvent) {
 
     if (value.isDecimal) {
         value.valD = valStr.toFloat();
+        getRoundValue();
     } else {
         value.valS = valStr;
     }
@@ -117,15 +118,19 @@ void IoTItem::regEvent(const String& value, const String& consoleInfo, bool erro
 }
 
 String IoTItem::getRoundValue() {
+    if (!value.isDecimal) return value.valS;
+    
     if (_round >= 0 && _round <= 6) {
         int sot = _round ? pow(10, (int)_round) : 1;
         value.valD = round(value.valD * sot) / sot;
 
         char buf[15];
         sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
-        return (String)buf;
+        value.valS = (String)buf;
+        return value.valS;
     } else {
-        return (String)value.valD;
+        value.valS = (String)value.valD;
+        return value.valS;
     }
 }
 
