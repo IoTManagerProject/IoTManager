@@ -51,6 +51,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/virtual/VariableColor",
+                "active": true
+            },
+            {
                 "path": "src/modules/virtual/VButton",
                 "active": true
             },
