@@ -18,10 +18,10 @@ public:
     void onMqttWsAppConnectEvent()
     {
         SerialPrint("i", "Connecting", "Dashbord open ");
-        regEvent(value.valD, "VariableColor", false, true);
+        regEvent(value.valS, "VariableColor", false, true);
     }
-
-    IoTValue execute(String command, std::vector<IoTValue> &param)
+     
+     IoTValue execute(String command, std::vector<IoTValue> &param)
     {
         if (command == "widget" && param.size() == 2)
         {
