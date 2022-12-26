@@ -53,6 +53,10 @@
             {
                 "path": "src/modules/virtual/VButton",
                 "active": true
+            },
+            {
+                "path": "src/modules/virtual/Weather",
+                "active": false
             }
         ],
         "Сенсоры": [
@@ -181,6 +185,10 @@
             {
                 "path": "src/modules/exec/IoTServo",
                 "active": true
+            },
+            {
+                "path": "src/modules/exec/Mcp23008",
+                "active": false
             },
             {
                 "path": "src/modules/exec/Mcp23017",
