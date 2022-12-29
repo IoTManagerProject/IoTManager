@@ -110,8 +110,8 @@ void mqttSubscribe() {
     mqtt.subscribe((mqttRootDevice + "/update").c_str());
 
     if (jsonReadBool(settingsFlashJson, "mqttin")) {
-        mqtt.subscribe((mqttPrefix + "/+/+/event").c_str());
-        mqtt.subscribe((mqttPrefix + "/+/+/order").c_str());
+        mqtt.subscribe((mqttPrefix + "/+/+/event/#").c_str());
+        mqtt.subscribe((mqttPrefix + "/+/+/order/#").c_str());
         mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
     }
 }
