@@ -105,6 +105,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/ExternalMQTT",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/FreqMeter",
                 "active": false
             },
@@ -243,6 +247,10 @@
             {
                 "path": "src/modules/display/Lcd2004",
                 "active": true
+            },
+            {
+                "path": "src/modules/display/NextionUpload",
+                "active": false
             },
             {
                 "path": "src/modules/display/Ws2812b",
