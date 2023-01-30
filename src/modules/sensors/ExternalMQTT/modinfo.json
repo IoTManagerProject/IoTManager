@@ -1,0 +1,58 @@
+{
+  "menuSection": "Сенсоры",
+
+  "configItem": [
+    {
+      "global": 0,
+      "name": "MQTT парсер",
+      "type": "Reading",
+      "subtype": "ExternalMQTT",
+      "id": "MQTTin",
+      "widget": "",
+      "page": "",
+      "descr": "",
+      "MAC": "",
+      "sensor": "",
+      "round": "",
+      "orange": 60,
+      "red": 120,
+      "offline": 180,
+      "int": 60
+    }
+  ],
+
+  "about": {
+    "authorName": "AVAKS",
+    "authorContact": "https://t.me/@avaks_dev",
+    "authorGit": "https://github.com/avaksru",
+    "specialThanks": "",
+    "moduleName": "ExternalMQTT",
+    "moduleVersion": "1",
+    "usedRam": {
+      "esp32_4mb": 15,
+      "esp8266_4mb": 15
+    },
+    "title": "ExternalMQTT",
+    "moduleDesc": "Модуль получения  данных из OpenMQTTGateway, Zigbee2MQTT, SLS, Tasmota, NodeRead, HA, openHAB, Fhem, domotiz, EEdom",
+    "propInfo": {
+      "round": "Округление после запятой.",
+      "int": "Интервал для изменения цвета",
+      "orange": "количество минут после которого окрасить виджет в оранжевый цвет",
+      "red": "количество минут после которого окрасить виджет в красный цвет",
+      "offline": "количество минут после которого отобразить что устройство offline, если все три orange red и offline поставить в ноль - то функция окраски выключится",
+      "MAC": "MAC адрес беспроводного датчика",
+      "sensor": "Тип сенсора: температура / влажность / время / ...   "
+    }
+  },
+
+  "defActive": false,
+
+  "usedLibs": {
+    "esp32_4mb": [],
+    "esp8266_4mb": [],
+    "esp8266_1mb": [],
+    "esp8266_1mb_ota": [],
+    "esp8285_1mb": [],
+    "esp8285_1mb_ota": []
+  }
+}

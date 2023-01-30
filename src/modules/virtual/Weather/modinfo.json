@@ -1,0 +1,53 @@
+{
+  "menuSection": "Виртуальные элементы",
+
+  "configItem": [
+    {
+      "global": 0,
+      "name": "Погода",
+      "type": "Reading",
+      "subtype": "Weather",
+      "id": "Weather",
+      "needSave": 0,
+      "widget": "anydataDef",
+      "page": "Погода",
+      "descr": "",
+      "int": 3,
+      "location": "Moscow",
+      "param": "temp_C",
+      "round": 0,
+      "val": "..."
+    }
+  ],
+
+  "about": {
+    "authorName": "AVAKS",
+    "authorContact": "https://t.me/@avaks_dev",
+    "authorGit": "https://github.com/avaksru",
+    "specialThanks": "",
+    "moduleName": "Weather",
+    "moduleVersion": "1",
+    "usedRam": {
+      "esp32_4mb": 15,
+      "esp8266_4mb": 15
+    },
+    "title": "Погода",
+    "moduleDesc": "Получение погоды из интернет",
+    "propInfo": {
+      "location": "Город.",
+      "param": "temp_C - температура, humidity - влажность, weatherCode - погодный код, sunrise - рассвет, sunset - закат, rangetempC - (-3...-10 C), temp_C_tomorrow - температура завтра, rangetempC_tomorrow - (-3...-10 C) на завтра",
+      "int": "Интервал запроса погоды в часах"
+    }
+  },
+
+  "defActive": false,
+
+  "usedLibs": {
+    "esp32_4mb": [],
+    "esp8266_4mb": [],
+    "esp8266_1mb": [],
+    "esp8266_1mb_ota": [],
+    "esp8285_1mb": [],
+    "esp8285_1mb_ota": []
+  }
+}

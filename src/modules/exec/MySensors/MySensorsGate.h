@@ -1,5 +1,7 @@
 #pragma once
 #include "Const.h"
+#define MYSENSORS
+
 #ifdef MYSENSORS
 
 /*

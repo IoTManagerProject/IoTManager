@@ -112,6 +112,7 @@ class VariableExprAST : public ExprAST {
             // if (Item->value.isDecimal)
             //   Serial.printf("Call from  VariableExprAST: %s = %f\n", Name.c_str(), Item->value.valD);
             // else Serial.printf("Call from  VariableExprAST: %s = %s\n", Name.c_str(), Item->value.valS.c_str());
+            Item->getRoundValue();
             return &(Item->value);
         }
 
@@ -125,7 +126,7 @@ class BinaryExprAST : public ExprAST {
     signed char Op;
     ExprAST *LHS, *RHS;
     IoTValue val;
-    String lhsStr, rhsStr;
+    //String lhsStr, rhsStr;
 
    public:
     BinaryExprAST(signed char op, ExprAST *lhs, ExprAST *rhs)
@@ -139,21 +140,6 @@ class BinaryExprAST : public ExprAST {
 
     IoTValue *exec() {
         if (isIotScenException) return nullptr;
-        // String printStr = "";
-
-        // if (Op == tok_equal)
-        //     printStr = "==";
-        // else if (Op == tok_notequal)
-        //     printStr = "!=";
-        // else if (Op == tok_lesseq)
-        //     printStr = "<=";
-        // else if (Op == tok_greateq)
-        //     printStr = ">=";
-        // else
-        //     printStr = printStr + (char)Op;
-
-        // Serial.printf("Call from  BinaryExprAST: %s\n", printStr.c_str());
-
         if (RHS == nullptr || LHS == nullptr) return nullptr;
 
         IoTValue *rhs = RHS->exec();  // получаем значение правого операнда для возможного использования в операции присваивания
@@ -170,8 +156,12 @@ class BinaryExprAST : public ExprAST {
         IoTValue *lhs = LHS->exec();  // если присваивания не произошло, значит операция иная и необходимо значение левого операнда
         if (lhs == nullptr) return nullptr;
 
-        
-        if (lhs->isDecimal && rhs->isDecimal) {
+        // все бинарные операции кроме +, - и == обязаны работать с числами
+        if (Op != '+' && Op != '-' && Op != tok_equal) {
+            // поэтому преобразовываем строки в булевые интерпретации
+            if (!lhs->isDecimal) lhs->valD = lhs->valS != "";  // пустая строка = false 
+            if (!rhs->isDecimal) rhs->valD = rhs->valS != "";  // пустая строка = false 
+
             switch (Op) {
                 case '>':
                     val.valD = lhs->valD > rhs->valD;
@@ -185,19 +175,10 @@ class BinaryExprAST : public ExprAST {
                 case tok_greateq:
                     val.valD = lhs->valD >= rhs->valD;
                     break;
-                case tok_equal:
-                    val.valD = lhs->valD == rhs->valD;
-                    break;
                 case tok_notequal:
                     val.valD = lhs->valD != rhs->valD;
                     break;
 
-                case '+':
-                    val.valD = lhs->valD + rhs->valD;
-                    break;
-                case '-':
-                    val.valD = lhs->valD - rhs->valD;
-                    break;
                 case '*':
                     val.valD = lhs->valD * rhs->valD;
                     break;
@@ -218,37 +199,43 @@ class BinaryExprAST : public ExprAST {
                 default:
                     break;
             }
-            return &val;
-        }
-
-        if (!lhs->isDecimal || !rhs->isDecimal) {
-            if (lhs->isDecimal)
-                lhsStr = (String)lhs->valD;
-            else
-                lhsStr = lhs->valS;
-            
-            if (rhs->isDecimal)
-                rhsStr = (String)rhs->valD;
-            else
-                rhsStr = rhs->valS;
-            
+        } else {    // иначе имеем дело с операциями + или - или ==, которые могут работать с разными типами данных
+            if (lhs->isDecimal && lhs->valS == "") lhs->valS = (String)lhs->valD;   // небольшой костыль пока не переделаем работу со значениями, планируется добавить long, работу со временем, перенести округление и модификаторы в IoTValue
+            if (rhs->isDecimal && rhs->valS == "") rhs->valS = (String)rhs->valD;   // пока для сохранения округления в IoTItem применяется хитрость с сохранением внешнего вида числа в строку valS,
+                                                                                    // но некоторые модули и системные не делают этого, поэтому отлавливаем эту ситуацию тут и учитываем.
             switch (Op) {
                 case tok_equal:
-                    val.valD = compStr(lhsStr, rhsStr);
+                    if (lhs->isDecimal && rhs->isDecimal)
+                        val.valD = lhs->valD == rhs->valD;
+                    else
+                        val.valD = compStr(lhs->valS, rhs->valS);
                     break;
 
                 case '+':
-                    val.valS = lhsStr + rhsStr;
-                    val.valD = 1;
-                    val.isDecimal = false;
+                    if (lhs->isDecimal && rhs->isDecimal)
+                        val.valD = lhs->valD + rhs->valD;
+                    else {
+                        val.valS = lhs->valS + rhs->valS;
+                        val.valD = 1;
+                        val.isDecimal = false;
+                    }
+                    break;
+
+                case '-':
+                    if (lhs->isDecimal && rhs->isDecimal)
+                        val.valD = lhs->valD - rhs->valD;
+                    else {
+                        val.valS = lhs->valS;
+                        val.valS.replace(rhs->valS, "");
+                        val.valD = 1;
+                        val.isDecimal = false;
+                    }
                     break;
 
                 default:
                     break;
             }
-            return &val;
-        }
-        
+        }    
         return &val;
     }
 

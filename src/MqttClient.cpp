@@ -6,7 +6,7 @@ void mqttInit() {
         WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL,
         [&](void*) {
             if (WiFi.status() == WL_CONNECTED) {
-                SerialPrint("i", F("WIFI"), F("OK"));
+                SerialPrint("i", F("WIFI"), "OK: " + jsonReadStr(settingsFlashJson, F("ip")));
                 wifiUptimeCalc();
                 if (mqtt.connected()) {
                     SerialPrint("i", F("MQTT"), "OK");
@@ -110,8 +110,8 @@ void mqttSubscribe() {
     mqtt.subscribe((mqttRootDevice + "/update").c_str());
 
     if (jsonReadBool(settingsFlashJson, "mqttin")) {
-        mqtt.subscribe((mqttPrefix + "/+/+/event").c_str());
-        mqtt.subscribe((mqttPrefix + "/+/+/order").c_str());
+        mqtt.subscribe((mqttPrefix + "/+/+/event/#").c_str());
+        mqtt.subscribe((mqttPrefix + "/+/+/order/#").c_str());
         mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
     }
 }
