@@ -1,0 +1,139 @@
+{
+  "menuSection": "Исполнительные устройства",
+
+  "configItem": [
+    {
+      "global": 0,
+      "needSave": 0,
+      "name": "Термостат Гистере́зис ",
+      "type": "Writing",
+      "subtype": "ThermostatGIST",
+      "id": "Thermo",
+      "widget": "anydataDef",
+      "page": "Климат",
+      "descr": "термостат",
+      "int": 60,
+      "round": 1,
+      "set_id": "",
+      "term_id": "",
+      "term_rezerv_id": "",
+      "gist": 0.3,
+      "rele": ""
+    },
+    {
+      "global": 0,
+      "needSave": 0,
+      "name": "Термостат PID",
+      "type": "Writing",
+      "subtype": "ThermostatPID",
+      "id": "Thermo",
+      "widget": "anydataHum",
+      "page": "Климат",
+      "descr": "термостат",
+      "int": 60,
+      "round": 1,
+      "map": "1,100,1,100",
+      "set_id": "",
+      "term_id": "",
+      "rele": "",
+      "KP": 5.0,
+      "KI": 50,
+      "KD": 1.0
+    },
+    {
+      "global": 0,
+      "needSave": 0,
+      "name": "Термостат ЭТК",
+      "type": "Writing",
+      "subtype": "ThermostatETK",
+      "id": "Thermo",
+      "widget": "anydataTmp",
+      "page": "Климат",
+      "descr": "термостат",
+      "int": 60,
+      "round": 1,
+      "iv_k": 1,
+      "outside_id": ""
+    },
+    {
+      "global": 0,
+      "needSave": 0,
+      "name": "Термостат ЭТК2 ",
+      "type": "Writing",
+      "subtype": "ThermostatETK2",
+      "id": "Thermo",
+      "widget": "anydataTmp",
+      "page": "Климат",
+      "descr": "термостат",
+      "int": 60,
+      "round": 1,
+      "set_id": "",
+      "term_id": "",
+      "iv_k": 1,
+      "outside_id": ""
+    }
+  ],
+
+  "about": {
+    "authorName": "AVAKS",
+    "authorContact": "https://t.me/@avaks_dev",
+    "authorGit": "https://github.com/avaksru",
+    "specialThanks": "@Serghei63 за работу PID с обычным реле, Serg  помощь в тестировании и устранении ошибок",
+    "moduleName": "Thermostat",
+    "moduleVersion": "1",
+    "usedRam": {
+      "esp32_4mb": 15,
+      "esp8266_4mb": 15
+    },
+    "title": "Термостат",
+    "moduleDesc": "Реализованы четыре варианта термостатирования: PID , Гистере́зис ,  эквитермические кривые, эквитермические кривые с учётом температуры в помещении",
+    "propInfo": {
+      "set_id": "Заданная температура в помещении",
+      "gist": "Гистере́зис  - отклонение от заданной температуры при котором будет срабатывать термостат",
+      "term_id": "ID виджета термометра в помещении",
+      "term_rezerv_id": "ID резервного термометра в помещении",
+      "rele": "ID реле термостата",
+      "int": "интервал дискретизации термостата",
+      "outside_id": "ID уличного термометра",
+      "iv_k": "Эквитермическая кривая",
+      "KP": "Пропорциональный коэффициент PID ",
+      "KI": "Интегральный коэффициент PID ",
+      "KD": "Дифференциальный коэффициент PID ",
+      "round": "округление",
+      "map": "преобразование интервала значений"
+    },
+    "funcInfo": [
+      {
+        "name": "enable",
+        "descr": "включить / выключить термостатирование (режим AUTO)  применим к PID  и Гистере́зис ",
+        "params": ["thermostat.enable(1) - вкл, thermostat.enable(0) - выкл, "]
+      },
+      {
+        "name": "KP",
+        "descr": "Пропорциональный коэффициент PID .",
+        "params": ["thermostat.KP(1) - задает значение коэффициента"]
+      },
+      {
+        "name": "KI",
+        "descr": "Интегральный коэффициент PID .",
+        "params": ["thermostat.KI(1) - задает значение коэффициента"]
+      },
+      {
+        "name": "KD",
+        "descr": "Дифференциальный коэффициент PID .",
+        "params": ["thermostat.KD(1) - задает значение коэффициента"]
+      }
+    ]
+  },
+
+  "defActive": false,
+
+  "usedLibs": {
+    "esp32_4mb": [],
+    "esp8266_4mb": [],
+    "esp8266_1mb": [],
+    "esp8266_1mb_ota": [],
+    "esp8285_1mb": [],
+    "esp8285_1mb_ota": []
+  }
+}
