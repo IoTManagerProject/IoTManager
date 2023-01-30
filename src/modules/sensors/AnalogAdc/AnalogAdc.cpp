@@ -28,6 +28,9 @@ class AnalogAdc : public IoTItem {
     AnalogAdc(String parameters) : IoTItem(parameters) {
         _pin = jsonReadInt(parameters, "pin");
         _avgSteps = jsonReadInt(parameters, "avgSteps");
+        if (!_avgSteps) {
+            jsonRead(parameters, F("int"), _interval, false);
+        }
         _avgSumm = 0;
         _avgCount = 0;
     }
