@@ -92,7 +92,7 @@ class UART : public IoTItem {
 
     void onRegEvent(IoTItem* eventItem) {
         if (!_myUART || !eventItem) return; 
-
+        int indexOf_;
         String printStr = "";
         switch (_eventFormat) {
             case 0: return;     // не указан формат, значит не следим за событиями
@@ -105,7 +105,7 @@ class UART : public IoTItem {
             
             case 2:             // формат событий для Nextion ID=Value0xFF0xFF0xFF
                 printStr += eventItem->getID();
-                int indexOf_ = printStr.indexOf("_");
+                indexOf_ = printStr.indexOf("_");
                 //Serial.println(printStr + " fff " + indexOf_);
                 if (indexOf_ == -1) return;  // пропускаем событие, если нет используемого признака типа данных - _txt или _vol
                 
@@ -126,8 +126,85 @@ class UART : public IoTItem {
 
                 uartPrintFFF(printStr);
             break;
+
+            case 3:             // формат событий для Dwin
+            //for (int i=0; i<2; i++) {
+                printStr = eventItem->getID();
+                indexOf_ = printStr.indexOf("_");
+                if (indexOf_ == -1 || !_myUART) return;  // пропускаем событие, если нет используемого признака типа данных - _txt или _vol
+                
+                String VP = selectToMarkerLast(printStr, "_");
+
+                _myUART->write(0x5A);
+                _myUART->write(0xA5);
+
+                if (eventItem->value.isDecimal) {  // пока отправляем только целые числа
+                    _myUART->write(0x05);   // размер данных отправляемых с учетом целых чисел int
+                    _myUART->write(0x82);   // требуем запись в память
+                    uartPrintHex(VP);       // отправляем адрес в памяти VP
+
+                    byte raw[2];
+                    (int&)raw = eventItem->value.valD;
+                    _myUART->write(raw[1]);
+                    _myUART->write(raw[0]);
+                } else {
+                    // подсчитываем количество символов отличающихся от ASCII, для понимания сколько символов состоит из дух байт
+                    int u16counter = 0;
+                    const char* valSptr = eventItem->value.valS.c_str();
+                    //Serial.print("iiiii ");
+                    for (int i=0; i < eventItem->value.valS.length(); i++) {
+                        if (valSptr[i] > 200) u16counter++;
+                        //Serial.printf("%d ", valSptr[i]);
+                    }
+                    //Serial.println();
+
+                    _myUART->write((eventItem->value.valS.length() - u16counter) * 2 + 5);  // подсчитываем и отправляем размер итоговой строки + служебные байты
+                    _myUART->write(0x82);   // требуем запись в память
+                    uartPrintHex(VP);   // отправляем адрес в памяти VP
+                    Serial.println("ffffff " + VP);
+                    //_myUART->write(0x53);
+                    //_myUART->write(0x00);
+                    uartPrintStrInUTF16(eventItem->value.valS.c_str(), eventItem->value.valS.length());     // отправляем строку для записи
+                    _myUART->write(0xFF);   // терминируем строку, чтоб экран очистил все остальное в элементе своем
+                    _myUART->write(0xFF);
+
+                    //uint8_t Data[8] = {0x00, 0x31, 0x00, 0x44, 0x04, 0x10, 0x00, 0x00};
+                    //uartPrintArray(Data, 6);
+                    //Serial.printf("fffffffff %#x %#x %#x %#x \n", Data[0], Data[1], Data[2], Data[3]);
+                }
+            //}    
+            break;
         }
     }
+
+    void uartPrintStrInUTF16(const char *strUTF8, int length) {   
+        // очень жесткий но быстрый способ конвертирования UTF-8 в UTF-16, но с поддержкой только кириллицы и двух байт в UTF-8
+        // не определяются исключения по формату UTF-8
+        for (int i=0; i < length; i++) {
+            if (strUTF8[i] < 176) {     // если байт соответствует коду ASCII, значит берем как есть, но расширяем до двух байт
+                _myUART->write(0x00);
+                _myUART->write(strUTF8[i]);
+            } else {                    // иначе понимаем, что имеем дело с двумя байтами (да UTF8 может иметь и больше, но это ограничение наше)
+                _myUART->write(0x04);   // указываем номер диапазона символов кириллицы первым байтом на выходе
+                
+                if (strUTF8[i] == 208) {    // если первый байт символа в первом диапазоне
+                    if (strUTF8[i+1] == 129) _myUART->write(0x01);  // исключение для символа 'ё'
+                    else  _myUART->write(strUTF8[i+1] - 128);   // применяем смещение 128 и отправляем второй байт
+                }
+
+                if (strUTF8[i] == 209) {    // если первый байт символа во втором диапазоне
+                    if (strUTF8[i+1] == 145) _myUART->write(0x51);  // исключение для символа 'Ё'
+                    else _myUART->write(strUTF8[i+1] - 64);     // применяем смещение 64 и отправляем второй байт
+                }
+
+                i++;    // пропускаем второй байт входной строки
+            }
+        }
+    }
+
+    void uartPrintArray(uint8_t *_Data, uint8_t _Size) {
+        for (size_t i = 0; i < _Size; i++) _myUART->write(_Data[i]);
+	}
 
     virtual void loop() {
         uartHandle();
