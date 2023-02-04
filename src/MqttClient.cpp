@@ -161,9 +161,10 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     }
 
     else if (topicStr.indexOf("control") != -1) {
-        String key = selectFromMarkerToMarker(topicStr, "/", 3);
-        generateOrder(key, payloadStr);
-        SerialPrint("i", F("=>MQTT"), "Msg from iotmanager app: " + key + " " + payloadStr);
+        size_t num_level = itemsCount2(topicStr, "/");
+        String id = selectFromMarkerToMarker(topicStr, "/", num_level-2);
+        generateOrder(id, payloadStr);
+        SerialPrint("i", F("=>MQTT"), "Msg from iotmanager app: " + id + " " + payloadStr);
     }
 
     //здесь мы получаем события с других устройств, которые потом проверяются в сценариях этого устройства
@@ -171,11 +172,12 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         if (!jsonReadBool(settingsFlashJson, "mqttin")) {
             return;
         }
+        size_t num_level = itemsCount2(topicStr, "/");
         if (topicStr.indexOf(chipId) == -1) {
-            String devId = selectFromMarkerToMarker(topicStr, "/", 2);
-            String id = selectFromMarkerToMarker(topicStr, "/", 3);
+            String devId = selectFromMarkerToMarker(topicStr, "/", num_level-3);
+            String id = selectFromMarkerToMarker(topicStr, "/", num_level-2);
             analyzeMsgFromNet(payloadStr, id);
-            // SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + valAsStr);
+            SerialPrint("i", F("=>MQTT"), "Received event from other device: '" + devId + "' " + id + " " + payloadStr);
         }
     }
 
@@ -185,10 +187,11 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         if (!jsonReadBool(settingsFlashJson, "mqttin")) {
             return;
         }
-        String devId = selectFromMarkerToMarker(topicStr, "/", 2);
-        String id = selectFromMarkerToMarker(topicStr, "/", 3);
+        size_t num_level = itemsCount2(topicStr, "/");
+        String devId = selectFromMarkerToMarker(topicStr, "/", num_level-3);
+        String id = selectFromMarkerToMarker(topicStr, "/", num_level-2);
         generateOrder(id, payloadStr);
-        SerialPrint("i", F("=>MQTT"), "Received direct order " + id + " " + payloadStr);
+        SerialPrint("i", F("=>MQTT"), "Received direct order '" + devId + "' " + id + " " + payloadStr);
     }
 }
 
