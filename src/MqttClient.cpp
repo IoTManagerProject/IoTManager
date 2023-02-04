@@ -164,7 +164,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
         size_t num_level = itemsCount2(topicStr, "/");
         String id = selectFromMarkerToMarker(topicStr, "/", num_level-2);
         generateOrder(id, payloadStr);
-        SerialPrint("i", F("=>MQTT"), "Msg from iotmanager app: " + id + " " + payloadStr + " " + num_level);
+        SerialPrint("i", F("=>MQTT"), "Msg from iotmanager app: " + id + " " + payloadStr);
     }
 
     //здесь мы получаем события с других устройств, которые потом проверяются в сценариях этого устройства
