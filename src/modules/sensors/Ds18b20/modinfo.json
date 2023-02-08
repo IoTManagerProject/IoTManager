@@ -40,22 +40,22 @@
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "https://github.com/milesburton/Arduino-Temperature-Control-Library"
         ],
         "esp8266_4mb": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "https://github.com/milesburton/Arduino-Temperature-Control-Library"
         ],
         "esp8266_1mb": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "https://github.com/milesburton/Arduino-Temperature-Control-Library"
         ],
         "esp8266_1mb_ota": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "https://github.com/milesburton/Arduino-Temperature-Control-Library"
         ],
         "esp8285_1mb": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "https://github.com/milesburton/Arduino-Temperature-Control-Library"
         ],
         "esp8285_1mb_ota": [
-            "milesburton/DallasTemperature@^3.9.1"
+            "https://github.com/milesburton/Arduino-Temperature-Control-Library"
         ]
     }
 }
