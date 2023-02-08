@@ -7,8 +7,9 @@
 
 IoTItem::IoTItem(const String& parameters) {
     jsonRead(parameters, F("int"), _interval, false);
-    if (_interval <= 0) enableDoByInt = false;
-    _interval = _interval * 1000;
+    if (_interval = 0) enableDoByInt = false;           // выключаем использование периодического выполнения в модуле
+    if (_interval > 0) _interval = _interval * 1000;    // если int положителен, то считаем, что получены секунды
+    if (_interval < 0) _interval = _interval * -1;      // если int отрицательный, то миллисекунды
     jsonRead(parameters, F("subtype"), _subtype, false);
     jsonRead(parameters, F("id"), _id);
     if (!jsonRead(parameters, F("multiply"), _multiply, false)) _multiply = 1;
@@ -278,7 +279,7 @@ IoTItem* createItemFromNet(const String& msgFromNet) {
 }
 
 void analyzeMsgFromNet(const String& msg, String altId) {
-    if (!jsonRead(msg, F("id"), altId, altId == "") && altId == "") return;  // ничего не предпринимаем, если ошибка и altId = "", вообще данная конструкция нужна для совместимости с форматом данных 3 версией
+    if (!jsonRead(msg, F("id"), altId, altId == "")) return;  // ничего не предпринимаем, если ошибка и altId = "", вообще данная конструкция нужна для совместимости с форматом данных 3 версией
     IoTItem* itemExist = findIoTItem(altId);
     if (itemExist) {
         String valAsStr = msg;
@@ -293,6 +294,7 @@ void analyzeMsgFromNet(const String& msg, String altId) {
     } else {
         // временно зафиксируем данные в базе, если локально элемент отсутствует
         createItemFromNet(msg);
+        //Serial.println("ffffffffff " + msg + " altId=" + altId);
     }
 }
 
