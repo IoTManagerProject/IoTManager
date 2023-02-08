@@ -272,7 +272,7 @@ IoTItem* createItemFromNet(const String& itemId, const String& value, int interv
 IoTItem* createItemFromNet(const String& msgFromNet) {
     IoTItem* tmpp = new IoTItem(msgFromNet);
 
-    Serial.println("vvvvvvvvvvv " + msgFromNet + " " + (String)tmpp->getInterval());
+    //Serial.println("vvvvvvvvvvv " + msgFromNet + " " + (String)tmpp->getInterval());
 
     if (tmpp->getInterval()) tmpp->setIntFromNet(tmpp->getInterval() / 1000 + 5);
     tmpp->iAmLocal = false;
