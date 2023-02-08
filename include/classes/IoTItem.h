@@ -90,7 +90,7 @@ class IoTItem {
 IoTItem* findIoTItem(const String& name);                     // поиск экземпляра элемента модуля по имени
 String getItemValue(const String& name);                      // поиск плюс получение значения
 bool isItemExist(const String& name);                         // существует ли айтем
-StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных значений Items
+//StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных значений Items
 
 IoTItem* createItemFromNet(const String& itemId, const String& value, int interval);
 IoTItem* createItemFromNet(const String& msgFromNet);

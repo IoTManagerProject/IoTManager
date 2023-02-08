@@ -27,12 +27,12 @@ void globalVarsSync() {
 }
 
 //к удалению. не используется
-String getParamsJson() {
-    String json;
-    serializeJson(*getLocalItemsAsJSON(), json);
-    jsonWriteStr_(json, "params", "");
-    return json;
-}
+// String getParamsJson() {
+//     String json;
+//     serializeJson(*getLocalItemsAsJSON(), json);
+//     jsonWriteStr_(json, "params", "");
+//     return json;
+// }
 
 void syncSettingsFlashJson() {
     writeFile(F("settings.json"), settingsFlashJson);

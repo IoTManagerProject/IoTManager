@@ -301,13 +301,13 @@ void analyzeMsgFromNet(const String& msg, String altId) {
     }
 }
 
-StaticJsonDocument<JSON_BUFFER_SIZE> docForExport;
+//StaticJsonDocument<JSON_BUFFER_SIZE> docForExport;
 
-StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON() {
-    docForExport.clear();
-    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-        if ((*it)->iAmLocal) docForExport[(*it)->getID()] = (*it)->getValue();
-    }
+// StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON() {
+//     docForExport.clear();
+//     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+//         if ((*it)->iAmLocal) docForExport[(*it)->getID()] = (*it)->getValue();
+//     }
 
-    return &docForExport;
-}
+//     return &docForExport;
+// }
