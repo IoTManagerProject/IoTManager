@@ -22,7 +22,7 @@ bool jsonRead(const String& json, String key, long& value, bool e) {
         return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
-            SerialPrint("E", F("jsonRead"), key + " missing");
+            SerialPrint("E", F("jsonRead"), key + " missing in " + json);
             jsonErrorDetected();
         }
         return false;
@@ -42,7 +42,7 @@ bool jsonRead(const String& json, String key, float& value, bool e) {
         return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
-            SerialPrint("E", F("jsonRead"), key + " missing");
+            SerialPrint("E", F("jsonRead"), key + " missing in " + json);
             jsonErrorDetected();
         }
         return false;
@@ -62,7 +62,7 @@ bool jsonRead(const String& json, String key, String& value, bool e) {
         return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
-            SerialPrint("E", F("jsonRead"), key + " missing");
+            SerialPrint("E", F("jsonRead"), key + " missing in " + json);
             jsonErrorDetected();
         }
         return false;
@@ -89,7 +89,7 @@ bool jsonRead(const String& json, String key, int& value, bool e) {
         return false;
     } else if (!doc.containsKey(key)) {
         if (e) {
-            SerialPrint("E", F("jsonRead"), key + " missing");
+            SerialPrint("E", F("jsonRead"), key + " missing in " + json);
             jsonErrorDetected();
         }
         return false;
