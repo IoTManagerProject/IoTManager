@@ -91,7 +91,7 @@ void setup() {
     iotScen.loadScenario("/scenario.txt");
 
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
-    createItemFromNet("onStart", "1", -4);
+    createItemFromNet("onStart", "1", 1);
 
     stInit();
 

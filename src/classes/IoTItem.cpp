@@ -7,7 +7,7 @@
 
 IoTItem::IoTItem(const String& parameters) {
     jsonRead(parameters, F("int"), _interval, false);
-    if (_interval = 0) enableDoByInt = false;           // выключаем использование периодического выполнения в модуле
+    if (_interval == 0) enableDoByInt = false;           // выключаем использование периодического выполнения в модуле
     if (_interval > 0) _interval = _interval * 1000;    // если int положителен, то считаем, что получены секунды
     if (_interval < 0) _interval = _interval * -1;      // если int отрицательный, то миллисекунды
     jsonRead(parameters, F("subtype"), _subtype, false);
@@ -171,7 +171,7 @@ void IoTItem::setIntFromNet(int interval) {
 void IoTItem::checkIntFromNet() {
     // проверяем элемент на доверие данным.
     if (_intFromNet >= 0) {
-        // если время жизни истекло, то удаляем элемент
+        // если время жизни истекло, то удаляем элемент чуть позже на следующем такте loop
         // если это было уведомление не об ошибке или начале работы, то сообщаем, что сетевое событие давно не приходило
         if (_intFromNet == 0 && _id.indexOf("onError") == -1 && _id.indexOf("onStart") == -1) {
             SerialPrint("E", _id, "The new data did not come from the network. The level of trust is low.", _id);
@@ -271,6 +271,9 @@ IoTItem* createItemFromNet(const String& itemId, const String& value, int interv
 // создаем временную копию элемента из сети на основе события
 IoTItem* createItemFromNet(const String& msgFromNet) {
     IoTItem* tmpp = new IoTItem(msgFromNet);
+
+    Serial.println("vvvvvvvvvvv " + msgFromNet + " " + (String)tmpp->getInterval());
+
     if (tmpp->getInterval()) tmpp->setIntFromNet(tmpp->getInterval() / 1000 + 5);
     tmpp->iAmLocal = false;
     IoTItems.push_back(tmpp);
