@@ -73,8 +73,8 @@ class IoTItem {
     String _id = "errorId";  // если будет попытка создания Item без указания id, то элемент оставит это значение
     long _interval = 0;
     int _intFromNet = -2;  // количество секунд доверия, пришедших из сети вместе с данными для текущего ИД
-                           // -2 - данные не приходили, скорее всего, элемент локальный, доверие есть
-                           // -1 - данные приходили и обратный отсчет дошел до нуля, значит доверия нет
+                           // -2 - данные не приходили, скорее всего, элемент локальный, доверие есть, в случае прихода сетевого значения с int=0, будет выключен механизм проверки доверия
+                           // -1 - данные приходили и обратный отсчет дошел до нуля, значит доверия нет и элемент будет удален при следующем такте loop
 
     float _multiply;  // умножаем на значение
     float _plus;      // увеличиваем на значение
@@ -90,7 +90,7 @@ class IoTItem {
 IoTItem* findIoTItem(const String& name);                     // поиск экземпляра элемента модуля по имени
 String getItemValue(const String& name);                      // поиск плюс получение значения
 bool isItemExist(const String& name);                         // существует ли айтем
-StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных значений Items
+//StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных значений Items
 
 IoTItem* createItemFromNet(const String& itemId, const String& value, int interval);
 IoTItem* createItemFromNet(const String& msgFromNet);
