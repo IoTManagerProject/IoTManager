@@ -20,17 +20,17 @@ littlefsSrcPath = ".pio/build/" + deviceName + "/littlefs.bin"
 
 if Path(firmwareSrcPath).is_file():
     print("Ok...... \"" + firmwareSrcPath + "\" Exist!")
-    firmwareDstPath = "iotm/" + deviceName + "/999/firmware.bin"
+    firmwareDstPath = "iotm/" + deviceName + "/400/firmware.bin"
     Path(firmwareDstPath).parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(firmwareSrcPath, firmwareDstPath)
 
     if Path(littlefsSrcPath).is_file():
         print("Ok...... \"" + littlefsSrcPath + "\" Exist!")
-        littlefsDstPath = "iotm/" + deviceName + "/999/littlefs.bin"
+        littlefsDstPath = "iotm/" + deviceName + "/400/littlefs.bin"
         Path(littlefsDstPath).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(littlefsSrcPath, littlefsDstPath)
         
-        versionsJson = json.loads('{"' + deviceName + '": {"0": "999"}}')
+        versionsJson = json.loads('{"' + deviceName + '": {"0": "400"}}')
         with open("iotm/ver.json", "w", encoding='utf-8') as write_file:
             json.dump(versionsJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
             
