@@ -160,9 +160,14 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
 #endif
     }
 
-    else if (topicStr.indexOf("control") != -1) {
+    else if (topicStr.indexOf(F("control")) != -1) {
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
-        generateOrder(key, payloadStr);
+        
+        String valueIfJson = "";    // проверяем формат, если json то берем статус, иначе - как есть
+        if (!jsonRead(payloadStr, F("status"), valueIfJson, false))
+            generateOrder(key, payloadStr);
+        else generateOrder(key, valueIfJson);
+
         SerialPrint("i", F("=>MQTT"), "Msg from iotmanager app: " + key + " " + payloadStr);
     }
 
