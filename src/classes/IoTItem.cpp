@@ -208,6 +208,14 @@ IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
 }
 
+IoTItem* IoTItem::getRtcDriver() {
+    return nullptr;
+}
+
+ulong IoTItem::getRtcUnixTime() {
+    return 0;
+}
+
 // сетевое общение====================================================================================================================================
 
 // externalVariable::externalVariable(const String& parameters) : IoTItem(parameters) {
