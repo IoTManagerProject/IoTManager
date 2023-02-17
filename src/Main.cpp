@@ -10,6 +10,26 @@ String volStrForSave = "";
 unsigned long currentMillis;
 unsigned long prevMillis;
 
+
+
+void elementsLoop() {
+    // передаем управление каждому элементу конфигурации для выполнения своих функций
+    for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        (*it)->loop();
+
+        // if ((*it)->iAmDead) {
+        if (!((*it)->iAmLocal) && (*it)->getIntFromNet() == -1) {
+            delete *it;
+            IoTItems.erase(it);
+            break;
+        }
+    }
+
+    handleOrder();
+    handleEvent();
+}
+
+
 void setup() {
     Serial.begin(115200);
     Serial.flush();
@@ -33,6 +53,24 @@ void setup() {
     // синхронизация глобальных переменных с flash
     globalVarsSync();
 
+    
+    
+
+
+    // настраиваем микроконтроллер
+    configure("/config.json");
+    
+    // подготавливаем сценарии
+    iotScen.loadScenario("/scenario.txt");
+    
+    // создаем событие завершения инициализации основных моментов для возможности выполнения блока кода при загрузке
+    createItemFromNet("onInit", "1", 1);
+
+    elementsLoop();
+    
+    
+    
+    
     // подключаемся к роутеру
     routerConnect();
 
@@ -75,8 +113,7 @@ void setup() {
         SerialPrint("i", "i2c", F("i2c pins overriding done"));
     }
 
-    // настраиваем микроконтроллер
-    configure("/config.json");
+    
 
     // инициализация задач переодического выполнения
     periodicTasksInit();
@@ -86,9 +123,6 @@ void setup() {
 
     // запуск работы udp
     asyncUdpInit();
-
-    // подготавливаем сценарии
-    iotScen.loadScenario("/scenario.txt");
 
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
     createItemFromNet("onStart", "1", 1);
@@ -134,6 +168,8 @@ void setup() {
     // }
 }
 
+
+
 void loop() {
 #ifdef LOOP_DEBUG
     unsigned long st = millis();
@@ -151,20 +187,9 @@ void loop() {
 
     mqttLoop();
 
-    // передаем управление каждому элементу конфигурации для выполнения своих функций
-    for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-        (*it)->loop();
+    
+    elementsLoop();
 
-        // if ((*it)->iAmDead) {
-        if (!((*it)->iAmLocal) && (*it)->getIntFromNet() == -1) {
-            delete *it;
-            IoTItems.erase(it);
-            break;
-        }
-    }
-
-    handleOrder();
-    handleEvent();
 
     // #ifdef LOOP_DEBUG
     //     loopPeriod = millis() - st;
