@@ -58,3 +58,9 @@ void IoTGpio::digitalInvert(uint8_t pin) {
 void IoTGpio::regDriver(IoTGpio* newDriver) {
     _drivers[newDriver->index] = newDriver;
 }
+
+void IoTGpio::clearDrivers() {
+    for (int i=0; i<5; i++) {
+        _drivers[i] = nullptr;
+    }
+}
