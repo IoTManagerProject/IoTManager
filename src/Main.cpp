@@ -110,7 +110,7 @@ void setup() {
     ntpInit();
 
     // инициализация mqtt
-    mqttInit();
+    //mqttInit();
 
     
 
