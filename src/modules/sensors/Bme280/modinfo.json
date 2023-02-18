@@ -6,7 +6,7 @@
             "name": "BME280 Температура",
             "type": "Reading",
             "subtype": "Bme280t",
-            "id": "tmp3",
+            "id": "Tmp3",
             "widget": "anydataTmp",
             "page": "Сенсоры",
             "descr": "Температура",
@@ -39,6 +39,19 @@
             "int": 15,
             "addr": "0x77",
             "round": 1
+        },
+        {
+            "global": 0,
+            "name": "BME280 Tочка росы",
+            "type": "Reading",
+            "subtype": "Bme280dp",
+            "id": "Dew3",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "Точка росы",
+            "int": 15,
+            "addr": "0x77",
+            "round": 1
         }
     ],
     "about": {
@@ -55,12 +68,13 @@
         "subTypes": [
             "Bme280t",
             "Bme280p",
-            "Bme280h"
+            "Bme280h",
+            "Bme280dp"
         ],
-        "title": "Сенсор температуры, давления и влажности с Bme280",
-        "moduleDesc": "Позволяет получить значения температуры, давления и влажности с Bme280.",
+        "title": "Сенсор температуры, давления, влажности и точки росы с Bme280",
+        "moduleDesc": "Позволяет получить значения температуры, давления, влажности и точки росы с Bme280.",
         "propInfo": {
-            "addr": "Адрес датчика на шине, обычно 0x77.",
+            "addr": "Адрес датчика на шине, обычно 0x77. Для стабильности надо пин SDO притянуть к 3.3В. Если пин SDO притянуть к GND то адрес будет 0х76",
             "int": "Количество секунд между опросами датчика."
         }
     },
@@ -70,18 +84,6 @@
             "adafruit/Adafruit BME280 Library"
         ],
         "esp8266_4mb": [
-            "adafruit/Adafruit BME280 Library"
-        ],
-        "esp8266_1mb": [
-            "adafruit/Adafruit BME280 Library"
-        ],
-        "esp8266_1mb_ota": [
-            "adafruit/Adafruit BME280 Library"
-        ],
-        "esp8285_1mb": [
-            "adafruit/Adafruit BME280 Library"
-        ],
-        "esp8285_1mb_ota": [
             "adafruit/Adafruit BME280 Library"
         ]
     }
