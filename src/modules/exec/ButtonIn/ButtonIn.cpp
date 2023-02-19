@@ -26,9 +26,9 @@ class ButtonIn : public IoTItem {
         _round = 0;
         //Serial.printf("vvvvvvvvvvvvvvvv =%d \n", _fixState);
         
-        IoTgpio.pinMode(_pin, INPUT);
-        if (_pinMode == "INPUT_PULLUP") IoTgpio.digitalWrite(_pin, HIGH);
-        else if (_pinMode == "INPUT_PULLDOWN") IoTgpio.digitalWrite(_pin, LOW);
+        if (_pinMode == "INPUT") IoTgpio.pinMode(_pin, INPUT);
+        else if (_pinMode == "INPUT_PULLDOWN") {IoTgpio.pinMode(_pin, INPUT); IoTgpio.digitalWrite(_pin, LOW);}
+        else if (_pinMode == "INPUT_PULLUP") IoTgpio.pinMode(_pin, INPUT_PULLUP);
 
         value.valD = _buttonState = IoTgpio.digitalRead(_pin);
         // сообщаем всем о стартовом статусе без генерации события
