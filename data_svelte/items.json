@@ -727,23 +727,7 @@
     },
     {
         "global": 0,
-        "name": "49. LCD Dwin экран",
-        "type": "Reading",
-        "subtype": "DwinI",
-        "id": "dwin",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        "int": 15,
-        "TX": 17,
-        "RX": 16,
-        "line": 2,
-        "speed": 115200,
-        "num": 49
-    },
-    {
-        "global": 0,
-        "name": "50. LCD экран 2004",
+        "name": "49. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -755,10 +739,10 @@
         "size": "20,4",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 50
+        "num": 49
     },
     {
-        "name": "51. LCD экран 1602",
+        "name": "50. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -770,6 +754,6 @@
         "size": "16,2",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 51
+        "num": 50
     }
 ]

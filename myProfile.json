@@ -105,6 +105,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/ExternalMQTT",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/FreqMeter",
                 "active": false
             },
@@ -147,6 +151,10 @@
             {
                 "path": "src/modules/sensors/RCswitch",
                 "active": false
+            },
+            {
+                "path": "src/modules/sensors/RTC",
+                "active": true
             },
             {
                 "path": "src/modules/sensors/Sds011",
