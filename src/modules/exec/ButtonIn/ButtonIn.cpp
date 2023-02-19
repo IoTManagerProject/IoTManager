@@ -7,30 +7,29 @@ extern IoTGpio IoTgpio;
 class ButtonIn : public IoTItem {
    private:
     int _pin;
-    bool _execLevel;
-    int _fixState;
-    String _pinMode;
-    int _lastButtonState = LOW;
+    bool _execLevel, _fixState, _inv, _buttonState, _reading;
+    bool _lastButtonState = LOW;
     unsigned long _lastDebounceTime = 0;
-    long _debounceDelay = 50;
-    int _buttonState;
-    int _reading;
+    int _debounceDelay = 50;
 
    public:
     ButtonIn(String parameters): IoTItem(parameters) {
-        jsonRead(parameters, "pin", _pin);
-        jsonRead(parameters, "execLevel", _execLevel);
-        jsonRead(parameters, "pinMode", _pinMode);
-        jsonRead(parameters, "debounceDelay", _debounceDelay);
-        jsonRead(parameters, "fixState", _fixState);
-        _round = 0;
-        //Serial.printf("vvvvvvvvvvvvvvvv =%d \n", _fixState);
-        
-        if (_pinMode == "INPUT") IoTgpio.pinMode(_pin, INPUT);
-        else if (_pinMode == "INPUT_PULLDOWN") {IoTgpio.pinMode(_pin, INPUT); IoTgpio.digitalWrite(_pin, LOW);}
-        else if (_pinMode == "INPUT_PULLUP") IoTgpio.pinMode(_pin, INPUT_PULLUP);
+        String _pinMode;
 
+        jsonRead(parameters, F("inv"), _inv);
+        jsonRead(parameters, F("pin"), _pin);
+        jsonRead(parameters, F("execLevel"), _execLevel);
+        jsonRead(parameters, F("pinMode"), _pinMode);
+        jsonRead(parameters, F("debounceDelay"), _debounceDelay);
+        jsonRead(parameters, F("fixState"), _fixState);
+        _round = 0;
+        
+        if (_pinMode == F("INPUT")) IoTgpio.pinMode(_pin, INPUT);
+        else if (_pinMode == F("INPUT_PULLUP")) IoTgpio.pinMode(_pin, INPUT_PULLUP);
+        else if (_pinMode == F("INPUT_PULLDOWN")) {IoTgpio.pinMode(_pin, INPUT); IoTgpio.digitalWrite(_pin, LOW);}
+        
         value.valD = _buttonState = IoTgpio.digitalRead(_pin);
+        if (_inv) value.valD = _buttonState = !_buttonState;    // инвертируем, если нужно показания
         // сообщаем всем о стартовом статусе без генерации события
         regEvent(_buttonState, "", false, false);
     }
@@ -48,17 +47,13 @@ class ButtonIn : public IoTItem {
 
                 if (_fixState == 1 && _buttonState == _execLevel) {
                     value.valD = !value.valD;
-                    regEvent(value.valD, "ButtonIn"); 
-                }
-
-                if (_fixState == 2) {
-                    value.valD = !value.valD;
-                    regEvent(value.valD, "ButtonIn"); 
+                    regEvent(value.valD, F("ButtonIn")); 
                 }
                 
                 if (_fixState == 0) {
                     value.valD = _buttonState;
-                    regEvent(value.valD, "ButtonIn");
+                    if (_inv) value.valD = !_buttonState;    // инвертируем, если нужно показания
+                    regEvent(value.valD, F("ButtonIn"));
                 }
             }
         }
@@ -68,7 +63,7 @@ class ButtonIn : public IoTItem {
 
     void setValue(const IoTValue& Value, bool genEvent = true) {
         value = Value;
-        regEvent((String)(int)value.valD, "ButtonIn", false, genEvent);
+        regEvent((String)(int)value.valD, F("ButtonIn"), false, genEvent);
     }
 
     String getValue() {

@@ -15,6 +15,7 @@ void* getAPI_Bmp280(String subtype, String params);
 void* getAPI_Dht1122(String subtype, String params);
 void* getAPI_Ds18b20(String subtype, String params);
 void* getAPI_Pzem004(String subtype, String params);
+void* getAPI_RTC(String subtype, String params);
 void* getAPI_Sht20(String subtype, String params);
 void* getAPI_Sht30(String subtype, String params);
 void* getAPI_Sonar(String subtype, String params);
@@ -28,6 +29,7 @@ void* getAPI_Multitouch(String subtype, String params);
 void* getAPI_Pcf8574(String subtype, String params);
 void* getAPI_Pwm8266(String subtype, String params);
 void* getAPI_TelegramLT(String subtype, String params);
+void* getAPI_DwinI(String subtype, String params);
 void* getAPI_Lcd2004(String subtype, String params);
 
 void* getAPI(String subtype, String params) {
@@ -47,6 +49,7 @@ if ((tmpAPI = getAPI_Bmp280(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Dht1122(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Ds18b20(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Pzem004(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_RTC(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Sht20(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Sht30(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Sonar(subtype, params)) != nullptr) return tmpAPI;
@@ -60,6 +63,7 @@ if ((tmpAPI = getAPI_Multitouch(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Pcf8574(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Pwm8266(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_TelegramLT(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_DwinI(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Lcd2004(subtype, params)) != nullptr) return tmpAPI;
 return nullptr;
 }
