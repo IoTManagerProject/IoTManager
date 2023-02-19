@@ -10,6 +10,26 @@ String volStrForSave = "";
 unsigned long currentMillis;
 unsigned long prevMillis;
 
+
+
+void elementsLoop() {
+    // передаем управление каждому элементу конфигурации для выполнения своих функций
+    for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        (*it)->loop();
+
+        // if ((*it)->iAmDead) {
+        if (!((*it)->iAmLocal) && (*it)->getIntFromNet() == -1) {
+            delete *it;
+            IoTItems.erase(it);
+            break;
+        }
+    }
+
+    handleOrder();
+    handleEvent();
+}
+
+
 void setup() {
     Serial.begin(115200);
     Serial.flush();
@@ -33,6 +53,40 @@ void setup() {
     // синхронизация глобальных переменных с flash
     globalVarsSync();
 
+    
+
+
+    // настраиваем микроконтроллер
+    configure("/config.json");
+
+    // настраиваем i2c шину
+    int i2c, pinSCL, pinSDA, i2cFreq;
+    jsonRead(settingsFlashJson, "pinSCL", pinSCL, false);
+    jsonRead(settingsFlashJson, "pinSDA", pinSDA, false);
+    jsonRead(settingsFlashJson, "i2cFreq", i2cFreq, false);
+    jsonRead(settingsFlashJson, "i2c", i2c, false);
+    if (i2c != 0) {
+#ifdef esp32_4mb
+        Wire.end();
+        Wire.begin(pinSDA, pinSCL, (uint32_t)i2cFreq);
+#else
+        Wire.begin(pinSDA, pinSCL);
+        Wire.setClock(i2cFreq);
+#endif
+        SerialPrint("i", "i2c", F("i2c pins overriding done"));
+    }
+    
+    // подготавливаем сценарии
+    iotScen.loadScenario("/scenario.txt");
+    
+    // создаем событие завершения инициализации основных моментов для возможности выполнения блока кода при загрузке
+    createItemFromNet("onInit", "1", 1);
+
+    elementsLoop();
+    
+    
+    
+    
     // подключаемся к роутеру
     routerConnect();
 
@@ -56,27 +110,9 @@ void setup() {
     ntpInit();
 
     // инициализация mqtt
-    mqttInit();
+    //mqttInit();
 
-    // настраиваем i2c шину
-    int i2c, pinSCL, pinSDA, i2cFreq;
-    jsonRead(settingsFlashJson, "pinSCL", pinSCL, false);
-    jsonRead(settingsFlashJson, "pinSDA", pinSDA, false);
-    jsonRead(settingsFlashJson, "i2cFreq", i2cFreq, false);
-    jsonRead(settingsFlashJson, "i2c", i2c, false);
-    if (i2c != 0) {
-#ifdef esp32_4mb
-        Wire.end();
-        Wire.begin(pinSDA, pinSCL, (uint32_t)i2cFreq);
-#else
-        Wire.begin(pinSDA, pinSCL);
-        Wire.setClock(i2cFreq);
-#endif
-        SerialPrint("i", "i2c", F("i2c pins overriding done"));
-    }
-
-    // настраиваем микроконтроллер
-    configure("/config.json");
+    
 
     // инициализация задач переодического выполнения
     periodicTasksInit();
@@ -86,9 +122,6 @@ void setup() {
 
     // запуск работы udp
     asyncUdpInit();
-
-    // подготавливаем сценарии
-    iotScen.loadScenario("/scenario.txt");
 
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
     createItemFromNet("onStart", "1", 1);
@@ -116,23 +149,9 @@ void setup() {
     // test
     Serial.println("-------test start--------");
     Serial.println("--------test end---------");
-
-    // симуляция добавления внешних событий
-    // IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"rel1\",\"val\":10,\"int\":20}"));
-    // IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"rel4\",\"val\":34,\"int\":30}"));
-    // пример получения JSON всех Items
-    // Serial.println(getParamsJson());
-    // чтение одного параметра
-    // Serial.println(findIoTItem("t1")->getValue());
-    // тест перебора пинов из расширения
-    // for (int i = 109; i < 112; i++) {
-    //     IoTgpio.pinMode(i, OUTPUT);
-    //     IoTgpio.digitalWrite(i, !IoTgpio.digitalRead(i));
-    //     delay(1000);
-    //     IoTgpio.digitalWrite(i, !IoTgpio.digitalRead(i));
-    //     delay(1000);
-    // }
 }
+
+
 
 void loop() {
 #ifdef LOOP_DEBUG
@@ -151,20 +170,9 @@ void loop() {
 
     mqttLoop();
 
-    // передаем управление каждому элементу конфигурации для выполнения своих функций
-    for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-        (*it)->loop();
+    
+    elementsLoop();
 
-        // if ((*it)->iAmDead) {
-        if (!((*it)->iAmLocal) && (*it)->getIntFromNet() == -1) {
-            delete *it;
-            IoTItems.erase(it);
-            break;
-        }
-    }
-
-    handleOrder();
-    handleEvent();
 
     // #ifdef LOOP_DEBUG
     //     loopPeriod = millis() - st;

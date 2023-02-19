@@ -15,6 +15,7 @@ class IoTGpio {
 
         int index;
         void regDriver(IoTGpio* newDriver);
+        void clearDrivers();
 
     private:
         IoTGpio* _drivers[5] = {nullptr};  //ссылки на объекты доступа к портам более 100, 200, 300, 400. Нулевой элемент используется как маркер - и возвращается nullptr при обращении

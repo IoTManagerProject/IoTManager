@@ -29,7 +29,8 @@ homeDir = os.path.expanduser('~')
 os.system(homeDir + "\.platformio\penv\Scripts\pio run")
 os.system(homeDir + "\.platformio\penv\Scripts\pio run -t buildfs --disable-auto-clean")
 
-if copyFileIfExist("firmware.bin", deviceName) and copyFileIfExist("littlefs.bin", deviceName) and copyFileIfExist("partitions.bin", deviceName):
+if copyFileIfExist("firmware.bin", deviceName) and copyFileIfExist("littlefs.bin", deviceName):
+    copyFileIfExist("partitions.bin", deviceName)
     versionsJson = json.loads('{"' + deviceName + '": {"0": "400"}}')
     with open("iotm/ver.json", "w", encoding='utf-8') as write_file:
         json.dump(versionsJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)    

@@ -28,6 +28,7 @@ void routerConnect() {
             SerialPrint("E", "WIFI", "password is not correct");
             tries = 1;
             jsonWriteInt(errorsHeapJson, "passer", 1);
+            break;
         }
         Serial.print(".");
         delay(1000);

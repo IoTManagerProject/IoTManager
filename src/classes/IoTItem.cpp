@@ -173,7 +173,7 @@ void IoTItem::checkIntFromNet() {
     if (_intFromNet >= 0) {
         // если время жизни истекло, то удаляем элемент чуть позже на следующем такте loop
         // если это было уведомление не об ошибке или начале работы, то сообщаем, что сетевое событие давно не приходило
-        if (_intFromNet == 0 && _id.indexOf("onError") == -1 && _id.indexOf("onStart") == -1) {
+        if (_intFromNet == 0 && _id.indexOf("onError") == -1 && _id.indexOf("onStart") == -1 && _id.indexOf("onInit") == -1) {
             SerialPrint("E", _id, "The new data did not come from the network. The level of trust is low.", _id);
         }
         _intFromNet--;
@@ -206,6 +206,14 @@ void IoTItem::setInterval(long interval) {
 
 IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
+}
+
+IoTItem* IoTItem::getRtcDriver() {
+    return nullptr;
+}
+
+ulong IoTItem::getRtcUnixTime() {
+    return 0;
 }
 
 // сетевое общение====================================================================================================================================

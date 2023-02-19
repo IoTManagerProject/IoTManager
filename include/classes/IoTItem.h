@@ -46,6 +46,9 @@ class IoTItem {
     bool enableDoByInt = true;
 
     virtual IoTGpio* getGpioDriver();
+    virtual IoTItem* getRtcDriver();
+    virtual ulong getRtcUnixTime();
+
     virtual void setValue(const IoTValue& Value, bool genEvent = true);
     virtual void setValue(const String& valStr, bool genEvent = true);
     String getRoundValue();
