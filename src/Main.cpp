@@ -30,7 +30,61 @@ void elementsLoop() {
 }
 
 
+
+
+#define SETUPBASE_ERRORMARKER   0
+#define SETUPCONF_ERRORMARKER   1
+#define SETUPSCEN_ERRORMARKER   2
+#define SETUPINET_ERRORMARKER   3
+#define SETUPLAST_ERRORMARKER   4
+#define TICKER_ERRORMARKER      5
+#define HTTP_ERRORMARKER        6
+#define SOCKETS_ERRORMARKER     7
+#define MQTT_ERRORMARKER        8
+#define MODULES_ERRORMARKER     9
+
+#define COUNTER_ERRORMARKER     9       // количество шагов счетчика
+#define STEPPER_ERRORMARKER     100000  // размер шага счетчика интервала доверия выполнения блока кода мкс
+
+int initErrorMarkerId = 0;  // ИД маркера 
+int errorMarkerId = 0;
+unsigned long errorMarkerCounter = 0;
+
+hw_timer_t *My_timer = NULL;
+void IRAM_ATTR onTimer(){
+    if (errorMarkerCounter >= 0) {
+        if (errorMarkerCounter >= COUNTER_ERRORMARKER) {
+            errorMarkerId = initErrorMarkerId;
+            errorMarkerCounter = -1;
+        } else 
+            errorMarkerCounter++;
+    } 
+}
+
+void initErrorMarker(int id) {
+    initErrorMarkerId = id;
+    errorMarkerCounter = 0;
+}
+
+void stopErrorMarker(int id) {
+    errorMarkerCounter = -1;
+    if (errorMarkerId) 
+    SerialPrint("I", "WARNING!", "A lazy (freezing loop more than " + (String)(COUNTER_ERRORMARKER * STEPPER_ERRORMARKER / 1000) + " ms) section has been found! With ID=" + (String)errorMarkerId);
+    errorMarkerId = 0;
+    initErrorMarkerId = 0;
+}
+
+
+
 void setup() {
+    My_timer = timerBegin(0, 80, true);
+    timerAttachInterrupt(My_timer, &onTimer, true);
+    timerAlarmWrite(My_timer, STEPPER_ERRORMARKER, true);
+    timerAlarmEnable(My_timer);
+    //timerAlarmDisable(My_timer);
+
+    initErrorMarker(SETUPBASE_ERRORMARKER);
+
     Serial.begin(115200);
     Serial.flush();
     Serial.println();
@@ -53,8 +107,11 @@ void setup() {
     // синхронизация глобальных переменных с flash
     globalVarsSync();
 
-    
+    stopErrorMarker(SETUPBASE_ERRORMARKER);
 
+
+
+    initErrorMarker(SETUPCONF_ERRORMARKER);
 
     // настраиваем микроконтроллер
     configure("/config.json");
@@ -76,17 +133,24 @@ void setup() {
         SerialPrint("i", "i2c", F("i2c pins overriding done"));
     }
     
+    stopErrorMarker(SETUPCONF_ERRORMARKER);
+
+
+
+    initErrorMarker(SETUPSCEN_ERRORMARKER);
+    
     // подготавливаем сценарии
     iotScen.loadScenario("/scenario.txt");
-    
     // создаем событие завершения инициализации основных моментов для возможности выполнения блока кода при загрузке
     createItemFromNet("onInit", "1", 1);
-
     elementsLoop();
     
+    stopErrorMarker(SETUPSCEN_ERRORMARKER);
     
+
     
-    
+    initErrorMarker(SETUPINET_ERRORMARKER);
+
     // подключаемся к роутеру
     routerConnect();
 
@@ -106,13 +170,14 @@ void setup() {
     standWebSocketsInit();
 #endif
 
+    stopErrorMarker(SETUPINET_ERRORMARKER);
+
+
+
+    initErrorMarker(SETUPLAST_ERRORMARKER);
+
     // NTP
     ntpInit();
-
-    // инициализация mqtt
-    //mqttInit();
-
-    
 
     // инициализация задач переодического выполнения
     periodicTasksInit();
@@ -149,6 +214,8 @@ void setup() {
     // test
     Serial.println("-------test start--------");
     Serial.println("--------test end---------");
+
+    stopErrorMarker(SETUPLAST_ERRORMARKER);
 }
 
 
@@ -158,21 +225,29 @@ void loop() {
     unsigned long st = millis();
 #endif
 
+    initErrorMarker(TICKER_ERRORMARKER);
     ts.update();
+    stopErrorMarker(TICKER_ERRORMARKER);
 
 #ifdef STANDARD_WEB_SERVER
+    initErrorMarker(HTTP_ERRORMARKER);
     HTTP.handleClient();
+    stopErrorMarker(HTTP_ERRORMARKER);
 #endif
 
 #ifdef STANDARD_WEB_SOCKETS
+    initErrorMarker(SOCKETS_ERRORMARKER);
     standWebSocket.loop();
+    stopErrorMarker(SOCKETS_ERRORMARKER);
 #endif
 
+    initErrorMarker(MQTT_ERRORMARKER);
     mqttLoop();
-
+    stopErrorMarker(MQTT_ERRORMARKER);
     
+    initErrorMarker(MODULES_ERRORMARKER);
     elementsLoop();
-
+    stopErrorMarker(MODULES_ERRORMARKER);
 
     // #ifdef LOOP_DEBUG
     //     loopPeriod = millis() - st;
