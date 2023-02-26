@@ -16,7 +16,7 @@ class Loging : public IoTItem {
     int _wsNum = -1;
 
     int points;
-    int keepdays;
+    //int keepdays;
 
     IoTItem *dateIoTItem;
 
@@ -36,12 +36,12 @@ class Loging : public IoTItem {
         }
         jsonRead(parameters, F("int"), interval);
         interval = interval * 1000 * 60;  // приводим к милисекундам
-        jsonRead(parameters, F("keepdays"), keepdays);
+        //jsonRead(parameters, F("keepdays"), keepdays, false);
 
         // создадим экземпляр класса даты
         dateIoTItem = (IoTItem *)getAPI_Date("{\"id\": \"" + id + "-date\",\"int\":\"20\",\"subtype\":\"date\"}");
         IoTItems.push_back(dateIoTItem);
-        SerialPrint("E", F("Loging"), "created date instance " + id);
+        SerialPrint("I", F("Loging"), "created date instance " + id);
     }
 
     void doByInterval() {
