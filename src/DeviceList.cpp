@@ -36,7 +36,7 @@ void asyncUdpInit() {
             // Serial.print(packet.length());
             // Serial.print(", Data: ");
             // Serial.write(packet.data(), packet.length());
-            String data = uint8tToString(packet.data(), packet.length());
+            String data = {packet.data(), packet.length()};
             String remoteWorkgroup = "";
             data.replace("[", "");
             data.replace("]", "");
@@ -121,11 +121,4 @@ void jsonMergeArrays(String& existJson, String& incJson) {
     existJson = outArr;
 }
 
-String uint8tToString(uint8_t* data, size_t len) {
-    String ret;
-    while (len--) {
-        ret += (char)*data++;
-    }
-    return ret;
-}
 #endif

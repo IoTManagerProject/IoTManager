@@ -12,6 +12,5 @@ extern AsyncUDP asyncUdp;
 extern const String getThisDevice();
 extern void addThisDeviceToList();
 extern void asyncUdpInit();
-extern String uint8tToString(uint8_t* data, size_t len);
 extern void udpPacketParse(String& data);
 extern void jsonMergeArrays(String& existJson, String& incJson);
