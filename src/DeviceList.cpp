@@ -37,12 +37,16 @@ void asyncUdpInit() {
             // Serial.print(", Data: ");
             // Serial.write(packet.data(), packet.length());
             String data = uint8tToString(packet.data(), packet.length());
-            // Serial.println(data);
-            if (udpPacketValidation(data)) {
-                SerialPrint("i", F("UDP"), "IP: " + packet.remoteIP().toString() + ":" + String(packet.remotePort()));
-                // Serial.println(data);
-                jsonMergeArrays(devListHeapJson, data);
-                // Serial.println(devListHeapJson);
+            String remoteWorkgroup = "";
+            data.replace("[", "");
+            data.replace("]", "");
+            if (jsonRead(data, F("wg"), remoteWorkgroup)) {    // проверяем чтоб полученный формат был Json и заодно вытягиваем имя группы
+                String loacalWorkgroup = "";
+                jsonRead(settingsFlashJson, F("wg"), loacalWorkgroup);  
+                if (remoteWorkgroup == loacalWorkgroup) {
+                    SerialPrint("i", F("UDP"), "IP: " + packet.remoteIP().toString() + ":" + String(packet.remotePort()));
+                    jsonMergeArrays(devListHeapJson, data);
+                }
             } else {
                 SerialPrint("E", F("UDP"), F("Udp packet invalid"));
             }
@@ -66,16 +70,6 @@ void asyncUdpInit() {
         nullptr, true);
 
     SerialPrint("i", F("UDP"), F("Udp Init"));
-}
-
-bool udpPacketValidation(String& data) {
-    // SerialPrint("i", F("UDP"), data);
-    String workgroup = jsonReadStr(settingsFlashJson, "wg");
-    if (workgroup != "" && data.indexOf(workgroup) != -1) {
-        return true;
-    } else {
-        return false;
-    }
 }
 
 void jsonMergeArrays(String& existJson, String& incJson) {
