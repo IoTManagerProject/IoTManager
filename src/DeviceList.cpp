@@ -75,23 +75,23 @@ void asyncUdpInit() {
 void jsonMergeArrays(String& existJson, String& incJson) {
     DynamicJsonDocument incJsonDoc(1024);
     DeserializationError incJsonError = deserializeJson(incJsonDoc, incJson);
-    if (incJsonError) {
-        SerialPrint("E", F("UDP"), "Invailed json in incomming udp packet " + String(incJsonError.f_str()));
-        jsonErrorDetected();
-        return;
-    }
+    // if (incJsonError) {  // upd: devlist заведомо верный, зачем проверять еще раз?
+    //     SerialPrint("E", F("UDP"), "Invailed json in incomming udp packet " + String(incJsonError.f_str()));
+    //     jsonErrorDetected();
+    //     return;
+    // }
 
     DynamicJsonDocument existJsonDoc(1024);
     DeserializationError existJsonError = deserializeJson(existJsonDoc, existJson);
-    if (existJsonError) {
-        SerialPrint("E", F("UDP"), "Invailed json in existing udp dev list " + String(incJsonError.f_str()));
-        jsonErrorDetected();
-        return;
-    }
+    // if (existJsonError) {    // upd: полученный json уже проверен на целостность
+    //     SerialPrint("E", F("UDP"), "Invailed json in existing udp dev list " + String(incJsonError.f_str()));
+    //     jsonErrorDetected();
+    //     return;
+    // }
     JsonArray existJsonArr = existJsonDoc.as<JsonArray>();
 
-    incJson.replace("[", "");
-    incJson.replace("]", "");
+    // incJson.replace("[", "");    // upd: уже исключены символы ранее при получении пакета
+    // incJson.replace("]", "");
     String incIP = jsonReadStr(incJson, "ip");
     String outArr = "[";
     bool ipExistInList = false;
