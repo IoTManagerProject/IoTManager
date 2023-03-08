@@ -9,11 +9,16 @@ class RCswitch : public IoTItem {
    private:
     int _pinRx; // Выход радио модуля
     int _pinTx; // Выход модуля передатчика
+    int _intRepeat = 6;
+    int _repeatCount = 0;
+    unsigned long _oldValue = 0;
+    unsigned long _newValue = 0;
 
    public:
     RCswitch(String parameters): IoTItem(parameters) {
         jsonRead(parameters, "pinRx", _pinRx);
         jsonRead(parameters, "pinTx", _pinTx);
+        jsonRead(parameters, "intRepeat", _intRepeat);
         _interval = _interval / 1000;   // корректируем величину интервала int, теперь он в миллисекундах
         if (_pinRx >= 0) {
             Serial.printf("Protocol: %d", _pinRx);
@@ -32,11 +37,19 @@ class RCswitch : public IoTItem {
             // Serial.print("bit ");
             // Serial.print("Protocol: ");
             // Serial.println( mySwitch.getReceivedProtocol() );
-            value.valD = mySwitch.getReceivedValue();
-            regEvent(value.valD, "RCswitch");                         
-       
+
+            _newValue = mySwitch.getReceivedValue();
+            if (_newValue != _oldValue || _repeatCount > _intRepeat) {                
+                value.valD = _newValue;
+                regEvent(value.valD, "RCswitch");
+                _oldValue = _newValue;
+                _repeatCount = 0;
+            }
+
             mySwitch.resetAvailable();
         }
+
+        if (_repeatCount <= _intRepeat) _repeatCount++;
     }
 
     IoTValue execute(String command, std::vector<IoTValue> &param) {

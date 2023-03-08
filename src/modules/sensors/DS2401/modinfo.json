@@ -1,0 +1,51 @@
+{
+    "menuSection": "Сенсоры",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Сканер DS2401 меток",
+            "type": "Reading",
+            "subtype": "DS2401",
+            "id": "rds",
+            "int": 100,
+            "intRepeat": 6,
+            "pin": 12
+        }
+    ],
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "DS2401",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "Сканер DS2401 меток",
+        "moduleDesc": "Ожидает появления на шине 1-wire метки DS2401",
+        "propInfo": {
+            "pin": "GPIO номер, к которому подключена шина 1-Wire с подтяжкой 4,7к",
+            "int": "Количество миллисекунд между опросами шины. 0 - выключено.",
+            "intRepeat": "Количество интервалов int пропускаем повторы, т.е. при int=100 и intRepeat=6, первые 600мс игнорируем одинаковые адреса меток."
+        },
+        "retInfo": "Содержит 64-битный адрес метки в формате HEX строки",
+        "funcInfo": []
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [
+        ],
+        "esp8266_4mb": [
+        ],
+        "esp8266_1mb": [
+        ],
+        "esp8266_1mb_ota": [
+        ],
+        "esp8285_1mb": [
+        ],
+        "esp8285_1mb_ota": [
+        ]
+    }
+}

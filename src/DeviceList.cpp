@@ -36,13 +36,19 @@ void asyncUdpInit() {
             // Serial.print(packet.length());
             // Serial.print(", Data: ");
             // Serial.write(packet.data(), packet.length());
+            
+            //String data = {packet.data(), packet.length()}; // для ESP32 подходит как замена uint8tToString, но 8266 не переваривает
             String data = uint8tToString(packet.data(), packet.length());
-            // Serial.println(data);
-            if (udpPacketValidation(data)) {
-                SerialPrint("i", F("UDP"), "IP: " + packet.remoteIP().toString() + ":" + String(packet.remotePort()));
-                // Serial.println(data);
-                jsonMergeArrays(devListHeapJson, data);
-                // Serial.println(devListHeapJson);
+            String remoteWorkgroup = "";
+            data.replace("[", "");
+            data.replace("]", "");
+            if (jsonRead(data, F("wg"), remoteWorkgroup)) {    // проверяем чтоб полученный формат был Json и заодно вытягиваем имя группы
+                String loacalWorkgroup = "";
+                jsonRead(settingsFlashJson, F("wg"), loacalWorkgroup);  
+                if (remoteWorkgroup == loacalWorkgroup) {
+                    SerialPrint("i", F("UDP"), "IP: " + packet.remoteIP().toString() + ":" + String(packet.remotePort()));
+                    jsonMergeArrays(devListHeapJson, data);
+                }
             } else {
                 SerialPrint("E", F("UDP"), F("Udp packet invalid"));
             }
@@ -68,36 +74,26 @@ void asyncUdpInit() {
     SerialPrint("i", F("UDP"), F("Udp Init"));
 }
 
-bool udpPacketValidation(String& data) {
-    // SerialPrint("i", F("UDP"), data);
-    String workgroup = jsonReadStr(settingsFlashJson, "wg");
-    if (workgroup != "" && data.indexOf(workgroup) != -1) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 void jsonMergeArrays(String& existJson, String& incJson) {
     DynamicJsonDocument incJsonDoc(1024);
     DeserializationError incJsonError = deserializeJson(incJsonDoc, incJson);
-    if (incJsonError) {
-        SerialPrint("E", F("UDP"), "Invailed json in incomming udp packet " + String(incJsonError.f_str()));
-        jsonErrorDetected();
-        return;
-    }
+    // if (incJsonError) {  // upd: devlist заведомо верный, зачем проверять еще раз?
+    //     SerialPrint("E", F("UDP"), "Invailed json in incomming udp packet " + String(incJsonError.f_str()));
+    //     jsonErrorDetected();
+    //     return;
+    // }
 
     DynamicJsonDocument existJsonDoc(1024);
     DeserializationError existJsonError = deserializeJson(existJsonDoc, existJson);
-    if (existJsonError) {
-        SerialPrint("E", F("UDP"), "Invailed json in existing udp dev list " + String(incJsonError.f_str()));
-        jsonErrorDetected();
-        return;
-    }
+    // if (existJsonError) {    // upd: полученный json уже проверен на целостность
+    //     SerialPrint("E", F("UDP"), "Invailed json in existing udp dev list " + String(incJsonError.f_str()));
+    //     jsonErrorDetected();
+    //     return;
+    // }
     JsonArray existJsonArr = existJsonDoc.as<JsonArray>();
 
-    incJson.replace("[", "");
-    incJson.replace("]", "");
+    // incJson.replace("[", "");    // upd: уже исключены символы ранее при получении пакета
+    // incJson.replace("]", "");
     String incIP = jsonReadStr(incJson, "ip");
     String outArr = "[";
     bool ipExistInList = false;

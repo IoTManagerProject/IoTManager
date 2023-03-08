@@ -81,6 +81,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/sensors/BH_1750",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/Ble",
                 "active": false
             },
@@ -99,6 +103,10 @@
             {
                 "path": "src/modules/sensors/Ds18b20",
                 "active": true
+            },
+            {
+                "path": "src/modules/sensors/DS2401",
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Emon",
@@ -252,6 +260,10 @@
             }
         ],
         "Экраны": [
+            {
+                "path": "src/modules/display/DwinI",
+                "active": false
+            },
             {
                 "path": "src/modules/display/Lcd2004",
                 "active": true
