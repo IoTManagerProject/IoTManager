@@ -144,28 +144,11 @@
         "num": 9
     },
     {
-        "global": 0,
-        "name": "10. Погода",
-        "type": "Reading",
-        "subtype": "Weather",
-        "id": "Weather",
-        "needSave": 0,
-        "widget": "anydataDef",
-        "page": "Погода",
-        "descr": "",
-        "int": 3,
-        "location": "Moscow",
-        "param": "temp_C",
-        "round": 0,
-        "val": "...",
-        "num": 10
-    },
-    {
         "header": "Сенсоры"
     },
     {
         "global": 0,
-        "name": "11. Аналоговый сенсор",
+        "name": "10. Аналоговый сенсор",
         "type": "Reading",
         "subtype": "AnalogAdc",
         "id": "t",
@@ -179,11 +162,11 @@
         "pin": 0,
         "int": 15,
         "avgSteps": 1,
-        "num": 11
+        "num": 10
     },
     {
         "global": 0,
-        "name": "12. BMP280 Температура",
+        "name": "11. BMP280 Температура",
         "type": "Reading",
         "subtype": "Bmp280t",
         "id": "tmp3",
@@ -193,11 +176,11 @@
         "int": 15,
         "addr": "0x77",
         "round": 1,
-        "num": 12
+        "num": 11
     },
     {
         "global": 0,
-        "name": "13. BMP280 Давление",
+        "name": "12. BMP280 Давление",
         "type": "Reading",
         "subtype": "Bmp280p",
         "id": "Press3",
@@ -207,11 +190,11 @@
         "int": 15,
         "addr": "0x77",
         "round": 1,
-        "num": 13
+        "num": 12
     },
     {
         "global": 0,
-        "name": "14. DS18B20 Температура",
+        "name": "13. DS18B20 Температура",
         "type": "Reading",
         "subtype": "Ds18b20",
         "id": "dstmp",
@@ -223,34 +206,11 @@
         "index": 0,
         "addr": "",
         "round": 1,
-        "num": 14
+        "num": 13
     },
     {
         "global": 0,
-        "name": "15. Сканер DS2401 меток",
-        "type": "Reading",
-        "subtype": "DS2401",
-        "id": "rds",
-        "int": 100,
-        "intRepeat": 6,
-        "pin": 12,
-        "num": 15
-    },
-    {
-        "global": 0,
-        "name": "16. Сканер кнопок 433 MHz",
-        "num": 16,
-        "type": "Reading",
-        "subtype": "RCswitch",
-        "id": "rsw",
-        "int": 100,
-        "intRepeat": 6,
-        "pinRx": 12,
-        "pinTx": 12
-    },
-    {
-        "global": 0,
-        "name": "17. Часы реального времени",
+        "name": "14. Часы реального времени",
         "type": "Reading",
         "subtype": "RTC",
         "id": "rtc",
@@ -266,11 +226,11 @@
         "int": 5,
         "btn-setUTime": "0",
         "btn-setSysTime": "nil",
-        "num": 17
+        "num": 14
     },
     {
         "global": 0,
-        "name": "18. Sht20 Температура",
+        "name": "15. Sht20 Температура",
         "type": "Reading",
         "subtype": "Sht20t",
         "id": "tmp2",
@@ -279,11 +239,11 @@
         "descr": "Температура",
         "int": 15,
         "round": 1,
-        "num": 18
+        "num": 15
     },
     {
         "global": 0,
-        "name": "19. Sht20 Влажность",
+        "name": "16. Sht20 Влажность",
         "type": "Reading",
         "subtype": "Sht20h",
         "id": "Hum2",
@@ -292,11 +252,11 @@
         "descr": "Влажность",
         "int": 15,
         "round": 1,
-        "num": 19
+        "num": 16
     },
     {
         "global": 0,
-        "name": "20. Sht30 Температура",
+        "name": "17. Sht30 Температура",
         "type": "Reading",
         "subtype": "Sht30t",
         "id": "tmp30",
@@ -305,11 +265,11 @@
         "descr": "SHT30 Температура",
         "int": 15,
         "round": 1,
-        "num": 20
+        "num": 17
     },
     {
         "global": 0,
-        "name": "21. Sht30 Влажность",
+        "name": "18. Sht30 Влажность",
         "type": "Reading",
         "subtype": "Sht30h",
         "id": "Hum30",
@@ -318,12 +278,12 @@
         "descr": "SHT30 Влажность",
         "int": 15,
         "round": 1,
-        "num": 21
+        "num": 18
     },
     {
         "global": 0,
-        "name": "22. HC-SR04 Ультразвуковой дальномер",
-        "num": 22,
+        "name": "19. HC-SR04 Ультразвуковой дальномер",
+        "num": 19,
         "type": "Reading",
         "subtype": "Sonar",
         "id": "sonar",
@@ -339,7 +299,7 @@
     },
     {
         "global": 0,
-        "name": "23. Кнопка подключенная к пину",
+        "name": "20. Кнопка подключенная к пину",
         "type": "Writing",
         "subtype": "ButtonIn",
         "id": "btn",
@@ -354,11 +314,11 @@
         "debounceDelay": 50,
         "fixState": 0,
         "inv": 0,
-        "num": 23
+        "num": 20
     },
     {
         "global": 0,
-        "name": "24. Управление пином",
+        "name": "21. Управление пином",
         "type": "Writing",
         "subtype": "ButtonOut",
         "needSave": 0,
@@ -369,11 +329,11 @@
         "int": 0,
         "inv": 0,
         "pin": 2,
-        "num": 24
+        "num": 21
     },
     {
         "global": 0,
-        "name": "25. Расширитель портов Mcp23017",
+        "name": "22. Расширитель портов Mcp23017",
         "type": "Reading",
         "subtype": "Mcp23017",
         "id": "Mcp",
@@ -383,11 +343,11 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 25
+        "num": 22
     },
     {
         "global": 0,
-        "name": "26. Сенсорная кнопка",
+        "name": "23. Сенсорная кнопка",
         "type": "Writing",
         "subtype": "Multitouch",
         "id": "impulse",
@@ -401,11 +361,11 @@
         "pinMode": "INPUT",
         "debounceDelay": 50,
         "PWMDelay": 500,
-        "num": 26
+        "num": 23
     },
     {
         "global": 0,
-        "name": "27. Расширитель портов Pcf8574",
+        "name": "24. Расширитель портов Pcf8574",
         "type": "Reading",
         "subtype": "Pcf8574",
         "id": "Pcf",
@@ -415,11 +375,11 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 27
+        "num": 24
     },
     {
         "global": 0,
-        "name": "28. PWM ESP8266",
+        "name": "25. PWM ESP8266",
         "type": "Writing",
         "subtype": "Pwm8266",
         "id": "pwm",
@@ -431,11 +391,11 @@
         "freq": 5000,
         "val": 0,
         "apin": -1,
-        "num": 28
+        "num": 25
     },
     {
         "global": 0,
-        "name": "29. Телеграм-Лайт",
+        "name": "26. Телеграм-Лайт",
         "type": "Writing",
         "subtype": "TelegramLT",
         "id": "tg",
@@ -444,30 +404,14 @@
         "descr": "",
         "token": "",
         "chatID": "",
-        "num": 29
+        "num": 26
     },
     {
         "header": "Экраны"
     },
     {
         "global": 0,
-        "name": "30. LCD Dwin экран",
-        "type": "Reading",
-        "subtype": "DwinI",
-        "id": "dwin",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        "int": 15,
-        "TX": 17,
-        "RX": 16,
-        "line": 2,
-        "speed": 115200,
-        "num": 30
-    },
-    {
-        "global": 0,
-        "name": "31. LCD экран 2004",
+        "name": "27. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -479,10 +423,10 @@
         "size": "20,4",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 31
+        "num": 27
     },
     {
-        "name": "32. LCD экран 1602",
+        "name": "28. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -494,6 +438,6 @@
         "size": "16,2",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 32
+        "num": 28
     }
 ]
