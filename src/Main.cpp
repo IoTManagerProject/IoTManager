@@ -32,6 +32,7 @@ void elementsLoop() {
 
 
 
+
 #define SETUPBASE_ERRORMARKER   0
 #define SETUPCONF_ERRORMARKER   1
 #define SETUPSCEN_ERRORMARKER   2
@@ -43,12 +44,14 @@ void elementsLoop() {
 #define MQTT_ERRORMARKER        8
 #define MODULES_ERRORMARKER     9
 
-#define COUNTER_ERRORMARKER     9       // количество шагов счетчика
+#define COUNTER_ERRORMARKER     4       // количество шагов счетчика
 #define STEPPER_ERRORMARKER     100000  // размер шага счетчика интервала доверия выполнения блока кода мкс
 
-int initErrorMarkerId = 0;  // ИД маркера 
-int errorMarkerId = 0;
-unsigned long errorMarkerCounter = 0;
+#ifdef esp32_4mb
+
+static int IRAM_ATTR initErrorMarkerId = 0;  // ИД маркера 
+static int IRAM_ATTR errorMarkerId = 0;
+static int IRAM_ATTR errorMarkerCounter = 0;
 
 hw_timer_t *My_timer = NULL;
 void IRAM_ATTR onTimer(){
@@ -60,23 +63,30 @@ void IRAM_ATTR onTimer(){
             errorMarkerCounter++;
     } 
 }
+#endif
 
 void initErrorMarker(int id) {
+#ifdef esp32_4mb 
     initErrorMarkerId = id;
     errorMarkerCounter = 0;
+#endif
 }
 
 void stopErrorMarker(int id) {
+#ifdef esp32_4mb 
     errorMarkerCounter = -1;
     if (errorMarkerId) 
     SerialPrint("I", "WARNING!", "A lazy (freezing loop more than " + (String)(COUNTER_ERRORMARKER * STEPPER_ERRORMARKER / 1000) + " ms) section has been found! With ID=" + (String)errorMarkerId);
     errorMarkerId = 0;
     initErrorMarkerId = 0;
+#endif
 }
 
 
 
 void setup() {
+
+#ifdef esp32_4mb 
     My_timer = timerBegin(0, 80, true);
     timerAttachInterrupt(My_timer, &onTimer, true);
     timerAlarmWrite(My_timer, STEPPER_ERRORMARKER, true);
@@ -84,6 +94,7 @@ void setup() {
     //timerAlarmDisable(My_timer);
 
     initErrorMarker(SETUPBASE_ERRORMARKER);
+#endif
 
     Serial.begin(115200);
     Serial.flush();
