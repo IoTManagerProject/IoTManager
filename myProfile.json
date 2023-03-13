@@ -203,6 +203,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/exec/HttpGet",
+                "active": false
+            },
+            {
                 "path": "src/modules/exec/IoTServo",
                 "active": true
             },
