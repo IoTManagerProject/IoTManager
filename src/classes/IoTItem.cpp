@@ -216,7 +216,7 @@ IoTItem* IoTItem::getRtcDriver() {
     return nullptr;
 }
 
-ulong IoTItem::getRtcUnixTime() {
+unsigned long IoTItem::getRtcUnixTime() {
     return 0;
 }
 

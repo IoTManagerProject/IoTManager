@@ -48,7 +48,7 @@ class IoTItem {
 
     virtual IoTGpio* getGpioDriver();
     virtual IoTItem* getRtcDriver();
-    virtual ulong getRtcUnixTime();
+    virtual unsigned long getRtcUnixTime();
 
     virtual void setValue(const IoTValue& Value, bool genEvent = true);
     virtual void setValue(const String& valStr, bool genEvent = true);
