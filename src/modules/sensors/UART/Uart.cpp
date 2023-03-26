@@ -170,51 +170,81 @@ class UART : public IoTItem {
             break;
 
             case 3:             // формат событий для Dwin
-            //for (int i=0; i<2; i++) {
                 printStr = eventItem->getID();
                 indexOf_ = printStr.indexOf("_");
-                if (indexOf_ == -1 || !_myUART) return;  // пропускаем событие, если нет используемого признака типа данных - _txt или _vol
+                uint8_t sizeOfVPPart = printStr.length() - indexOf_ - 1;
+                if (indexOf_ == -1 || !_myUART || sizeOfVPPart < 4 || indexOf_ == 0)  return;  // пропускаем событие, если нет признака _ или признак пустой
                 
-                String VP = selectToMarkerLast(printStr, "_");
+                char typeOfVP = sizeOfVPPart == 5 ? printStr.charAt(indexOf_ + 5) : 0;
+                String VP = printStr.substring(indexOf_ + 1, indexOf_ + 5);
 
-                _myUART->write(0x5A);
-                _myUART->write(0xA5);
+                if (typeOfVP == 0) {    // если не указан тип, то додумываем на основании типа данных источника
+                    if (eventItem->value.isDecimal)
+                        typeOfVP = 'i';
+                    else
+                        typeOfVP = 's';
+                }
 
-                if (eventItem->value.isDecimal) {  // пока отправляем только целые числа
+                if (typeOfVP == 'i') {
+                    _myUART->write(0x5A);
+                    _myUART->write(0xA5);
                     _myUART->write(0x05);   // размер данных отправляемых с учетом целых чисел int
                     _myUART->write(0x82);   // требуем запись в память
                     uartPrintHex(VP);       // отправляем адрес в памяти VP
+                    
+                    if (!eventItem->value.isDecimal) {
+                        eventItem->value.valD = atoi(eventItem->value.valS.c_str());
+                    }
 
-                    byte raw[2];
-                    (int&)raw = eventItem->value.valD;
-                    _myUART->write(raw[1]);
-                    _myUART->write(raw[0]);
-                } else {
+                    _myUART->write(highByte((int)eventItem->value.valD));
+                    _myUART->write(lowByte((int)eventItem->value.valD));
+                }
+
+                if (typeOfVP == 's') {
+                    if (eventItem->value.isDecimal) {
+                        eventItem->value.valS = eventItem->getValue();
+                    }
+
                     // подсчитываем количество символов отличающихся от ASCII, для понимания сколько символов состоит из дух байт
                     int u16counter = 0;
                     const char* valSptr = eventItem->value.valS.c_str();
-                    //Serial.print("iiiii ");
                     for (int i=0; i < eventItem->value.valS.length(); i++) {
                         if (valSptr[i] > 200) u16counter++;
-                        //Serial.printf("%d ", valSptr[i]);
                     }
-                    //Serial.println();
 
+                    _myUART->write(0x5A);
+                    _myUART->write(0xA5);
                     _myUART->write((eventItem->value.valS.length() - u16counter) * 2 + 5);  // подсчитываем и отправляем размер итоговой строки + служебные байты
                     _myUART->write(0x82);   // требуем запись в память
                     uartPrintHex(VP);   // отправляем адрес в памяти VP
-                    //Serial.println("ffffff " + VP);
-                    //_myUART->write(0x53);
-                    //_myUART->write(0x00);
                     uartPrintStrInUTF16(eventItem->value.valS.c_str(), eventItem->value.valS.length());     // отправляем строку для записи
                     _myUART->write(0xFF);   // терминируем строку, чтоб экран очистил все остальное в элементе своем
                     _myUART->write(0xFF);
 
-                    //uint8_t Data[8] = {0x00, 0x31, 0x00, 0x44, 0x04, 0x10, 0x00, 0x00};
-                    //uartPrintArray(Data, 6);
                     //Serial.printf("fffffffff %#x %#x %#x %#x \n", Data[0], Data[1], Data[2], Data[3]);
                 }
-            //}    
+
+                if (typeOfVP == 'f') {
+                    _myUART->write(0x5A);
+                    _myUART->write(0xA5);
+                    _myUART->write(0x07);   // размер данных отправляемых с учетом дробных чисел dword
+                    _myUART->write(0x82);   // требуем запись в память
+                    uartPrintHex(VP);       // отправляем адрес в памяти VP
+                    
+                    byte hex[4] = {0};
+                    if (!eventItem->value.isDecimal) {
+                       eventItem->value.valD = atof(eventItem->value.valS.c_str()); 
+                    }
+
+                    byte* f_byte = reinterpret_cast<byte*>(&(eventItem->value.valD));
+                    memcpy(hex, f_byte, 4);
+
+                    _myUART->write(hex[3]);
+                    _myUART->write(hex[2]);
+                    _myUART->write(hex[1]);
+                    _myUART->write(hex[0]);
+                }
+
             break;
         }
     }
@@ -243,10 +273,6 @@ class UART : public IoTItem {
             }
         }
     }
-
-    void uartPrintArray(uint8_t *_Data, uint8_t _Size) {
-        for (size_t i = 0; i < _Size; i++) _myUART->write(_Data[i]);
-	}
 
     virtual void loop() {
         uartHandle();
