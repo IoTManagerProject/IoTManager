@@ -101,11 +101,6 @@ void IoTItem::regEvent(const String& value, const String& consoleInfo, bool erro
     if (genEvent) {
         generateEvent(_id, value);
 
-        // распространяем событие через хуки
-        for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-            (*it)->onRegEvent(this);
-        }
-
         // отправка события другим устройствам в сети если не было ошибки
         if (_global && !error) {
             String json = "{}";
