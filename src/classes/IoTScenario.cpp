@@ -156,8 +156,8 @@ class BinaryExprAST : public ExprAST {
         IoTValue *lhs = LHS->exec();  // если присваивания не произошло, значит операция иная и необходимо значение левого операнда
         if (lhs == nullptr) return nullptr;
 
-        // все бинарные операции кроме +, - и == обязаны работать с числами
-        if (Op != '+' && Op != '-' && Op != tok_equal) {
+        // все бинарные операции кроме +, -, != и == обязаны работать с числами
+        if (Op != '+' && Op != '-' && Op != tok_equal && Op != tok_notequal) {
             // поэтому преобразовываем строки в булевые интерпретации
             if (!lhs->isDecimal) lhs->valD = lhs->valS != "";  // пустая строка = false 
             if (!rhs->isDecimal) rhs->valD = rhs->valS != "";  // пустая строка = false 
@@ -174,9 +174,6 @@ class BinaryExprAST : public ExprAST {
                     break;
                 case tok_greateq:
                     val.valD = lhs->valD >= rhs->valD;
-                    break;
-                case tok_notequal:
-                    val.valD = lhs->valD != rhs->valD;
                     break;
 
                 case '*':
@@ -199,7 +196,7 @@ class BinaryExprAST : public ExprAST {
                 default:
                     break;
             }
-        } else {    // иначе имеем дело с операциями + или - или ==, которые могут работать с разными типами данных
+        } else {    // иначе имеем дело с операциями + или - или == или !=, которые могут работать с разными типами данных
             if (lhs->isDecimal && lhs->valS == "") lhs->valS = (String)lhs->valD;   // небольшой костыль пока не переделаем работу со значениями, планируется добавить long, работу со временем, перенести округление и модификаторы в IoTValue
             if (rhs->isDecimal && rhs->valS == "") rhs->valS = (String)rhs->valD;   // пока для сохранения округления в IoTItem применяется хитрость с сохранением внешнего вида числа в строку valS,
                                                                                     // но некоторые модули и системные не делают этого, поэтому отлавливаем эту ситуацию тут и учитываем.
@@ -209,6 +206,13 @@ class BinaryExprAST : public ExprAST {
                         val.valD = lhs->valD == rhs->valD;
                     else
                         val.valD = compStr(lhs->valS, rhs->valS);
+                    break;
+
+                case tok_notequal:
+                    if (lhs->isDecimal && rhs->isDecimal)
+                        val.valD = lhs->valD != rhs->valD;
+                    else
+                        val.valD = !compStr(lhs->valS, rhs->valS);
                     break;
 
                 case '+':
