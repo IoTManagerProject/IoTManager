@@ -11,7 +11,7 @@
     HardwareSerial* myUART = nullptr;
 #endif
 
-class UART : public IoTItem {
+class IoTmUART : public IoTItem {
    private:
     int _eventFormat = 0;   // 0 - нет приема, 1 - json IoTM, 2 - Nextion
     char _inc;
@@ -26,7 +26,7 @@ class UART : public IoTItem {
 #endif
 
    public:
-    UART(String parameters) : IoTItem(parameters) {
+    IoTmUART(String parameters) : IoTItem(parameters) {
         int _tx, _rx, _speed, _line;
         jsonRead(parameters,  "tx", _tx);
         jsonRead(parameters,  "rx", _rx);
@@ -351,7 +351,7 @@ class UART : public IoTItem {
 
 void* getAPI_UART(String subtype, String param) {
     if (subtype == F("UART")) {
-        return new UART(param);
+        return new IoTmUART(param);
     } else {
         return nullptr;
     }
