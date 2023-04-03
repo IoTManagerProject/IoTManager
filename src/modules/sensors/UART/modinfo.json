@@ -9,8 +9,8 @@
             "descr": "",
             "widget": "nil",
             "id": "u",
-            "tx": 12,
-            "rx": 13,
+            "tx": 4,
+            "rx": 5,
             "line": 2,
             "speed": 9600,
             "eventFormat": 0
@@ -70,6 +70,19 @@
         ],
         "esp8266_4mb": [
             "plerup/EspSoftwareSerial"
+        ],
+        "esp8266_1mb": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp8266_1mb_ota": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp8266_2mb": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp8266_2mb_ota": [
+            "plerup/EspSoftwareSerial"
         ]
+
     }
 }

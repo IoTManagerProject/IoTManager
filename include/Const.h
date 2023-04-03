@@ -11,6 +11,14 @@
 #define FIRMWARE_NAME "esp8266_1mb"
 #endif
 
+#ifdef esp8266_2mb
+#define FIRMWARE_NAME "esp8266_2mb"
+#endif
+
+#ifdef esp8266_2mb_ota
+#define FIRMWARE_NAME "esp8266_2mb_ota"
+#endif
+
 #ifdef esp8266_4mb
 #define FIRMWARE_NAME "esp8266_4mb"
 #endif

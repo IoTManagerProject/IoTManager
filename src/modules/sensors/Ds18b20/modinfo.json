@@ -56,6 +56,12 @@
         ],
         "esp8285_1mb_ota": [
             "https://github.com/milesburton/Arduino-Temperature-Control-Library"
+        ],
+        "esp8266_2mb": [
+            "https://github.com/milesburton/Arduino-Temperature-Control-Library"
+        ],
+        "esp8266_2mb_ota": [
+            "https://github.com/milesburton/Arduino-Temperature-Control-Library"
         ]
     }
 }
