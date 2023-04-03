@@ -101,11 +101,6 @@ void IoTItem::regEvent(const String& value, const String& consoleInfo, bool erro
     if (genEvent) {
         generateEvent(_id, value);
 
-        // распространяем событие через хуки
-        for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-            (*it)->onRegEvent(this);
-        }
-
         // отправка события другим устройствам в сети если не было ошибки
         if (_global && !error) {
             String json = "{}";
@@ -200,6 +195,10 @@ String IoTItem::getID() {
     return _id;
 };
 
+bool IoTItem::isStrInID(const String& str) {
+    return _id.indexOf(str) != -1; 
+}
+
 void IoTItem::setInterval(long interval) {
     _interval = interval;
 }
@@ -212,7 +211,7 @@ IoTItem* IoTItem::getRtcDriver() {
     return nullptr;
 }
 
-ulong IoTItem::getRtcUnixTime() {
+unsigned long IoTItem::getRtcUnixTime() {
     return 0;
 }
 
@@ -245,6 +244,17 @@ IoTItem* findIoTItem(const String& name) {
 
     return nullptr;
 }
+
+// поиск элемента модуля в существующей конфигурации по части имени
+IoTItem* findIoTItemByPartOfName(const String& partName) {
+    if (partName == "") return nullptr;
+    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if ((*it)->isStrInID(partName)) return *it;
+    }
+
+    return nullptr;
+}
+
 // поиск плюс получение значения
 String getItemValue(const String& name) {
     IoTItem* tmp = findIoTItem(name);

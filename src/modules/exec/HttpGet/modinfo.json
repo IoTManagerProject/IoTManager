@@ -34,14 +34,14 @@
         "name": "get",
         "descr": "Отправить http запрос методом GET.",
         "params": [
-          "http.get('URL')"
+          "URL"
         ]
       },
       {
         "name": "post",
         "descr": "Отправить http запрос методом POST.",
         "params": [
-          "http.post('URL','message')"
+          "URL","message"
         ]
       }
     ]
