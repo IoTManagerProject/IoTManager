@@ -30,9 +30,10 @@ class PZEMSensor {
     bool search();
     // Get most up to date values from device registers and cache them
     bool refresh();
+    void updateSerial(Stream *serial) {_serial = serial;}
 
    private:
-    void init(void);
+    void init(void); 
 
    private:
     PZEM_Info _values;   // Measured values
