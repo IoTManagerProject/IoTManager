@@ -51,10 +51,16 @@ void handleEvent() {
     if (eventBuf.length()) {
         String event = selectToMarker(eventBuf, ",");
         SerialPrint("i", F("EVENT"), event);
+        String enentIdName = selectToMarker(event, " ");
+
+        // распространяем событие через хуки
+        for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+            (*it)->onRegEvent(findIoTItem(enentIdName));
+        }
 
         //здесь нужно пропускать данное событие через условия сценариев
         //и если оно есть в условии сценария и совподает
-        iotScen.exec(selectToMarker(event, " "));
+        iotScen.exec(enentIdName);
 
         eventBuf = deleteBeforeDelimiter(eventBuf, ",");
     }

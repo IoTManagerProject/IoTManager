@@ -64,10 +64,19 @@
         "esp8266_1mb_ota": [
             "adafruit/Adafruit BMP280 Library"
         ],
+        "esp8266_2mb": [
+            "adafruit/Adafruit BMP280 Library"
+        ], 
         "esp8285_1mb": [
             "adafruit/Adafruit BMP280 Library"
         ],
         "esp8285_1mb_ota": [
+            "adafruit/Adafruit BMP280 Library"
+        ],
+        "esp8266_2mb": [
+            "adafruit/Adafruit BMP280 Library"
+        ],
+        "esp8266_2mb_ota": [
             "adafruit/Adafruit BMP280 Library"
         ]
     }

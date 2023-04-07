@@ -34,14 +34,14 @@
         "name": "get",
         "descr": "Отправить http запрос методом GET.",
         "params": [
-          "http.get('URL')"
+          "URL"
         ]
       },
       {
         "name": "post",
         "descr": "Отправить http запрос методом POST.",
         "params": [
-          "http.post('URL','message')"
+          "URL","message"
         ]
       }
     ]
@@ -53,6 +53,8 @@
     "esp8266_1mb": [],
     "esp8266_1mb_ota": [],
     "esp8285_1mb": [],
-    "esp8285_1mb_ota": []
+    "esp8285_1mb_ota": [],
+    "esp8266_2mb": [],
+    "esp8266_2mb_ota": []
   }
 }

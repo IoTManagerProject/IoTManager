@@ -66,6 +66,12 @@
         ],
         "esp8285_1mb_ota": [
             "robtillaart/SHT2x@^0.1.1"
+        ],
+        "esp8266_2mb": [
+            "robtillaart/SHT2x@^0.1.1"
+        ],
+        "esp8266_2mb_ota": [
+            "robtillaart/SHT2x@^0.1.1"
         ]
     }
 }

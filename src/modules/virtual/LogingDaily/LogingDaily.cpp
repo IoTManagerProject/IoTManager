@@ -156,7 +156,7 @@ class LogingDaily : public IoTItem {
         if (!firstTimeInit) {
             if (prevDate != currentDate) {
                 changed = true;
-                SerialPrint("i", F("NTP"), "Change day event");
+                SerialPrint("i", F("NTP"), F("Change day event"));
 #if defined(ESP8266)
                 FileFS.gc();
 #endif
@@ -164,7 +164,7 @@ class LogingDaily : public IoTItem {
 #endif
             }
         }
-        firstTimeInit = false;
+        if (isTimeSynch) firstTimeInit = false;
         prevDate = currentDate;
         return changed;
     }

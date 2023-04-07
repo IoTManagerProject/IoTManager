@@ -24,6 +24,7 @@ class IoTItem {
     String getSubtype();
 
     String getID();
+    bool isStrInID(const String& str);
     int getIntFromNet();
     virtual String getValue();
     long getInterval();
@@ -47,7 +48,7 @@ class IoTItem {
 
     virtual IoTGpio* getGpioDriver();
     virtual IoTItem* getRtcDriver();
-    virtual ulong getRtcUnixTime();
+    virtual unsigned long getRtcUnixTime();
 
     virtual void setValue(const IoTValue& Value, bool genEvent = true);
     virtual void setValue(const String& valStr, bool genEvent = true);
@@ -91,6 +92,7 @@ class IoTItem {
 };
 
 IoTItem* findIoTItem(const String& name);                     // поиск экземпляра элемента модуля по имени
+IoTItem* findIoTItemByPartOfName(const String& partName);      // поиск элемента модуля в существующей конфигурации по части имени
 String getItemValue(const String& name);                      // поиск плюс получение значения
 bool isItemExist(const String& name);                         // существует ли айтем
 //StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON();  // сбор всех локальных значений Items
