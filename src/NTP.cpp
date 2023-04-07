@@ -44,7 +44,7 @@ void ntpInit() {
 }
 
 void synchTime() {
-    configTime(0, 0, "pool.ntp.org", "ru.pool.ntp.org", "pool.ntp.org");
+    configTime(0, 0, "pool.ntp.org", "ru.pool.ntp.org", jsonReadStr(settingsFlashJson, F("ntp")).c_str());
 }
 
 //событие смены даты
