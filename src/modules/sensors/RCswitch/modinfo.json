@@ -78,6 +78,12 @@
         ],
         "esp8285_1mb_ota": [
             "rc-switch @ ^2.6.4"
+        ],
+        "esp8266_2mb": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8266_2mb_ota": [
+            "rc-switch @ ^2.6.4"
         ]
     }
 }

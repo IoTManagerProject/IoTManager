@@ -62,6 +62,8 @@
         "esp8266_1mb": ["https://github.com/tremaru/iarduino_RTC"],
         "esp8266_1mb_ota": ["https://github.com/tremaru/iarduino_RTC"],
         "esp8285_1mb": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8285_1mb_ota": ["https://github.com/tremaru/iarduino_RTC"]
+        "esp8285_1mb_ota": ["https://github.com/tremaru/iarduino_RTC"],
+        "esp8266_2mb": ["https://github.com/tremaru/iarduino_RTC"],
+        "esp8266_2mb_ota": ["https://github.com/tremaru/iarduino_RTC"]
     }
 }

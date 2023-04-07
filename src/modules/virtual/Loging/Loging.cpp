@@ -68,8 +68,8 @@ class Loging : public IoTItem {
 
         String logData;
 
-        jsonWriteInt(logData, "x", unixTime);
-        jsonWriteFloat(logData, "y1", value.toFloat());
+        jsonWriteInt(logData, "x", unixTime, false);
+        jsonWriteFloat(logData, "y1", value.toFloat(), false);
 
         // прочитаем путь к файлу последнего сохранения
         String filePath = readDataDB(id);
@@ -119,8 +119,8 @@ class Loging : public IoTItem {
         }
         regEvent(value, F("LogingEvent"));
         String logData;
-        jsonWriteInt(logData, "x", unixTime);
-        jsonWriteFloat(logData, "y1", value.toFloat());
+        jsonWriteInt(logData, "x", unixTime, false);
+        jsonWriteFloat(logData, "y1", value.toFloat(), false);
         // прочитаем путь к файлу последнего сохранения
         String filePath = readDataDB(id);
 
