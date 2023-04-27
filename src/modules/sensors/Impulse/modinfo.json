@@ -14,7 +14,8 @@
       "int": 1,
       "pin": 16,
       "pinMode": "INPUT",
-      "debounceDelay": 3
+      "debounceDelay": 3,
+      "multiply": 1
     }
   ],
   "about": {
