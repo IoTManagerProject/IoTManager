@@ -1,0 +1,49 @@
+{
+  "menuSection": "Сенсоры",
+  "configItem": [
+    {
+      "global": 0,
+      "name": "Аналоговый счетчик импульсов",
+      "type": "Writing",
+      "subtype": "Impulse",
+      "id": "impulse",
+      "widget": "anydataDef",
+      "page": "Счетчики",
+      "descr": "Импульсов",
+      "needSave": 0,
+      "int": 1,
+      "pin": 16,
+      "pinMode": "INPUT",
+      "debounceDelay": 3
+    }
+  ],
+  "about": {
+    "authorName": "AVAKS",
+    "authorContact": "https://t.me/@avaks_dev",
+    "authorGit": "https://github.com/avaksru",
+    "specialThanks": "",
+    "moduleName": "Impulse",
+    "moduleVersion": "2.0",
+    "usedRam": {
+      "esp32_4mb": 15,
+      "esp8266_4mb": 15
+    },
+    "title": "Аналоговый счетчик импульсов. Датчик Холла ",
+    "moduleDesc": "Считает количество импульсов за период времени",
+    "propInfo": {
+      "int": "Период сбора импульсов  в секундах",
+      "pin": "Укажите GPIO номер пина для чтения импульсов",
+      "pinMode": "Может быть INPUT_PULLUP INPUT_PULLDOWN INPUT",
+      "debounceDelay": "Время обработки дребезга (миллисекунд)"
+    }
+  },
+  "defActive": true,
+  "usedLibs": {
+    "esp32_4mb": [],
+    "esp8266_4mb": [],
+    "esp8266_1mb": [],
+    "esp8266_1mb_ota": [],
+    "esp8285_1mb": [],
+    "esp8285_1mb_ota": []
+  }
+}
