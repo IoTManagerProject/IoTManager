@@ -120,12 +120,7 @@ void setup() {
 
     stopErrorMarker(SETUPBASE_ERRORMARKER);
 
-
-
     initErrorMarker(SETUPCONF_ERRORMARKER);
-
-    // настраиваем микроконтроллер
-    configure("/config.json");
 
     // настраиваем i2c шину
     int i2c, pinSCL, pinSDA, i2cFreq;
@@ -143,6 +138,9 @@ void setup() {
 #endif
         SerialPrint("i", "i2c", F("i2c pins overriding done"));
     }
+
+    // настраиваем микроконтроллер
+    configure("/config.json");
     
     stopErrorMarker(SETUPCONF_ERRORMARKER);
 
