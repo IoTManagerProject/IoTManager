@@ -284,6 +284,13 @@
         "icon": "speedometer"
     },
     {
+        "name": "anydataCm",
+        "label": "Сантиметры",
+        "widget": "anydata",
+        "after": "cm",
+        "icon": "speedometer"
+    },
+    {
         "name": "nil",
         "label": "Без виджета"
     }
