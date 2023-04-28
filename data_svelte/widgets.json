@@ -41,7 +41,25 @@
         "label": "Ватты",
         "widget": "anydata",
         "after": "Wt",
-        "icon": "speedometer"
+        "icon": "speedometer",
+        "color": [
+            {
+                "level": 0,
+                "value": ""
+            },
+            {
+                "level": 200,
+                "value": "#009933"
+            },
+            {
+                "level": 2000,
+                "value": "#FF9900"
+            },
+            {
+                "level": 4000,
+                "value": "red"
+            }
+        ]
     },
     {
         "name": "anydataWth",
@@ -62,7 +80,42 @@
         "label": "Температура",
         "widget": "anydata",
         "after": "°С",
-        "icon": "thermometer"
+        "icon": "thermometer",
+        "font": "OCR A Std",
+        "color": [
+            {
+                "level": -20,
+                "value": "#0000CC"
+            },
+            {
+                "level": -10,
+                "value": "#0000CC"
+            },
+            {
+                "level": 0,
+                "value": "#0000CC"
+            },
+            {
+                "level": 12,
+                "value": "#3366FF"
+            },
+            {
+                "level": 16,
+                "value": "#33CCFF"
+            },
+            {
+                "level": 18,
+                "value": "#009933"
+            },
+            {
+                "level": 30,
+                "value": "#FF9900"
+            },
+            {
+                "level": 40,
+                "value": "red"
+            }
+        ]
     },
     {
         "name": "anydataMm",
@@ -225,9 +278,16 @@
     },
     {
         "name": "anydatamWt",
-        "label": "миллиВатты",       
+        "label": "миллиВатты",
         "widget": "anydata",
         "after": "mWt",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataCm",
+        "label": "Сантиметры",
+        "widget": "anydata",
+        "after": "cm",
         "icon": "speedometer"
     },
     {
