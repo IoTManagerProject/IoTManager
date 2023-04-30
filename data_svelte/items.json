@@ -202,6 +202,11 @@
         "round": 3,
         "pin": 39,
         "int": 5,
+        "rms": 1,
+        "vref": 5000,
+        "sens": 100,
+        "adczero": 512,
+        "btn-setZero": "nil",
         "num": 13
     },
     {
@@ -394,6 +399,7 @@
         "pin": 16,
         "pinMode": "INPUT",
         "debounceDelay": 3,
+        "multiply": 1,
         "num": 26
     },
     {
