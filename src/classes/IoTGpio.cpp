@@ -10,32 +10,32 @@ IoTGpio::~IoTGpio(){
 }
 
 
-void IoTGpio::pinMode(uint8_t pin, uint8_t mode) {
+void IoTGpio::pinMode(int pin, uint8_t mode) {
     int pinH = pin/100;
     if (_drivers[pinH]) _drivers[pinH]->pinMode(pin - pinH*100, mode);
     else ::pinMode(pin, mode);
 }
 
-void IoTGpio::digitalWrite(uint8_t pin, uint8_t val) {
+void IoTGpio::digitalWrite(int pin, uint8_t val) {
     int pinH = pin/100;
     if (_drivers[pinH]) _drivers[pinH]->digitalWrite(pin - pinH*100, val);
     else ::digitalWrite(pin, val);
 }
 
-int IoTGpio::digitalRead(uint8_t pin) {
+int IoTGpio::digitalRead(int pin) {
     int pinH = pin/100;
     if (_drivers[pinH]) return _drivers[pinH]->digitalRead(pin - pinH*100);
     else return ::digitalRead(pin);
 }
 
 
-int IoTGpio::analogRead(uint8_t pin) {
+int IoTGpio::analogRead(int pin) {
     int pinH = pin/100;
     if (_drivers[pinH]) return _drivers[pinH]->analogRead(pin - pinH*100);
     else return ::analogRead(pin);
 }
 
-void IoTGpio::analogWrite(uint8_t pin, int val) {
+void IoTGpio::analogWrite(int pin, int val) {
     int pinH = pin/100;
     if (_drivers[pinH]) _drivers[pinH]->analogWrite(pin - pinH*100, val);
     else {
@@ -48,7 +48,7 @@ void IoTGpio::analogWrite(uint8_t pin, int val) {
     }
 }
 
-void IoTGpio::digitalInvert(uint8_t pin) {
+void IoTGpio::digitalInvert(int pin) {
     int pinH = pin/100;
     if (_drivers[pinH]) _drivers[pinH]->digitalInvert(pin - pinH*100);
     else ::digitalWrite(pin, 1 - ::digitalRead(pin));

@@ -30,7 +30,7 @@ class Adafruit_PCF8574_mod {
         return _readbuf;
     }
 
-    bool digitalWrite(uint8_t pinnum, bool val) {
+    bool digitalWrite(int pinnum, bool val) {
         if (val) {
             _writebuf |= 1 << pinnum;
         } else {
@@ -39,7 +39,7 @@ class Adafruit_PCF8574_mod {
         return i2c_dev->write(&_writebuf, 1);         
     }
 
-    bool pinMode(uint8_t pinnum, uint8_t val) {
+    bool pinMode(int pinnum, uint8_t val) {
         if ((val == INPUT) || (val == INPUT_PULLUP)) {
             _writebuf |= 1 << pinnum;
         } else {
@@ -48,7 +48,7 @@ class Adafruit_PCF8574_mod {
         return i2c_dev->write(&_writebuf, 1);
     }
 
-    bool digitalRead(uint8_t pinnum) {
+    bool digitalRead(int pinnum) {
         i2c_dev->read(&_readbuf, 1);
         return (_readbuf >> pinnum) & 0x1;
     }
@@ -70,19 +70,19 @@ class Pcf8574Driver : public IoTGpio {
         }
     }
 
-    void pinMode(uint8_t pin, uint8_t mode) {
+    void pinMode(int pin, uint8_t mode) {
         _pcf.pinMode(pin, mode);
     }
 
-    void digitalWrite(uint8_t pin, uint8_t val) {
+    void digitalWrite(int pin, uint8_t val) {
         _pcf.digitalWrite(pin, val);
     }
 
-    int digitalRead(uint8_t pin) {
+    int digitalRead(int pin) {
         return _pcf.digitalRead(pin);
     }
 
-    void digitalInvert(uint8_t pin) {
+    void digitalInvert(int pin) {
         _pcf.digitalWrite(pin, 1 - _pcf.digitalRead(pin));
     }
 

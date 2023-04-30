@@ -14,19 +14,19 @@ class Mcp23017Driver : public IoTGpio {
         }
     }
 
-    void pinMode(uint8_t pin, uint8_t mode) {
+    void pinMode(int pin, uint8_t mode) {
         _mcp.pinMode(pin, mode);
     }
 
-    void digitalWrite(uint8_t pin, uint8_t val) {
+    void digitalWrite(int pin, uint8_t val) {
         _mcp.digitalWrite(pin, val);
     }
 
-    int digitalRead(uint8_t pin) {
+    int digitalRead(int pin) {
         return _mcp.digitalRead(pin);
     }
 
-    void digitalInvert(uint8_t pin) {
+    void digitalInvert(int pin) {
         _mcp.digitalWrite(pin, 1 - _mcp.digitalRead(pin));
     }
 
