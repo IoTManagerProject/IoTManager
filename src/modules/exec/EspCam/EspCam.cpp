@@ -2,8 +2,8 @@
 #include "classes/IoTItem.h"
 
 #include "esp_camera.h"
-#include "soc/soc.h"           // Disable brownour problems
-#include "soc/rtc_cntl_reg.h"  // Disable brownour problems
+// #include "soc/soc.h"           // Disable brownour problems
+// #include "soc/rtc_cntl_reg.h"  // Disable brownour problems
 
 
 // Pin definition for CAMERA_MODEL_AI_THINKER
@@ -32,12 +32,12 @@ IoTItem* globalItem = nullptr;
 bool webTicker = false;
 
 void handleGetCam() {
-    //Serial.printf("try send pic by size=%d", lastPhotoBSize);
-    if (globalItem && globalItem->value.extBinInfoSize) {
-        //Serial.printf("try send pic by size=%d", globalItem->value.extBinInfoSize);
-        HTTP.send_P(200, "image/jpeg", (char*)globalItem->value.extBinInfo, globalItem->value.extBinInfoSize);
-        if (webTicker) globalItem->regEvent("webAsk", "EspCam");
-    } else HTTP.send(200, "text/json", "Item EspCam not prepared yet or camera hasn't taken a picture yet");
+    ////Serial.printf("try send pic by size=%d", lastPhotoBSize);
+    // if (globalItem && globalItem->value.extBinInfoSize) {
+    //     //Serial.printf("try send pic by size=%d", globalItem->value.extBinInfoSize);
+    //     HTTP.send_P(200, "image/jpeg", (char*)globalItem->value.extBinInfo, globalItem->value.extBinInfoSize);
+    //     if (webTicker) globalItem->regEvent("webAsk", "EspCam");
+    // } else HTTP.send(200, "text/json", "Item EspCam not prepared yet or camera hasn't taken a picture yet");
 }
 
 class EspCam : public IoTItem {
@@ -47,7 +47,7 @@ class EspCam : public IoTItem {
 
    public:
     EspCam(String parameters): IoTItem(parameters) {
-        WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
+        //WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
 
         jsonRead(parameters, "useLed", _useLed);    // используем = 1 или нет = 0 подсветку (вспышку)
         jsonRead(parameters, "ticker", _ticker);    // тикать = 1 - сообщаем всем, что сделали снимок и он готов
@@ -55,8 +55,8 @@ class EspCam : public IoTItem {
         webTicker = _webTicker;
         globalItem = this;   // выносим адрес переменной экземпляра для доступа к данным из обработчика событий веб
 
-        pinMode(4, OUTPUT);
-        digitalWrite(4, LOW);
+        //pinMode(4, OUTPUT);
+        //digitalWrite(4, LOW);
 
         camera_config_t config;
         config.ledc_channel = LEDC_CHANNEL_0;
@@ -80,16 +80,18 @@ class EspCam : public IoTItem {
         config.xclk_freq_hz = 20000000;
         config.pixel_format = PIXFORMAT_JPEG; 
 
-        value.extBinInfo = (uint8_t*)malloc(sizeof(uint8_t) * PICBUF_SIZE);
+        config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
+
+        //value.extBinInfo = (uint8_t*)malloc(sizeof(uint8_t) * PICBUF_SIZE);
         
         if(psramFound()){
-            config.frame_size = FRAMESIZE_SVGA; // FRAMESIZE_ + QVGA|CIF|VGA|SVGA|XGA|SXGA|UXGA
-            config.jpeg_quality = 20;  //0-63 lower number means higher quality
+            config.frame_size = FRAMESIZE_QVGA; // FRAMESIZE_ + QVGA|CIF|VGA|SVGA|XGA|SXGA|UXGA
+            config.jpeg_quality = 12;  //0-63 lower number means higher quality
             config.fb_count = 1;
             Serial.printf("Camera psramFound\n");
         } else {
-            config.frame_size = FRAMESIZE_SVGA;
-            config.jpeg_quality = 20;
+            config.frame_size = FRAMESIZE_QVGA;
+            config.jpeg_quality = 12;
             config.fb_count = 1;
         }
         
@@ -116,12 +118,12 @@ class EspCam : public IoTItem {
             return;
         }
         
-        // if (value.extBinInfoSize < fb->len) {
-        //     if (value.extBinInfo) free(value.extBinInfo);
-        //     value.extBinInfo = (uint8_t*)malloc(sizeof(uint8_t) * fb->len);
-        // }
-        memcpy(value.extBinInfo, fb->buf, fb->len);
-        value.extBinInfoSize = fb->len;
+        // // if (value.extBinInfoSize < fb->len) {
+        // //     if (value.extBinInfo) free(value.extBinInfo);
+        // //     value.extBinInfo = (uint8_t*)malloc(sizeof(uint8_t) * fb->len);
+        // // }
+        // memcpy(value.extBinInfo, fb->buf, fb->len);
+        // value.extBinInfoSize = fb->len;
 
         Serial.printf("try send pic by size=%d", fb->len);
          
@@ -131,7 +133,7 @@ class EspCam : public IoTItem {
     }
 
     void doByInterval() {
-       take_picture();
+       //take_picture();
     }
 
     IoTValue execute(String command, std::vector<IoTValue> &param) {
@@ -143,8 +145,8 @@ class EspCam : public IoTItem {
     }
 
     ~EspCam() {
-        free(value.extBinInfo);
-        //globalItem = nullptr;
+        //free(value.extBinInfo);
+        globalItem = nullptr;
     };
 };
 
