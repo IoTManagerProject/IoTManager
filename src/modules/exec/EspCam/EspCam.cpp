@@ -1,9 +1,13 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
+#include "NTP.h"
 
 #include "esp_camera.h"
 #include "soc/soc.h"           // Disable brownour problems
 #include "soc/rtc_cntl_reg.h"  // Disable brownour problems
+
+#include "FS.h"                // SD Card ESP32
+#include "SD_MMC.h"            // SD Card ESP32
 
 void handleGetPic();
 
@@ -38,7 +42,7 @@ IoTItem* globalItem = nullptr;
 
 class EspCam : public IoTItem {
    private:
-    bool _useLed, _ticker, _webTicker;
+    bool _useLed, _ticker, _webTicker, _initSD;
 
    public:
     bool isUsedLed() { return _useLed; }
@@ -128,9 +132,28 @@ class EspCam : public IoTItem {
         #endif
 
         HTTP.on("/getpic", HTTP_GET, handleGetPic);
+
+        // Start Micro SD card
+        _initSD = true;
+        Serial.println("Starting SD Card");
+        if(!SD_MMC.begin("/sdcard", true)){
+            Serial.println("SD Card Mount Failed");
+            _initSD = false;
+            return;
+        }
+        
+        uint8_t cardType = SD_MMC.cardType();
+        if(cardType == CARD_NONE){
+            Serial.println("No SD Card attached");
+            _initSD = false;
+            return;
+        }
+        
+        fs::FS &fs = SD_MMC;
+        fs.mkdir("/photos/");
     }
 
-    void save_picture() {
+    void save_picture(String path = "") {
         // if (_useLed) digitalWrite(4, HIGH); //Turn on the flash
 
         // // Take Picture with Camera
@@ -155,6 +178,44 @@ class EspCam : public IoTItem {
         // if (_useLed) digitalWrite(4, LOW);
         // if (_ticker) regEvent("shot", "EspCam");
         // esp_camera_fb_return(fb);
+
+
+        // Save picture to microSD card
+        fs::FS &fs = SD_MMC;
+
+        if (path == "") {
+            path = "/photos/";
+            path += getTodayDateDotFormated(); 
+            path += "/";
+            fs.mkdir(path.c_str());
+
+            char buf[32];
+            sprintf(buf, "%02d-%02d-%02d", _time_local.hour, _time_local.minute, _time_local.second);
+            path += buf;
+            path += ".jpg";
+        }
+        Serial.println(path);
+
+        // Take Picture with Camera
+        camera_fb_t  * fb = esp_camera_fb_get();
+
+        if(!fb) {
+            Serial.println("Camera capture failed");
+            return;
+        }
+ 
+        File file = fs.open(path.c_str(), FILE_WRITE);
+        if(!file){
+            Serial.println("Failed to open file in writing mode");
+        } 
+        else {
+            file.write(fb->buf, fb->len); // payload (image), payload length
+            Serial.printf("Saved file to path: %s\n", path.c_str());
+        }
+        file.close();
+        
+        //return the frame buffer back to the driver for reuse
+        esp_camera_fb_return(fb);
     }
 
     void doByInterval() {
@@ -163,7 +224,10 @@ class EspCam : public IoTItem {
 
     IoTValue execute(String command, std::vector<IoTValue> &param) {
         if (command == "save") { 
-            save_picture();
+            if (param.size() == 1)
+                save_picture(param[0].valS);
+            else
+                save_picture();
         } else if (command == "ledOn" && param.size() == 1) {         
             ledcSetup(LED_LEDC_CHANNEL, 5000, 8);
             ledcAttachPin(LED_GPIO_NUM, LED_LEDC_CHANNEL);
