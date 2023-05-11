@@ -23,7 +23,52 @@
     },
     {
         "global": 0,
-        "name": "2. Таймер",
+        "name": "2. График",
+        "type": "Writing",
+        "subtype": "Loging",
+        "id": "log",
+        "widget": "chart2",
+        "page": "Графики",
+        "descr": "Температура",
+        "num": 2,
+        "int": 5,
+        "logid": "t",
+        "points": 300
+    },
+    {
+        "global": 0,
+        "name": "3. График по событию",
+        "type": "Writing",
+        "subtype": "Loging",
+        "id": "log",
+        "widget": "chart2",
+        "page": "Графики",
+        "descr": "Температура",
+        "int": 0,
+        "num": 3,
+        "points": 300
+    },
+    {
+        "global": 0,
+        "name": "4. График дневного расхода",
+        "type": "Writing",
+        "subtype": "LogingDaily",
+        "id": "log",
+        "widget": "chart3",
+        "page": "Графики",
+        "descr": "Температура",
+        "num": 4,
+        "int": 1,
+        "logid": "t",
+        "points": 365,
+        "telegram": 0,
+        "test": 0,
+        "btn-defvalue": 0,
+        "btn-reset": "nil"
+    },
+    {
+        "global": 0,
+        "name": "5. Таймер",
         "type": "Writing",
         "subtype": "Timer",
         "id": "timer",
@@ -35,11 +80,11 @@
         "ticker": 1,
         "repeat": 1,
         "needSave": 0,
-        "num": 2
+        "num": 5
     },
     {
         "global": 0,
-        "name": "3. Окно ввода числа (переменная)",
+        "name": "6. Окно ввода числа (переменная)",
         "type": "Reading",
         "subtype": "Variable",
         "id": "value",
@@ -53,11 +98,11 @@
         "plus": 0,
         "multiply": 1,
         "round": 0,
-        "num": 3
+        "num": 6
     },
     {
         "global": 0,
-        "name": "4. Окно ввода времени",
+        "name": "7. Окно ввода времени",
         "type": "Reading",
         "subtype": "Variable",
         "id": "time",
@@ -67,11 +112,11 @@
         "descr": "Введите время",
         "int": "0",
         "val": "02:00",
-        "num": 4
+        "num": 7
     },
     {
         "global": 0,
-        "name": "5. Окно ввода даты",
+        "name": "8. Окно ввода даты",
         "type": "Reading",
         "subtype": "Variable",
         "id": "time",
@@ -81,11 +126,11 @@
         "descr": "Введите дату",
         "int": "0",
         "val": "24.05.2022",
-        "num": 5
+        "num": 8
     },
     {
         "global": 0,
-        "name": "6. Окно ввода текста",
+        "name": "9. Окно ввода текста",
         "type": "Reading",
         "subtype": "Variable",
         "id": "txt",
@@ -95,11 +140,11 @@
         "descr": "Введите текст",
         "int": "0",
         "val": "текст",
-        "num": 6
+        "num": 9
     },
     {
         "global": 0,
-        "name": "7. Вывод значения",
+        "name": "10. Вывод значения",
         "type": "Reading",
         "subtype": "Variable",
         "id": "vout",
@@ -113,11 +158,11 @@
         "plus": 0,
         "multiply": 1,
         "round": 0,
-        "num": 7
+        "num": 10
     },
     {
         "global": 0,
-        "name": "8. Цветной текст",
+        "name": "11. Цветной текст",
         "type": "Reading",
         "subtype": "VariableColor",
         "id": "color",
@@ -127,11 +172,11 @@
         "descr": "Цветной текст",
         "val": "...",
         "round": 0,
-        "num": 8
+        "num": 11
     },
     {
         "global": 0,
-        "name": "9. Виртуальная кнопка",
+        "name": "12. Виртуальная кнопка",
         "type": "Reading",
         "subtype": "VButton",
         "id": "vbtn",
@@ -141,14 +186,44 @@
         "descr": "Кнопка",
         "int": "0",
         "val": "0",
-        "num": 9
+        "num": 12
     },
     {
         "header": "Сенсоры"
     },
     {
+        "name": "13. A02 Дальность",
+        "type": "Reading",
+        "subtype": "A02Distance",
+        "id": "dist",
+        "widget": "anydataCm",
+        "page": "Сенсоры",
+        "descr": "Дальность",
+        "int": 5,
+        "round": 1,
+        "num": 13
+    },
+    {
+        "name": "14. Acs712 Ток",
+        "type": "Reading",
+        "subtype": "Acs712",
+        "id": "amp",
+        "widget": "anydataAmp",
+        "page": "Сенсоры",
+        "descr": "Ток",
+        "round": 3,
+        "pin": 39,
+        "int": 5,
+        "rms": 1,
+        "vref": 5000,
+        "sens": 100,
+        "adczero": 512,
+        "btn-setZero": "nil",
+        "num": 14
+    },
+    {
         "global": 0,
-        "name": "10. Аналоговый сенсор",
+        "name": "15. Аналоговый сенсор",
         "type": "Reading",
         "subtype": "AnalogAdc",
         "id": "t",
@@ -162,11 +237,67 @@
         "pin": 0,
         "int": 15,
         "avgSteps": 1,
-        "num": 10
+        "num": 15
     },
     {
         "global": 0,
-        "name": "11. BMP280 Температура",
+        "name": "16. BME280 Температура",
+        "type": "Reading",
+        "subtype": "Bme280t",
+        "id": "Tmp3",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Температура",
+        "int": 15,
+        "addr": "0x77",
+        "round": 1,
+        "num": 16
+    },
+    {
+        "global": 0,
+        "name": "17. BME280 Давление",
+        "type": "Reading",
+        "subtype": "Bme280p",
+        "id": "Press3",
+        "widget": "anydataMm",
+        "page": "Сенсоры",
+        "descr": "Давление",
+        "int": 15,
+        "addr": "0x77",
+        "round": 1,
+        "num": 17
+    },
+    {
+        "global": 0,
+        "name": "18. BME280 Влажность",
+        "type": "Reading",
+        "subtype": "Bme280h",
+        "id": "Hum3",
+        "widget": "anydataHum",
+        "page": "Сенсоры",
+        "descr": "Влажность",
+        "int": 15,
+        "addr": "0x77",
+        "round": 1,
+        "num": 18
+    },
+    {
+        "global": 0,
+        "name": "19. BME280 Tочка росы",
+        "type": "Reading",
+        "subtype": "Bme280dp",
+        "id": "Dew3",
+        "widget": "anydataTmp",
+        "page": "Сенсоры",
+        "descr": "Точка росы",
+        "int": 15,
+        "addr": "0x77",
+        "round": 1,
+        "num": 19
+    },
+    {
+        "global": 0,
+        "name": "20. BMP280 Температура",
         "type": "Reading",
         "subtype": "Bmp280t",
         "id": "tmp3",
@@ -176,11 +307,11 @@
         "int": 15,
         "addr": "0x77",
         "round": 1,
-        "num": 11
+        "num": 20
     },
     {
         "global": 0,
-        "name": "12. BMP280 Давление",
+        "name": "21. BMP280 Давление",
         "type": "Reading",
         "subtype": "Bmp280p",
         "id": "Press3",
@@ -190,11 +321,11 @@
         "int": 15,
         "addr": "0x77",
         "round": 1,
-        "num": 12
+        "num": 21
     },
     {
         "global": 0,
-        "name": "13. DS18B20 Температура",
+        "name": "22. DS18B20 Температура",
         "type": "Reading",
         "subtype": "Ds18b20",
         "id": "dstmp",
@@ -206,11 +337,128 @@
         "index": 0,
         "addr": "",
         "round": 1,
-        "num": 13
+        "num": 22
     },
     {
         "global": 0,
-        "name": "14. Часы реального времени",
+        "name": "23. Аналоговый счетчик импульсов",
+        "type": "Writing",
+        "subtype": "Impulse",
+        "id": "impulse",
+        "widget": "anydataDef",
+        "page": "Счетчики",
+        "descr": "Импульсов",
+        "needSave": 0,
+        "int": 1,
+        "pin": 16,
+        "pinMode": "INPUT",
+        "debounceDelay": 3,
+        "multiply": 1,
+        "num": 23
+    },
+    {
+        "global": 0,
+        "name": "24. PZEM 004t Напряжение",
+        "type": "Reading",
+        "subtype": "Pzem004v",
+        "id": "v",
+        "widget": "anydataVlt",
+        "page": "PZEM",
+        "descr": "Напряжение",
+        "int": 15,
+        "addr": "0xF8",
+        "round": 1,
+        "num": 24
+    },
+    {
+        "global": 0,
+        "name": "25. PZEM 004t Сила тока",
+        "type": "Reading",
+        "subtype": "Pzem004a",
+        "id": "a",
+        "widget": "anydataAmp",
+        "page": "PZEM",
+        "descr": "Сила тока",
+        "int": 15,
+        "addr": "0xF8",
+        "round": 1,
+        "num": 25
+    },
+    {
+        "global": 0,
+        "name": "26. PZEM 004t Мощность",
+        "type": "Reading",
+        "subtype": "Pzem004w",
+        "id": "w",
+        "widget": "anydataWt",
+        "page": "PZEM",
+        "descr": "Мощность",
+        "int": 15,
+        "addr": "0xF8",
+        "round": 1,
+        "num": 26
+    },
+    {
+        "global": 0,
+        "name": "27. PZEM 004t Энергия",
+        "type": "Reading",
+        "subtype": "Pzem004wh",
+        "id": "wh",
+        "widget": "anydataWth",
+        "page": "PZEM",
+        "descr": "Энергия",
+        "int": 15,
+        "addr": "0xF8",
+        "round": 1,
+        "num": 27
+    },
+    {
+        "global": 0,
+        "name": "28. PZEM 004t Частота",
+        "type": "Reading",
+        "subtype": "Pzem004hz",
+        "id": "hz",
+        "widget": "anydataHtz",
+        "page": "PZEM",
+        "descr": "Частота",
+        "int": 15,
+        "addr": "0xF8",
+        "round": 1,
+        "num": 28
+    },
+    {
+        "global": 0,
+        "name": "29. PZEM 004t Косинус",
+        "type": "Reading",
+        "subtype": "Pzem004pf",
+        "id": "pf",
+        "widget": "anydata",
+        "page": "PZEM",
+        "descr": "Косинус F",
+        "int": 15,
+        "addr": "0xF8",
+        "round": 1,
+        "num": 29
+    },
+    {
+        "global": 0,
+        "name": "30. PZEM настройка",
+        "type": "Reading",
+        "subtype": "Pzem004cmd",
+        "id": "set",
+        "widget": "nil",
+        "page": "",
+        "descr": "",
+        "int": 15,
+        "addr": "0xF8",
+        "changeaddr": 0,
+        "setaddr": "0x01",
+        "reset": 0,
+        "num": 30
+    },
+    {
+        "global": 0,
+        "name": "31. Часы реального времени",
         "type": "Reading",
         "subtype": "RTC",
         "id": "rtc",
@@ -226,11 +474,11 @@
         "int": 5,
         "btn-setUTime": "0",
         "btn-setSysTime": "nil",
-        "num": 14
+        "num": 31
     },
     {
         "global": 0,
-        "name": "15. Sht20 Температура",
+        "name": "32. Sht20 Температура",
         "type": "Reading",
         "subtype": "Sht20t",
         "id": "tmp2",
@@ -239,11 +487,11 @@
         "descr": "Температура",
         "int": 15,
         "round": 1,
-        "num": 15
+        "num": 32
     },
     {
         "global": 0,
-        "name": "16. Sht20 Влажность",
+        "name": "33. Sht20 Влажность",
         "type": "Reading",
         "subtype": "Sht20h",
         "id": "Hum2",
@@ -252,11 +500,11 @@
         "descr": "Влажность",
         "int": 15,
         "round": 1,
-        "num": 16
+        "num": 33
     },
     {
         "global": 0,
-        "name": "17. Sht30 Температура",
+        "name": "34. Sht30 Температура",
         "type": "Reading",
         "subtype": "Sht30t",
         "id": "tmp30",
@@ -265,11 +513,11 @@
         "descr": "SHT30 Температура",
         "int": 15,
         "round": 1,
-        "num": 17
+        "num": 34
     },
     {
         "global": 0,
-        "name": "18. Sht30 Влажность",
+        "name": "35. Sht30 Влажность",
         "type": "Reading",
         "subtype": "Sht30h",
         "id": "Hum30",
@@ -278,12 +526,12 @@
         "descr": "SHT30 Влажность",
         "int": 15,
         "round": 1,
-        "num": 18
+        "num": 35
     },
     {
         "global": 0,
-        "name": "19. HC-SR04 Ультразвуковой дальномер",
-        "num": 19,
+        "name": "36. HC-SR04 Ультразвуковой дальномер",
+        "num": 36,
         "type": "Reading",
         "subtype": "Sonar",
         "id": "sonar",
@@ -295,11 +543,26 @@
         "int": 5
     },
     {
+        "name": "37. UART",
+        "type": "Reading",
+        "subtype": "UART",
+        "page": "",
+        "descr": "",
+        "widget": "nil",
+        "id": "u",
+        "tx": 4,
+        "rx": 5,
+        "line": 2,
+        "speed": 9600,
+        "eventFormat": 0,
+        "num": 37
+    },
+    {
         "header": "Исполнительные устройства"
     },
     {
         "global": 0,
-        "name": "20. Кнопка подключенная к пину",
+        "name": "38. Кнопка подключенная к пину",
         "type": "Writing",
         "subtype": "ButtonIn",
         "id": "btn",
@@ -314,11 +577,11 @@
         "debounceDelay": 50,
         "fixState": 0,
         "inv": 0,
-        "num": 20
+        "num": 38
     },
     {
         "global": 0,
-        "name": "21. Управление пином",
+        "name": "39. Управление пином",
         "type": "Writing",
         "subtype": "ButtonOut",
         "needSave": 0,
@@ -329,11 +592,11 @@
         "int": 0,
         "inv": 0,
         "pin": 2,
-        "num": 21
+        "num": 39
     },
     {
         "global": 0,
-        "name": "22. Расширитель портов Mcp23017",
+        "name": "40. Расширитель портов Mcp23017",
         "type": "Reading",
         "subtype": "Mcp23017",
         "id": "Mcp",
@@ -343,11 +606,11 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 22
+        "num": 40
     },
     {
         "global": 0,
-        "name": "23. Сенсорная кнопка",
+        "name": "41. Сенсорная кнопка",
         "type": "Writing",
         "subtype": "Multitouch",
         "id": "impulse",
@@ -361,11 +624,11 @@
         "pinMode": "INPUT",
         "debounceDelay": 50,
         "PWMDelay": 500,
-        "num": 23
+        "num": 41
     },
     {
         "global": 0,
-        "name": "24. Расширитель портов Pcf8574",
+        "name": "42. Расширитель портов Pcf8574",
         "type": "Reading",
         "subtype": "Pcf8574",
         "id": "Pcf",
@@ -375,11 +638,11 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 24
+        "num": 42
     },
     {
         "global": 0,
-        "name": "25. PWM ESP8266",
+        "name": "43. PWM ESP8266",
         "type": "Writing",
         "subtype": "Pwm8266",
         "id": "pwm",
@@ -391,11 +654,11 @@
         "freq": 5000,
         "val": 0,
         "apin": -1,
-        "num": 25
+        "num": 43
     },
     {
         "global": 0,
-        "name": "26. Телеграм-Лайт",
+        "name": "44. Телеграм-Лайт",
         "type": "Writing",
         "subtype": "TelegramLT",
         "id": "tg",
@@ -404,14 +667,14 @@
         "descr": "",
         "token": "",
         "chatID": "",
-        "num": 26
+        "num": 44
     },
     {
         "header": "Экраны"
     },
     {
         "global": 0,
-        "name": "27. LCD экран 2004",
+        "name": "45. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -423,10 +686,10 @@
         "size": "20,4",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 27
+        "num": 45
     },
     {
-        "name": "28. LCD экран 1602",
+        "name": "46. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -438,6 +701,6 @@
         "size": "16,2",
         "coord": "0,0",
         "id2show": "id датчика",
-        "num": 28
+        "num": 46
     }
 ]
