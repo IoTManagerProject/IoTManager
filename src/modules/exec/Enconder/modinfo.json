@@ -1,0 +1,66 @@
+{
+    "menuSection": "Исполнительные устройства",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Энкодер",
+            "type": "Writing",
+            "subtype": "Encoder",
+            "id": "enc",
+            "widget": "inputDgt",
+            "page": "Энкодер",
+            "descr": "Громкость",
+            "needSave": 0,
+            "val": "0",
+            "round" : 0,
+            
+            "step": 1,
+            "stepOnPress": 5,
+            "pins": "4,5,2"
+        }
+    ],
+    "about": {
+        "authorName": "Sergei Yakovlev",
+        "authorContact": "",
+        "authorGit": "",
+        "specialThanks": "",
+        "moduleName": "Encoder",
+        "moduleVersion": "1.5",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "subTypes": [
+            "Encoder"
+        ],
+        "title": "Энкодер",
+        "moduleDesc": "модуль для работы с Энкодером. Кнопочный вариант совместим с модулями Multitouch и ButtonIn",
+        "retInfo": "Значение счетчика",
+        "propInfo": {
+            "step" : "Размер шага Энкодера, может принимать значение 0.0001 или 1000",
+            "stepOnPress": "Размер шага Энкодера при нажатой кнопке, 0 - отключает учет",
+            "pins": "Подключеные пины (CLK, DT, SW)"
+        }
+    },
+    "defActive": true,
+    "usedLibs": {
+        "esp32_4mb": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp8266_4mb": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp8266_1mb": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp8266_1mb_ota": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp8285_1mb": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp8285_1mb_ota": [
+            "gyverlibs/EncButton @ ^2.0"
+        ]
+    }
+}
