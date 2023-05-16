@@ -65,6 +65,10 @@
         ],
         "Сенсоры": [
             {
+                "path": "src/modules/sensors/A02Distance",
+                "active": true
+            },
+            {
                 "path": "src/modules/sensors/Acs712",
                 "active": true
             },
@@ -169,6 +173,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/sensors/S8",
+                "active": true
+            },
+            {
                 "path": "src/modules/sensors/Sds011",
                 "active": false
             },
@@ -200,6 +208,14 @@
             },
             {
                 "path": "src/modules/exec/ButtonOut",
+                "active": true
+            },
+            {
+                "path": "src/modules/exec/Buzzer",
+                "active": true
+            },
+            {
+                "path": "src/modules/exec/Enconder",
                 "active": true
             },
             {
