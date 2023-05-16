@@ -26,6 +26,7 @@
 import configparser
 import os, json, sys, getopt
 from pathlib import Path
+import shutil
 
 
 config = configparser.ConfigParser()  # создаём объекта парсера INI
@@ -202,6 +203,10 @@ config["platformio"]["default_envs"] = deviceName
 config["platformio"]["data_dir"] = profJson['projectProp']['platformio']['data_dir']
 with open("platformio.ini", 'w') as configFile:
     config.write(configFile)
+    
+# сохраняем применяемый профиль в папку data_svelte для загрузки на контроллер и дальнейшего переиспользования
+print(f"Сохраняем профиль {profile} в {dataDir}")
+shutil.copy(profile, dataDir + "/" + profile) 
 
     
 # import ctypes  # An included library with Python install.   
