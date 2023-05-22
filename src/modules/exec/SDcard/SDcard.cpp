@@ -28,18 +28,18 @@ class SDcard : public IoTItem {
     }
 
     void savePicture(String path, IoTValue srcValue) {
-        if (srcValue.extBinInfoSize) {       
-            fs::FS &fs = SD_MMC;    
-            File file = fs.open(path.c_str(), FILE_WRITE);
-            if(!file){
-                Serial.println("Failed to open file in writing mode");
-            } 
-            else {
-                file.write(srcValue.extBinInfo, srcValue.extBinInfoSize); // payload (image), payload length
-                Serial.printf("Picture file name: %s | bufsize: %d\n", path.c_str(), srcValue.extBinInfoSize);
-            }
-            file.close();
-        }
+        // if (srcValue.extBinInfoSize) {       
+        //     fs::FS &fs = SD_MMC;    
+        //     File file = fs.open(path.c_str(), FILE_WRITE);
+        //     if(!file){
+        //         Serial.println("Failed to open file in writing mode");
+        //     } 
+        //     else {
+        //         file.write(srcValue.extBinInfo, srcValue.extBinInfoSize); // payload (image), payload length
+        //         Serial.printf("Picture file name: %s | bufsize: %d\n", path.c_str(), srcValue.extBinInfoSize);
+        //     }
+        //     file.close();
+        // }
     }
 
     void doByInterval() {

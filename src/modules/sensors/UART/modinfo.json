@@ -82,7 +82,12 @@
         ],
         "esp8266_2mb_ota": [
             "plerup/EspSoftwareSerial"
+        ],
+        "esp8285_1mb": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp8285_1mb_ota": [
+            "plerup/EspSoftwareSerial"
         ]
-
     }
 }

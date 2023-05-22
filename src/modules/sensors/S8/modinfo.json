@@ -1,0 +1,43 @@
+{
+    "menuSection": "Сенсоры",
+    "configItem": [
+        {
+         "name": "(S8) Cенсор качества воздуха",
+         "num": 3,
+         "type": "Reading",
+         "subtype": "S8co",
+         "id": "s8co",
+         "widget": "anydataPpm",
+         "page": "Сенсоры",
+         "descr": "S8_CO2",
+         "int": 15,
+         "round": 1,
+		 "rxPin": 13,
+         "txPin": 15
+        }
+    ],
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "",
+        "moduleName": "S8",
+        "moduleVersion": "2.1",
+        "usedRam": 15,
+        "subTypes": [
+            "S8co"
+        ],
+        "title": "Датчик углекислого газа S8",
+        "moduleDesc": "Измеряет параметвы воздуха.",
+        "propInfo": {
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+    "defActive": true,
+    "usedLibs": {
+        "esp32_4mb": [
+                    ],
+        "esp8266_4mb": [
+                   ]
+    }
+}
