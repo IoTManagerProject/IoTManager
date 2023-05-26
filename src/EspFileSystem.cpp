@@ -76,6 +76,7 @@ uint32_t ESP_getChipId(void) {
 #endif
 }
 
+#ifndef esp32s2_4mb
 uint32_t ESP_getFlashChipId(void) {
 #ifdef ESP32
     // Нет аналогичной (без доп.кода) функций в 32
@@ -85,6 +86,7 @@ uint32_t ESP_getFlashChipId(void) {
     return ESP.getFlashChipId();
 #endif
 }
+#endif
 
 const String getMacAddress() {
     uint8_t mac[6];
