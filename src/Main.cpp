@@ -10,7 +10,92 @@ String volStrForSave = "";
 unsigned long currentMillis;
 unsigned long prevMillis;
 
+
+
+void elementsLoop() {
+    // передаем управление каждому элементу конфигурации для выполнения своих функций
+    for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        (*it)->loop();
+
+        // if ((*it)->iAmDead) {
+        if (!((*it)->iAmLocal) && (*it)->getIntFromNet() == -1) {
+            delete *it;
+            IoTItems.erase(it);
+            break;
+        }
+    }
+
+    handleOrder();
+    handleEvent();
+}
+
+
+
+
+
+#define SETUPBASE_ERRORMARKER   0
+#define SETUPCONF_ERRORMARKER   1
+#define SETUPSCEN_ERRORMARKER   2
+#define SETUPINET_ERRORMARKER   3
+#define SETUPLAST_ERRORMARKER   4
+#define TICKER_ERRORMARKER      5
+#define HTTP_ERRORMARKER        6
+#define SOCKETS_ERRORMARKER     7
+#define MQTT_ERRORMARKER        8
+#define MODULES_ERRORMARKER     9
+
+#define COUNTER_ERRORMARKER     4       // количество шагов счетчика
+#define STEPPER_ERRORMARKER     100000  // размер шага счетчика интервала доверия выполнения блока кода мкс
+
+#ifdef esp32_4mb
+
+static int IRAM_ATTR initErrorMarkerId = 0;  // ИД маркера 
+static int IRAM_ATTR errorMarkerId = 0;
+static int IRAM_ATTR errorMarkerCounter = 0;
+
+hw_timer_t *My_timer = NULL;
+void IRAM_ATTR onTimer(){
+    if (errorMarkerCounter >= 0) {
+        if (errorMarkerCounter >= COUNTER_ERRORMARKER) {
+            errorMarkerId = initErrorMarkerId;
+            errorMarkerCounter = -1;
+        } else 
+            errorMarkerCounter++;
+    } 
+}
+#endif
+
+void initErrorMarker(int id) {
+#ifdef esp32_4mb 
+    initErrorMarkerId = id;
+    errorMarkerCounter = 0;
+#endif
+}
+
+void stopErrorMarker(int id) {
+#ifdef esp32_4mb 
+    errorMarkerCounter = -1;
+    if (errorMarkerId) 
+    SerialPrint("I", "WARNING!", "A lazy (freezing loop more than " + (String)(COUNTER_ERRORMARKER * STEPPER_ERRORMARKER / 1000) + " ms) section has been found! With ID=" + (String)errorMarkerId);
+    errorMarkerId = 0;
+    initErrorMarkerId = 0;
+#endif
+}
+
+
+
 void setup() {
+
+#ifdef esp32_4mb 
+    My_timer = timerBegin(0, 80, true);
+    timerAttachInterrupt(My_timer, &onTimer, true);
+    timerAlarmWrite(My_timer, STEPPER_ERRORMARKER, true);
+    timerAlarmEnable(My_timer);
+    //timerAlarmDisable(My_timer);
+
+    initErrorMarker(SETUPBASE_ERRORMARKER);
+#endif
+
     Serial.begin(115200);
     Serial.flush();
     Serial.println();
@@ -33,30 +118,9 @@ void setup() {
     // синхронизация глобальных переменных с flash
     globalVarsSync();
 
-    // подключаемся к роутеру
-    routerConnect();
+    stopErrorMarker(SETUPBASE_ERRORMARKER);
 
-// инициализация асинхронного веб сервера и веб сокетов
-#ifdef ASYNC_WEB_SERVER
-    asyncWebServerInit();
-#endif
-#ifdef ASYNC_WEB_SOCKETS
-    asyncWebSocketsInit();
-#endif
-
-// инициализация стандартного веб сервера и веб сокетов
-#ifdef STANDARD_WEB_SERVER
-    standWebServerInit();
-#endif
-#ifdef STANDARD_WEB_SOCKETS
-    standWebSocketsInit();
-#endif
-
-    // NTP
-    ntpInit();
-
-    // инициализация mqtt
-    mqttInit();
+    initErrorMarker(SETUPCONF_ERRORMARKER);
 
     // настраиваем i2c шину
     int i2c, pinSCL, pinSDA, i2cFreq;
@@ -77,6 +141,52 @@ void setup() {
 
     // настраиваем микроконтроллер
     configure("/config.json");
+    
+    stopErrorMarker(SETUPCONF_ERRORMARKER);
+
+
+
+    initErrorMarker(SETUPSCEN_ERRORMARKER);
+    
+    // подготавливаем сценарии
+    iotScen.loadScenario("/scenario.txt");
+    // создаем событие завершения инициализации основных моментов для возможности выполнения блока кода при загрузке
+    createItemFromNet("onInit", "1", 1);
+    elementsLoop();
+    
+    stopErrorMarker(SETUPSCEN_ERRORMARKER);
+    
+
+    
+    initErrorMarker(SETUPINET_ERRORMARKER);
+
+    // подключаемся к роутеру
+    routerConnect();
+
+// инициализация асинхронного веб сервера и веб сокетов
+#ifdef ASYNC_WEB_SERVER
+    asyncWebServerInit();
+#endif
+#ifdef ASYNC_WEB_SOCKETS
+    asyncWebSocketsInit();
+#endif
+
+// инициализация стандартного веб сервера и веб сокетов
+#ifdef STANDARD_WEB_SERVER
+    standWebServerInit();
+#endif
+#ifdef STANDARD_WEB_SOCKETS
+    standWebSocketsInit();
+#endif
+
+    stopErrorMarker(SETUPINET_ERRORMARKER);
+
+
+
+    initErrorMarker(SETUPLAST_ERRORMARKER);
+
+    // NTP
+    ntpInit();
 
     // инициализация задач переодического выполнения
     periodicTasksInit();
@@ -87,11 +197,8 @@ void setup() {
     // запуск работы udp
     asyncUdpInit();
 
-    // подготавливаем сценарии
-    iotScen.loadScenario("/scenario.txt");
-
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
-    createItemFromNet("onStart", "1", -4);
+    createItemFromNet("onStart", "1", 1);
 
     stInit();
 
@@ -117,54 +224,39 @@ void setup() {
     Serial.println("-------test start--------");
     Serial.println("--------test end---------");
 
-    // симуляция добавления внешних событий
-    // IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"rel1\",\"val\":10,\"int\":20}"));
-    // IoTItems.push_back((IoTItem*)new externalVariable("{\"id\":\"rel4\",\"val\":34,\"int\":30}"));
-    // пример получения JSON всех Items
-    // Serial.println(getParamsJson());
-    // чтение одного параметра
-    // Serial.println(findIoTItem("t1")->getValue());
-    // тест перебора пинов из расширения
-    // for (int i = 109; i < 112; i++) {
-    //     IoTgpio.pinMode(i, OUTPUT);
-    //     IoTgpio.digitalWrite(i, !IoTgpio.digitalRead(i));
-    //     delay(1000);
-    //     IoTgpio.digitalWrite(i, !IoTgpio.digitalRead(i));
-    //     delay(1000);
-    // }
+    stopErrorMarker(SETUPLAST_ERRORMARKER);
 }
+
+
 
 void loop() {
 #ifdef LOOP_DEBUG
     unsigned long st = millis();
 #endif
 
+    initErrorMarker(TICKER_ERRORMARKER);
     ts.update();
+    stopErrorMarker(TICKER_ERRORMARKER);
 
 #ifdef STANDARD_WEB_SERVER
+    initErrorMarker(HTTP_ERRORMARKER);
     HTTP.handleClient();
+    stopErrorMarker(HTTP_ERRORMARKER);
 #endif
 
 #ifdef STANDARD_WEB_SOCKETS
+    initErrorMarker(SOCKETS_ERRORMARKER);
     standWebSocket.loop();
+    stopErrorMarker(SOCKETS_ERRORMARKER);
 #endif
 
+    initErrorMarker(MQTT_ERRORMARKER);
     mqttLoop();
-
-    // передаем управление каждому элементу конфигурации для выполнения своих функций
-    for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-        (*it)->loop();
-
-        // if ((*it)->iAmDead) {
-        if (!((*it)->iAmLocal) && (*it)->getIntFromNet() == -1) {
-            delete *it;
-            IoTItems.erase(it);
-            break;
-        }
-    }
-
-    handleOrder();
-    handleEvent();
+    stopErrorMarker(MQTT_ERRORMARKER);
+    
+    initErrorMarker(MODULES_ERRORMARKER);
+    elementsLoop();
+    stopErrorMarker(MODULES_ERRORMARKER);
 
     // #ifdef LOOP_DEBUG
     //     loopPeriod = millis() - st;

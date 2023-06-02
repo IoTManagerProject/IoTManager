@@ -7,8 +7,9 @@
 
 IoTItem::IoTItem(const String& parameters) {
     jsonRead(parameters, F("int"), _interval, false);
-    if (_interval <= 0) enableDoByInt = false;
-    _interval = _interval * 1000;
+    if (_interval == 0) enableDoByInt = false;           // выключаем использование периодического выполнения в модуле
+    if (_interval > 0) _interval = _interval * 1000;    // если int положителен, то считаем, что получены секунды
+    if (_interval < 0) _interval = _interval * -1;      // если int отрицательный, то миллисекунды
     jsonRead(parameters, F("subtype"), _subtype, false);
     jsonRead(parameters, F("id"), _id);
     if (!jsonRead(parameters, F("multiply"), _multiply, false)) _multiply = 1;
@@ -100,11 +101,6 @@ void IoTItem::regEvent(const String& value, const String& consoleInfo, bool erro
     if (genEvent) {
         generateEvent(_id, value);
 
-        // распространяем событие через хуки
-        for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-            (*it)->onRegEvent(this);
-        }
-
         // отправка события другим устройствам в сети если не было ошибки
         if (_global && !error) {
             String json = "{}";
@@ -170,9 +166,9 @@ void IoTItem::setIntFromNet(int interval) {
 void IoTItem::checkIntFromNet() {
     // проверяем элемент на доверие данным.
     if (_intFromNet >= 0) {
-        // если время жизни истекло, то удаляем элемент
+        // если время жизни истекло, то удаляем элемент чуть позже на следующем такте loop
         // если это было уведомление не об ошибке или начале работы, то сообщаем, что сетевое событие давно не приходило
-        if (_intFromNet == 0 && _id.indexOf("onError") == -1 && _id.indexOf("onStart") == -1) {
+        if (_intFromNet == 0 && _id.indexOf("onError") == -1 && _id.indexOf("onStart") == -1 && _id.indexOf("onInit") == -1) {
             SerialPrint("E", _id, "The new data did not come from the network. The level of trust is low.", _id);
         }
         _intFromNet--;
@@ -199,12 +195,24 @@ String IoTItem::getID() {
     return _id;
 };
 
+bool IoTItem::isStrInID(const String& str) {
+    return _id.indexOf(str) != -1; 
+}
+
 void IoTItem::setInterval(long interval) {
     _interval = interval;
 }
 
 IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
+}
+
+IoTItem* IoTItem::getRtcDriver() {
+    return nullptr;
+}
+
+unsigned long IoTItem::getRtcUnixTime() {
+    return 0;
 }
 
 // сетевое общение====================================================================================================================================
@@ -236,6 +244,17 @@ IoTItem* findIoTItem(const String& name) {
 
     return nullptr;
 }
+
+// поиск элемента модуля в существующей конфигурации по части имени
+IoTItem* findIoTItemByPartOfName(const String& partName) {
+    if (partName == "") return nullptr;
+    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if ((*it)->isStrInID(partName)) return *it;
+    }
+
+    return nullptr;
+}
+
 // поиск плюс получение значения
 String getItemValue(const String& name) {
     IoTItem* tmp = findIoTItem(name);
@@ -270,6 +289,9 @@ IoTItem* createItemFromNet(const String& itemId, const String& value, int interv
 // создаем временную копию элемента из сети на основе события
 IoTItem* createItemFromNet(const String& msgFromNet) {
     IoTItem* tmpp = new IoTItem(msgFromNet);
+
+    //Serial.println("vvvvvvvvvvv " + msgFromNet + " " + (String)tmpp->getInterval());
+
     if (tmpp->getInterval()) tmpp->setIntFromNet(tmpp->getInterval() / 1000 + 5);
     tmpp->iAmLocal = false;
     IoTItems.push_back(tmpp);
@@ -278,7 +300,7 @@ IoTItem* createItemFromNet(const String& msgFromNet) {
 }
 
 void analyzeMsgFromNet(const String& msg, String altId) {
-    if (!jsonRead(msg, F("id"), altId, altId == "") && altId == "") return;  // ничего не предпринимаем, если ошибка и altId = "", вообще данная конструкция нужна для совместимости с форматом данных 3 версией
+    if (!jsonRead(msg, F("id"), altId, altId == "")) return;  // ничего не предпринимаем, если ошибка и altId = "", вообще данная конструкция нужна для совместимости с форматом данных 3 версией
     IoTItem* itemExist = findIoTItem(altId);
     if (itemExist) {
         String valAsStr = msg;
@@ -293,16 +315,17 @@ void analyzeMsgFromNet(const String& msg, String altId) {
     } else {
         // временно зафиксируем данные в базе, если локально элемент отсутствует
         createItemFromNet(msg);
+        //Serial.println("ffffffffff " + msg + " altId=" + altId);
     }
 }
 
-StaticJsonDocument<JSON_BUFFER_SIZE> docForExport;
+//StaticJsonDocument<JSON_BUFFER_SIZE> docForExport;
 
-StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON() {
-    docForExport.clear();
-    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-        if ((*it)->iAmLocal) docForExport[(*it)->getID()] = (*it)->getValue();
-    }
+// StaticJsonDocument<JSON_BUFFER_SIZE>* getLocalItemsAsJSON() {
+//     docForExport.clear();
+//     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+//         if ((*it)->iAmLocal) docForExport[(*it)->getID()] = (*it)->getValue();
+//     }
 
-    return &docForExport;
-}
+//     return &docForExport;
+// }

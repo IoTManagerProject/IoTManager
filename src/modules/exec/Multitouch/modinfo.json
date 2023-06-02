@@ -25,7 +25,7 @@
     "authorGit": "https://github.com/avaksru",
     "specialThanks": "",
     "moduleName": "Multitouch",
-    "moduleVersion": "1.0",
+    "moduleVersion": "2.0",
     "usedRam": {
       "esp32_4mb": 15,
       "esp8266_4mb": 15

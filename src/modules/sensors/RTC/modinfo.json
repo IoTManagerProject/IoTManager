@@ -1,0 +1,69 @@
+{
+    "menuSection": "Сенсоры",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Часы реального времени",
+            "type": "Reading",
+            "subtype": "RTC",
+            "id": "rtc",
+            "widget": "anydataDef",
+            "page": "Таймеры",
+            "descr": "Время RTC",
+            "chipCode": 1,
+            "timeFormat": "d-m-Y H:i:s",
+            "RST": -1,
+            "CLK": -1,
+            "DAT": -1,
+            "ticker": 0,
+            "int": 5,
+            "btn-setUTime": "0",
+            "btn-setSysTime": "nil"    
+        }
+    ],
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "",
+        "moduleName": "RTC",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "Часы реального времени",
+        "moduleDesc": "Позволяет хранить и получать время из модуля с батарейкой.",
+        "propInfo": {
+            "chipCode": "RX8025 - 4, DS3231 - 3, DS1307 - 2, DS1302 - 1 (необходимо установить пины RST, CLK и DAT)",
+            "timeFormat": "Формат времени для вывода. Как у функции date() в PHP",
+            "RST": "Пин RST",
+            "CLK": "Пин CLK",
+            "DAT": "Пин DAT",
+            "ticker": "Генерировать(1) или нет(0) события при каждом тике часов (каждые int секунд).",
+            "int": "Количество секунд между получениями данных из модуля",
+            "btn-setUTime": "Кнопка установки времени модуля на основе указанного unixtime",
+            "btn-setSysTime": "Кнопка установки времени модуля на основе системного с платы ESP"
+        },
+        "retInfo": "Содержит текущее время из модуля RTC",
+        "funcInfo": [
+            {
+                "name": "getTime",
+                "descr": "Получить строковое значение времени по указанному формату.",
+                "params": ["Формат как у функции date() в PHP"]
+            }
+        ]
+    },
+    "defActive": true,
+    "usedLibs": {
+        "esp32_4mb": ["https://github.com/tremaru/iarduino_RTC"],
+        "esp8266_4mb": ["https://github.com/tremaru/iarduino_RTC"],
+        "esp8266_1mb": ["https://github.com/tremaru/iarduino_RTC"],
+        "esp8266_1mb_ota": ["https://github.com/tremaru/iarduino_RTC"],
+        "esp8285_1mb": ["https://github.com/tremaru/iarduino_RTC"],
+        "esp8285_1mb_ota": ["https://github.com/tremaru/iarduino_RTC"],
+        "esp8266_2mb": ["https://github.com/tremaru/iarduino_RTC"],
+        "esp8266_2mb_ota": ["https://github.com/tremaru/iarduino_RTC"]
+    }
+}

@@ -21,7 +21,7 @@ void SerialPrint(const String& errorLevel, const String& module, const String& m
         cleanString(tosend);
         // создаем событие об ошибке для возможной реакции в сценарии
         if (itemId != "") {
-            createItemFromNet(itemId + F("_onError"), tosend, -4);
+            createItemFromNet(itemId + F("_onError"), tosend, 1);
         } else {
             // createItemFromNet("onError", tosend, -4);
         }

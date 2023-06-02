@@ -124,6 +124,8 @@ const String readFile(const String& filename, size_t max_size) {
     size_t size = file.size();
     if (size > max_size) {
         file.close();
+        if (path == "/config.json") 
+            return "[]";
         return "large";
     }
     String temp = file.readString();

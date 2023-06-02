@@ -1,12 +1,15 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 
-#include "LiquidCrystal_I2C.h"
+//#include "LiquidCrystal_I2C.h"
+#include <RobotClass_LiquidCrystal_I2C.h>
+
 #include <map>
 
 void scanI2C();
 
-LiquidCrystal_I2C *LCDI2C;
+//LiquidCrystal_I2C *LCDI2C;
+RobotClass_LiquidCrystal_I2C *LCDI2C;
 
 class Lcd2004 : public IoTItem {
    private:
@@ -34,7 +37,8 @@ class Lcd2004 : public IoTItem {
         int w = selectFromMarkerToMarker(size, ",", 0).toInt();  //количество столбцов
         int h = selectFromMarkerToMarker(size, ",", 1).toInt();  //количество строк
         if (LCDI2C == nullptr) {                                 //инициализации экрана еще не было
-            LCDI2C = new LiquidCrystal_I2C(hexStringToUint8(_addr), w, h);
+            //LCDI2C = new LiquidCrystal_I2C(hexStringToUint8(_addr), w, h);
+            LCDI2C = new RobotClass_LiquidCrystal_I2C(hexStringToUint8(_addr), w, h, CP_UTF8);
             if (LCDI2C != nullptr) {
                 LCDI2C->init();
             }

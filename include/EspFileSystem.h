@@ -35,7 +35,7 @@ extern FS* filesystem;
 extern bool fileSystemInit();
 extern void globalVarsSync();
 
-extern String getParamsJson();
+//extern String getParamsJson();
 
 extern void syncSettingsFlashJson();
 extern void syncValuesFlashJson();

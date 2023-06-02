@@ -119,7 +119,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 configure("/config.json");
                 iotScen.loadScenario("/scenario.txt");
                 // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
-                createItemFromNet("onStart", "1", -4);
+                createItemFromNet("onStart", "1", 1);
             }
 
             //----------------------------------------------------------------------//

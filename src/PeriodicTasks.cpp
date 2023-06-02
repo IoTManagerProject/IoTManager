@@ -9,6 +9,7 @@ void periodicTasksInit() {
             // heap
             String heap = prettyBytes(ESP.getFreeHeap());
             SerialPrint(F("i"), F("HEAP"), heap);
+            SerialPrint(F("i"), F("IoTItems"), (String)IoTItems.size());
             printGlobalVarSize();
             jsonWriteStr_(errorsHeapJson, F("heap"), heap);
             // rssi

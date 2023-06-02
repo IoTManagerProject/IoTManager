@@ -1,0 +1,39 @@
+{
+    "menuSection": "Сенсоры",
+    "configItem": [
+        {
+            "name": "A02 Дальность",
+            "type": "Reading", 
+            "subtype": "A02Distance",
+            "id": "dist",
+            "widget": "anydataCm",
+            "page": "Сенсоры",
+            "descr": "Дальность",
+            "int": 5,
+            "round": 1
+        }
+    ],
+    "about": {
+        "authorName": "Bubnov Mikhail",
+        "authorContact": "https://t.me/Mitchel",
+        "authorGit": "https://github.com/Mit4el",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "",
+        "moduleName": "A02Distance",
+        "moduleVersion": "0.1",
+        "moduleDesc": "A0221AU, A02YYUW Ультразвуковой датчик. Позволяет получить дальность с ультрозвуковых датчиков A0221AU, A02YYUW",
+        "propInfo": {
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+    "defActive": true,
+    "usedLibs": {
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": [],
+        "esp8285_1mb": [],
+        "esp8285_1mb_ota": [],
+        "esp8266_2mb": [],
+        "esp8266_2mb_ota": []
+    }
+}

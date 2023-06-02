@@ -66,6 +66,12 @@
         ],
         "esp8285_1mb_ota": [
             "WEMOS SHT3x@1.0.0"
+        ],
+        "esp8266_2mb": [
+            "WEMOS SHT3x@1.0.0"
+        ],
+        "esp8266_2mb_ota": [
+            "WEMOS SHT3x@1.0.0"
         ]
     }
 }

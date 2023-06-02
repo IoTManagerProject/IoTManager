@@ -9,14 +9,19 @@ void ntpInit() {
     ts.add(
         TIME, 1000, [&](void*) {
             unixTime = getSystemTime();
-            unixTimeShort = unixTime - START_DATETIME;
             if (unixTime < MIN_DATETIME) {
                 isTimeSynch = false;
                 // SerialPrint("E", "NTP", "Time not synched");
                 jsonWriteInt(errorsHeapJson, F("tme1"), 1);
                 synchTime();
-                return;
+
+                // проверяем присутствие RTC с батарейкой и получаем время при наличии
+                if (rtcItem) {
+                    unixTime = rtcItem->getRtcUnixTime();
+                } else return;
             }
+
+            unixTimeShort = unixTime - START_DATETIME;
             jsonWriteInt(errorsHeapJson, F("tme1"), 0);
             breakEpochToTime(unixTime + jsonReadInt(settingsFlashJson, F("timezone")) * 60 * 60, _time_local);
             breakEpochToTime(unixTime, _time_utc);
@@ -39,7 +44,7 @@ void ntpInit() {
 }
 
 void synchTime() {
-    configTime(0, 0, "pool.ntp.org", "ru.pool.ntp.org", "pool.ntp.org");
+    configTime(0, 0, "pool.ntp.org", "ru.pool.ntp.org", jsonReadStr(settingsFlashJson, F("ntp")).c_str());
 }
 
 //событие смены даты

@@ -1,0 +1,44 @@
+{   
+    "menuSection": "Сенсоры",
+
+    "configItem": [{
+        "global": 0,
+        "name": "Cенсор освещенность Bh1750",
+        "type": "Reading",
+        "subtype": "Bh1750",
+        "id": "Bh1750",
+        "widget": "anydata",
+        "page": "Сенсоры",
+        "descr": "Освещённость",
+        "round": 1,
+        "int": 15
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "",
+        "moduleName": "Bh1750",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "Cенсор освещённости",
+        "moduleDesc": "Позволяет получить текущее значение освещённости в LUX.",
+        "propInfo": {
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [
+            "BH1750"
+        ],
+        "esp8266_4mb": [
+            "BH1750"
+        ]
+    }
+}
