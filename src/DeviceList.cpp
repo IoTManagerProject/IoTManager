@@ -37,10 +37,10 @@ void addThisDeviceToList() {
 AsyncUDP asyncUdp;
 
 void udpListningInit() {
-    // если был включен автоматический поиск устройств
-    if (jsonReadInt(settingsFlashJson, F("udps")) != 0) {
-        if (asyncUdp.listenMulticast(IPAddress(239, 255, 255, 255), 4210)) {
-            asyncUdp.onPacket([](AsyncUDPPacket packet) {
+    if (asyncUdp.listenMulticast(IPAddress(239, 255, 255, 255), 4210)) {
+        asyncUdp.onPacket([](AsyncUDPPacket packet) {
+            // если был включен автоматический поиск устройств то начнем запись в оперативную память
+            if (jsonReadInt(settingsFlashJson, F("udps")) != 0) {
                 // Serial.print("UDP Packet Type: ");
                 // Serial.println(packet.isBroadcast() ? "Broadcast" : packet.isMulticast() ? "Multicast" : "Unicast");
                 // Serial.print("From: ");
@@ -55,8 +55,8 @@ void udpListningInit() {
                 // Serial.print(packet.length());
                 // Serial.print(", Data: ");
                 // Serial.write(packet.data(), packet.length());
-
                 // String data = {packet.data(), packet.length()}; // для ESP32 подходит как замена uint8tToString, но 8266 не переваривает
+
                 String data = uint8tToString(packet.data(), packet.length());
                 String remoteWorkgroup = "";
                 data.replace("[", "");
@@ -67,21 +67,25 @@ void udpListningInit() {
                     if (remoteWorkgroup == loacalWorkgroup) {
                         SerialPrint("i", F("UDP"), "IP: " + packet.remoteIP().toString() + ":" + String(packet.remotePort()));
                         jsonMergeArrays(devListHeapJson, data);
+                        // эксперементальный вариант отправки нового списка сразу по приходу
+                        // sendStringToWs("devlis", devListHeapJson, -1);
                     }
                 } else {
                     SerialPrint("E", F("UDP"), F("Udp packet invalid"));
                 }
+
                 // reply to the client
                 // String ip = WiFi.localIP().toString();
                 // asyncUdp.broadcastTo(ip.c_str(), packet.remotePort());
                 // packet.printf(ip.c_str(), packet.length());
-            });
-        }
 
-        SerialPrint("i", F("UDP"), F("Udp listning inited"));
-    } else {
-        devListHeapJson = "";
+            } else {
+                devListHeapJson = "";
+            }
+        });
     }
+
+    SerialPrint("i", F("UDP"), F("Udp listning inited"));
 }
 
 void udpBroadcastInit() {

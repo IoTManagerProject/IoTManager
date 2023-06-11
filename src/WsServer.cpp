@@ -428,10 +428,11 @@ void sendStringToWs(const String& header, String& payload, int client_id) {
 void sendDeviceList(uint8_t num) {
     if (jsonReadInt(settingsFlashJson, F("udps")) != 0) {
         // если включен автопоиск то отдаем список из оперативной памяти
-        SerialPrint("E", "FS", devListHeapJson);
+        SerialPrint("i", "FS", "heap list");
         sendStringToWs("devlis", devListHeapJson, num);
     } else {
         // если выключен автопоиск то отдаем список из флешь памяти
         sendFileToWsByFrames("/devlist.json", "devlis", "", num, WEB_SOCKETS_FRAME_SIZE);
+        SerialPrint("i", "FS", "flash list");
     }
 }
