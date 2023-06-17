@@ -2,7 +2,7 @@
 #include "Global.h"
 #include "utils/StringUtils.h"
 
-static const char* TIME_FORMAT PROGMEM = "%02d:%02d:%02d";
+static const char* TIME_FORMAT PROGMEM = "%02d:%02d";  //:%02d";
 static const char* TIME_FORMAT_WITH_DAYS PROGMEM = "%dd %02d:%02d";
 
 const String prettySeconds(unsigned long time_s) {
