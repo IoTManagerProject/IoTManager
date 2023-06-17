@@ -76,7 +76,7 @@ bool upgradeBuild() {
     ESPhttpUpdate.rebootOnUpdate(false);
     t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, getBinPath("firmware.bin"));
 #endif
-#ifdef esp32_4mb
+#ifdef ESP32
     httpUpdate.rebootOnUpdate(false);
     HTTPUpdateResult retBuild = httpUpdate.update(wifiClient, getBinPath("firmware.bin"));
 #endif
