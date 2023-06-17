@@ -135,11 +135,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 // RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
             }
 
-            // обработка кнопки сохранить настройки wifi
+            // обработка кнопки сохранить settings.json
             if (headerStr == "/sgnittes|") {
                 writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 sendStringToWs("errors", errorsHeapJson, num);
+                // если не было создано приема данных по udp - то создадим его
                 addThisDeviceToList();
             }
 
@@ -164,7 +165,14 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             // отвечаем данными на запрос страницы
             if (headerStr == "/list|") {
-                sendStringToWs("devlis", devListHeapJson, num);
+                sendStringToWs("settin", settingsFlashJson, num);
+                // отправим список устройств в зависимости от того что выбрал user
+                sendDeviceList(num);
+            }
+
+            // сохраняем данные листа
+            if (headerStr == "/tsil|") {
+                writeFileUint8tByFrames("devlist.json", payload, length, headerLenth, 256);
             }
 
             //----------------------------------------------------------------------//
@@ -307,7 +315,10 @@ void publishJsonWs(const String& topic, String& json) {
 void periodicWsSend() {
     sendStringToWs("ssidli", ssidListHeapJson, -1);
     sendStringToWs("errors", errorsHeapJson, -1);
-    sendStringToWs("devlis", devListHeapJson, -1);
+    // отправляем переодичестки только в авто режиме
+    if (jsonReadInt(settingsFlashJson, F("udps")) != 0) {
+        sendStringToWs("devlis", devListHeapJson, -1);
+    }
 }
 
 #ifdef ESP32
@@ -411,5 +422,17 @@ void sendStringToWs(const String& header, String& payload, int client_id) {
         standWebSocket.broadcastBIN((uint8_t*)dataArray, totalSize);
     } else {
         standWebSocket.sendBIN(client_id, (uint8_t*)dataArray, totalSize);
+    }
+}
+
+void sendDeviceList(uint8_t num) {
+    if (jsonReadInt(settingsFlashJson, F("udps")) != 0) {
+        // если включен автопоиск то отдаем список из оперативной памяти
+        SerialPrint("i", "FS", "heap list");
+        sendStringToWs("devlis", devListHeapJson, num);
+    } else {
+        // если выключен автопоиск то отдаем список из флешь памяти
+        sendFileToWsByFrames("/devlist.json", "devlis", "", num, WEB_SOCKETS_FRAME_SIZE);
+        SerialPrint("i", "FS", "flash list");
     }
 }

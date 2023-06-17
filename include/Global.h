@@ -1,8 +1,8 @@
 #pragma once
-//константы
+// константы
 #include "Const.h"
 
-//внешние глобальные директории
+// внешние глобальные директории
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <TickerScheduler.h>
@@ -43,7 +43,7 @@
 
 #include <FS.h>
 
-//внутренние глобальные директории проекта
+// внутренние глобальные директории проекта
 #include "utils/FileUtils.h"
 #include "utils/JsonUtils.h"
 #include "utils/SerialPrint.h"

@@ -26,13 +26,13 @@ void globalVarsSync() {
     // jsonWriteStr_(ssidListHeapJson, "ssids_", "");  //метка для парсинга удалить
 }
 
-//к удалению. не используется
-// String getParamsJson() {
-//     String json;
-//     serializeJson(*getLocalItemsAsJSON(), json);
-//     jsonWriteStr_(json, "params", "");
-//     return json;
-// }
+// к удалению. не используется
+//  String getParamsJson() {
+//      String json;
+//      serializeJson(*getLocalItemsAsJSON(), json);
+//      jsonWriteStr_(json, "params", "");
+//      return json;
+//  }
 
 void syncSettingsFlashJson() {
     writeFile(F("settings.json"), settingsFlashJson);
@@ -43,7 +43,7 @@ void syncValuesFlashJson() {
 }
 
 const String getChipId() {
-    return String(ESP_getChipId()) + "-" + String(ESP_getFlashChipId());
+    return String(ESP_getChipId()) + "-" + String(getFlashChipIdNew());  // + "v" + String(FIRMWARE_VERSION);
 }
 
 void setChipId() {
@@ -76,6 +76,7 @@ uint32_t ESP_getChipId(void) {
 #endif
 }
 
+// устарела используем новую функцию ниже
 uint32_t ESP_getFlashChipId(void) {
 #ifdef ESP32
     // Нет аналогичной (без доп.кода) функций в 32
@@ -84,6 +85,31 @@ uint32_t ESP_getFlashChipId(void) {
 #else
     return ESP.getFlashChipId();
 #endif
+}
+
+// https://github.com/espressif/arduino-esp32/issues/6945#issuecomment-1199900892
+// получение flash ch id из проекта esp easy
+
+uint32_t getFlashChipIdNew() {
+    // Cache since size does not change
+    static uint32_t flashChipId = 0;
+
+    if (flashChipId == 0) {
+#ifdef ESP32
+        uint32_t tmp = g_rom_flashchip.device_id;
+
+        for (int i = 0; i < 3; ++i) {
+            flashChipId = flashChipId << 8;
+            flashChipId |= (tmp & 0xFF);
+            tmp = tmp >> 8;
+        }
+
+        //    esp_flash_read_id(nullptr, &flashChipId);
+#elif defined(ESP8266)
+        flashChipId = ESP.getFlashChipId();
+#endif  // ifdef ESP32
+    }
+    return flashChipId;
 }
 
 const String getMacAddress() {
