@@ -51,7 +51,7 @@
             "Beta":"Beta термистора"
         }
     },
-    "defActive": true,
+    "defActive": false,
     "usedLibs": {
         "esp32_4mb": [],
         "esp8266_4mb": [],
