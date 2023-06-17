@@ -3,7 +3,7 @@
 #include "classes/IoTItem.h"
 
 String URL = "https://script.google.com/macros/s/";
-long interval;
+
 
 class GoogleSheet : public IoTItem
 {
@@ -13,6 +13,8 @@ private:
   String scid = "";
   String shname = "";
   bool init = false;
+  int interval = 1;
+ // long interval;
 public:
   GoogleSheet(String parameters) : IoTItem(parameters)
   {
@@ -21,7 +23,7 @@ public:
     jsonRead(parameters, F("scid"), scid);
     jsonRead(parameters, F("shname"), shname);
     jsonRead(parameters, F("int"), interval);
-    interval = interval * 1000 * 60; // приводим к милисекундам
+    interval = interval * 1000 * 60; // так как у нас в минутах
   }
 
   void doByInterval()
@@ -45,16 +47,17 @@ public:
 #endif
         SerialPrint("I", F("GoogleSheet"), "connection failed  ");
       }
-      http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
+      http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS); // HTTPC_STRICT_FOLLOW_REDIRECTS HTTPC_FORCE_FOLLOW_REDIRECTS
       http.addHeader("Content-Type", "application/x-www-form-urlencoded");
       int httpCode = http.GET();
-      String payload = http.getString();
+//      String payload = http.getString();
       SerialPrint("<-", F("GoogleSheet"), "URL: " + urlFinal);
-      SerialPrint("->", F("GoogleSheet"), "URL: " + urlFinal + ", server: " + httpCode);
-      if (httpCode > 0)
+      SerialPrint("->", F("GoogleSheet"), "server: " + (String)httpCode); /*"URL: " + urlFinal + */
+/*      if (httpCode > 0)
       {
         SerialPrint("->", F("GoogleSheet"), "msg from server: " + (String)payload.c_str());
       }
+*/
       http.end();
     }
   }
