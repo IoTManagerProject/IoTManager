@@ -117,6 +117,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/Ds2423",
+                "active": true
+            },
+            {
                 "path": "src/modules/sensors/Emon",
                 "active": false
             },
@@ -165,6 +169,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/Ntc",
+                "active": true
+            },
+            {
                 "path": "src/modules/sensors/Pzem004t",
                 "active": true
             },
@@ -178,6 +186,10 @@
             },
             {
                 "path": "src/modules/sensors/S8",
+                "active": true
+            },
+            {
+                "path": "src/modules/sensors/Scd40",
                 "active": true
             },
             {
