@@ -1,0 +1,52 @@
+{
+    "menuSection": "Виртуальные элементы",
+    "configItem": [
+        {
+		    "global": 0,
+            "name": "GoogleSheet",
+            "type": "Reading", 
+            "subtype": "GoogleSheet",
+            "id": "sheet",
+            "widget": "nil",
+            "page": "",
+            "descr": "",
+            "int": 5,
+            "logid": "id", 
+			"scid": "AKfycbzAsuM-4Keb-DxZ6yqwmqSeiXRJJAqndijayZQfmx9pfh6wGAejjT6u7gTAIxrbxPBxyw",
+			"shname": "Logger"
+        }
+    ],
+    "about": {
+        "authorName": "Bubnov Mikhail",
+        "authorContact": "https://t.me/Mit4bmw",
+        "authorGit": "https://github.com/Mit4el",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "",
+        "moduleName": "GoogleSheet",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 10,
+            "esp8266_4mb": 10
+        },
+        "title": "Логирование в Google таблицы",
+        "moduleDesc": "Расширение позволяющее логировать любую величину в Google таблицы. Инструкция https://drive.google.com/file/d/1VuI06arObNfH3rsOSHKww1tyhfgqXd9F/view?usp=sharing",
+        "propInfo": {
+            "int": "Интервал логирования в минутах",
+            "logid": "ID величины которую будем логировать",
+			"scid": "Идентификатор развертывания Google Apps (script id)",
+			"shname": "Наименование листа в таблице (sheet name)"
+        }
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [],
+        "esp32s2_4mb": [],        
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": [],
+        "esp8285_1mb": [],
+        "esp8285_1mb_ota": [],
+        "esp8266_2mb": [],
+        "esp8266_2mb_ota": []
+    }
+}

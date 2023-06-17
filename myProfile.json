@@ -35,6 +35,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/virtual/GoogleSheet",
+                "active": false
+            },
+            {
                 "path": "src/modules/virtual/Loging",
                 "active": true
             },

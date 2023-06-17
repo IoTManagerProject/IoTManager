@@ -21,7 +21,7 @@
     ],
     "about": {
         "authorName": "Bubnov Mikhail",
-        "authorContact": "https://t.me/Mitchel",
+        "authorContact": "https://t.me/Mit4bmw",
         "authorGit": "https://github.com/Mit4el",
         "exampleURL": "https://iotmanager.org/wiki",
         "specialThanks": "",
@@ -41,6 +41,7 @@
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [],
+        "esp32s2_4mb": [],        
         "esp8266_4mb": [],
         "esp8266_1mb": [],
         "esp8266_1mb_ota": [],

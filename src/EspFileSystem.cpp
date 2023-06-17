@@ -77,6 +77,7 @@ uint32_t ESP_getChipId(void) {
 }
 
 // устарела используем новую функцию ниже
+#ifndef esp32s2_4mb
 uint32_t ESP_getFlashChipId(void) {
 #ifdef ESP32
     // Нет аналогичной (без доп.кода) функций в 32
@@ -86,6 +87,7 @@ uint32_t ESP_getFlashChipId(void) {
     return ESP.getFlashChipId();
 #endif
 }
+#endif
 
 // https://github.com/espressif/arduino-esp32/issues/6945#issuecomment-1199900892
 // получение flash ch id из проекта esp easy

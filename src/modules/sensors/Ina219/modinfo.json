@@ -88,6 +88,9 @@
             "esp32_4mb": [
                 "https://github.com/adafruit/Adafruit_INA219.git"
             ],
+            "esp32s2_4mb": [
+                "https://github.com/adafruit/Adafruit_INA219.git"
+            ],
 
             "esp8266_4mb": [
                 "https://github.com/adafruit/Adafruit_INA219.git"
