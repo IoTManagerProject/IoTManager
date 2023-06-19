@@ -30,7 +30,7 @@ void printSerialNumber(uint16_t serial0, uint16_t serial1, uint16_t serial2)
 }
 
 // Функция инициализации библиотечного класса, возвращает Единстрвенный указать на библиотеку
-SensirionI2CScd4x *instance()
+SensirionI2CScd4x *instanceScd4x()
 {
     if (!scd4x)
     { // Если библиотека ранее инициализировалась, т о просто вернем указатель
@@ -41,7 +41,7 @@ SensirionI2CScd4x *instance()
 
         //Останавливаем периодический опрос датчика вбиблиотеке для запроса Сер.номера (на всякий случай)
         // stop potentially previously started measurement
-        errorCodeScd4x = instance()->stopPeriodicMeasurement();
+        errorCodeScd4x = instanceScd4x()->stopPeriodicMeasurement();
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute stopPeriodicMeasurement(): ");
@@ -52,7 +52,7 @@ SensirionI2CScd4x *instance()
         uint16_t serial0;
         uint16_t serial1;
         uint16_t serial2;
-        errorCodeScd4x = instance()->getSerialNumber(serial0, serial1, serial2);
+        errorCodeScd4x = instanceScd4x()->getSerialNumber(serial0, serial1, serial2);
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute getSerialNumber(): ");
@@ -66,7 +66,7 @@ SensirionI2CScd4x *instance()
 
         //Обратно стартуем периодический опрос датчика библиотекой (по описанию библиотеки каждые 5сек)
         // Start Measurement
-        errorCodeScd4x = instance()->startPeriodicMeasurement();
+        errorCodeScd4x = instanceScd4x()->startPeriodicMeasurement();
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute startPeriodicMeasurement(): ");
@@ -102,7 +102,7 @@ public:
         float humidity = 0.0f;
         bool isDataReady = false;
         //Запрашиваем библиотеку о готовности отправить запрос 
-        errorCodeScd4x = instance()->getDataReadyFlag(isDataReady);
+        errorCodeScd4x = instanceScd4x()->getDataReadyFlag(isDataReady);
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute getDataReadyFlag(): ");
@@ -115,7 +115,7 @@ public:
             return;
         }
         //Если все нормально забираем у библиотеки данные
-        errorCodeScd4x = instance()->readMeasurement(co2, temperature, humidity);
+        errorCodeScd4x = instanceScd4x()->readMeasurement(co2, temperature, humidity);
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute readMeasurement(): ");
@@ -158,7 +158,7 @@ public:
     {
         //Останавливаем периодический опрос датчика вбиблиотеке для запроса Сер.номера (на всякий случай)
         // stop potentially previously started measurement
-        errorCodeScd4x = instance()->stopPeriodicMeasurement();
+        errorCodeScd4x = instanceScd4x()->stopPeriodicMeasurement();
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute stopPeriodicMeasurement(): ");
@@ -166,7 +166,7 @@ public:
         }
         delay(500); // Из описания performForcedRecalibration  2. Stop periodic measurement. Wait 500 ms.
         uint16_t frcCorrection;
-        errorCodeScd4x = instance()->performForcedRecalibration(targetCo2, frcCorrection);
+        errorCodeScd4x = instanceScd4x()->performForcedRecalibration(targetCo2, frcCorrection);
 
         if (errorCodeScd4x)
         {
@@ -182,7 +182,7 @@ public:
 
         //Обратно стартуем периодический опрос датчика библиотекой (по описанию библиотеки каждые 5сек)
         // Start Measurement
-        errorCodeScd4x = instance()->startPeriodicMeasurement();
+        errorCodeScd4x = instanceScd4x()->startPeriodicMeasurement();
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute startPeriodicMeasurement(): ");
@@ -197,14 +197,14 @@ public:
     {
         //Останавливаем периодический опрос датчика вбиблиотеке для запроса Сер.номера (на всякий случай)
         // stop potentially previously started measurement
-        errorCodeScd4x = instance()->stopPeriodicMeasurement();
+        errorCodeScd4x = instanceScd4x()->stopPeriodicMeasurement();
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute stopPeriodicMeasurement(): ");
             Serial.println(errorMessageScd4x);
         }
 
-        errorCodeScd4x = instance()->startLowPowerPeriodicMeasurement();
+        errorCodeScd4x = instanceScd4x()->startLowPowerPeriodicMeasurement();
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute startLowPowerPeriodicMeasurement(): ");
@@ -216,7 +216,7 @@ public:
             Serial.println("startLowPowerPeriodicMeasurement(): OK!");
         }
 
-        errorCodeScd4x = instance()->setAutomaticSelfCalibration((uint16_t)autoCalibration);
+        errorCodeScd4x = instanceScd4x()->setAutomaticSelfCalibration((uint16_t)autoCalibration);
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute setAutomaticSelfCalibration(): ");
@@ -230,7 +230,7 @@ public:
 
         //Обратно стартуем периодический опрос датчика библиотекой (по описанию библиотеки каждые 5сек)
         // Start Measurement
-        errorCodeScd4x = instance()->startPeriodicMeasurement();
+        errorCodeScd4x = instanceScd4x()->startPeriodicMeasurement();
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute startPeriodicMeasurement(): ");
@@ -262,7 +262,7 @@ public:
         float temperature = 0.0f;
         float humidity = 0.0f;
         bool isDataReady = false;
-        errorCodeScd4x = instance()->getDataReadyFlag(isDataReady);
+        errorCodeScd4x = instanceScd4x()->getDataReadyFlag(isDataReady);
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute getDataReadyFlag(): ");
@@ -274,7 +274,7 @@ public:
         {
             return;
         }
-        errorCodeScd4x = instance()->readMeasurement(co2, temperature, humidity);
+        errorCodeScd4x = instanceScd4x()->readMeasurement(co2, temperature, humidity);
         if (errorCodeScd4x)
         {
             Serial.print("errorCodeScd4x trying to execute readMeasurement(): ");
@@ -308,14 +308,14 @@ public:
     {
         //Останавливаем периодический опрос датчика вбиблиотеке для запроса Сер.номера (на всякий случай)
         // stop potentially previously started measurement
-        errorCodeScd4x = instance()->stopPeriodicMeasurement();
+        errorCodeScd4x = instanceScd4x()->stopPeriodicMeasurement();
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute stopPeriodicMeasurement(): ");
             Serial.println(errorMessageScd4x);
         }
 
-        errorCodeScd4x = instance()->setTemperatureOffset((uint16_t)offsetT);
+        errorCodeScd4x = instanceScd4x()->setTemperatureOffset((uint16_t)offsetT);
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute setTemperatureOffset(): ");
@@ -329,7 +329,7 @@ public:
 
         //Обратно стартуем периодический опрос датчика библиотекой (по описанию библиотеки каждые 5сек)
         // Start Measurement
-        errorCodeScd4x = instance()->startPeriodicMeasurement();
+        errorCodeScd4x = instanceScd4x()->startPeriodicMeasurement();
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute startPeriodicMeasurement(): ");
@@ -357,7 +357,7 @@ public:
         float temperature = 0.0f;
         float humidity = 0.0f;
         bool isDataReady = false;
-        errorCodeScd4x = instance()->getDataReadyFlag(isDataReady);
+        errorCodeScd4x = instanceScd4x()->getDataReadyFlag(isDataReady);
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute getDataReadyFlag(): ");
@@ -369,7 +369,7 @@ public:
         {
             return;
         }
-        errorCodeScd4x = instance()->readMeasurement(co2, temperature, humidity);
+        errorCodeScd4x = instanceScd4x()->readMeasurement(co2, temperature, humidity);
         if (errorCodeScd4x)
         {
             Serial.print("Error trying to execute readMeasurement(): ");

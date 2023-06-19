@@ -1,0 +1,68 @@
+{
+  "menuSection": "Исполнительные устройства",
+  "configItem": [
+      {
+          "global": 0,
+          "name": "FTP сервер",
+          "type": "Reading",
+          "subtype": "ftp",
+          "id": "ftp",
+          "widget": "nil",
+          "page": "",
+          "descr": "FTP сервер",
+          "login": "admin", 
+          "pass": "admin"
+
+
+      }
+      
+
+  ],
+  "about": {
+      "authorName": "Bubnov Mikhail",
+      "authorContact": "https://t.me/Mit4bmw",
+      "authorGit": "https://github.com/Mit4el",
+      "specialThanks": "",
+      "moduleName": "FTPModule",
+      "moduleVersion": "0.1",
+      "usedRam": {
+          "esp32_4mb": 15,
+          "esp8266_4mb": 15
+      },
+      "title": "FTP-сервер",
+      "moduleDesc": "Запускает FTP-сервер на плате esp",
+      "propInfo": {
+          "login": "Логин FTP сервера", 
+          "pass": "Пароль FTP сервера"
+      }
+  },
+  "defActive": false,
+  "usedLibs": {
+    "esp32_4mb": [
+        "https://github.com/xreef/SimpleFTPServer"
+    ],
+    "esp32s2_4mb": [],
+    "esp8266_4mb": [
+        "https://github.com/xreef/SimpleFTPServer"
+    ],
+    "esp8266_1mb": [
+        "https://github.com/xreef/SimpleFTPServer"
+    ],
+    "esp8266_1mb_ota": [
+        "https://github.com/xreef/SimpleFTPServer"
+    ],
+    "esp8285_1mb": [
+        "https://github.com/xreef/SimpleFTPServer"
+    ],
+    "esp8285_1mb_ota": [
+        "https://github.com/xreef/SimpleFTPServer"
+    ],
+    "esp8266_2mb": [
+        "https://github.com/xreef/SimpleFTPServer"
+    ],
+    "esp8266_2mb_ota": [
+        "https://github.com/xreef/SimpleFTPServer"
+    ]
+  }
+}
+
