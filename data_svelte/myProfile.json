@@ -153,6 +153,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/ld2410",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/Max6675",
                 "active": false
             },
