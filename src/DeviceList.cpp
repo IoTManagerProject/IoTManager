@@ -1,9 +1,5 @@
 #include "DeviceList.h"
 
-// данная функция не записывает поле status из этого следует что поле равно false и поэтому весь список устройств отдаваемый мк
-// уходит со статусом для всех устройств - offline
-// приложение svelte хранит свой список и в нем поддерживает корректные статусы, а при получении этого списка
-// лишь изменяет в своем те элементы массива которые добавились новые, не трогая остальные
 const String getThisDevice() {
     String thisDevice = "{}";
     // jsonWriteStr_(thisDevice, F("devicelist_"), "");                            // метка для парсинга - она не нужна теперь
@@ -11,6 +7,10 @@ const String getThisDevice() {
     jsonWriteStr_(thisDevice, F("ip"), jsonReadStr(settingsFlashJson, F("ip")));
     jsonWriteStr_(thisDevice, F("id"), jsonReadStr(settingsFlashJson, F("id")));
     jsonWriteStr_(thisDevice, F("name"), jsonReadStr(settingsFlashJson, F("name")));
+    // приложение svelte хранит свой список и в нем поддерживает корректные статусы, а при получении этого списка
+    // лишь изменяет в своем те элементы массива которые добавились новые, не трогая остальные
+    jsonWriteBool_(thisDevice, F("status"), false);
+    jsonWriteInt_(thisDevice, F("fv"), FIRMWARE_VERSION);
     thisDevice = "[" + thisDevice + "]";
     return thisDevice;
 }
