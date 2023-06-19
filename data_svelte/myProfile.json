@@ -24,8 +24,8 @@
     },
     "projectProp": {
         "platformio": {
-            "default_envs": "esp32_4mb",
-            "comments_default_envs": "choose from: esp8266_4mb or esp32_4mb or esp8266_1mb or esp8266_1mb_ota or esp8285_1mb or esp8285_1mb_ota"
+            "default_envs": "esp8266_4mb",
+            "comments_default_envs": "choose from: esp8266_4mb or esp32_4mb or esp32s2_4mb or esp8266_1mb or esp8266_1mb_ota or esp8285_1mb or esp8285_1mb_ota"
         }
     },
     "modules": {
@@ -33,6 +33,10 @@
             {
                 "path": "src/modules/virtual/Cron",
                 "active": true
+            },
+            {
+                "path": "src/modules/virtual/GoogleSheet",
+                "active": false
             },
             {
                 "path": "src/modules/virtual/Loging",
@@ -113,6 +117,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/Ds2423",
+                "active": true
+            },
+            {
                 "path": "src/modules/sensors/Emon",
                 "active": false
             },
@@ -161,6 +169,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/Ntc",
+                "active": true
+            },
+            {
                 "path": "src/modules/sensors/Pzem004t",
                 "active": true
             },
@@ -174,6 +186,10 @@
             },
             {
                 "path": "src/modules/sensors/S8",
+                "active": true
+            },
+            {
+                "path": "src/modules/sensors/Scd40",
                 "active": true
             },
             {

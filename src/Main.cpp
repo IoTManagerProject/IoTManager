@@ -3,6 +3,9 @@
 #include "classes/IoTDB.h"
 #include "utils/Statistic.h"
 #include <Wire.h>
+#ifdef esp32s2_4mb  
+#include <USB.h>
+#endif
 
 IoTScenario iotScen;  // объект управления сценарием
 
@@ -77,6 +80,9 @@ void stopErrorMarker(int id) {
 }
 
 void setup() {
+#ifdef esp32s2_4mb    
+    USB.begin();
+#endif    
 #ifdef esp32_4mb
     My_timer = timerBegin(0, 80, true);
     timerAttachInterrupt(My_timer, &onTimer, true);
@@ -123,7 +129,7 @@ void setup() {
     jsonRead(settingsFlashJson, "i2cFreq", i2cFreq, false);
     jsonRead(settingsFlashJson, "i2c", i2c, false);
     if (i2c != 0) {
-#ifdef esp32_4mb
+#ifdef ESP32
         Wire.end();
         Wire.begin(pinSDA, pinSCL, (uint32_t)i2cFreq);
 #else

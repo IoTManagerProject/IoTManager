@@ -28,7 +28,11 @@
 #define FIRMWARE_NAME "esp32_4mb"
 #endif
 
-// Размер буфера json
+#ifdef esp32s2_4mb
+#define FIRMWARE_NAME "esp32s2_4mb"
+#endif
+
+//Размер буфера json
 #define JSON_BUFFER_SIZE 2048  // держим 2 кб не меняем
 #define WEB_SOCKETS_FRAME_SIZE 2048
 
