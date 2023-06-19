@@ -93,7 +93,7 @@ void setup() {
     Serial.println(F("--------------started----------------"));
 
     // создание экземпляров классов
-    //  myNotAsyncActions = new NotAsync(do_LAST);
+    // myNotAsyncActions = new NotAsync(do_LAST);
 
     // инициализация файловой системы
     fileSystemInit();
@@ -101,6 +101,9 @@ void setup() {
     Serial.println("FIRMWARE NAME     " + String(FIRMWARE_NAME));
     Serial.println("FIRMWARE VERSION  " + String(FIRMWARE_VERSION));
     Serial.println("WEB VERSION       " + getWebVersion());
+    const String buildTime = String(BUILD_DAY) + "/" + String(BUILD_MONTH) + "/" + String(BUILD_YEAR) + " " + String(BUILD_HOUR) + ":" + String(BUILD_MIN) + ":" + String(BUILD_SEC);
+    Serial.println("BUILD TIME        " + buildTime);
+    jsonWriteStr_(errorsHeapJson, F("bt"), buildTime);
     Serial.println(F("------------------------"));
 
     // получение chip id

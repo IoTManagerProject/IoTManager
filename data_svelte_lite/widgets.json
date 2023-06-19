@@ -41,13 +41,31 @@
         "label": "Ватты",
         "widget": "anydata",
         "after": "Wt",
-        "icon": "speedometer"
+        "icon": "speedometer",
+        "color": [
+            {
+                "level": 0,
+                "value": ""
+            },
+            {
+                "level": 200,
+                "value": "#009933"
+            },
+            {
+                "level": 2000,
+                "value": "#FF9900"
+            },
+            {
+                "level": 4000,
+                "value": "red"
+            }
+        ]
     },
     {
         "name": "anydataWth",
         "label": "Энергия",
         "widget": "anydata",
-        "after": "kWt/Hr",
+        "after": "kWh",
         "icon": "speedometer"
     },
     {
@@ -62,7 +80,42 @@
         "label": "Температура",
         "widget": "anydata",
         "after": "°С",
-        "icon": "thermometer"
+        "icon": "thermometer",
+        "font": "OCR A Std",
+        "color": [
+            {
+                "level": -20,
+                "value": "#0000CC"
+            },
+            {
+                "level": -10,
+                "value": "#0000CC"
+            },
+            {
+                "level": 0,
+                "value": "#0000CC"
+            },
+            {
+                "level": 12,
+                "value": "#3366FF"
+            },
+            {
+                "level": 16,
+                "value": "#33CCFF"
+            },
+            {
+                "level": 18,
+                "value": "#009933"
+            },
+            {
+                "level": 30,
+                "value": "#FF9900"
+            },
+            {
+                "level": 40,
+                "value": "red"
+            }
+        ]
     },
     {
         "name": "anydataMm",
@@ -193,6 +246,17 @@
         "debounce": 500
     },
     {
+        "name": "range",
+        "label": "Ползунок (Servo)",
+        "widget": "range",
+        "descrColor": "red",
+        "after": "%",
+        "k": 1,
+        "min": 0,
+        "max": 180,
+        "debounce": 500
+    },
+    {
         "name": "select",
         "label": "Выпадающий",
         "widget": "select",
@@ -207,6 +271,34 @@
         "label": "PPM",
         "widget": "anydata",
         "after": "ppm",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydatamAmp",
+        "label": "миллиАмперы",
+        "widget": "anydata",
+        "after": "mAmp",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydatamVlt",
+        "label": "миллиВольты",
+        "widget": "anydata",
+        "after": "mVlt",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydatamWt",
+        "label": "миллиВатты",
+        "widget": "anydata",
+        "after": "mWt",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataCm",
+        "label": "Сантиметры",
+        "widget": "anydata",
+        "after": "cm",
         "icon": "speedometer"
     },
     {
