@@ -16,12 +16,14 @@
 # поддерживаемые контроллеры (профили):
 # esp8266_4mb
 # esp32_4mb
+# esp32s2_4mb
 # esp8266_1mb
 # esp8266_1mb_ota
 # esp8285_1mb
 # esp8285_1mb_ota
 # esp8266_2mb
 # esp8266_2mb_ota
+
 
 import configparser
 import os, json, sys, getopt
