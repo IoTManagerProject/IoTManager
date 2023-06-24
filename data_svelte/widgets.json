@@ -62,13 +62,6 @@
         ]
     },
     {
-        "name": "anydatamWtt",
-        "label": "миллиВатты",
-        "widget": "anydata",
-        "after": "mW",
-        "icon": "speedometer",
-    },
-    {
         "name": "anydataWth",
         "label": "Энергия",
         "widget": "anydata",
