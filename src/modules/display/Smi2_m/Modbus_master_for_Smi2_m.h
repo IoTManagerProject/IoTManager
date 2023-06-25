@@ -61,11 +61,11 @@ class Smi_display {
     unsigned int TxEnablePin;
     unsigned char frame[BUFFER_SIZE];
     unsigned char buffer;
-    unsigned int T1_5;        //
-    unsigned int frameDelay;  //
+    unsigned int T1_5;
+    unsigned int frameDelay;
     unsigned int total_no_of_packets;
-    Packet* packetArray;               //
-    Packet* packet;                    //
-    /*unsigned*/ int* register_array;  //
+    Packet* packetArray;
+    Packet* packet;
+    /*unsigned*/ int* register_array;
     HardwareSerial* ModbusPort;
 };
