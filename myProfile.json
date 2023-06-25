@@ -322,7 +322,7 @@
             },
             {
                 "path": "src/modules/display/Smi2_m",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/display/Ws2812b",

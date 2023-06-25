@@ -5,9 +5,6 @@
 #include "Modbus_master_for_Smi2_m.h"
 #include "modules/sensors/UART/Uart.h"
 
-#include <iostream>
-#include <string>
-
 // Общая сумма доступной памяти на ведущем устройстве, чтобы хранить данные
 #define TOTAL_NO_OF_REGISTERS 4
 
