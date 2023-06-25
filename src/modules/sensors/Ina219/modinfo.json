@@ -10,6 +10,10 @@
         "widget": "anydatamAmp",
         "page": "INA 219",
         "descr": "219 Датчик тока",
+        "addr": "0x40",
+        "plus": 0,
+        "multiply": 1,
+        "round": 3,
         "int": 10
     },
     {   
@@ -21,17 +25,25 @@
         "widget": "anydataVlt",
         "page": "INA 219",
         "descr": "219 Датчик напряжения",
+        "addr": "0x40",
+        "plus": 0,
+        "multiply": 1,
+        "round": 3,
         "int": 10
     },
     {   
         "global": 0,
         "name": "INA219 Мощность",
         "type": "Reading",
-        "subtype": "power_mW",
+        "subtype": "Ina219power_mW",
         "id": "Ina219power",
-        "widget": "anydatamWtt",
+        "widget": "anydatamWt",
         "page": "INA 219",
         "descr": "219 Мощность",
+        "addr": "0x40",
+        "plus": 0,
+        "multiply": 1,
+        "round": 3,
         "int": 10
     },
     {   
@@ -43,6 +55,10 @@
         "widget": "anydataVlt",
         "page": "INA 219",
         "descr": "219 Напряжение нагрузки",
+        "addr": "0x40",
+        "plus": 0,
+        "multiply": 1,
+        "round": 3,
         "int": 10
     },
     {   
@@ -54,6 +70,10 @@
         "widget": "anydatamVlt",
         "page": "INA 219",
         "descr": "219 Напряжение шунта",
+        "addr": "0x40",
+        "plus": 0,
+        "multiply": 1,
+        "round": 3,
         "int": 10
     }],
 
@@ -61,9 +81,9 @@
             "authorName": "Serghei Crasnicov",
             "authorContact": "https://t.me/Serghei63",
             "authorGit": "https://github.com/Serghei63",
-            "specialThanks": "Дмитрий , Serg",
+            "specialThanks": "Дмитрий, Serg, v2.0 - Mitchel @Mit4bmw",
             "moduleName": "Ina219",
-            "moduleVersion": "1.0",
+            "moduleVersion": "2.0",
             "usedRam": {
                 "esp32_4mb": 15,
                 "esp8266_4mb": 15
@@ -71,14 +91,15 @@
             "subTypes": [
                 "Ina219curr",
                 "Ina219busvoltage",
-                "power_mW",
+                "Ina219power_mW",
                 "Ina219loadvoltage",
                 "Ina219shuntvoltage"
             ],
             "title": "Милливатметр постоянного тока",
-            "moduleDesc": "Измеряет постоянный ток до 3.2 ампера, напряжение до 26 вольт и мощность на нагрузке",
+            "moduleDesc": "Измеряет постоянный ток до 3.2 ампера, напряжение до 26 вольт и мощность на нагрузке. Для расчета Наряжения нагрузки, необходимы Напряжение шунта и Датчик Напряжения",
             "propInfo": {
-                "int": "Количество секунд между опросами датчика."
+                "int": "Количество секунд между опросами датчика.",
+                "addr": "Адрес датчика на шине, обычно 0x40. Если оставить поле пустым, то запуститься сканер I2C и подключение к адресу 0x40"
             }
         },
     
