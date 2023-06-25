@@ -58,7 +58,7 @@
             "int": "Количество секунд между опросами датчика."
         }
     },
-    "defActive": true,
+    "defActive": false,
     "usedLibs": {
         "esp32_4mb": [
             "https://github.com/jbechter/arduino-onewire-DS2423",
