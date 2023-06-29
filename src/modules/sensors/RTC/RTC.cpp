@@ -40,7 +40,7 @@ class RTC : public IoTItem {
     }
 
     unsigned long getRtcUnixTime() {
-        return _watch->gettimeUnix();
+        return _watch->gettimeUnix() - jsonReadInt(settingsFlashJson, F("timezone")) * 60 * 60;
     }
 
     void onModuleOrder(String &key, String &value) {
