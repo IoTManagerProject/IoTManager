@@ -50,7 +50,7 @@ class RTC : public IoTItem {
             _watch->settimeUnix(ut);
             SerialPrint("i", F("RTC"), "Устанавливаем время: " + value);
         } else if (key == "setSysTime") {
-            _watch->settimeUnix(unixTime);
+            _watch->settimeUnix(unixTime + jsonReadInt(settingsFlashJson, F("timezone")) * 60 * 60);
             SerialPrint("i", F("RTC"), F("Запоминаем системное время"));
         }
     }
