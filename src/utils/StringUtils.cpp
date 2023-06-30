@@ -205,3 +205,22 @@ void cleanString(String& str) {
         if (allowedChars.indexOf(str.charAt(i)) == -1) str.setCharAt(i, ' ');
     }
 }
+
+std::vector<String> splitStr(const String& str, const String& delimiter) {
+    std::vector<String> result;
+    size_t newPos, pos = 0;
+    while ((newPos = str.indexOf(delimiter, pos)) != -1) {
+        result.push_back(str.substring(pos, newPos));
+        pos = newPos + delimiter.length();
+    }
+    result.push_back(str.substring(pos));
+    return result;
+}
+
+
+bool strInVector(const String& str, const std::vector<String>& vec) {
+    for (size_t i = 0; i < vec.size(); i++) {
+        if (vec[i] == str) return true;
+    }
+    return false;
+}
