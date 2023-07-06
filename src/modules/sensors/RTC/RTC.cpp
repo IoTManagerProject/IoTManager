@@ -39,18 +39,18 @@ class RTC : public IoTItem {
         return this;
     }
 
-    ulong getRtcUnixTime() {
-        return _watch->gettimeUnix();
+    unsigned long getRtcUnixTime() {
+        return _watch->gettimeUnix() - jsonReadInt(settingsFlashJson, F("timezone")) * 60 * 60;
     }
 
     void onModuleOrder(String &key, String &value) {
         if (key == "setUTime") {
             char *stopstring;
-            ulong ut = strtoul(value.c_str(), &stopstring, 10);
+            unsigned long ut = strtoul(value.c_str(), &stopstring, 10);
             _watch->settimeUnix(ut);
             SerialPrint("i", F("RTC"), "Устанавливаем время: " + value);
         } else if (key == "setSysTime") {
-            _watch->settimeUnix(unixTime);
+            _watch->settimeUnix(unixTime + jsonReadInt(settingsFlashJson, F("timezone")) * 60 * 60);
             SerialPrint("i", F("RTC"), F("Запоминаем системное время"));
         }
     }

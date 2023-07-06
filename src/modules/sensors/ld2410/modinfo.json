@@ -1,0 +1,92 @@
+{
+    "menuSection": "Сенсоры",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "LD2410 Датчик присутствия",
+            "type": "Reading",
+            "subtype": "ld2410m",
+            "id": "ld2410m",
+            "widget": "anydataDef",
+            "page": "Сенсоры",
+            "descr": "Присутствие",
+            "RX": 32,
+            "TX": 33,
+            "val": 0,
+            "round": 0,
+            "ticker": 0
+        },
+        {
+            "global": 0,
+            "name": "LD2410 подвижность объета",
+            "type": "Reading",
+            "subtype": "ld2410t",
+            "id": "ld2410t",
+            "widget": "anydataDef",
+            "page": "Сенсоры",
+            "descr": "Движение",
+            "RX": 32,
+            "TX": 33,
+            "val": 0,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "name": "LD2410 дистанция до объекта",
+            "type": "Reading",
+            "subtype": "ld2410d",
+            "id": "ld2410d",
+            "widget": "anydataCm",
+            "page": "Сенсоры",
+            "descr": "Дистанция",
+            "RX": 32,
+            "TX": 33,
+            "val": 0,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "name": "LD2410 отраженная энергия",
+            "type": "Reading",
+            "subtype": "ld2410e",
+            "id": "ld2410e",
+            "widget": "anydataHum",
+            "page": "Сенсоры",
+            "descr": "Энергия",
+            "RX": 32,
+            "TX": 33,
+            "val": 0,
+            "round": 0
+        }
+    ],
+    "about": {
+        "authorName": "AVAKS",
+        "authorContact": "https://t.me/avaks",
+        "authorGit": "https://github.com/avaksru",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "Mitchel https://t.me/Mit4bmw",
+        "moduleName": "ld2410",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 0
+        },
+        "subTypes": [
+            "ld2410m",
+            "ld2410t",
+            "ld2410d",
+            "ld2410e"
+        ],
+        "title": "Радарный датчик присутствия человека Hi-Link HLK-LD2410",
+        "moduleDesc": "Умный датчик, который измеряет расстояние, определяет стоит объект или двигается. Умеет разбивать зоны движения (всего можно до 8 зон задать). ",
+        "propInfo": {
+            "ticker": "1 - генерирует событие каждую секунду пока обнаружено присутствие, 0 - событие генереруется только один раз когда присутствие обнаружено или когда обьект вышел из поля обнаружения датчика"
+        }
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [
+            "ncmreynolds/ld2410@^0.1.3"
+        ]
+    }
+}

@@ -238,6 +238,18 @@ int jsonReadInt(const String& json, String name, bool e) {
     return doc[name].as<int>();
 }
 
+long int jsonReadLInt(const String& json, String name, bool e) {
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        if (e) {
+            SerialPrint("E", F("jsonRead"), error.f_str());
+            jsonErrorDetected();
+        }
+    }
+    return doc[name].as<long int>();
+}
+
 // depricated========================================================================
 String jsonWriteStr(String& json, String name, String value, bool e) {
     DynamicJsonDocument doc(JSON_BUFFER_SIZE);

@@ -16,8 +16,8 @@ void stInit() {
 
 void updateDeviceStatus() {
     String ret;
-    String serverIP;
-    jsonRead(settingsFlashJson, F("serverip"), serverIP);
+    String serverIP = "http://iotmanager.org";
+    // jsonRead(settingsFlashJson, F("serverip"), serverIP);
     String url = serverIP + F("/projects/esprebootstat.php");
     // SerialPrint("i", "Stat", "url " + url);
     if ((WiFi.status() == WL_CONNECTED)) {

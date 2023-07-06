@@ -3,7 +3,7 @@
 #include "classes/IoTDB.h"
 #include "utils/Statistic.h"
 #include <Wire.h>
-#ifdef esp32s2_4mb  
+#ifdef esp32s2_4mb
 #include <USB.h>
 #endif
 
@@ -80,9 +80,9 @@ void stopErrorMarker(int id) {
 }
 
 void setup() {
-#ifdef esp32s2_4mb    
+#ifdef esp32s2_4mb
     USB.begin();
-#endif    
+#endif
 #ifdef esp32_4mb
     My_timer = timerBegin(0, 80, true);
     timerAttachInterrupt(My_timer, &onTimer, true);
@@ -107,7 +107,7 @@ void setup() {
     Serial.println("FIRMWARE NAME     " + String(FIRMWARE_NAME));
     Serial.println("FIRMWARE VERSION  " + String(FIRMWARE_VERSION));
     Serial.println("WEB VERSION       " + getWebVersion());
-    const String buildTime = String(BUILD_DAY) + "/" + String(BUILD_MONTH) + "/" + String(BUILD_YEAR) + " " + String(BUILD_HOUR) + ":" + String(BUILD_MIN) + ":" + String(BUILD_SEC);
+    const String buildTime = String(BUILD_DAY) + "." + String(BUILD_MONTH) + "." + String(BUILD_YEAR) + " " + String(BUILD_HOUR) + ":" + String(BUILD_MIN) + ":" + String(BUILD_SEC);
     Serial.println("BUILD TIME        " + buildTime);
     jsonWriteStr_(errorsHeapJson, F("bt"), buildTime);
     Serial.println(F("------------------------"));

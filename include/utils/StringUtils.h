@@ -45,3 +45,7 @@ String uint64ToString(uint64_t input, uint8_t base = 10);
 void cleanString(String& str);
 
 unsigned char ChartoHex(char ch);
+
+std::vector<String> splitStr(const String& str, const String& delimiter);
+
+bool strInVector(const String& str, const std::vector<String>& vec);
