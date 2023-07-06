@@ -1,0 +1,82 @@
+{
+    "menuSection": "Сенсоры",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Пример датчика А",
+            "type": "Reading",
+            "subtype": "ExampleModule_A",
+            "id": "Tmp",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "Температура",
+            "int": 15,
+            "pin": "32",
+            "round": 1
+        },
+        {
+            "global": 0,
+            "name": "Пример датчика Б",
+            "type": "Reading",
+            "subtype": "ExampleModule_B",
+            "id": "Press",
+            "widget": "anydataMm",
+            "page": "Сенсоры",
+            "descr": "Давление",
+            "int": 15,
+            "pin": "32",            
+            "round": 1,
+            "btn-Example": 100 
+        }
+    ],
+    "about": {
+        "authorName": "NAME",
+        "authorContact": "https://t.me/NAME",
+        "authorGit": "https://github.com/NAME",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "",
+        "moduleName": "ExampleModule",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "Название модуля",
+        "moduleDesc": "Описание модуля. Что позволяет получить. Особенности работы",
+        "propInfo": {
+            "pin": "Аналоговый GPIO номер, к которому подключен датчик.",
+            "int": "Количество секунд между опросами датчика",
+            "btn-Example": "Кнопка Example. В поле указать ......"    
+        },
+        "funcInfo": [
+            {
+                "name": "expampleFunc",
+                "descr": "Пример функции вызываемой из сценария. Принимает Id другого модуля и смотрит его значение",
+                "params": ["ID стороннего модуля"]
+            },
+            {
+                "name": "expample2",
+                "descr": "Второй Пример функции вызываемой из сценария.",
+                "params": ["Описание педедаваемого параметра",
+                        "параметр 2"]
+            },
+            {
+                "name": "expampleAny",
+                "descr": "Третий Пример функции вызываемой из сценария. С неограниченным числом параметров",
+                "params": ["Описание педедаваемых параметров"]
+            }
+        ] 
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [],
+        "esp32s2_4mb": [], 
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": [],
+        "esp8285_1mb": [],
+        "esp8285_1mb_ota": [],
+        "esp8266_2mb": [],
+        "esp8266_2mb_ota": []
+    }
+}
