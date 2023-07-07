@@ -2,8 +2,6 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 
-String URL = F("https://script.google.com/macros/s/");
-
 class GoogleSheet : public IoTItem
 {
 private:
@@ -14,7 +12,10 @@ private:
   //  bool init = false;
   int interval = 1;
   // long interval;
+  String URL = ("http://iotmanager.org/projects/google.php?/macros/s/"); // F("https://script.google.com/macros/s/");
   String urlFinal;
+  HTTPClient http;
+  WiFiClient client;
 
 public:
   GoogleSheet(String parameters) : IoTItem(parameters)
@@ -101,30 +102,29 @@ public:
     if (!send)
       return; // Не отправляем просто накапливаем данные
 
-    /*    if (!init)
-        {
-          init = true;
-          urlFinal = urlFinal + "&init=1";
-        }
-    */
-    HTTPClient http;
+      /*    if (!init)
+          {
+            init = true;
+            urlFinal = urlFinal + "&init=1";
+          }
+      */
+//    HTTPClient http;
 #if defined ESP8266
-    WiFiClientSecure client;
-    client.setInsecure();
+    //    WiFiClient client;
+    // client.setInsecure();
     if (!http.begin(client, urlFinal))
-    {
 #elif defined ESP32
-    WiFiClient client;
+    //    WiFiClient client;
     if (!http.begin(urlFinal))
-    {
 #endif
+    {
       SerialPrint("I", F("GoogleSheet"), F("connection failed"));
     }
-    http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS); // HTTPC_STRICT_FOLLOW_REDIRECTS HTTPC_FORCE_FOLLOW_REDIRECTS
+    //    http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS); // HTTPC_STRICT_FOLLOW_REDIRECTS HTTPC_FORCE_FOLLOW_REDIRECTS
     http.addHeader(F("Content-Type"), F("application/x-www-form-urlencoded"));
     int httpCode = http.GET();
 
-    //      String payload = http.getString();
+    String payload = http.getString();
     SerialPrint("<-", F("GoogleSheet"), "URL: " + urlFinal);
     SerialPrint("->", F("GoogleSheet"), "server: " + (String)httpCode); /*"URL: " + urlFinal + */
 
@@ -133,7 +133,7 @@ public:
             SerialPrint("->", F("GoogleSheet"), "msg from server: " + (String)payload.c_str());
           }
     */
-    http.end();
+    //    http.end();
     // Обнуляем данные в запросе, так как все отправили
     urlFinal = URL + scid + F("/exec?") + F("sheet=") + shname;
   };
@@ -153,7 +153,7 @@ public:
     return nullptr;
   };
 
-  ~GoogleSheet(){};
+  ~GoogleSheet() { http.end(); };
 };
 
 void *getAPI_GoogleSheet(String subtype, String param)
