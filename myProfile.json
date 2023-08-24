@@ -125,6 +125,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/ExampleModule",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/ExternalMQTT",
                 "active": false
             },
@@ -154,6 +158,10 @@
             },
             {
                 "path": "src/modules/sensors/Ina219",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/Ina226",
                 "active": false
             },
             {
