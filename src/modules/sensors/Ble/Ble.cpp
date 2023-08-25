@@ -16,7 +16,7 @@ StaticJsonDocument<512> doc;
 class BleScan : public IoTItem, BLEAdvertisedDeviceCallbacks
 {
 private:
-  //описание параметров передаваемых из настроек датчика из веба
+  // описание параметров передаваемых из настроек датчика из веба
   int _scanDuration;
   String _filter;
 
@@ -82,9 +82,13 @@ public:
           {
             extBLEdata[mac_address][kv.key()] = BLEdata[kv.key()];
           }
-
           // дописываем время прихода пакета данных
-          extBLEdata[mac_address]["last"] = millis();
+          int tm = int(unixTime);
+          if (tm > 1)
+          {
+            extBLEdata[mac_address]["last"] = tm - 5;
+          }
+          extBLEdata[mac_address]["last_milis"] = millis();
         }
       }
       else
@@ -94,7 +98,16 @@ public:
           extBLEdata[mac_address][kv.key()] = BLEdata[kv.key()];
         }
         // дописываем время прихода пакета данных
-        extBLEdata[mac_address]["last"] = millis();
+
+        int tm = int(unixTime);
+        if (tm > 1)
+        {
+          extBLEdata[mac_address]["last"] = tm - 5;
+        }
+        else
+        {
+          extBLEdata[mac_address]["last_milis"] = millis();
+        }
       }
     };
   }
@@ -145,9 +158,15 @@ public:
 class BleSens : public IoTItem
 {
 private:
-  //описание параметров передаваемых из настроек датчика из веба
+  // описание параметров передаваемых из настроек датчика из веба
   String _MAC;
   String _sensor;
+  int orange = 0;
+  int red = 0;
+  int offline = 0;
+  int _minutesPassed = 0;
+  String json = "{}";
+  bool dataFromNode = false;
 
 public:
   //=======================================================================================================
@@ -166,45 +185,86 @@ public:
   {
     _MAC = jsonReadStr(parameters, "MAC");
     _sensor = jsonReadStr(parameters, "sensor");
+    jsonRead(parameters, F("orange"), orange);
+    jsonRead(parameters, F("red"), red);
+    jsonRead(parameters, F("offline"), offline);
   }
 
+  void setNewWidgetAttributes()
+  {
+
+    jsonWriteStr(json, F("info"), prettyMinutsTimeout(_minutesPassed));
+    if (dataFromNode)
+    {
+      if (orange != 0 && red != 0 && offline != 0)
+      {
+        if (_minutesPassed < orange)
+        {
+          jsonWriteStr(json, F("color"), "");
+        }
+        if (_minutesPassed >= orange && _minutesPassed < red)
+        {
+          jsonWriteStr(json, F("color"), F("orange")); // сделаем виджет оранжевым
+        }
+        if (_minutesPassed >= red && _minutesPassed < offline)
+        {
+          jsonWriteStr(json, F("color"), F("red")); // сделаем виджет красным
+        }
+        if (_minutesPassed >= offline)
+        {
+          jsonWriteStr(json, F("info"), F("offline"));
+        }
+      }
+    }
+    else
+    {
+      jsonWriteStr(json, F("info"), F("awaiting"));
+    }
+    sendSubWidgetsValues(_id, json);
+  }
   //=======================================================================================================
+  void onMqttWsAppConnectEvent()
+  {
+    setNewWidgetAttributes();
+  }
 
   // doByInterval()
   void doByInterval()
   {
+    _minutesPassed++;
+
     if (_sensor == "last")
     {
-      int valInt = extBLEdata[_MAC][_sensor].as<int>();
-      char *s;
-      s = TimeToString(millis() / 1000 - valInt / 1000);
-      value.isDecimal = 0;
-      if (valInt > 0)
-      {
-        value.valS = s;
-      }
-      else
-      {
-        value.valS = "";
-      }
-      regEvent(value.valS, _id);
-    }
-    else
-    {
+      //  SerialPrint("i", F("BLE"), "LAST: " + extBLEdata[_MAC][_sensor].as<String>());
+      //  SerialPrint("i", F("BLE"), "LAST_millis: " + extBLEdata[_MAC]["last_milis"].as<String>());
+      //  SerialPrint("i", F("BLE"), "_minutesPassed: " + String(_minutesPassed));
+
       String valStr = extBLEdata[_MAC][_sensor].as<String>();
       if (valStr != "null")
       {
-        if (value.isDecimal = isDigitDotCommaStr(valStr))
+        setValue(valStr);
+      }
+      else
+      {
+        int valINT = int(extBLEdata[_MAC]["last_milis"]);
+        if (valINT > 0)
         {
-          value.isDecimal = 1;
-          value.valD = valStr.toFloat();
-          regEvent(value.valD, _id);
+          setValue(TimeToString(millis() / 1000 - valINT / 1000));
         }
-        else
+      }
+    }
+    else
+    {
+
+      String valStr = extBLEdata[_MAC][_sensor].as<String>();
+      if (valStr != "null")
+      {
+        if (valStr != "")
         {
-          value.isDecimal = 0;
-          value.valS = valStr;
-          regEvent(value.valS, _id);
+          setValue(valStr);
+          extBLEdata[_MAC][_sensor] = "";
+          _minutesPassed = 0;
+          dataFromNode = true;
         }
       }
       else
@@ -212,9 +272,12 @@ public:
         value.isDecimal = 0;
         value.valS = "";
         regEvent(value.valS, _id);
+        jsonWriteStr(json, F("info"), F("awaiting"));
+        sendSubWidgetsValues(_id, json);
       }
     }
-    }
+    setNewWidgetAttributes();
+  }
   //=======================================================================================================
 
   ~BleSens(){};

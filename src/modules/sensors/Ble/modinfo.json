@@ -26,6 +26,9 @@
       "needSave": 0,
       "global": 0,
       "round": 1,
+      "orange": 60,
+      "red": 120,
+      "offline": 180,
       "int": 60,
       "MAC": "",
       "sensor": ""
@@ -37,12 +40,15 @@
     "authorGit": "https://github.com/avaksru",
     "specialThanks": "@Serghei63",
     "moduleName": "Ble",
-    "moduleVersion": "1.0",
+    "moduleVersion": "2.0",
     "usedRam": {
       "esp32_4mb": 1261449,
       "esp8266_4mb": 0
     },
-    "subTypes": ["BleSens", "BleScan"],
+    "subTypes": [
+      "BleSens",
+      "BleScan"
+    ],
     "title": "Сканер Bluetooth",
     "moduleDesc": "Позволяет получить данные с Bluetooth часов и термометров Mijia, Xiaomi, Cleargrass, ...",
     "propInfo": {
