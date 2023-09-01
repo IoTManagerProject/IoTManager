@@ -1,6 +1,5 @@
 {
   "menuSection": "Сенсоры",
-
   "configItem": [
     {
       "global": 0,
@@ -20,10 +19,9 @@
       "int": 60
     }
   ],
-
   "about": {
     "authorName": "AVAKS",
-    "authorContact": "https://t.me/@avaks_dev",
+    "authorContact": "https://t.me/@avaks",
     "authorGit": "https://github.com/avaksru",
     "specialThanks": "",
     "moduleName": "ExternalMQTT",
@@ -44,9 +42,7 @@
       "sensor": "Тип сенсора: температура / влажность / время / ...   "
     }
   },
-
   "defActive": false,
-
   "usedLibs": {
     "esp32_4mb": [],
     "esp8266_4mb": [],

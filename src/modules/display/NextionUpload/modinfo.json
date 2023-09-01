@@ -1,6 +1,5 @@
 {
   "menuSection": "Экраны",
-
   "configItem": [
     {
       "global": 0,
@@ -17,10 +16,9 @@
       "NEXT_RX": 17
     }
   ],
-
   "about": {
     "authorName": "AVAKS",
-    "authorContact": "https://t.me/@avaks_dev",
+    "authorContact": "https://t.me/@avaks",
     "authorGit": "https://github.com/avaksru",
     "specialThanks": "",
     "moduleName": "NextionUpload",
@@ -36,15 +34,25 @@
       "url": "файл прошивки"
     }
   },
-
   "defActive": false,
-
   "usedLibs": {
-    "esp32_4mb": ["https://github.com/avaksru/ESPNexUpload.git"],
-    "esp8266_4mb": ["https://github.com/avaksru/ESPNexUpload.git"],
-    "esp8266_1mb": ["https://github.com/avaksru/ESPNexUpload.git"],
-    "esp8266_1mb_ota": ["https://github.com/avaksru/ESPNexUpload.git"],
-    "esp8285_1mb": ["https://github.com/avaksru/ESPNexUpload.git"],
-    "esp8285_1mb_ota": ["https://github.com/avaksru/ESPNexUpload.git"]
+    "esp32_4mb": [
+      "https://github.com/avaksru/ESPNexUpload.git"
+    ],
+    "esp8266_4mb": [
+      "https://github.com/avaksru/ESPNexUpload.git"
+    ],
+    "esp8266_1mb": [
+      "https://github.com/avaksru/ESPNexUpload.git"
+    ],
+    "esp8266_1mb_ota": [
+      "https://github.com/avaksru/ESPNexUpload.git"
+    ],
+    "esp8285_1mb": [
+      "https://github.com/avaksru/ESPNexUpload.git"
+    ],
+    "esp8285_1mb_ota": [
+      "https://github.com/avaksru/ESPNexUpload.git"
+    ]
   }
 }

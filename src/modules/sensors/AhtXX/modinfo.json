@@ -12,7 +12,7 @@
             "descr": "AHTXX Температура",
             "int": 15,
             "addr": "0x38",
-            "shtType":1,
+            "shtType": 1,
             "round": 1
         },
         {
@@ -26,7 +26,7 @@
             "descr": "AHTXX Влажность",
             "int": 15,
             "addr": "0x38",
-            "shtType":1,
+            "shtType": 1,
             "round": 1
         }
     ],
@@ -34,7 +34,7 @@
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
         "authorGit": "https://github.com/biveraxe",
-        "specialThanks": "Sergey @Serghei63, @avaks_dev",
+        "specialThanks": "Sergey @Serghei63, @avaks",
         "moduleName": "AhtXX",
         "moduleVersion": "1.0",
         "usedRam": {

@@ -1,6 +1,5 @@
 {
   "menuSection": "Виртуальные элементы",
-
   "configItem": [
     {
       "global": 0,
@@ -19,10 +18,9 @@
       "val": "..."
     }
   ],
-
   "about": {
     "authorName": "AVAKS",
-    "authorContact": "https://t.me/@avaks_dev",
+    "authorContact": "https://t.me/@avaks",
     "authorGit": "https://github.com/avaksru",
     "specialThanks": "",
     "moduleName": "Weather",
@@ -39,9 +37,7 @@
       "int": "Интервал запроса погоды в часах"
     }
   },
-
   "defActive": false,
-
   "usedLibs": {
     "esp32_4mb": [],
     "esp8266_4mb": [],
