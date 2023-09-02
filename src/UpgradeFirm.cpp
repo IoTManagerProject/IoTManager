@@ -48,17 +48,19 @@ bool upgradeFS() {
 #endif
 #ifdef ESP32
     httpUpdate.rebootOnUpdate(false);
-    //обновляем little fs с помощью метода обновления spiffs
+    // обновляем little fs с помощью метода обновления spiffs
     HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, getBinPath("littlefs.bin"));
 #endif
 
-    //если FS обновилась успешно
+    // если FS обновилась успешно
     if (retFS == HTTP_UPDATE_OK) {
         SerialPrint("!!!", F("Update"), F("FS upgrade done!"));
         handleUpdateStatus(true, UPDATE_FS_COMPLETED);
         ret = true;
+    } else {
+        handleUpdateStatus(true, UPDATE_FS_FAILED);
     }
-    handleUpdateStatus(true, UPDATE_FS_FAILED);
+
     return ret;
 }
 
@@ -72,22 +74,23 @@ bool upgradeBuild() {
         handleUpdateStatus(true, PATH_ERROR);
         return ret;
     }
-#if defined (esp8266_4mb) || defined (esp8266_1mb) || defined (esp8266_1mb_ota) || defined (esp8266_2mb) || defined (esp8266_2mb_ota) 
+#if defined(esp8266_4mb) || defined(esp8266_1mb) || defined(esp8266_1mb_ota) || defined(esp8266_2mb) || defined(esp8266_2mb_ota)
     ESPhttpUpdate.rebootOnUpdate(false);
     t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, getBinPath("firmware.bin"));
 #endif
-#ifdef esp32_4mb
+#ifdef ESP32
     httpUpdate.rebootOnUpdate(false);
     HTTPUpdateResult retBuild = httpUpdate.update(wifiClient, getBinPath("firmware.bin"));
 #endif
 
-    //если BUILD обновился успешно
+    // если BUILD обновился успешно
     if (retBuild == HTTP_UPDATE_OK) {
         SerialPrint("!!!", F("Update"), F("BUILD upgrade done!"));
         handleUpdateStatus(true, UPDATE_BUILD_COMPLETED);
         ret = true;
+    } else {
+        handleUpdateStatus(true, UPDATE_BUILD_FAILED);
     }
-    handleUpdateStatus(true, UPDATE_BUILD_FAILED);
     return ret;
 }
 
@@ -132,5 +135,5 @@ void saveUserDataToFlash() {
 
 void handleUpdateStatus(bool send, int state) {
     jsonWriteInt_(errorsHeapJson, F("upd"), state);
-    if (!send) sendStringToWs("errors", errorsHeapJson, -1);
+    if (send) sendStringToWs("errors", errorsHeapJson, -1);
 }

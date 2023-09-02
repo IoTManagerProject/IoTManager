@@ -1,0 +1,84 @@
+{
+    "menuSection": "Сенсоры",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "SCD40 Углекислый газ",
+            "type": "Reading",
+            "subtype": "Scd40co2",
+            "id": "Scd40co2",
+            "widget": "anydataPpm",
+            "page": "Сенсоры",
+            "descr": "SCD40 Углекислый газ",
+            "int": 15,
+            "round": 0,
+            "lowPeriodic": 1,
+            "autoCalibration": 1,
+            "btn-Recalibration": 0 
+        },
+        {
+            "global": 0,
+            "name": "SCD40 Влажность",
+            "type": "Reading",
+            "subtype": "Scd40h",
+            "id": "Scd40h",
+            "widget": "anydataHum",
+            "page": "Сенсоры",
+            "descr": "SCD40 Влажность",
+            "int": 15,
+            "round": 1
+        },
+        {
+            "global": 0,
+            "name": "SCD40 Температура",
+            "type": "Reading",
+            "subtype": "Scd40t",
+            "id": "Scd40t",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "SCD40 Температура",
+            "int": 15,
+            "round": 1,
+            "offset": 4
+        }
+    ],
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "Bubnov Mikhail @Mit4bmw",
+        "moduleName": "Scd40",
+        "moduleVersion": "0.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "subTypes": [
+            "Scd40co2",
+            "Scd40t",
+            "Scd40h"
+        ],
+        "title": "Датчик температуры и влажности Scd40",
+        "moduleDesc": "Позволяет получить значения температуры и влажности с Scd40.",
+        "propInfo": {
+           
+            "int": "Количество секунд между опросами библиотеки (датчик опрашивается библиотекой по своему таймеру, см. lowPeriodic).",
+            "offset": "Смещение температуры представляет собой разницу между температурой, измеренной SCD4x, и фактической температурой окружающей среды температура. По умолчанию смещение температуры в библиотеке/датчике установлено на 4°C.",
+            "lowPeriodic": "Медленные режим опроса датчика библиотекой. 0-каждые 5сек, 1-каждые 30сек",
+            "autoCalibration": "Автоматическая калибровка, по умолчанию включена AutomaticSelfCalibration, 0 - выключена",
+            "btn-Recalibration": "Кнопка принудительной калибровки. В поле указать Целевая концентрация CO₂ в миллионных долях. Перед калибровкой необходимо находтся в течение > 3 минут в среде с однородной и постоянной концентрацией CO₂. Выдает в лог Значение коррекции FRC в co₂ ppm"    
+ 
+        }
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [
+            "Sensirion I2C SCD4x @0.4.0",
+            "Sensirion Core @0.6.0"
+        ],
+        "esp8266_4mb": [
+            "Sensirion I2C SCD4x @0.4.0",
+            "Sensirion Core @0.6.0"
+        ]
+    }
+}

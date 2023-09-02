@@ -15,6 +15,7 @@ IoTItem::IoTItem(const String& parameters) {
     if (!jsonRead(parameters, F("multiply"), _multiply, false)) _multiply = 1;
     if (!jsonRead(parameters, F("plus"), _plus, false)) _plus = 0;
     if (!jsonRead(parameters, F("round"), _round, false)) _round = -1;
+    if (!jsonRead(parameters, F("numDigits"), _numDigits, false)) _numDigits = 1;
 
     if (!jsonRead(parameters, F("global"), _global, false)) _global = false;
 
@@ -119,9 +120,9 @@ String IoTItem::getRoundValue() {
     if (_round >= 0 && _round <= 6) {
         int sot = _round ? pow(10, (int)_round) : 1;
         value.valD = round(value.valD * sot) / sot;
-
+        //todo: оптимизировать. Вынести расчет строки формата округления, чтоб использовать постоянно готовую
         char buf[15];
-        sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
+        sprintf(buf, ("%0" + (String)(_numDigits + _round) + "." + (String)_round + "f").c_str(), value.valD);
         value.valS = (String)buf;
         return value.valS;
     } else {

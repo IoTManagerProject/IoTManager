@@ -1,0 +1,133 @@
+{   
+    "menuSection": "Экраны",
+
+    "configItem": [{
+        "global": 0,
+        "name": "7 сегментный дисплей TM16XX",
+        "type": "Writing",
+        "subtype": "TM16XX",
+        "id": "tm",
+        "widget": "inputTxt",
+        "page": "Экраны",
+        "descr": "Экран",
+        "round": 0,
+        
+        "chip": 1637,
+        "numDigits": 4,
+        "DIO": "13",
+        "CLK": "14",
+        "STB": "12",
+        "intensity": "5",
+        "on": "1",
+        "id2show": ""
+    }],
+    
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "specialThanks": "",
+        "moduleName": "TM16XX",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "moduleDesc": "Позволяет выводить на 7 сегментный экран серии TM16XX (TM1637, TM1638). Может быть расширен до поддержки TM1616, TM1620, TM1628, TM1630, TM1637, TM1638, TM1640, TM1650, TM1652 и TM1668",
+        "propInfo": {
+            "int": "Период времени в секундах обновления информации на экране по конкретному элементу.",
+            "chip": "Номер чипа TM1637 или TM1638",
+            "numDigits": "Число цифр на дисплее",
+            "DIO": "Номер пина данных",
+            "CLK": "Номер пина часового сигнала",
+            "intensity": "Яркость 0-7",
+            "on": "Вкл/выкл при старте 1/0",
+            "STB": "Номер пина стекового сигнала - не используется на определенных моделях",
+            "id2show": "id элемента конфигурации для отображения. Если пустая строка, то дисплей использует свою переменную. Если указать несколько значений через запятую, то все данные будут последовательно выводиться в строку."
+        },
+        "funcInfo": [
+            {
+                "name": "noBacklight",
+                "descr": "Выключить подсветку",
+                "params": []
+            },
+            {
+                "name": "backlight",
+                "descr": "Включить подсветку",
+                "params": []
+            },
+            {
+                "name": "noDisplay",
+                "descr": "Спрятать все данные",
+                "params": []
+            },
+            {
+                "name": "display",
+                "descr": "Показать данные на экране",
+                "params": []
+            },
+            {
+                "name": "toggle",
+                "descr": "Переключает видимость значений на экране",
+                "params": []
+            },
+            {
+                "name": "x",
+                "descr": "Устанавливает первую координату",
+                "params": ["Номер строки первого символа"]
+            },
+            {
+                "name": "y",
+                "descr": "Устанавливает вторую координату",
+                "params": ["Номер столбца первого символа"]
+            },
+            {
+                "name": "descr",
+                "descr": "Задает приставку слева от значения",
+                "params": ["Строка"]
+            },
+            {
+                "name": "id2show",
+                "descr": "Задает ИД элемента, значение которого хотим отображать на экране",
+                "params": ["Имя элемента конфигурации"]
+            }
+        ]
+    },
+
+    "defActive": true,
+
+    "usedLibs": {
+        "esp32_4mb": [
+            "https://github.com/maxint-rd/TM16xx",
+            "adafruit/Adafruit GFX Library @ ^1.11.5"
+        ],
+        "esp8266_4mb": [
+            "https://github.com/maxint-rd/TM16xx",
+            "adafruit/Adafruit GFX Library @ ^1.11.5"
+        ],
+        "esp8266_1mb": [
+            "https://github.com/maxint-rd/TM16xx",
+            "adafruit/Adafruit GFX Library @ ^1.11.5"
+        ],
+        "esp8266_1mb_ota": [
+            "https://github.com/maxint-rd/TM16xx",
+            "adafruit/Adafruit GFX Library @ ^1.11.5"
+        ],
+        "esp8285_1mb": [
+            "https://github.com/maxint-rd/TM16xx",
+            "adafruit/Adafruit GFX Library @ ^1.11.5"
+        ],
+        "esp8285_1mb_ota": [
+            "https://github.com/maxint-rd/TM16xx",
+            "adafruit/Adafruit GFX Library @ ^1.11.5"
+        ],
+        "esp8266_2mb": [
+            "https://github.com/maxint-rd/TM16xx",
+            "adafruit/Adafruit GFX Library @ ^1.11.5"
+        ],
+        "esp8266_2mb_ota": [
+            "https://github.com/maxint-rd/TM16xx",
+            "adafruit/Adafruit GFX Library @ ^1.11.5"
+        ]
+    }
+}

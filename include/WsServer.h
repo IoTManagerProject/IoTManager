@@ -19,3 +19,5 @@ void periodicWsSend();
 
 void sendFileToWsByFrames(const String& filename, const String& header, const String& json, int client_id, size_t frameSize);
 void sendStringToWs(const String& header, String& payload, int client_id);
+
+void sendDeviceList(uint8_t num);
