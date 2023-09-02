@@ -24,7 +24,7 @@
     },
     "projectProp": {
         "platformio": {
-            "default_envs": "esp8266_4mb",
+            "default_envs": "esp32_4mb",
             "comments_default_envs": "choose from: esp8266_4mb or esp32_4mb or esp32s2_4mb or esp8266_1mb or esp8266_1mb_ota or esp8285_1mb or esp8285_1mb_ota",
             "envs": [
                 "esp8266_4mb",
