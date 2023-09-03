@@ -246,6 +246,11 @@ protected:
         pv_last = pv;
     }
 
+// временное решение
+    unsigned long currentMillis;
+    unsigned long prevMillis;
+    unsigned long difference;
+    
     void loop()
     {
         if (enableDoByInt)

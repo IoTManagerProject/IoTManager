@@ -10,7 +10,7 @@ private:
   String scid = "";
   String shname = "";
   //  bool init = false;
-  int interval = 1;
+  // int interval = 1;
   // long interval;
   String URL = ("http://iotmanager.org/projects/google.php?/macros/s/"); // F("https://script.google.com/macros/s/");
   String urlFinal;
@@ -24,8 +24,11 @@ public:
     jsonRead(parameters, F("logid"), logid);
     jsonRead(parameters, F("scid"), scid);
     jsonRead(parameters, F("shname"), shname);
-    jsonRead(parameters, F("int"), interval);
-    interval = interval * 1000 * 60; // так как у нас в минутах
+    // jsonRead(parameters, F("int"), interval);
+    long interval;
+    jsonRead(parameters, F("int"), interval); // в минутах
+    setInterval(interval * 60);
+    // interval = interval * 1000 * 60; // так как у нас в минутах
     urlFinal = URL + scid + F("/exec?") + F("sheet=") + shname;
   }
 
@@ -39,19 +42,19 @@ public:
     }
   }
 
-  void loop()
-  {
-    if (enableDoByInt)
-    {
-      currentMillis = millis();
-      difference = currentMillis - prevMillis;
-      if (difference >= interval)
-      {
-        prevMillis = millis();
-        this->doByInterval();
-      }
-    }
-  }
+  // void loop()
+  // {
+  //   if (enableDoByInt)
+  //   {
+  //     currentMillis = millis();
+  //     difference = currentMillis - prevMillis;
+  //     if (difference >= interval)
+  //     {
+  //       prevMillis = millis();
+  //       this->doByInterval();
+  //     }
+  //   }
+  // }
 
   IoTValue execute(String command, std::vector<IoTValue> &param)
   {
