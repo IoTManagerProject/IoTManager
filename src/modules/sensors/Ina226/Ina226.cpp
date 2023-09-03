@@ -16,45 +16,45 @@
 
 
 // Структура для хранения настроек датчика
-struct Ina219Value
+struct Ina226Value
 {
     float shunt = 0;
     float maxV = 0;
 };
 
 // глобальные списки необходимы для хранения Модуля Настроек. Ключ - адрес
-std::map<uint8_t, Ina219Value *> ina219SettingArray;
+std::map<uint8_t, Ina226Value *> ina226SettingArray;
 
 // глобальные списки необходимы для хранения объектов  используемых разными датчиками из модуля. Ключ - адрес
-std::map<uint8_t, INA219 *> ina219Array;
+std::map<uint8_t, INA226 *> ina226Array;
 
 // Функция инициализации библиотечного класса, возвращает Единстрвенный указать на библиотеку
-INA219 *instanceIna219(uint8_t ADDR)
+INA226 *instanceIna226(uint8_t ADDR)
 {
     /** default I2C address **/
     if (ADDR == 0)
         ADDR = 0x40; // 1000000 (A0+A1=GND)
 
     // учитываем, что библиотека может работать с несколькими линиями на разных пинах, поэтому инициируем библиотеку, если линия ранее не использовалась
-    if (ina219Array.find(ADDR) == ina219Array.end())
+    if (ina226Array.find(ADDR) == ina226Array.end())
     {
-        if (ina219SettingArray.find(ADDR) == ina219SettingArray.end())
-            ina219Array[ADDR] = new INA219(ina219SettingArray[ADDR]->shunt, ina219SettingArray[ADDR]->maxV, (uint8_t)ADDR);
+        if (ina226SettingArray.find(ADDR) == ina226SettingArray.end())
+            ina226Array[ADDR] = new INA226(ina226SettingArray[ADDR]->shunt, ina226SettingArray[ADDR]->maxV, (uint8_t)ADDR);
         else
-            ina219Array[ADDR] = new INA219(0.1f, 3.2f, (uint8_t)ADDR); // Стандартные значения для модуля INA219 (0.1 Ом, 3.2А, адрес 0x40)
-        ina219Array[ADDR]->begin();
-        //     ina219ValueArray[ADDR] = new Ina219Value;
+            ina226Array[ADDR] = new INA226(0.1f, 0.8f, (uint8_t)ADDR); // Стандартные значения для модуля INA226 (0.1 Ом, 0.8А, адрес 0x40)
+        ina226Array[ADDR]->begin();
+        //     ina226ValueArray[ADDR] = new Ina226Value;
     }
-    return ina219Array[ADDR];
+    return ina226Array[ADDR];
 }
 
-class Ina219voltage : public IoTItem
+class Ina226voltage : public IoTItem
 {
 private:
     uint8_t _addr = 0;
 
 public:
-    Ina219voltage(String parameters) : IoTItem(parameters)
+    Ina226voltage(String parameters) : IoTItem(parameters)
     {
         String sAddr;
         jsonRead(parameters, "addr", sAddr);
@@ -66,20 +66,20 @@ public:
 
     void doByInterval()
     {
-        value.valD = instanceIna219(_addr)->getVoltage();
-        regEvent(value.valD, "Ina219voltage");
+        value.valD = instanceIna226(_addr)->getVoltage();
+        regEvent(value.valD, "Ina226voltage");
     }
 
-    ~Ina219voltage(){};
+    ~Ina226voltage(){};
 };
 
-class Ina219shuntvoltage : public IoTItem
+class Ina226shuntvoltage : public IoTItem
 {
 private:
     uint8_t _addr = 0;
 
 public:
-    Ina219shuntvoltage(String parameters) : IoTItem(parameters)
+    Ina226shuntvoltage(String parameters) : IoTItem(parameters)
     {
         String sAddr;
         jsonRead(parameters, "addr", sAddr);
@@ -90,20 +90,20 @@ public:
     }
     void doByInterval()
     {
-        value.valD = instanceIna219(_addr)->getShuntVoltage();
-        regEvent(value.valD, "Ina219shuntvoltage");
+        value.valD = instanceIna226(_addr)->getShuntVoltage();
+        regEvent(value.valD, "Ina226shuntvoltage");
     }
 
-    ~Ina219shuntvoltage(){};
+    ~Ina226shuntvoltage(){};
 };
 
-class Ina219curr : public IoTItem
+class Ina226curr : public IoTItem
 {
 private:
     uint8_t _addr = 0;
 
 public:
-    Ina219curr(String parameters) : IoTItem(parameters)
+    Ina226curr(String parameters) : IoTItem(parameters)
     {
         String sAddr;
         jsonRead(parameters, "addr", sAddr);
@@ -114,20 +114,20 @@ public:
     }
     void doByInterval()
     {
-        value.valD = instanceIna219(_addr)->getCurrent();
-        regEvent(value.valD, "Ina219curr");
+        value.valD = instanceIna226(_addr)->getCurrent();
+        regEvent(value.valD, "Ina226curr");
     }
 
-    ~Ina219curr(){};
+    ~Ina226curr(){};
 };
 
-class Ina219Power : public IoTItem
+class Ina226Power : public IoTItem
 {
 private:
     uint8_t _addr = 0;
 
 public:
-    Ina219Power(String parameters) : IoTItem(parameters)
+    Ina226Power(String parameters) : IoTItem(parameters)
     {
         String sAddr;
         jsonRead(parameters, "addr", sAddr);
@@ -138,14 +138,14 @@ public:
     }
     void doByInterval()
     {
-        value.valD = instanceIna219(_addr)->getPower();
-        regEvent(value.valD, "Ina219power"); // TODO: найти способ понимания ошибки получения данных
+        value.valD = instanceIna226(_addr)->getPower();
+        regEvent(value.valD, "Ina226power"); // TODO: найти способ понимания ошибки получения данных
     }
 
-    ~Ina219Power(){};
+    ~Ina226Power(){};
 };
 
-class Ina219Setting : public IoTItem
+class Ina226Setting : public IoTItem
 {
 private:
     uint8_t _addr = 0;
@@ -154,7 +154,7 @@ private:
 
 
 public:
-    Ina219Setting(String parameters) : IoTItem(parameters)
+    Ina226Setting(String parameters) : IoTItem(parameters)
     {
         String sAddr;
         jsonRead(parameters, "addr", sAddr);
@@ -166,26 +166,21 @@ public:
             scanI2C();
         else
             _addr = hexStringToUint8(sAddr);
+            
+        ina226SettingArray[_addr] = new Ina226Value;
+        jsonRead(parameters, "shunt", ina226SettingArray[_addr]->shunt);
+        jsonRead(parameters, "maxV", ina226SettingArray[_addr]->maxV);
+        
+        instanceIna226(_addr)->adjCalibration(adjClbr);
 
-        ina219SettingArray[_addr] = new Ina219Value;
-        jsonRead(parameters, "shunt", ina219SettingArray[_addr]->shunt);
-        jsonRead(parameters, "maxV", ina219SettingArray[_addr]->maxV);
-
-        instanceIna219(_addr)->adjCalibration(adjClbr);
-        if (resol == 1)
-            resol = 0b0011;
-        else
-            resol += 0b0111;
-
-        instanceIna219(_addr)->setResolution(INA219_VBUS, resol);   // Напряжение в 12ти битном режиме
-        instanceIna219(_addr)->setResolution(INA219_VSHUNT, resol); // Ток в 12ти битном режиме
+        instanceIna226(_addr)->setAveraging(resol);   // Напряжение в 12ти битном режиме
     }
 
     void onModuleOrder(String &key, String &value)
     {
         if (key == "getClbr")
         {
-            SerialPrint("i", F("Ina219"), "addr: " + String(_addr) + ", Value Calibration:" + instanceIna219(_addr)->getCalibration());
+            SerialPrint("i", F("Ina226"), "addr: " + String(_addr) + ", Value Calibration:" + instanceIna226(_addr)->getCalibration());
         }
     }
 
@@ -196,47 +191,47 @@ public:
             if (param.size() == 1)
             {
                 if (param[0].valD == 0)
-                    instanceIna219(_addr)->sleep(false);
+                    instanceIna226(_addr)->sleep(false);
                 if (param[0].valD == 1)
-                    instanceIna219(_addr)->sleep(true);
+                    instanceIna226(_addr)->sleep(true);
                 return {};
             }
         }
         /*
         else if (command == "getCalibration")
         {
-            SerialPrint("i", F("Ina219"), "addr: " + String(_addr) + ", Value Calibration:" + instanceIna219(_addr)->getCalibration());
+            SerialPrint("i", F("Ina226"), "addr: " + String(_addr) + ", Value Calibration:" + instanceIna226(_addr)->getCalibration());
             return {};
         }*/
         return {};
     }
 
-    ~Ina219Setting(){};
+    ~Ina226Setting(){};
 };
 
-void *getAPI_Ina219(String subtype, String param)
+void *getAPI_Ina226(String subtype, String param)
 {
-    if (subtype == F("Ina219curr"))
+    if (subtype == F("Ina226curr"))
     {
-        return new Ina219curr(param);
+        return new Ina226curr(param);
     }
-    else if (subtype == F("Ina219shuntvoltage"))
+    else if (subtype == F("Ina226shuntvoltage"))
     {
-        return new Ina219shuntvoltage(param);
+        return new Ina226shuntvoltage(param);
     }
-    else if (subtype == F("Ina219power"))
+    else if (subtype == F("Ina226power"))
     {
-        return new Ina219Power(param);
+        return new Ina226Power(param);
     }
-    else if (subtype == F("Ina219voltage"))
+    else if (subtype == F("Ina226voltage"))
     {
-        return new Ina219voltage(param);
+        return new Ina226voltage(param);
     }
-    else if (subtype == F("Ina219setting"))
+    else if (subtype == F("Ina226setting"))
     {
-        return new Ina219Setting(param);
-       // Ina219Setting *ptr = new Ina219Setting(param);
-       // ina219SettingArray[ptr->getAddr()] = ptr;
+        return new Ina226Setting(param);
+       // Ina226Setting *ptr = new Ina226Setting(param);
+       // ina226SettingArray[ptr->getAddr()] = ptr;
        // return ptr;
     }
     else

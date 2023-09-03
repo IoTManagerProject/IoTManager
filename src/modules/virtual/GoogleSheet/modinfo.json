@@ -12,7 +12,7 @@
             "descr": "",
             "int": 5,
             "logid": "", 
-			"scid": "Script_ID",
+			"scid": "",
 			"shname": "Logger"
         }
     ],
@@ -21,7 +21,7 @@
         "authorContact": "https://t.me/Mit4bmw",
         "authorGit": "https://github.com/Mit4el",
         "exampleURL": "https://iotmanager.org/wiki",
-        "specialThanks": "",
+        "specialThanks": "@AVAKS",
         "moduleName": "GoogleSheet",
         "moduleVersion": "1.0",
         "usedRam": {
@@ -40,7 +40,7 @@
         "funcInfo": [
             {
                 "name": "logGoogle",
-                "descr": "Использовать не чаще раз в минуту! Логирование элементов по их идентификатору в GoogleSheet, указывать через запятую, от одного до N (проверено на 16шт)",
+                "descr": "Использовать не чаще раз в минуту! Логирование элементов в GoogleSheet, ID элементов указывать через запятую, от одного до N (проверено на 16шт). В данной функции поиск элементов идет по их значению, если несколько элементов с одинаковым значение, может быть не правильно указан его id в Таблице.",
                 "params": [
                     "id Идентификатор 1-го элеменета",
 					"id Идентификатор N-го элеменета"
@@ -59,6 +59,7 @@
     "defActive": false,
     "usedLibs": {
         "esp32_4mb": [],
-        "esp32s2_4mb": []
+        "esp32s2_4mb": [],
+        "esp8266_4mb": []
     }
 }
