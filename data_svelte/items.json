@@ -4,7 +4,7 @@
         "num": 0
     },
     {
-        "header": "Виртуальные элементы"
+        "header": "virtual_elments"
     },
     {
         "global": 0,
@@ -189,7 +189,7 @@
         "num": 12
     },
     {
-        "header": "Сенсоры"
+        "header": "sensors"
     },
     {
         "name": "13. A02 Дальность",
@@ -630,7 +630,7 @@
         "num": 42
     },
     {
-        "header": "Исполнительные устройства"
+        "header": "executive_devices"
     },
     {
         "global": 0,
@@ -811,7 +811,7 @@
         "num": 53
     },
     {
-        "header": "Экраны"
+        "header": "screens"
     },
     {
         "global": 0,

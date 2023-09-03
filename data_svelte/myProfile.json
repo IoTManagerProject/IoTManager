@@ -38,7 +38,7 @@
         }
     },
     "modules": {
-        "Виртуальные элементы": [
+        "virtual_elments": [
             {
                 "path": "src/modules/virtual/Cron",
                 "active": true
@@ -76,7 +76,7 @@
                 "active": false
             }
         ],
-        "Сенсоры": [
+        "sensors": [
             {
                 "path": "src/modules/sensors/A02Distance",
                 "active": true
@@ -230,7 +230,7 @@
                 "active": true
             }
         ],
-        "Исполнительные устройства": [
+        "executive_devices": [
             {
                 "path": "src/modules/exec/ButtonIn",
                 "active": true
@@ -316,7 +316,7 @@
                 "active": false
             }
         ],
-        "Экраны": [
+        "screens": [
             {
                 "path": "src/modules/display/DwinI",
                 "active": false
