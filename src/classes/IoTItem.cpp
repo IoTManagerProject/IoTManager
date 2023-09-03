@@ -36,6 +36,13 @@ IoTItem::IoTItem(const String& parameters) {
     jsonRead(parameters, F("needSave"), _needSave, false);
     if (_needSave && jsonRead(valuesFlashJson, _id, valAsStr, false))  // пробуем достать из сохранения значение элемента, если указано, что нужно сохранять
         setValue(valAsStr, false);
+
+    // проверяем нужно ли отслеживать значение другого элемента
+    String trackingID = "";
+    IoTItem* item = nullptr;
+    if (jsonRead(parameters, F("trackingID"), trackingID, false) && (item = findIoTItem(trackingID)) != nullptr) {
+        _trackingValue = &(item->value);
+    }
 }
 
 void IoTItem::loop() {
@@ -181,6 +188,13 @@ void IoTItem::onRegEvent(IoTItem* item) {}
 void IoTItem::onMqttRecive(String& topic, String& msg) {}
 void IoTItem::onMqttWsAppConnectEvent() {}
 void IoTItem::onModuleOrder(String& key, String& value) {}
+void IoTItem::onTrackingValue(IoTItem* item) {
+    setValue(item->getValue(), false);
+}
+
+bool IoTItem::isTracking(IoTItem* item) {
+    return &(item->value) == _trackingValue;
+}
 
 // делаем доступным модулям отправку сообщений в телеграм
 void IoTItem::sendTelegramMsg(bool often, String msg) {}
