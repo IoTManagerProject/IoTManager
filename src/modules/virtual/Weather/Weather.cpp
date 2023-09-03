@@ -26,7 +26,7 @@ public:
     {
         String ret;
 
-        if (WiFi.status() == WL_CONNECTED)
+        if (isNetworkActive())
         {
             // char c;
             String payload;

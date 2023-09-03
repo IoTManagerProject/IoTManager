@@ -121,7 +121,7 @@ boolean RouterFind(String ssid) {
 
 uint8_t RSSIquality() {
     uint8_t res = 0;
-    if (WiFi.status() == WL_CONNECTED) {
+    if (isNetworkActive()) {
         int rssi = WiFi.RSSI();
         if (rssi >= -50) {
             res = 6;  //"Excellent";

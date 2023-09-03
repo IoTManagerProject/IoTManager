@@ -31,7 +31,7 @@ public:
 
   void doByInterval()
   {
-    if (WiFi.status() == WL_CONNECTED)
+    if (isNetworkActive())
     {
       String value = getItemValue(logid);
       if (value != "")
@@ -55,7 +55,7 @@ public:
 
   IoTValue execute(String command, std::vector<IoTValue> &param)
   {
-    if (WiFi.status() == WL_CONNECTED)
+    if (isNetworkActive())
     {
       if (command == F("logGoogle"))
       { // Логирование определенного элемента по его идентификатору в GoogleSheet
