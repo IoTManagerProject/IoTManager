@@ -34,8 +34,8 @@ class ButtonOut : public IoTItem {
         // param - вектор ("массив") значений параметров переданных вместе с командой: ID.Команда("пар1", 22, 33) -> param[0].ValS = "пар1", param[1].ValD = 22
     
         if (command == "change") { 
-            value.valD = 1 - IoTgpio.digitalRead(_pin);
-            IoTgpio.digitalWrite(_pin, value.valD);
+            value.valD = 1 - (int)value.valD;
+            IoTgpio.digitalWrite(_pin, _inv?!value.valD:value.valD);
             regEvent(value.valD, "ButtonOut");
         }
         else if (command == "pulse") {
