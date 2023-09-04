@@ -11,15 +11,16 @@ class Weather : public IoTItem
 private:
     String _location;
     String _param;
-    long interval;
+    // long interval;
 
 public:
     Weather(String parameters) : IoTItem(parameters)
     {
         _location = jsonReadStr(parameters, "location");
         _param = jsonReadStr(parameters, "param");
-        jsonRead(parameters, F("int"), interval);
-        interval = interval * 1000 * 60 * 60; // интервал проверки погоды в часах
+        long interval;
+        jsonRead(parameters, F("int"), interval); // интервал проверки погоды в часах
+        setInterval(interval * 60 * 60);
     }
 
     void getWeather()
@@ -113,19 +114,21 @@ public:
             regEvent(value.valS, "Weather");
         }
     }
-    void loop()
-    {
-        if (enableDoByInt)
-        {
-            currentMillis = millis();
-            difference = currentMillis - prevMillis;
-            if (difference >= interval)
-            {
-                prevMillis = millis();
-                this->doByInterval();
-            }
-        }
-    }
+
+    // void loop()
+    // {
+    //     if (enableDoByInt)
+    //     {
+    //         currentMillis = millis();
+    //         difference = currentMillis - prevMillis;
+    //         if (difference >= interval)
+    //         {
+    //             prevMillis = millis();
+    //             this->doByInterval();
+    //         }
+    //     }
+    // }
+
     IoTValue execute(String command, std::vector<IoTValue> &param)
     {
         if (command == "get")

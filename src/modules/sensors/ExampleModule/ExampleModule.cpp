@@ -102,13 +102,7 @@ public:
         adc = IoTgpio.analogRead(_pin);
 
         // Блок вызова doByInterval, так как если определили loop, то сам он не вызовится
-        currentMillis = millis();
-        difference = currentMillis - prevMillis;
-        if (difference >= _interval)
-        {
-            prevMillis = millis();
-            this->doByInterval();
-        }
+        IoTItem::loop();
     }
 
     ~ExampleModule_A(){};
