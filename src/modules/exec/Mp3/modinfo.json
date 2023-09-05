@@ -1,21 +1,20 @@
-{   
-    "menuSection": "Исполнительные устройства",
-
-    "configItem": [{
-        "global": 0,
-        "name": "MP3 плеер",
-        "type": "Reading",
-        "subtype": "Mp3",
-        "id": "mp3",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        
-        "int": 1,
-        "pins": "14,12",
-        "volume": 20
-    }],
-    
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "MP3 плеер",
+            "type": "Reading",
+            "subtype": "Mp3",
+            "id": "mp3",
+            "widget": "",
+            "page": "",
+            "descr": "",
+            "int": 1,
+            "pins": "14,12",
+            "volume": 20
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -59,12 +58,17 @@
             {
                 "name": "volume",
                 "descr": "Установить громкость",
-                "params": ["Значение громкости"]
+                "params": [
+                    "Значение громкости"
+                ]
             },
             {
                 "name": "playFolder",
                 "descr": "Проиграть файл из папки",
-                "params": ["Номер папки", "Номер файла"]
+                "params": [
+                    "Номер папки",
+                    "Номер файла"
+                ]
             },
             {
                 "name": "play",
@@ -83,9 +87,7 @@
             }
         ]
     },
-
     "defActive": true,
-
     "usedLibs": {
         "esp32_4mb": [
             "dfrobot/DFRobotDFPlayerMini @ ^1.0.5"

@@ -126,11 +126,11 @@
                 "active": false
             },
             {
-                "path": "src/modules/sensors/Ds2423",
+                "path": "src/modules/sensors/Emon",
                 "active": false
             },
             {
-                "path": "src/modules/sensors/Emon",
+                "path": "src/modules/sensors/ExampleModule",
                 "active": false
             },
             {
@@ -163,6 +163,10 @@
             },
             {
                 "path": "src/modules/sensors/Ina219",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/Ina226",
                 "active": false
             },
             {
@@ -314,6 +318,10 @@
             {
                 "path": "src/modules/exec/Thermostat",
                 "active": false
+            },
+            {
+                "path": "src/modules/sensors/Ds2423",
+                "active": false
             }
         ],
         "screens": [
@@ -331,6 +339,10 @@
             },
             {
                 "path": "src/modules/display/Smi2_m",
+                "active": true
+            },
+            {
+                "path": "src/modules/display/TM16XX",
                 "active": true
             },
             {

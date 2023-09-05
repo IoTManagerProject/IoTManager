@@ -1,5 +1,5 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "global": 0,
@@ -12,7 +12,7 @@
             "descr": "AHTXX Температура",
             "int": 15,
             "addr": "0x38",
-            "shtType":1,
+            "shtType": 1,
             "round": 1
         },
         {
@@ -26,7 +26,7 @@
             "descr": "AHTXX Влажность",
             "int": 15,
             "addr": "0x38",
-            "shtType":1,
+            "shtType": 1,
             "round": 1
         }
     ],

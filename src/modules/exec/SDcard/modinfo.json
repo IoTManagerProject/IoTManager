@@ -1,19 +1,18 @@
-{   
-    "menuSection": "Исполнительные устройства",
-
-    "configItem": [{
-        "global": 0,
-        "name": "SD карта",
-        "type": "Writing",
-        "subtype": "SDcard",
-        "id": "sd",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        
-        "int": 1
-    }],
-    
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "SD карта",
+            "type": "Writing",
+            "subtype": "SDcard",
+            "id": "sd",
+            "widget": "",
+            "page": "",
+            "descr": "",
+            "int": 1
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -31,9 +30,7 @@
             "int": "Не используется."
         }
     },
-
     "defActive": false,
-
     "usedLibs": {
         "esp32_4mb": [
             "espressif/esp32-camera @ ^2.0.0"

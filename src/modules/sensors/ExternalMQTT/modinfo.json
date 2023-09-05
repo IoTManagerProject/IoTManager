@@ -1,6 +1,5 @@
 {
-  "menuSection": "Сенсоры",
-
+  "menuSection": "sensors",
   "configItem": [
     {
       "global": 0,
@@ -20,7 +19,6 @@
       "int": 60
     }
   ],
-
   "about": {
     "authorName": "AVAKS",
     "authorContact": "https://t.me/@avaks_dev",
@@ -44,9 +42,7 @@
       "sensor": "Тип сенсора: температура / влажность / время / ...   "
     }
   },
-
   "defActive": false,
-
   "usedLibs": {
     "esp32_4mb": [],
     "esp8266_4mb": [],

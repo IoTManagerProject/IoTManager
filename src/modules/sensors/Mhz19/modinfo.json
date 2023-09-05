@@ -1,5 +1,5 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "global": 0,
@@ -78,7 +78,9 @@
     "defActive": false,
     "usedLibs": {
         "esp32_4mb": [],
-        "esp32s2_4mb": ["plerup/EspSoftwareSerial"],
+        "esp32s2_4mb": [
+            "plerup/EspSoftwareSerial"
+        ],
         "esp8266_4mb": []
     }
 }

@@ -1,40 +1,38 @@
-{   
-    "menuSection": "Экраны",
-
-    "configItem": [{
-        "global": 0,
-        "name": "LCD экран 2004",
-        "type": "Reading",
-        "subtype": "Lcd2004",
-        "id": "Lcd",
-        "widget": "inputTxt",
-        "page": "Экраны",
-        "descr": "LCD Экран",
-        
-        "addr": "0x27",
-        "size": "20,4",
-        "coord": "0,0",
-        "id2show": "",
-        "prefix": "",
-        "postfix": ""
-    },
-    {
-        "name": "LCD экран 1602",
-        "type": "Reading",
-        "subtype": "Lcd2004",
-        "id": "Lcd",
-        "widget": "inputTxt",
-        "page": "Экраны",
-        "descr": "LCD Экран",
-        
-        "addr": "0x27",
-        "size": "16,2",
-        "coord": "0,0",
-        "id2show": "",
-        "prefix": "",
-        "postfix": ""
-    }],
-    
+{
+    "menuSection": "screens",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "LCD экран 2004",
+            "type": "Reading",
+            "subtype": "Lcd2004",
+            "id": "Lcd",
+            "widget": "inputTxt",
+            "page": "screens",
+            "descr": "LCD Экран",
+            "addr": "0x27",
+            "size": "20,4",
+            "coord": "0,0",
+            "id2show": "",
+            "prefix": "",
+            "postfix": ""
+        },
+        {
+            "name": "LCD экран 1602",
+            "type": "Reading",
+            "subtype": "Lcd2004",
+            "id": "Lcd",
+            "widget": "inputTxt",
+            "page": "screens",
+            "descr": "LCD Экран",
+            "addr": "0x27",
+            "size": "16,2",
+            "coord": "0,0",
+            "id2show": "",
+            "prefix": "",
+            "postfix": ""
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -84,33 +82,41 @@
             {
                 "name": "x",
                 "descr": "Устанавливает первую координату",
-                "params": ["Номер строки первого символа"]
+                "params": [
+                    "Номер строки первого символа"
+                ]
             },
             {
                 "name": "y",
                 "descr": "Устанавливает вторую координату",
-                "params": ["Номер столбца первого символа"]
+                "params": [
+                    "Номер столбца первого символа"
+                ]
             },
             {
                 "name": "prefix",
                 "descr": "Задает приставку слева от значения",
-                "params": ["Строка"]
+                "params": [
+                    "Строка"
+                ]
             },
             {
                 "name": "postfix",
                 "descr": "Задает приставку справа от значения",
-                "params": ["Строка"]
+                "params": [
+                    "Строка"
+                ]
             },
             {
                 "name": "id2show",
                 "descr": "Задает ИД элемента, значение которого хотим отображать на экране",
-                "params": ["Имя элемента конфигурации"]
+                "params": [
+                    "Имя элемента конфигурации"
+                ]
             }
         ]
     },
-
     "defActive": true,
-
     "usedLibs": {
         "esp32_4mb": [
             "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",

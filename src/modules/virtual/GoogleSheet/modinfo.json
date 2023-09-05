@@ -1,19 +1,19 @@
 {
-    "menuSection": "Виртуальные элементы",
+    "menuSection": "virtual_elments",
     "configItem": [
         {
-		    "global": 0,
+            "global": 0,
             "name": "GoogleSheet",
-            "type": "Reading", 
+            "type": "Reading",
             "subtype": "GoogleSheet",
             "id": "sheet",
             "widget": "nil",
             "page": "",
             "descr": "",
             "int": 5,
-            "logid": "", 
-			"scid": "",
-			"shname": "Logger"
+            "logid": "",
+            "scid": "",
+            "shname": "Logger"
         }
     ],
     "about": {
@@ -33,8 +33,8 @@
         "propInfo": {
             "int": "Интервал логирования в минутах",
             "logid": "ID величины которую будем логировать",
-			"scid": "Идентификатор развертывания Google Apps (script id)",
-			"shname": "Наименование листа в таблице (sheet name)"
+            "scid": "Идентификатор развертывания Google Apps (script id)",
+            "shname": "Наименование листа в таблице (sheet name)"
         },
         "retInfo": "",
         "funcInfo": [
@@ -43,7 +43,7 @@
                 "descr": "Использовать не чаще раз в минуту! Логирование элементов в GoogleSheet, ID элементов указывать через запятую, от одного до N (проверено на 16шт). В данной функции поиск элементов идет по их значению, если несколько элементов с одинаковым значение, может быть не правильно указан его id в Таблице.",
                 "params": [
                     "id Идентификатор 1-го элеменета",
-					"id Идентификатор N-го элеменета"
+                    "id Идентификатор N-го элеменета"
                 ]
             },
             {

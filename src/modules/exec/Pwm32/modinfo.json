@@ -1,24 +1,24 @@
-{   
-    "menuSection": "Исполнительные устройства",
-
-    "configItem": [{
-        "global": 0,
-        "name": "PWM ESP32",
-        "type": "Writing",
-        "subtype": "Pwm32",
-        "id": "pwm",
-        "widget": "range",
-        "page": "Кнопки",
-        "descr": "PWM",
-        "int": 0,
-        "pin": 2,
-        "freq": 5000,
-        "ledChannel": 2,
-        "PWM_resolution": 10,
-        "val": 0,
-        "apin": -1
-      }],
-    
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "PWM ESP32",
+            "type": "Writing",
+            "subtype": "Pwm32",
+            "id": "pwm",
+            "widget": "range",
+            "page": "Кнопки",
+            "descr": "PWM",
+            "int": 0,
+            "pin": 2,
+            "freq": 5000,
+            "ledChannel": 2,
+            "PWM_resolution": 10,
+            "val": 0,
+            "apin": -1
+        }
+    ],
     "about": {
         "authorName": "Avaks",
         "authorContact": "https://t.me/Avaks",
@@ -42,9 +42,7 @@
             "freq": "Частота"
         }
     },
-
     "defActive": true,
-
     "usedLibs": {
         "esp32_4mb": []
     }

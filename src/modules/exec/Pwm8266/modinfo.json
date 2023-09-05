@@ -1,22 +1,22 @@
-{   
-    "menuSection": "Исполнительные устройства",
-
-    "configItem": [{
-        "global": 0,
-        "name": "PWM ESP8266",
-        "type": "Writing",
-        "subtype": "Pwm8266",
-        "id": "pwm",
-        "widget": "range",
-        "page": "Кнопки",
-        "descr": "PWM",
-        "int": 0,
-        "pin": 15,
-        "freq": 5000,
-        "val": 0,
-        "apin": -1
-      }],
-    
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "PWM ESP8266",
+            "type": "Writing",
+            "subtype": "Pwm8266",
+            "id": "pwm",
+            "widget": "range",
+            "page": "Кнопки",
+            "descr": "PWM",
+            "int": 0,
+            "pin": 15,
+            "freq": 5000,
+            "val": 0,
+            "apin": -1
+        }
+    ],
     "about": {
         "authorName": "Avaks",
         "authorContact": "https://t.me/Avaks",
@@ -38,9 +38,7 @@
             "freq": "Частота"
         }
     },
-
     "defActive": true,
-
     "usedLibs": {
         "esp8266_4mb": [],
         "esp8266_1mb": [],
