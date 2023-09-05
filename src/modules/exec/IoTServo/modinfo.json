@@ -1,22 +1,21 @@
-{   
-    "menuSection": "Исполнительные устройства",
-
-    "configItem": [{
-        "global": 0,
-        "name": "Сервопривод",
-        "type": "Writing",
-        "subtype": "IoTServo",
-        "id": "servo",
-        "widget": "range",
-        "page": "servo",
-        "descr": "угол",
-        
-        "int": 1,
-        "pin": 12,
-        "apin": -1,
-        "amap": "0, 4096, 0, 180"
-    }],
-    
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Сервопривод",
+            "type": "Writing",
+            "subtype": "IoTServo",
+            "id": "servo",
+            "widget": "range",
+            "page": "servo",
+            "descr": "угол",
+            "int": 1,
+            "pin": 12,
+            "apin": -1,
+            "amap": "0, 4096, 0, 180"
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -41,13 +40,13 @@
             {
                 "name": "rotate",
                 "descr": "Повернуть привод на значение",
-                "params": ["Числовое значение"]
+                "params": [
+                    "Числовое значение"
+                ]
             }
         ]
     },
-
     "defActive": true,
-
     "usedLibs": {
         "esp32_4mb": [
             "https://github.com/RoboticsBrno/ServoESP32"

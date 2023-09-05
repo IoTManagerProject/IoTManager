@@ -1,49 +1,47 @@
 {
-    "menuSection": "Виртуальные элементы",
-    "configItem": [
-        {
-            "global": 0,
-            "name": "Цветной текст",
-            "type": "Reading",
-            "subtype": "VariableColor",
-            "id": "color",
-            "needSave": 0,
-            "widget": "anydataDef",
-            "page": "Вывод",
-            "descr": "Цветной текст",
-            "val": "...",
-            "round": 0
-        }
-    ],
-    "about": {
-        "authorName": "AVAKS",
-        "authorContact": "https://t.me/@avaks_dev",
-        "authorGit": "https://github.com/avaksru",
-        "specialThanks": "",
-        "moduleName": "VariableColor",
-        "moduleVersion": "1",
-        "usedRam": {
-          "esp32_4mb": 15,
-          "esp8266_4mb": 15
-        },
-        "title": "Цветной текст",
-        "moduleDesc": "Текст с возможностью динамического изменения цвета",
-        "propInfo": {
-            "val": "Значение при старте"
-        }
-      },
-    
-      "defActive": true,
-    
-      "usedLibs": {
-        "esp32_4mb": [],
-        "esp32s2_4mb": [],
-        "esp8266_4mb": [],
-        "esp8266_1mb": [],
-        "esp8266_1mb_ota": [],
-        "esp8285_1mb": [],
-        "esp8285_1mb_ota": [],
-        "esp8266_2mb": [],
-        "esp8266_2mb_ota": []
-      }
+  "menuSection": "virtual_elments",
+  "configItem": [
+    {
+      "global": 0,
+      "name": "Цветной текст",
+      "type": "Reading",
+      "subtype": "VariableColor",
+      "id": "color",
+      "needSave": 0,
+      "widget": "anydataDef",
+      "page": "Вывод",
+      "descr": "Цветной текст",
+      "val": "...",
+      "round": 0
+    }
+  ],
+  "about": {
+    "authorName": "AVAKS",
+    "authorContact": "https://t.me/@avaks_dev",
+    "authorGit": "https://github.com/avaksru",
+    "specialThanks": "",
+    "moduleName": "VariableColor",
+    "moduleVersion": "1",
+    "usedRam": {
+      "esp32_4mb": 15,
+      "esp8266_4mb": 15
+    },
+    "title": "Цветной текст",
+    "moduleDesc": "Текст с возможностью динамического изменения цвета",
+    "propInfo": {
+      "val": "Значение при старте"
+    }
+  },
+  "defActive": true,
+  "usedLibs": {
+    "esp32_4mb": [],
+    "esp32s2_4mb": [],
+    "esp8266_4mb": [],
+    "esp8266_1mb": [],
+    "esp8266_1mb_ota": [],
+    "esp8285_1mb": [],
+    "esp8285_1mb_ota": [],
+    "esp8266_2mb": [],
+    "esp8266_2mb_ota": []
+  }
 }

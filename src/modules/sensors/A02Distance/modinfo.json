@@ -1,9 +1,9 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "name": "A02 Дальность",
-            "type": "Reading", 
+            "type": "Reading",
             "subtype": "A02Distance",
             "id": "dist",
             "widget": "anydataCm",
