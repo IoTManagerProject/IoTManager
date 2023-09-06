@@ -49,7 +49,7 @@
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [
-            "https://github.com/RoboticsBrno/ServoESP32"
+            "https://github.com/RoboticsBrno/ServoESP32#v1.0.3"
         ],
         "esp8266_4mb": []
     }
