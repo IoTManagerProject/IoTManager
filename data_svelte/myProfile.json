@@ -52,13 +52,13 @@
                 },
                 {
                     "name": "esp8266_2mb",
-                    "firmware": "-",
-                    "littlefs": "-"
+                    "firmware": "0x00000000",
+                    "littlefs": "0x00100000"
                 },
                 {
                     "name": "esp8266_2mb_ota",
-                    "firmware": "-",
-                    "littlefs": "-"
+                    "firmware": "0x00000000",
+                    "littlefs": "0x001c0000"
                 },
                 {
                     "name": "esp8285_1mb",
