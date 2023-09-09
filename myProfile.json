@@ -33,6 +33,11 @@
                     "littlefs": "0x300000"
                 },
                 {
+                    "name": "esp8266_16mb",
+                    "firmware": "0x00000",
+                    "littlefs": "0x200000"
+                },
+                {
                     "name": "esp32_4mb",
                     "boot_app0": "0xe000",
                     "bootloader_qio_80m": "0x1000",
