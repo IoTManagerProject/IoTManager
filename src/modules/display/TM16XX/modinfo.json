@@ -104,35 +104,43 @@
     "usedLibs": {
         "esp32_4mb": [
             "https://github.com/maxint-rd/TM16xx",
-            "adafruit/Adafruit GFX Library @ ^1.11.5"
+            "adafruit/Adafruit GFX Library @ ^1.11.5",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
         "esp8266_4mb": [
             "https://github.com/maxint-rd/TM16xx",
-            "adafruit/Adafruit GFX Library @ ^1.11.5"
+            "adafruit/Adafruit GFX Library @ ^1.11.5",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
         "esp8266_1mb": [
             "https://github.com/maxint-rd/TM16xx",
-            "adafruit/Adafruit GFX Library @ ^1.11.5"
+            "adafruit/Adafruit GFX Library @ ^1.11.5",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
         "esp8266_1mb_ota": [
             "https://github.com/maxint-rd/TM16xx",
-            "adafruit/Adafruit GFX Library @ ^1.11.5"
+            "adafruit/Adafruit GFX Library @ ^1.11.5",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
         "esp8285_1mb": [
             "https://github.com/maxint-rd/TM16xx",
-            "adafruit/Adafruit GFX Library @ ^1.11.5"
+            "adafruit/Adafruit GFX Library @ ^1.11.5",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
         "esp8285_1mb_ota": [
             "https://github.com/maxint-rd/TM16xx",
-            "adafruit/Adafruit GFX Library @ ^1.11.5"
+            "adafruit/Adafruit GFX Library @ ^1.11.5",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
         "esp8266_2mb": [
             "https://github.com/maxint-rd/TM16xx",
-            "adafruit/Adafruit GFX Library @ ^1.11.5"
+            "adafruit/Adafruit GFX Library @ ^1.11.5",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
         "esp8266_2mb_ota": [
             "https://github.com/maxint-rd/TM16xx",
-            "adafruit/Adafruit GFX Library @ ^1.11.5"
+            "adafruit/Adafruit GFX Library @ ^1.11.5",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ]
     }
 }
