@@ -74,7 +74,7 @@ bool upgradeBuild() {
         handleUpdateStatus(true, PATH_ERROR);
         return ret;
     }
-#if defined(esp8266_4mb) || defined(esp8266_1mb) || defined(esp8266_1mb_ota) || defined(esp8266_2mb) || defined(esp8266_2mb_ota)
+#if defined(esp8266_4mb) || defined(esp8266_16mb) || defined(esp8266_1mb) || defined(esp8266_1mb_ota) || defined(esp8266_2mb) || defined(esp8266_2mb_ota)
     ESPhttpUpdate.rebootOnUpdate(false);
     t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, getBinPath("firmware.bin"));
 #endif
