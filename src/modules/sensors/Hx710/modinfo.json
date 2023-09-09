@@ -1,22 +1,22 @@
-{   
-    "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "HX710 Cенсор давления",
-        "type": "Reading",
-        "subtype": "Hx710",
-        "id": "hxp",
-        "widget": "anydataDef",
-        "page": "Давление",
-        "descr": "HX press",
-        "int": 15,
-        "plus": 0,
-        "multiply": 1,
-        "round": 1,
-        "data": 14,
-        "clock": 15
-    }],
-    
+{
+    "menuSection": "sensors",
+    "configItem": [
+        {
+            "name": "HX710 Cенсор давления",
+            "type": "Reading",
+            "subtype": "Hx710",
+            "id": "hxp",
+            "widget": "anydataDef",
+            "page": "Давление",
+            "descr": "HX press",
+            "int": 15,
+            "plus": 0,
+            "multiply": 1,
+            "round": 1,
+            "data": 14,
+            "clock": 15
+        }
+    ],
     "about": {
         "authorName": "Serghei Crasnicov",
         "authorContact": "https://t.me/Serghei63",
@@ -44,9 +44,7 @@
             }
         ]
     },
-
     "defActive": false,
-
     "usedLibs": {
         "esp32_4mb": [
             "https://github.com/kurimawxx00/hx710B_pressure_sensor"

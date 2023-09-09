@@ -25,11 +25,64 @@
     "projectProp": {
         "platformio": {
             "default_envs": "esp8266_4mb",
-            "comments_default_envs": "choose from: esp8266_4mb or esp32_4mb or esp32s2_4mb or esp8266_1mb or esp8266_1mb_ota or esp8285_1mb or esp8285_1mb_ota"
+            "comments_default_envs": "choose from: esp8266_4mb or esp32_4mb or esp32s2_4mb or esp8266_1mb or esp8266_1mb_ota or esp8285_1mb or esp8285_1mb_ota",
+            "envs": [
+                {
+                    "name": "esp8266_4mb",
+                    "firmware": "0x00000",
+                    "littlefs": "0x300000"
+                },
+                {
+                    "name": "esp32_4mb",
+                    "boot_app0": "0xe000",
+                    "bootloader_qio_80m": "0x1000",
+                    "firmware": "0x10000",
+                    "partitions": "0x8000",
+                    "littlefs": "0x290000"
+                },
+                {
+                    "name": "esp8266_1mb",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x000bb000"
+                },
+                {
+                    "name": "esp8266_1mb_ota",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x000eb000"
+                },
+                {
+                    "name": "esp8266_2mb",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x00100000"
+                },
+                {
+                    "name": "esp8266_2mb_ota",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x001c0000"
+                },
+                {
+                    "name": "esp8285_1mb",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x000bb000"
+                },
+                {
+                    "name": "esp8285_1mb_ota",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x000eb000"
+                },
+                {
+                    "name": "esp32s2_4mb",
+                    "boot_app0": "0xe000",
+                    "bootloader_qio_80m": "0x1000",
+                    "firmware": "0x10000",
+                    "partitions": "0x8000",
+                    "littlefs": "0x290000"
+                }
+            ]
         }
     },
     "modules": {
-        "Виртуальные элементы": [
+        "virtual_elments": [
             {
                 "path": "src/modules/virtual/Cron",
                 "active": true
@@ -67,7 +120,7 @@
                 "active": false
             }
         ],
-        "Сенсоры": [
+        "sensors": [
             {
                 "path": "src/modules/sensors/A02Distance",
                 "active": true
@@ -117,11 +170,11 @@
                 "active": false
             },
             {
-                "path": "src/modules/sensors/Ds2423",
+                "path": "src/modules/sensors/Emon",
                 "active": false
             },
             {
-                "path": "src/modules/sensors/Emon",
+                "path": "src/modules/sensors/ExampleModule",
                 "active": false
             },
             {
@@ -154,6 +207,10 @@
             },
             {
                 "path": "src/modules/sensors/Ina219",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/Ina226",
                 "active": false
             },
             {
@@ -221,7 +278,7 @@
                 "active": true
             }
         ],
-        "Исполнительные устройства": [
+        "executive_devices": [
             {
                 "path": "src/modules/exec/ButtonIn",
                 "active": true
@@ -305,9 +362,13 @@
             {
                 "path": "src/modules/exec/Thermostat",
                 "active": false
+            },
+            {
+                "path": "src/modules/sensors/Ds2423",
+                "active": false
             }
         ],
-        "Экраны": [
+        "screens": [
             {
                 "path": "src/modules/display/DwinI",
                 "active": false
@@ -322,6 +383,10 @@
             },
             {
                 "path": "src/modules/display/Smi2_m",
+                "active": true
+            },
+            {
+                "path": "src/modules/display/TM16XX",
                 "active": true
             },
             {

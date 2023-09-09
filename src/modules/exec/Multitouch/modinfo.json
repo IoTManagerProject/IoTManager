@@ -1,5 +1,5 @@
 {
-  "menuSection": "Исполнительные устройства",
+  "menuSection": "executive_devices",
   "configItem": [
     {
       "global": 0,
@@ -9,7 +9,7 @@
       "id": "impulse",
       "widget": "anydataDef",
       "page": "Кнопки",
-      "descr": "Количество нажаний",
+      "descr": "Количество нажатий",
       "needSave": 0,
       "int": 300,
       "inv": 1,
@@ -48,6 +48,8 @@
     "esp8266_1mb": [],
     "esp8266_1mb_ota": [],
     "esp8285_1mb": [],
-    "esp8285_1mb_ota": []
+    "esp8285_1mb_ota": [],
+    "esp8266_2mb": [],
+    "esp8266_2mb_ota": []
   }
 }

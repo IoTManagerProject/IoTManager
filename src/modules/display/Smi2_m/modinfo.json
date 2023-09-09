@@ -1,5 +1,5 @@
 {
-    "menuSection": "Экраны",
+    "menuSection": "screens",
     "configItem": [
         {
             "global": 0,
@@ -32,6 +32,7 @@
             "id2show": "id элемента конфигурации.",
             "baud": "скорость обмена, бит/с"
         },
+        "title": "СМИ2-М трёхцветный Modbus-индикатор",
         "funcInfo": [
             {
                 "name": "descr",

@@ -4,7 +4,7 @@
         "num": 0
     },
     {
-        "header": "Виртуальные элементы"
+        "header": "virtual_elments"
     },
     {
         "global": 0,
@@ -189,7 +189,7 @@
         "num": 12
     },
     {
-        "header": "Сенсоры"
+        "header": "sensors"
     },
     {
         "name": "13. Acs712 Ток",
@@ -197,7 +197,7 @@
         "subtype": "Acs712",
         "id": "amp",
         "widget": "anydataAmp",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "Ток",
         "round": 3,
         "pin": 39,
@@ -216,7 +216,7 @@
         "subtype": "AnalogAdc",
         "id": "t",
         "widget": "anydataTmp",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "Температура",
         "map": "1,1024,1,100",
         "plus": 0,
@@ -234,7 +234,7 @@
         "subtype": "Bme280t",
         "id": "Tmp3",
         "widget": "anydataTmp",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "Температура",
         "int": 15,
         "addr": "0x77",
@@ -248,7 +248,7 @@
         "subtype": "Bme280p",
         "id": "Press3",
         "widget": "anydataMm",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "Давление",
         "int": 15,
         "addr": "0x77",
@@ -262,7 +262,7 @@
         "subtype": "Bme280h",
         "id": "Hum3",
         "widget": "anydataHum",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "Влажность",
         "int": 15,
         "addr": "0x77",
@@ -276,7 +276,7 @@
         "subtype": "Bme280dp",
         "id": "Dew3",
         "widget": "anydataTmp",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "Точка росы",
         "int": 15,
         "addr": "0x77",
@@ -290,7 +290,7 @@
         "subtype": "Bmp280t",
         "id": "tmp3",
         "widget": "anydataTmp",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "280 Температура",
         "int": 15,
         "addr": "0x77",
@@ -304,7 +304,7 @@
         "subtype": "Bmp280p",
         "id": "Press3",
         "widget": "anydataMm",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "280 Давление",
         "int": 15,
         "addr": "0x77",
@@ -318,7 +318,7 @@
         "subtype": "Ds18b20",
         "id": "dstmp",
         "widget": "anydataTmp",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "DS Температура",
         "int": 15,
         "pin": 2,
@@ -471,7 +471,7 @@
         "subtype": "Sht20t",
         "id": "tmp2",
         "widget": "anydataTmp",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "Температура",
         "int": 15,
         "round": 1,
@@ -484,7 +484,7 @@
         "subtype": "Sht20h",
         "id": "Hum2",
         "widget": "anydataHum",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "Влажность",
         "int": 15,
         "round": 1,
@@ -497,7 +497,7 @@
         "subtype": "Sht30t",
         "id": "tmp30",
         "widget": "anydataTmp",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "SHT30 Температура",
         "int": 15,
         "round": 1,
@@ -510,7 +510,7 @@
         "subtype": "Sht30h",
         "id": "Hum30",
         "widget": "anydataHum",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "SHT30 Влажность",
         "int": 15,
         "round": 1,
@@ -524,7 +524,7 @@
         "subtype": "Sonar",
         "id": "sonar",
         "widget": "anydataTmp",
-        "page": "Сенсоры",
+        "page": "sensors",
         "descr": "Расстояние (см)",
         "pinTrig": 5,
         "pinEcho": 4,
@@ -546,7 +546,7 @@
         "num": 36
     },
     {
-        "header": "Исполнительные устройства"
+        "header": "executive_devices"
     },
     {
         "global": 0,
@@ -658,7 +658,7 @@
         "num": 43
     },
     {
-        "header": "Экраны"
+        "header": "screens"
     },
     {
         "global": 0,

@@ -1,6 +1,5 @@
 {
-  "menuSection": "Исполнительные устройства",
-
+  "menuSection": "executive_devices",
   "configItem": [
     {
       "global": 0,
@@ -15,7 +14,6 @@
       "chatID": ""
     }
   ],
-
   "about": {
     "authorName": "AVAKS",
     "authorContact": "https://t.me/@avaks_dev",
@@ -51,9 +49,7 @@
       }
     ]
   },
-
   "defActive": true,
-
   "usedLibs": {
     "esp32_4mb": [],
     "esp32_16mb": [],

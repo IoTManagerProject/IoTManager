@@ -1,5 +1,5 @@
 {
-  "menuSection": "Сенсоры",
+  "menuSection": "sensors",
   "configItem": [
     {
       "name": "bluetooth сканер",
@@ -42,7 +42,10 @@
       "esp32_4mb": 1261449,
       "esp8266_4mb": 0
     },
-    "subTypes": ["BleSens", "BleScan"],
+    "subTypes": [
+      "BleSens",
+      "BleScan"
+    ],
     "title": "Сканер Bluetooth",
     "moduleDesc": "Позволяет получить данные с Bluetooth часов и термометров Mijia, Xiaomi, Cleargrass, ...",
     "propInfo": {

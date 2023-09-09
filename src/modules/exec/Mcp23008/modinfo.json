@@ -1,21 +1,20 @@
-{   
-    "menuSection": "Исполнительные устройства",
-
-    "configItem": [{
-        "global": 0,
-        "name": "Расширитель портов Mcp23008",
-        "type": "Reading",
-        "subtype": "Mcp23008",
-        "id": "Mcp",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        
-        "int": "0",
-        "addr": "0x20",
-        "index": 1
-    }],
-    
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Расширитель портов Mcp23008",
+            "type": "Reading",
+            "subtype": "Mcp23008",
+            "id": "Mcp",
+            "widget": "",
+            "page": "",
+            "descr": "",
+            "int": "0",
+            "addr": "0x20",
+            "index": 1
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -35,9 +34,7 @@
             "index": "Значения от 1 до 4, где при выборе 1 будет нумерация pin 100-115, при выборе 2 200-215 и т.д."
         }
     },
-
     "defActive": false,
-
     "usedLibs": {
         "esp32_4mb": [
             "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
