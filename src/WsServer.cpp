@@ -414,6 +414,10 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
 }
 
 void sendStringToWs(const String& header, String& payload, int client_id) {
+    if (!(WiFi.softAPgetStationNum() || isNetworkActive())) {
+        return;
+    }
+
     if (header.length() != 6) {
         SerialPrint("E", "FS", F("wrong header size"));
         return;
