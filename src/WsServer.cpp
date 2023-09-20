@@ -414,7 +414,9 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
 }
 
 void sendStringToWs(const String& header, String& payload, int client_id) {
-    if (!(WiFi.softAPgetStationNum() || isNetworkActive())) {
+    if ((!getNumAPClients() && !isNetworkActive()) || !getNumWSClients()) {
+        // standWebSocket.disconnect(); // это и ниже надо сделать при -
+        // standWebSocket.close();      // - отключении AP И WiFi(STA), надо менять ядро WiFi. Сейчас не закрывается сессия клиента при пропаже AP И WiFi(STA)
         return;
     }
 
@@ -445,4 +447,8 @@ void sendDeviceList(uint8_t num) {
         sendFileToWsByFrames("/devlist.json", "devlis", "", num, WEB_SOCKETS_FRAME_SIZE);
         SerialPrint("i", "FS", "flash list");
     }
+}
+
+int getNumWSClients() {
+    return standWebSocket.connectedClients(false);
 }
