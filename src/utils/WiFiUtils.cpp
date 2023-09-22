@@ -57,7 +57,11 @@ void routerConnect() {
         SerialPrint("i", "WIFI", "pass connect: " + _passwordList[i]);
         while (--triesOne && WiFi.status() != WL_CONNECTED) {
 //            SerialPrint("i", "WIFI", ": " + String((int)WiFi.status()));
+#ifdef ESP8266
             if (WiFi.status() == WL_CONNECT_FAILED || WiFi.status() ==  WL_WRONG_PASSWORD)
+#else
+            if (WiFi.status() == WL_CONNECT_FAILED)
+#endif            
             {
                 SerialPrint("E", "WIFI", "password is not correct");
                 triesOne = 1;
