@@ -1,37 +1,73 @@
 #include "utils/WiFiUtils.h"
+#include <vector>
+#define TRIESONE 25 // количество попыток подключения к одной сети из несколких
+#define TRIES 40    // количество попыток подключения сети если она одна
 
 void routerConnect() {
     WiFi.setAutoConnect(false);
     WiFi.persistent(false);
 
     WiFi.mode(WIFI_STA);
-    byte tries = 40;
+    byte triesOne = TRIESONE;
 
     String _ssid = jsonReadStr(settingsFlashJson, "routerssid");
     String _password = jsonReadStr(settingsFlashJson, "routerpass");
+    std::vector<String> _ssidList;
+    std::vector<String> _passwordList;
+    for (size_t i = 0; i < 3; i++)
+    {
+        String _stmp = selectFromMarkerToMarker(_ssid, ",", i);
+        String _ptmp = selectFromMarkerToMarker(_password, ",", i);
+        if (_stmp == "not found" && _ssidList.size() == 0)
+        {
+            triesOne = TRIES;
+            _ssidList.push_back(_ssid);
+            _passwordList.push_back(_password);
+            break;
+        }
+        if (_stmp != "not found")
+        {
+            _ssidList.push_back(_stmp);
+            _passwordList.push_back(_ptmp);
+        }
+    }
 
     if (_ssid == "" && _password == "") {
         WiFi.begin();
     } else {
-        WiFi.begin(_ssid.c_str(), _password.c_str());
+        WiFi.begin(_ssidList[0].c_str(), _passwordList[0].c_str());
 #ifdef ESP32
         WiFi.setTxPower(WIFI_POWER_19_5dBm);
 #else
         WiFi.setOutputPower(20.5);
 #endif
-        SerialPrint("i", "WIFI", "ssid: " + _ssid);
-        SerialPrint("i", "WIFI", "pass: " + _password);
-    }
 
-    while (--tries && WiFi.status() != WL_CONNECTED) {
-        if (WiFi.status() == WL_CONNECT_FAILED) {
-            SerialPrint("E", "WIFI", "password is not correct");
-            tries = 1;
-            jsonWriteInt(errorsHeapJson, "passer", 1);
-            break;
+        if (_ssidList.size() > 1)
+        {
+            SerialPrint("i", "WIFI", "ssid list: " + _ssid);
+            SerialPrint("i", "WIFI", "pass list: " + _password);
         }
-        Serial.print(".");
-        delay(1000);
+    }
+    for (size_t i = 0; i < _ssidList.size(); i++) {
+        triesOne = TRIESONE;
+        if (WiFi.status() == WL_CONNECTED)
+            break;
+        WiFi.begin(_ssidList[i].c_str(), _passwordList[i].c_str());
+        SerialPrint("i", "WIFI", "ssid connect: " + _ssidList[i]);
+        SerialPrint("i", "WIFI", "pass connect: " + _passwordList[i]);
+        while (--triesOne && WiFi.status() != WL_CONNECTED) {
+//            SerialPrint("i", "WIFI", ": " + String((int)WiFi.status()));
+            if (WiFi.status() == WL_CONNECT_FAILED || WiFi.status() ==  WL_WRONG_PASSWORD)
+            {
+                SerialPrint("E", "WIFI", "password is not correct");
+                triesOne = 1;
+                jsonWriteInt(errorsHeapJson, "passer", 1);
+                break;
+            }
+            Serial.print(".");
+            delay(1000);
+        }
+        Serial.println("");
     }
 
     if (WiFi.status() != WL_CONNECTED) {
@@ -98,10 +134,26 @@ boolean RouterFind(String ssid) {
         SerialPrint("i", "WIFI", "no networks found");
         WiFi.scanNetworks(true, false);
     }
+    else if (n > 0)
+    {
+        std::vector<String> _ssidList;
+        for (size_t i = 0; i < 3; i++)
+        {
+            String _stmp = selectFromMarkerToMarker(ssid, ",", i);
+            if (_stmp == "not found" && _ssidList.size() == 0)
+            {
+                _ssidList.push_back(ssid);
+                break;
+            }
+            if (_stmp != "not found")
+                _ssidList.push_back(_stmp);
+        }
 
-    else if (n > 0) {
-        for (int8_t i = 0; i < n; i++) {
-            if (WiFi.SSID(i) == ssid) {
+        for (int8_t i = 0; i < n; i++)
+        {
+            if (WiFi.SSID(i) == _ssidList[0] || WiFi.SSID(i) == _ssidList[1] ||
+                WiFi.SSID(i) == _ssidList[2])
+            {
                 res = true;
             }
             // SerialPrint("i", "WIFI", (res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
