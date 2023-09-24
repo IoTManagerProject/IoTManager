@@ -155,7 +155,7 @@ boolean RouterFind(JsonArray jArray)
     {
       for (int8_t k = 0; k < jArray.size(); k++)
       {
-        if (WiFi.SSID(i) == String(jArray[k]))
+        if (WiFi.SSID(i) == jArray[k])
         {
           res = true;
         }
