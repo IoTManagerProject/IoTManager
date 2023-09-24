@@ -98,6 +98,26 @@ bool jsonRead(const String& json, String key, int& value, bool e) {
     return true;
 }
 
+bool jsonReadArray(const String& json, String key, JsonArray& jArray, bool e) {
+    DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+        if (e) {
+            SerialPrint("E", F("jsonReadArray"), error.f_str());
+            jsonErrorDetected();
+        }
+        return false;
+    } else if (!doc.containsKey(key)) {
+        if (e) {
+            SerialPrint("E", F("jsonReadArray"), key + " missing in " + json);
+            jsonErrorDetected();
+        }
+        return false;
+    }
+    jArray = doc[key];
+    return true;
+}
+
 // new==============================================================================
 bool jsonWriteStr_(String& json, const String& key, const String& value, bool e) {
     bool ret = true;
