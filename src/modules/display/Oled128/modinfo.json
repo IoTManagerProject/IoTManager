@@ -71,7 +71,7 @@
             }
         ]
     },
-    "defActive": true,
+    "defActive": false,
     "usedLibs": {
         "esp32_4mb": [
             "gyverlibs/GyverOLED @ 1.4"
