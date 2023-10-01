@@ -371,7 +371,7 @@
         "Экраны": [
             {
                 "path": "src/modules/display/Oled128",
-                "active": true
+                "active": false
             }
         ],
         "screens": [

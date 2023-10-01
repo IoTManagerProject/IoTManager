@@ -814,27 +814,11 @@
         "header": "Экраны"
     },
     {
-        "name": "54. OLED экран 128*64",
-        "type": "Reading",
-        "subtype": "Oled128",
-        "id": "oled",
-        "widget": "",
-        "page": "",
-        "descr": "T",
-        "descr1": "C",
-        "int": 1,
-        "addr": "0x3C",
-        "coord": "0,10",
-        "id2show": "id датчика",
-        "shrift": "2",
-        "num": 54
-    },
-    {
         "header": "screens"
     },
     {
         "global": 0,
-        "name": "55. LCD экран 2004",
+        "name": "54. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -847,10 +831,10 @@
         "id2show": "",
         "prefix": "",
         "postfix": "",
-        "num": 55
+        "num": 54
     },
     {
-        "name": "56. LCD экран 1602",
+        "name": "55. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -863,11 +847,11 @@
         "id2show": "",
         "prefix": "",
         "postfix": "",
-        "num": 56
+        "num": 55
     },
     {
         "global": 0,
-        "name": "57. 7 сегментный дисплей TM16XX",
+        "name": "56. 7 сегментный дисплей TM16XX",
         "type": "Writing",
         "subtype": "TM16XX",
         "id": "tm",
@@ -883,6 +867,6 @@
         "intensity": "5",
         "on": "1",
         "id2show": "",
-        "num": 57
+        "num": 56
     }
 ]
