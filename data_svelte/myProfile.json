@@ -368,12 +368,6 @@
                 "active": false
             }
         ],
-        "Экраны": [
-            {
-                "path": "src/modules/display/Oled128",
-                "active": false
-            }
-        ],
         "screens": [
             {
                 "path": "src/modules/display/DwinI",
@@ -385,6 +379,10 @@
             },
             {
                 "path": "src/modules/display/NextionUpload",
+                "active": false
+            },
+            {
+                "path": "src/modules/display/Oled128",
                 "active": false
             },
             {
