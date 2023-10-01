@@ -176,7 +176,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
       // запуск асинхронного сканирования wifi сетей при нажатии выпадающего
       // списка
       if (headerStr == "/scan|") {
-        JsonArray jArray;
+        std::vector<String> jArray;
         jsonReadArray(settingsFlashJson, "routerssid", jArray);
         RouterFind(jArray);
         sendStringToWs("ssidli", ssidListHeapJson, num);

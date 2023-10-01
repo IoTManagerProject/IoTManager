@@ -11,8 +11,8 @@ void routerConnect()
   WiFi.mode(WIFI_STA);
   byte triesOne = TRIESONE;
 
-  JsonArray _ssidList;
-  JsonArray _passwordList;
+  std::vector<String> _ssidList;
+  std::vector<String> _passwordList;
   jsonReadArray(settingsFlashJson, "routerssid", _ssidList);
   jsonReadArray(settingsFlashJson, "routerpass", _passwordList);
   if (_ssidList.size() > 1)
@@ -24,7 +24,7 @@ void routerConnect()
   }
   else
   {
-    WiFi.begin(_ssidList[0].as<const char*>(), _passwordList[0].as<const char*>());
+    WiFi.begin(_ssidList[0].c_str(), _passwordList[0].c_str());
 #ifdef ESP32
     WiFi.setTxPower(WIFI_POWER_19_5dBm);
 #else
@@ -34,11 +34,11 @@ void routerConnect()
     String _password;
     for (int8_t i = 0; i < _ssidList.size(); i++)
     {
-      _ssid = _ssid + _ssidList[i].as<String>() + "; ";
+      _ssid = _ssid + _ssidList[i] + "; ";
     }
     for (int8_t i = 0; i < _passwordList.size(); i++)
     {
-      _password = _password + _passwordList[i].as<String>() + "; ";
+      _password = _password + _passwordList[i] + "; ";
     }
     SerialPrint("i", "WIFI", "ssid list: " + _ssid);
     SerialPrint("i", "WIFI", "pass list: " + _password);
@@ -48,9 +48,9 @@ void routerConnect()
     triesOne = TRIESONE;
     if (WiFi.status() == WL_CONNECTED)
       break;
-    WiFi.begin(_ssidList[i].as<const char*>(), _passwordList[i].as<const char*>());
-    SerialPrint("i", "WIFI", "ssid connect: " + _ssidList[i].as<String>());
-    SerialPrint("i", "WIFI", "pass connect: " + _passwordList[i].as<String>());
+    WiFi.begin(_ssidList[i].c_str(), _passwordList[i].c_str());
+    SerialPrint("i", "WIFI", "ssid connect: " + _ssidList[i]);
+    SerialPrint("i", "WIFI", "pass connect: " + _passwordList[i]);
     while (--triesOne && WiFi.status() != WL_CONNECTED)
     {
 //            SerialPrint("i", "WIFI", ": " + String((int)WiFi.status()));
@@ -109,11 +109,11 @@ bool startAPMode()
         WIFI_SCAN, 30 * 1000,
         [&](void *)
         {
-          JsonArray jArray;
+          std::vector<String> jArray;
           jsonReadArray(settingsFlashJson, "routerssid", jArray);
           for (int8_t i = 0; i < jArray.size(); i++)
           {
-            SerialPrint("i", "WIFI", "scanning for " + jArray[i].as<String>());
+            SerialPrint("i", "WIFI", "scanning for " + jArray[i]);
           }
           if (RouterFind(jArray))
           {
@@ -127,7 +127,7 @@ bool startAPMode()
   return true;
 }
 
-boolean RouterFind(JsonArray jArray)
+boolean RouterFind(std::vector<String> jArray)
 {
   bool res = false;
   int n = WiFi.scanComplete();
