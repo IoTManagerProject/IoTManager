@@ -1,5 +1,5 @@
 {
-    "menuSection": "Экраны",
+    "menuSection": "screens",
     "configItem": [
         {
             "name": "OLED экран 128*64",
