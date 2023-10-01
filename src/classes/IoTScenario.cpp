@@ -341,7 +341,8 @@ enum SysOp {
     sysop_getRSSI,
     sysop_getIP,
     sysop_mqttPub,
-    sysop_getUptime
+    sysop_getUptime,
+    sysop_mqttIsConnect
 };
 
 IoTValue sysExecute(SysOp command, std::vector<IoTValue> &param) {
@@ -442,6 +443,9 @@ IoTValue sysExecute(SysOp command, std::vector<IoTValue> &param) {
             value.valS = jsonReadStr(errorsHeapJson, F("upt"));
             value.isDecimal = false;
             break;
+        case sysop_mqttIsConnect:
+            value.valD = mqttIsConnect();
+            break;
     }
 
     return value;
@@ -496,6 +500,8 @@ class SysCallExprAST : public ExprAST {
             operation = sysop_getTime;
         else if (Callee == F("getUptime"))
             operation = sysop_getUptime;
+        else if (Callee == F("mqttIsConnect"))
+            operation = sysop_mqttIsConnect;
         else
             operation = sysop_notfound;
     }
