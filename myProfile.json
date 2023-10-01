@@ -368,6 +368,12 @@
                 "active": false
             }
         ],
+        "Экраны": [
+            {
+                "path": "src/modules/display/Oled128",
+                "active": true
+            }
+        ],
         "screens": [
             {
                 "path": "src/modules/display/DwinI",
