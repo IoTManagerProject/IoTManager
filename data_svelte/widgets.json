@@ -246,7 +246,7 @@
         "debounce": 500
     },
     {
-        "name": "range",
+        "name": "rangeServo",
         "label": "Ползунок (Servo)",
         "widget": "range",
         "descrColor": "red",
