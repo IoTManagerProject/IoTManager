@@ -712,7 +712,7 @@
         "type": "Writing",
         "subtype": "IoTServo",
         "id": "servo",
-        "widget": "range",
+        "widget": "rangeServo",
         "page": "servo",
         "descr": "угол",
         "int": 1,
