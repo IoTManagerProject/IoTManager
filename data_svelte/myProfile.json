@@ -25,12 +25,17 @@
     "projectProp": {
         "platformio": {
             "default_envs": "esp8266_4mb",
-            "comments_default_envs": "choose from: esp8266_4mb or esp32_4mb or esp32s2_4mb or esp8266_1mb or esp8266_1mb_ota or esp8285_1mb or esp8285_1mb_ota",
+            "comments_default_envs": "choose from: esp8266_4mb or esp32_4mb or esp32cam_4mb or esp32s2_4mb or esp8266_1mb or esp8266_1mb_ota or esp8285_1mb or esp8285_1mb_ota",
             "envs": [
                 {
                     "name": "esp8266_4mb",
                     "firmware": "0x00000",
                     "littlefs": "0x300000"
+                },
+                {
+                    "name": "esp8266_16mb",
+                    "firmware": "0x00000",
+                    "littlefs": "0x200000"
                 },
                 {
                     "name": "esp32_4mb",
@@ -39,6 +44,22 @@
                     "firmware": "0x10000",
                     "partitions": "0x8000",
                     "littlefs": "0x290000"
+                },
+                {
+                    "name": "esp32cam_4mb",
+                    "boot_app0": "0xe000",
+                    "bootloader_qio_80m": "0x1000",
+                    "firmware": "0x10000",
+                    "partitions": "0x8000",
+                    "littlefs": "0x290000"
+                },
+                {
+                    "name": "esp32_16mb",
+                    "boot_app0": "0xe000",
+                    "bootloader_qio_80m": "0x1000",
+                    "firmware": "0x10000",
+                    "partitions": "0x8000",
+                    "littlefs": "0x910000"
                 },
                 {
                     "name": "esp8266_1mb",
@@ -358,6 +379,10 @@
             {
                 "path": "src/modules/exec/TelegramLT",
                 "active": true
+            },
+            {
+                "path": "src/modules/exec/Telegram_v2",
+                "active": false
             },
             {
                 "path": "src/modules/exec/Thermostat",

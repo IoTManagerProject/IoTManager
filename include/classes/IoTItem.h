@@ -48,7 +48,15 @@ class IoTItem {
 
     virtual IoTGpio* getGpioDriver();
     virtual IoTItem* getRtcDriver();
+    //virtual IoTItem* getCAMDriver();
+    virtual IoTItem* getTlgrmDriver();
     virtual unsigned long getRtcUnixTime();
+
+        // делаем доступным модулям отправку сообщений в телеграм
+    virtual void sendTelegramMsg(bool often, String msg);
+    virtual void sendFoto(uint8_t *buf, uint32_t length, const String &name);
+    virtual void editFoto(uint8_t *buf, uint32_t length, const String &name);
+
 
     virtual void setValue(const IoTValue& Value, bool genEvent = true);
     virtual void setValue(const String& valStr, bool genEvent = true);
@@ -60,9 +68,6 @@ class IoTItem {
     virtual void onMqttRecive(String& topic, String& msg);
     virtual void onMqttWsAppConnectEvent();
     virtual void onModuleOrder(String& key, String& value);
-
-    // делаем доступным модулям отправку сообщений в телеграм
-    virtual void sendTelegramMsg(bool often, String msg);
 
     // методы для графиков (будет упрощено)
     virtual void publishValue();

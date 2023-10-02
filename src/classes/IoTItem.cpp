@@ -184,7 +184,8 @@ void IoTItem::onModuleOrder(String& key, String& value) {}
 
 // делаем доступным модулям отправку сообщений в телеграм
 void IoTItem::sendTelegramMsg(bool often, String msg) {}
-
+void IoTItem::sendFoto(uint8_t *buf, uint32_t length, const String &name) {}
+void IoTItem::editFoto(uint8_t *buf, uint32_t length, const String &name) {}
 // методы для графиков (будет упрощено)
 void IoTItem::publishValue() {}
 void IoTItem::clearValue() {}
@@ -209,6 +210,14 @@ IoTGpio* IoTItem::getGpioDriver() {
 }
 
 IoTItem* IoTItem::getRtcDriver() {
+    return nullptr;
+}
+/*
+IoTItem* IoTItem::getCAMDriver() {
+    return nullptr;
+}
+*/
+IoTItem* IoTItem::getTlgrmDriver() {
     return nullptr;
 }
 

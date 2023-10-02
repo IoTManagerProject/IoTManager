@@ -44,7 +44,7 @@ void elementsLoop() {
 #define COUNTER_ERRORMARKER 4       // количество шагов счетчика
 #define STEPPER_ERRORMARKER 100000  // размер шага счетчика интервала доверия выполнения блока кода мкс
 
-#ifdef esp32_4mb
+#if defined(esp32_4mb) || defined(esp32_16mb) || defined(esp32cam_4mb)
 
 static int IRAM_ATTR initErrorMarkerId = 0;  // ИД маркера
 static int IRAM_ATTR errorMarkerId = 0;
@@ -63,14 +63,14 @@ void IRAM_ATTR onTimer() {
 #endif
 
 void initErrorMarker(int id) {
-#ifdef esp32_4mb
+#if defined(esp32_4mb) || defined(esp32_16mb) || defined(esp32cam_4mb)
     initErrorMarkerId = id;
     errorMarkerCounter = 0;
 #endif
 }
 
 void stopErrorMarker(int id) {
-#ifdef esp32_4mb
+#if defined(esp32_4mb) || defined(esp32_16mb) || defined(esp32cam_4mb)
     errorMarkerCounter = -1;
     if (errorMarkerId)
         SerialPrint("I", "WARNING!", "A lazy (freezing loop more than " + (String)(COUNTER_ERRORMARKER * STEPPER_ERRORMARKER / 1000) + " ms) section has been found! With ID=" + (String)errorMarkerId);
@@ -83,7 +83,7 @@ void setup() {
 #ifdef esp32s2_4mb
     USB.begin();
 #endif
-#ifdef esp32_4mb
+#if defined(esp32_4mb) || defined(esp32_16mb) || defined(esp32cam_4mb)
     My_timer = timerBegin(0, 80, true);
     timerAttachInterrupt(My_timer, &onTimer, true);
     timerAlarmWrite(My_timer, STEPPER_ERRORMARKER, true);

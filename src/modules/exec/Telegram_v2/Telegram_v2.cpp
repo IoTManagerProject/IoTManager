@@ -1,12 +1,13 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
-
 // #define FB_NO_UNICODE
 // #define FB_NO_URLENCODE
 // #define FB_NO_OTA
 // #define FB_DYNAMIC
 // #include <GyverGFX.h>
 // #include <CharPlot.h>
+// #include "esp_camera.h"
+
 #include <FastBot.h>
 #include <vector>
 
@@ -25,12 +26,14 @@ FastBot *instanceBot()
 String _token;
 String _chatID;
 bool _autos;
+bool _initSD;
 
 class Telegram_v2 : public IoTItem
 {
 private:
     bool _receiveMsg;
     String _prevMsg = "";
+    bool _useLed = false;
 
 public:
     Telegram_v2(String parameters) : IoTItem(parameters)
@@ -243,13 +246,15 @@ public:
             {
                 String path = '/' + msg.fileName;          // вида /filename.xxx
                 auto file = FileFS.open(path, FILE_WRITE); // открываем для записи
-                if(!_myBot->downloadFile(file, msg.fileUrl))
+                _myBot->sendMessage("Downloading from: " + _chatID + ", file: " + String(msg.fileName), _chatID);
+                if (!_myBot->downloadFile(file, msg.fileUrl))
                 {
-                    SerialPrint("X", F("Telegram"), "download from: error write" );
+                    SerialPrint("X", F("Telegram"), "download from: error write");
+                    _myBot->sendMessage("Download Fail", _chatID);
                     return;
                 }
                 SerialPrint("<-", F("Telegram"), "download from: " + _chatID + ", file: " + String(msg.fileUrl));
-                _myBot->sendMessage("download from: " + _chatID + ", file: " + String(msg.fileName), _chatID);
+                _myBot->sendMessage("Download Ok", _chatID);
             }
         }
         else if (msg.text.indexOf("help") != -1)
@@ -293,8 +298,25 @@ public:
         }
     }
 
-    ~Telegram_v2(){
+    void sendFoto(uint8_t *buf, uint32_t length, const String &name)
+    {
+        _myBot->sendFile(buf, length, FB_PHOTO, name, _chatID);
+        SerialPrint("<-", F("Telegram"), "chat ID: " + _chatID + ", send foto from esp-cam");
+    }
 
+    void editFoto(uint8_t *buf, uint32_t length, const String &name)
+    {
+        _myBot->editFile(buf, length, FB_PHOTO, name, _myBot->lastBotMsg(), _chatID);
+        SerialPrint("<-", F("Telegram"), "chat ID: " + _chatID + ", edit foto from esp-cam");
+    }
+
+
+    IoTItem* getTlgrmDriver() {
+        return this;
+    }
+
+    ~Telegram_v2(){
+        tlgrmItem = nullptr;
     };
 };
 

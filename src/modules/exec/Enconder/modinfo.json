@@ -46,6 +46,9 @@
         "esp32_4mb": [
             "gyverlibs/EncButton @ ^2.0"
         ],
+        "esp32cam_4mb": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
         "esp8266_4mb": [
             "gyverlibs/EncButton @ ^2.0"
         ],

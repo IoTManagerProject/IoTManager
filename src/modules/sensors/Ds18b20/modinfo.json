@@ -42,6 +42,9 @@
         "esp32_4mb": [
             "https://github.com/milesburton/Arduino-Temperature-Control-Library"
         ],
+        "esp32cam_4mb": [
+            "https://github.com/milesburton/Arduino-Temperature-Control-Library"
+        ],
         "esp8266_4mb": [
             "https://github.com/milesburton/Arduino-Temperature-Control-Library"
         ],

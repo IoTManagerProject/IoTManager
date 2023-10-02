@@ -122,6 +122,9 @@
         "esp32_4mb": [
             "https://github.com/GyverLibs/GyverINA"
         ],
+        "esp32cam_4mb": [
+            "https://github.com/GyverLibs/GyverINA"
+        ],
         "esp32s2_4mb": [
             "https://github.com/GyverLibs/GyverINA"
         ],
