@@ -17,6 +17,7 @@ private:
     bool _isJson;
     bool _addPrefix;
     bool _debug;
+    bool sendOk = false;
 
 public:
     ExternalMQTT(String parameters) : IoTItem(parameters)
@@ -26,10 +27,12 @@ public:
         jsonRead(parameters, F("red"), red);
         jsonRead(parameters, F("offline"), offline);
         _topic = jsonReadStr(parameters, "topic");
-        _isJson = jsonReadBool(parameters, "isJson");
-        _addPrefix = jsonReadBool(parameters, "addPrefix");
-        _debug = jsonReadBool(parameters, "debug");
+        jsonRead(parameters, "isJson", _isJson);
+        jsonRead(parameters, "addPrefix", _addPrefix);
+        jsonRead(parameters, "debug", _debug);
         dataFromNode = false;
+        if (mqttIsConnect())
+            sendOk = true;
         mqttSubscribeExternal(_topic, _addPrefix);
     }
     char *TimeToString(unsigned long t)
@@ -58,6 +61,7 @@ public:
             {
                 return;
             }
+
             if (_isJson)
             {
                 DynamicJsonDocument doc(JSON_BUFFER_SIZE);
@@ -106,6 +110,11 @@ public:
     {
         _minutesPassed++;
         setNewWidgetAttributes();
+        if (mqttIsConnect() && !sendOk)
+        {
+            sendOk = true;
+            mqttSubscribeExternal(_topic, _addPrefix);
+        }
     }
     void onMqttWsAppConnectEvent()
     {
