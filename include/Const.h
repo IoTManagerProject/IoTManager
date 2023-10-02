@@ -24,8 +24,16 @@
 #define FIRMWARE_NAME "esp8266_4mb"
 #endif
 
+#ifdef esp8266_16mb
+#define FIRMWARE_NAME "esp8266_16mb"
+#endif
+
 #ifdef esp32_4mb
 #define FIRMWARE_NAME "esp32_4mb"
+#endif
+
+#ifdef esp32_16mb
+#define FIRMWARE_NAME "esp32_16mb"
 #endif
 
 #ifdef esp32s2_4mb
