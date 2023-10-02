@@ -12,9 +12,10 @@ static const char FILE_NOT_FOUND[] PROGMEM = "FileNotFound";
 
 void standWebServerInit() {
     //  Кэшировать файлы для быстрой работы
-    HTTP.serveStatic("/build/bundle.js", FileFS, "/build/bundle.js.gz", "max-age=31536000");    // кеширование на 1 год
-    HTTP.serveStatic("/build/bundle.css", FileFS, "/build/bundle.css.gz", "max-age=31536000");  // кеширование на 1 год
-    HTTP.serveStatic("/favicon.ico", FileFS, "/favicon.ico", "max-age=31536000");               // кеширование на 1 год
+    // если указана директория то все файлы будут отмечены как Directory Request Handler
+    // если указан файл то он будет отмечен как File Request Handler
+    HTTP.serveStatic("/build", FileFS, "/build", "max-age=31536000");              // кеширование на 1 год
+    HTTP.serveStatic("/favicon.ico", FileFS, "/favicon.ico", "max-age=31536000");  // кеширование на 1 год
 
     // HTTP.on("/devicelist.json", HTTP_GET, []() {
     //     HTTP.send(200, "application/json", devListHeapJson);
