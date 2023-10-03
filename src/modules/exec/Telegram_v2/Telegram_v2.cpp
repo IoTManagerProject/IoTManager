@@ -140,7 +140,7 @@ public:
                 auto file = FileFS.open(param[0].valS, FILE_READ);
                 if (!file)
                 {
-                    SerialPrint("X", F("Telegram"), "Fail send file: " + param[0].valS);
+                    SerialPrint("E", F("Telegram"), "Fail send file: " + param[0].valS);
                     return {};
                 }
                 //  File file = LittleFS.open(param[0].valS, "r"); // /test.png
@@ -159,7 +159,7 @@ public:
                 auto file = FileFS.open(param[0].valS, FILE_READ);
                 if (!file)
                 {
-                    SerialPrint("X", F("Telegram"), "Fail edit file: " + param[0].valS);
+                    SerialPrint("E", F("Telegram"), "Fail edit file: " + param[0].valS);
                     return {};
                 }
                 //  File file = LittleFS.open(param[0].valS, "r"); // /test.png
@@ -233,7 +233,7 @@ public:
             auto file = FileFS.open(selectToMarker(msg.text, "_"), FILE_READ); // /test.png
             if (!file)
             {
-                SerialPrint("X", F("Telegram"), "Fail send file: " + selectToMarker(msg.text, "_"));
+                SerialPrint("E", F("Telegram"), "Fail send file: " + selectToMarker(msg.text, "_"));
                 return;
             }
             int type = atoi(selectToMarkerLast(msg.text, "_").c_str());
@@ -244,17 +244,14 @@ public:
         {
             if (msg.text.indexOf("download") != -1 && msg.chatID == _chatID)
             {
-                String path = '/' + msg.fileName;          // вида /filename.xxx
-                auto file = FileFS.open(path, FILE_WRITE); // открываем для записи
-                _myBot->sendMessage("Downloading from: " + _chatID + ", file: " + String(msg.fileName), _chatID);
-                if (!_myBot->downloadFile(file, msg.fileUrl))
+                downloadFile(msg);
+            }
+            else if (msg.text.indexOf("nextion") != -1 && msg.chatID == _chatID)
+            {
+                if (downloadFile(msg))
                 {
-                    SerialPrint("X", F("Telegram"), "download from: error write");
-                    _myBot->sendMessage("Download Fail", _chatID);
-                    return;
+                    //               flashNextion();
                 }
-                SerialPrint("<-", F("Telegram"), "download from: " + _chatID + ", file: " + String(msg.fileUrl));
-                _myBot->sendMessage("Download Ok", _chatID);
             }
         }
         else if (msg.text.indexOf("help") != -1)
@@ -268,18 +265,7 @@ public:
             //  setValue(msg.text);
         }
     }
-    /*
-        String static returnListOfParams()
-        {
-            String out;
-            for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it)
-            {
-                if ((*it)->iAmLocal)
-                    out = out + (*it)->getID() + ": " + (*it)->getValue() + "\n";
-            }
-            return out;
-        }
-    */
+
     void sendTelegramMsg(bool often, String msg)
     {
         if (often)
@@ -310,12 +296,58 @@ public:
         SerialPrint("<-", F("Telegram"), "chat ID: " + _chatID + ", edit foto from esp-cam");
     }
 
+    int static downloadFile(FB_msg &msg)
+    {
+        int _size = 0;
+        String path = '/' + msg.fileName;          // вида /filename.xxx
+        auto file = FileFS.open(path, FILE_WRITE); // открываем для записи
+                                                   //        _myBot->sendMessage("Downloading from: " + _chatID + ", file: " + String(msg.fileName), _chatID);
+        if (file)
+        { // файл открылся/создался
+            HTTPClient http;
 
-    IoTItem* getTlgrmDriver() {
+#ifdef ESP8266 // esp8266 требует SSl
+            BearSSL::WiFiClientSecure client;
+            client.setInsecure();
+            http.begin(client, msg.fileUrl); // пингуем файл
+#else                                        // esp32 сама умеет SSL
+            http.begin(msg.fileUrl); // пингуем файл
+#endif
+
+            if (http.GET() == HTTP_CODE_OK)
+            { // файл доступен
+                // загружаем в память. Результат > 0 - успешно
+                _size = http.writeToStream(&file);
+            }
+            http.end();   // закрываем соединение
+            file.close(); // закрываем файл
+
+            if (_size == 0)
+            {
+                SerialPrint("E", F("Telegram"), "download error file url: " + msg.fileUrl);
+                _myBot->sendMessage(F("Download Fail"), _chatID);
+            }
+            else
+            {
+                SerialPrint("<-", F("Telegram"), "download from: " + _chatID + ", file: " + msg.fileName + " size = " + String(_size) + " byte");
+                _myBot->sendMessage("Download Ok, size = " + String(_size) + " byte", _chatID);
+            }
+            return _size;
+        }
+        else
+        {
+            SerialPrint("E", F("Telegram"), F("file write error"));
+            _myBot->sendMessage(F("file write error"), _chatID);
+        }
+    }
+
+    IoTItem *getTlgrmDriver()
+    {
         return this;
     }
 
-    ~Telegram_v2(){
+    ~Telegram_v2()
+    {
         tlgrmItem = nullptr;
     };
 };
