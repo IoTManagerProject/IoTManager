@@ -17,12 +17,12 @@
         }
     ],
     "about": {
-        "authorName": "Ilya Belyakov",
+        "authorName": "Ilya Belyakov, Mikhail Bubnov",
         "authorContact": "https://t.me/Biveraxe",
         "authorGit": "https://github.com/biveraxe",
         "specialThanks": "",
         "moduleName": "EspCam",
-        "moduleVersion": "2.1",
+        "moduleVersion": "3.0",
         "usedRam": {
             "esp32_4mb": 15,
             "esp8266_4mb": 15
@@ -52,15 +52,13 @@
                 "params": [""]
             }, 
             {
-                "name": "ledOn",
-                "descr": "Включить подсветку",
-                "params": [
-                    "Яркость 0-255"
-                ]
+                "name": "flashOn",
+                "descr": "Включить вспышку",
+                "params": []
             },
             {
-                "name": "ledOff",
-                "descr": "Отключить подсветку",
+                "name": "flashOff",
+                "descr": "Отключить вспышку",
                 "params": []
             }
         ]

@@ -75,7 +75,7 @@ public:
             else
                 save_picture();
         }
-        else if (command == "flashOn" && param.size() == 1)
+        else if (command == "flashOn")
         {
             ledcSetup(LED_LEDC_CHANNEL, 5000, 8);
             ledcAttachPin(LED_GPIO_NUM, LED_LEDC_CHANNEL);
