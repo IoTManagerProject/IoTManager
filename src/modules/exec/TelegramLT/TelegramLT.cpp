@@ -13,7 +13,7 @@ class TelegramLT : public IoTItem {
     }
 
     void sendTelegramMsg(bool often, String msg) {
-        if (WiFi.status() == WL_CONNECTED && (often || !often && _prevMsg != msg)) {
+        if (isNetworkActive() && (often || !often && _prevMsg != msg)) {
             WiFiClient client;
             HTTPClient http;
             http.begin(client, "http://live-control.com/iotm/telegram.php");

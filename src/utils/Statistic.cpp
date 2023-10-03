@@ -20,7 +20,7 @@ void updateDeviceStatus() {
     // jsonRead(settingsFlashJson, F("serverip"), serverIP);
     String url = serverIP + F("/projects/esprebootstat.php");
     // SerialPrint("i", "Stat", "url " + url);
-    if ((WiFi.status() == WL_CONNECTED)) {
+    if ((isNetworkActive())) {
         WiFiClient client;
         HTTPClient http;
         http.begin(client, url);
