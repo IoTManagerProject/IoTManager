@@ -10,7 +10,7 @@ public:
 
     void sendHttpPOST(String url, String msg)
     {
-        if (WiFi.status() == WL_CONNECTED)
+        if (isNetworkActive())
         {
 
             WiFiClient client;

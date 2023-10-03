@@ -5,7 +5,7 @@ void mqttInit() {
     ts.add(
         WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL,
         [&](void*) {
-            if (WiFi.status() == WL_CONNECTED) {
+            if (isNetworkActive()) {
                 SerialPrint("i", F("WIFI"), "http://" + jsonReadStr(settingsFlashJson, F("ip")));
                 wifiUptimeCalc();
                 if (mqtt.connected()) {

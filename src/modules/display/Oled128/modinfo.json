@@ -1,0 +1,86 @@
+{
+    "menuSection": "screens",
+    "configItem": [
+        {
+            "name": "OLED экран 128*64",
+            "type": "Reading",
+            "subtype": "Oled128",
+            "id": "oled",
+            "widget": "",
+            "page": "",
+            "descr": "T",
+            "descr1": "C",
+            "int": 1,
+            "addr": "0x3C",
+            "coord": "0,10",
+            "id2show": "id датчика",
+            "shrift": "2"
+        }
+    ],
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "Ilya Belyakov @Biveraxe",
+        "moduleName": "Oled128",
+        "moduleVersion": "1.0",
+        "moduleDesc": "Позволяет выводить на матричные Oled экраны по указанным позициям значения других элементов конфигурации.",
+        "usedRam": 15,
+        "propInfo": {
+            "int": "Период времени в секундах обновления информации на экране по конкретному элементу.",
+            "addr": "Адрес устройства на шине, обычно 0x3c.",
+            "coord": "Координата позиции для вывода данных элемента конфигурации.",
+            "id2show": "id элемента конфигурации.",
+            "shrift": "Шрифт текста от 1 до 4 "
+        },
+        "funcInfo": [
+            {
+                "name": "x",
+                "descr": "Устанавливает первую координату",
+                "params": [
+                    "Номер строки первого символа"
+                ]
+            },
+            {
+                "name": "y",
+                "descr": "Устанавливает вторую координату",
+                "params": [
+                    "Номер столбца первого символа"
+                ]
+            },
+            {
+                "name": "descr",
+                "descr": "Задает приставку слева от значения, если none значит пусто",
+                "params": [
+                    "Строка"
+                ]
+            },
+            {
+                "name": "descr1",
+                "descr": "Задает приставку справа от значения. Если descr none , то не выводится",
+                "params": [
+                    "Строка"
+                ]
+            },
+            {
+                "name": "id2show",
+                "descr": "Задает ИД элемента, значение которого хотим отображать на экране",
+                "params": [
+                    "Имя элемента конфигурации"
+                ]
+            }
+        ]
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [
+            "gyverlibs/GyverOLED @ 1.4"
+        ],
+        "esp32_16mb": [
+            "gyverlibs/GyverOLED @ 1.4"
+        ],
+        "esp8266_4mb": [
+            "gyverlibs/GyverOLED @ 1.4"
+        ]
+    }
+}
