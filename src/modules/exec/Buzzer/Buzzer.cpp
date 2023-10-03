@@ -79,16 +79,7 @@ public:
 
         case 1:
             // for doByIntervals
-            if (enableDoByInt)
-            {
-                currentMillis = millis();
-                difference = currentMillis - prevMillis;
-                if (difference >= _interval)
-                {
-                    prevMillis = millis();
-                    this->doByInterval();
-                }
-            }
+            IoTItem::loop();
             break;
 
         case 2:

@@ -246,11 +246,11 @@
         "debounce": 500
     },
     {
-        "name": "range",
+        "name": "rangeServo",
         "label": "Ползунок (Servo)",
         "widget": "range",
         "descrColor": "red",
-        "after": "%",
+        "after": "°",
         "k": 1,
         "min": 0,
         "max": 180,

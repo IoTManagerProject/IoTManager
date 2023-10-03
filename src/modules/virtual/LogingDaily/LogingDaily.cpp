@@ -25,7 +25,7 @@ class LogingDaily : public IoTItem {
     String prevDate = "";
     bool firstTimeInit = true;
 
-    long interval;
+    // long interval;
 
    public:
     LogingDaily(String parameters) : IoTItem(parameters) {
@@ -40,8 +40,9 @@ class LogingDaily : public IoTItem {
             points = 365;
             SerialPrint("E", F("LogingDaily"), "'" + id + "' user set more points than allowed, value reset to 365");
         }
-        jsonRead(parameters, F("int"), interval);
-        interval = interval * 1000 * 60;  // приводим к милисекундам
+        long interval;
+        jsonRead(parameters, F("int"), interval); // в минутах
+        setInterval(interval * 60);
     }
 
     void doByInterval() {
@@ -225,16 +226,16 @@ class LogingDaily : public IoTItem {
         return "";
     }
 
-    void loop() {
-        if (enableDoByInt) {
-            currentMillis = millis();
-            difference = currentMillis - prevMillis;
-            if (difference >= interval) {
-                prevMillis = millis();
-                this->doByInterval();
-            }
-        }
-    }
+    // void loop() {
+    //     if (enableDoByInt) {
+    //         currentMillis = millis();
+    //         difference = currentMillis - prevMillis;
+    //         if (difference >= interval) {
+    //             prevMillis = millis();
+    //             this->doByInterval();
+    //         }
+    //     }
+    // }
 
     // просто максимальное количество точек
     int calculateMaxCount() {

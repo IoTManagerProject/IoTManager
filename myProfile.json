@@ -3,8 +3,8 @@
         "name": "IoTmanagerVer4",
         "apssid": "IoTmanager",
         "appass": "",
-        "routerssid": ["iot","wifi"],
-        "routerpass": ["hostel3333","pswd"],
+        "routerssid": "iot",
+        "routerpass": "hostel3333",
         "timezone": 2,
         "ntp": "pool.ntp.org",
         "weblogin": "admin",
@@ -404,6 +404,10 @@
             },
             {
                 "path": "src/modules/display/NextionUpload",
+                "active": false
+            },
+            {
+                "path": "src/modules/display/Oled128",
                 "active": false
             },
             {

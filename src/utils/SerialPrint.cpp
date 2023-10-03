@@ -11,11 +11,11 @@ void SerialPrint(const String& errorLevel, const String& module, const String& m
     tosend += msg;
     Serial.println(tosend);
 
-    if (isNetworkActive()) {
-        if (jsonReadInt(settingsFlashJson, F("log")) != 0) {
-            sendStringToWs(F("corelg"), tosend, -1);
-        }
+    // if (isNetworkActive()) { // все проверки происходят в sendStringToWs()
+    if (jsonReadInt(settingsFlashJson, F("log")) != 0) {
+        sendStringToWs(F("corelg"), tosend, -1);
     }
+    // }
 
     if (errorLevel == "E") {
         cleanString(tosend);

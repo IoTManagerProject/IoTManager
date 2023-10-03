@@ -5,7 +5,7 @@ void mqttInit() {
     ts.add(
         WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL,
         [&](void*) {
-            if (WiFi.status() == WL_CONNECTED) {
+            if (isNetworkActive()) {
                 SerialPrint("i", F("WIFI"), "http://" + jsonReadStr(settingsFlashJson, F("ip")));
                 wifiUptimeCalc();
                 if (mqtt.connected()) {
@@ -121,13 +121,16 @@ void mqttSubscribe() {
 }
 
 void mqttSubscribeExternal(String topic, bool usePrefix) {
-    SerialPrint("i", F("MQTT"), ("subscribed external" + topic).c_str());
+
    // SerialPrint("i", F("MQTT"), mqttRootDevice);
+   String _sb_topic = topic;
    if (usePrefix)
    {
-    mqtt.subscribe((mqttPrefix + topic).c_str());
+    _sb_topic = mqttPrefix + "/" + topic;
    }
-   mqtt.subscribe(topic.c_str());
+   mqtt.subscribe(_sb_topic.c_str());
+
+    SerialPrint("i", F("MQTT"), ("subscribed external " + _sb_topic).c_str());
 }
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length) {

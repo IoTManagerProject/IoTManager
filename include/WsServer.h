@@ -21,3 +21,4 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
 void sendStringToWs(const String& header, String& payload, int client_id);
 
 void sendDeviceList(uint8_t num);
+int getNumWSClients();
