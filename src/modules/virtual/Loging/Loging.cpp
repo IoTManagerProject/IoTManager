@@ -23,7 +23,7 @@ class Loging : public IoTItem {
     String prevDate = "";
     bool firstTimeInit = true;
 
-    long interval;
+    // long interval;
 
    public:
     Loging(String parameters) : IoTItem(parameters) {
@@ -34,8 +34,9 @@ class Loging : public IoTItem {
             points = 300;
             SerialPrint("E", F("Loging"), "'" + id + "' user set more points than allowed, value reset to 300");
         }
-        jsonRead(parameters, F("int"), interval);
-        interval = interval * 1000 * 60;  // приводим к милисекундам
+        long interval;
+        jsonRead(parameters, F("int"), interval); // в минутах
+        setInterval(interval * 60);
         //jsonRead(parameters, F("keepdays"), keepdays, false);
 
         // создадим экземпляр класса даты
@@ -303,18 +304,18 @@ class Loging : public IoTItem {
         return "";
     }
 
-    void loop() {
-        if (enableDoByInt) {
-            currentMillis = millis();
-            difference = currentMillis - prevMillis;
-            if (difference >= interval) {
-                prevMillis = millis();
-                if (interval != 0) {
-                    this->doByInterval();
-                }
-            }
-        }
-    }
+    // void loop() {
+    //     if (enableDoByInt) {
+    //         currentMillis = millis();
+    //         difference = currentMillis - prevMillis;
+    //         if (difference >= interval) {
+    //             prevMillis = millis();
+    //             if (interval != 0) {
+    //                 this->doByInterval();
+    //             }
+    //         }
+    //     }
+    // }
 
     void regEvent(const String &value, const String &consoleInfo, bool error = false, bool genEvent = true) {
         String userDate = getItemValue(id + "-date");
