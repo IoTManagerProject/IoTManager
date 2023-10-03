@@ -171,9 +171,13 @@ boolean RouterFind(std::vector<String> jArray)
   return res;
 }
 
-// boolean isNetworkActive() {
-//     return WiFi.status() == WL_CONNECTED;
-// }
+boolean isNetworkActive() {
+    return WiFi.status() == WL_CONNECTED;
+}
+
+uint8_t getNumAPClients() {
+    return WiFi.softAPgetStationNum();
+}
 
 uint8_t RSSIquality() {
     uint8_t res = 0;

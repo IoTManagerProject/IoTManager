@@ -450,25 +450,27 @@ void sendFileToWsByFrames(const String& filename, const String& header,
 }
 
 void sendStringToWs(const String& header, String& payload, int client_id) {
-  if (!(WiFi.softAPgetStationNum() || isNetworkActive())) {
-    return;
-  }
+    if ((!getNumAPClients() && !isNetworkActive()) || !getNumWSClients()) {
+        // standWebSocket.disconnect(); // это и ниже надо сделать при -
+        // standWebSocket.close();      // - отключении AP И WiFi(STA), надо менять ядро WiFi. Сейчас не закрывается сессия клиента при пропаже AP И WiFi(STA)
+        return;
+    }
 
-  if (header.length() != 6) {
-    SerialPrint("E", "FS", F("wrong header size"));
-    return;
-  }
+    if (header.length() != 6) {
+        SerialPrint("E", "FS", F("wrong header size"));
+        return;
+    }
 
-  String msg = header + "|0012|" + payload;
-  size_t totalSize = msg.length();
+    String msg = header + "|0012|" + payload;
+    size_t totalSize = msg.length();
 
-  char dataArray[totalSize];
-  msg.toCharArray(dataArray, totalSize + 1);
-  if (client_id == -1) {
-    standWebSocket.broadcastBIN((uint8_t*)dataArray, totalSize);
-  } else {
-    standWebSocket.sendBIN(client_id, (uint8_t*)dataArray, totalSize);
-  }
+    char dataArray[totalSize];
+    msg.toCharArray(dataArray, totalSize + 1);
+    if (client_id == -1) {
+        standWebSocket.broadcastBIN((uint8_t*)dataArray, totalSize);
+    } else {
+        standWebSocket.sendBIN(client_id, (uint8_t*)dataArray, totalSize);
+    }
 }
 
 void sendDeviceList(uint8_t num) {
@@ -482,4 +484,8 @@ void sendDeviceList(uint8_t num) {
                          WEB_SOCKETS_FRAME_SIZE);
     SerialPrint("i", "FS", "flash list");
   }
+}
+
+int getNumWSClients() {
+    return standWebSocket.connectedClients(false);
 }
