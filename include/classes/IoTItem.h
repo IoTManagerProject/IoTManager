@@ -11,7 +11,7 @@ struct IoTValue {
 class IoTItem {
    public:
     IoTItem(const String& parameters);
-    virtual ~IoTItem() {}
+    virtual ~IoTItem() {};
     virtual void loop();
     virtual void doByInterval();
     virtual IoTValue execute(String command, std::vector<IoTValue>& param);
@@ -35,9 +35,12 @@ class IoTItem {
     void setInterval(long interval);
     void setIntFromNet(int interval);
 
-    unsigned long currentMillis;
-    unsigned long prevMillis;
-    unsigned long difference;
+    // unsigned long currentMillis;
+    // unsigned long prevMillis;
+    // unsigned long difference;
+    unsigned long nextMillis=0; // достаточно 1 переменной, надо экономить память
+    // задержка следующего вызова, не изменяет текущий _interval
+    void suspendNextDoByInt(unsigned long _delay); // 0 - force
 
     IoTValue value;  // хранение основного значения, которое обновляется из сценария, execute(), loop() или doByInterval()
 

@@ -64,13 +64,7 @@ class AnalogAdc : public IoTItem {
             _avgSumm = _avgSumm + IoTgpio.analogRead(_pin);
             _avgCount++;
         }
-
-        currentMillis = millis();
-        difference = currentMillis - prevMillis;
-        if (difference >= _interval) {
-            prevMillis = millis();
-            this->doByInterval();
-        }
+        IoTItem::loop();
     }
 
     ~AnalogAdc(){};

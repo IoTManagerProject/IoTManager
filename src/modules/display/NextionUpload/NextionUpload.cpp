@@ -43,13 +43,16 @@ public:
 #if defined ESP8266
                 if (!http.begin(_host, 80, _url))
                 {
-#elif defined ESP32
-                if (!http.begin(String("http://") + _host + _url))
-                {
-#endif
                     //  Serial.println("connection failed");
                     SerialPrint("I", F("NextionUpdate"), "connection failed  ");
                 }
+#elif defined ESP32
+                if (!http.begin(String("http://") + _host + _url))
+                {
+                    //  Serial.println("connection failed");
+                    SerialPrint("I", F("NextionUpdate"), "connection failed  ");
+                }
+#endif
 
                 SerialPrint("I", F("NextionUpdate"), "Requesting file:   " + (String)_url);
                 int code = http.GET();
