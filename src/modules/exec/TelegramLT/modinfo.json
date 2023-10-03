@@ -1,6 +1,5 @@
 {
-  "menuSection": "Исполнительные устройства",
-
+  "menuSection": "executive_devices",
   "configItem": [
     {
       "global": 0,
@@ -15,7 +14,6 @@
       "chatID": ""
     }
   ],
-
   "about": {
     "authorName": "AVAKS",
     "authorContact": "https://t.me/@avaks_dev",
@@ -51,13 +49,13 @@
       }
     ]
   },
-
   "defActive": true,
-
   "usedLibs": {
     "esp32_4mb": [],
+    "esp32_16mb": [],
     "esp32s2_4mb": [],
     "esp8266_4mb": [],
+    "esp8266_16mb": [],
     "esp8266_1mb": [],
     "esp8266_1mb_ota": [],
     "esp8285_1mb": [],

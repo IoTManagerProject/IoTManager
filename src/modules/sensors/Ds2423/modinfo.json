@@ -1,5 +1,5 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "executive_devices",
     "configItem": [
         {
             "global": 0,
@@ -14,7 +14,7 @@
             "multiply": 1,
             "pin": 4,
             "index": 0,
-            "addr": "",           
+            "addr": "",
             "int": 10,
             "round": 0,
             "needSave": 0

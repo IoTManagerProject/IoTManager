@@ -95,6 +95,10 @@ void mqttReconnect() {
     mqttConnect();
 }
 
+bool mqttIsConnect(){
+    return mqtt.connected();
+}
+
 void getMqttData() {
     mqttServer = jsonReadStr(settingsFlashJson, F("mqttServer"));
     mqttPort = jsonReadInt(settingsFlashJson, F("mqttPort"));
@@ -114,6 +118,16 @@ void mqttSubscribe() {
         mqtt.subscribe((mqttPrefix + "/+/+/order/#").c_str());
         mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
     }
+}
+
+void mqttSubscribeExternal(String topic, bool usePrefix) {
+    SerialPrint("i", F("MQTT"), ("subscribed external" + topic).c_str());
+   // SerialPrint("i", F("MQTT"), mqttRootDevice);
+   if (usePrefix)
+   {
+    mqtt.subscribe((mqttPrefix + topic).c_str());
+   }
+   mqtt.subscribe(topic.c_str());
 }
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length) {

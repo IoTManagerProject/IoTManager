@@ -1,9 +1,9 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "name": "A02 Дальность",
-            "type": "Reading", 
+            "type": "Reading",
             "subtype": "A02Distance",
             "id": "dist",
             "widget": "anydataCm",
@@ -21,10 +21,11 @@
         "specialThanks": "",
         "moduleName": "A02Distance",
         "moduleVersion": "0.1",
-        "moduleDesc": "A0221AU, A02YYUW Ультразвуковой датчик. Позволяет получить дальность с ультрозвуковых датчиков A0221AU, A02YYUW",
+        "moduleDesc": "Позволяет получить дальность с ультрозвуковых датчиков A0221AU, A02YYUW",
         "propInfo": {
             "int": "Количество секунд между опросами датчика."
-        }
+        },
+        "title": "A0221AU, A02YYUW Ультразвуковой датчик дальности"
     },
     "defActive": true,
     "usedLibs": {

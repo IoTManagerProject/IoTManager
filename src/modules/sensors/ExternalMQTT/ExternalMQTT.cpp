@@ -13,16 +13,24 @@ private:
     int red = 0;
     int offline = 0;
     bool dataFromNode = false;
+    String _topic = "";
+    bool _isJson;
+    bool _addPrefix;
+    bool _debug;
 
 public:
     ExternalMQTT(String parameters) : IoTItem(parameters)
     {
-        _MAC = jsonReadStr(parameters, "MAC");
         _sensor = jsonReadStr(parameters, "sensor");
         jsonRead(parameters, F("orange"), orange);
         jsonRead(parameters, F("red"), red);
         jsonRead(parameters, F("offline"), offline);
+        _topic = jsonReadStr(parameters, "topic");
+        _isJson = jsonReadBool(parameters, "isJson");
+        _addPrefix = jsonReadBool(parameters, "addPrefix");
+        _debug = jsonReadBool(parameters, "debug");
         dataFromNode = false;
+        mqttSubscribeExternal(_topic, _addPrefix);
     }
     char *TimeToString(unsigned long t)
     {
@@ -38,38 +46,58 @@ public:
     {
         if (msg.indexOf("HELLO") == -1)
         {
-
-            //        SerialPrint("i", "onMqttRecive", "Прилетело  " + topic);
-            //        SerialPrint("i", "onMqttRecive", "Прилетело  " + msg);
+            if (_debug)
+            {
+                SerialPrint("i", "onMqttRecive", "Прилетело  " + topic + " msg: " + msg);
+                //  SerialPrint("i", "onMqttRecive", "Прилетело  " + msg);
+            }
             String dev = selectToMarkerLast(topic, "/");
             dev.toUpperCase();
             dev.replace(":", "");
-            if (_MAC == "")
+            if (_topic != topic)
             {
-                SerialPrint("i", "onMqttRecive", dev + " -->  " + msg);
+                return;
             }
-            DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-            DeserializationError error = deserializeJson(doc, msg);
-            if (error)
+            if (_isJson)
             {
-                SerialPrint("E", F("onMqttRecive"), error.f_str());
-            }
-            JsonObject jsonObject = doc.as<JsonObject>();
-
-            for (JsonPair kv : jsonObject)
-            {
-                String key = kv.key().c_str();
-                String val = kv.value();
-                if (_MAC == dev && _sensor == key)
+                DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+                DeserializationError error = deserializeJson(doc, msg);
+                if (error)
                 {
-                    dataFromNode = true;
-                    _minutesPassed = 0;
-                    setValue(val);
-                    // setNewWidgetAttributes();
+                    SerialPrint("E", F("onMqttRecive"), error.f_str());
                 }
+                JsonObject jsonObject = doc.as<JsonObject>();
 
-                //   Serial.println("Key: " + key);
-                //   Serial.println("Value: " + val);
+                for (JsonPair kv : jsonObject)
+                {
+                    String key = kv.key().c_str();
+                    String val = kv.value();
+                    if (_debug)
+                    {
+                        SerialPrint("i", "onMqttRecive", "Прилетело MAC: " + dev + " key=" + key + " val=" + val);
+                    }
+                    if (_sensor == key)
+                    {
+                        dataFromNode = true;
+                        _minutesPassed = 0;
+                        setValue(val);
+                        // setNewWidgetAttributes();
+                    }
+
+                    //   Serial.println("Key: " + key);
+                    //   Serial.println("Value: " + val);
+                }
+            }
+            else
+            {
+                if (_debug)
+                {
+                    SerialPrint("i", "onMqttRecive", "Прилетело MAC: " + dev + " val=" + msg);
+                }
+                dataFromNode = true;
+                _minutesPassed = 0;
+                setValue(msg);
+                // setNewWidgetAttributes();
             }
         }
     }
@@ -116,7 +144,22 @@ public:
         }
         sendSubWidgetsValues(_id, json);
     }
-
+    /*
+        IoTValue execute(String command, std::vector<IoTValue> &param)
+        {
+            if (command == "mqttSubscribe")
+            {
+                if (param.size() == 2)
+                {
+                    if (!param[0].isDecimal && param[1].isDecimal)
+                    {
+                        mqttSubscribeExternal(param[0].valS, (bool)param[0].valD);
+                    }
+                }
+            }
+            return {};
+        }
+    */
     ~ExternalMQTT(){};
 };
 

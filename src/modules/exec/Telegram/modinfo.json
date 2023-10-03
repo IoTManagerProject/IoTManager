@@ -1,23 +1,22 @@
-{   
-    "menuSection": "Исполнительные устройства",
-
-    "configItem": [{
-        "global": 0,
-        "name": "Телеграм-Бот",
-        "type": "Writing",
-        "subtype": "Telegram",
-        "id": "tg",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        "int": 10,
-
-        "token": "",
-        "autos": 1,
-        "receiveMsg": 0,
-        "chatID": ""
-    }],
-    
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Телеграм-Бот",
+            "type": "Writing",
+            "subtype": "Telegram",
+            "id": "tg",
+            "widget": "",
+            "page": "",
+            "descr": "",
+            "int": 10,
+            "token": "",
+            "autos": 1,
+            "receiveMsg": 0,
+            "chatID": ""
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -38,23 +37,28 @@
             "chatID": "ИД диалога с контактом. Необходим для отправки сообщений именно вам."
         },
         "funcInfo": [
-            {   
+            {
                 "name": "sendMsg",
                 "descr": "Отправить сообщение без повторений.",
-                "params": ["Сообщение, может быть строкой, числом или ИД другого элемента для получения значения"]
+                "params": [
+                    "Сообщение, может быть строкой, числом или ИД другого элемента для получения значения"
+                ]
             },
-            {   
+            {
                 "name": "sendOftenMsg",
                 "descr": "Отправить сообщение в любом случае, даж если отправляли такое ранее.",
-                "params": ["Сообщение, может быть строкой, числом или ИД другого элемента для получения значения"]
+                "params": [
+                    "Сообщение, может быть строкой, числом или ИД другого элемента для получения значения"
+                ]
             }
-          ]
+        ]
     },
-
     "defActive": false,
-
     "usedLibs": {
         "esp32_4mb": [
+            "CTBot @2.1.9"
+        ],
+        "esp32_16mb": [
             "CTBot @2.1.9"
         ],
         "esp8266_4mb": [

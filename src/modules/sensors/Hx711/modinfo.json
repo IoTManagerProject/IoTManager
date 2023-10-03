@@ -1,24 +1,24 @@
-{   
-    "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "name": "HX711 Cенсор весов",
-        "type": "Reading",
-        "subtype": "Hx711",
-        "id": "hx",
-        "widget": "anydataDef",
-        "page": "Весы",
-        "descr": "HX вес",
-        "int": 15,
-        "map": "1024,1024,1,100",
-        "plus": 0,
-        "multiply": 1,
-        "round": 1,
-        "data": 3,
-        "clock": 2,
-        "chan": 2
-    }],
-    
+{
+    "menuSection": "sensors",
+    "configItem": [
+        {
+            "name": "HX711 Cенсор весов",
+            "type": "Reading",
+            "subtype": "Hx711",
+            "id": "hx",
+            "widget": "anydataDef",
+            "page": "Весы",
+            "descr": "HX вес",
+            "int": 15,
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 1,
+            "data": 3,
+            "clock": 2,
+            "chan": 2
+        }
+    ],
     "about": {
         "authorName": "Serghei Crasnicov",
         "authorContact": "https://t.me/Serghei63",
@@ -48,7 +48,9 @@
             {
                 "name": "sleepMode",
                 "descr": "Перевести в режим сна",
-                "params": ["=1 режим сна, =0 проснуться"]
+                "params": [
+                    "=1 режим сна, =0 проснуться"
+                ]
             },
             {
                 "name": "read",
@@ -57,9 +59,7 @@
             }
         ]
     },
-
     "defActive": false,
-
     "usedLibs": {
         "esp32_4mb": [
             "GyverHX711@1.2"
