@@ -34,7 +34,7 @@ void updateDeviceStatus() {
         int httpResponseCode = http.POST(httpRequestData);
 
         if (httpResponseCode > 0) {
-            ret = httpResponseCode;
+            ret = http.errorToString(httpResponseCode).c_str();
             if (httpResponseCode == HTTP_CODE_OK) {
                 String payload = http.getString();
                 ret += " " + payload;

@@ -1,5 +1,5 @@
 {
-  "menuSection": "Исполнительные устройства",
+  "menuSection": "executive_devices",
   "configItem": [
     {
       "global": 0,
@@ -41,7 +41,8 @@
         "name": "post",
         "descr": "Отправить http запрос методом POST.",
         "params": [
-          "URL","message"
+          "URL",
+          "message"
         ]
       }
     ]

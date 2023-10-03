@@ -1,5 +1,5 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "global": 0,
@@ -18,7 +18,7 @@
             "ticker": 0,
             "int": 5,
             "btn-setUTime": "0",
-            "btn-setSysTime": "nil"    
+            "btn-setSysTime": "nil"
         }
     ],
     "about": {
@@ -51,19 +51,37 @@
             {
                 "name": "getTime",
                 "descr": "Получить строковое значение времени по указанному формату.",
-                "params": ["Формат как у функции date() в PHP"]
+                "params": [
+                    "Формат как у функции date() в PHP"
+                ]
             }
         ]
     },
     "defActive": true,
     "usedLibs": {
-        "esp32_4mb": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8266_4mb": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8266_1mb": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8266_1mb_ota": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8285_1mb": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8285_1mb_ota": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8266_2mb": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8266_2mb_ota": ["https://github.com/tremaru/iarduino_RTC"]
+        "esp32_4mb": [
+            "https://github.com/tremaru/iarduino_RTC"
+        ],
+        "esp8266_4mb": [
+            "https://github.com/tremaru/iarduino_RTC"
+        ],
+        "esp8266_1mb": [
+            "https://github.com/tremaru/iarduino_RTC"
+        ],
+        "esp8266_1mb_ota": [
+            "https://github.com/tremaru/iarduino_RTC"
+        ],
+        "esp8285_1mb": [
+            "https://github.com/tremaru/iarduino_RTC"
+        ],
+        "esp8285_1mb_ota": [
+            "https://github.com/tremaru/iarduino_RTC"
+        ],
+        "esp8266_2mb": [
+            "https://github.com/tremaru/iarduino_RTC"
+        ],
+        "esp8266_2mb_ota": [
+            "https://github.com/tremaru/iarduino_RTC"
+        ]
     }
 }

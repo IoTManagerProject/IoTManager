@@ -1,23 +1,22 @@
-{   
-    "menuSection": "Экраны",
-
-    "configItem": [{
-        "global": 0,
-        "name": "LCD Dwin экран",
-        "type": "Reading",
-        "subtype": "DwinI",
-        "id": "dwin",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        
-        "int": 15,
-        "TX": 17,
-        "RX": 16,
-        "line": 2,
-        "speed": 115200
-    }],
-    
+{
+    "menuSection": "screens",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "LCD Dwin экран",
+            "type": "Reading",
+            "subtype": "DwinI",
+            "id": "dwin",
+            "widget": "",
+            "page": "",
+            "descr": "",
+            "int": 15,
+            "TX": 17,
+            "RX": 16,
+            "line": 2,
+            "speed": 115200
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -33,6 +32,7 @@
         "propInfo": {
             "int": ""
         },
+        "title": "Экраны от компании Dwin",
         "funcInfo": [
             {
                 "name": "rrrr",
@@ -41,21 +41,13 @@
             }
         ]
     },
-
     "defActive": false,
-
     "usedLibs": {
-        "esp32_4mb": [
-        ],
-        "esp8266_4mb": [
-        ],
-        "esp8266_1mb": [
-        ],
-        "esp8266_1mb_ota": [
-        ],
-        "esp8285_1mb": [
-        ],
-        "esp8285_1mb_ota": [
-        ]
+        "esp32_4mb": [],
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": [],
+        "esp8285_1mb": [],
+        "esp8285_1mb_ota": []
     }
 }
