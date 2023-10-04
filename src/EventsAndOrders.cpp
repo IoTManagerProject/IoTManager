@@ -51,16 +51,21 @@ void handleEvent() {
     if (eventBuf.length()) {
         String event = selectToMarker(eventBuf, ",");
         SerialPrint("i", F("EVENT"), event);
-        String enentIdName = selectToMarker(event, " ");
+        String eventIdName = selectToMarker(event, " ");
+        IoTItem* eventIoTItem = findIoTItem(eventIdName);
+        
+        if (eventIoTItem)
+            // распространяем событие через хуки
+            for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                (*it)->onRegEvent(eventIoTItem);  // прямой хук
 
-        // распространяем событие через хуки
-        for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-            (*it)->onRegEvent(findIoTItem(enentIdName));
-        }
+                // вызов хука при условии отслеживания изменения 
+                if ((*it)->isTracking(eventIoTItem)) (*it)->onTrackingValue(eventIoTItem);
+            }
 
         //здесь нужно пропускать данное событие через условия сценариев
-        //и если оно есть в условии сценария и совподает
-        iotScen.exec(enentIdName);
+        //и если оно есть в условии сценария и совпадает
+        iotScen.exec(eventIdName);
 
         eventBuf = deleteBeforeDelimiter(eventBuf, ",");
     }

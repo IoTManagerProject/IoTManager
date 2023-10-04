@@ -7,9 +7,7 @@
 
 IoTItem::IoTItem(const String& parameters) {
     jsonRead(parameters, F("int"), _interval, false);
-    if (_interval == 0) enableDoByInt = false;           // выключаем использование периодического выполнения в модуле
-    if (_interval > 0) _interval = _interval * 1000;    // если int положителен, то считаем, что получены секунды
-    if (_interval < 0) _interval = _interval * -1;      // если int отрицательный, то миллисекунды
+    setInterval(_interval);
     jsonRead(parameters, F("subtype"), _subtype, false);
     jsonRead(parameters, F("id"), _id);
     if (!jsonRead(parameters, F("multiply"), _multiply, false)) _multiply = 1;
@@ -36,14 +34,25 @@ IoTItem::IoTItem(const String& parameters) {
     jsonRead(parameters, F("needSave"), _needSave, false);
     if (_needSave && jsonRead(valuesFlashJson, _id, valAsStr, false))  // пробуем достать из сохранения значение элемента, если указано, что нужно сохранять
         setValue(valAsStr, false);
+
+    // проверяем нужно ли отслеживать значение другого элемента
+    String trackingID = "";
+    IoTItem* item = nullptr;
+    if (jsonRead(parameters, F("trackingID"), trackingID, false) && (item = findIoTItem(trackingID)) != nullptr) {
+        _trackingValue = &(item->value);
+    }
+}
+
+void IoTItem::suspendNextDoByInt(unsigned long _delay) { // 0 - force
+    nextMillis = millis() + _delay; 
 }
 
 void IoTItem::loop() {
     if (enableDoByInt) {
-        currentMillis = millis();
-        difference = currentMillis - prevMillis;
-        if (difference >= _interval) {
-            prevMillis = millis();
+        unsigned long currentMillis = millis(); // _interval должен быть < 2147483647 мс (24 суток)
+        if (nextMillis - currentMillis > 2147483647UL /*ULONG_MAX/2*/ ) {
+            nextMillis = currentMillis + _interval;
+            // SerialPrint(F("i"), _id, "this->doByInterval");
             this->doByInterval();
         }
     }
@@ -181,6 +190,13 @@ void IoTItem::onRegEvent(IoTItem* item) {}
 void IoTItem::onMqttRecive(String& topic, String& msg) {}
 void IoTItem::onMqttWsAppConnectEvent() {}
 void IoTItem::onModuleOrder(String& key, String& value) {}
+void IoTItem::onTrackingValue(IoTItem* item) {
+    setValue(item->getValue(), false);
+}
+
+bool IoTItem::isTracking(IoTItem* item) {
+    return &(item->value) == _trackingValue;
+}
 
 // делаем доступным модулям отправку сообщений в телеграм
 void IoTItem::sendTelegramMsg(bool often, String msg) {}
@@ -201,7 +217,13 @@ bool IoTItem::isStrInID(const String& str) {
 }
 
 void IoTItem::setInterval(long interval) {
-    _interval = interval;
+    if (interval == 0) enableDoByInt = false;           // выключаем использование периодического выполнения в модуле
+    else {
+        enableDoByInt = true;
+        if (interval > 0) _interval = interval * 1000;    // если int положителен, то считаем, что получены секунды
+        else if (interval < 0) _interval = interval * -1;      // если int отрицательный, то миллисекунды
+    }
+    // SerialPrint(F("i"), F("IoTItem"), "setInterval: " + _interval.toString);
 }
 
 IoTGpio* IoTItem::getGpioDriver() {

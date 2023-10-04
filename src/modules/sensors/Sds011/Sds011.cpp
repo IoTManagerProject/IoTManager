@@ -157,16 +157,17 @@ public:
     void loop()
     {
         ts_sds.update();
-        if (enableDoByInt)
-        {
-            currentMillis = millis();
-            difference = currentMillis - prevMillis;
-            if (difference >= _interval)
-            {
-                prevMillis = millis();
-                this->doByInterval();
-            }
-        }
+        IoTItem::loop();
+        // if (enableDoByInt)
+        // {
+        //     currentMillis = millis();
+        //     difference = currentMillis - prevMillis;
+        //     if (difference >= _interval)
+        //     {
+        //         prevMillis = millis();
+        //         this->doByInterval();
+        //     }
+        // }
     }
     //=======================================================================================================
     // doByInterval()

@@ -3,6 +3,11 @@
 #include "Arduino.h"
 #include "MySensorsGate.h"
 
+// временное решение
+unsigned long currentMillis;
+unsigned long prevMillis;
+unsigned long difference;
+
 #ifdef MYSENSORS
 // callback библиотеки mysensors
 void receive(const MyMessage& message) {

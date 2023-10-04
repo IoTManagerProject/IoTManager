@@ -11,7 +11,7 @@ struct IoTValue {
 class IoTItem {
    public:
     IoTItem(const String& parameters);
-    virtual ~IoTItem() {}
+    virtual ~IoTItem() {};
     virtual void loop();
     virtual void doByInterval();
     virtual IoTValue execute(String command, std::vector<IoTValue>& param);
@@ -35,9 +35,12 @@ class IoTItem {
     void setInterval(long interval);
     void setIntFromNet(int interval);
 
-    unsigned long currentMillis;
-    unsigned long prevMillis;
-    unsigned long difference;
+    // unsigned long currentMillis;
+    // unsigned long prevMillis;
+    // unsigned long difference;
+    unsigned long nextMillis=0; // достаточно 1 переменной, надо экономить память
+    // задержка следующего вызова, не изменяет текущий _interval
+    void suspendNextDoByInt(unsigned long _delay); // 0 - force
 
     IoTValue value;  // хранение основного значения, которое обновляется из сценария, execute(), loop() или doByInterval()
 
@@ -60,6 +63,7 @@ class IoTItem {
     virtual void onMqttRecive(String& topic, String& msg);
     virtual void onMqttWsAppConnectEvent();
     virtual void onModuleOrder(String& key, String& value);
+    virtual void onTrackingValue(IoTItem* item);  // момент, когда ядро заметило изменение отслеживаемого значения
 
     // делаем доступным модулям отправку сообщений в телеграм
     virtual void sendTelegramMsg(bool often, String msg);
@@ -70,6 +74,8 @@ class IoTItem {
     virtual void setPublishDestination(int type, int wsNum = -1);
     virtual void clearHistory();
     virtual void setTodayDate();
+
+    bool isTracking(IoTItem* item);    // проверка на отслеживание
 
    protected:
     bool _needSave = false;  // признак необходимости сохранять и загружать значение элемента на flash
@@ -90,6 +96,8 @@ class IoTItem {
     int _numDigits = 1;     // количество целых значений, не значимые позиции заменяются нулем в строковом формате
 
     bool _global = false;  // характеристика айтема, что ему нужно слать и принимать события из внешнего мира
+
+    IoTValue* _trackingValue = nullptr;   // указатель на значение родительского элемента изменение которого отслеживается
 };
 
 IoTItem* findIoTItem(const String& name);                     // поиск экземпляра элемента модуля по имени

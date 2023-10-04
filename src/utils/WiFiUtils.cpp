@@ -171,40 +171,31 @@ boolean RouterFind(std::vector<String> jArray)
   return res;
 }
 
-// boolean isNetworkActive() {
-//     return WiFi.status() == WL_CONNECTED;
-// }
+boolean isNetworkActive() {
+    return WiFi.status() == WL_CONNECTED;
+}
 
-uint8_t RSSIquality()
-{
-  uint8_t res = 0;
-  if (WiFi.status() == WL_CONNECTED)
-  {
-    int rssi = WiFi.RSSI();
-    if (rssi >= -50)
-    {
-      res = 6; //"Excellent";
+uint8_t getNumAPClients() {
+    return WiFi.softAPgetStationNum();
+}
+
+uint8_t RSSIquality() {
+    uint8_t res = 0;
+    if (isNetworkActive()) {
+        int rssi = WiFi.RSSI();
+        if (rssi >= -50) {
+            res = 6;  //"Excellent";
+        } else if (rssi < -50 && rssi >= -60) {
+            res = 5;  //"Very good";
+        } else if (rssi < -60 && rssi >= -70) {
+            res = 4;  //"Good";
+        } else if (rssi < -70 && rssi >= -80) {
+            res = 3;  //"Low";
+        } else if (rssi < -80 && rssi > -100) {
+            res = 2;  //"Very low";
+        } else if (rssi <= -100) {
+            res = 1;  //"No signal";
+        }
     }
-    else if (rssi < -50 && rssi >= -60)
-    {
-      res = 5; //"Very good";
-    }
-    else if (rssi < -60 && rssi >= -70)
-    {
-      res = 4; //"Good";
-    }
-    else if (rssi < -70 && rssi >= -80)
-    {
-      res = 3; //"Low";
-    }
-    else if (rssi < -80 && rssi > -100)
-    {
-      res = 2; //"Very low";
-    }
-    else if (rssi <= -100)
-    {
-      res = 1; //"No signal";
-    }
-  }
-  return res;
+    return res;
 }
