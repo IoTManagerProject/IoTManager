@@ -239,9 +239,9 @@ protected:
         }
         if (sp && pv)
         {
-            value.valD = pid(sp, pv, pv_last, ierr, _int);
-            value.valS = (String)(int)pid(sp, pv, pv_last, ierr, _int);
-            regEvent(value.valS, "ThermostatPID", false, true);
+//            value.valD = pid(sp, pv, pv_last, ierr, _int);
+//            value.valS = (String)(int)value.valD;
+            regEvent(pid(sp, pv, pv_last, ierr, _int), "ThermostatPID", false, true);
                 }
         pv_last = pv;
     }
@@ -332,8 +332,8 @@ private:
 public:
     ThermostatETK(String parameters) : IoTItem(parameters)
     {
-        jsonRead(parameters, "set_id", _set_id);
-        jsonRead(parameters, "term_id", _term_id);
+//        jsonRead(parameters, "set_id", _set_id);
+//        jsonRead(parameters, "term_id", _term_id);
         jsonRead(parameters, "iv_k", _iv_k);
         jsonRead(parameters, "outside_id", _outside_id);
     }

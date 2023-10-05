@@ -22,7 +22,7 @@ boolean publishChartMqtt(const String& topic, const String& data);
 boolean publishJsonMqtt(const String& topic, const String& json);
 boolean publishStatusMqtt(const String& topic, const String& data);
 boolean publishEvent(const String& topic, const String& data);
-void mqttSubscribeExternal(String topic, bool usePrefix);
+void mqttSubscribeExternal(String topic, bool usePrefix = false);
 
 bool publishChartFileToMqtt(String path, String id, int maxCount);
 
