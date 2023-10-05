@@ -36,8 +36,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
 
         case WStype_TEXT: {
             bool endOfHeaderFound = false;
-            size_t maxAllowedHeaderSize =
-                15;  // максимальное количество символов заголовка
+            size_t maxAllowedHeaderSize = 15;  // максимальное количество символов заголовка
             size_t headerLenth = 0;
             String headerStr;
             for (size_t i = 0; i <= maxAllowedHeaderSize; i++) {
@@ -59,8 +58,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
 
             // публикация всех виджетов
             if (headerStr == "/|") {
-                sendFileToWsByFrames("/layout.json", "layout", "", num,
-                                     WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/layout.json", "layout", "", num, WEB_SOCKETS_FRAME_SIZE);
             }
 
             if (headerStr == "/params|") {
@@ -107,14 +105,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
 
             // отвечаем данными на запрос страницы
             if (headerStr == "/config|") {
-                sendFileToWsByFrames("/items.json", "itemsj", "", num,
-                                     WEB_SOCKETS_FRAME_SIZE);
-                sendFileToWsByFrames("/widgets.json", "widget", "", num,
-                                     WEB_SOCKETS_FRAME_SIZE);
-                sendFileToWsByFrames("/config.json", "config", "", num,
-                                     WEB_SOCKETS_FRAME_SIZE);
-                sendFileToWsByFrames("/scenario.txt", "scenar", "", num,
-                                     WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/items.json", "itemsj", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/widgets.json", "widget", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/scenario.txt", "scenar", "", num, WEB_SOCKETS_FRAME_SIZE);
                 sendStringToWs("settin", settingsFlashJson, num);
             }
 
@@ -222,10 +216,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
             if (headerStr == "/dev|") {
                 sendStringToWs("errors", errorsHeapJson, num);
                 sendStringToWs("settin", settingsFlashJson, num);
-                sendFileToWsByFrames("/config.json", "config", "", num,
-                                     WEB_SOCKETS_FRAME_SIZE);
-                sendFileToWsByFrames("/items.json", "itemsj", "", num,
-                                     WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/items.json", "itemsj", "", num, WEB_SOCKETS_FRAME_SIZE);
                 // sendFileToWsByFrames("/layout.json", "layout", "", num,
                 // WEB_SOCKETS_FRAME_SIZE);
             }
@@ -244,8 +236,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
 
             // переписать любое поле в errors json
             if (headerStr == "/rorre|") {
-                writeUint8tValueToJsonString(payload, length, headerLenth,
-                                             errorsHeapJson);
+                writeUint8tValueToJsonString(payload, length, headerLenth, errorsHeapJson);
             }
 
             // команда перезагрузки esp
@@ -260,7 +251,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
 
             // команда обновления прошивки esp
             if (headerStr == "/update|") {
-                upgrade_firmware(3);
+                String path;
+                writeUint8tToString(payload, length, headerLenth, path);
+                upgrade_firmware(3, path);
             }
 
             // Прием команд control c dashboard
@@ -270,9 +263,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
                 String key = selectFromMarkerToMarker(msg, "/", 0);
                 String value = selectFromMarkerToMarker(msg, "/", 1);
                 generateOrder(key, value);
-                SerialPrint(
-                    "i", F("=>WS"),
-                    "Msg from svelte web, WS No: " + String(num) + ", msg: " + msg);
+                SerialPrint("i", F("=>WS"), "Msg from svelte web, WS No: " + String(num) + ", msg: " + msg);
             }
 
             if (headerStr == "/tst|") {
