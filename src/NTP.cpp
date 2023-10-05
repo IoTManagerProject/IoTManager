@@ -184,6 +184,14 @@ const String getDateTimeDotFormatedFromUnix(unsigned long unixTime) {
     return String(buf);
 }
 
+const String getTimeDotFormatedFromUnix(unsigned long unixTime) {
+    Time_t time;
+    breakEpochToTime(unixTime, time);
+    char buf[32];
+    sprintf(buf, "%02d:%02d:%02d", time.hour, time.minute, time.second);
+    return String(buf);
+}
+
 const String getDateDotFormatedFromUnix(unsigned long unixTime) {
     Time_t time;
     breakEpochToTime(unixTime, time);
