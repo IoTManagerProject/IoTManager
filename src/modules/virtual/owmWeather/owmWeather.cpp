@@ -188,10 +188,32 @@ public:
             return;
 
         if (root == "weather")
-        {
+        { // ☔⛅❄🌤🌥🌦🌧🌨🌩🌫🌞
+            String icn = Weatherdoc1[root][0]["icon"].as<String>();
+            if (icn == "01d" || icn == "01n")
+                icn = "🌞";
+            else if (icn == "02d" || icn == "02n")
+                icn = "🌤";
+            else if (icn == "03d" || icn == "03n")
+                icn = "🌥";
+            else if (icn == "04d" || icn == "04n")
+                icn = "🌫";
+            else if (icn == "09d" || icn == "09n")
+                icn = "🌧";
+            else if (icn == "10d" || icn == "10n")
+                icn = "🌦";
+            else if (icn == "11d" || icn == "11n")
+                icn = "🌩";
+            else if (icn == "13d" || icn == "13n")
+                icn = "❄";
+            else
+                icn = "";
             if (Weatherdoc1[root][0][param].as<String>() != tmp->value.valS)
             {
-                tmp->setValue(Weatherdoc1[root][0][param].as<String>(), true);
+                if (param == "description")
+                    tmp->setValue(Weatherdoc1[root][0][param].as<String>() + icn, true);
+                else
+                    tmp->setValue(Weatherdoc1[root][0][param].as<String>(), true);
             }
         }
         else if (root == "")
