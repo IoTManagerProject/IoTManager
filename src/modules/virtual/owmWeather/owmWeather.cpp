@@ -16,7 +16,7 @@ private:
     String _param;
     //  long interval;
     String _API_key;
-    String _сity = "";
+    String _city = "";
     String _lat = "";
     String _lon = "";
     String _lang = "";
@@ -27,7 +27,7 @@ public:
     {
         _API_key = jsonReadStr(parameters, "API_key");
         //    _ID_sity = jsonReadStr(parameters, "ID_sity");
-        _сity = jsonReadStr(parameters, "сity");
+        _city = jsonReadStr(parameters, "city");
         _lon = jsonReadStr(parameters, "lon");
         _lat = jsonReadStr(parameters, "lat");
         _lang = jsonReadStr(parameters, "lang");
@@ -45,12 +45,12 @@ public:
         if (isNetworkActive())
         {
             String urlReq;
-            if (_сity != "")
+            if (_city != "")
             {
                 // Для нового API
                 //   request = "http://api.openweathermap.org/geo/1.0/direct?q=" _сity + "&limit=1&appid=" + _API_key;
                 // Устарело, но пока работает
-                urlReq = "http://api.openweathermap.org/data/2.5/weather?q=" + _сity + "&units=metric&lang=" + _lang + "&appid=" + _API_key;
+                urlReq = "http://api.openweathermap.org/data/2.5/weather?q=" + _city + "&units=metric&lang=" + _lang + "&appid=" + _API_key;
             }
             else
             {
