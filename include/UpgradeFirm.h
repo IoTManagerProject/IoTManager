@@ -1,8 +1,8 @@
 #pragma once
 #include "Global.h"
-//#include "Upgrade.h"
+// #include "Upgrade.h"
 #ifdef ESP8266
-//#include "ESP8266.h"
+// #include "ESP8266.h"
 #else
 #include <HTTPUpdate.h>
 #endif
@@ -17,9 +17,9 @@ struct updateFirm {
 
 extern void upgradeInit();
 extern void getLastVersion();
-extern void upgrade_firmware(int type);
-extern bool upgradeFS();
-extern bool upgradeBuild();
+extern void upgrade_firmware(int type, String path);
+extern bool upgradeFS(String path);
+extern bool upgradeBuild(String path);
 extern void restartEsp();
 
 extern const String getBinPath(String file);
