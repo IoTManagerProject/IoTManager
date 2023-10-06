@@ -64,6 +64,9 @@
         "esp32_4mb": [
             "rc-switch @ ^2.6.4"
         ],
+        "esp32cam_4mb": [
+            "rc-switch @ ^2.6.4"
+        ],
         "esp8266_4mb": [
             "rc-switch @ ^2.6.4"
         ],
