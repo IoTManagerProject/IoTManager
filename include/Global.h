@@ -56,6 +56,8 @@
 **********************************************************************************************************************/
 extern IoTGpio IoTgpio;
 extern IoTItem* rtcItem;
+//extern IoTItem* camItem;
+extern IoTItem* tlgrmItem;
 
 extern TickerScheduler ts;
 extern WiFiClient espClient;

@@ -42,6 +42,7 @@
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [],
+        "esp32cam_4mb": [],
         "esp8266_4mb": [],
         "esp8266_1mb": [],
         "esp8266_1mb_ota": [],

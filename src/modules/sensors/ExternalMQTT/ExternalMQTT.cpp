@@ -15,7 +15,7 @@ private:
     bool dataFromNode = false;
     String _topic = "";
     bool _isJson;
-    bool _addPrefix;
+//    bool _addPrefix;
     bool _debug;
     bool sendOk = false;
 
@@ -28,12 +28,12 @@ public:
         jsonRead(parameters, F("offline"), offline);
         _topic = jsonReadStr(parameters, "topic");
         jsonRead(parameters, "isJson", _isJson);
-        jsonRead(parameters, "addPrefix", _addPrefix);
+//        jsonRead(parameters, "addPrefix", _addPrefix);
         jsonRead(parameters, "debug", _debug);
         dataFromNode = false;
         if (mqttIsConnect())
             sendOk = true;
-        mqttSubscribeExternal(_topic, _addPrefix);
+        mqttSubscribeExternal(_topic);
     }
     char *TimeToString(unsigned long t)
     {
@@ -113,7 +113,7 @@ public:
         if (mqttIsConnect() && !sendOk)
         {
             sendOk = true;
-            mqttSubscribeExternal(_topic, _addPrefix);
+            mqttSubscribeExternal(_topic);
         }
     }
     void onMqttWsAppConnectEvent()
@@ -144,6 +144,8 @@ public:
                 if (_minutesPassed >= offline)
                 {
                     jsonWriteStr(json, F("info"), F("offline"));
+                    regEvent(NAN, "ExternalMQTT");
+                    SerialPrint("E", "ExternalMQTT", "V error", _id);
                 }
             }
         }

@@ -15,7 +15,10 @@
 # 
 # поддерживаемые контроллеры (профили):
 # esp8266_4mb
+# esp8266_16mb
 # esp32_4mb
+# esp32cam_4mb
+# esp32_16mb
 # esp32s2_4mb
 # esp8266_1mb
 # esp8266_1mb_ota

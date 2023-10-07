@@ -1,0 +1,82 @@
+{
+  "menuSection": "virtual_elments",
+
+  "configItem": [
+    {
+      "global": 0,
+      "name": "Погода OWM",
+      "type": "Reading",
+      "subtype": "owmWeather",
+      "id": "owm",
+      "needSave": 0,
+      "widget": "nil",
+      "page": "Погода",
+      "descr": "Температура на улице",
+      "int": 30,
+      "API_key": "",
+      "сity": "Moscow",
+      "lon": "37.54",
+      "lat": "57.74",
+      "lang": "ru",
+      "param": "",
+      "round": 1,
+      "val": "...",
+      "debug": 0
+    }
+  ],
+
+  "about": {
+    "authorName": "Serghei Crasnicov, v2.0 Mikhail Bubnov",
+    "authorContact": "https://t.me/Serghei63",
+    "authorGit": "https://github.com/Serghei63",
+    "specialThanks": "AVAKS",
+    "moduleName": "owmWeather",
+    "moduleVersion": "2.0",
+    "usedRam": {
+      "esp32_4mb": 15,
+      "esp8266_4mb": 15
+    },
+    "subTypes": [
+      "temp",
+      "humidity",
+      "pressure",
+      "speed",
+      "deg",
+      "all",
+      "main",
+      "description",
+      "icon",
+      "sunrise",
+      "sunset",
+      "name"
+    ],
+    "title": "Погода",
+    "moduleDesc": "Получение погоды из интернет OpenWeatherMap",
+    "propInfo": {
+      "param": "Тип текущего Item: temp - температура, humidity - влажность, pressure - давление, speed - скорость ветра, deg - направление ветра, all - процент облачности, sunrise - рассвет, sunset - закат, description - Погодные условия, icon - код иконки, name - город. Если оставить пустым пудет искать и публиковать при изменении в Items с именами wea_temp и т.д. wea_...",
+      "int": "Интервал запроса погоды в минутах",
+      "API_key": "API ключ",
+      "сity": "Название города, через запятую можно уочнить код страны. Наример Moscow или Moscow,ru или Москва. Если город не задан будут использоваться координаты. OWM рекомендует координаты",
+      "lon": "Долгота, при использовании координат, будет автоматически выбран ближайший город",
+      "lat": "Широта, при использовании координат, будет автоматически выбран ближайший город",
+      "lang": "Язык используемый в ответах OpenWetaherMap",
+      "debug":"1 - выводить дополнительный лог в сериал"      
+    }
+  },
+
+  "defActive": true,
+
+  "usedLibs": {
+    "esp32_4mb": [],
+    "esp32s2_4mb": [],
+    "esp32_16mb": [],
+    "esp8266_4mb": [],
+    "esp8266_16mb": [],    
+    "esp8266_1mb": [],
+    "esp8266_1mb_ota": [],
+    "esp8285_1mb": [],
+    "esp8285_1mb_ota": [],
+    "esp8266_2mb": [],
+    "esp8266_2mb_ota": []
+  }
+}
