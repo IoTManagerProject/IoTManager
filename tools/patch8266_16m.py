@@ -3,9 +3,16 @@
 
 import os
 import shutil
+from sys import platform
 
+if platform == "linux" or platform == "linux2":
+    # linux
+    mainPyPath = '~/.platformio/platforms/espressif8266@4.0.1/builder/main.py'
+else:
+    # windows
+    mainPyPath = os.environ['USERPROFILE'] + '\\.platformio\\platforms\\espressif8266@4.0.1\\builder\\main.py'
 
-mainPyPath = os.environ['USERPROFILE'] + '\\.platformio\\platforms\\espressif8266@4.0.1\\builder\\main.py'
+# print(mainPyPath)
 
 with open(mainPyPath) as fr:
     oldData = fr.read()
