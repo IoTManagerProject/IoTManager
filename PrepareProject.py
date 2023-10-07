@@ -130,7 +130,7 @@ deviceName = profJson['projectProp']['platformio']['default_envs']
 if deviceName == 'esp8266_1mb_ota' or deviceName == 'esp8285_1mb_ota' or deviceName == 'esp8266_2mb_ota': 
     copy_tree("data_lite", "data_svelte")
 else:
-    copy_tree("data_plus", "data_svelte")
+    copy_tree("data_full", "data_svelte")
     
 # генерируем файлы проекта на основе подготовленного профиля
 # заполняем конфигурационный файл прошивки параметрами из профиля
