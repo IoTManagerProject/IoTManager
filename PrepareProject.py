@@ -218,6 +218,7 @@ shutil.copy(profile, "data_svelte/" + profile)
 #     ctypes.windll.user32.MessageBoxW(0, "Профиль " + profile + " применен, можно запускать компиляцию и прошивку.", "Операция завершена.", 0)
 
 if update:    
+    shutil.copy(profile, "compilerProfile.json") 
     print(f"\x1b[1;31;42m Profile modules " + profile + " updated, profile applied, you can run compilation and firmware.\x1b[0m")
     
 else:
