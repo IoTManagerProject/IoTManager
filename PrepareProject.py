@@ -206,10 +206,19 @@ config["platformio"]["default_envs"] = deviceName
 with open("platformio.ini", 'w') as configFile:
     config.write(configFile)
     
-# сохраняем применяемый профиль в папку data_svelte для загрузки на контроллер и дальнейшего переиспользования
-print(f"Saving profile {profile} in /data_svelte")
-shutil.copy(profile, "data_svelte/" + profile) 
-
+    
+# сохраняем часть применяемого профиля в папку data_svelte для загрузки на контроллер и дальнейшего переиспользования
+print(f"Saving profile {profile} in /data_svelte/flashProfile.json")
+shortProfJson = json.loads('{}')
+shortProfJson['projectProp'] = {
+        'platformio': {
+            'default_envs': deviceName
+        }
+    }
+shortProfJson['modules'] = profJson['modules']
+with open("data_svelte/flashProfile.json", "w", encoding='utf-8') as write_file:
+    json.dump(shortProfJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
+    
     
 # import ctypes  # An included library with Python install.   
 # if update:    
