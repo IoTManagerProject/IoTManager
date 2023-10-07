@@ -57,21 +57,12 @@ public:
 
     void loop()
     {
-        if (_receiveMsg)
+        if (_receiveMsg && isNetworkActive())
         {
             _myBot->tick();
         }
         // Далее вызов doByInterval для обработки комманд
-        if (enableDoByInt)
-        {
-            currentMillis = millis();
-            difference = currentMillis - prevMillis;
-            if (difference >= _interval)
-            {
-                prevMillis = millis();
-                this->doByInterval();
-            }
-        }
+        IoTItem::loop();
     }
 
     void doByInterval()
@@ -80,6 +71,7 @@ public:
 
     IoTValue execute(String command, std::vector<IoTValue> &param)
     {
+        if (!isNetworkActive()) return {};
         if (command == "sendMsg")
         {
             if (param.size())
@@ -268,6 +260,7 @@ public:
 
     void sendTelegramMsg(bool often, String msg)
     {
+        if (!isNetworkActive()) return;
         if (often)
         {
             _myBot->sendMessage(msg, _chatID);
@@ -286,12 +279,14 @@ public:
 
     void sendFoto(uint8_t *buf, uint32_t length, const String &name)
     {
+        if (!isNetworkActive()) return;
         _myBot->sendFile(buf, length, FB_PHOTO, name, _chatID);
         SerialPrint("<-", F("Telegram"), "chat ID: " + _chatID + ", send foto from esp-cam");
     }
 
     void editFoto(uint8_t *buf, uint32_t length, const String &name)
     {
+        if (!isNetworkActive()) return;
         _myBot->editFile(buf, length, FB_PHOTO, name, _myBot->lastBotMsg(), _chatID);
         SerialPrint("<-", F("Telegram"), "chat ID: " + _chatID + ", edit foto from esp-cam");
     }
@@ -332,13 +327,13 @@ public:
                 SerialPrint("<-", F("Telegram"), "download from: " + _chatID + ", file: " + msg.fileName + " size = " + String(_size) + " byte");
                 _myBot->sendMessage("Download Ok, size = " + String(_size) + " byte", _chatID);
             }
-            return _size;
         }
         else
         {
             SerialPrint("E", F("Telegram"), F("file write error"));
             _myBot->sendMessage(F("file write error"), _chatID);
         }
+        return _size;
     }
 
     IoTItem *getTlgrmDriver()
