@@ -68,6 +68,7 @@
 
   "usedLibs": {
     "esp32_4mb": [],
+    "esp32_4mb3f": [],
     "esp32s2_4mb": [],
     "esp32_16mb": [],
     "esp8266_4mb": [],

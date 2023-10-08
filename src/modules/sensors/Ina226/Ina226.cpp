@@ -38,7 +38,7 @@ INA226 *instanceIna226(uint8_t ADDR)
     // учитываем, что библиотека может работать с несколькими линиями на разных пинах, поэтому инициируем библиотеку, если линия ранее не использовалась
     if (ina226Array.find(ADDR) == ina226Array.end())
     {
-        if (ina226SettingArray.find(ADDR) == ina226SettingArray.end())
+        if (ina226SettingArray.find(ADDR) != ina226SettingArray.end())
             ina226Array[ADDR] = new INA226(ina226SettingArray[ADDR]->shunt, ina226SettingArray[ADDR]->maxV, (uint8_t)ADDR);
         else
             ina226Array[ADDR] = new INA226(0.1f, 0.8f, (uint8_t)ADDR); // Стандартные значения для модуля INA226 (0.1 Ом, 0.8А, адрес 0x40)
@@ -66,8 +66,7 @@ public:
 
     void doByInterval()
     {
-        value.valD = instanceIna226(_addr)->getVoltage();
-        regEvent(value.valD, "Ina226voltage");
+        regEvent(instanceIna226(_addr)->getVoltage(), "Ina226voltage");
     }
 
     ~Ina226voltage(){};
@@ -90,8 +89,7 @@ public:
     }
     void doByInterval()
     {
-        value.valD = instanceIna226(_addr)->getShuntVoltage();
-        regEvent(value.valD, "Ina226shuntvoltage");
+        regEvent(vinstanceIna226(_addr)->getShuntVoltage(), "Ina226shuntvoltage");
     }
 
     ~Ina226shuntvoltage(){};
@@ -114,8 +112,7 @@ public:
     }
     void doByInterval()
     {
-        value.valD = instanceIna226(_addr)->getCurrent();
-        regEvent(value.valD, "Ina226curr");
+        regEvent(instanceIna226(_addr)->getCurrent(), "Ina226curr");
     }
 
     ~Ina226curr(){};
@@ -138,8 +135,7 @@ public:
     }
     void doByInterval()
     {
-        value.valD = instanceIna226(_addr)->getPower();
-        regEvent(value.valD, "Ina226power"); // TODO: найти способ понимания ошибки получения данных
+        regEvent(instanceIna226(_addr)->getPower(), "Ina226power"); // TODO: найти способ понимания ошибки получения данных
     }
 
     ~Ina226Power(){};

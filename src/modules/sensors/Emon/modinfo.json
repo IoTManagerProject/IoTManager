@@ -62,6 +62,9 @@
         "esp32_4mb": [
             "openenergymonitor/EmonLib@1.1.0"
         ],
+        "esp32_4mb3f": [
+            "openenergymonitor/EmonLib@1.1.0"
+        ],
         "esp32cam_4mb": [
             "openenergymonitor/EmonLib@1.1.0"
         ],

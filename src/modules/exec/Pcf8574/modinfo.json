@@ -35,6 +35,9 @@
         "esp32_4mb": [
             "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
+        "esp32_4mb3f": [
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
         "esp32cam_4mb": [
             "adafruit/Adafruit BusIO @ ^1.13.2"
         ],

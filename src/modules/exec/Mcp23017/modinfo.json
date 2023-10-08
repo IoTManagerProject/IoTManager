@@ -40,6 +40,10 @@
             "adafruit/Adafruit MCP23017 Arduino Library@^2.1.0",
             "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
+        "esp32_4mb3f": [
+            "adafruit/Adafruit MCP23017 Arduino Library@^2.1.0",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
         "esp32cam_4mb": [
             "adafruit/Adafruit MCP23017 Arduino Library@^2.1.0",
             "adafruit/Adafruit BusIO @ ^1.13.2"

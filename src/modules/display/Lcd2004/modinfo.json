@@ -123,6 +123,10 @@
             "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
             "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
         ],
+        "esp32_4mb3f": [
+            "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
+            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
+        ],
         "esp32cam_4mb": [
             "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
             "marcoschwartz/LiquidCrystal_I2C@^1.1.4"

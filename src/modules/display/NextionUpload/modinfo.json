@@ -39,6 +39,9 @@
     "esp32_4mb": [
       "https://github.com/avaksru/ESPNexUpload.git"
     ],
+    "esp32_4mb3f": [
+      "https://github.com/avaksru/ESPNexUpload.git"
+    ],
     "esp32cam_4mb": [
       "https://github.com/avaksru/ESPNexUpload.git"
     ],

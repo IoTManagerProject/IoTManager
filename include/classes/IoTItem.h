@@ -29,7 +29,7 @@ class IoTItem {
     virtual String getValue();
     long getInterval();
     bool isGlobal();
-
+    
     void sendSubWidgetsValues(String& id, String& json);
 
     void setInterval(long interval);
@@ -63,8 +63,9 @@ class IoTItem {
 
     virtual void setValue(const IoTValue& Value, bool genEvent = true);
     virtual void setValue(const String& valStr, bool genEvent = true);
-    String getRoundValue();
+        String getRoundValue();
     void getNetEvent(String& event);
+    virtual String getMqttExterSub();
 
     // хуки для системных событий (должны начинаться с "on")
     virtual void onRegEvent(IoTItem* item);

@@ -87,6 +87,9 @@
         "esp32_4mb": [
             "kosme/arduinoFFT@^1.5.6"
         ],
+        "esp32_4mb3f": [
+            "kosme/arduinoFFT@^1.5.6"
+        ],
         "esp32cam_4mb": [
             "kosme/arduinoFFT@^1.5.6"
         ],
