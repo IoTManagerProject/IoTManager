@@ -3,6 +3,7 @@
 void* getAPI_Cron(String subtype, String params);
 void* getAPI_Loging(String subtype, String params);
 void* getAPI_LogingDaily(String subtype, String params);
+void* getAPI_owmWeather(String subtype, String params);
 void* getAPI_Timer(String subtype, String params);
 void* getAPI_Variable(String subtype, String params);
 void* getAPI_VariableColor(String subtype, String params);
@@ -42,6 +43,7 @@ void* tmpAPI;
 if ((tmpAPI = getAPI_Cron(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Loging(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_LogingDaily(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_owmWeather(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Timer(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Variable(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_VariableColor(subtype, params)) != nullptr) return tmpAPI;

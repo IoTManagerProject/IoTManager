@@ -121,6 +121,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/virtual/owmWeather",
+                "active": true
+            },
+            {
                 "path": "src/modules/virtual/Timer",
                 "active": true
             },

@@ -3,7 +3,7 @@
         "name": "IoTmanagerVer4",
         "apssid": "IoTmanager",
         "appass": "",
-        "routerssid": "rise",
+        "routerssid": "iot",
         "routerpass": "hostel3333",
         "timezone": 2,
         "ntp": "pool.ntp.org",
@@ -24,8 +24,82 @@
     },
     "projectProp": {
         "platformio": {
-            "default_envs": "esp8266_1mb_ota",
-            "comments_default_envs": "choose from: esp8266_4mb or esp32_4mb or esp8266_1mb or esp8266_1mb_ota or esp8285_1mb or esp8285_1mb_ota"
+            "default_envs": "esp8266_4mb",
+            "comments_default_envs": "choose from: esp8266_4mb or esp32_4mb or esp32cam_4mb or esp32s2_4mb or esp8266_1mb or esp8266_1mb_ota or esp8285_1mb or esp8285_1mb_ota",
+            "envs": [
+                {
+                    "name": "esp8266_4mb",
+                    "firmware": "0x00000",
+                    "littlefs": "0x300000"
+                },
+                {
+                    "name": "esp8266_16mb",
+                    "firmware": "0x00000",
+                    "littlefs": "0x200000"
+                },
+                {
+                    "name": "esp32_4mb",
+                    "boot_app0": "0xe000",
+                    "bootloader_qio_80m": "0x1000",
+                    "firmware": "0x10000",
+                    "partitions": "0x8000",
+                    "littlefs": "0x290000"
+                },
+                {
+                    "name": "esp32cam_4mb",
+                    "boot_app0": "0xe000",
+                    "bootloader_qio_80m": "0x1000",
+                    "firmware": "0x10000",
+                    "partitions": "0x8000",
+                    "littlefs": "0x290000"
+                },
+                {
+                    "name": "esp32_16mb",
+                    "boot_app0": "0xe000",
+                    "bootloader_qio_80m": "0x1000",
+                    "firmware": "0x10000",
+                    "partitions": "0x8000",
+                    "littlefs": "0x910000"
+                },
+                {
+                    "name": "esp8266_1mb",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x000bb000"
+                },
+                {
+                    "name": "esp8266_1mb_ota",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x000eb000"
+                },
+                {
+                    "name": "esp8266_2mb",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x00100000"
+                },
+                {
+                    "name": "esp8266_2mb_ota",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x001c0000"
+                },
+                {
+                    "name": "esp8285_1mb",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x000bb000"
+                },
+                {
+                    "name": "esp8285_1mb_ota",
+                    "firmware": "0x00000000",
+                    "littlefs": "0x000eb000"
+                },
+                {
+                    "name": "esp32s2_4mb",
+                    "boot_app0": "0xe000",
+                    "bootloader_qio_80m": "0x1000",
+                    "firmware": "0x10000",
+                    "partitions": "0x8000",
+                    "littlefs": "0x290000"
+                }
+            ]
         }
     },
     "modules": {
@@ -35,11 +109,19 @@
                 "active": true
             },
             {
+                "path": "src/modules/virtual/GoogleSheet",
+                "active": false
+            },
+            {
                 "path": "src/modules/virtual/Loging",
                 "active": true
             },
             {
                 "path": "src/modules/virtual/LogingDaily",
+                "active": true
+            },
+            {
+                "path": "src/modules/virtual/owmWeather",
                 "active": true
             },
             {
@@ -64,6 +146,10 @@
             }
         ],
         "sensors": [
+            {
+                "path": "src/modules/sensors/A02Distance",
+                "active": true
+            },
             {
                 "path": "src/modules/sensors/Acs712",
                 "active": true
@@ -113,6 +199,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/ExampleModule",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/ExternalMQTT",
                 "active": false
             },
@@ -145,7 +235,15 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/Ina226",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/IoTWiegand",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/ld2410",
                 "active": false
             },
             {
@@ -154,6 +252,10 @@
             },
             {
                 "path": "src/modules/sensors/Mhz19",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/Ntc",
                 "active": false
             },
             {
@@ -167,6 +269,14 @@
             {
                 "path": "src/modules/sensors/RTC",
                 "active": true
+            },
+            {
+                "path": "src/modules/sensors/S8",
+                "active": true
+            },
+            {
+                "path": "src/modules/sensors/Scd40",
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Sds011",
@@ -203,7 +313,19 @@
                 "active": true
             },
             {
+                "path": "src/modules/exec/Buzzer",
+                "active": true
+            },
+            {
+                "path": "src/modules/exec/Enconder",
+                "active": true
+            },
+            {
                 "path": "src/modules/exec/EspCam",
+                "active": false
+            },
+            {
+                "path": "src/modules/exec/Ftp",
                 "active": false
             },
             {
@@ -263,7 +385,15 @@
                 "active": true
             },
             {
+                "path": "src/modules/exec/Telegram_v2",
+                "active": false
+            },
+            {
                 "path": "src/modules/exec/Thermostat",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/Ds2423",
                 "active": false
             }
         ],
@@ -279,6 +409,18 @@
             {
                 "path": "src/modules/display/NextionUpload",
                 "active": false
+            },
+            {
+                "path": "src/modules/display/Oled128",
+                "active": false
+            },
+            {
+                "path": "src/modules/display/Smi2_m",
+                "active": true
+            },
+            {
+                "path": "src/modules/display/TM16XX",
+                "active": true
             },
             {
                 "path": "src/modules/display/Ws2812b",
