@@ -10,7 +10,7 @@
 IoTScenario iotScen;  // объект управления сценарием
 
 String volStrForSave = "";
-// unsigned long currentMillis; // это сдесь лишнее
+// unsigned long currentMillis; // это здесь лишнее
 // unsigned long prevMillis;
 
 void elementsLoop() {

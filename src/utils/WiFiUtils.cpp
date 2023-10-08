@@ -3,6 +3,8 @@
 #define TRIESONE 25 // количество попыток подключения к одной сети из несколких
 #define TRIES 40    // количество попыток подключения сети если она одна
 
+wifi_t g_WiFi;
+
 void routerConnect()
 {
   WiFi.setAutoConnect(false);
@@ -46,12 +48,12 @@ void routerConnect()
   for (size_t i = 0; i < _ssidList.size(); i++)
   {
     triesOne = TRIESONE;
-    if (WiFi.status() == WL_CONNECTED)
+    if (isNetworkActive())
       break;
     WiFi.begin(_ssidList[i].c_str(), _passwordList[i].c_str());
     SerialPrint("i", "WIFI", "ssid connect: " + _ssidList[i]);
     SerialPrint("i", "WIFI", "pass connect: " + _passwordList[i]);
-    while (--triesOne && WiFi.status() != WL_CONNECTED)
+    while (--triesOne && !isNetworkActive())
     {
 //            SerialPrint("i", "WIFI", ": " + String((int)WiFi.status()));
 #ifdef ESP8266
@@ -71,7 +73,7 @@ void routerConnect()
     Serial.println("");
   }
 
-  if (WiFi.status() != WL_CONNECTED)
+  if (!isNetworkActive())
   {
     Serial.println("");
     startAPMode();
@@ -102,73 +104,98 @@ bool startAPMode()
 
   SerialPrint("i", "WIFI", "AP IP: " + myIP.toString());
   jsonWriteStr(settingsFlashJson, "ip", myIP.toString());
-
-  if (jsonReadInt(errorsHeapJson, "passer") != 1)
-  {
-    ts.add(
-        WIFI_SCAN, 30 * 1000,
-        [&](void *)
-        {
-          std::vector<String> jArray;
-          jsonReadArray(settingsFlashJson, "routerssid", jArray);
-          for (int8_t i = 0; i < jArray.size(); i++)
-          {
-            SerialPrint("i", "WIFI", "scanning for " + jArray[i]);
-          }
-          if (RouterFind(jArray))
-          {
-            ts.remove(WIFI_SCAN);
-            WiFi.scanDelete();
-            routerConnect();
-          }
-        },
-        nullptr, true);
-  }
+  AsyncRouterFind(_scan_for_connect);
   return true;
 }
 
-boolean RouterFind(std::vector<String> jArray)
+void AsyncRouterFind(mode_scan_t mode)
 {
-  bool res = false;
-  int n = WiFi.scanComplete();
-  SerialPrint("i", "WIFI", "scan result: " + String(n, DEC));
-
-  if (n == -2)
-  { // Сканирование не было запущено, запускаем
-    SerialPrint("i", "WIFI", "start scanning");
-    WiFi.scanNetworks(true, false); // async, show_hidden
+  switch (mode) {
+  case _scan_for_ws:
+    g_WiFi.mode_scan_for_ws = true;
+    break;
+  case _scan_for_connect:
+    g_WiFi.mode_scan_for_connect = true;
+    break;
+  default:
+    break;
   }
-
-  else if (n == -1)
-  { // Сканирование все еще выполняется
-    SerialPrint("i", "WIFI", "scanning in progress");
-  }
-
-  else if (n == 0)
-  { // ни одна сеть не найдена
-    SerialPrint("i", "WIFI", "no networks found");
-    WiFi.scanNetworks(true, false);
-  }
-  else if (n > 0)
-  {
-    for (int8_t i = 0; i < n; i++)
+  if(g_WiFi.state_scan == _FindAP_end) {
+    std::vector<String> jArray;
+    jsonReadArray(settingsFlashJson, "routerssid", jArray);
+    for (int8_t i = 0; i < jArray.size(); i++)
     {
-      for (int8_t k = 0; k < jArray.size(); k++)
-      {
-        if (WiFi.SSID(i) == jArray[k])
-        {
-          res = true;
-        }
-      }
-      // SerialPrint("i", "WIFI", (res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
-      jsonWriteStr_(ssidListHeapJson, String(i), WiFi.SSID(i));
-
-      // String(WiFi.RSSI(i)
+      SerialPrint("i", "WIFI", "scanning for " + jArray[i]);
     }
+    ts.add(WIFI_SCAN, 1000, [&](void *) {
+      switch (g_WiFi.state_scan) {
+      default:
+      case _FindAP_start:
+          WiFi.scanNetworks(true, true);
+          SerialPrint("i", F("WIFI_scan"), "Start");
+          g_WiFi.state_scan = _FindAP_finding;
+          break;
+      case _FindAP_finding:
+          int8_t n = WiFi.scanComplete();
+          if (n == -1) // еще ищем
+              break;
+          else if (n == -2) {
+              SerialPrint("E", F("WIFI_scan"), "Error");
+              g_WiFi.state_scan = _FindAP_start;
+              // g_WiFi.StateFind = _FindAP_end;
+              // break;
+          } else if (n == 0) {
+              SerialPrint("i", F("WIFI_scan"), "No WiFi");
+              // ssidListHeapJson = "{}";
+              g_WiFi.state_scan = _FindAP_start;
+              // g_WiFi.StateFind = _FindAP_end;
+              // break;
+          } else if (n > 0) {
+            bool ssid_available = false;
+            ssidListHeapJson = "{}"; // очищаем, ранее были задвоения сетей
+            String current_SSID = "";
+            if(isNetworkActive()) {
+              current_SSID = WiFi.SSID();
+            }
+            for (int8_t i = 0; i < n; i++)
+            {
+              String i_SSID = WiFi.SSID(i);
+              for (int8_t k = 0; k < jArray.size(); k++) {
+                if (i_SSID == jArray[k]) {
+                  ssid_available = true;
+                }
+              }
+              // SerialPrint("i", "WIFI", (res ? "*" : "") + String(i, DEC) + ") " + WiFi.SSID(i));
+              jsonWriteStr_(ssidListHeapJson, String(i+1), i_SSID);
+            }
+            WiFi.scanDelete();
+            SerialPrint("i", "WIFI_scan", ssidListHeapJson);
+            jsonWriteStr_(ssidListHeapJson, "0", jsonReadStr(settingsFlashJson, F("routerssid"))); // чтобы всегда была первой в списке
+            if(g_WiFi.mode_scan_for_ws) {
+              sendStringToWs("ssidli", ssidListHeapJson, -1);
+              g_WiFi.mode_scan_for_ws = false;
+            }
+            if(g_WiFi.mode_scan_for_connect) {
+              if(ssid_available) {
+                if(!isNetworkActive()) {
+                  routerConnect();
+                }
+              } else {
+                g_WiFi.state_scan = _FindAP_start; // бесконечно ищем наши сети
+                break;
+              }
+              g_WiFi.mode_scan_for_connect = false;
+            }
+          }
+          g_WiFi.state_scan = _FindAP_end;
+          // break;
+      // case _FindAP_end:
+          SerialPrint("i", F("WIFI_scan"), "End");
+          ts.remove(WIFI_SCAN);
+          break;
+      }
+    }, nullptr, true);
   }
-  SerialPrint("i", "WIFI", ssidListHeapJson);
-  WiFi.scanDelete();
-  return res;
 }
 
 boolean isNetworkActive() {

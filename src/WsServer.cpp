@@ -7,6 +7,7 @@ void standWebSocketsInit()
 {
     standWebSocket.begin();
     standWebSocket.onEvent(webSocketEvent);
+    jsonWriteStr_(ssidListHeapJson, "0", jsonReadStr(settingsFlashJson, F("routerssid"))); // чтобы в списке была наша сеть
     SerialPrint("i", "WS", "WS server initialized");
 }
 
@@ -147,8 +148,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
             sendStringToWs("ssidli", ssidListHeapJson, num);
             sendStringToWs("errors", errorsHeapJson, num);
             // запуск асинхронного сканирования wifi сетей при переходе на страницу
-            // соединений RouterFind(jsonReadStr(settingsFlashJson,
-            // F("routerssid")));
+            AsyncRouterFind(_scan_for_ws);
         }
 
         // обработка кнопки сохранить settings.json
@@ -174,10 +174,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
         // запуск асинхронного сканирования wifi сетей при нажатии выпадающего
         // списка
         if (headerStr == "/scan|") {
-            std::vector<String> jArray;
-            jsonReadArray(settingsFlashJson, "routerssid", jArray);
-            RouterFind(jArray);
-            sendStringToWs("ssidli", ssidListHeapJson, num);
+            AsyncRouterFind(_scan_for_ws);
         }
 
         //----------------------------------------------------------------------//
