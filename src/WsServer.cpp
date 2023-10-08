@@ -6,6 +6,7 @@ extern IoTScenario iotScen;
 void standWebSocketsInit() {
     standWebSocket.begin();
     standWebSocket.onEvent(webSocketEvent);
+    jsonWriteStr_(ssidListHeapJson, "0", jsonReadStr(settingsFlashJson, F("routerssid"))); // чтобы в списке была наша сеть
     SerialPrint("i", "WS", "WS server initialized");
 }
 
@@ -128,17 +129,16 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса connection
             //----------------------------------------------------------------------//
 
-            // отвечаем данными на запрос страницы
-            if (headerStr == "/connection|") {
-                sendFileToWsByFrames("/widgets.json", "widget", "", num, WEB_SOCKETS_FRAME_SIZE);
-                sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
-                sendStringToWs("settin", settingsFlashJson, num);
-                sendStringToWs("ssidli", ssidListHeapJson, num);
-                sendStringToWs("errors", errorsHeapJson, num);
-                // запуск асинхронного сканирования wifi сетей при переходе на страницу
-                // соединений RouterFind(jsonReadStr(settingsFlashJson,
-                // F("routerssid")));
-            }
+        // отвечаем данными на запрос страницы
+        if (headerStr == "/connection|") {
+            sendFileToWsByFrames("/widgets.json", "widget", "", num, WEB_SOCKETS_FRAME_SIZE);
+            sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
+            sendStringToWs("settin", settingsFlashJson, num);
+            sendStringToWs("ssidli", ssidListHeapJson, num);
+            sendStringToWs("errors", errorsHeapJson, num);
+            // запуск асинхронного сканирования wifi сетей при переходе на страницу
+            AsyncRouterFind(_scan_for_ws);
+        }
 
             // обработка кнопки сохранить settings.json
             if (headerStr == "/sgnittes|") {
@@ -160,14 +160,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendStringToWs("ssidli", ssidListHeapJson, num);
             }
 
-            // запуск асинхронного сканирования wifi сетей при нажатии выпадающего
-            // списка
-            if (headerStr == "/scan|") {
-                std::vector<String> jArray;
-                jsonReadArray(settingsFlashJson, "routerssid", jArray);
-                RouterFind(jArray);
-                sendStringToWs("ssidli", ssidListHeapJson, num);
-            }
+        // запуск асинхронного сканирования wifi сетей при нажатии выпадающего
+        // списка
+        if (headerStr == "/scan|") {
+            AsyncRouterFind(_scan_for_ws);
+        }
 
             //----------------------------------------------------------------------//
             // Страница веб интерфейса list
