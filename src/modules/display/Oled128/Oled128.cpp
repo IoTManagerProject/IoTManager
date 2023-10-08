@@ -35,7 +35,7 @@ class Oled128 : public IoTItem {
 
         jsonRead(parameters, "addr", addr);
         if (addr == "") {
-            // scanI2C();
+            scanI2C();
             return;
         }
 
