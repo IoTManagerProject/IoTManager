@@ -1,0 +1,99 @@
+{
+    "menuSection": "screens",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "OLED экран 64 8266",
+            "type": "Reading",
+            "subtype": "Oled64",
+            "id": "Oled",
+            "widget": "inputTxt",
+            "page": "screens",
+            "descr": "OLED Экран",
+            "addr": "0x3C",
+            "coord": "0,0",
+            "size": "1",
+            "id2show": "",
+            "prefix": "",
+            "postfix": ""
+        }
+    ],
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "Valentin Khandriga @Valiuhaaa",
+        "moduleName": "Oled64",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "Модуль отображения на экранах OLED 64*48",
+        "moduleDesc": "Позволяет выводить на OLED экраны по указанным позициям значения других элементов конфигурации.",
+        "propInfo": {
+            "int": "Период времени в секундах обновления информации на экране по конкретному элементу.",
+            "addr": "Адрес устройства на шине, обычно 0x3C.",
+            "size": "Размерность шрифта экрана.",
+            "coord": "Координата позиции для вывода данных элемента конфигурации.",
+            "id2show": "id элемента конфигурации.",
+            "size": "Размер шрифта. Допускается 1 , 2, 3, 4"
+        },
+        "funcInfo": [
+            {
+                "name": "x",
+                "descr": "Устанавливает первую координату",
+                "params": [
+                    "Номер строки первого символа"
+                ]
+            },
+            {
+                "name": "y",
+                "descr": "Устанавливает вторую координату",
+                "params": [
+                    "Номер столбца первого символа"
+                ]
+            },
+            {
+                "name": "descr",
+                "descr": "Задает приставку слева от значения",
+                "params": [
+                    "Строка"
+                ]
+            },
+            {
+                "name": "descr1",
+                "descr1": "Задает приставку справа от значения",
+                "params": [
+                    "Строка"
+                ]
+            },
+            {
+                "name": "id2show",
+                "descr": "Задает ИД элемента, значение которого хотим отображать на экране",
+                "params": [
+                    "Имя элемента конфигурации"
+                ]
+            }
+        ]
+    },
+    "defActive": true,
+    "usedLibs": {
+        "esp32_4mb": [
+            "https://github.com/stblassitude/Adafruit_SSD1306_Wemos_OLED",
+            "https://github.com/adafruit/Adafruit-GFX-Library"
+        ],
+        "esp8266_4mb": [
+            "https://github.com/stblassitude/Adafruit_SSD1306_Wemos_OLED",
+            "https://github.com/adafruit/Adafruit-GFX-Library"
+        ],
+        "esp8266_1mb": [
+            "https://github.com/stblassitude/Adafruit_SSD1306_Wemos_OLED",
+            "https://github.com/adafruit/Adafruit-GFX-Library"
+        ],
+        "esp8266_1mb_ota": [
+            "https://github.com/stblassitude/Adafruit_SSD1306_Wemos_OLED",
+            "https://github.com/adafruit/Adafruit-GFX-Library"
+        ]
+    }
+}

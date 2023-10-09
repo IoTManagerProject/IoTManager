@@ -730,7 +730,20 @@
     },
     {
         "global": 0,
-        "name": "48. Сервопривод",
+        "name": "48. HttpGet",
+        "type": "Writing",
+        "subtype": "HttpGet",
+        "id": "http",
+        "widget": "",
+        "page": "",
+        "descr": "",
+        "token": "",
+        "chatID": "",
+        "num": 48
+    },
+    {
+        "global": 0,
+        "name": "49. Сервопривод",
         "type": "Writing",
         "subtype": "IoTServo",
         "id": "servo",
@@ -741,11 +754,11 @@
         "pin": 12,
         "apin": -1,
         "amap": "0, 4096, 0, 180",
-        "num": 48
+        "num": 49
     },
     {
         "global": 0,
-        "name": "49. Расширитель портов Mcp23017",
+        "name": "50. Расширитель портов Mcp23017",
         "type": "Reading",
         "subtype": "Mcp23017",
         "id": "Mcp",
@@ -755,11 +768,11 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 49
+        "num": 50
     },
     {
         "global": 0,
-        "name": "50. MP3 плеер",
+        "name": "51. MP3 плеер",
         "type": "Reading",
         "subtype": "Mp3",
         "id": "mp3",
@@ -769,11 +782,11 @@
         "int": 1,
         "pins": "14,12",
         "volume": 20,
-        "num": 50
+        "num": 51
     },
     {
         "global": 0,
-        "name": "51. Сенсорная кнопка",
+        "name": "52. Сенсорная кнопка",
         "type": "Writing",
         "subtype": "Multitouch",
         "id": "impulse",
@@ -787,11 +800,11 @@
         "pinMode": "INPUT",
         "debounceDelay": 50,
         "PWMDelay": 500,
-        "num": 51
+        "num": 52
     },
     {
         "global": 0,
-        "name": "52. Расширитель портов Pcf8574",
+        "name": "53. Расширитель портов Pcf8574",
         "type": "Reading",
         "subtype": "Pcf8574",
         "id": "Pcf",
@@ -801,11 +814,11 @@
         "int": "0",
         "addr": "0x20",
         "index": 1,
-        "num": 52
+        "num": 53
     },
     {
         "global": 0,
-        "name": "53. PWM ESP8266",
+        "name": "54. PWM ESP8266",
         "type": "Writing",
         "subtype": "Pwm8266",
         "id": "pwm",
@@ -817,11 +830,11 @@
         "freq": 5000,
         "val": 0,
         "apin": -1,
-        "num": 53
+        "num": 54
     },
     {
         "global": 0,
-        "name": "54. Телеграм-Лайт",
+        "name": "55. Телеграм-Лайт",
         "type": "Writing",
         "subtype": "TelegramLT",
         "id": "tg",
@@ -830,14 +843,14 @@
         "descr": "",
         "token": "",
         "chatID": "",
-        "num": 54
+        "num": 55
     },
     {
         "header": "screens"
     },
     {
         "global": 0,
-        "name": "55. LCD экран 2004",
+        "name": "56. LCD экран 2004",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -850,10 +863,10 @@
         "id2show": "",
         "prefix": "",
         "postfix": "",
-        "num": 55
+        "num": 56
     },
     {
-        "name": "56. LCD экран 1602",
+        "name": "57. LCD экран 1602",
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
@@ -866,11 +879,28 @@
         "id2show": "",
         "prefix": "",
         "postfix": "",
-        "num": 56
+        "num": 57
     },
     {
         "global": 0,
-        "name": "57. 7 сегментный дисплей TM16XX",
+        "name": "58. OLED экран 64 8266",
+        "type": "Reading",
+        "subtype": "Oled64",
+        "id": "Oled",
+        "widget": "inputTxt",
+        "page": "screens",
+        "descr": "OLED Экран",
+        "addr": "0x3C",
+        "coord": "0,0",
+        "size": "1",
+        "id2show": "",
+        "prefix": "",
+        "postfix": "",
+        "num": 58
+    },
+    {
+        "global": 0,
+        "name": "59. 7 сегментный дисплей TM16XX",
         "type": "Writing",
         "subtype": "TM16XX",
         "id": "tm",
@@ -886,6 +916,6 @@
         "intensity": "5",
         "on": "1",
         "id2show": "",
-        "num": 57
+        "num": 59
     }
 ]
