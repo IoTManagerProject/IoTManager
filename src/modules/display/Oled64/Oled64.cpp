@@ -3,8 +3,6 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 
-#include <map>
-
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
