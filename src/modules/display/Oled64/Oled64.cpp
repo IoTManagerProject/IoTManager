@@ -52,7 +52,6 @@ class Oled64 : public IoTItem {
     }
 
     void drawItem(IoTItem *item) {
-        Serial.println("drawItem");
         String tmpStr = _prefix;
         tmpStr += item->getValue();
         tmpStr += _postfix;
