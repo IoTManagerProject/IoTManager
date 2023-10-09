@@ -1,4 +1,27 @@
 {
+    "iotmSettings": {
+        "name": "IoTmanagerVer4",
+        "apssid": "IoTmanager",
+        "appass": "",
+        "routerssid": "iot",
+        "routerpass": "hostel3333",
+        "timezone": 2,
+        "ntp": "pool.ntp.org",
+        "weblogin": "admin",
+        "webpass": "admin",
+        "mqttServer": "",
+        "mqttPort": 8021,
+        "mqttPrefix": "/risenew",
+        "mqttUser": "rise",
+        "mqttPass": "3hostel3",
+        "serverip": "http://iotmanager.org",
+        "log": 0,
+        "mqttin": 0,
+        "pinSCL": 0,
+        "pinSDA": 0,
+        "i2cFreq": 100000,
+        "wg": "group1"
+    },
     "projectProp": {
         "platformio": {
             "default_envs": "esp8266_4mb"

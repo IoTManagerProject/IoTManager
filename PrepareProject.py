@@ -210,6 +210,7 @@ with open("platformio.ini", 'w') as configFile:
 # сохраняем часть применяемого профиля в папку data_svelte для загрузки на контроллер и дальнейшего переиспользования
 print(f"Saving profile {profile} in /data_svelte/flashProfile.json")
 shortProfJson = json.loads('{}')
+shortProfJson['iotmSettings'] = profJson['iotmSettings']
 shortProfJson['projectProp'] = {
         'platformio': {
             'default_envs': deviceName
