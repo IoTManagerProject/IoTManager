@@ -12,7 +12,6 @@
       "descr": "",
       "sensor": "",
       "topic": "",
-      "addPrefix": 0,
       "isJson": 1,
       "round": "",
       "orange": 60,
@@ -24,7 +23,7 @@
   ],
   "about": {
     "authorName": "AVAKS",
-    "authorContact": "https://t.me/@avaks_dev",
+    "authorContact": "https://t.me/@avaks",
     "authorGit": "https://github.com/avaksru",
     "specialThanks": "",
     "moduleName": "ExternalMQTT",
@@ -53,6 +52,7 @@
   "usedLibs": {
     "esp32_4mb": [],
     "esp32s2_4mb": [],
+    "esp32cam_4mb": [],
     "esp8266_4mb": [],
     "esp8266_1mb": [],
     "esp8266_1mb_ota": [],

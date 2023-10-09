@@ -15,7 +15,10 @@
 # 
 # поддерживаемые контроллеры (профили):
 # esp8266_4mb
+# esp8266_16mb
 # esp32_4mb
+# esp32cam_4mb
+# esp32_16mb
 # esp32s2_4mb
 # esp8266_1mb
 # esp8266_1mb_ota
@@ -29,6 +32,7 @@ import configparser
 import os, json, sys, getopt
 from pathlib import Path
 import shutil
+from distutils.dir_util import copy_tree
 
 
 config = configparser.ConfigParser()  # создаём объекта парсера INI
@@ -122,23 +126,19 @@ else:
 # определяем какое устройство используется в профиле
 deviceName = profJson['projectProp']['platformio']['default_envs']  
 
-# назначаем папку с файлами прошивки в зависимости от устройства и запоминаем в профиле
-dataDir = 'data_svelte'
+# заполняем папку /data файлами прошивки в зависимости от устройства
 if deviceName == 'esp8266_1mb_ota' or deviceName == 'esp8285_1mb_ota' or deviceName == 'esp8266_2mb_ota': 
-    dataDir = 'data_svelte_lite'
-profJson['projectProp'] = {
-    'platformio': {
-        'data_dir': dataDir
-    }
-}
+    copy_tree("data_lite", "data_svelte")
+else:
+    copy_tree("data_full", "data_svelte")
     
 # генерируем файлы проекта на основе подготовленного профиля
 # заполняем конфигурационный файл прошивки параметрами из профиля
-with open(dataDir + "/settings.json", "r", encoding='utf-8') as read_file:
+with open("data_svelte/settings.json", "r", encoding='utf-8') as read_file:
     iotmJson = json.load(read_file)
 for key, value in profJson['iotmSettings'].items():
     iotmJson[key] = value
-with open(dataDir + "/settings.json", "w", encoding='utf-8') as write_file:
+with open("data_svelte/settings.json", "w", encoding='utf-8') as write_file:
     json.dump(iotmJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
 
 
@@ -167,7 +167,7 @@ for section, modules in profJson['modules'].items():
                         configItemsJson['name'] = str(itemsCount) + ". " + configItemsJson['name']
                         itemsCount = itemsCount + 1
                         itemsJson.append(configItemsJson)        
-with open(dataDir + "/items.json", "w", encoding='utf-8') as write_file:
+with open("data_svelte/items.json", "w", encoding='utf-8') as write_file:
     json.dump(itemsJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
 
 
@@ -202,14 +202,23 @@ config.read("platformio.ini")
 config["env:" + deviceName + "_fromitems"]["lib_deps"] = allLibs
 config["env:" + deviceName + "_fromitems"]["build_src_filter"] = includeDirs
 config["platformio"]["default_envs"] = deviceName
-config["platformio"]["data_dir"] = profJson['projectProp']['platformio']['data_dir']
+# config["platformio"]["data_dir"] = profJson['projectProp']['platformio']['data_dir']
 with open("platformio.ini", 'w') as configFile:
     config.write(configFile)
     
-# сохраняем применяемый профиль в папку data_svelte для загрузки на контроллер и дальнейшего переиспользования
-print(f"Saving profile {profile} in {dataDir}")
-shutil.copy(profile, dataDir + "/" + profile) 
-
+    
+# сохраняем часть применяемого профиля в папку data_svelte для загрузки на контроллер и дальнейшего переиспользования
+print(f"Saving profile {profile} in /data_svelte/flashProfile.json")
+shortProfJson = json.loads('{}')
+shortProfJson['projectProp'] = {
+        'platformio': {
+            'default_envs': deviceName
+        }
+    }
+shortProfJson['modules'] = profJson['modules']
+with open("data_svelte/flashProfile.json", "w", encoding='utf-8') as write_file:
+    json.dump(shortProfJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
+    
     
 # import ctypes  # An included library with Python install.   
 # if update:    
@@ -218,6 +227,7 @@ shutil.copy(profile, dataDir + "/" + profile)
 #     ctypes.windll.user32.MessageBoxW(0, "Профиль " + profile + " применен, можно запускать компиляцию и прошивку.", "Операция завершена.", 0)
 
 if update:    
+    shutil.copy(profile, "compilerProfile.json") 
     print(f"\x1b[1;31;42m Profile modules " + profile + " updated, profile applied, you can run compilation and firmware.\x1b[0m")
     
 else:

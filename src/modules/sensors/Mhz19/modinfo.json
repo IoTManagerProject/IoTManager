@@ -82,6 +82,7 @@
         "esp32s2_4mb": [
             "plerup/EspSoftwareSerial"
         ],
+        "esp32cam_4mb": [],
         "esp8266_4mb": []
     }
 }

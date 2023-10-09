@@ -62,6 +62,9 @@
         "esp32_4mb": [
             "https://github.com/tremaru/iarduino_RTC"
         ],
+        "esp32cam_4mb": [
+            "https://github.com/tremaru/iarduino_RTC"
+        ],
         "esp8266_4mb": [
             "https://github.com/tremaru/iarduino_RTC"
         ],

@@ -1,97 +1,7 @@
 {
-    "iotmSettings": {
-        "name": "IoTmanagerVer4",
-        "apssid": "IoTmanager",
-        "appass": "",
-        "routerssid": "iot",
-        "routerpass": "hostel3333",
-        "timezone": 2,
-        "ntp": "pool.ntp.org",
-        "weblogin": "admin",
-        "webpass": "admin",
-        "mqttServer": "",
-        "mqttPort": 8021,
-        "mqttPrefix": "/risenew",
-        "mqttUser": "rise",
-        "mqttPass": "3hostel3",
-        "serverip": "http://iotmanager.org",
-        "log": 0,
-        "mqttin": 0,
-        "pinSCL": 0,
-        "pinSDA": 0,
-        "i2cFreq": 100000,
-        "wg": "group1"
-    },
     "projectProp": {
         "platformio": {
-            "default_envs": "esp8266_4mb",
-            "comments_default_envs": "choose from: esp8266_4mb or esp32_4mb or esp32s2_4mb or esp8266_1mb or esp8266_1mb_ota or esp8285_1mb or esp8285_1mb_ota",
-            "envs": [
-                {
-                    "name": "esp8266_4mb",
-                    "firmware": "0x00000",
-                    "littlefs": "0x300000"
-                },
-                {
-                    "name": "esp8266_16mb",
-                    "firmware": "0x00000",
-                    "littlefs": "0x200000"
-                },
-                {
-                    "name": "esp32_4mb",
-                    "boot_app0": "0xe000",
-                    "bootloader_qio_80m": "0x1000",
-                    "firmware": "0x10000",
-                    "partitions": "0x8000",
-                    "littlefs": "0x290000"
-                },
-                {
-                    "name": "esp32_16mb",
-                    "boot_app0": "0xe000",
-                    "bootloader_qio_80m": "0x1000",
-                    "firmware": "0x10000",
-                    "partitions": "0x8000",
-                    "littlefs": "0x910000"
-                },
-                {
-                    "name": "esp8266_1mb",
-                    "firmware": "0x00000000",
-                    "littlefs": "0x000bb000"
-                },
-                {
-                    "name": "esp8266_1mb_ota",
-                    "firmware": "0x00000000",
-                    "littlefs": "0x000eb000"
-                },
-                {
-                    "name": "esp8266_2mb",
-                    "firmware": "0x00000000",
-                    "littlefs": "0x00100000"
-                },
-                {
-                    "name": "esp8266_2mb_ota",
-                    "firmware": "0x00000000",
-                    "littlefs": "0x001c0000"
-                },
-                {
-                    "name": "esp8285_1mb",
-                    "firmware": "0x00000000",
-                    "littlefs": "0x000bb000"
-                },
-                {
-                    "name": "esp8285_1mb_ota",
-                    "firmware": "0x00000000",
-                    "littlefs": "0x000eb000"
-                },
-                {
-                    "name": "esp32s2_4mb",
-                    "boot_app0": "0xe000",
-                    "bootloader_qio_80m": "0x1000",
-                    "firmware": "0x10000",
-                    "partitions": "0x8000",
-                    "littlefs": "0x290000"
-                }
-            ]
+            "default_envs": "esp8266_4mb"
         }
     },
     "modules": {
@@ -110,6 +20,10 @@
             },
             {
                 "path": "src/modules/virtual/LogingDaily",
+                "active": true
+            },
+            {
+                "path": "src/modules/virtual/owmWeather",
                 "active": true
             },
             {
@@ -318,7 +232,7 @@
             },
             {
                 "path": "src/modules/exec/HttpGet",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/exec/IoTServo",
@@ -373,6 +287,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/exec/Telegram_v2",
+                "active": false
+            },
+            {
                 "path": "src/modules/exec/Thermostat",
                 "active": false
             },
@@ -397,6 +315,10 @@
             {
                 "path": "src/modules/display/Oled128",
                 "active": false
+            },
+            {
+                "path": "src/modules/display/Oled64",
+                "active": true
             },
             {
                 "path": "src/modules/display/Smi2_m",

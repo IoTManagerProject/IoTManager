@@ -9,8 +9,7 @@ void standWebSocketsInit() {
     SerialPrint("i", "WS", "WS server initialized");
 }
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
-                    size_t length) {
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length) {
     switch (type) {
         case WStype_ERROR: {
             Serial.printf("[%u] Error!\n", num);
@@ -64,20 +63,17 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
             if (headerStr == "/params|") {
                 // публикация всех статус сообщений при подключении svelte приложения
                 String params = "{}";
-                for (std::list<IoTItem*>::iterator it = IoTItems.begin();
-                     it != IoTItems.end(); ++it) {
+                for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->getSubtype() != "Loging") {
                         if ((*it)->getSubtype() != "LogingDaily") {
-                            if ((*it)->iAmLocal)
-                                jsonWriteStr(params, (*it)->getID(), (*it)->getValue());
+                            if ((*it)->iAmLocal) jsonWriteStr(params, (*it)->getID(), (*it)->getValue());
                         }
                     }
                 }
                 sendStringToWs("params", params, num);
 
                 // генерация события подключения в модулях
-                for (std::list<IoTItem*>::iterator it = IoTItems.begin();
-                     it != IoTItems.end(); ++it) {
+                for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->iAmLocal) (*it)->onMqttWsAppConnectEvent();
                 }
             }
@@ -86,8 +82,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
             if (headerStr == "/charts|") {
                 // обращение к логированию из ядра
                 // отправка данных графиков только в выбранный сокет
-                for (std::list<IoTItem*>::iterator it = IoTItems.begin();
-                     it != IoTItems.end(); ++it) {
+                for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     // сбрасываем даты графиков
                     //  if ((*it)->getID().endsWith("-date")) {
                     //     (*it)->setTodayDate();
@@ -114,16 +109,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
 
             // обработка кнопки сохранить
             if (headerStr == "/gifnoc|") {
-                writeFileUint8tByFrames("config.json", payload, length, headerLenth,
-                                        256);
+                writeFileUint8tByFrames("config.json", payload, length, headerLenth, 256);
             }
             if (headerStr == "/tuoyal|") {
-                writeFileUint8tByFrames("layout.json", payload, length, headerLenth,
-                                        256);
+                writeFileUint8tByFrames("layout.json", payload, length, headerLenth, 256);
             }
             if (headerStr == "/oiranecs|") {
-                writeFileUint8tByFrames("scenario.txt", payload, length, headerLenth,
-                                        256);
+                writeFileUint8tByFrames("scenario.txt", payload, length, headerLenth, 256);
                 clearConfigure();
                 configure("/config.json");
                 iotScen.loadScenario("/scenario.txt");
@@ -138,6 +130,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
 
             // отвечаем данными на запрос страницы
             if (headerStr == "/connection|") {
+                sendFileToWsByFrames("/widgets.json", "widget", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
                 sendStringToWs("settin", settingsFlashJson, num);
                 sendStringToWs("ssidli", ssidListHeapJson, num);
                 sendStringToWs("errors", errorsHeapJson, num);
@@ -149,8 +143,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
             // обработка кнопки сохранить settings.json
             if (headerStr == "/sgnittes|") {
                 writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
-                writeFileUint8tByFrames("settings.json", payload, length, headerLenth,
-                                        256);
+                writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 sendStringToWs("errors", errorsHeapJson, num);
                 // если не было создано приема данных по udp - то создадим его
                 addThisDeviceToList();
@@ -196,8 +189,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
 
             // сохраняем данные листа
             if (headerStr == "/tsil|") {
-                writeFileUint8tByFrames("devlist.json", payload, length, headerLenth,
-                                        256);
+                writeFileUint8tByFrames("devlist.json", payload, length, headerLenth, 256);
             }
 
             //----------------------------------------------------------------------//
@@ -226,8 +218,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
             // Страница веб интерфейса update
             //----------------------------------------------------------------------//
             if (headerStr == "/profile|") {
-                sendFileToWsByFrames("/myProfile.json", "prfile", "", num,
-                                     WEB_SOCKETS_FRAME_SIZE);
+                // для версии 451 отдаем myProfile.json
+                if (FileFS.exists("/myProfile.json")) {
+                    sendFileToWsByFrames("/myProfile.json", "prfile", "", num, WEB_SOCKETS_FRAME_SIZE);
+                    // для версии 452 и более отдаем flashProfile.json
+                } else if (FileFS.exists("/flashProfile.json")) {
+                    sendFileToWsByFrames("/flashProfile.json", "prfile", "", num, WEB_SOCKETS_FRAME_SIZE);
+                }
             }
 
             //----------------------------------------------------------------------//
@@ -282,8 +279,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload,
 
                 SerialPrint("i", F("=>WS"), "Msg from module, id: " + id);
 
-                for (std::list<IoTItem*>::iterator it = IoTItems.begin();
-                     it != IoTItems.end(); ++it) {
+                for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
                     if ((*it)->getID() == id) {
                         (*it)->onModuleOrder(key, value);
                     }
@@ -359,8 +355,7 @@ void periodicWsSend() {
 #ifdef ESP32
 void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
     const uint8_t* src = (const uint8_t*)mem;
-    Serial.printf("\n[HEXDUMP] Address: 0x%08X len: 0x%X (%d)", (ptrdiff_t)src,
-                  len, len);
+    Serial.printf("\n[HEXDUMP] Address: 0x%08X len: 0x%X (%d)", (ptrdiff_t)src, len, len);
     for (uint32_t i = 0; i < len; i++) {
         if (i % cols == 0) {
             Serial.printf("\n[0x%08X] 0x%08X: ", (ptrdiff_t)src, i);
@@ -373,8 +368,7 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
 #endif
 #endif
 
-void sendFileToWsByFrames(const String& filename, const String& header,
-                          const String& json, int client_id, size_t frameSize) {
+void sendFileToWsByFrames(const String& filename, const String& header, const String& json, int client_id, size_t frameSize) {
     if (header.length() != 6) {
         SerialPrint("E", "FS", F("wrong header size"));
         return;
@@ -478,12 +472,9 @@ void sendDeviceList(uint8_t num) {
         sendStringToWs("devlis", devListHeapJson, num);
     } else {
         // если выключен автопоиск то отдаем список из флешь памяти
-        sendFileToWsByFrames("/devlist.json", "devlis", "", num,
-                             WEB_SOCKETS_FRAME_SIZE);
+        sendFileToWsByFrames("/devlist.json", "devlis", "", num, WEB_SOCKETS_FRAME_SIZE);
         SerialPrint("i", "FS", "flash list");
     }
 }
 
-int getNumWSClients() {
-    return standWebSocket.connectedClients(false);
-}
+int getNumWSClients() { return standWebSocket.connectedClients(false); }

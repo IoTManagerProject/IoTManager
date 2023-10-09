@@ -11,27 +11,27 @@
             "page": "",
             "descr": "",
             "int": 60,
-            "useLed": 0,
+            "flashOn": 0,
             "ticker": 0,
             "webTicker": 0
         }
     ],
     "about": {
-        "authorName": "Ilya Belyakov",
+        "authorName": "Ilya Belyakov, Mikhail Bubnov",
         "authorContact": "https://t.me/Biveraxe",
         "authorGit": "https://github.com/biveraxe",
         "specialThanks": "",
         "moduleName": "EspCam",
-        "moduleVersion": "2.1",
+        "moduleVersion": "3.0",
         "usedRam": {
             "esp32_4mb": 15,
             "esp8266_4mb": 15
         },
         "title": "Camera OV2640 (ESPcam)",
-        "moduleDesc": "Предназначен для специальной платы esp32 со встроенной камерой. Добавляет в прошивку функцию создания фото и сохранения на SD при наличии. По адресу /getpic можно получить текущее фото (работает в том числе без SD карты).",
+        "moduleDesc": "Предназначен для специальной платы esp32 со встроенной камерой. Добавляет в прошивку функцию создания фото и сохранения на SD при наличии. По адресу /getpic можно получить текущее фото (работает в том числе без SD карты). Отправка фото в телеграмм через модуль Telegram_v2",
         "propInfo": {
             "int": "Пауза в секундах во время постоянной фотосъемки.",
-            "useLed": "использовать диод подсветки при съемке.",
+            "flashOn": "использовать диод подсветки при съемке. используем = 1 или нет = 0 подсветку (вспышку)",
             "ticker": "Генерировать(1) или нет(0) событие с интервалом int",
             "webTicker": "Генерировать(1) или нет(0) событие при обращении через веб-страницу по адресу /getpic."
         },
@@ -41,23 +41,31 @@
                 "descr": "Сохранить снимок на SD",
                 "params": []
             },
+            {   
+                "name": "sendFoto",
+                "descr": "Отправить фото с esp-CAM в телеграмм",
+                "params": [""]
+            },
+            {   
+                "name": "editFoto",
+                "descr": "Отредактировать последнее отправленное фото в телеграмм",
+                "params": [""]
+            }, 
             {
-                "name": "ledOn",
-                "descr": "Включить подсветку",
-                "params": [
-                    "Яркость 0-255"
-                ]
+                "name": "flashOn",
+                "descr": "Включить вспышку",
+                "params": []
             },
             {
-                "name": "ledOff",
-                "descr": "Отключить подсветку",
+                "name": "flashOff",
+                "descr": "Отключить вспышку",
                 "params": []
             }
         ]
     },
     "defActive": false,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32cam_4mb": [
             "espressif/esp32-camera @ ^2.0.0"
         ]
     }

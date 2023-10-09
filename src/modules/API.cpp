@@ -3,6 +3,7 @@
 void* getAPI_Cron(String subtype, String params);
 void* getAPI_Loging(String subtype, String params);
 void* getAPI_LogingDaily(String subtype, String params);
+void* getAPI_owmWeather(String subtype, String params);
 void* getAPI_Timer(String subtype, String params);
 void* getAPI_Variable(String subtype, String params);
 void* getAPI_VariableColor(String subtype, String params);
@@ -27,6 +28,7 @@ void* getAPI_ButtonIn(String subtype, String params);
 void* getAPI_ButtonOut(String subtype, String params);
 void* getAPI_Buzzer(String subtype, String params);
 void* getAPI_Encoder(String subtype, String params);
+void* getAPI_HttpGet(String subtype, String params);
 void* getAPI_IoTServo(String subtype, String params);
 void* getAPI_Mcp23017(String subtype, String params);
 void* getAPI_Mp3(String subtype, String params);
@@ -35,6 +37,7 @@ void* getAPI_Pcf8574(String subtype, String params);
 void* getAPI_Pwm8266(String subtype, String params);
 void* getAPI_TelegramLT(String subtype, String params);
 void* getAPI_Lcd2004(String subtype, String params);
+void* getAPI_Oled64(String subtype, String params);
 void* getAPI_TM16XX(String subtype, String params);
 
 void* getAPI(String subtype, String params) {
@@ -42,6 +45,7 @@ void* tmpAPI;
 if ((tmpAPI = getAPI_Cron(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Loging(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_LogingDaily(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_owmWeather(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Timer(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Variable(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_VariableColor(subtype, params)) != nullptr) return tmpAPI;
@@ -66,6 +70,7 @@ if ((tmpAPI = getAPI_ButtonIn(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_ButtonOut(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Buzzer(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Encoder(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_HttpGet(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_IoTServo(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Mcp23017(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Mp3(subtype, params)) != nullptr) return tmpAPI;
@@ -74,6 +79,7 @@ if ((tmpAPI = getAPI_Pcf8574(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Pwm8266(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_TelegramLT(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Lcd2004(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_Oled64(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_TM16XX(subtype, params)) != nullptr) return tmpAPI;
 return nullptr;
 }
