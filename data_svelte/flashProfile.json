@@ -24,7 +24,7 @@
             },
             {
                 "path": "src/modules/virtual/owmWeather",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/virtual/Timer",
@@ -232,7 +232,7 @@
             },
             {
                 "path": "src/modules/exec/HttpGet",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/exec/IoTServo",
