@@ -4,6 +4,8 @@ updateFirm update;
 
 void upgrade_firmware(int type, String path) {
     putUserDataToRam();
+    // сбросим файл статуса последнего обновления
+    writeFile("ota.json", "{}");
 
     // only build
     if (type == 1) {
@@ -36,10 +38,10 @@ bool upgradeFS(String path) {
     bool ret = false;
     WiFiClient wifiClient;
     SerialPrint("!!!", F("Update"), "Start upgrade FS... " + path);
-    handleUpdateStatus(true, UPDATE_FS_IN_PROGRESS);
+
     if (path == "") {
         SerialPrint("E", F("Update"), F("FS Path error"));
-        handleUpdateStatus(true, PATH_ERROR);
+        saveUpdeteStatus("fs", PATH_ERROR);
         return ret;
     }
 #ifdef ESP8266
@@ -55,10 +57,10 @@ bool upgradeFS(String path) {
     // если FS обновилась успешно
     if (retFS == HTTP_UPDATE_OK) {
         SerialPrint("!!!", F("Update"), F("FS upgrade done!"));
-        handleUpdateStatus(true, UPDATE_FS_COMPLETED);
+        saveUpdeteStatus("fs", UPDATE_COMPLETED);
         ret = true;
     } else {
-        handleUpdateStatus(true, UPDATE_FS_FAILED);
+        saveUpdeteStatus("fs", UPDATE_FAILED);
         if (retFS == HTTP_UPDATE_FAILED) {
             SerialPrint("E", F("Update"), "HTTP_UPDATE_FAILED");
         } else if (retFS == HTTP_UPDATE_NO_UPDATES) {
@@ -72,10 +74,10 @@ bool upgradeBuild(String path) {
     bool ret = false;
     WiFiClient wifiClient;
     SerialPrint("!!!", F("Update"), "Start upgrade BUILD... " + path);
-    handleUpdateStatus(true, UPDATE_BUILD_IN_PROGRESS);
+
     if (path == "") {
         SerialPrint("E", F("Update"), F("Build Path error"));
-        handleUpdateStatus(true, PATH_ERROR);
+        saveUpdeteStatus("build", PATH_ERROR);
         return ret;
     }
 #if defined(esp8266_4mb) || defined(esp8266_16mb) || defined(esp8266_1mb) || defined(esp8266_1mb_ota) || defined(esp8266_2mb) || defined(esp8266_2mb_ota)
@@ -90,10 +92,10 @@ bool upgradeBuild(String path) {
     // если BUILD обновился успешно
     if (retBuild == HTTP_UPDATE_OK) {
         SerialPrint("!!!", F("Update"), F("BUILD upgrade done!"));
-        handleUpdateStatus(true, UPDATE_BUILD_COMPLETED);
+        saveUpdeteStatus("build", UPDATE_COMPLETED);
         ret = true;
     } else {
-        handleUpdateStatus(true, UPDATE_BUILD_FAILED);
+        saveUpdeteStatus("build", UPDATE_FAILED);
         if (retBuild == HTTP_UPDATE_FAILED) {
             SerialPrint("E", F("Update"), "HTTP_UPDATE_FAILED");
         } else if (retBuild == HTTP_UPDATE_NO_UPDATES) {
@@ -132,7 +134,7 @@ void putUserDataToRam() {
     update.settingsFlashJson = readFile("settings.json", 4096);
     update.layoutJson = readFile("layout.json", 4096);
     update.scenarioTxt = readFile("scenario.txt", 4096);
-    update.chartsData = createDataBaseSting();
+    // update.chartsData = createDataBaseSting();
 }
 
 void saveUserDataToFlash() {
@@ -140,10 +142,13 @@ void saveUserDataToFlash() {
     writeFile("/settings.json", update.settingsFlashJson);
     writeFile("/layout.json", update.layoutJson);
     writeFile("/scenario.txt", update.scenarioTxt);
-    writeDataBaseSting(update.chartsData);
+    // writeDataBaseSting(update.chartsData);
 }
 
-void handleUpdateStatus(bool send, int state) {
-    jsonWriteInt_(errorsHeapJson, F("upd"), state);
-    if (send) sendStringToWs("errors", errorsHeapJson, -1);
+void saveUpdeteStatus(String key, int val) {
+    const String path = "ota.json";
+    String json = readFile(path, 1024);
+    if (json == "failed") json = "{}";
+    jsonWriteInt_(json, key, val);
+    writeFile(path, json);
 }

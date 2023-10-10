@@ -2,7 +2,7 @@
 #include "BuildTime.h"
 
 // Версия прошивки
-#define FIRMWARE_VERSION 453
+#define FIRMWARE_VERSION 454
 
 #ifdef esp8266_1mb_ota
 #define FIRMWARE_NAME "esp8266_1mb_ota"
@@ -45,7 +45,7 @@
 #endif
 
 // Размер буфера json
-#define JSON_BUFFER_SIZE 4096 // держим 2 кб не меняем
+#define JSON_BUFFER_SIZE 4096  // держим 2 кб не меняем
 
 /*
 WEB_SOCKETS_FRAME_SIZE создан для того что бы не загружать оперативку.
@@ -74,22 +74,24 @@ WEB_SOCKETS_FRAME_SIZE создан для того что бы не загру�
 
 #define USE_LITTLEFS true
 
-#define START_DATETIME 1661990400 // 01.09.2022 00:00:00 константа для сокращения unix time
+#define START_DATETIME 1661990400  // 01.09.2022 00:00:00 константа для сокращения unix time
 
 #define MIN_DATETIME 1575158400
 #define LEAP_YEAR(Y) (((1970 + Y) > 0) && !((1970 + Y) % 4) && (((1970 + Y) % 100) || !((1970 + Y) % 400)))
 
 // задачи таскера
-enum TimerTask_t { WIFI_SCAN,
+enum TimerTask_t {
+    WIFI_SCAN,
     WIFI_MQTT_CONNECTION_CHECK,
     TIME,
     TIME_SYNC,
     UPTIME,
-    UDP, // UDPP
-    TIMES, // периодические секундные проверки
+    UDP,    // UDPP
+    TIMES,  // периодические секундные проверки
     PTASK,
     ST,
-    END };
+    END
+};
 
 // задачи которые надо протащить через loop
 enum NotAsyncActions {
@@ -99,15 +101,7 @@ enum NotAsyncActions {
 };
 
 // состояния обновления
-enum UpdateStates { NOT_STARTED,
-    UPDATE_FS_IN_PROGRESS,
-    UPDATE_FS_COMPLETED,
-    UPDATE_FS_FAILED,
-    UPDATE_BUILD_IN_PROGRESS,
-    UPDATE_BUILD_COMPLETED,
-    UPDATE_BUILD_FAILED,
-    PATH_ERROR
-};
+enum UpdateStates { UPDATE_COMPLETED, UPDATE_FAILED, PATH_ERROR };
 
 enum distination {
     TO_MQTT,

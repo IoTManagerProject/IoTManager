@@ -219,6 +219,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             //----------------------------------------------------------------------//
             if (headerStr == "/profile|") {
                 // для версии 451 отдаем myProfile.json
+                sendFileToWsByFrames("/ota.json", "otaupd", "", num, WEB_SOCKETS_FRAME_SIZE);
                 if (FileFS.exists("/myProfile.json")) {
                     sendFileToWsByFrames("/myProfile.json", "prfile", "", num, WEB_SOCKETS_FRAME_SIZE);
                     // для версии 452 и более отдаем flashProfile.json
