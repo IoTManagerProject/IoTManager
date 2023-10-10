@@ -2,13 +2,9 @@
 #include "utils/FileUtils.h"
 
 // new================================================================================
-String jsonReadStrDoc(DynamicJsonDocument &doc, String name) {
-    return doc[name].as<String>();
-}
+String jsonReadStrDoc(DynamicJsonDocument &doc, String name) { return doc[name].as<String>(); }
 
-void jsonWriteStrDoc(DynamicJsonDocument &doc, String name, String value) {
-    doc[name] = value;
-}
+void jsonWriteStrDoc(DynamicJsonDocument &doc, String name, String value) { doc[name] = value; }
 
 // new==============================================================================
 bool jsonRead(const String &json, String key, long &value, bool e) {
@@ -114,21 +110,14 @@ bool jsonReadArray(const String &json, String key, std::vector<String> &jArray, 
         }
         return false;
     }
-    //                SerialPrint("E", F("jsonReadArray"), key + " doc " + doc[key].as<String>());
+
     if (doc[key].is<JsonArray>()) {
-        for (int8_t i = 0; i < doc[key].size(); i++)
-            jArray.push_back(doc[key][i].as<String>());
-        //    SerialPrint("E", F("jsonReadArray"), "isArray"+key + " doc " + doc[key].as<String>());
+        for (int8_t i = 0; i < doc[key].size(); i++) jArray.push_back(doc[key][i].as<String>());
+
     } else {
         jArray.push_back(doc[key].as<String>());
-        //        DynamicJsonDocument docArr(JSON_BUFFER_SIZE/5);
-        //    jArray = doc[key].as<JsonArray>();
-        //    String tmp =  doc[key].as<String>();
-        //   jArray.add("dsdsd");
-        //        SerialPrint("E", F("jsonReadArray"), "notArray"+key + " doc " + doc[key].as<String>());
-        //    SerialPrint("E", F("jsonReadArray"), "count: " + String(jArray.size()) +" key: " + key + " arr " + jArray[0]);
     }
-    //    SerialPrint("E", F("jsonReadArray"), "count: " + String(jArray.size()) +" key: " + key + " doc " + jArray[0].as<String>());
+
     return true;
 }
 
