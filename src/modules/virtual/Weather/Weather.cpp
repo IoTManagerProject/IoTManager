@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 
 long prevWeatherMillis = millis() - 60001;
-StaticJsonDocument<JSON_BUFFER_SIZE * 2> Weatherdoc;
+//StaticJsonDocument<JSON_BUFFER_SIZE * 2> Weatherdoc;
 
 extern IoTGpio IoTgpio;
 class Weather : public IoTItem
@@ -12,9 +12,9 @@ private:
     String _location;
     String _param;
     // long interval;
-
+    DynamicJsonDocument Weatherdoc;
 public:
-    Weather(String parameters) : IoTItem(parameters)
+    Weather(String parameters) : Weatherdoc(1024), IoTItem(parameters)
     {
         _location = jsonReadStr(parameters, "location");
         _param = jsonReadStr(parameters, "param");

@@ -4,7 +4,7 @@
 #include "NTP.h"
 // long prevWeatherMillis = millis() - 60001;
 //  TODO Зачем так много???
-StaticJsonDocument<JSON_BUFFER_SIZE * 2> Weatherdoc1;
+// StaticJsonDocument<JSON_BUFFER_SIZE * 2> Weatherdoc1;
 
 extern IoTGpio IoTgpio;
 class owmWeather : public IoTItem
@@ -21,17 +21,19 @@ private:
     String _lon = "";
     String _lang = "";
     bool _debug = false;
+    DynamicJsonDocument Weatherdoc1;
 
 public:
-    owmWeather(String parameters) : IoTItem(parameters)
+    owmWeather(String parameters) : Weatherdoc1(1024), IoTItem(parameters) 
     {
         _API_key = jsonReadStr(parameters, "API_key");
         //    _ID_sity = jsonReadStr(parameters, "ID_sity");
-        _city = jsonReadStr(parameters, "city");
-        _lon = jsonReadStr(parameters, "lon");
-        _lat = jsonReadStr(parameters, "lat");
-        _lang = jsonReadStr(parameters, "lang");
-        _param = jsonReadStr(parameters, "param");
+        if (!jsonRead(parameters, "city", _city))
+            _city = "";
+        jsonRead(parameters, "lon", _lon);
+        jsonRead(parameters, "lat", _lat);
+        jsonRead(parameters, "lang", _lang);
+        jsonRead(parameters, "param", _param);
         jsonRead(parameters, "debug", _debug);
         long interval;
         jsonRead(parameters, F("int"), interval); // в минутах
@@ -79,7 +81,8 @@ public:
                     payload = http.getString();
 
                     deserializeJson(Weatherdoc1, payload);
-                    ret += payload;
+                    // ret += payload;
+                    SerialPrint("i", "Weatherdoc1", "memoryUsage: " + String(Weatherdoc1.memoryUsage()));
                 }
             }
             else
@@ -181,7 +184,7 @@ public:
     }
 
     // проверяем если пришедшее значение отличается от предыдущего регистрируем событие
-    static void publishNew(String root, String param)
+    void publishNew(String root, String param)
     {
         IoTItem *tmp = findIoTItem("wea_" + param);
         if (!tmp)
