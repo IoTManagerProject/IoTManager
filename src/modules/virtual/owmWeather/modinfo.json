@@ -1,6 +1,5 @@
 {
   "menuSection": "virtual_elments",
-
   "configItem": [
     {
       "global": 0,
@@ -24,7 +23,6 @@
       "debug": 0
     }
   ],
-
   "about": {
     "authorName": "Serghei Crasnicov, v2.0 Mikhail Bubnov",
     "authorContact": "https://t.me/Serghei63",
@@ -60,24 +58,14 @@
       "lon": "Долгота, при использовании координат, будет автоматически выбран ближайший город",
       "lat": "Широта, при использовании координат, будет автоматически выбран ближайший город",
       "lang": "Язык используемый в ответах OpenWetaherMap",
-      "debug":"1 - выводить дополнительный лог в сериал"      
+      "debug": "1 - выводить дополнительный лог в сериал"
     }
   },
-
-  "defActive": true,
-
+  "defActive": false,
   "usedLibs": {
     "esp32_4mb": [],
     "esp32_4mb3f": [],
     "esp32s2_4mb": [],
-    "esp32_16mb": [],
-    "esp8266_4mb": [],
-    "esp8266_16mb": [],    
-    "esp8266_1mb": [],
-    "esp8266_1mb_ota": [],
-    "esp8285_1mb": [],
-    "esp8285_1mb_ota": [],
-    "esp8266_2mb": [],
-    "esp8266_2mb_ota": []
+    "esp32_16mb": []
   }
 }

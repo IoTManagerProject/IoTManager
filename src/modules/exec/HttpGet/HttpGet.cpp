@@ -1,18 +1,12 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 
-class HttpGet : public IoTItem
-{
-public:
-    HttpGet(String parameters) : IoTItem(parameters)
-    {
-    }
+class HttpGet : public IoTItem {
+   public:
+    HttpGet(String parameters) : IoTItem(parameters) {}
 
-    void sendHttpPOST(String url, String msg)
-    {
-        if (isNetworkActive())
-        {
-
+    void sendHttpPOST(String url, String msg) {
+        if (isNetworkActive()) {
             WiFiClient client;
             HTTPClient http;
             http.begin(client, url);
@@ -23,26 +17,23 @@ public:
             SerialPrint("<-", F("HttpPOST"), "URL: " + url + ", msg: " + msg);
             SerialPrint("->", F("HttpPOST"), "URL: " + url + ", server: " + httpResponseCode);
 
-            if (httpResponseCode > 0)
-            {
+            if (httpResponseCode > 0) {
                 value.valS = payload;
+                value.isDecimal = false;
                 SerialPrint("->", F("HttpPOST"), "msg from server: " + (String)payload.c_str());
-                value.valS = payload;
                 regEvent(value.valS, "HttpGet");
             }
             http.end();
         }
     }
-    void sendHttpGET(String url)
-    {
+
+    void sendHttpGET(String url) {
         WiFiClient client;
         HTTPClient http;
 #if defined ESP8266
-        if (!http.begin(client, url))
-        {
+        if (!http.begin(client, url)) {
 #elif defined ESP32
-        if (!http.begin(url))
-        {
+        if (!http.begin(url)) {
 #endif
 
             SerialPrint("I", F("HttpGet"), "connection failed  ");
@@ -52,31 +43,23 @@ public:
         String payload = http.getString();
         SerialPrint("<-", F("HttpGET"), "URL: " + url);
         SerialPrint("->", F("HttpGET"), "URL: " + url + ", server: " + httpResponseCode);
-        if (httpResponseCode > 0)
-        {
+        if (httpResponseCode > 0) {
             value.valS = payload;
+            value.isDecimal = false;
             SerialPrint("->", F("HttpGET"), "msg from server: " + (String)payload.c_str());
-            value.valS = payload;
             regEvent(value.valS, "HttpGet");
         }
         http.end();
     }
 
-    IoTValue execute(String command, std::vector<IoTValue> &param)
-    {
-        if (param.size() > 0)
-        {
-            if (command == "get")
-            {
-                if (param.size())
-                {
+    IoTValue execute(String command, std::vector<IoTValue> &param) {
+        if (param.size() > 0) {
+            if (command == "get") {
+                if (param.size()) {
                     sendHttpGET(param[0].valS);
                 }
-            }
-            else if (command == "post")
-            {
-                if (param.size())
-                {
+            } else if (command == "post") {
+                if (param.size()) {
                     sendHttpPOST(param[0].valS, param[1].valS);
                 }
             }
@@ -87,14 +70,10 @@ public:
     ~HttpGet(){};
 };
 
-void *getAPI_HttpGet(String subtype, String param)
-{
-    if (subtype == F("HttpGet"))
-    {
+void *getAPI_HttpGet(String subtype, String param) {
+    if (subtype == F("HttpGet")) {
         return new HttpGet(param);
-    }
-    else
-    {
+    } else {
         return nullptr;
     }
 }

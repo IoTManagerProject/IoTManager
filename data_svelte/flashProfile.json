@@ -24,7 +24,7 @@
             },
             {
                 "path": "src/modules/virtual/owmWeather",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/virtual/Timer",
@@ -315,6 +315,10 @@
             {
                 "path": "src/modules/display/Oled128",
                 "active": false
+            },
+            {
+                "path": "src/modules/display/Oled64",
+                "active": true
             },
             {
                 "path": "src/modules/display/Smi2_m",
