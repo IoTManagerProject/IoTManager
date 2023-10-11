@@ -58,6 +58,9 @@
         "esp32_4mb": [
             "CTBot @2.1.9"
         ],
+        "esp32_4mb3f": [
+            "CTBot @2.1.9"
+        ],
         "esp32cam_4mb": [
             "CTBot @2.1.9"
         ],

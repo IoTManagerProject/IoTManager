@@ -52,6 +52,9 @@
         "esp32_4mb": [
             "WEMOS SHT3x@1.0.0"
         ],
+        "esp32_4mb3f": [
+            "WEMOS SHT3x@1.0.0"
+        ],
         "esp32cam_4mb": [
             "WEMOS SHT3x@1.0.0"
         ],

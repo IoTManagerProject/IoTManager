@@ -15,7 +15,6 @@ private:
     bool dataFromNode = false;
     String _topic = "";
     bool _isJson;
-//    bool _addPrefix;
     bool _debug;
     bool sendOk = false;
 
@@ -28,12 +27,14 @@ public:
         jsonRead(parameters, F("offline"), offline);
         _topic = jsonReadStr(parameters, "topic");
         jsonRead(parameters, "isJson", _isJson);
-//        jsonRead(parameters, "addPrefix", _addPrefix);
+        //        jsonRead(parameters, "addPrefix", _addPrefix);
         jsonRead(parameters, "debug", _debug);
         dataFromNode = false;
         if (mqttIsConnect())
+        {
             sendOk = true;
-        mqttSubscribeExternal(_topic);
+            mqttSubscribeExternal(_topic);
+        }
     }
     char *TimeToString(unsigned long t)
     {
@@ -49,16 +50,15 @@ public:
     {
         if (msg.indexOf("HELLO") == -1)
         {
-            if (_debug)
-            {
-                SerialPrint("i", "onMqttRecive", "Прилетело  " + topic + " msg: " + msg);
-                //  SerialPrint("i", "onMqttRecive", "Прилетело  " + msg);
-            }
             String dev = selectToMarkerLast(topic, "/");
             dev.toUpperCase();
             dev.replace(":", "");
             if (_topic != topic)
             {
+                if (_debug)
+                {
+                    SerialPrint("i", "ExternalMQTT", _id + " not equal: " + topic + " msg: " + msg);
+                }
                 return;
             }
 
@@ -68,7 +68,7 @@ public:
                 DeserializationError error = deserializeJson(doc, msg);
                 if (error)
                 {
-                    SerialPrint("E", F("onMqttRecive"), error.f_str());
+                    SerialPrint("E", F("ExternalMQTT"), error.f_str());
                 }
                 JsonObject jsonObject = doc.as<JsonObject>();
 
@@ -78,32 +78,32 @@ public:
                     String val = kv.value();
                     if (_debug)
                     {
-                        SerialPrint("i", "onMqttRecive", "Прилетело MAC: " + dev + " key=" + key + " val=" + val);
+                        SerialPrint("i", "ExternalMQTT", "Received MAC: " + dev + " key=" + key + " val=" + val);
                     }
                     if (_sensor == key)
                     {
                         dataFromNode = true;
                         _minutesPassed = 0;
                         setValue(val);
-                        // setNewWidgetAttributes();
                     }
-
-                    //   Serial.println("Key: " + key);
-                    //   Serial.println("Value: " + val);
                 }
             }
             else
             {
                 if (_debug)
                 {
-                    SerialPrint("i", "onMqttRecive", "Прилетело MAC: " + dev + " val=" + msg);
+                    SerialPrint("i", "ExternalMQTT", "Received MAC: " + dev + " val=" + msg);
                 }
                 dataFromNode = true;
                 _minutesPassed = 0;
                 setValue(msg);
-                // setNewWidgetAttributes();
             }
         }
+    }
+
+    String getMqttExterSub()
+    {
+        return _topic;
     }
 
     void doByInterval()
@@ -144,8 +144,7 @@ public:
                 if (_minutesPassed >= offline)
                 {
                     jsonWriteStr(json, F("info"), F("offline"));
-                    regEvent(NAN, "ExternalMQTT");
-                    SerialPrint("E", "ExternalMQTT", "V error", _id);
+                    SerialPrint("i", "ExternalMQTT", _id + " - offline");
                 }
             }
         }
@@ -155,22 +154,6 @@ public:
         }
         sendSubWidgetsValues(_id, json);
     }
-    /*
-        IoTValue execute(String command, std::vector<IoTValue> &param)
-        {
-            if (command == "mqttSubscribe")
-            {
-                if (param.size() == 2)
-                {
-                    if (!param[0].isDecimal && param[1].isDecimal)
-                    {
-                        mqttSubscribeExternal(param[0].valS, (bool)param[0].valD);
-                    }
-                }
-            }
-            return {};
-        }
-    */
     ~ExternalMQTT(){};
 };
 

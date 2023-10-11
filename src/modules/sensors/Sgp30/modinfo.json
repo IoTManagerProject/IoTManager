@@ -51,6 +51,9 @@
         "esp32_4mb": [
             "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
         ],
+        "esp32_4mb3f": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
         "esp32cam_4mb": [
             "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
         ],

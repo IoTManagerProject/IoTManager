@@ -107,6 +107,11 @@
             "adafruit/Adafruit GFX Library @ ^1.11.5",
             "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
+        "esp32_4mb3f": [
+            "https://github.com/maxint-rd/TM16xx",
+            "adafruit/Adafruit GFX Library @ ^1.11.5",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
         "esp32cam_4mb": [
             "https://github.com/maxint-rd/TM16xx",
             "adafruit/Adafruit GFX Library @ ^1.11.5",

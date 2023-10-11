@@ -55,6 +55,9 @@
         "esp32_4mb": [
             "ClosedCube HDC1080"
         ],
+        "esp32_4mb3f": [
+            "ClosedCube HDC1080"
+        ],
         "esp32cam_4mb": [
             "ClosedCube HDC1080"
         ],

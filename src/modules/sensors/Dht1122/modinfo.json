@@ -55,6 +55,9 @@
         "esp32_4mb": [
             "beegee-tokyo/DHT sensor library for ESPx"
         ],
+        "esp32_4mb3f": [
+            "beegee-tokyo/DHT sensor library for ESPx"
+        ],
         "esp32cam_4mb": [
             "beegee-tokyo/DHT sensor library for ESPx"
         ],
