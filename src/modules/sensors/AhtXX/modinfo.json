@@ -59,6 +59,9 @@
         "esp32_4mb": [
             "https://github.com/enjoyneering/AHTxx.git"
         ],
+        "esp32_4mb3f": [
+            "https://github.com/enjoyneering/AHTxx.git"
+        ],
         "esp32cam_4mb": [
             "https://github.com/enjoyneering/AHTxx.git"
         ],

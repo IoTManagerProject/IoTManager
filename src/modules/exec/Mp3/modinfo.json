@@ -92,6 +92,9 @@
         "esp32_4mb": [
             "dfrobot/DFRobotDFPlayerMini @ ^1.0.5"
         ],
+        "esp32_4mb4f": [
+            "dfrobot/DFRobotDFPlayerMini @ ^1.0.5"
+        ],
         "esp32cam_4mb": [
             "dfrobot/DFRobotDFPlayerMini @ ^1.0.5"
         ],

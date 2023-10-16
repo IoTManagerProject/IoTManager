@@ -150,8 +150,9 @@ public:
 class ThermostatPID : public IoTItem
 {
 private:
-    String _set_id;  // заданная температура
-    String _term_id; // термометр
+    String _set_id;         // заданная температура
+    String _term_id;        // термометр
+    String _term_rezerv_id; // резервный термометр
     float _int, _KP, _KI, _KD, sp, pv,
         pv_last = 0, // предыдущая температура
         ierr = 0,    // интегральная погрешность
@@ -168,6 +169,7 @@ public:
     {
         jsonRead(parameters, "set_id", _set_id);
         jsonRead(parameters, "term_id", _term_id);
+        jsonRead(parameters, "term_rezerv_id", _term_rezerv_id);
         jsonRead(parameters, "int", _int);
         jsonRead(parameters, "KP", _KP);
         jsonRead(parameters, "KI", _KI);
@@ -237,20 +239,40 @@ protected:
             interim = tmp->getValue();
             pv = ::atof(interim.c_str());
         }
+        if (pv < -40 && pv > 120 && !pv) // Решаем что ошибка датчика
+        {
+            if (_term_rezerv_id != "")
+            {
+                tmp = findIoTItem(_term_rezerv_id); // используем резервный
+                if (tmp)
+                {
+                    interim = tmp->getValue();
+                    pv = ::atof(interim.c_str());
+                    if (pv < -40 && pv > 120 && !pv)
+                        pv = 0;
+                }
+                else
+                    pv = 0;
+            }
+            else
+                pv = 0;
+        }
         if (sp && pv)
         {
-//            value.valD = pid(sp, pv, pv_last, ierr, _int);
-//            value.valS = (String)(int)value.valD;
+            //            value.valD = pid(sp, pv, pv_last, ierr, _int);
+            //            value.valS = (String)(int)value.valD;
             regEvent(pid(sp, pv, pv_last, ierr, _int), "ThermostatPID", false, true);
-                }
+        }
+        else
+            regEvent(0, "ThermostatPID", false, true);
         pv_last = pv;
     }
 
-// временное решение
+    // временное решение
     unsigned long currentMillis;
     unsigned long prevMillis;
     unsigned long difference;
-    
+
     void loop()
     {
         if (enableDoByInt)
@@ -332,8 +354,8 @@ private:
 public:
     ThermostatETK(String parameters) : IoTItem(parameters)
     {
-//        jsonRead(parameters, "set_id", _set_id);
-//        jsonRead(parameters, "term_id", _term_id);
+        //        jsonRead(parameters, "set_id", _set_id);
+        //        jsonRead(parameters, "term_id", _term_id);
         jsonRead(parameters, "iv_k", _iv_k);
         jsonRead(parameters, "outside_id", _outside_id);
     }

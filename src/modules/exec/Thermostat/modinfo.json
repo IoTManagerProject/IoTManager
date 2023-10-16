@@ -34,6 +34,7 @@
       "map": "1,100,1,100",
       "set_id": "",
       "term_id": "",
+      "term_rezerv_id": "",      
       "rele": "",
       "KP": 5.0,
       "KI": 50,
@@ -134,6 +135,7 @@
   "defActive": false,
   "usedLibs": {
     "esp32_4mb": [],
+    "esp32_4mb3f": [],
     "esp32cam_4mb": [],
     "esp8266_4mb": [],
     "esp8266_1mb": [],

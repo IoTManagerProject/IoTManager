@@ -70,19 +70,19 @@ long IoTItem::getInterval() { return _interval; }
 bool IoTItem::isGlobal() { return _global; }
 
 void IoTItem::setValue(const String& valStr, bool genEvent) {
-    value.isDecimal = isDigitDotCommaStr(valStr);
-
+            value.isDecimal = isDigitDotCommaStr(valStr);
+    
     if (value.isDecimal) {
         value.valD = valStr.toFloat();
-        getRoundValue();
+                getRoundValue();
     } else {
-        value.valS = valStr;
+                value.valS = valStr;
     }
     setValue(value, genEvent);
 }
 
 void IoTItem::setValue(const IoTValue& Value, bool genEvent) {
-    value = Value;
+    value = Value; 
 
     if (value.isDecimal) {
         regEvent(value.valD, "", false, genEvent);
@@ -100,7 +100,7 @@ void IoTItem::sendSubWidgetsValues(String& id, String& json) {
 
 // когда событие случилось
 void IoTItem::regEvent(const String& value, const String& consoleInfo, bool error, bool genEvent) {
-    if (_needSave) {
+        if (_needSave) {
         jsonWriteStr_(valuesFlashJson, _id, value);
         needSaveValues = true;
     }
@@ -141,7 +141,7 @@ String IoTItem::getRoundValue() {
 }
 
 void IoTItem::regEvent(float regvalue, const String& consoleInfo, bool error, bool genEvent) {
-    value.valD = regvalue;
+        value.valD = regvalue;
 
     if (_multiply) value.valD = value.valD * _multiply;
     if (_plus) value.valD = value.valD + _plus;
@@ -183,6 +183,10 @@ void IoTItem::checkIntFromNet() {
         }
         _intFromNet--;
     }
+}
+
+String IoTItem::getMqttExterSub() {
+    return "";
 }
 
 // хуки для системных событий (должны начинаться с "on")

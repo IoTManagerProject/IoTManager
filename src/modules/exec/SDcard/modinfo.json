@@ -35,6 +35,9 @@
         "esp32_4mb": [
             "espressif/esp32-camera @ ^2.0.0"
         ],
+        "esp32_4mb3f": [
+            "espressif/esp32-camera @ ^2.0.0"
+        ],
         "esp32cam_4mb": [
             "espressif/esp32-camera @ ^2.0.0"
         ]

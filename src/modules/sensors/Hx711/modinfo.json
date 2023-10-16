@@ -64,6 +64,9 @@
         "esp32_4mb": [
             "GyverHX711@1.2"
         ],
+        "esp32_4mb3f": [
+            "GyverHX711@1.2"
+        ],
         "esp32cam_4mb": [
             "GyverHX711@1.2"
         ],

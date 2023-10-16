@@ -38,7 +38,7 @@ INA219 *instanceIna219(uint8_t ADDR)
     // учитываем, что библиотека может работать с несколькими линиями на разных пинах, поэтому инициируем библиотеку, если линия ранее не использовалась
     if (ina219Array.find(ADDR) == ina219Array.end())
     {
-        if (ina219SettingArray.find(ADDR) == ina219SettingArray.end())
+        if (ina219SettingArray.find(ADDR) != ina219SettingArray.end())
             ina219Array[ADDR] = new INA219(ina219SettingArray[ADDR]->shunt, ina219SettingArray[ADDR]->maxV, (uint8_t)ADDR);
         else
             ina219Array[ADDR] = new INA219(0.1f, 3.2f, (uint8_t)ADDR); // Стандартные значения для модуля INA219 (0.1 Ом, 3.2А, адрес 0x40)
@@ -66,8 +66,7 @@ public:
 
     void doByInterval()
     {
-        value.valD = instanceIna219(_addr)->getVoltage();
-        regEvent(value.valD, "Ina219voltage");
+        regEvent(instanceIna219(_addr)->getVoltage(), "Ina219voltage");
     }
 
     ~Ina219voltage(){};
@@ -90,8 +89,7 @@ public:
     }
     void doByInterval()
     {
-        value.valD = instanceIna219(_addr)->getShuntVoltage();
-        regEvent(value.valD, "Ina219shuntvoltage");
+        regEvent(instanceIna219(_addr)->getShuntVoltage(), "Ina219shuntvoltage");
     }
 
     ~Ina219shuntvoltage(){};
@@ -114,8 +112,7 @@ public:
     }
     void doByInterval()
     {
-        value.valD = instanceIna219(_addr)->getCurrent();
-        regEvent(value.valD, "Ina219curr");
+        regEvent(instanceIna219(_addr)->getCurrent(), "Ina219curr");
     }
 
     ~Ina219curr(){};
@@ -138,8 +135,7 @@ public:
     }
     void doByInterval()
     {
-        value.valD = instanceIna219(_addr)->getPower();
-        regEvent(value.valD, "Ina219power"); // TODO: найти способ понимания ошибки получения данных
+        regEvent(instanceIna219(_addr)->getPower(), "Ina219power"); // TODO: найти способ понимания ошибки получения данных
     }
 
     ~Ina219Power(){};

@@ -49,6 +49,9 @@
         "esp32_4mb": [
             "https://github.com/kurimawxx00/hx710B_pressure_sensor"
         ],
+        "esp32_4mb3f": [
+            "https://github.com/kurimawxx00/hx710B_pressure_sensor"
+        ],
         "esp32cam_4mb": [
             "https://github.com/kurimawxx00/hx710B_pressure_sensor"
         ],

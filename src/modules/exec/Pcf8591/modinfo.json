@@ -1,0 +1,75 @@
+{
+    "menuSection": "sensors",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Расширитель портов PCF8591",
+            "type": "Reading",
+            "subtype": "Pcf8591",
+            "id": "Pcf85",
+            "widget": "anydataVlt",
+            "page": "PCF8591",
+            "descr": "PCF_0",
+            "pin": "0",
+            "mode": "volt",
+            "map": "1,255,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 2,
+            "int": 7
+        }
+    ],
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "",
+        "moduleName": "Pcf8591",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "Расширитель 4-х аналоговых портов PCF8591",
+        "moduleDesc": "Позволяет получить относительную величину напряжения на понижающем трансформаторе.",
+        "propInfo": {
+            "pin": "Номер AN, к которому подключен датчик. Допускается 0, 1, 2, 3",
+            "mode": "Режим работы. volt - вывод в вольтах , raw - значения от 0 до 255",
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+    "defActive": false,
+    "usedLibs": {
+
+        "esp32_4mb": [
+            "https://github.com/adafruit/Adafruit_PCF8591"
+        ],
+        "esp32_16mb": [
+            "https://github.com/adafruit/Adafruit_PCF8591"
+        ],
+        "esp8266_4mb": [
+            "https://github.com/adafruit/Adafruit_PCF8591"
+        ],
+        "esp8266_16mb": [
+            "https://github.com/adafruit/Adafruit_PCF8591"
+        ],
+        "esp8266_1mb": [
+            "https://github.com/adafruit/Adafruit_PCF8591"
+        ],
+        "esp8266_1mb_ota": [
+            "https://github.com/adafruit/Adafruit_PCF8591"
+        ],
+        "esp8285_1mb": [
+            "https://github.com/adafruit/Adafruit_PCF8591"
+        ],
+        "esp8285_1mb_ota": [
+            "https://github.com/adafruit/Adafruit_PCF8591"
+        ],
+        "esp8266_2mb": [
+            "https://github.com/adafruit/Adafruit_PCF8591"
+        ],
+        "esp8266_2mb_ota": [
+            "https://github.com/adafruit/Adafruit_PCF8591"
+        ]
+    }
+}

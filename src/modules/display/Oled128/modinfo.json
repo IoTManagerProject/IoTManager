@@ -76,6 +76,9 @@
         "esp32_4mb": [
             "gyverlibs/GyverOLED @ 1.4"
         ],
+        "esp32_4mb3f": [
+            "gyverlibs/GyverOLED @ 1.4"
+        ],
         "esp32_16mb": [
             "gyverlibs/GyverOLED @ 1.4"
         ],
