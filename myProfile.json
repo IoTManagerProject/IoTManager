@@ -52,7 +52,7 @@
                     "firmware": "0x10000",
                     "partitions": "0x8000",
                     "littlefs": "0x310000"
-                }, 
+                },
                 {
                     "name": "esp32cam_4mb",
                     "boot_app0": "0xe000",
@@ -170,6 +170,10 @@
             }
         ],
         "sensors": [
+            {
+                "path": "src/modules/exec/Pcf8591",
+                "active": false
+            },
             {
                 "path": "src/modules/sensors/A02Distance",
                 "active": true
