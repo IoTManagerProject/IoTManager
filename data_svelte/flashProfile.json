@@ -49,6 +49,10 @@
         ],
         "sensors": [
             {
+                "path": "src/modules/exec/Pcf8591",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/A02Distance",
                 "active": true
             },
