@@ -24,7 +24,7 @@ private:
     DynamicJsonDocument Weatherdoc1;
     unsigned long _sunsetTime = 0;
     unsigned long _sunriseTime = 0;
-    int _tzone = 0;
+    uint32_t _tzone = 0;
 
 public:
     owmWeather(String parameters) : Weatherdoc1(1024), IoTItem(parameters)
@@ -184,7 +184,7 @@ public:
                 value.valS = getTimeDotFormatedFromUnix(_sunsetTime);
                 regEvent(value.valS, "owmWeather");
             }
-            else if (_param == "sunset")
+            else if (_param == "name")
             {
                 value.valS = Weatherdoc1["name"].as<String>();
                 regEvent(value.valS, "owmWeather");
@@ -208,10 +208,16 @@ public:
             if (param.size())
             {
                 if (param[0].isDecimal)
-                    if (getSystemTime() + _tzone >= _sunsetTime + param[0].valD * 60)
+                    if ((unsigned long)(getSystemTime() + _tzone) >= (unsigned long)(_sunsetTime + (param[0].valD * 60)))
                         value.valD = 0;
                     else
-                        value.valD = (int)((_sunsetTime + param[0].valD * 60) - getSystemTime() + _tzone) / 60;
+                    {
+                        if (_debug)
+                        {
+                            SerialPrint("i", ("owmWeather"), "set sunset astroTimer: " + String(_sunsetTime + param[0].valD * 60) + " date: " + getTimeDotFormatedFromUnix(_sunsetTime + param[0].valD * 60));
+                        }
+                        value.valD = (float)(((_sunsetTime + (int)(param[0].valD * 60)) - getSystemTime() + _tzone) / 60);
+                    }
             }
             if (_debug)
             {
@@ -222,14 +228,20 @@ public:
         {
             if (param.size())
             {
-                if (getSystemTime() + _tzone >= _sunriseTime + param[0].valD * 60)
+                if ((unsigned long)(getSystemTime() + _tzone) >= (unsigned long)(_sunriseTime + (param[0].valD * 60)))
                     value.valD = 0;
                 else
-                    value.valD = (int)((_sunriseTime + param[0].valD * 60) - getSystemTime() + _tzone) / 60;
+                {
+                    if (_debug)
+                    {
+                        SerialPrint("i", ("owmWeather"), "set sunrise astroTimer: " + String(_sunriseTime + param[0].valD * 60) + " date: " + getTimeDotFormatedFromUnix(_sunriseTime + param[0].valD * 60));
+                    }
+                    value.valD = (float)(((_sunriseTime + (int)(param[0].valD * 60)) - getSystemTime() + _tzone) / 60);
+                }
             }
             if (_debug)
             {
-                SerialPrint("i", ("owmWeather"), "time: " + String(getSystemTime() + _tzone) + " sunset: " + String(_sunriseTime) + " Dt: " + String(param[0].valD) + " diff: " + String(value.valD));
+                SerialPrint("i", ("owmWeather"), "time: " + String(getSystemTime() + _tzone) + " sunrise: " + String(_sunriseTime) + " Dt: " + String(param[0].valD) + " diff: " + String(value.valD));
             }
         }
 
