@@ -203,48 +203,78 @@ public:
             // getWeather();
             doByInterval();
         }
+        else if (command == "night")
+        {
+            if (_sunsetTime == 0 || !isTimeSynch)
+            {
+                SerialPrint("i", ("AstroTimer"), "Not TimeSynch or Weather data server");
+                value.valD = 0;
+                return value;
+            }
+            long dt_cur = getSystemTime() + _tzone;
+            // Если светло
+            if (dt_cur >= _sunriseTime && dt_cur < _sunsetTime)
+                value.valD = 0;
+            else // если темно
+                value.valD = 1;
+            if (_debug)
+            {
+                SerialPrint("i", ("AstroTimer"), "night: " + String(value.valD));
+            }
+        }
+
         else if (command == "sunset")
         {
+            if (_sunsetTime == 0 || !isTimeSynch)
+            {
+                SerialPrint("i", ("AstroTimer"), "Not TimeSynch or Weather data server");
+                value.valD = 999;
+                return value;
+            }
+            long dt_cur = getSystemTime() + _tzone;
             if (param.size())
             {
                 if (param[0].isDecimal)
-                    if ((unsigned long)(getSystemTime() + _tzone) >= (unsigned long)(_sunsetTime + (param[0].valD * 60)))
-                        value.valD = 0;
-                    else
+                {
+                    long dt_set = (_sunsetTime + (int)(param[0].valD * 60));
+                    long dt = dt_set - dt_cur;
+                    value.valD = dt / 60;
+                    if (_debug)
                     {
-                        if (_debug)
-                        {
-                            SerialPrint("i", ("owmWeather"), "set sunset astroTimer: " + String(_sunsetTime + param[0].valD * 60) + " date: " + getTimeDotFormatedFromUnix(_sunsetTime + param[0].valD * 60));
-                        }
-                        value.valD = (float)(((_sunsetTime + (int)(param[0].valD * 60)) - getSystemTime() + _tzone) / 60);
+                        SerialPrint("i", ("AstroTimer"), "set: " + getTimeDotFormatedFromUnix(dt_set) + " time: " + getTimeDotFormatedFromUnix(dt_cur) + " sunset: " + getTimeDotFormatedFromUnix(_sunsetTime) + " Dt: " + String(param[0].valD) + " diff: " + String(value.valD));
                     }
-            }
-            if (_debug)
-            {
-                SerialPrint("i", ("owmWeather"), "time: " + String(getSystemTime() + _tzone) + " sunset: " + String(_sunsetTime) + " Dt: " + String(param[0].valD) + " diff: " + String(value.valD));
+                }
             }
         }
         else if (command == "sunrise")
         {
+            if (_sunriseTime == 0 || !isTimeSynch)
+            {
+                SerialPrint("i", ("AstroTimer"), "Not TimeSynch or Weather data server");
+                value.valD = 999;
+                return value;
+            }
+            long dt_cur = getSystemTime() + _tzone;
+            if (dt_cur >= _sunsetTime)
+            {
+                SerialPrint("i", ("AstroTimer"), "УЖЕ Закат, таймер не считаем  time: " + getTimeDotFormatedFromUnix(dt_cur) + " diff: " + String(value.valD));
+                value.valD = 999;
+                return value;
+            }
             if (param.size())
             {
-                if ((unsigned long)(getSystemTime() + _tzone) >= (unsigned long)(_sunriseTime + (param[0].valD * 60)))
-                    value.valD = 0;
-                else
+                if (param[0].isDecimal)
                 {
+                    long dt_set = (_sunriseTime + (int)(param[0].valD * 60));
+                    long dt = dt_set - dt_cur;
+                    value.valD = dt / 60;
                     if (_debug)
                     {
-                        SerialPrint("i", ("owmWeather"), "set sunrise astroTimer: " + String(_sunriseTime + param[0].valD * 60) + " date: " + getTimeDotFormatedFromUnix(_sunriseTime + param[0].valD * 60));
+                        SerialPrint("i", ("AstroTimer"), "set: " + getTimeDotFormatedFromUnix(dt_set) + " time: " + getTimeDotFormatedFromUnix(dt_cur) + " sunrise: " + getTimeDotFormatedFromUnix(_sunriseTime) + " Dt: " + String(param[0].valD) + " diff: " + String(value.valD));
                     }
-                    value.valD = (float)(((_sunriseTime + (int)(param[0].valD * 60)) - getSystemTime() + _tzone) / 60);
                 }
             }
-            if (_debug)
-            {
-                SerialPrint("i", ("owmWeather"), "time: " + String(getSystemTime() + _tzone) + " sunrise: " + String(_sunriseTime) + " Dt: " + String(param[0].valD) + " diff: " + String(value.valD));
-            }
         }
-
         return value;
     }
 
