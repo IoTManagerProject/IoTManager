@@ -3,7 +3,7 @@
 #include "classes/IoTDB.h"
 #include "utils/Statistic.h"
 #include <Wire.h>
-#ifdef esp32s2_4mb
+#if defined(esp32s2_4mb) || defined(esp32s3_16mb)
 #include <USB.h>
 #endif
 
@@ -80,7 +80,7 @@ void stopErrorMarker(int id) {
 }
 
 void setup() {
-#ifdef esp32s2_4mb
+#if defined(esp32s2_4mb) || defined(esp32s3_16mb)
     USB.begin();
 #endif
 #if defined(esp32_4mb) || defined(esp32_16mb) || defined(esp32cam_4mb)

@@ -2,7 +2,7 @@
 #include "BuildTime.h"
 
 // Версия прошивки
-#define FIRMWARE_VERSION 454
+#define FIRMWARE_VERSION 455
 
 #ifdef esp8266_1mb_ota
 #define FIRMWARE_NAME "esp8266_1mb_ota"
@@ -42,6 +42,14 @@
 
 #ifdef esp32s2_4mb
 #define FIRMWARE_NAME "esp32s2_4mb"
+#endif
+
+#ifdef esp32c3m_4mb
+#define FIRMWARE_NAME "esp32c3m_4mb"
+#endif
+
+#ifdef esp32s3_16mb
+#define FIRMWARE_NAME "esp32s3_16mb"
 #endif
 
 // Размер буфера json
