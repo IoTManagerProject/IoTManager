@@ -22,9 +22,12 @@ private:
     String _lang = "";
     bool _debug = false;
     DynamicJsonDocument Weatherdoc1;
+    unsigned long _sunsetTime = 0;
+    unsigned long _sunriseTime = 0;
+    uint32_t _tzone = 0;
 
 public:
-    owmWeather(String parameters) : Weatherdoc1(1024), IoTItem(parameters) 
+    owmWeather(String parameters) : Weatherdoc1(1024), IoTItem(parameters)
     {
         _API_key = jsonReadStr(parameters, "API_key");
         //    _ID_sity = jsonReadStr(parameters, "ID_sity");
@@ -82,7 +85,8 @@ public:
 
                     deserializeJson(Weatherdoc1, payload);
                     // ret += payload;
-                    SerialPrint("i", "Weatherdoc1", "memoryUsage: " + String(Weatherdoc1.memoryUsage()));
+                    if (_debug)
+                        SerialPrint("i", "Weatherdoc1", "memoryUsage: " + String(Weatherdoc1.memoryUsage()));
                 }
             }
             else
@@ -104,6 +108,11 @@ public:
         getWeather();
         if (jsonReadStr(Weatherdoc1["main"], "temp", true) != "null")
         {
+            _tzone = Weatherdoc1["timezone"].as<int>();
+            _sunriseTime = std::atoll(jsonReadStr(Weatherdoc1["sys"], "sunrise", true).c_str());
+            _sunriseTime = _sunriseTime + _tzone;
+            _sunsetTime = std::atoll(jsonReadStr(Weatherdoc1["sys"], "sunset", true).c_str());
+            _sunsetTime = _sunsetTime + _tzone;
 
             publishNew("main", "temp");
             publishNew("main", "pressure");
@@ -121,66 +130,152 @@ public:
             if (_param == "temp")
             {
                 value.valS = jsonReadStr(Weatherdoc1["main"], "temp", true);
+                regEvent(value.valS, "owmWeather");
             }
             else if (_param == "pressure")
             {
-                value.valS = jsonReadStr(Weatherdoc1["main"], "pressure", true);
+                // value.valS = jsonReadStr(Weatherdoc1["main"], "pressure", true);
+                int tval;
+                jsonRead(Weatherdoc1["main"], "pressure", tval, true);
+                regEvent(tval / 1.333, "owmWeather");
             }
             else if (_param == "humidity")
             {
                 value.valS = jsonReadStr(Weatherdoc1["main"], "humidity", true);
+                regEvent(value.valS, "owmWeather");
             }
             else if (_param == "speed")
             {
                 value.valS = jsonReadStr(Weatherdoc1["wind"], "speed", true);
+                regEvent(value.valS, "owmWeather");
             }
             else if (_param == "deg")
             {
                 value.valS = jsonReadStr(Weatherdoc1["wind"], "deg", true);
+                regEvent(value.valS, "owmWeather");
             }
             else if (_param == "all")
             {
                 value.valS = jsonReadStr(Weatherdoc1["clouds"], "all", true);
+                regEvent(value.valS, "owmWeather");
             }
             else if (_param == "main")
             {
                 value.valS = jsonReadStr(Weatherdoc1["weather"][0], "main", true);
+                regEvent(value.valS, "owmWeather");
             }
             else if (_param == "description")
             {
                 value.valS = jsonReadStr(Weatherdoc1["weather"][0], "description", true);
+                regEvent(value.valS, "owmWeather");
             }
             else if (_param == "icon")
             {
                 value.valS = jsonReadStr(Weatherdoc1["weather"][0], "icon", true);
+                regEvent(value.valS, "owmWeather");
             }
             else if (_param == "sunrise")
             {
-                value.valS = getTimeDotFormatedFromUnix(std::atoll(jsonReadStr(Weatherdoc1["sys"], "sunrise", true).c_str()));
+                value.valS = getTimeDotFormatedFromUnix(_sunriseTime);
+                regEvent(value.valS, "owmWeather");
             }
             else if (_param == "sunset")
             {
-                value.valS = getTimeDotFormatedFromUnix(std::atoll(jsonReadStr(Weatherdoc1["sys"], "sunset", true).c_str()));
+                value.valS = getTimeDotFormatedFromUnix(_sunsetTime);
+                regEvent(value.valS, "owmWeather");
             }
-            else if (_param == "sunset")
+            else if (_param == "name")
             {
                 value.valS = Weatherdoc1["name"].as<String>();
+                regEvent(value.valS, "owmWeather");
             }
             // value.isDecimal = false;
 
-            regEvent(value.valS, "owmWeather");
+            //     regEvent(value.valS, "owmWeather");
         }
     }
 
     IoTValue execute(String command, std::vector<IoTValue> &param)
     {
+        IoTValue value = {};
         if (command == "get")
         {
             // getWeather();
             doByInterval();
         }
+        else if (command == "night")
+        {
+            if (_sunsetTime == 0 || !isTimeSynch)
+            {
+                SerialPrint("i", ("AstroTimer"), "Not TimeSynch or Weather data server");
+                value.valD = 0;
+                return value;
+            }
+            long dt_cur = getSystemTime() + _tzone;
+            // Если светло
+            if (dt_cur >= _sunriseTime && dt_cur < _sunsetTime)
+                value.valD = 0;
+            else // если темно
+                value.valD = 1;
+            if (_debug)
+            {
+                SerialPrint("i", ("AstroTimer"), "night: " + String(value.valD));
+            }
+        }
 
-        return {};
+        else if (command == "sunset")
+        {
+            if (_sunsetTime == 0 || !isTimeSynch)
+            {
+                SerialPrint("i", ("AstroTimer"), "Not TimeSynch or Weather data server");
+                value.valD = 999;
+                return value;
+            }
+            long dt_cur = getSystemTime() + _tzone;
+            if (param.size())
+            {
+                if (param[0].isDecimal)
+                {
+                    long dt_set = (_sunsetTime + (int)(param[0].valD * 60));
+                    long dt = dt_set - dt_cur;
+                    value.valD = dt / 60;
+                    if (_debug)
+                    {
+                        SerialPrint("i", ("AstroTimer"), "set: " + getTimeDotFormatedFromUnix(dt_set) + " time: " + getTimeDotFormatedFromUnix(dt_cur) + " sunset: " + getTimeDotFormatedFromUnix(_sunsetTime) + " Dt: " + String(param[0].valD) + " diff: " + String(value.valD));
+                    }
+                }
+            }
+        }
+        else if (command == "sunrise")
+        {
+            if (_sunriseTime == 0 || !isTimeSynch)
+            {
+                SerialPrint("i", ("AstroTimer"), "Not TimeSynch or Weather data server");
+                value.valD = 999;
+                return value;
+            }
+            long dt_cur = getSystemTime() + _tzone;
+            if (dt_cur >= _sunsetTime)
+            {
+                SerialPrint("i", ("AstroTimer"), "УЖЕ Закат, таймер не считаем  time: " + getTimeDotFormatedFromUnix(dt_cur) + " diff: " + String(value.valD));
+                value.valD = 999;
+                return value;
+            }
+            if (param.size())
+            {
+                if (param[0].isDecimal)
+                {
+                    long dt_set = (_sunriseTime + (int)(param[0].valD * 60));
+                    long dt = dt_set - dt_cur;
+                    value.valD = dt / 60;
+                    if (_debug)
+                    {
+                        SerialPrint("i", ("AstroTimer"), "set: " + getTimeDotFormatedFromUnix(dt_set) + " time: " + getTimeDotFormatedFromUnix(dt_cur) + " sunrise: " + getTimeDotFormatedFromUnix(_sunriseTime) + " Dt: " + String(param[0].valD) + " diff: " + String(value.valD));
+                    }
+                }
+            }
+        }
+        return value;
     }
 
     // проверяем если пришедшее значение отличается от предыдущего регистрируем событие
@@ -230,14 +325,33 @@ public:
         {
             if (Weatherdoc1[root][param].as<String>() != tmp->value.valS)
             {
-                tmp->setValue(getTimeDotFormatedFromUnix(std::atoll(jsonReadStr(Weatherdoc1[root], param, true).c_str())), true);
+                if (param == "sunrise")
+                {
+                    tmp->setValue(getTimeDotFormatedFromUnix(_sunriseTime), true);
+                }
+                else if (param == "sunset")
+                {
+                    tmp->setValue(getTimeDotFormatedFromUnix(_sunsetTime), true);
+                }
+                else
+                {
+                    tmp->setValue(Weatherdoc1[root][param].as<String>(), true);
+                }
             }
         }
         else
         {
             if (Weatherdoc1[root][param].as<String>() != tmp->value.valS)
             {
-                tmp->setValue(Weatherdoc1[root][param].as<String>(), true);
+                if (param == "pressure")
+                {
+                    int tval = Weatherdoc1[root][param].as<int>();
+                    tmp->setValue(String(tval / 1.333), true);
+                }
+                else
+                {
+                    tmp->setValue(Weatherdoc1[root][param].as<String>(), true);
+                }
             }
         }
     }

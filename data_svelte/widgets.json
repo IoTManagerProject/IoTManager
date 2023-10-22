@@ -307,7 +307,21 @@
         "widget": "anydata",
         "after": "ltr",
         "icon": "speedometer"
-    },    
+    }, 
+    {
+        "name": "anydataSpeed",
+        "label": "мерты в секунду",
+        "widget": "anydata",
+        "after": "m/s",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataСorner",
+        "label": "угол градусов",
+        "widget": "anydata",
+        "after": "°",
+        "icon": "speedometer"
+    },   
     {
         "name": "nil",
         "label": "Без виджета"
