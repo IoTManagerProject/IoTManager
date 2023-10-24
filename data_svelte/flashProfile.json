@@ -23,6 +23,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/virtual/Math",
+                "active": false
+            },
+            {
                 "path": "src/modules/virtual/owmWeather",
                 "active": true
             },

@@ -723,10 +723,11 @@
         "widget": "rangeServo",
         "page": "servo",
         "descr": "угол",
-        "int": 1,
         "pin": 12,
-        "apin": -1,
-        "amap": "0, 4096, 0, 180",
+        "minPulseWidth": 544,
+        "maxPulseWidth": 2400,
+        "neutralPulseWidth": 1500,
+        "trackingID": "",
         "num": 47
     },
     {

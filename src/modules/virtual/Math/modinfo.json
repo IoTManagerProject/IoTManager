@@ -1,0 +1,55 @@
+{
+    "menuSection": "virtual_elments",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Math library",
+            "type":  "Reading",
+            "subtype": "IoTMath",
+            "id": "math",
+            "widget": "anydataValue",
+            "page": "Математика",
+            "descr": ""
+        }
+    ],
+    "about": {
+        "authorName": "Berenbaum Maxim",
+        "authorContact": "https://t.me/Bermax_sys",
+        "authorGit": "https://github.com/xpohuk8",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "Ilya Belyakov",
+        "moduleName": "IoTMath",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "Модуль Math",
+        "moduleDesc": "Модуль для расчета значений с использованием математических функций. Подходит для коррекции показаний датчиков.",
+        "propInfo": {
+        },
+        "funcInfo": [
+            {
+                "name": "map",
+                "descr": "Аналог функции map",
+                "params": [
+                    "Значение1", "Значение2", "Значение3", "Значение4"
+                ]
+            }
+        ]
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32cam_4mb": [],
+        "esp32s2_4mb": [],
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": [],
+        "esp8285_1mb": [],
+        "esp8285_1mb_ota": [],
+        "esp8266_2mb": [],
+        "esp8266_2mb_ota": []
+    }
+}
