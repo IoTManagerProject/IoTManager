@@ -69,7 +69,7 @@
       "https://github.com/h2zero/NimBLE-Arduino.git",
       "https://github.com/avaksru/decoder.git"
     ],    
-    "esp32s2_4mb": [
+    "esp32cam_4mb": [
       "https://github.com/h2zero/NimBLE-Arduino.git",
       "https://github.com/avaksru/decoder.git"
     ],    
