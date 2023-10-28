@@ -18,7 +18,7 @@ private:
   // описание параметров передаваемых из настроек датчика из веба
   String _MAC;
   String _sensor;
-
+  int timeRecv;
 public:
   String whoIAm(/*String &mac, String &sens*/)
   {
@@ -31,11 +31,11 @@ public:
   {
     if (_sensor == "last")
     {
-      int valInt = extBLEdata[_sensor].as<int>();
+      timeRecv = extBLEdata[_sensor].as<int>();
       char *s;
-      s = TimeToString(millis() / 1000 - valInt / 1000);
+      s = TimeToString(millis() / 1000 - timeRecv / 1000);
       value.isDecimal = 0;
-      if (valInt > 0)
+      if (timeRecv > 0)
       {
         value.valS = s;
       }
@@ -80,6 +80,25 @@ public:
     int s = t % 60;
     sprintf(str, "%02ld:%02d:%02d", h, m, s);
     return str;
+  }
+
+  void doByInterval()
+  {
+    if (_sensor == "last")
+    {
+      char *s;
+      s = TimeToString(millis() / 1000 - timeRecv / 1000);
+      value.isDecimal = 0;
+      if (timeRecv > 0)
+      {
+        value.valS = s;
+      }
+      else
+      {
+        value.valS = "";
+      }
+      regEvent(value.valS, _id);
+    }
   }
 
   BleSens(String parameters) : IoTItem(parameters)
