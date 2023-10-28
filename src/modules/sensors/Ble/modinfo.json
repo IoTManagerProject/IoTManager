@@ -60,27 +60,27 @@
   "usedLibs": {
     "esp32_4mb": [
       "https://github.com/h2zero/NimBLE-Arduino.git",
-      "https://github.com/avaksru/decoder.git"
+      "https://github.com/Mit4el/decoder.git"
     ],
     "esp32_16mb": [
       "https://github.com/h2zero/NimBLE-Arduino.git",
-      "https://github.com/avaksru/decoder.git"
+      "https://github.com/Mit4el/decoder.git"
     ],
     "esp32_4mb3f": [
       "https://github.com/h2zero/NimBLE-Arduino.git",
-      "https://github.com/avaksru/decoder.git"
+      "https://github.com/Mit4el/decoder.git"
     ],    
     "esp32cam_4mb": [
       "https://github.com/h2zero/NimBLE-Arduino.git",
-      "https://github.com/avaksru/decoder.git"
+      "https://github.com/Mit4el/decoder.git"
     ],    
     "esp32s3_16mb": [
       "https://github.com/h2zero/NimBLE-Arduino.git",
-      "https://github.com/avaksru/decoder.git"
+      "https://github.com/Mit4el/decoder.git"
     ],    
     "esp32c3m_4mb": [
       "https://github.com/h2zero/NimBLE-Arduino.git",
-      "https://github.com/avaksru/decoder.git"
+      "https://github.com/Mit4el/decoder.git"
     ]
   }
 }
