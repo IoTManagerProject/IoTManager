@@ -129,11 +129,12 @@ void restartEsp() {
 //     return path;
 // }
 
+// https://t.me/IoTmanager/128814/164752 - убрал ограничение
 void putUserDataToRam() {
-    update.configJson = readFile("config.json", 4096);
-    update.settingsFlashJson = readFile("settings.json", 4096);
-    update.layoutJson = readFile("layout.json", 4096);
-    update.scenarioTxt = readFile("scenario.txt", 4096);
+    update.configJson = readFile("config.json", 4096 * 4);
+    update.settingsFlashJson = readFile("settings.json", 4096 * 4);
+    update.layoutJson = readFile("layout.json", 4096 * 4);
+    update.scenarioTxt = readFile("scenario.txt", 4096 * 4);
     // update.chartsData = createDataBaseSting();
 }
 

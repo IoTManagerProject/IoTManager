@@ -114,7 +114,7 @@
                     "firmware": "0x10000",
                     "partitions": "0x8000",
                     "littlefs": "0x310000"
-                }, 
+                },
                 {
                     "name": "esp32s3_16mb",
                     "boot_app0": "0xe000",
@@ -146,7 +146,7 @@
             },
             {
                 "path": "src/modules/virtual/owmWeather",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/virtual/Timer",
@@ -154,10 +154,6 @@
             },
             {
                 "path": "src/modules/virtual/Variable",
-                "active": true
-            },
-            {
-                "path": "src/modules/virtual/VariableColor",
                 "active": true
             },
             {
@@ -433,10 +429,6 @@
             {
                 "path": "src/modules/display/Lcd2004",
                 "active": true
-            },
-            {
-                "path": "src/modules/display/NextionUpload",
-                "active": false
             },
             {
                 "path": "src/modules/display/Oled128",
