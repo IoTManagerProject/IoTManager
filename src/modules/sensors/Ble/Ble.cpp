@@ -18,7 +18,15 @@ private:
   // описание параметров передаваемых из настроек датчика из веба
   String _MAC;
   String _sensor;
-  int timeRecv;
+  int timeRecv = 0;
+  int _minutesPassed = 0;
+  String json = "{}";
+  int orange = 0;
+  int red = 0;
+  int offline = 0;
+  int _int;
+  bool dataFromNode = false;
+
 public:
   String whoIAm(/*String &mac, String &sens*/)
   {
@@ -38,6 +46,9 @@ public:
       if (timeRecv > 0)
       {
         value.valS = s;
+        dataFromNode = true;
+        _minutesPassed = 0;
+        setNewWidgetAttributes();
       }
       else
       {
@@ -55,12 +66,18 @@ public:
           value.isDecimal = 1;
           value.valD = valStr.toFloat();
           regEvent(value.valD, _id);
+          dataFromNode = true;
+          _minutesPassed = 0;
+          setNewWidgetAttributes();
         }
         else
         {
           value.isDecimal = 0;
           value.valS = valStr;
           regEvent(value.valS, _id);
+          dataFromNode = true;
+          _minutesPassed = 0;
+          setNewWidgetAttributes();
         }
       }
       else
@@ -99,12 +116,56 @@ public:
       }
       regEvent(value.valS, _id);
     }
+    _minutesPassed++;
+    setNewWidgetAttributes();
+  }
+  void onMqttWsAppConnectEvent()
+  {
+    setNewWidgetAttributes();
+  }
+  void setNewWidgetAttributes()
+  {
+
+    int minutes_ = _minutesPassed * _int / 60;
+    jsonWriteStr(json, F("info"), prettyMinutsTimeout(minutes_));
+    if (dataFromNode)
+    {
+      if (orange != 0 && red != 0 && offline != 0)
+      {
+        if (minutes_ < orange)
+        {
+          jsonWriteStr(json, F("color"), "");
+        }
+        if (minutes_ >= orange && minutes_ < red)
+        {
+          jsonWriteStr(json, F("color"), F("orange")); // сделаем виджет оранжевым
+        }
+        if (minutes_ >= red && minutes_ < offline)
+        {
+          jsonWriteStr(json, F("color"), F("red")); // сделаем виджет красным
+        }
+        if (minutes_ >= offline)
+        {
+          jsonWriteStr(json, F("info"), F("offline"));
+        }
+      }
+    }
+    else
+    {
+      jsonWriteStr(json, F("info"), F("awaiting"));
+    }
+    sendSubWidgetsValues(_id, json);
   }
 
   BleSens(String parameters) : IoTItem(parameters)
   {
     _MAC = jsonReadStr(parameters, "MAC");
     _sensor = jsonReadStr(parameters, "sensor");
+    jsonRead(parameters, F("orange"), orange);
+    jsonRead(parameters, F("red"), red);
+    jsonRead(parameters, F("offline"), offline);
+    jsonRead(parameters, F("int"), _int);
+    dataFromNode = false;
     BleSensArray.push_back(this);
   }
 
@@ -186,8 +247,9 @@ public:
       BLEdata.remove("acts");
       BLEdata.remove("cont");
       BLEdata.remove("track");
+      BLEdata.remove("id");
 
-      String mac_address = BLEdata["id"].as<const char *>();
+      String mac_address = BLEdata["MAC"].as<const char *>();
       mac_address.replace(":", "");
       // дописываем время прихода пакета данных
       BLEdata["last"] = millis();
@@ -199,13 +261,15 @@ public:
           // {
           // String val = BLEdata.as<String>();
           String output;
+          BLEdata.remove("servicedatauuid");
           serializeJson(BLEdata, output);
-          SerialPrint("i", F("BLE"), _id + " " + output);
+          SerialPrint("i", F("BLE"), mac_address + " " + output);
           //}
         }
+
+        SerialPrint("i", F("BLE"), "found: " + mac_address);
       }
-      BLEdata.remove("servicedatauuid");
-      SerialPrint("i", F("BLE"), "found: " + mac_address);
+
       // Перебираем все зарегистрированные сенсоры BleSens
       for (std::vector<BleSens *>::iterator it = BleSensArray.begin();
            it != BleSensArray.end(); ++it)
@@ -246,9 +310,7 @@ public:
     }
   }
 
-  ~BleScan(){
-    BleSensArray.clear();
-  };
+  ~BleScan() { BleSensArray.clear(); };
 };
 
 //=======================================================================================================

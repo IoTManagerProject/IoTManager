@@ -12,7 +12,7 @@
       "int": 135,
       "scanDuration": 10,
       "filter": "servicedatauuid",
-      "debug":1
+      "debug": 1
     },
     {
       "name": "bluetooth датчик",
@@ -26,6 +26,9 @@
       "int": 30,
       "global": 0,
       "round": 1,
+      "orange": 60,
+      "red": 120,
+      "offline": 180,
       "MAC": "",
       "sensor": ""
     }
@@ -49,6 +52,9 @@
     "moduleDesc": "Позволяет получить данные с Bluetooth часов и термометров Mijia, Xiaomi, Cleargrass, ...",
     "propInfo": {
       "round": "Округление после запятой.",
+      "orange": "количество минут после которого окрасить виджет в оранжевый цвет",
+      "red": "количество минут после которого окрасить виджет в красный цвет",
+      "offline": "количество минут после которого отобразить что устройство offline, если все три orange red и offline поставить в ноль - то функция окраски выключится",
       "int": "Интервал сканирования BLE окружения (BleScan) / В BleSens темп обновления времнени поступления данных, сами даные обновляются по мене сканирования/поступления",
       "scanDuration": "Длительность сканирования ",
       "filter": "Позволяет установить фильтр по параметру передаваемому датчиком. Влияет только на вывод лога при debug=1, что бы было легче найти датчики, если много устройств в эфире",
@@ -59,27 +65,27 @@
   "defActive": false,
   "usedLibs": {
     "esp32_4mb": [
-      "https://github.com/h2zero/NimBLE-Arduino.git",
+      "https://github.com/Mit4el/NimBLE-Arduino.git",
       "https://github.com/Mit4el/decoder.git"
     ],
     "esp32_16mb": [
-      "https://github.com/h2zero/NimBLE-Arduino.git",
+      "https://github.com/Mit4el/NimBLE-Arduino.git",
       "https://github.com/Mit4el/decoder.git"
     ],
     "esp32_4mb3f": [
-      "https://github.com/h2zero/NimBLE-Arduino.git",
+      "https://github.com/Mit4el/NimBLE-Arduino.git",
       "https://github.com/Mit4el/decoder.git"
-    ],    
+    ],
     "esp32cam_4mb": [
-      "https://github.com/h2zero/NimBLE-Arduino.git",
+      "https://github.com/Mit4el/NimBLE-Arduino.git",
       "https://github.com/Mit4el/decoder.git"
-    ],    
+    ],
     "esp32s3_16mb": [
-      "https://github.com/h2zero/NimBLE-Arduino.git",
+      "https://github.com/Mit4el/NimBLE-Arduino.git",
       "https://github.com/Mit4el/decoder.git"
-    ],    
+    ],
     "esp32c3m_4mb": [
-      "https://github.com/h2zero/NimBLE-Arduino.git",
+      "https://github.com/Mit4el/NimBLE-Arduino.git",
       "https://github.com/Mit4el/decoder.git"
     ]
   }
