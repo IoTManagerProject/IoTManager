@@ -36,12 +36,12 @@ class LogingDaily : public IoTItem {
         jsonRead(parameters, F("telegram"), telegram);
         jsonRead(parameters, F("descr"), descr);
 
-        if (points > 365) {
-            points = 365;
-            SerialPrint("E", F("LogingDaily"), "'" + id + "' user set more points than allowed, value reset to 365");
+        if (points > 200) {
+            points = 200;
+            SerialPrint("E", F("LogingDaily"), "'" + id + "' user set more points than allowed, value reset to 200");
         }
         long interval;
-        jsonRead(parameters, F("int"), interval); // в минутах
+        jsonRead(parameters, F("int"), interval);  // в минутах
         setInterval(interval * 60);
     }
 
@@ -222,9 +222,7 @@ class LogingDaily : public IoTItem {
         _wsNum = wsNum;
     }
 
-    String getValue() {
-        return "";
-    }
+    String getValue() { return ""; }
 
     // void loop() {
     //     if (enableDoByInt) {
@@ -238,9 +236,7 @@ class LogingDaily : public IoTItem {
     // }
 
     // просто максимальное количество точек
-    int calculateMaxCount() {
-        return 86400;
-    }
+    int calculateMaxCount() { return 86400; }
 
     void onModuleOrder(String &key, String &value) {
         if (key == "defvalue") {
