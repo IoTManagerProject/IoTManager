@@ -3,7 +3,6 @@
   "configItem": [
     {
       "name": "bluetooth сканер",
-      "num": 1,
       "type": "Reading",
       "subtype": "BleScan",
       "id": "BleScan",
@@ -12,11 +11,11 @@
       "descr": "",
       "int": 135,
       "scanDuration": 10,
-      "filter": "servicedatauuid"
+      "filter": "servicedatauuid",
+      "debug":1
     },
     {
       "name": "bluetooth датчик",
-      "num": 1,
       "type": "Reading",
       "subtype": "BleSens",
       "id": "BleSens",
@@ -24,20 +23,20 @@
       "page": "Сенсоры",
       "descr": "",
       "needSave": 0,
+      "int": 30,
       "global": 0,
       "round": 1,
-      "int": 60,
       "MAC": "",
       "sensor": ""
     }
   ],
   "about": {
-    "authorName": "AVAKS",
-    "authorContact": "https://t.me/@avaks_dev",
-    "authorGit": "https://github.com/avaksru",
+    "authorName": "AVAKS, v3 - Mit4bmw",
+    "authorContact": "https://t.me/@avaks, https://t.me/Mit4bmw",
+    "authorGit": "https://github.com/avaksru, https://github.com/Mit4el",
     "specialThanks": "@Serghei63",
     "moduleName": "Ble",
-    "moduleVersion": "1.0",
+    "moduleVersion": "3.0",
     "usedRam": {
       "esp32_4mb": 1261449,
       "esp8266_4mb": 0
@@ -50,9 +49,9 @@
     "moduleDesc": "Позволяет получить данные с Bluetooth часов и термометров Mijia, Xiaomi, Cleargrass, ...",
     "propInfo": {
       "round": "Округление после запятой.",
-      "int": "Интервал сканирования BLE окружения (BleScan) / Интервал отправки собранной телеметрии в MQTT (BleSens)",
+      "int": "Интервал сканирования BLE окружения (BleScan) / В BleSens темп обновления времнени поступления данных, сами даные обновляются по мене сканирования/поступления",
       "scanDuration": "Длительность сканирования ",
-      "filter": "Позволяет установить фильтр по параметру передаваемому датчиком. Данные будут считываться только с датчиков у которых есть передаваемый параметр указанный в фильтре",
+      "filter": "Позволяет установить фильтр по параметру передаваемому датчиком. Влияет только на вывод лога при debug=1, что бы было легче найти датчики, если много устройств в эфире",
       "MAC": "MAC адрес беспроводного датчика",
       "sensor": "Тип сенсора: температура / влажность / время / ...   "
     }
@@ -61,15 +60,27 @@
   "usedLibs": {
     "esp32_4mb": [
       "https://github.com/h2zero/NimBLE-Arduino.git",
-      "https://github.com/avaksru/decoder.git"
+      "https://github.com/Mit4el/decoder.git"
+    ],
+    "esp32_16mb": [
+      "https://github.com/h2zero/NimBLE-Arduino.git",
+      "https://github.com/Mit4el/decoder.git"
     ],
     "esp32_4mb3f": [
       "https://github.com/h2zero/NimBLE-Arduino.git",
-      "https://github.com/avaksru/decoder.git"
-    ],
+      "https://github.com/Mit4el/decoder.git"
+    ],    
     "esp32cam_4mb": [
       "https://github.com/h2zero/NimBLE-Arduino.git",
-      "https://github.com/avaksru/decoder.git"
+      "https://github.com/Mit4el/decoder.git"
+    ],    
+    "esp32s3_16mb": [
+      "https://github.com/h2zero/NimBLE-Arduino.git",
+      "https://github.com/Mit4el/decoder.git"
+    ],    
+    "esp32c3m_4mb": [
+      "https://github.com/h2zero/NimBLE-Arduino.git",
+      "https://github.com/Mit4el/decoder.git"
     ]
   }
 }

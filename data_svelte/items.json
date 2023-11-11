@@ -60,7 +60,7 @@
         "num": 4,
         "int": 1,
         "logid": "t",
-        "points": 365,
+        "points": 200,
         "telegram": 0,
         "test": 0,
         "btn-defvalue": 0,
@@ -723,10 +723,11 @@
         "widget": "rangeServo",
         "page": "servo",
         "descr": "угол",
-        "int": 1,
         "pin": 12,
-        "apin": -1,
-        "amap": "0, 4096, 0, 180",
+        "minPulseWidth": 544,
+        "maxPulseWidth": 2400,
+        "neutralPulseWidth": 1500,
+        "trackingID": "",
         "num": 47
     },
     {

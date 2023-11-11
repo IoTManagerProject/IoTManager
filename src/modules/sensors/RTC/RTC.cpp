@@ -63,6 +63,42 @@ class RTC : public IoTItem {
                 valTmp.valS = _watch->gettime(param[0].valS + " ");
                 return valTmp;
             }
+        } else if (command == "setUnixTime") {
+            if (param.size() == 1) {
+                long ut = strtoul(param[0].valS.c_str(), nullptr, 10);
+                _watch->settimeUnix(ut);
+                return {};
+            }
+        } else if (command == "setTime") {
+            if (param.size() == 6) {
+                _watch->settime(param[0].valD, param[1].valD, param[2].valD, param[3].valD, param[4].valD, param[5].valD);      //сек, мин, час, день, мес, год
+                return {};
+            }
+        } else if (command == "getTimeFloat") {
+            if (param.size() == 1) {
+                IoTValue valTmp;
+                _watch->gettime();
+                valTmp.isDecimal = true;
+                String type = param[0].valS;
+                    if (type == "H") {
+                        valTmp.valD = static_cast<float>(_watch->Hours);
+                    } else if (type == "i") {
+                        valTmp.valD = static_cast<float>(_watch->minutes);
+                    } else if (type == "s") {
+                        valTmp.valD = static_cast<float>(_watch->seconds);
+                    } else if (type == "w") {
+                        valTmp.valD = static_cast<float>(_watch->weekday);                        
+                    } else if (type == "d") {
+                        valTmp.valD = static_cast<float>(_watch->day);      
+                    } else if (type == "m") {
+                        valTmp.valD = static_cast<float>(_watch->month);
+                    } else if (type == "Y") {
+                        valTmp.valD = static_cast<float>(_watch->year);                                           
+                    } else {
+                        return {};  // Если переданный тип не поддерживается
+                    }
+                return valTmp;
+            }
         }
 
         return {}; 
