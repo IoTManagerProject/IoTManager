@@ -80,12 +80,6 @@ public:
           setNewWidgetAttributes();
         }
       }
-      else
-      {
-        value.isDecimal = 0;
-        value.valS = "";
-        regEvent(value.valS, _id);
-      }
     }
   }
   char *TimeToString(unsigned long t)
@@ -240,6 +234,14 @@ public:
 
     if (decoder.decodeBLEJson(BLEdata))
     {
+      String mac_address = BLEdata["MAC"].as<const char *>();
+      if (mac_address == "")
+      {
+        BLEdata["MAC"] = BLEdata["id"];
+        mac_address = BLEdata["id"].as<const char *>();
+      }
+      mac_address.replace(":", "");
+
       BLEdata.remove("manufacturerdata");
       BLEdata.remove("servicedata");
       BLEdata.remove("type");
@@ -249,8 +251,6 @@ public:
       BLEdata.remove("track");
       BLEdata.remove("id");
 
-      String mac_address = BLEdata["MAC"].as<const char *>();
-      mac_address.replace(":", "");
       // дописываем время прихода пакета данных
       BLEdata["last"] = millis();
       if (_debug)
@@ -267,7 +267,7 @@ public:
           //}
         }
 
-        SerialPrint("i", F("BLE"), "found: " + mac_address);
+        SerialPrint("i", F("BLE"), "found: " + String(BLEdata["MAC"].as<const char *>()));
       }
 
       // Перебираем все зарегистрированные сенсоры BleSens
