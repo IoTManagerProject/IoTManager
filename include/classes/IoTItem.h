@@ -74,6 +74,9 @@ class IoTItem {
     virtual void onModuleOrder(String& key, String& value);
     virtual void onTrackingValue(IoTItem* item);  // момент, когда ядро заметило изменение отслеживаемого значения
 
+    // для обновления экрана Nextion из телеграм
+    virtual void uploadNextionTlgrm(String &url);
+
     // методы для графиков (будет упрощено)
     virtual void publishValue();
     virtual void clearValue();

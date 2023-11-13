@@ -240,10 +240,11 @@ public:
             }
             else if (msg.text.indexOf("nextion") != -1 && msg.chatID == _chatID)
             {
-                if (downloadFile(msg))
-                {
-                    //               flashNextion();
+            for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+                if ((*it)->getSubtype() == "NextionUpload") {
+                    (*it)->uploadNextionTlgrm(msg.fileUrl);
                 }
+            }
             }
         }
         else if (msg.text.indexOf("help") != -1)
