@@ -4,7 +4,7 @@
     {
       "name": "bluetooth сканер",
       "type": "Reading",
-      "subtype": "BleScan",
+      "subtype": "BleScan_p2",
       "id": "BleScan",
       "widget": "na",
       "page": "",
@@ -17,7 +17,7 @@
     {
       "name": "bluetooth датчик",
       "type": "Reading",
-      "subtype": "BleSens",
+      "subtype": "BleSens_p2",
       "id": "BleSens",
       "widget": "anydataDef",
       "page": "Сенсоры",
@@ -38,18 +38,18 @@
     "authorContact": "https://t.me/@avaks, https://t.me/Mit4bmw",
     "authorGit": "https://github.com/avaksru, https://github.com/Mit4el",
     "specialThanks": "@Serghei63",
-    "moduleName": "Ble",
+    "moduleName": "Ble_part2",
     "moduleVersion": "3.1",
     "usedRam": {
-      "esp32_4mb": 314692,
+      "esp32_4mb": 288972,
       "esp8266_4mb": 0
     },
     "subTypes": [
-      "BleSens",
-      "BleScan"
+      "BleSens_p2",
+      "BleScan_p2"
     ],
-    "title": "Сканер Bluetooth",
-    "moduleDesc": "Позволяет получить данные с Bluetooth часов и термометров и.т.д. Полный список (учитывать отстование нашей версии библиотеки) https://decoder.theengs.io/devices/devices.html Наш перечень в файле lib/decoder/devices.h  Здесь полный перечень датчиков, для уменьшения размера модуля рекомендуется использовать модули Ble_part1 и Ble_part2",
+    "title": "Сканер Bluetooth, часть 2",
+    "moduleDesc": "Часть 2 Bluetooth датчиков. Позволяет получить данные с Bluetooth датчиков, кроме Mijia, Xiaomi, Cleargrass, Qingping, Inkbird. Обе части вместе не использовать! для всех датчиков модуль Ble! Полный список (учитывать отстование нашей версии библиотеки) https://decoder.theengs.io/devices/devices.html Наш перечень в файле lib/decoder/devices.h",
     "propInfo": {
       "round": "Округление после запятой.",
       "orange": "количество минут после которого окрасить виджет в оранжевый цвет",

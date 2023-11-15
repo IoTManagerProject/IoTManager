@@ -206,6 +206,9 @@ bool IoTItem::isTracking(IoTItem* item) {
 void IoTItem::sendTelegramMsg(bool often, String msg) {}
 void IoTItem::sendFoto(uint8_t *buf, uint32_t length, const String &name) {}
 void IoTItem::editFoto(uint8_t *buf, uint32_t length, const String &name) {}
+// для обновления экрана Nextion из телеграм
+void IoTItem::uploadNextionTlgrm(String &url) {}
+
 // методы для графиков (будет упрощено)
 void IoTItem::publishValue() {}
 void IoTItem::clearValue() {}

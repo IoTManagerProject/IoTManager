@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <NimBLEDevice.h>
 #define BLE_PART1
-#define BLE_PART2
+// #define BLE_PART2
 #include <decoder.h>
 #include <vector>
 
@@ -243,7 +243,6 @@ public:
         mac_address = BLEdata["id"].as<const char *>();
       }
       mac_address.replace(":", "");
-
       if (_debug < 2)
       {
         BLEdata.remove("manufacturerdata");
@@ -322,13 +321,13 @@ public:
 
 //=======================================================================================================
 
-void *getAPI_Ble(String subtype, String param)
+void *getAPI_Ble_part1(String subtype, String param)
 {
-  if (subtype == F("BleScan"))
+  if (subtype == F("BleScan_p1"))
   {
     return new BleScan(param);
   }
-  else if (subtype == F("BleSens"))
+  else if (subtype == F("BleSens_p1"))
   {
     return new BleSens(param);
   }
