@@ -25,8 +25,8 @@ public:
         _NEXT_TX = jsonReadInt(parameters, "NEXT_TX");
         jsonRead(parameters, "UpTelegram", _UpTelegram);
 
-#define NEXT_RX _NEXT_RX // Nextion RX pin | Default 16
-#define NEXT_TX _NEXT_TX // Nextion TX pin | Default 17
+//#define NEXT_RX _NEXT_RX // Nextion RX pin | Default 16
+//#define NEXT_TX _NEXT_TX // Nextion TX pin | Default 17
     }
 
     IoTValue execute(String command, std::vector<IoTValue> &param)
@@ -96,7 +96,7 @@ public:
                 SerialPrint("I", F("NextionUpdate"), "connection failed  ");
             }
 #endif
-            SerialPrint("I", F("NextionUpdate"), "Requesting file:   " + (String)_url);
+            SerialPrint("I", F("NextionUpdate"), "Requesting file: OK" );
             int code = http.GET();
             // Update the nextion display
             if (code == 200)
@@ -118,7 +118,7 @@ public:
         int contentLength = http.getSize();
         SerialPrint("I", F("NextionUpdate"), "File received. Update Nextion...   ");
         bool result;
-        ESPNexUpload nextion(115200);
+        ESPNexUpload nextion(115200, _NEXT_RX, _NEXT_TX);
         nextion.setUpdateProgressCallback([]()
                                           { SerialPrint("I", F("NextionUpdate"), "...   "); });
 
