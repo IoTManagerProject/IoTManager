@@ -9,37 +9,41 @@ extern IoTGpio IoTgpio;
 class IoTServo : public IoTItem {
     private:
         Servo servObj;
-        int _apin, _oldValue;
-        int _locmap1, _locmap2, _locmap3, _locmap4;
+        // int _apin, _oldValue;
+        int _oldValue;
+        // int _locmap1, _locmap2, _locmap3, _locmap4;
 
     public:
         IoTServo(String parameters): IoTItem(parameters) {
-            int pin;
+            int pin, minPulseWidth, maxPulseWidth, neutralPulseWidth;
             jsonRead(parameters, "pin", pin);
-            servObj.attach(pin);
+            jsonRead(parameters, "minPulseWidth", minPulseWidth);
+            jsonRead(parameters, "maxPulseWidth", maxPulseWidth);
+            jsonRead(parameters, "neutralPulseWidth", neutralPulseWidth);
+            servObj.attach(pin, minPulseWidth, maxPulseWidth, neutralPulseWidth);
 
-            jsonRead(parameters, "apin", _apin);
-            if (_apin >= 0) IoTgpio.pinMode(_apin, INPUT);
+            // jsonRead(parameters, "apin", _apin);
+            // if (_apin >= 0) IoTgpio.pinMode(_apin, INPUT);
         
-            String map;
-            jsonRead(parameters, F("amap"), map, false);
-            if (map != "") {
-                _locmap1 = selectFromMarkerToMarker(map, ",", 0).toInt();
-                _locmap2 = selectFromMarkerToMarker(map, ",", 1).toInt();
-                _locmap3 = selectFromMarkerToMarker(map, ",", 2).toInt();
-                _locmap4 = selectFromMarkerToMarker(map, ",", 3).toInt();
-            }
+            // String map;
+            // jsonRead(parameters, F("amap"), map, false);
+            // if (map != "") {
+            //     _locmap1 = selectFromMarkerToMarker(map, ",", 0).toInt();
+            //     _locmap2 = selectFromMarkerToMarker(map, ",", 1).toInt();
+            //     _locmap3 = selectFromMarkerToMarker(map, ",", 2).toInt();
+            //     _locmap4 = selectFromMarkerToMarker(map, ",", 3).toInt();
+            // }
         }
 
-        void doByInterval() {
-            if (_apin >= 0) {
-                value.valD = map(IoTgpio.analogRead(_apin), _locmap1, _locmap2, _locmap3, _locmap4);
-                if (abs(_oldValue - value.valD) > 5) {
-                    _oldValue = value.valD;
-                    servObj.write(_oldValue);
-                }
-            }
-        }
+        // void doByInterval() {
+        //     if (_apin >= 0) {
+        //         value.valD = map(IoTgpio.analogRead(_apin), _locmap1, _locmap2, _locmap3, _locmap4);
+        //         if (abs(_oldValue - value.valD) > 5) {
+        //             _oldValue = value.valD;
+        //             servObj.write(_oldValue);
+        //         }
+        //     }
+        // }
 
         IoTValue execute(String command, std::vector<IoTValue> &param) {
             if (command == "rotate") { 
