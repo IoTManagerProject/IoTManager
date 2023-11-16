@@ -14,8 +14,13 @@ IoTUart::IoTUart(const String& parameters) : IoTItem(parameters) {
     _myUART->begin(_speed);
 #endif
 #ifdef ESP32
-    _myUART = new HardwareSerial(_line);
-    _myUART->begin(_speed, SERIAL_8N1, _rx, _tx);
+    if (_line >= 0) {
+        _myUART = new HardwareSerial(_line);
+        ((HardwareSerial*)_myUART)->begin(_speed, SERIAL_8N1, _rx, _tx);
+    } else {
+        _myUART = new SoftwareSerial(_rx, _tx);
+        ((SoftwareSerial*)_myUART)->begin(_speed);
+    }
 #endif
 }
 
@@ -33,7 +38,7 @@ void IoTUart::uartPrintStrInUTF16(const char *strUTF8, int length) {
     // не определяются исключения по формату UTF-8
     for (int i=0; i < length; i++) {
         if (strUTF8[i] < 176) {     // если байт соответствует коду ASCII, значит берем как есть, но расширяем до двух байт
-            _myUART->write(0x00);
+            //_myUART->write(0x00);
             _myUART->write(strUTF8[i]);
         } else {                    // иначе понимаем, что имеем дело с двумя байтами (да UTF8 может иметь и больше, но это ограничение наше)
             _myUART->write(0x04);   // указываем номер диапазона символов кириллицы первым байтом на выходе

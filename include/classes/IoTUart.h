@@ -6,6 +6,7 @@
 #include <SoftwareSerial.h>
 #else
 #include <HardwareSerial.h>
+#include <SoftwareSerial.h>
 #endif
 
 
@@ -28,7 +29,7 @@ class IoTUart : public IoTItem {
 #ifdef ESP8266
         SoftwareSerial* _myUART;
 #else
-        HardwareSerial* _myUART;
+        Stream* _myUART;
 #endif
 
 };

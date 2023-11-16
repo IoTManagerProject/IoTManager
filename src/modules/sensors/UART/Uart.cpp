@@ -9,7 +9,7 @@
 #ifdef ESP8266
     SoftwareSerial* myUART = nullptr;
 #else
-    HardwareSerial* myUART = nullptr;
+    Stream* myUART = nullptr;
 #endif
 
 class IoTmUART : public IoTUart {
