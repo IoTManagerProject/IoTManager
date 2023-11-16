@@ -21,6 +21,7 @@ class IoTmUART : public IoTUart {
    public:
     IoTmUART(String parameters) : IoTUart(parameters) {
         jsonRead(parameters,  "eventFormat", _eventFormat);
+        myUART = _myUART;
     }
 
     // проверяем формат и если событие, то регистрируем его
