@@ -5,5 +5,5 @@
 extern SoftwareSerial* myUART;
 #else
 #include <HardwareSerial.h>
-extern HardwareSerial* myUART;
+extern Stream* myUART;
 #endif
