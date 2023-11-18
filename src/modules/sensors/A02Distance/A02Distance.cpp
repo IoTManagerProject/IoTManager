@@ -2,17 +2,18 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 
-#include "modules/sensors/UART/Uart.h"
+///#include "modules/sensors/UART/Uart.h"
+#include "classes/IoTUart.h"
 
 #define READ_TIMEOUT 100
 
-class A02Distance : public IoTItem
+class A02Distance : public IoTUart
 {
 private:
 public:
-    A02Distance(String parameters) : IoTItem(parameters)
+    A02Distance(String parameters) : IoTUart(parameters)
     {
-        if (myUART)
+        if (_myUART)
         {
         }
     }
@@ -20,7 +21,7 @@ public:
 //Периодическое выполнение программы, в int секунд, которые зададим в конфигурации
     void doByInterval()
     {
-        if (myUART)
+        if (_myUART)
         {
             static uint8_t data[4];
 
@@ -67,14 +68,14 @@ public:
     //Приём данных из COM порта
     uint16_t recieve(uint8_t *resp, uint16_t len)
     {
-        ((SoftwareSerial *)myUART)->listen(); // Start software serial listen
+        ((SoftwareSerial *)_myUART)->listen(); // Start software serial listen
         unsigned long startTime = millis();   // Start time for Timeout
         uint8_t index = 0;                    // Bytes we have read
         while ((index < len) && (millis() - startTime < READ_TIMEOUT))
         {
-            if (myUART->available() > 0)
+            if (_myUART->available() > 0)
             {
-                uint8_t c = (uint8_t)myUART->read();
+                uint8_t c = (uint8_t)_myUART->read();
                 resp[index++] = c;
             }
         }
