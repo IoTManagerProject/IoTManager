@@ -89,6 +89,9 @@
         "esp32cam_4mb": [
             "adafruit/Adafruit BME280 Library"
         ],
+        "esp32c3m_4mb":[
+            "adafruit/Adafruit BME280 Library"
+        ],
         "esp8266_4mb": [
             "adafruit/Adafruit BME280 Library"
         ],
