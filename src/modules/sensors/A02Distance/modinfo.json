@@ -10,7 +10,11 @@
             "page": "Сенсоры",
             "descr": "Дальность",
             "int": 5,
-            "round": 1
+            "round": 1,
+            "tx": 17,
+            "rx": 16,
+            "line": 2,
+            "speed": 9600
         }
     ],
     "about": {
@@ -23,12 +27,18 @@
         "moduleVersion": "0.1",
         "moduleDesc": "Позволяет получить дальность с ультрозвуковых датчиков A0221AU, A02YYUW",
         "propInfo": {
-            "int": "Количество секунд между опросами датчика."
+            "int": "Количество секунд между опросами датчика.",
+            "tx": "TX пин",
+            "rx": "RX пин",
+            "speed": "Скорость UART",
+            "line": "Актуально только для ESP32: номер линии hardUART. =2 rx=16 tx=17, для SoftwarwSerial в ESP32 line = -1"
         },
         "title": "A0221AU, A02YYUW Ультразвуковой датчик дальности"
     },
     "defActive": true,
     "usedLibs": {
+        "esp32_4mb": [],
+        "esp32_4mb3f": [],        
         "esp8266_4mb": [],
         "esp8266_1mb": [],
         "esp8266_1mb_ota": [],
