@@ -137,7 +137,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             sendStringToWs("ssidli", ssidListHeapJson, num);
             sendStringToWs("errors", errorsHeapJson, num);
             // запуск асинхронного сканирования wifi сетей при переходе на страницу
-            AsyncRouterFind(_scan_for_ws);
+            // AsyncRouterFind(_scan_for_ws);
         }
 
             // обработка кнопки сохранить settings.json
