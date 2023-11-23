@@ -3,11 +3,6 @@
 #include "Arduino.h"
 #include "MySensorsGate.h"
 
-// временное решение
-unsigned long currentMillis;
-unsigned long prevMillis;
-unsigned long difference;
-
 #ifdef MYSENSORS
 // callback библиотеки mysensors
 void receive(const MyMessage& message) {
@@ -58,16 +53,11 @@ String parseToString(const MyMessage& message) {
 class MySensorsGate : public IoTItem {
    private:
    public:
-    MySensorsGate(String parameters) : IoTItem(parameters) {
-        SerialPrint("i", "MySensors", "Gate initialized");
-    }
+    MySensorsGate(String parameters) : IoTItem(parameters) { SerialPrint("i", "MySensors", "Gate initialized"); }
 
-    void doByInterval() {
-    }
+    void doByInterval() {}
 
-    void loop() {
-        loopMySensorsExecute();
-    }
+    void loop() { loopMySensorsExecute(); }
 
     ~MySensorsGate(){};
 
@@ -356,6 +346,10 @@ class MySensorsNode : public IoTItem {
     int _minutesPassed = 0;
     String json = "{}";
     bool dataFromNode = false;
+    // временное решение
+    unsigned long currentMillis;
+    unsigned long prevMillis;
+    unsigned long difference;
 
    public:
     MySensorsNode(String parameters) : IoTItem(parameters) {
@@ -393,9 +387,7 @@ class MySensorsNode : public IoTItem {
     }
 
     // событие когда пользователь подключается приложением или веб интерфейсом к усройству
-    void onMqttWsAppConnectEvent() {
-        setNewWidgetAttributes();
-    }
+    void onMqttWsAppConnectEvent() { setNewWidgetAttributes(); }
 
     void setNewWidgetAttributes() {
         if (dataFromNode) {
