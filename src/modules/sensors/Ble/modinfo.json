@@ -1,9 +1,8 @@
 {
-  "menuSection": "Сенсоры",
+  "menuSection": "sensors",
   "configItem": [
     {
       "name": "bluetooth сканер",
-      "num": 1,
       "type": "Reading",
       "subtype": "BleScan",
       "id": "BleScan",
@@ -12,11 +11,11 @@
       "descr": "",
       "int": 135,
       "scanDuration": 10,
-      "filter": "servicedatauuid"
+      "filter": "servicedatauuid",
+      "debug": 1
     },
     {
       "name": "bluetooth датчик",
-      "num": 1,
       "type": "Reading",
       "subtype": "BleSens",
       "id": "BleSens",
@@ -24,32 +23,41 @@
       "page": "Сенсоры",
       "descr": "",
       "needSave": 0,
+      "int": 30,
       "global": 0,
       "round": 1,
-      "int": 60,
+      "orange": 60,
+      "red": 120,
+      "offline": 180,
       "MAC": "",
       "sensor": ""
     }
   ],
   "about": {
-    "authorName": "AVAKS",
-    "authorContact": "https://t.me/@avaks_dev",
-    "authorGit": "https://github.com/avaksru",
+    "authorName": "AVAKS, v3 - Mit4bmw",
+    "authorContact": "https://t.me/@avaks, https://t.me/Mit4bmw",
+    "authorGit": "https://github.com/avaksru, https://github.com/Mit4el",
     "specialThanks": "@Serghei63",
     "moduleName": "Ble",
-    "moduleVersion": "1.0",
+    "moduleVersion": "3.1",
     "usedRam": {
-      "esp32_4mb": 1261449,
+      "esp32_4mb": 314692,
       "esp8266_4mb": 0
     },
-    "subTypes": ["BleSens", "BleScan"],
+    "subTypes": [
+      "BleSens",
+      "BleScan"
+    ],
     "title": "Сканер Bluetooth",
-    "moduleDesc": "Позволяет получить данные с Bluetooth часов и термометров Mijia, Xiaomi, Cleargrass, ...",
+    "moduleDesc": "Позволяет получить данные с Bluetooth часов и термометров и.т.д. Полный список (учитывать отстование нашей версии библиотеки) https://decoder.theengs.io/devices/devices.html Наш перечень в файле lib/decoder/devices.h  Здесь полный перечень датчиков, для уменьшения размера модуля рекомендуется использовать модули Ble_part1 и Ble_part2",
     "propInfo": {
       "round": "Округление после запятой.",
-      "int": "Интервал сканирования BLE окружения (BleScan) / Интервал отправки собранной телеметрии в MQTT (BleSens)",
+      "orange": "количество минут после которого окрасить виджет в оранжевый цвет",
+      "red": "количество минут после которого окрасить виджет в красный цвет",
+      "offline": "количество минут после которого отобразить что устройство offline, если все три orange red и offline поставить в ноль - то функция окраски выключится",
+      "int": "Интервал сканирования BLE окружения (BleScan) / В BleSens темп обновления времнени поступления данных, сами даные обновляются по мене сканирования/поступления",
       "scanDuration": "Длительность сканирования ",
-      "filter": "Позволяет установить фильтр по параметру передаваемому датчиком. Данные будут считываться только с датчиков у которых есть передаваемый параметр указанный в фильтре",
+      "filter": "Позволяет установить фильтр по параметру передаваемому датчиком. Влияет только на вывод лога при debug=1, что бы было легче найти датчики, если много устройств в эфире",
       "MAC": "MAC адрес беспроводного датчика",
       "sensor": "Тип сенсора: температура / влажность / время / ...   "
     }
@@ -57,8 +65,22 @@
   "defActive": false,
   "usedLibs": {
     "esp32_4mb": [
-      "https://github.com/h2zero/NimBLE-Arduino.git",
-      "https://github.com/avaksru/decoder.git"
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32_16mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32_4mb3f": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32cam_4mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32s3_16mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32c3m_4mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
     ]
   }
 }

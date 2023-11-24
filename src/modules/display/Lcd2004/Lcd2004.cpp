@@ -1,26 +1,18 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
-
-//#include "LiquidCrystal_I2C.h"
 #include <RobotClass_LiquidCrystal_I2C.h>
 
-#include <map>
-
-void scanI2C();
-
-//LiquidCrystal_I2C *LCDI2C;
-RobotClass_LiquidCrystal_I2C *LCDI2C;
+RobotClass_LiquidCrystal_I2C* LCDI2C;
 
 class Lcd2004 : public IoTItem {
    private:
     unsigned int _x;
     unsigned int _y;
-    String _id2show;
-    String _descr;
+    String _id2show, _prefix = "", _postfix = "";
     int _prevStrSize;
     String _addr;
 
-    bool _isShow = true;    // экран показывает
+    bool _isShow = true;  // экран показывает
 
    public:
     Lcd2004(String parameters) : IoTItem(parameters) {
@@ -34,45 +26,58 @@ class Lcd2004 : public IoTItem {
         }
 
         jsonRead(parameters, "size", size);
-        int w = selectFromMarkerToMarker(size, ",", 0).toInt();  //количество столбцов
-        int h = selectFromMarkerToMarker(size, ",", 1).toInt();  //количество строк
-        if (LCDI2C == nullptr) {                                 //инициализации экрана еще не было
-            //LCDI2C = new LiquidCrystal_I2C(hexStringToUint8(_addr), w, h);
+        int w = selectFromMarkerToMarker(size, ",", 0).toInt();  // количество столбцов
+        int h = selectFromMarkerToMarker(size, ",", 1).toInt();  // количество строк
+        if (LCDI2C == nullptr) {                                 // инициализации экрана еще не было
             LCDI2C = new RobotClass_LiquidCrystal_I2C(hexStringToUint8(_addr), w, h, CP_UTF8);
             if (LCDI2C != nullptr) {
                 LCDI2C->init();
+                LCDI2C->clear();
+                LCDI2C->backlight();
             }
         }
-            
-        LCDI2C->clear();
-        LCDI2C->backlight();
 
         jsonRead(parameters, "coord", xy);
         _x = selectFromMarkerToMarker(xy, ",", 0).toInt();
         _y = selectFromMarkerToMarker(xy, ",", 1).toInt();
 
-        jsonRead(parameters, "descr", _descr);
         jsonRead(parameters, "id2show", _id2show);
+        jsonRead(parameters, "prefix", _prefix);
+        jsonRead(parameters, "postfix", _postfix);
     }
 
-    void doByInterval() {
-        if (LCDI2C != nullptr) {
-            printBlankStr(_prevStrSize);
-            
-            String tmpStr = getItemValue(_id2show);
-            if (_descr != "none") tmpStr = _descr + " " + tmpStr;
-            LCDI2C->setCursor(_x, _y);
-            LCDI2C->print(tmpStr);
-            
-            //LCDI2C->print("Helloy,Manager 404 !");
-            //Serial.printf("ffff %s\n", _id2show);
-            _prevStrSize = tmpStr.length();
-        } else {
+    void drawItem(IoTItem* item) {
+        String tmpStr = _prefix;
+        tmpStr += item->getValue();
+        tmpStr += _postfix;
+
+        printBlankStr(_prevStrSize);
+        LCDI2C->setCursor(_x, _y);
+        LCDI2C->print(tmpStr);
+        _prevStrSize = tmpStr.length();
+    }
+
+    void setValue(const IoTValue& Value, bool genEvent = true) {
+        if (LCDI2C == nullptr) return;
+
+        value = Value;
+        drawItem(this);
+        IoTItem::setValue(Value, genEvent);
+    }
+
+    void onRegEvent(IoTItem* eventItem) {
+        if (LCDI2C == nullptr) {
             scanI2C();
+            return;
+        }
+        if (!eventItem || _id2show == "") return;
+
+        if (_id2show == eventItem->getID()) {
+            setValue(eventItem->value, false);
         }
     }
 
-    IoTValue execute(String command, std::vector<IoTValue> &param) {  // будет возможным использовать, когда сценарии запустятся
+    IoTValue execute(String command, std::vector<IoTValue>& param) {
         if (command == "noBacklight")
             LCDI2C->noBacklight();
         else if (command == "backlight")
@@ -87,7 +92,7 @@ class Lcd2004 : public IoTItem {
             if (_isShow) {
                 LCDI2C->noDisplay();
                 _isShow = false;
-            } else { 
+            } else {
                 LCDI2C->display();
                 _isShow = true;
             }
@@ -99,9 +104,13 @@ class Lcd2004 : public IoTItem {
             if (param.size()) {
                 _y = param[0].valD;
             }
-        } else if (command == "descr") {
+        } else if (command == "prefix") {
             if (param.size()) {
-                _descr = param[0].valS;
+                _prefix = param[0].valS;
+            }
+        } else if (command == "postfix") {
+            if (param.size()) {
+                _postfix = param[0].valS;
             }
         } else if (command == "id2show") {
             if (param.size()) {
@@ -113,7 +122,7 @@ class Lcd2004 : public IoTItem {
         return {};
     }
 
-    //печать пустой строки нужной длинны для затирания предыдущего значения на экране
+    // печать пустой строки нужной длинны для затирания предыдущего значения на экране
     void printBlankStr(int strSize) {
         String tmpStr = "";
         for (int i = 0; i < strSize; i++) tmpStr += " ";
@@ -121,13 +130,13 @@ class Lcd2004 : public IoTItem {
         LCDI2C->print(tmpStr);
     }
 
-    ~Lcd2004(){
+    ~Lcd2004() {
         if (LCDI2C) delete LCDI2C;
         LCDI2C = nullptr;
     };
 };
 
-void *getAPI_Lcd2004(String subtype, String param) {
+void* getAPI_Lcd2004(String subtype, String param) {
     if (subtype == F("Lcd2004")) {
         return new Lcd2004(param);
     } else {

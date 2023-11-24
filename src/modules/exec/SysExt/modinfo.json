@@ -1,18 +1,18 @@
-{   
-    "menuSection": "Исполнительные устройства",
-
-    "configItem": [{
-        "global": 0,
-        "name": "Доп. функции системы",
-        "type": "Reading",
-        "subtype": "SysExt",
-        "id": "SysExt",
-        "widget": "",
-        "page": "",
-        "descr": "",
-        "int": 15
-    }],
-    
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Доп. функции системы",
+            "type": "Reading",
+            "subtype": "SysExt",
+            "id": "SysExt",
+            "widget": "",
+            "page": "",
+            "descr": "",
+            "int": 15
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -30,11 +30,11 @@
             "int": "Не используется"
         }
     },
-
     "defActive": false,
-
     "usedLibs": {
         "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32cam_4mb": [],
         "esp8266_4mb": []
     }
 }

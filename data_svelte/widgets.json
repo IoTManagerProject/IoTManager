@@ -246,6 +246,17 @@
         "debounce": 500
     },
     {
+        "name": "rangeServo",
+        "label": "Ползунок (Servo)",
+        "widget": "range",
+        "descrColor": "red",
+        "after": "°",
+        "k": 1,
+        "min": 0,
+        "max": 180,
+        "debounce": 500
+    },
+    {
         "name": "select",
         "label": "Выпадающий",
         "widget": "select",
@@ -290,6 +301,27 @@
         "after": "cm",
         "icon": "speedometer"
     },
+    {
+        "name": "anydataLiter",
+        "label": "Литры",
+        "widget": "anydata",
+        "after": "ltr",
+        "icon": "speedometer"
+    }, 
+    {
+        "name": "anydataSpeed",
+        "label": "мерты в секунду",
+        "widget": "anydata",
+        "after": "m/s",
+        "icon": "speedometer"
+    },
+    {
+        "name": "anydataСorner",
+        "label": "угол градусов",
+        "widget": "anydata",
+        "after": "°",
+        "icon": "speedometer"
+    },   
     {
         "name": "nil",
         "label": "Без виджета"

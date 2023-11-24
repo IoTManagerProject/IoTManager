@@ -4,7 +4,7 @@
         "num": 0
     },
     {
-        "header": "Виртуальные элементы"
+        "header": "virtual_elments"
     },
     {
         "global": 0,
@@ -60,7 +60,7 @@
         "num": 4,
         "int": 1,
         "logid": "t",
-        "points": 365,
+        "points": 200,
         "telegram": 0,
         "test": 0,
         "btn-defvalue": 0,
@@ -68,7 +68,29 @@
     },
     {
         "global": 0,
-        "name": "5. Таймер",
+        "name": "5. Погода OWM",
+        "type": "Reading",
+        "subtype": "owmWeather",
+        "id": "owm",
+        "needSave": 0,
+        "widget": "nil",
+        "page": "Погода",
+        "descr": "Температура на улице",
+        "int": 30,
+        "API_key": "",
+        "city": "Moscow",
+        "lon": "37.54",
+        "lat": "57.74",
+        "lang": "ru",
+        "param": "",
+        "round": 1,
+        "val": "...",
+        "debug": 0,
+        "num": 5
+    },
+    {
+        "global": 0,
+        "name": "6. Таймер",
         "type": "Writing",
         "subtype": "Timer",
         "id": "timer",
@@ -80,11 +102,11 @@
         "ticker": 1,
         "repeat": 1,
         "needSave": 0,
-        "num": 5
+        "num": 6
     },
     {
         "global": 0,
-        "name": "6. Окно ввода числа (переменная)",
+        "name": "7. Окно ввода числа (переменная)",
         "type": "Reading",
         "subtype": "Variable",
         "id": "value",
@@ -98,11 +120,11 @@
         "plus": 0,
         "multiply": 1,
         "round": 0,
-        "num": 6
+        "num": 7
     },
     {
         "global": 0,
-        "name": "7. Окно ввода времени",
+        "name": "8. Окно ввода времени",
         "type": "Reading",
         "subtype": "Variable",
         "id": "time",
@@ -112,11 +134,11 @@
         "descr": "Введите время",
         "int": "0",
         "val": "02:00",
-        "num": 7
+        "num": 8
     },
     {
         "global": 0,
-        "name": "8. Окно ввода даты",
+        "name": "9. Окно ввода даты",
         "type": "Reading",
         "subtype": "Variable",
         "id": "time",
@@ -126,11 +148,11 @@
         "descr": "Введите дату",
         "int": "0",
         "val": "24.05.2022",
-        "num": 8
+        "num": 9
     },
     {
         "global": 0,
-        "name": "9. Окно ввода текста",
+        "name": "10. Окно ввода текста",
         "type": "Reading",
         "subtype": "Variable",
         "id": "txt",
@@ -140,11 +162,11 @@
         "descr": "Введите текст",
         "int": "0",
         "val": "текст",
-        "num": 9
+        "num": 10
     },
     {
         "global": 0,
-        "name": "10. Вывод значения",
+        "name": "11. Вывод значения",
         "type": "Reading",
         "subtype": "Variable",
         "id": "vout",
@@ -157,20 +179,6 @@
         "map": "1024,1024,1,100",
         "plus": 0,
         "multiply": 1,
-        "round": 0,
-        "num": 10
-    },
-    {
-        "global": 0,
-        "name": "11. Цветной текст",
-        "type": "Reading",
-        "subtype": "VariableColor",
-        "id": "color",
-        "needSave": 0,
-        "widget": "anydataDef",
-        "page": "Вывод",
-        "descr": "Цветной текст",
-        "val": "...",
         "round": 0,
         "num": 11
     },
@@ -189,7 +197,7 @@
         "num": 12
     },
     {
-        "header": "Сенсоры"
+        "header": "sensors"
     },
     {
         "name": "13. A02 Дальность",
@@ -630,7 +638,7 @@
         "num": 42
     },
     {
-        "header": "Исполнительные устройства"
+        "header": "executive_devices"
     },
     {
         "global": 0,
@@ -712,13 +720,14 @@
         "type": "Writing",
         "subtype": "IoTServo",
         "id": "servo",
-        "widget": "range",
+        "widget": "rangeServo",
         "page": "servo",
         "descr": "угол",
-        "int": 1,
         "pin": 12,
-        "apin": -1,
-        "amap": "0, 4096, 0, 180",
+        "minPulseWidth": 544,
+        "maxPulseWidth": 2400,
+        "neutralPulseWidth": 1500,
+        "trackingID": "",
         "num": 47
     },
     {
@@ -757,7 +766,7 @@
         "id": "impulse",
         "widget": "anydataDef",
         "page": "Кнопки",
-        "descr": "Количество нажаний",
+        "descr": "Количество нажатий",
         "needSave": 0,
         "int": 300,
         "inv": 1,
@@ -811,7 +820,7 @@
         "num": 53
     },
     {
-        "header": "Экраны"
+        "header": "screens"
     },
     {
         "global": 0,
@@ -819,14 +828,15 @@
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
-        "widget": "",
-        "page": "",
-        "descr": "T",
-        "int": 15,
+        "widget": "inputTxt",
+        "page": "screens",
+        "descr": "LCD Экран",
         "addr": "0x27",
         "size": "20,4",
         "coord": "0,0",
-        "id2show": "id датчика",
+        "id2show": "",
+        "prefix": "",
+        "postfix": "",
         "num": 54
     },
     {
@@ -834,14 +844,52 @@
         "type": "Reading",
         "subtype": "Lcd2004",
         "id": "Lcd",
-        "widget": "",
-        "page": "",
-        "descr": "T",
-        "int": 15,
+        "widget": "inputTxt",
+        "page": "screens",
+        "descr": "LCD Экран",
         "addr": "0x27",
         "size": "16,2",
         "coord": "0,0",
-        "id2show": "id датчика",
+        "id2show": "",
+        "prefix": "",
+        "postfix": "",
         "num": 55
+    },
+    {
+        "global": 0,
+        "name": "56. OLED экран 64 8266",
+        "type": "Reading",
+        "subtype": "Oled64",
+        "id": "Oled",
+        "widget": "inputTxt",
+        "page": "screens",
+        "descr": "OLED Экран",
+        "addr": "0x3C",
+        "coord": "0,0",
+        "size": "1",
+        "id2show": "",
+        "prefix": "",
+        "postfix": "",
+        "num": 56
+    },
+    {
+        "global": 0,
+        "name": "57. 7 сегментный дисплей TM16XX",
+        "type": "Writing",
+        "subtype": "TM16XX",
+        "id": "tm",
+        "widget": "inputTxt",
+        "page": "screens",
+        "descr": "Экран",
+        "round": 0,
+        "chip": 1637,
+        "numDigits": 4,
+        "DIO": "13",
+        "CLK": "14",
+        "STB": "12",
+        "intensity": "5",
+        "on": "1",
+        "id2show": "",
+        "num": 57
     }
 ]

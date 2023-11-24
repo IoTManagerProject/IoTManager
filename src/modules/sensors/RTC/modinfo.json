@@ -1,5 +1,5 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "global": 0,
@@ -18,7 +18,7 @@
             "ticker": 0,
             "int": 5,
             "btn-setUTime": "0",
-            "btn-setSysTime": "nil"    
+            "btn-setSysTime": "nil"
         }
     ],
     "about": {
@@ -51,19 +51,44 @@
             {
                 "name": "getTime",
                 "descr": "Получить строковое значение времени по указанному формату.",
-                "params": ["Формат как у функции date() в PHP"]
+                "params": [
+                    "Формат как у функции date() в PHP"
+                ]
+            },
+            {
+                "name": "setTime",
+                "descr": "Установить время через сценарии в формате сек, мин, час, день, мес, год.",
+                "params": [
+                    "сек", "мин", "час", "день", "мес", "год"
+                ]
+            },
+            {
+                "name": "setUnixTime",
+                "descr": "Установить время через сценарий в формате юникстайм",
+                "params": [
+                    "rtc.setUnixTime('46489234') - параметр в виде строки"
+                ]
+            },
+            {
+                "name": "getTimeFloat",
+                "descr": "Получить числовое значение времени по указанному формату",
+                "params": [
+                    "s - Вернуть секунды, i - Вернуть минуты, H - Вернуть часы в 24-часовом формате, d - Вернуть день месяца, w - Вернуть день недели, m - Вернуть месяц, Y - Вернуть год(4 знака)"
+                ]
             }
         ]
     },
     "defActive": true,
     "usedLibs": {
-        "esp32_4mb": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8266_4mb": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8266_1mb": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8266_1mb_ota": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8285_1mb": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8285_1mb_ota": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8266_2mb": ["https://github.com/tremaru/iarduino_RTC"],
-        "esp8266_2mb_ota": ["https://github.com/tremaru/iarduino_RTC"]
+        "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32cam_4mb": [],
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": [],
+        "esp8285_1mb": [],
+        "esp8285_1mb_ota": [],
+        "esp8266_2mb": [],
+        "esp8266_2mb_ota": []
     }
 }

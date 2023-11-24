@@ -2,7 +2,7 @@
 #include "Global.h"
 
 #ifdef ESP8266
-//эта библиотека встроена в ядро
+// эта библиотека встроена в ядро
 #include "ESPAsyncUDP.h"
 #else
 #include "AsyncUDP.h"
@@ -11,7 +11,8 @@ extern AsyncUDP asyncUdp;
 
 extern const String getThisDevice();
 extern void addThisDeviceToList();
-extern void asyncUdpInit();
+extern void udpListningInit();
+extern void  udpBroadcastInit();
 extern String uint8tToString(uint8_t* data, size_t len);
 extern void udpPacketParse(String& data);
 extern void jsonMergeArrays(String& existJson, String& incJson);

@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 
 long prevWeatherMillis = millis() - 60001;
-StaticJsonDocument<JSON_BUFFER_SIZE * 2> Weatherdoc;
+//StaticJsonDocument<JSON_BUFFER_SIZE * 2> Weatherdoc;
 
 extern IoTGpio IoTgpio;
 class Weather : public IoTItem
@@ -11,22 +11,23 @@ class Weather : public IoTItem
 private:
     String _location;
     String _param;
-    long interval;
-
+    // long interval;
+    DynamicJsonDocument Weatherdoc;
 public:
-    Weather(String parameters) : IoTItem(parameters)
+    Weather(String parameters) : Weatherdoc(1024), IoTItem(parameters)
     {
         _location = jsonReadStr(parameters, "location");
         _param = jsonReadStr(parameters, "param");
-        jsonRead(parameters, F("int"), interval);
-        interval = interval * 1000 * 60 * 60; // интервал проверки погоды в часах
+        long interval;
+        jsonRead(parameters, F("int"), interval); // интервал проверки погоды в часах
+        setInterval(interval * 60 * 60);
     }
 
     void getWeather()
     {
         String ret;
 
-        if (WiFi.status() == WL_CONNECTED)
+        if (isNetworkActive())
         {
             // char c;
             String payload;
@@ -113,19 +114,21 @@ public:
             regEvent(value.valS, "Weather");
         }
     }
-    void loop()
-    {
-        if (enableDoByInt)
-        {
-            currentMillis = millis();
-            difference = currentMillis - prevMillis;
-            if (difference >= interval)
-            {
-                prevMillis = millis();
-                this->doByInterval();
-            }
-        }
-    }
+
+    // void loop()
+    // {
+    //     if (enableDoByInt)
+    //     {
+    //         currentMillis = millis();
+    //         difference = currentMillis - prevMillis;
+    //         if (difference >= interval)
+    //         {
+    //             prevMillis = millis();
+    //             this->doByInterval();
+    //         }
+    //     }
+    // }
+
     IoTValue execute(String command, std::vector<IoTValue> &param)
     {
         if (command == "get")

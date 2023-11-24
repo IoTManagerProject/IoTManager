@@ -1,6 +1,5 @@
 {
-  "menuSection": "Исполнительные устройства",
-
+  "menuSection": "executive_devices",
   "configItem": [
     {
       "global": 0,
@@ -35,6 +34,7 @@
       "map": "1,100,1,100",
       "set_id": "",
       "term_id": "",
+      "term_rezerv_id": "",      
       "rele": "",
       "KP": 5.0,
       "KI": 50,
@@ -73,7 +73,6 @@
       "outside_id": ""
     }
   ],
-
   "about": {
     "authorName": "AVAKS",
     "authorContact": "https://t.me/@avaks_dev",
@@ -106,30 +105,38 @@
       {
         "name": "enable",
         "descr": "включить / выключить термостатирование (режим AUTO)  применим к PID  и Гистере́зис ",
-        "params": ["thermostat.enable(1) - вкл, thermostat.enable(0) - выкл, "]
+        "params": [
+          "thermostat.enable(1) - вкл, thermostat.enable(0) - выкл, "
+        ]
       },
       {
         "name": "KP",
         "descr": "Пропорциональный коэффициент PID .",
-        "params": ["thermostat.KP(1) - задает значение коэффициента"]
+        "params": [
+          "thermostat.KP(1) - задает значение коэффициента"
+        ]
       },
       {
         "name": "KI",
         "descr": "Интегральный коэффициент PID .",
-        "params": ["thermostat.KI(1) - задает значение коэффициента"]
+        "params": [
+          "thermostat.KI(1) - задает значение коэффициента"
+        ]
       },
       {
         "name": "KD",
         "descr": "Дифференциальный коэффициент PID .",
-        "params": ["thermostat.KD(1) - задает значение коэффициента"]
+        "params": [
+          "thermostat.KD(1) - задает значение коэффициента"
+        ]
       }
     ]
   },
-
   "defActive": false,
-
   "usedLibs": {
     "esp32_4mb": [],
+    "esp32_4mb3f": [],
+    "esp32cam_4mb": [],
     "esp8266_4mb": [],
     "esp8266_1mb": [],
     "esp8266_1mb_ota": [],

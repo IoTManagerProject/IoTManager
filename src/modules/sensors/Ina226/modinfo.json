@@ -1,0 +1,141 @@
+{
+    "menuSection": "sensors",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "INA226 Tок",
+            "type": "Reading",
+            "subtype": "Ina226curr",
+            "id": "ina226_A",
+            "widget": "anydataAmp",
+            "page": "INA 226",
+            "descr": "Сила тока",
+            "addr": "0x40",
+            "plus": 0,
+            "multiply": 1,
+            "round": 3,
+            "int": 10
+        },
+        {
+            "global": 0,
+            "name": "INA226 Напряжение",
+            "type": "Reading",
+            "subtype": "Ina226voltage",
+            "id": "ina226_V",
+            "widget": "anydataVlt",
+            "page": "INA 226",
+            "descr": "Напряжения",
+            "addr": "0x40",
+            "plus": 0,
+            "multiply": 1,
+            "round": 3,
+            "int": 10
+        },
+        {
+            "global": 0,
+            "name": "INA226 Мощность",
+            "type": "Reading",
+            "subtype": "Ina226power",
+            "id": "ina226_W",
+            "widget": "anydataWt",
+            "page": "INA 226",
+            "descr": "Мощность",
+            "addr": "0x40",
+            "plus": 0,
+            "multiply": 1,
+            "round": 3,
+            "int": 10
+        },
+        {
+            "global": 0,
+            "name": "INA226 Шунт",
+            "type": "Reading",
+            "subtype": "Ina226shuntvoltage",
+            "id": "ina226_Vsh",
+            "widget": "anydataVlt",
+            "page": "INA 226",
+            "descr": "Напряжение шунта",
+            "addr": "0x40",
+            "plus": 0,
+            "multiply": 1,
+            "round": 3,
+            "int": 10
+        },
+        {
+            "global": 0,
+            "name": "INA226 Настройки",
+            "type": "Reading",
+            "subtype": "Ina226setting",
+            "id": "ina226_set",
+            "widget": "nil",
+            "page": "",
+            "descr": "",
+            "addr": "0x40",
+            "shunt": 0.1,
+            "maxV": 3.2,
+            "adjClbr": 0,
+            "resol": 4,
+            "btn-getClbr": "nil"
+        }
+    ],
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "v2.0 - Mitchel @Mit4bmw",
+        "moduleName": "Ina226",
+        "moduleVersion": "2.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "subTypes": [
+            "Ina226curr",
+            "Ina226voltage",
+            "Ina226power",
+            "Ina226shuntvoltage",
+            "Ina226setting"
+        ],
+        "title": "Милливатметр постоянного тока",
+        "moduleDesc": "Стандартные значения для модуля INA226 (Сопротивление шунта - 0.1 Ом, Максимальный ожидаемый ток - 0.8 А, Адрес на шине I2c - 0x40). Модуль INA226 Настройки - для изменении настроек нужен постоянно в конфигурации, должен стоять перед рдугими модулями с тем же адресом, без него работает на значенях по умолчанию",
+        "propInfo": {
+            "int": "Количество секунд между опросами датчика.",
+            "addr": "Адрес датчика на шине, обычно 0x40. Если оставить поле пустым, то запуститься сканер I2C и подключение к адресу 0x40",
+            "shunt": "Сопротивление шунта, штатно 0.1Ом. Изменить если его перепаяли",
+            "maxV": "Максимальный ожидаемый ток, штатно 0.8А, для указаного шунта",
+            "adjClbr": "Задать смещение (подкрутить) калибровочное значение на указанное значение. -20  = Уменьшить калибровочное значение на 20",
+            "resol": "Установка режима усреднения (колическва замеров) для измерения напряжения и тока, рекомендуется для повышения стабильности показаний на шумной нагрузке. Пропорционально увеличивает время оцифровки. Варианты 0(без усреднения), от 1 до 7 - соответстввует 4,16,64,128,256,512,1024",
+            "btn-getClbr": "Кнопка запроса текущей калибровки, выводится в лог"
+        },
+        "funcInfo": [
+            {
+                "name": "sleep",
+                "descr": "INA226 Настройки. Установка / снятие режима сна датчика INA226",
+                "params": [
+                    "1- вкл сна/ 0-выкл сна"
+                ]
+            }
+        ]
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [
+            "https://github.com/GyverLibs/GyverINA"
+        ],
+        "esp32_4mb3f": [
+            "https://github.com/GyverLibs/GyverINA"
+        ],
+        "esp32cam_4mb": [
+            "https://github.com/GyverLibs/GyverINA"
+        ],
+        "esp32s2_4mb": [
+            "https://github.com/GyverLibs/GyverINA"
+        ],
+        "esp8266_4mb": [
+            "https://github.com/GyverLibs/GyverINA"
+        ],
+        "esp8266_16mb": [
+            "https://github.com/GyverLibs/GyverINA"
+        ]
+    }
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <title>IoT Manager 4.4.3</title>
+    <link rel="icon" type="image/png" href="/favicon.ico" />
+    <link
+      rel="stylesheet"
+      href="https://iotmanager.org/esp01ota/build/bundle.css?450"
+    />
+  </head>
+
+  <body>
+    <script>
+      let script = document.createElement("script");
+      script.src = "https://iotmanager.org/esp01ota/build/bundle.js?450";
+      script.onload = execute;
+      document.head.append(script);
+      script.onerror = error;
+      function error() {
+        console.log("ошибка при загрузке ресурса");
+      }
+      function execute() {
+        console.log("скрипт загружен");
+        document.getElementById("my-form").style.display = "none";
+      }
+    </script>
+    <div style="display: flex; align-items: center; justify-content: center">
+      <form method="GET" action="http://192.168.4.1/set" id="my-form">
+        <br /><br />
+        <h1>Настройка WiFi</h1>
+        <br />
+        <div>
+          <input name="routerssid" type="text" placeholder="WIFI" />
+        </div>
+        <br />
+        <div>
+          <input name="routerpass" placeholder="Password" />
+        </div>
+        <br /><br />
+        <input type="submit" value="сохранить" />
+      </form>
+    </div>
+  </body>
+</html>

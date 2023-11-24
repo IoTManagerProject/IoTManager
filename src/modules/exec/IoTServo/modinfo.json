@@ -1,22 +1,22 @@
-{   
-    "menuSection": "Исполнительные устройства",
-
-    "configItem": [{
-        "global": 0,
-        "name": "Сервопривод",
-        "type": "Writing",
-        "subtype": "IoTServo",
-        "id": "servo",
-        "widget": "range",
-        "page": "servo",
-        "descr": "угол",
-        
-        "int": 1,
-        "pin": 12,
-        "apin": -1,
-        "amap": "0, 4096, 0, 180"
-    }],
-    
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Сервопривод",
+            "type": "Writing",
+            "subtype": "IoTServo",
+            "id": "servo",
+            "widget": "rangeServo",
+            "page": "servo",
+            "descr": "угол",
+            "pin": 12,
+            "minPulseWidth": 544,
+            "maxPulseWidth": 2400,
+            "neutralPulseWidth": 1500,
+            "trackingID": ""
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -31,26 +31,33 @@
         "title": "Сервопривод",
         "moduleDesc": "Предназначен для управления сервоприводом по уровню аналогово сигнала.",
         "propInfo": {
-            "int": "Пауза в секундах между опросами аналогового входа. Если 0, то читаем постоянно",
             "pin": "Пин, к которому подключен сервопривод",
-            "apin": "Номер GPIO аналогового пина. Если -1, то функция отключена.",
-            "amap": "Настройки преобразования значений аналога в нужный диапазон сервы, имеет смысл, если аналог включен."
+            "minPulseWidth": "Минимальная длина импульса",
+            "maxPulseWidth": "Максимальная длина импульса",
+            "neutralPulseWidth": "Нейтральная длина импульса",
+            "trackingID": "Идентификатор отслеживания значения другого элемента конфигурации, например, чтение аналога"
         },
         "retInfo": "Содержит текущее значение поворота",
         "funcInfo": [
             {
                 "name": "rotate",
                 "descr": "Повернуть привод на значение",
-                "params": ["Числовое значение"]
+                "params": [
+                    "Числовое значение"
+                ]
             }
         ]
     },
-
     "defActive": true,
-
     "usedLibs": {
         "esp32_4mb": [
-            "https://github.com/RoboticsBrno/ServoESP32"
+            "https://github.com/RoboticsBrno/ServoESP32#v1.0.3"
+        ],
+        "esp32_4mb3f": [
+            "https://github.com/RoboticsBrno/ServoESP32#v1.0.3"
+        ],
+        "esp32cam_4mb": [
+            "https://github.com/RoboticsBrno/ServoESP32#v1.0.3"
         ],
         "esp8266_4mb": []
     }

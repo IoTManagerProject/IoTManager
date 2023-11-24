@@ -1,5 +1,5 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "name": "UART",
@@ -44,28 +44,43 @@
             {
                 "name": "println",
                 "descr": "Отправить в UART строку текста и признак завершения строки (перевод строки).",
-                "params": ["Строка текста"]
+                "params": [
+                    "Строка текста"
+                ]
             },
             {
                 "name": "print",
                 "descr": "Отправить в UART строку текста.",
-                "params": ["Строка текста"]
+                "params": [
+                    "Строка текста"
+                ]
             },
             {
                 "name": "printHex",
                 "descr": "Отправить в UART HEX-строку.",
-                "params": ["HEX-строка."]
+                "params": [
+                    "HEX-строка."
+                ]
             },
             {
                 "name": "printFFF",
                 "descr": "Отправить в UART текстовую строку и hex метку 3 байта 0xFF0xFF0xFF.",
-                "params": ["Строка текста", "1 - обернуть строку в кавычки, 0 - отправить без кавычек"]
+                "params": [
+                    "Строка текста",
+                    "1 - обернуть строку в кавычки, 0 - отправить без кавычек"
+                ]
             }
         ]
     },
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp32_4mb3f": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp32cam_4mb": [
             "plerup/EspSoftwareSerial"
         ],
         "esp8266_4mb": [

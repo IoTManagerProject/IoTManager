@@ -1,19 +1,19 @@
-{   
-    "menuSection": "Сенсоры",
-
-    "configItem": [{
-        "global": 0,
-        "name": "Cенсор освещенность Bh1750",
-        "type": "Reading",
-        "subtype": "Bh1750",
-        "id": "Bh1750",
-        "widget": "anydata",
-        "page": "Сенсоры",
-        "descr": "Освещённость",
-        "round": 1,
-        "int": 15
-    }],
-    
+{
+    "menuSection": "sensors",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Cенсор освещенность Bh1750",
+            "type": "Reading",
+            "subtype": "Bh1750",
+            "id": "Bh1750",
+            "widget": "anydata",
+            "page": "Сенсоры",
+            "descr": "Освещённость",
+            "round": 1,
+            "int": 15
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -35,6 +35,12 @@
     "defActive": false,
     "usedLibs": {
         "esp32_4mb": [
+            "BH1750"
+        ],
+        "esp32_4mb3f": [
+            "BH1750"
+        ],
+        "esp32cam_4mb": [
             "BH1750"
         ],
         "esp8266_4mb": [

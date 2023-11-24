@@ -1,5 +1,5 @@
 {
-    "menuSection": "Виртуальные элементы",
+    "menuSection": "virtual_elments",
     "configItem": [
         {
             "global": 0,
@@ -13,7 +13,7 @@
             "num": 1,
             "int": 1,
             "logid": "t",
-            "points": 365,
+            "points": 200,
             "telegram": 0,
             "test": 0,
             "btn-defvalue": 0,
@@ -44,7 +44,14 @@
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32cam_4mb": [],
+        "esp32_16mb": [],
+        "esp32s2_4mb": [],
+        "esp32s3_16mb": [],
+        "esp32c3m_4mb": [],
         "esp8266_4mb": [],
+        "esp8266_16mb": [],
         "esp8266_1mb": [],
         "esp8266_1mb_ota": [],
         "esp8285_1mb": [],

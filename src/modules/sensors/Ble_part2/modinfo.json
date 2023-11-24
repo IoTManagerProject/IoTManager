@@ -1,0 +1,86 @@
+{
+  "menuSection": "sensors",
+  "configItem": [
+    {
+      "name": "bluetooth сканер",
+      "type": "Reading",
+      "subtype": "BleScan_p2",
+      "id": "BleScan",
+      "widget": "na",
+      "page": "",
+      "descr": "",
+      "int": 135,
+      "scanDuration": 10,
+      "filter": "servicedatauuid",
+      "debug": 1
+    },
+    {
+      "name": "bluetooth датчик",
+      "type": "Reading",
+      "subtype": "BleSens_p2",
+      "id": "BleSens",
+      "widget": "anydataDef",
+      "page": "Сенсоры",
+      "descr": "",
+      "needSave": 0,
+      "int": 30,
+      "global": 0,
+      "round": 1,
+      "orange": 60,
+      "red": 120,
+      "offline": 180,
+      "MAC": "",
+      "sensor": ""
+    }
+  ],
+  "about": {
+    "authorName": "AVAKS, v3 - Mit4bmw",
+    "authorContact": "https://t.me/@avaks, https://t.me/Mit4bmw",
+    "authorGit": "https://github.com/avaksru, https://github.com/Mit4el",
+    "specialThanks": "@Serghei63",
+    "moduleName": "Ble_part2",
+    "moduleVersion": "3.1",
+    "usedRam": {
+      "esp32_4mb": 288972,
+      "esp8266_4mb": 0
+    },
+    "subTypes": [
+      "BleSens_p2",
+      "BleScan_p2"
+    ],
+    "title": "Сканер Bluetooth, часть 2",
+    "moduleDesc": "Часть 2 Bluetooth датчиков. Позволяет получить данные с Bluetooth датчиков, кроме Mijia, Xiaomi, Cleargrass, Qingping, Inkbird. Обе части вместе не использовать! для всех датчиков модуль Ble! Полный список (учитывать отстование нашей версии библиотеки) https://decoder.theengs.io/devices/devices.html Наш перечень в файле lib/decoder/devices.h",
+    "propInfo": {
+      "round": "Округление после запятой.",
+      "orange": "количество минут после которого окрасить виджет в оранжевый цвет",
+      "red": "количество минут после которого окрасить виджет в красный цвет",
+      "offline": "количество минут после которого отобразить что устройство offline, если все три orange red и offline поставить в ноль - то функция окраски выключится",
+      "int": "Интервал сканирования BLE окружения (BleScan) / В BleSens темп обновления времнени поступления данных, сами даные обновляются по мене сканирования/поступления",
+      "scanDuration": "Длительность сканирования ",
+      "filter": "Позволяет установить фильтр по параметру передаваемому датчиком. Влияет только на вывод лога при debug=1, что бы было легче найти датчики, если много устройств в эфире",
+      "MAC": "MAC адрес беспроводного датчика",
+      "sensor": "Тип сенсора: температура / влажность / время / ...   "
+    }
+  },
+  "defActive": false,
+  "usedLibs": {
+    "esp32_4mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32_16mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32_4mb3f": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32cam_4mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32s3_16mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32c3m_4mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ]
+  }
+}

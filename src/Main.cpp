@@ -3,14 +3,15 @@
 #include "classes/IoTDB.h"
 #include "utils/Statistic.h"
 #include <Wire.h>
+#if defined(esp32s2_4mb) || defined(esp32s3_16mb)
+#include <USB.h>
+#endif
 
 IoTScenario iotScen;  // объект управления сценарием
 
 String volStrForSave = "";
-unsigned long currentMillis;
-unsigned long prevMillis;
-
-
+// unsigned long currentMillis; // это сдесь лишнее
+// unsigned long prevMillis;
 
 void elementsLoop() {
     // передаем управление каждому элементу конфигурации для выполнения своих функций
@@ -29,69 +30,65 @@ void elementsLoop() {
     handleEvent();
 }
 
+#define SETUPBASE_ERRORMARKER 0
+#define SETUPCONF_ERRORMARKER 1
+#define SETUPSCEN_ERRORMARKER 2
+#define SETUPINET_ERRORMARKER 3
+#define SETUPLAST_ERRORMARKER 4
+#define TICKER_ERRORMARKER 5
+#define HTTP_ERRORMARKER 6
+#define SOCKETS_ERRORMARKER 7
+#define MQTT_ERRORMARKER 8
+#define MODULES_ERRORMARKER 9
 
+#define COUNTER_ERRORMARKER 4       // количество шагов счетчика
+#define STEPPER_ERRORMARKER 100000  // размер шага счетчика интервала доверия выполнения блока кода мкс
 
+#if defined(esp32_4mb) || defined(esp32_16mb) || defined(esp32cam_4mb)
 
-
-#define SETUPBASE_ERRORMARKER   0
-#define SETUPCONF_ERRORMARKER   1
-#define SETUPSCEN_ERRORMARKER   2
-#define SETUPINET_ERRORMARKER   3
-#define SETUPLAST_ERRORMARKER   4
-#define TICKER_ERRORMARKER      5
-#define HTTP_ERRORMARKER        6
-#define SOCKETS_ERRORMARKER     7
-#define MQTT_ERRORMARKER        8
-#define MODULES_ERRORMARKER     9
-
-#define COUNTER_ERRORMARKER     4       // количество шагов счетчика
-#define STEPPER_ERRORMARKER     100000  // размер шага счетчика интервала доверия выполнения блока кода мкс
-
-#ifdef esp32_4mb
-
-static int IRAM_ATTR initErrorMarkerId = 0;  // ИД маркера 
+static int IRAM_ATTR initErrorMarkerId = 0;  // ИД маркера
 static int IRAM_ATTR errorMarkerId = 0;
 static int IRAM_ATTR errorMarkerCounter = 0;
 
 hw_timer_t *My_timer = NULL;
-void IRAM_ATTR onTimer(){
+void IRAM_ATTR onTimer() {
     if (errorMarkerCounter >= 0) {
         if (errorMarkerCounter >= COUNTER_ERRORMARKER) {
             errorMarkerId = initErrorMarkerId;
             errorMarkerCounter = -1;
-        } else 
+        } else
             errorMarkerCounter++;
-    } 
+    }
 }
 #endif
 
 void initErrorMarker(int id) {
-#ifdef esp32_4mb 
+#if defined(esp32_4mb) || defined(esp32_16mb) || defined(esp32cam_4mb)
     initErrorMarkerId = id;
     errorMarkerCounter = 0;
 #endif
 }
 
 void stopErrorMarker(int id) {
-#ifdef esp32_4mb 
+#if defined(esp32_4mb) || defined(esp32_16mb) || defined(esp32cam_4mb)
     errorMarkerCounter = -1;
-    if (errorMarkerId) 
-    SerialPrint("I", "WARNING!", "A lazy (freezing loop more than " + (String)(COUNTER_ERRORMARKER * STEPPER_ERRORMARKER / 1000) + " ms) section has been found! With ID=" + (String)errorMarkerId);
+    if (errorMarkerId)
+        SerialPrint("I", "WARNING!", "A lazy (freezing loop more than " + (String)(COUNTER_ERRORMARKER * STEPPER_ERRORMARKER / 1000) + " ms) section has been found! With ID=" + (String)errorMarkerId);
     errorMarkerId = 0;
     initErrorMarkerId = 0;
 #endif
 }
 
-
-
 void setup() {
-
-#ifdef esp32_4mb 
+#if defined(esp32s2_4mb) || defined(esp32s3_16mb)
+    USB.begin();
+#endif
+#if defined(esp32_4mb) || defined(esp32_16mb) || defined(esp32cam_4mb)
     My_timer = timerBegin(0, 80, true);
     timerAttachInterrupt(My_timer, &onTimer, true);
     timerAlarmWrite(My_timer, STEPPER_ERRORMARKER, true);
     timerAlarmEnable(My_timer);
-    //timerAlarmDisable(My_timer);
+    // timerAlarmDisable(My_timer);
 
     initErrorMarker(SETUPBASE_ERRORMARKER);
 #endif
@@ -102,7 +99,7 @@ void setup() {
     Serial.println(F("--------------started----------------"));
 
     // создание экземпляров классов
-    //  myNotAsyncActions = new NotAsync(do_LAST);
+    // myNotAsyncActions = new NotAsync(do_LAST);
 
     // инициализация файловой системы
     fileSystemInit();
@@ -110,6 +107,9 @@ void setup() {
     Serial.println("FIRMWARE NAME     " + String(FIRMWARE_NAME));
     Serial.println("FIRMWARE VERSION  " + String(FIRMWARE_VERSION));
     Serial.println("WEB VERSION       " + getWebVersion());
+    const String buildTime = String(BUILD_DAY) + "." + String(BUILD_MONTH) + "." + String(BUILD_YEAR) + " " + String(BUILD_HOUR) + ":" + String(BUILD_MIN) + ":" + String(BUILD_SEC);
+    Serial.println("BUILD TIME        " + buildTime);
+    jsonWriteStr_(errorsHeapJson, F("bt"), buildTime);
     Serial.println(F("------------------------"));
 
     // получение chip id
@@ -129,7 +129,7 @@ void setup() {
     jsonRead(settingsFlashJson, "i2cFreq", i2cFreq, false);
     jsonRead(settingsFlashJson, "i2c", i2c, false);
     if (i2c != 0) {
-#ifdef esp32_4mb
+#ifdef ESP32
         Wire.end();
         Wire.begin(pinSDA, pinSCL, (uint32_t)i2cFreq);
 #else
@@ -141,23 +141,19 @@ void setup() {
 
     // настраиваем микроконтроллер
     configure("/config.json");
-    
+
     stopErrorMarker(SETUPCONF_ERRORMARKER);
 
-
-
     initErrorMarker(SETUPSCEN_ERRORMARKER);
-    
+
     // подготавливаем сценарии
     iotScen.loadScenario("/scenario.txt");
     // создаем событие завершения инициализации основных моментов для возможности выполнения блока кода при загрузке
     createItemFromNet("onInit", "1", 1);
     elementsLoop();
-    
-    stopErrorMarker(SETUPSCEN_ERRORMARKER);
-    
 
-    
+    stopErrorMarker(SETUPSCEN_ERRORMARKER);
+
     initErrorMarker(SETUPINET_ERRORMARKER);
 
     // подключаемся к роутеру
@@ -181,8 +177,6 @@ void setup() {
 
     stopErrorMarker(SETUPINET_ERRORMARKER);
 
-
-
     initErrorMarker(SETUPLAST_ERRORMARKER);
 
     // NTP
@@ -191,11 +185,10 @@ void setup() {
     // инициализация задач переодического выполнения
     periodicTasksInit();
 
-    // синхронизация списка устройств
-    addThisDeviceToList();
-
     // запуск работы udp
-    asyncUdpInit();
+    addThisDeviceToList();
+    udpListningInit();
+    udpBroadcastInit();
 
     // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
     createItemFromNet("onStart", "1", 1);
@@ -227,8 +220,6 @@ void setup() {
     stopErrorMarker(SETUPLAST_ERRORMARKER);
 }
 
-
-
 void loop() {
 #ifdef LOOP_DEBUG
     unsigned long st = millis();
@@ -253,7 +244,7 @@ void loop() {
     initErrorMarker(MQTT_ERRORMARKER);
     mqttLoop();
     stopErrorMarker(MQTT_ERRORMARKER);
-    
+
     initErrorMarker(MODULES_ERRORMARKER);
     elementsLoop();
     stopErrorMarker(MODULES_ERRORMARKER);

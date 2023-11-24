@@ -1,6 +1,7 @@
 #pragma once
 #include "Global.h"
 #ifdef ESP32
+#include <rom/spi_flash.h>
 #if USE_LITTLEFS
 #include <LittleFS.h>
 #define FileFS LittleFS
@@ -35,7 +36,7 @@ extern FS* filesystem;
 extern bool fileSystemInit();
 extern void globalVarsSync();
 
-//extern String getParamsJson();
+// extern String getParamsJson();
 
 extern void syncSettingsFlashJson();
 extern void syncValuesFlashJson();
@@ -47,3 +48,4 @@ extern uint32_t ESP_getChipId(void);
 extern uint32_t ESP_getFlashChipId(void);
 extern const String getMacAddress();
 extern const String getWebVersion();
+extern uint32_t getFlashChipIdNew();

@@ -124,8 +124,8 @@ const String readFile(const String& filename, size_t max_size) {
     size_t size = file.size();
     if (size > max_size) {
         file.close();
-        if (path == "/config.json") 
-            return "[]";
+        // что это за бред!
+        if (path == "/config.json") return "[]";
         return "large";
     }
     String temp = file.readString();
@@ -133,9 +133,7 @@ const String readFile(const String& filename, size_t max_size) {
     return temp;
 }
 
-const String filepath(const String& filename) {
-    return filename.startsWith("/") ? filename : "/" + filename;
-}
+const String filepath(const String& filename) { return filename.startsWith("/") ? filename : "/" + filename; }
 
 bool cutFile(const String& src, const String& dst) {
     String srcPath = filepath(src);
@@ -288,9 +286,7 @@ String getFilesList(String& directory) {
 }
 
 #if defined(ESP8266)
-bool getInfo(FSInfo& info) {
-    return FileFS.info(info);
-}
+bool getInfo(FSInfo& info) { return FileFS.info(info); }
 
 // Информация о ФС
 IoTFSInfo getFSInfo() {

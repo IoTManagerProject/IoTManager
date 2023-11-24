@@ -15,9 +15,11 @@ extern bool jsonRead(const String& json, String key, float& value, bool e = true
 extern bool jsonRead(const String& json, String key, String& value, bool e = true);
 extern bool jsonRead(const String& json, String key, bool& value, bool e = true);
 extern bool jsonRead(const String& json, String key, int& value, bool e = true);
+extern bool jsonReadArray(const String& json, String key, std::vector<String>& jArray, bool e = true);
 
 extern String jsonReadStr(const String& json, String name, bool e = true);
 extern int jsonReadInt(const String& json, String name, bool e = true);
+long int jsonReadLInt(const String& json, String name, bool e=true);
 extern boolean jsonReadBool(const String& json, String name, bool e = true);
 
 extern bool jsonWriteStr_(String& json, const String& name, const String& value, bool e = true);

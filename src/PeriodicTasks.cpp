@@ -58,7 +58,50 @@ void printGlobalVarSize() {
 String ESP_getResetReason(void) {
     return ESP.getResetReason();
 }
-#else
+#endif
+#if defined(esp32s2_4mb) || defined(esp32s3_16mb) || defined(esp32c3m_4mb)
+String ESP_getResetReason(void) {
+    return ESP32GetResetReason(0);  // CPU 0
+}
+String ESP32GetResetReason(uint32_t cpu_no) {
+    // tools\sdk\include\esp32\rom\rtc.h
+    switch (rtc_get_reset_reason((RESET_REASON)cpu_no)) {
+        case POWERON_RESET:
+            return F("Vbat power on reset");  // 1
+        case RTC_SW_SYS_RESET:
+            return F("Software reset digital core");  // 3
+//      case OWDT_RESET:
+//          return F("Legacy Watchdog reset digital core");  // 4
+        case DEEPSLEEP_RESET:
+            return F("Deep Sleep reset digital core");  // 5
+//      case SDIO_RESET:
+//          return F("Reset by SLC module, reset digital core");  // 6
+        case TG0WDT_SYS_RESET:
+            return F("Timer Group0 Watchdog reset digital core");  // 7
+        case TG1WDT_SYS_RESET:
+            return F("Timer Group1 Watchdog reset digital core");  // 8
+        case RTCWDT_SYS_RESET:
+            return F("RTC Watchdog Reset digital core");  // 9
+        case INTRUSION_RESET:
+            return F("Instrusion tested to reset CPU");  // 10
+        case TG0WDT_CPU_RESET:
+            return F("Time Group reset CPU");  // 11
+        case RTC_SW_CPU_RESET:
+            return F("Software reset CPU");  // 12
+        case RTCWDT_CPU_RESET:
+            return F("RTC Watchdog Reset CPU");  // 13
+//      case EXT_CPU_RESET:
+//          return F("or APP CPU, reseted by PRO CPU");  // 14
+        case RTCWDT_BROWN_OUT_RESET:
+            return F("Reset when the vdd voltage is not stable");  // 15
+        case RTCWDT_RTC_RESET:
+            return F("RTC Watchdog reset digital core and rtc module");  // 16
+        default:
+            return F("NO_MEAN");  // 0
+    }
+}
+#endif
+#if defined(esp32_4mb) || defined(esp32_16mb) || defined(esp32cam_4mb)
 String ESP_getResetReason(void) {
     return ESP32GetResetReason(0);  // CPU 0
 }

@@ -1,0 +1,69 @@
+{
+    "menuSection": "virtual_elments",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "GoogleSheet",
+            "type": "Reading",
+            "subtype": "GoogleSheet",
+            "id": "sheet",
+            "widget": "nil",
+            "page": "",
+            "descr": "",
+            "int": 5,
+            "logid": "",
+            "scid": "",
+            "shname": "Logger"
+        }
+    ],
+    "about": {
+        "authorName": "Bubnov Mikhail",
+        "authorContact": "https://t.me/Mit4bmw",
+        "authorGit": "https://github.com/Mit4el",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "@AVAKS",
+        "moduleName": "GoogleSheet",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 10,
+            "esp8266_4mb": 10
+        },
+        "title": "Логирование в Google таблицы",
+        "moduleDesc": "Расширение позволяющее логировать любую величину в Google таблицы. Инструкция https://drive.google.com/file/d/1VuI06arObNfH3rsOSHKww1tyhfgqXd9F/view?usp=sharing",
+        "propInfo": {
+            "int": "Интервал логирования в минутах",
+            "logid": "ID величины которую будем логировать",
+            "scid": "Идентификатор развертывания Google Apps (script id)",
+            "shname": "Наименование листа в таблице (sheet name)"
+        },
+        "retInfo": "",
+        "funcInfo": [
+            {
+                "name": "logGoogle",
+                "descr": "Использовать не чаще раз в минуту! Логирование элементов в GoogleSheet, ID элементов указывать через запятую, от одного до N (проверено на 16шт). В данной функции поиск элементов идет по их значению, если несколько элементов с одинаковым значение, может быть не правильно указан его id в Таблице.",
+                "params": [
+                    "id Идентификатор 1-го элеменета",
+                    "id Идентификатор N-го элеменета"
+                ]
+            },
+            {
+                "name": "logGoogleAny",
+                "descr": "Использовать не чаще раз в минуту! Запись произвольных данных в GoogleSheet",
+                "params": [
+                    "Наименование данных",
+                    "Значение для записи"
+                ]
+            }
+        ]
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32cam_4mb": [],
+        "esp32s2_4mb": [],
+        "esp32s3_16mb": [],
+        "esp32c3m_4mb": [],
+        "esp8266_4mb": []
+    }
+}

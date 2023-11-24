@@ -39,18 +39,18 @@ class RTC : public IoTItem {
         return this;
     }
 
-    ulong getRtcUnixTime() {
-        return _watch->gettimeUnix();
+    unsigned long getRtcUnixTime() {
+        return _watch->gettimeUnix() - jsonReadInt(settingsFlashJson, F("timezone")) * 60 * 60;
     }
 
     void onModuleOrder(String &key, String &value) {
         if (key == "setUTime") {
             char *stopstring;
-            ulong ut = strtoul(value.c_str(), &stopstring, 10);
+            unsigned long ut = strtoul(value.c_str(), &stopstring, 10);
             _watch->settimeUnix(ut);
             SerialPrint("i", F("RTC"), "Устанавливаем время: " + value);
         } else if (key == "setSysTime") {
-            _watch->settimeUnix(unixTime);
+            _watch->settimeUnix(unixTime + jsonReadInt(settingsFlashJson, F("timezone")) * 60 * 60);
             SerialPrint("i", F("RTC"), F("Запоминаем системное время"));
         }
     }
@@ -61,6 +61,42 @@ class RTC : public IoTItem {
                 IoTValue valTmp;
                 valTmp.isDecimal = false;
                 valTmp.valS = _watch->gettime(param[0].valS + " ");
+                return valTmp;
+            }
+        } else if (command == "setUnixTime") {
+            if (param.size() == 1) {
+                long ut = strtoul(param[0].valS.c_str(), nullptr, 10);
+                _watch->settimeUnix(ut);
+                return {};
+            }
+        } else if (command == "setTime") {
+            if (param.size() == 6) {
+                _watch->settime(param[0].valD, param[1].valD, param[2].valD, param[3].valD, param[4].valD, param[5].valD);      //сек, мин, час, день, мес, год
+                return {};
+            }
+        } else if (command == "getTimeFloat") {
+            if (param.size() == 1) {
+                IoTValue valTmp;
+                _watch->gettime();
+                valTmp.isDecimal = true;
+                String type = param[0].valS;
+                    if (type == "H") {
+                        valTmp.valD = static_cast<float>(_watch->Hours);
+                    } else if (type == "i") {
+                        valTmp.valD = static_cast<float>(_watch->minutes);
+                    } else if (type == "s") {
+                        valTmp.valD = static_cast<float>(_watch->seconds);
+                    } else if (type == "w") {
+                        valTmp.valD = static_cast<float>(_watch->weekday);                        
+                    } else if (type == "d") {
+                        valTmp.valD = static_cast<float>(_watch->day);      
+                    } else if (type == "m") {
+                        valTmp.valD = static_cast<float>(_watch->month);
+                    } else if (type == "Y") {
+                        valTmp.valD = static_cast<float>(_watch->year);                                           
+                    } else {
+                        return {};  // Если переданный тип не поддерживается
+                    }
                 return valTmp;
             }
         }

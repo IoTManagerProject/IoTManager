@@ -25,7 +25,7 @@ class LogingDaily : public IoTItem {
     String prevDate = "";
     bool firstTimeInit = true;
 
-    long interval;
+    // long interval;
 
    public:
     LogingDaily(String parameters) : IoTItem(parameters) {
@@ -36,12 +36,13 @@ class LogingDaily : public IoTItem {
         jsonRead(parameters, F("telegram"), telegram);
         jsonRead(parameters, F("descr"), descr);
 
-        if (points > 365) {
-            points = 365;
-            SerialPrint("E", F("LogingDaily"), "'" + id + "' user set more points than allowed, value reset to 365");
+        if (points > 200) {
+            points = 200;
+            SerialPrint("E", F("LogingDaily"), "'" + id + "' user set more points than allowed, value reset to 200");
         }
-        jsonRead(parameters, F("int"), interval);
-        interval = interval * 1000 * 60;  // приводим к милисекундам
+        long interval;
+        jsonRead(parameters, F("int"), interval);  // в минутах
+        setInterval(interval * 60);
     }
 
     void doByInterval() {
@@ -84,7 +85,7 @@ class LogingDaily : public IoTItem {
         if (telegram == 1) {
             String msg = descr + ": total " + String(currentValue) + ", consumed " + String(difference);
             for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
-                if ((*it)->getSubtype() == "TelegramLT" || "Telegram") {
+                if ((*it)->getSubtype() == "TelegramLT" || "Telegram" || "Telegram_v2") {
                     (*it)->sendTelegramMsg(false, msg);
                 }
             }
@@ -221,25 +222,21 @@ class LogingDaily : public IoTItem {
         _wsNum = wsNum;
     }
 
-    String getValue() {
-        return "";
-    }
+    String getValue() { return ""; }
 
-    void loop() {
-        if (enableDoByInt) {
-            currentMillis = millis();
-            difference = currentMillis - prevMillis;
-            if (difference >= interval) {
-                prevMillis = millis();
-                this->doByInterval();
-            }
-        }
-    }
+    // void loop() {
+    //     if (enableDoByInt) {
+    //         currentMillis = millis();
+    //         difference = currentMillis - prevMillis;
+    //         if (difference >= interval) {
+    //             prevMillis = millis();
+    //             this->doByInterval();
+    //         }
+    //     }
+    // }
 
     // просто максимальное количество точек
-    int calculateMaxCount() {
-        return 86400;
-    }
+    int calculateMaxCount() { return 86400; }
 
     void onModuleOrder(String &key, String &value) {
         if (key == "defvalue") {

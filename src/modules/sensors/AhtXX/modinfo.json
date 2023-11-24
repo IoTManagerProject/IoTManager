@@ -1,5 +1,5 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "global": 0,
@@ -12,7 +12,7 @@
             "descr": "AHTXX Температура",
             "int": 15,
             "addr": "0x38",
-            "shtType":1,
+            "shtType": 1,
             "round": 1
         },
         {
@@ -26,7 +26,7 @@
             "descr": "AHTXX Влажность",
             "int": 15,
             "addr": "0x38",
-            "shtType":1,
+            "shtType": 1,
             "round": 1
         }
     ],
@@ -59,7 +59,25 @@
         "esp32_4mb": [
             "https://github.com/enjoyneering/AHTxx.git"
         ],
+        "esp32_4mb3f": [
+            "https://github.com/enjoyneering/AHTxx.git"
+        ],
+        "esp32cam_4mb": [
+            "https://github.com/enjoyneering/AHTxx.git"
+        ],
         "esp8266_4mb": [
+            "https://github.com/enjoyneering/AHTxx.git"
+        ],
+        "esp8266_1mb": [
+            "https://github.com/enjoyneering/AHTxx.git"
+        ],
+        "esp8266_1mb_ota": [
+            "https://github.com/enjoyneering/AHTxx.git"
+        ],
+        "esp8285_1mb": [
+            "https://github.com/enjoyneering/AHTxx.git"
+        ],
+        "esp8285_1mb_ota": [
             "https://github.com/enjoyneering/AHTxx.git"
         ]
     }

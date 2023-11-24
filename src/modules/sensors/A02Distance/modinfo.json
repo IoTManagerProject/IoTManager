@@ -1,9 +1,9 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "name": "A02 Дальность",
-            "type": "Reading", 
+            "type": "Reading",
             "subtype": "A02Distance",
             "id": "dist",
             "widget": "anydataCm",
@@ -15,16 +15,17 @@
     ],
     "about": {
         "authorName": "Bubnov Mikhail",
-        "authorContact": "https://t.me/Mitchel",
+        "authorContact": "https://t.me/Mit4bmw",
         "authorGit": "https://github.com/Mit4el",
         "exampleURL": "https://iotmanager.org/wiki",
         "specialThanks": "",
         "moduleName": "A02Distance",
         "moduleVersion": "0.1",
-        "moduleDesc": "A0221AU, A02YYUW Ультразвуковой датчик. Позволяет получить дальность с ультрозвуковых датчиков A0221AU, A02YYUW",
+        "moduleDesc": "Позволяет получить дальность с ультрозвуковых датчиков A0221AU, A02YYUW",
         "propInfo": {
             "int": "Количество секунд между опросами датчика."
-        }
+        },
+        "title": "A0221AU, A02YYUW Ультразвуковой датчик дальности"
     },
     "defActive": true,
     "usedLibs": {

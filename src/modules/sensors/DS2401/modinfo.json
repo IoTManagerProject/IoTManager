@@ -1,5 +1,5 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "global": 0,
@@ -36,6 +36,8 @@
     "defActive": false,
     "usedLibs": {
         "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32cam_4mb": [],
         "esp8266_4mb": [],
         "esp8266_1mb": [],
         "esp8266_1mb_ota": [],

@@ -1,0 +1,80 @@
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "DS2423 счетчик 1",
+            "type": "Reading",
+            "subtype": "Ds2423a",
+            "id": "dscounta",
+            "widget": "anydataDef",
+            "page": "Счетчики",
+            "descr": "DS1 V",
+            "plus": 0,
+            "multiply": 1,
+            "pin": 4,
+            "index": 0,
+            "addr": "",
+            "int": 10,
+            "round": 0,
+            "needSave": 0
+        },
+        {
+            "global": 0,
+            "name": "DS2423 счетчик 2",
+            "type": "Reading",
+            "subtype": "Ds2423b",
+            "id": "dscountb",
+            "widget": "anydataDef",
+            "page": "Счетчики",
+            "descr": "DS2 V",
+            "plus": 0,
+            "multiply": 1,
+            "pin": 4,
+            "index": 0,
+            "addr": "",
+            "int": 10,
+            "round": 0,
+            "needSave": 0
+        }
+    ],
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "Bubnov Mikhail @Mit4bmw",
+        "moduleName": "Ds2423",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "Cчетчик ds2423",
+        "moduleDesc": "Позволяет получить значения с Ds2423.",
+        "propInfo": {
+            "pin": "GPIO номер, к которому подключена шина данных датчиков.",
+            "index": "Порядковый номер датчика на шине.",
+            "addr": "Адрес датчика на шине для точной идентификации. Если оставить пустым, то попробует найти по индексу и пину и Можно скопировать из консоли.",
+            "int": "Количество секунд между опросами датчика."
+        }
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [
+            "https://github.com/jbechter/arduino-onewire-DS2423",
+            "paulstoffregen/OneWire @ ^2.3.7"
+        ],
+        "esp32_4mb3f": [
+            "https://github.com/jbechter/arduino-onewire-DS2423",
+            "paulstoffregen/OneWire @ ^2.3.7"
+        ],
+        "esp32cam_4mb": [
+            "https://github.com/jbechter/arduino-onewire-DS2423",
+            "paulstoffregen/OneWire @ ^2.3.7"
+        ],
+        "esp8266_4mb": [
+            "https://github.com/jbechter/arduino-onewire-DS2423",
+            "paulstoffregen/OneWire @ ^2.3.7"
+        ]
+    }
+}

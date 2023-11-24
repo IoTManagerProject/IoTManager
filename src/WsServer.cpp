@@ -28,8 +28,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 standWebSocket.close();
                 standWebSocketsInit();
             }
-            // Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-            // standWebSocket.sendTXT(num, "Connected");
+            // Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0],
+            // ip[1], ip[2], ip[3], payload); standWebSocket.sendTXT(num,
+            // "Connected");
         } break;
 
         case WStype_TEXT: {
@@ -118,7 +119,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 clearConfigure();
                 configure("/config.json");
                 iotScen.loadScenario("/scenario.txt");
-                // создаем событие завершения конфигурирования для возможности выполнения блока кода при загрузке
+                // создаем событие завершения конфигурирования для возможности
+                // выполнения блока кода при загрузке
                 createItemFromNet("onStart", "1", 1);
             }
 
@@ -128,33 +130,42 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             // отвечаем данными на запрос страницы
             if (headerStr == "/connection|") {
+                sendFileToWsByFrames("/widgets.json", "widget", "", num, WEB_SOCKETS_FRAME_SIZE);
+                sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
                 sendStringToWs("settin", settingsFlashJson, num);
                 sendStringToWs("ssidli", ssidListHeapJson, num);
                 sendStringToWs("errors", errorsHeapJson, num);
-                // запуск асинхронного сканирования wifi сетей при переходе на страницу соединений
-                // RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
+                // запуск асинхронного сканирования wifi сетей при переходе на страницу
+                // соединений RouterFind(jsonReadStr(settingsFlashJson,
+                // F("routerssid")));
             }
 
-            // обработка кнопки сохранить настройки wifi
+            // обработка кнопки сохранить settings.json
             if (headerStr == "/sgnittes|") {
                 writeUint8tToString(payload, length, headerLenth, settingsFlashJson);
                 writeFileUint8tByFrames("settings.json", payload, length, headerLenth, 256);
                 sendStringToWs("errors", errorsHeapJson, num);
+                // если не было создано приема данных по udp - то создадим его
                 addThisDeviceToList();
             }
 
             // обработка кнопки сохранить настройки mqtt
             if (headerStr == "/mqtt|") {
-                sendStringToWs("settin", settingsFlashJson, num);  // отправляем в ответ новые полученные настройки
-                handleMqttStatus(false, 8);                        // меняем статус на неопределенный
-                mqttReconnect();                                   // начинаем переподключение
-                sendStringToWs("errors", errorsHeapJson, num);     // отправляем что статус неопределен
+                sendStringToWs("settin", settingsFlashJson,
+                               num);         // отправляем в ответ новые полученные настройки
+                handleMqttStatus(false, 8);  // меняем статус на неопределенный
+                mqttReconnect();             // начинаем переподключение
+                sendStringToWs("errors", errorsHeapJson,
+                               num);  // отправляем что статус неопределен
                 sendStringToWs("ssidli", ssidListHeapJson, num);
             }
 
-            // запуск асинхронного сканирования wifi сетей при нажатии выпадающего списка
+            // запуск асинхронного сканирования wifi сетей при нажатии выпадающего
+            // списка
             if (headerStr == "/scan|") {
-                RouterFind(jsonReadStr(settingsFlashJson, F("routerssid")));
+                std::vector<String> jArray;
+                jsonReadArray(settingsFlashJson, "routerssid", jArray);
+                RouterFind(jArray);
                 sendStringToWs("ssidli", ssidListHeapJson, num);
             }
 
@@ -162,9 +173,23 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса list
             //----------------------------------------------------------------------//
 
-            // отвечаем данными на запрос страницы
+            // отвечаем данными на запрос страницы list
             if (headerStr == "/list|") {
-                sendStringToWs("devlis", devListHeapJson, num);
+                sendStringToWs("settin", settingsFlashJson, num);
+                // отправим список устройств в зависимости от того что выбрал user
+                // sendDeviceList(num);
+            }
+
+            // отвечаем на запрос списка устройств (это отдельный запрос который
+            // делает приложение при подключении)
+            if (headerStr == "/devlist|") {
+                // отправим список устройств в зависимости от того что выбрал user
+                sendDeviceList(num);
+            }
+
+            // сохраняем данные листа
+            if (headerStr == "/tsil|") {
+                writeFileUint8tByFrames("devlist.json", payload, length, headerLenth, 256);
             }
 
             //----------------------------------------------------------------------//
@@ -185,10 +210,22 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 sendStringToWs("settin", settingsFlashJson, num);
                 sendFileToWsByFrames("/config.json", "config", "", num, WEB_SOCKETS_FRAME_SIZE);
                 sendFileToWsByFrames("/items.json", "itemsj", "", num, WEB_SOCKETS_FRAME_SIZE);
-                // sendFileToWsByFrames("/layout.json", "layout", "", num, WEB_SOCKETS_FRAME_SIZE);
+                // sendFileToWsByFrames("/layout.json", "layout", "", num,
+                // WEB_SOCKETS_FRAME_SIZE);
             }
 
-            if (headerStr == "/test|") {
+            //----------------------------------------------------------------------//
+            // Страница веб интерфейса update
+            //----------------------------------------------------------------------//
+            if (headerStr == "/profile|") {
+                // для версии 451 отдаем myProfile.json
+                sendFileToWsByFrames("/ota.json", "otaupd", "", num, WEB_SOCKETS_FRAME_SIZE);
+                if (FileFS.exists("/myProfile.json")) {
+                    sendFileToWsByFrames("/myProfile.json", "prfile", "", num, WEB_SOCKETS_FRAME_SIZE);
+                    // для версии 452 и более отдаем flashProfile.json
+                } else if (FileFS.exists("/flashProfile.json")) {
+                    sendFileToWsByFrames("/flashProfile.json", "prfile", "", num, WEB_SOCKETS_FRAME_SIZE);
+                }
             }
 
             //----------------------------------------------------------------------//
@@ -212,7 +249,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
             // команда обновления прошивки esp
             if (headerStr == "/update|") {
-                upgrade_firmware(3);
+                String path;
+                writeUint8tToString(payload, length, headerLenth, path);
+                upgrade_firmware(3, path);
             }
 
             // Прием команд control c dashboard
@@ -286,7 +325,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
     }
 }
 
-// публикация статус сообщений в ws (недостаток в том что делаем бродкаст всем клиентам поднятым в свелте!!!)
+// публикация статус сообщений в ws (недостаток в том что делаем бродкаст всем
+// клиентам поднятым в свелте!!!)
 void publishStatusWs(const String& topic, const String& data) {
     String path = mqttRootDevice + "/" + topic;
     String json = "{}";
@@ -307,7 +347,10 @@ void publishJsonWs(const String& topic, String& json) {
 void periodicWsSend() {
     sendStringToWs("ssidli", ssidListHeapJson, -1);
     sendStringToWs("errors", errorsHeapJson, -1);
-    sendStringToWs("devlis", devListHeapJson, -1);
+    // отправляем переодичестки только в авто режиме
+    if (jsonReadInt(settingsFlashJson, F("udps")) != 0) {
+        sendStringToWs("devlis", devListHeapJson, -1);
+    }
 }
 
 #ifdef ESP32
@@ -340,7 +383,8 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
     }
 
     size_t totalSize = file.size();
-    // Serial.println("Send file '" + String(filename) + "', file size: " + String(totalSize));
+    // Serial.println("Send file '" + String(filename) + "', file size: " +
+    // String(totalSize));
 
     char buf[32];
     sprintf(buf, "%04d", json.length() + 12);
@@ -380,7 +424,9 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
                 continuation = true;
             }
 
-            // Serial.println(String(i) + ") " + "ws: " + String(client_id) + " fr sz: " + String(size) + " fin: " + String(fin) + " cnt: " + String(continuation));
+            // Serial.println(String(i) + ") " + "ws: " + String(client_id) + " fr sz:
+            // " + String(size) + " fin: " + String(fin) + " cnt: " +
+            // String(continuation));
 
             if (client_id == -1) {
                 standWebSocket.broadcastBIN(frameBuf, size, fin, continuation);
@@ -397,6 +443,12 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
 }
 
 void sendStringToWs(const String& header, String& payload, int client_id) {
+    if ((!getNumAPClients() && !isNetworkActive()) || !getNumWSClients()) {
+        // standWebSocket.disconnect(); // это и ниже надо сделать при -
+        // standWebSocket.close();      // - отключении AP И WiFi(STA), надо менять ядро WiFi. Сейчас не закрывается сессия клиента при пропаже AP И WiFi(STA)
+        return;
+    }
+
     if (header.length() != 6) {
         SerialPrint("E", "FS", F("wrong header size"));
         return;
@@ -413,3 +465,17 @@ void sendStringToWs(const String& header, String& payload, int client_id) {
         standWebSocket.sendBIN(client_id, (uint8_t*)dataArray, totalSize);
     }
 }
+
+void sendDeviceList(uint8_t num) {
+    if (jsonReadInt(settingsFlashJson, F("udps")) != 0) {
+        // если включен автопоиск то отдаем список из оперативной памяти
+        SerialPrint("i", "FS", "heap list");
+        sendStringToWs("devlis", devListHeapJson, num);
+    } else {
+        // если выключен автопоиск то отдаем список из флешь памяти
+        sendFileToWsByFrames("/devlist.json", "devlis", "", num, WEB_SOCKETS_FRAME_SIZE);
+        SerialPrint("i", "FS", "flash list");
+    }
+}
+
+int getNumWSClients() { return standWebSocket.connectedClients(false); }

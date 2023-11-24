@@ -1,19 +1,19 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
-         "name": "(S8) Cенсор качества воздуха",
-         "num": 3,
-         "type": "Reading",
-         "subtype": "S8co",
-         "id": "s8co",
-         "widget": "anydataPpm",
-         "page": "Сенсоры",
-         "descr": "S8_CO2",
-         "int": 15,
-         "round": 1,
-		 "rxPin": 13,
-         "txPin": 15
+            "name": "(S8) Cенсор качества воздуха",
+            "num": 3,
+            "type": "Reading",
+            "subtype": "S8co",
+            "id": "s8co",
+            "widget": "anydataPpm",
+            "page": "Сенсоры",
+            "descr": "S8_CO2",
+            "int": 15,
+            "round": 1,
+            "rxPin": 13,
+            "txPin": 15
         }
     ],
     "about": {
@@ -35,9 +35,8 @@
     },
     "defActive": true,
     "usedLibs": {
-        "esp32_4mb": [
-                    ],
-        "esp8266_4mb": [
-                   ]
+        "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp8266_4mb": []
     }
 }

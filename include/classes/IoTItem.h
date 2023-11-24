@@ -11,7 +11,7 @@ struct IoTValue {
 class IoTItem {
    public:
     IoTItem(const String& parameters);
-    virtual ~IoTItem() {}
+    virtual ~IoTItem() {};
     virtual void loop();
     virtual void doByInterval();
     virtual IoTValue execute(String command, std::vector<IoTValue>& param);
@@ -29,15 +29,18 @@ class IoTItem {
     virtual String getValue();
     long getInterval();
     bool isGlobal();
-
+    
     void sendSubWidgetsValues(String& id, String& json);
 
     void setInterval(long interval);
     void setIntFromNet(int interval);
 
-    unsigned long currentMillis;
-    unsigned long prevMillis;
-    unsigned long difference;
+    // unsigned long currentMillis;
+    // unsigned long prevMillis;
+    // unsigned long difference;
+    unsigned long nextMillis=0; // достаточно 1 переменной, надо экономить память
+    // задержка следующего вызова, не изменяет текущий _interval
+    void suspendNextDoByInt(unsigned long _delay); // 0 - force
 
     IoTValue value;  // хранение основного значения, которое обновляется из сценария, execute(), loop() или doByInterval()
 
@@ -48,21 +51,31 @@ class IoTItem {
 
     virtual IoTGpio* getGpioDriver();
     virtual IoTItem* getRtcDriver();
+    //virtual IoTItem* getCAMDriver();
+    virtual IoTItem* getTlgrmDriver();
     virtual unsigned long getRtcUnixTime();
+
+        // делаем доступным модулям отправку сообщений в телеграм
+    virtual void sendTelegramMsg(bool often, String msg);
+    virtual void sendFoto(uint8_t *buf, uint32_t length, const String &name);
+    virtual void editFoto(uint8_t *buf, uint32_t length, const String &name);
+
 
     virtual void setValue(const IoTValue& Value, bool genEvent = true);
     virtual void setValue(const String& valStr, bool genEvent = true);
-    String getRoundValue();
+        String getRoundValue();
     void getNetEvent(String& event);
+    virtual String getMqttExterSub();
 
     // хуки для системных событий (должны начинаться с "on")
     virtual void onRegEvent(IoTItem* item);
     virtual void onMqttRecive(String& topic, String& msg);
     virtual void onMqttWsAppConnectEvent();
     virtual void onModuleOrder(String& key, String& value);
+    virtual void onTrackingValue(IoTItem* item);  // момент, когда ядро заметило изменение отслеживаемого значения
 
-    // делаем доступным модулям отправку сообщений в телеграм
-    virtual void sendTelegramMsg(bool often, String msg);
+    // для обновления экрана Nextion из телеграм
+    virtual void uploadNextionTlgrm(String &url);
 
     // методы для графиков (будет упрощено)
     virtual void publishValue();
@@ -70,6 +83,8 @@ class IoTItem {
     virtual void setPublishDestination(int type, int wsNum = -1);
     virtual void clearHistory();
     virtual void setTodayDate();
+
+    bool isTracking(IoTItem* item);    // проверка на отслеживание
 
    protected:
     bool _needSave = false;  // признак необходимости сохранять и загружать значение элемента на flash
@@ -87,8 +102,11 @@ class IoTItem {
     int _map3 = 0;
     int _map4 = 0;
     int _round = 1;  // 1, 10, 100, 1000, 10000
+    int _numDigits = 1;     // количество целых значений, не значимые позиции заменяются нулем в строковом формате
 
     bool _global = false;  // характеристика айтема, что ему нужно слать и принимать события из внешнего мира
+
+    IoTValue* _trackingValue = nullptr;   // указатель на значение родительского элемента изменение которого отслеживается
 };
 
 IoTItem* findIoTItem(const String& name);                     // поиск экземпляра элемента модуля по имени

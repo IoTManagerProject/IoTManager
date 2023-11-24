@@ -7,14 +7,13 @@
 
 IoTItem::IoTItem(const String& parameters) {
     jsonRead(parameters, F("int"), _interval, false);
-    if (_interval == 0) enableDoByInt = false;           // выключаем использование периодического выполнения в модуле
-    if (_interval > 0) _interval = _interval * 1000;    // если int положителен, то считаем, что получены секунды
-    if (_interval < 0) _interval = _interval * -1;      // если int отрицательный, то миллисекунды
+    setInterval(_interval);
     jsonRead(parameters, F("subtype"), _subtype, false);
     jsonRead(parameters, F("id"), _id);
     if (!jsonRead(parameters, F("multiply"), _multiply, false)) _multiply = 1;
     if (!jsonRead(parameters, F("plus"), _plus, false)) _plus = 0;
     if (!jsonRead(parameters, F("round"), _round, false)) _round = -1;
+    if (!jsonRead(parameters, F("numDigits"), _numDigits, false)) _numDigits = 1;
 
     if (!jsonRead(parameters, F("global"), _global, false)) _global = false;
 
@@ -35,14 +34,25 @@ IoTItem::IoTItem(const String& parameters) {
     jsonRead(parameters, F("needSave"), _needSave, false);
     if (_needSave && jsonRead(valuesFlashJson, _id, valAsStr, false))  // пробуем достать из сохранения значение элемента, если указано, что нужно сохранять
         setValue(valAsStr, false);
+
+    // проверяем нужно ли отслеживать значение другого элемента
+    String trackingID = "";
+    IoTItem* item = nullptr;
+    if (jsonRead(parameters, F("trackingID"), trackingID, false) && (item = findIoTItem(trackingID)) != nullptr) {
+        _trackingValue = &(item->value);
+    }
+}
+
+void IoTItem::suspendNextDoByInt(unsigned long _delay) { // 0 - force
+    nextMillis = millis() + _delay; 
 }
 
 void IoTItem::loop() {
     if (enableDoByInt) {
-        currentMillis = millis();
-        difference = currentMillis - prevMillis;
-        if (difference >= _interval) {
-            prevMillis = millis();
+        unsigned long currentMillis = millis(); // _interval должен быть < 2147483647 мс (24 суток)
+        if (nextMillis - currentMillis > 2147483647UL /*ULONG_MAX/2*/ ) {
+            nextMillis = currentMillis + _interval;
+            // SerialPrint(F("i"), _id, "this->doByInterval");
             this->doByInterval();
         }
     }
@@ -60,19 +70,19 @@ long IoTItem::getInterval() { return _interval; }
 bool IoTItem::isGlobal() { return _global; }
 
 void IoTItem::setValue(const String& valStr, bool genEvent) {
-    value.isDecimal = isDigitDotCommaStr(valStr);
-
+            value.isDecimal = isDigitDotCommaStr(valStr);
+    
     if (value.isDecimal) {
         value.valD = valStr.toFloat();
-        getRoundValue();
+                getRoundValue();
     } else {
-        value.valS = valStr;
+                value.valS = valStr;
     }
     setValue(value, genEvent);
 }
 
 void IoTItem::setValue(const IoTValue& Value, bool genEvent) {
-    value = Value;
+    value = Value; 
 
     if (value.isDecimal) {
         regEvent(value.valD, "", false, genEvent);
@@ -90,7 +100,7 @@ void IoTItem::sendSubWidgetsValues(String& id, String& json) {
 
 // когда событие случилось
 void IoTItem::regEvent(const String& value, const String& consoleInfo, bool error, bool genEvent) {
-    if (_needSave) {
+        if (_needSave) {
         jsonWriteStr_(valuesFlashJson, _id, value);
         needSaveValues = true;
     }
@@ -119,9 +129,9 @@ String IoTItem::getRoundValue() {
     if (_round >= 0 && _round <= 6) {
         int sot = _round ? pow(10, (int)_round) : 1;
         value.valD = round(value.valD * sot) / sot;
-
+        //todo: оптимизировать. Вынести расчет строки формата округления, чтоб использовать постоянно готовую
         char buf[15];
-        sprintf(buf, ("%1." + (String)_round + "f").c_str(), value.valD);
+        sprintf(buf, ("%0" + (String)(_numDigits + _round) + "." + (String)_round + "f").c_str(), value.valD);
         value.valS = (String)buf;
         return value.valS;
     } else {
@@ -131,7 +141,7 @@ String IoTItem::getRoundValue() {
 }
 
 void IoTItem::regEvent(float regvalue, const String& consoleInfo, bool error, bool genEvent) {
-    value.valD = regvalue;
+        value.valD = regvalue;
 
     if (_multiply) value.valD = value.valD * _multiply;
     if (_plus) value.valD = value.valD + _plus;
@@ -175,14 +185,29 @@ void IoTItem::checkIntFromNet() {
     }
 }
 
+String IoTItem::getMqttExterSub() {
+    return "";
+}
+
 // хуки для системных событий (должны начинаться с "on")
 void IoTItem::onRegEvent(IoTItem* item) {}
 void IoTItem::onMqttRecive(String& topic, String& msg) {}
 void IoTItem::onMqttWsAppConnectEvent() {}
 void IoTItem::onModuleOrder(String& key, String& value) {}
+void IoTItem::onTrackingValue(IoTItem* item) {
+    setValue(item->getValue(), false);
+}
+
+bool IoTItem::isTracking(IoTItem* item) {
+    return &(item->value) == _trackingValue;
+}
 
 // делаем доступным модулям отправку сообщений в телеграм
 void IoTItem::sendTelegramMsg(bool often, String msg) {}
+void IoTItem::sendFoto(uint8_t *buf, uint32_t length, const String &name) {}
+void IoTItem::editFoto(uint8_t *buf, uint32_t length, const String &name) {}
+// для обновления экрана Nextion из телеграм
+void IoTItem::uploadNextionTlgrm(String &url) {}
 
 // методы для графиков (будет упрощено)
 void IoTItem::publishValue() {}
@@ -200,7 +225,13 @@ bool IoTItem::isStrInID(const String& str) {
 }
 
 void IoTItem::setInterval(long interval) {
-    _interval = interval;
+    if (interval == 0) enableDoByInt = false;           // выключаем использование периодического выполнения в модуле
+    else {
+        enableDoByInt = true;
+        if (interval > 0) _interval = interval * 1000;    // если int положителен, то считаем, что получены секунды
+        else if (interval < 0) _interval = interval * -1;      // если int отрицательный, то миллисекунды
+    }
+    // SerialPrint(F("i"), F("IoTItem"), "setInterval: " + _interval.toString);
 }
 
 IoTGpio* IoTItem::getGpioDriver() {
@@ -208,6 +239,14 @@ IoTGpio* IoTItem::getGpioDriver() {
 }
 
 IoTItem* IoTItem::getRtcDriver() {
+    return nullptr;
+}
+/*
+IoTItem* IoTItem::getCAMDriver() {
+    return nullptr;
+}
+*/
+IoTItem* IoTItem::getTlgrmDriver() {
     return nullptr;
 }
 

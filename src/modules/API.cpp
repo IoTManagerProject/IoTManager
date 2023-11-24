@@ -3,9 +3,9 @@
 void* getAPI_Cron(String subtype, String params);
 void* getAPI_Loging(String subtype, String params);
 void* getAPI_LogingDaily(String subtype, String params);
+void* getAPI_owmWeather(String subtype, String params);
 void* getAPI_Timer(String subtype, String params);
 void* getAPI_Variable(String subtype, String params);
-void* getAPI_VariableColor(String subtype, String params);
 void* getAPI_VButton(String subtype, String params);
 void* getAPI_A02Distance(String subtype, String params);
 void* getAPI_Acs712(String subtype, String params);
@@ -35,15 +35,17 @@ void* getAPI_Pcf8574(String subtype, String params);
 void* getAPI_Pwm8266(String subtype, String params);
 void* getAPI_TelegramLT(String subtype, String params);
 void* getAPI_Lcd2004(String subtype, String params);
+void* getAPI_Oled64(String subtype, String params);
+void* getAPI_TM16XX(String subtype, String params);
 
 void* getAPI(String subtype, String params) {
 void* tmpAPI;
 if ((tmpAPI = getAPI_Cron(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Loging(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_LogingDaily(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_owmWeather(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Timer(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Variable(subtype, params)) != nullptr) return tmpAPI;
-if ((tmpAPI = getAPI_VariableColor(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_VButton(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_A02Distance(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Acs712(subtype, params)) != nullptr) return tmpAPI;
@@ -73,5 +75,7 @@ if ((tmpAPI = getAPI_Pcf8574(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Pwm8266(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_TelegramLT(subtype, params)) != nullptr) return tmpAPI;
 if ((tmpAPI = getAPI_Lcd2004(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_Oled64(subtype, params)) != nullptr) return tmpAPI;
+if ((tmpAPI = getAPI_TM16XX(subtype, params)) != nullptr) return tmpAPI;
 return nullptr;
 }

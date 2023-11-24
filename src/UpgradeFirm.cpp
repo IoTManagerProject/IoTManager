@@ -2,12 +2,14 @@
 
 updateFirm update;
 
-void upgrade_firmware(int type) {
+void upgrade_firmware(int type, String path) {
     putUserDataToRam();
+    // сбросим файл статуса последнего обновления
+    writeFile("ota.json", "{}");
 
     // only build
     if (type == 1) {
-        if (upgradeBuild()) {
+        if (upgradeBuild(path)) {
             saveUserDataToFlash();
             restartEsp();
         }
@@ -15,7 +17,7 @@ void upgrade_firmware(int type) {
 
     // only littlefs
     else if (type == 2) {
-        if (upgradeFS()) {
+        if (upgradeFS(path)) {
             saveUserDataToFlash();
             restartEsp();
         }
@@ -23,71 +25,83 @@ void upgrade_firmware(int type) {
 
     // littlefs and build
     else if (type == 3) {
-        if (upgradeFS()) {
+        if (upgradeFS(path)) {
             saveUserDataToFlash();
-            if (upgradeBuild()) {
+            if (upgradeBuild(path)) {
                 restartEsp();
             }
         }
     }
 }
 
-bool upgradeFS() {
+bool upgradeFS(String path) {
     bool ret = false;
     WiFiClient wifiClient;
-    SerialPrint("!!!", F("Update"), F("Start upgrade FS..."));
-    handleUpdateStatus(true, UPDATE_FS_IN_PROGRESS);
-    if (getBinPath("") == "error") {
+    SerialPrint("!!!", F("Update"), "Start upgrade FS... " + path);
+
+    if (path == "") {
         SerialPrint("E", F("Update"), F("FS Path error"));
-        handleUpdateStatus(true, PATH_ERROR);
+        saveUpdeteStatus("fs", PATH_ERROR);
         return ret;
     }
 #ifdef ESP8266
     ESPhttpUpdate.rebootOnUpdate(false);
-    t_httpUpdate_return retFS = ESPhttpUpdate.updateFS(wifiClient, getBinPath("littlefs.bin"));
+    t_httpUpdate_return retFS = ESPhttpUpdate.updateFS(wifiClient, path + "/littlefs.bin");
 #endif
 #ifdef ESP32
     httpUpdate.rebootOnUpdate(false);
-    //обновляем little fs с помощью метода обновления spiffs
-    HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, getBinPath("littlefs.bin"));
+    // обновляем little fs с помощью метода обновления spiffs!!!!
+    HTTPUpdateResult retFS = httpUpdate.updateSpiffs(wifiClient, path + "/littlefs.bin");
 #endif
 
-    //если FS обновилась успешно
+    // если FS обновилась успешно
     if (retFS == HTTP_UPDATE_OK) {
         SerialPrint("!!!", F("Update"), F("FS upgrade done!"));
-        handleUpdateStatus(true, UPDATE_FS_COMPLETED);
+        saveUpdeteStatus("fs", UPDATE_COMPLETED);
         ret = true;
+    } else {
+        saveUpdeteStatus("fs", UPDATE_FAILED);
+        if (retFS == HTTP_UPDATE_FAILED) {
+            SerialPrint("E", F("Update"), "HTTP_UPDATE_FAILED");
+        } else if (retFS == HTTP_UPDATE_NO_UPDATES) {
+            SerialPrint("E", F("Update"), "HTTP_UPDATE_NO_UPDATES");
+        }
     }
-    handleUpdateStatus(true, UPDATE_FS_FAILED);
     return ret;
 }
 
-bool upgradeBuild() {
+bool upgradeBuild(String path) {
     bool ret = false;
     WiFiClient wifiClient;
-    SerialPrint("!!!", F("Update"), F("Start upgrade BUILD..."));
-    handleUpdateStatus(true, UPDATE_BUILD_IN_PROGRESS);
-    if (getBinPath("") == "error") {
+    SerialPrint("!!!", F("Update"), "Start upgrade BUILD... " + path);
+
+    if (path == "") {
         SerialPrint("E", F("Update"), F("Build Path error"));
-        handleUpdateStatus(true, PATH_ERROR);
+        saveUpdeteStatus("build", PATH_ERROR);
         return ret;
     }
-#if defined (esp8266_4mb) || defined (esp8266_1mb) || defined (esp8266_1mb_ota) || defined (esp8266_2mb) || defined (esp8266_2mb_ota) 
+#if defined(esp8266_4mb) || defined(esp8266_16mb) || defined(esp8266_1mb) || defined(esp8266_1mb_ota) || defined(esp8266_2mb) || defined(esp8266_2mb_ota)
     ESPhttpUpdate.rebootOnUpdate(false);
-    t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, getBinPath("firmware.bin"));
+    t_httpUpdate_return retBuild = ESPhttpUpdate.update(wifiClient, path + "/firmware.bin");
 #endif
-#ifdef esp32_4mb
+#ifdef ESP32
     httpUpdate.rebootOnUpdate(false);
-    HTTPUpdateResult retBuild = httpUpdate.update(wifiClient, getBinPath("firmware.bin"));
+    HTTPUpdateResult retBuild = httpUpdate.update(wifiClient, path + "/firmware.bin");
 #endif
 
-    //если BUILD обновился успешно
+    // если BUILD обновился успешно
     if (retBuild == HTTP_UPDATE_OK) {
         SerialPrint("!!!", F("Update"), F("BUILD upgrade done!"));
-        handleUpdateStatus(true, UPDATE_BUILD_COMPLETED);
+        saveUpdeteStatus("build", UPDATE_COMPLETED);
         ret = true;
+    } else {
+        saveUpdeteStatus("build", UPDATE_FAILED);
+        if (retBuild == HTTP_UPDATE_FAILED) {
+            SerialPrint("E", F("Update"), "HTTP_UPDATE_FAILED");
+        } else if (retBuild == HTTP_UPDATE_NO_UPDATES) {
+            SerialPrint("E", F("Update"), "HTTP_UPDATE_NO_UPDATES");
+        }
     }
-    handleUpdateStatus(true, UPDATE_BUILD_FAILED);
     return ret;
 }
 
@@ -97,29 +111,31 @@ void restartEsp() {
     ESP.restart();
 }
 
-const String getBinPath(String file) {
-    String path = "error";
-    int targetVersion = 0;
-    String serverip;
-    if (jsonRead(errorsHeapJson, F("chver"), targetVersion)) {
-        if (targetVersion >= 400) {
-            if (jsonRead(settingsFlashJson, F("serverip"), serverip)) {
-                if (serverip != "") {
-                    path = jsonReadStr(settingsFlashJson, F("serverip")) + "/iotm/" + String(FIRMWARE_NAME) + "/" + String(targetVersion) + "/" + file;
-                }
-            }
-        }
-    }
-    SerialPrint("i", F("Update"), "path: " + path);
-    return path;
-}
+// теперь путь к обнавленю прошивки мы получаем из веб интерфейса
+// const String getBinPath(String file) {
+//     String path = "error";
+//     int targetVersion = 0;
+//     String serverip;
+//     if (jsonRead(errorsHeapJson, F("chver"), targetVersion)) {
+//         if (targetVersion >= 400) {
+//             if (jsonRead(settingsFlashJson, F("serverip"), serverip)) {
+//                 if (serverip != "") {
+//                     path = jsonReadStr(settingsFlashJson, F("serverip")) + "/iotm/" + String(FIRMWARE_NAME) + "/" + String(targetVersion) + "/" + file;
+//                 }
+//             }
+//         }
+//     }
+//     SerialPrint("i", F("Update"), "path: " + path);
+//     return path;
+// }
 
+// https://t.me/IoTmanager/128814/164752 - убрал ограничение
 void putUserDataToRam() {
-    update.configJson = readFile("config.json", 4096);
-    update.settingsFlashJson = readFile("settings.json", 4096);
-    update.layoutJson = readFile("layout.json", 4096);
-    update.scenarioTxt = readFile("scenario.txt", 4096);
-    update.chartsData = createDataBaseSting();
+    update.configJson = readFile("config.json", 4096 * 4);
+    update.settingsFlashJson = readFile("settings.json", 4096 * 4);
+    update.layoutJson = readFile("layout.json", 4096 * 4);
+    update.scenarioTxt = readFile("scenario.txt", 4096 * 4);
+    // update.chartsData = createDataBaseSting();
 }
 
 void saveUserDataToFlash() {
@@ -127,10 +143,13 @@ void saveUserDataToFlash() {
     writeFile("/settings.json", update.settingsFlashJson);
     writeFile("/layout.json", update.layoutJson);
     writeFile("/scenario.txt", update.scenarioTxt);
-    writeDataBaseSting(update.chartsData);
+    // writeDataBaseSting(update.chartsData);
 }
 
-void handleUpdateStatus(bool send, int state) {
-    jsonWriteInt_(errorsHeapJson, F("upd"), state);
-    if (!send) sendStringToWs("errors", errorsHeapJson, -1);
+void saveUpdeteStatus(String key, int val) {
+    const String path = "ota.json";
+    String json = readFile(path, 1024);
+    if (json == "failed") json = "{}";
+    jsonWriteInt_(json, key, val);
+    writeFile(path, json);
 }

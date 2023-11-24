@@ -16,11 +16,11 @@ void stInit() {
 
 void updateDeviceStatus() {
     String ret;
-    String serverIP;
-    jsonRead(settingsFlashJson, F("serverip"), serverIP);
+    String serverIP = "http://iotmanager.org";
+    // jsonRead(settingsFlashJson, F("serverip"), serverIP);
     String url = serverIP + F("/projects/esprebootstat.php");
     // SerialPrint("i", "Stat", "url " + url);
-    if ((WiFi.status() == WL_CONNECTED)) {
+    if ((isNetworkActive())) {
         WiFiClient client;
         HTTPClient http;
         http.begin(client, url);
@@ -34,7 +34,7 @@ void updateDeviceStatus() {
         int httpResponseCode = http.POST(httpRequestData);
 
         if (httpResponseCode > 0) {
-            ret = httpResponseCode;
+            ret = http.errorToString(httpResponseCode).c_str();
             if (httpResponseCode == HTTP_CODE_OK) {
                 String payload = http.getString();
                 ret += " " + payload;

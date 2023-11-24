@@ -1,27 +1,196 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 #include <Arduino.h>
-#ifdef ESP32
 #include <NimBLEDevice.h>
+#define BLE_PART1
+#define BLE_PART2
 #include <decoder.h>
+#include <vector>
 
 // Создаем переменную для хранения данных с датчиков bluetooth
-StaticJsonDocument<JSON_BUFFER_SIZE * 4> BLEbuffer;
-JsonObject extBLEdata = BLEbuffer.to<JsonObject>();
+// StaticJsonDocument<JSON_BUFFER_SIZE * 4> BLEbuffer;
+// DynamicJsonDocument extBLEdata(JSON_BUFFER_SIZE * 4);
+// JsonObject extBLEdata = BLEbuffer.to<JsonObject>();
+class BleSens;
+std::vector<BleSens *> BleSensArray;
 
-BLEScan *pBLEScan;
-TheengsDecoder decoder;
-StaticJsonDocument<512> doc;
+class BleSens : public IoTItem
+{
+private:
+  // описание параметров передаваемых из настроек датчика из веба
+  String _MAC;
+  String _sensor;
+  int timeRecv = 0;
+  int _minutesPassed = 0;
+  String json = "{}";
+  int orange = 0;
+  int red = 0;
+  int offline = 0;
+  int _int;
+  bool dataFromNode = false;
+
+public:
+  String whoIAm(/*String &mac, String &sens*/)
+  {
+    // mac = _MAC;
+    // sens = _sensor;
+    return _MAC;
+  }
+
+  void setBLEdata(JsonObject extBLEdata)
+  {
+    if (_sensor == "last")
+    {
+      timeRecv = extBLEdata[_sensor].as<int>();
+      char *s;
+      s = TimeToString(millis() / 1000 - timeRecv / 1000);
+      value.isDecimal = 0;
+      if (timeRecv > 0)
+      {
+        value.valS = s;
+        dataFromNode = true;
+        _minutesPassed = 0;
+        setNewWidgetAttributes();
+      }
+      else
+      {
+        value.valS = "";
+      }
+      regEvent(value.valS, _id);
+    }
+    else
+    {
+      String valStr = extBLEdata[_sensor].as<String>();
+      if (valStr != "null")
+      {
+        if (value.isDecimal == isDigitDotCommaStr(valStr))
+        {
+          value.isDecimal = 1;
+          value.valD = valStr.toFloat();
+          regEvent(value.valD, _id);
+          dataFromNode = true;
+          _minutesPassed = 0;
+          setNewWidgetAttributes();
+        }
+        else
+        {
+          value.isDecimal = 0;
+          value.valS = valStr;
+          regEvent(value.valS, _id);
+          dataFromNode = true;
+          _minutesPassed = 0;
+          setNewWidgetAttributes();
+        }
+      }
+    }
+  }
+  char *TimeToString(unsigned long t)
+  {
+    static char str[12];
+    long h = t / 3600;
+    t = t % 3600;
+    int m = t / 60;
+    int s = t % 60;
+    sprintf(str, "%02ld:%02d:%02d", h, m, s);
+    return str;
+  }
+
+  void doByInterval()
+  {
+    if (_sensor == "last")
+    {
+      char *s;
+      s = TimeToString(millis() / 1000 - timeRecv / 1000);
+      value.isDecimal = 0;
+      if (timeRecv > 0)
+      {
+        value.valS = s;
+      }
+      else
+      {
+        value.valS = "";
+      }
+      regEvent(value.valS, _id);
+    }
+    _minutesPassed++;
+    setNewWidgetAttributes();
+  }
+  void onMqttWsAppConnectEvent()
+  {
+    setNewWidgetAttributes();
+  }
+  void setNewWidgetAttributes()
+  {
+
+    int minutes_ = _minutesPassed * _int / 60;
+    jsonWriteStr(json, F("info"), prettyMinutsTimeout(minutes_));
+    if (dataFromNode)
+    {
+      if (orange != 0 && red != 0 && offline != 0)
+      {
+        if (minutes_ < orange)
+        {
+          jsonWriteStr(json, F("color"), "");
+        }
+        if (minutes_ >= orange && minutes_ < red)
+        {
+          jsonWriteStr(json, F("color"), F("orange")); // сделаем виджет оранжевым
+        }
+        if (minutes_ >= red && minutes_ < offline)
+        {
+          jsonWriteStr(json, F("color"), F("red")); // сделаем виджет красным
+        }
+        if (minutes_ >= offline)
+        {
+          jsonWriteStr(json, F("info"), F("offline"));
+        }
+      }
+    }
+    else
+    {
+      jsonWriteStr(json, F("info"), F("awaiting"));
+    }
+    sendSubWidgetsValues(_id, json);
+  }
+
+  BleSens(String parameters) : IoTItem(parameters)
+  {
+    _MAC = jsonReadStr(parameters, "MAC");
+    _sensor = jsonReadStr(parameters, "sensor");
+    jsonRead(parameters, F("orange"), orange);
+    jsonRead(parameters, F("red"), red);
+    jsonRead(parameters, F("offline"), offline);
+    jsonRead(parameters, F("int"), _int);
+    dataFromNode = false;
+    BleSensArray.push_back(this);
+  }
+
+  ~BleSens(){};
+};
+
+//=======================================================================================================
+
+/** Callback to process the results of the last scan or restart it */
+void scanEndedCB(NimBLEScanResults results)
+{
+  int count = results.getCount();
+  SerialPrint("i", F("BLE"), "Scan done! "); // +"Devices found: " + String(count));
+  // pBLEScan->clearResults();
+}
 
 class BleScan : public IoTItem, BLEAdvertisedDeviceCallbacks
 {
 private:
-  //описание параметров передаваемых из настроек датчика из веба
+  // описание параметров передаваемых из настроек датчика из веба
   int _scanDuration;
   String _filter;
+  bool _debug;
+
+  StaticJsonDocument<512> doc;
+  BLEScan *pBLEScan;
+  TheengsDecoder decoder;
 
 public:
-  //=======================================================================================================
   std::string convertServiceData(std::string deviceServiceData)
   {
     int serviceDataLength = (int)deviceServiceData.length();
@@ -67,169 +236,91 @@ public:
 
     if (decoder.decodeBLEJson(BLEdata))
     {
-
-      BLEdata.remove("manufacturerdata");
-      BLEdata.remove("servicedata");
-
-      String mac_address = BLEdata["id"].as<const char *>();
+      String mac_address = BLEdata["mac"].as<const char *>();
+      if (mac_address == "")
+      {
+        BLEdata["mac"] = BLEdata["id"];
+        mac_address = BLEdata["id"].as<const char *>();
+      }
       mac_address.replace(":", "");
 
-      if (_filter != "")
+      if (_debug < 2)
       {
-        if (BLEdata[_filter])
+        BLEdata.remove("manufacturerdata");
+        BLEdata.remove("servicedata");
+        BLEdata.remove("type");
+        BLEdata.remove("cidc");
+        BLEdata.remove("acts");
+        BLEdata.remove("cont");
+        BLEdata.remove("track");
+        BLEdata.remove("id");
+      }
+      // дописываем время прихода пакета данных
+      BLEdata["last"] = millis();
+      if (_debug)
+      {
+        if ((_filter != "" && BLEdata[_filter]) || _filter == "")
         {
-          for (JsonPair kv : BLEdata)
+          //  for (JsonPair kv : BLEdata)
+          // {
+          // String val = BLEdata.as<String>();
+          String output;
+          if (_debug < 2)
           {
-            extBLEdata[mac_address][kv.key()] = BLEdata[kv.key()];
+            BLEdata.remove("servicedatauuid");
           }
+          serializeJson(BLEdata, output);
+          SerialPrint("i", F("BLE"), mac_address + " " + output);
+          //}
+        }
 
-          // дописываем время прихода пакета данных
-          extBLEdata[mac_address]["last"] = millis();
-        }
+        SerialPrint("i", F("BLE"), "found: " + String(BLEdata["mac"].as<const char *>()));
       }
-      else
+
+      // Перебираем все зарегистрированные сенсоры BleSens
+      for (std::vector<BleSens *>::iterator it = BleSensArray.begin();
+           it != BleSensArray.end(); ++it)
       {
-        for (JsonPair kv : BLEdata)
-        {
-          extBLEdata[mac_address][kv.key()] = BLEdata[kv.key()];
-        }
-        // дописываем время прихода пакета данных
-        extBLEdata[mac_address]["last"] = millis();
+        // Если это данные для нужного сенсора (по его МАКУ)
+        if ((*it)->whoIAm() == mac_address)
+          // то передаем ему json, дальше он сам разберется
+          (*it)->setBLEdata(BLEdata);
       }
-    };
+    }
   }
 
   BleScan(String parameters) : IoTItem(parameters)
   {
     _scanDuration = jsonReadInt(parameters, "scanDuration");
     _filter = jsonReadStr(parameters, "filter");
+    jsonRead(parameters, "debug", _debug);
 
+    BLEDevice::init("");
+    pBLEScan = BLEDevice::getScan(); // create new scan
+    pBLEScan->setAdvertisedDeviceCallbacks(this);
+    pBLEScan->setActiveScan(false); // active scan uses more power, but get results faster
+    pBLEScan->setInterval(100);
+    pBLEScan->setWindow(99);    // less or equal setInterval value
+    pBLEScan->setMaxResults(0); // do not store the scan results, use callback only.
+  }
+
+  // doByInterval()
+  void doByInterval()
+  {
     if (pBLEScan->isScanning() == false)
     {
-      SerialPrint("i", F("BLE"), "Start Scanning...");
-      BLEDevice::init("");
-      pBLEScan = BLEDevice::getScan(); // create new scan
-      pBLEScan->setAdvertisedDeviceCallbacks(this);
-      pBLEScan->setActiveScan(false); // active scan uses more power, but get results faster
-      pBLEScan->setInterval(100);
-      pBLEScan->setWindow(99); // less or equal setInterval value
+      if (_scanDuration > 0)
+      {
+        SerialPrint("i", F("BLE"), "Start Scanning...");
+        pBLEScan->start(_scanDuration, scanEndedCB, false);
+      }
     }
   }
 
-  //=======================================================================================================
-
-  // doByInterval()
-  void doByInterval()
-  {
-
-    if (_scanDuration > 0)
-    {
-      BLEScanResults foundDevices = pBLEScan->start(_scanDuration, true);
-      int count = foundDevices.getCount();
-      SerialPrint("i", F("BLE"), "Devices found: " + String(count));
-      SerialPrint("i", F("BLE"), "Scan done!");
-      pBLEScan->clearResults();
-    }
-    for (JsonPair kv : extBLEdata)
-    {
-      String val = extBLEdata[kv.key()].as<String>();
-      SerialPrint("i", F("BLE"), _id + " " + kv.key().c_str() + " " + val);
-    }
-  }
-
-  //=======================================================================================================
-
-  ~BleScan(){};
+  ~BleScan() { BleSensArray.clear(); };
 };
 
-class BleSens : public IoTItem
-{
-private:
-  //описание параметров передаваемых из настроек датчика из веба
-  String _MAC;
-  String _sensor;
-
-public:
-  //=======================================================================================================
-  char *TimeToString(unsigned long t)
-  {
-    static char str[12];
-    long h = t / 3600;
-    t = t % 3600;
-    int m = t / 60;
-    int s = t % 60;
-    sprintf(str, "%02ld:%02d:%02d", h, m, s);
-    return str;
-  }
-
-  BleSens(String parameters) : IoTItem(parameters)
-  {
-    _MAC = jsonReadStr(parameters, "MAC");
-    _sensor = jsonReadStr(parameters, "sensor");
-  }
-
-  //=======================================================================================================
-
-  // doByInterval()
-  void doByInterval()
-  {
-    if (_sensor == "last")
-    {
-      int valInt = extBLEdata[_MAC][_sensor].as<int>();
-      char *s;
-      s = TimeToString(millis() / 1000 - valInt / 1000);
-      value.isDecimal = 0;
-      if (valInt > 0)
-      {
-        value.valS = s;
-      }
-      else
-      {
-        value.valS = "";
-      }
-      regEvent(value.valS, _id);
-    }
-    else
-    {
-      String valStr = extBLEdata[_MAC][_sensor].as<String>();
-      if (valStr != "null")
-      {
-        if (value.isDecimal = isDigitDotCommaStr(valStr))
-        {
-          value.isDecimal = 1;
-          value.valD = valStr.toFloat();
-          regEvent(value.valD, _id);
-        }
-        else
-        {
-          value.isDecimal = 0;
-          value.valS = valStr;
-          regEvent(value.valS, _id);
-        }
-      }
-      else
-      {
-        value.isDecimal = 0;
-        value.valS = "";
-        regEvent(value.valS, _id);
-      }
-    }
-    }
-  //=======================================================================================================
-
-  ~BleSens(){};
-};
-#endif
-
-// Заглушка для ESP8266
-#ifdef ESP8266
-class Ble : public IoTItem
-{
-private:
-public:
-  Ble(String parameters) : IoTItem(parameters) {}
-};
-#endif
+//=======================================================================================================
 
 void *getAPI_Ble(String subtype, String param)
 {

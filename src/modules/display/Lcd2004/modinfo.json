@@ -1,38 +1,38 @@
-{   
-    "menuSection": "Экраны",
-
-    "configItem": [{
-        "global": 0,
-        "name": "LCD экран 2004",
-        "type": "Reading",
-        "subtype": "Lcd2004",
-        "id": "Lcd",
-        "widget": "",
-        "page": "",
-        "descr": "T",
-        
-        "int": 15,
-        "addr": "0x27",
-        "size": "20,4",
-        "coord": "0,0",
-        "id2show": "id датчика"
-    },
-    {
-        "name": "LCD экран 1602",
-        "type": "Reading",
-        "subtype": "Lcd2004",
-        "id": "Lcd",
-        "widget": "",
-        "page": "",
-        "descr": "T",
-        
-        "int": 15,
-        "addr": "0x27",
-        "size": "16,2",
-        "coord": "0,0",
-        "id2show": "id датчика"
-    }],
-    
+{
+    "menuSection": "screens",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "LCD экран 2004",
+            "type": "Reading",
+            "subtype": "Lcd2004",
+            "id": "Lcd",
+            "widget": "inputTxt",
+            "page": "screens",
+            "descr": "LCD Экран",
+            "addr": "0x27",
+            "size": "20,4",
+            "coord": "0,0",
+            "id2show": "",
+            "prefix": "",
+            "postfix": ""
+        },
+        {
+            "name": "LCD экран 1602",
+            "type": "Reading",
+            "subtype": "Lcd2004",
+            "id": "Lcd",
+            "widget": "inputTxt",
+            "page": "screens",
+            "descr": "LCD Экран",
+            "addr": "0x27",
+            "size": "16,2",
+            "coord": "0,0",
+            "id2show": "",
+            "prefix": "",
+            "postfix": ""
+        }
+    ],
     "about": {
         "authorName": "Ilya Belyakov",
         "authorContact": "https://t.me/Biveraxe",
@@ -46,12 +46,14 @@
         },
         "moduleDesc": "Позволяет выводить на символьные экраны по указанным позициям значения других элементов конфигурации.",
         "propInfo": {
-            "int": "Период времени в секундах обновления информации на экране по конкретному элементу.",
-            "addr": "Адрес устройства на шине, обычно 0x27.",
+            "addr": "Адрес устройства на шине, обычно 0x27. Установите пустую строку для включения режима сканирования адресов на шине (результат в консоли).",
             "size": "Размерность матрицы экрана.",
             "coord": "Координата позиции для вывода данных элемента конфигурации.",
-            "id2show": "id элемента конфигурации."
+            "id2show": "id элемента конфигурации для отображения на экране. Если пустое значение, то данные берутся из собственной переменной.",
+            "prefix": "Символы до значения.",
+            "postfix": "Символы после значения."
         },
+        "title": "Символьный дисплей Lcd2004",
         "funcInfo": [
             {
                 "name": "noBacklight",
@@ -81,30 +83,51 @@
             {
                 "name": "x",
                 "descr": "Устанавливает первую координату",
-                "params": ["Номер строки первого символа"]
+                "params": [
+                    "Номер строки первого символа"
+                ]
             },
             {
                 "name": "y",
                 "descr": "Устанавливает вторую координату",
-                "params": ["Номер столбца первого символа"]
+                "params": [
+                    "Номер столбца первого символа"
+                ]
             },
             {
-                "name": "descr",
+                "name": "prefix",
                 "descr": "Задает приставку слева от значения",
-                "params": ["Строка"]
+                "params": [
+                    "Строка"
+                ]
+            },
+            {
+                "name": "postfix",
+                "descr": "Задает приставку справа от значения",
+                "params": [
+                    "Строка"
+                ]
             },
             {
                 "name": "id2show",
                 "descr": "Задает ИД элемента, значение которого хотим отображать на экране",
-                "params": ["Имя элемента конфигурации"]
+                "params": [
+                    "Имя элемента конфигурации"
+                ]
             }
         ]
     },
-
     "defActive": true,
-
     "usedLibs": {
         "esp32_4mb": [
+            "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
+            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
+        ],
+        "esp32_4mb3f": [
+            "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
+            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
+        ],
+        "esp32cam_4mb": [
             "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
             "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
         ],

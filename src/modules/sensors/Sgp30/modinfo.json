@@ -1,31 +1,31 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
-		 "global": 0,
-         "name": "SGP30 Cенсор качества воздуха",
-         "num": 3,
-         "type": "Reading",
-         "subtype": "Sgp30t",
-         "id": "sgp30t",
-         "widget": "anydatappm",
-         "page": "Сенсоры",
-         "descr": "TVOC",
-         "int": 30,
-         "round": 1
+            "global": 0,
+            "name": "SGP30 Cенсор качества воздуха",
+            "num": 3,
+            "type": "Reading",
+            "subtype": "Sgp30t",
+            "id": "sgp30t",
+            "widget": "anydatappm",
+            "page": "Сенсоры",
+            "descr": "TVOC",
+            "int": 30,
+            "round": 1
         },
         {
-		 "global": 0,
-         "name": "SGP30 Cенсор газа",
-         "num": 4,
-         "type": "Reading",
-         "subtype": "Sgp30e",
-         "id": "sgp30e",
-         "widget": "anydatappm",
-         "page": "Сенсоры",
-         "descr": "eCO2",
-         "int": 30,
-         "round": 1
+            "global": 0,
+            "name": "SGP30 Cенсор газа",
+            "num": 4,
+            "type": "Reading",
+            "subtype": "Sgp30e",
+            "id": "sgp30e",
+            "widget": "anydatappm",
+            "page": "Сенсоры",
+            "descr": "eCO2",
+            "int": 30,
+            "round": 1
         }
     ],
     "about": {
@@ -49,6 +49,12 @@
     "defActive": false,
     "usedLibs": {
         "esp32_4mb": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp32_4mb3f": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp32cam_4mb": [
             "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
         ],
         "esp8266_4mb": [

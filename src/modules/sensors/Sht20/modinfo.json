@@ -1,5 +1,5 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "global": 0,
@@ -50,6 +50,9 @@
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [
+            "robtillaart/SHT2x@^0.1.1"
+        ],
+        "esp32_4mb3f": [
             "robtillaart/SHT2x@^0.1.1"
         ],
         "esp8266_4mb": [

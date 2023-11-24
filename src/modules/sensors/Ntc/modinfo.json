@@ -1,0 +1,64 @@
+{
+    "menuSection": "sensors",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Cенсор температуры NTC",
+            "type": "Reading",
+            "subtype": "Ntc",
+            "id": "Ntctmp",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "NTC Температура",
+            "needSave": 0,
+            "val": "0",
+            "int": 15,
+            "pin": "35",
+            "R1": "10000",
+            "R0": "10000",
+            "Beta": "3950.0",
+            "T0": "25",
+            "Vs": "3.3",
+            "round": 1
+        }
+    ],
+    "about": {
+        "authorName": "Serghei Crasnicov",
+        "authorContact": "https://t.me/Serghei63",
+        "authorGit": "https://github.com/Serghei63",
+        "specialThanks": "https://t.me/Mit4bmw",
+        "moduleName": "Ntc",
+        "moduleVersion": "1.1",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "subTypes": [
+            "Ntc"
+        ],
+        "title": "Модуль датчика Ntc",
+        "moduleDesc": "",
+        "retInfo": "",
+        "propInfo": {
+            "pin": "Аналоговый пин (для esp8266 = 0, для esp32  алаоговый gpio, например 35)",
+            "R1": "Сопротивление подтягивающего резистора, должен быть равен сопротивлению термистера",
+            "Vs": "Напряжение питания датчика, Для точности измерить и ввести своё, по умолчанию 3.3В",
+            "R0": "Сопротивление термистора при температуре То, например 10 КОм при 25С",
+            "T0": "Базовая температура, температура измерения сопротивление термистора (Rterm), обычно 25С",
+            "Beta": "Beta термистора"
+        }
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32cam_4mb": [],
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": [],
+        "esp8285_1mb": [],
+        "esp8285_1mb_ota": [],
+        "esp8266_2mb": [],
+        "esp8266_2mb_ota": []
+    }
+}

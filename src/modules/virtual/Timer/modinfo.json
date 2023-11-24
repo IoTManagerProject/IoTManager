@@ -1,5 +1,5 @@
 {
-    "menuSection": "Виртуальные элементы",
+    "menuSection": "virtual_elments",
     "configItem": [
         {
             "global": 0,
@@ -58,19 +58,30 @@
             {
                 "name": "int",
                 "descr": "Можно изменить шаг тиков.",
-                "params": ["Число в секундах"]
+                "params": [
+                    "Число в секундах"
+                ]
             },
             {
                 "name": "setInitCountDown",
                 "descr": "Меняем начальное значение счетчика, устанавливаемое после сброса.",
-                "params": ["Число в секундах"]
+                "params": [
+                    "Число в секундах"
+                ]
             }
         ]
     },
     "defActive": true,
     "usedLibs": {
         "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32cam_4mb": [],
+        "esp32_16mb": [],
+        "esp32s2_4mb": [],
+        "esp32s3_16mb": [],
+        "esp32c3m_4mb": [],
         "esp8266_4mb": [],
+        "esp8266_16mb": [],
         "esp8266_1mb": [],
         "esp8266_1mb_ota": [],
         "esp8285_1mb": [],

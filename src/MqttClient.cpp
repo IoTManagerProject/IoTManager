@@ -5,8 +5,8 @@ void mqttInit() {
     ts.add(
         WIFI_MQTT_CONNECTION_CHECK, MQTT_RECONNECT_INTERVAL,
         [&](void*) {
-            if (WiFi.status() == WL_CONNECTED) {
-                SerialPrint("i", F("WIFI"), "OK: " + jsonReadStr(settingsFlashJson, F("ip")));
+            if (isNetworkActive()) {
+                SerialPrint("i", F("WIFI"), "http://" + jsonReadStr(settingsFlashJson, F("ip")));
                 wifiUptimeCalc();
                 if (mqtt.connected()) {
                     SerialPrint("i", F("MQTT"), "OK");
@@ -95,6 +95,10 @@ void mqttReconnect() {
     mqttConnect();
 }
 
+bool mqttIsConnect(){
+    return mqtt.connected();
+}
+
 void getMqttData() {
     mqttServer = jsonReadStr(settingsFlashJson, F("mqttServer"));
     mqttPort = jsonReadInt(settingsFlashJson, F("mqttPort"));
@@ -114,6 +118,28 @@ void mqttSubscribe() {
         mqtt.subscribe((mqttPrefix + "/+/+/order/#").c_str());
         mqtt.subscribe((mqttPrefix + "/+/+/info").c_str());
     }
+    for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if ((*it)->getSubtype() == "ExternalMQTT") {
+            String tmps = (*it)->getMqttExterSub();
+            if (tmps != ""){
+                mqtt.subscribe(tmps.c_str());
+                SerialPrint("i", F("MQTT"), ("subscribed external " + tmps).c_str());
+            }
+        }
+    }
+}
+
+void mqttSubscribeExternal(String topic, bool usePrefix) {
+
+   // SerialPrint("i", F("MQTT"), mqttRootDevice);
+   String _sb_topic = topic;
+   if (usePrefix)
+   {
+    _sb_topic = mqttPrefix + "/" + topic;
+   }
+   mqtt.subscribe(_sb_topic.c_str());
+
+    SerialPrint("i", F("MQTT"), ("subscribed external " + _sb_topic).c_str());
 }
 
 void mqttCallback(char* topic, uint8_t* payload, size_t length) {
@@ -133,10 +159,10 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
     if (payloadStr.startsWith("HELLO")) {
         SerialPrint("i", F("MQTT"), F("Full update"));
 
-        //публикация всех виджетов
+        // публикация всех виджетов
         publishWidgets();
 
-        //публикация всех статус сообщений при подключении приложения и генерация события подключения приложения в модулях
+        // публикация всех статус сообщений при подключении приложения и генерация события подключения приложения в модулях
         for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->iAmLocal) {
                 publishStatusMqtt((*it)->getID(), (*it)->getValue());
@@ -144,7 +170,7 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
             }
         }
 
-        //отправка данных графиков - данный код будет оптимизирован после завершения написания приложения с новыми графиками
+        // отправка данных графиков - данный код будет оптимизирован после завершения написания приложения с новыми графиками
         for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
             if ((*it)->getSubtype() == "Loging" || "LogingDaily") {
                 (*it)->setPublishDestination(TO_MQTT);
@@ -162,16 +188,17 @@ void mqttCallback(char* topic, uint8_t* payload, size_t length) {
 
     else if (topicStr.indexOf(F("control")) != -1) {
         String key = selectFromMarkerToMarker(topicStr, "/", 3);
-        
-        String valueIfJson = "";    // проверяем формат, если json то берем статус, иначе - как есть
+
+        String valueIfJson = "";  // проверяем формат, если json то берем статус, иначе - как есть
         if (!jsonRead(payloadStr, F("status"), valueIfJson, false))
             generateOrder(key, payloadStr);
-        else generateOrder(key, valueIfJson);
+        else
+            generateOrder(key, valueIfJson);
 
         SerialPrint("i", F("=>MQTT"), "Msg from iotmanager app: " + key + " " + payloadStr);
     }
 
-    //здесь мы получаем события с других устройств, которые потом проверяются в сценариях этого устройства
+    // здесь мы получаем события с других устройств, которые потом проверяются в сценариях этого устройства
     else if (topicStr.indexOf("event") != -1) {
         if (!jsonReadBool(settingsFlashJson, "mqttin")) {
             return;
@@ -251,7 +278,7 @@ void publishWidgets() {
     DeserializationError error = deserializeJson(doc, file);
     if (error) {
         SerialPrint("E", F("MQTT"), error.f_str());
-        jsonWriteInt(errorsHeapJson, F("jse3"), 1);  //Ошибка чтения json файла с виджетами при отправки в mqtt
+        jsonWriteInt(errorsHeapJson, F("jse3"), 1);  // Ошибка чтения json файла с виджетами при отправки в mqtt
     }
     JsonArray arr = doc.as<JsonArray>();
     for (JsonVariant value : arr) {
@@ -292,43 +319,43 @@ void handleMqttStatus(bool send, int state) {
 
 const String getStateStr(int e) {
     switch (e) {
-        case -4:  //Нет ответа от сервера
+        case -4:  // Нет ответа от сервера
             return F("e1");
             break;
-        case -3:  //Соединение было разорвано
+        case -3:  // Соединение было разорвано
             return F("e2");
             break;
-        case -2:  //Ошибка соединения. Обычно возникает когда неверно указано название сервера MQTT
+        case -2:  // Ошибка соединения. Обычно возникает когда неверно указано название сервера MQTT
             return F("e3");
             break;
-        case -1:  //Клиент был отключен
+        case -1:  // Клиент был отключен
             return F("e4");
             break;
-        case 0:  //подключено
+        case 0:  // подключено
             return F("e5");
             break;
-        case 1:  //Ошибка версии
+        case 1:  // Ошибка версии
             return F("e6");
             break;
-        case 2:  //Отклонен идентификатор
+        case 2:  // Отклонен идентификатор
             return F("e7");
             break;
-        case 3:  //Не могу установить соединение
+        case 3:  // Не могу установить соединение
             return F("e8");
             break;
-        case 4:  //Неправильное имя пользователя/пароль
+        case 4:  // Неправильное имя пользователя/пароль
             return F("e9");
             break;
-        case 5:  //Не авторизован для подключения
+        case 5:  // Не авторизован для подключения
             return F("e10");
             break;
-        case 6:  //Название сервера пустое
+        case 6:  // Название сервера пустое
             return F("e11");
             break;
-        case 7:  //Имя пользователя или пароль пустые
+        case 7:  // Имя пользователя или пароль пустые
             return F("e12");
             break;
-        case 8:  //Подключение в процессе
+        case 8:  // Подключение в процессе
             return F("e13");
             break;
         default:

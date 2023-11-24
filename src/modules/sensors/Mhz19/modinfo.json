@@ -1,5 +1,5 @@
 {
-    "menuSection": "Сенсоры",
+    "menuSection": "sensors",
     "configItem": [
         {
             "global": 0,
@@ -73,11 +73,17 @@
             "ABC": "Автокалибровка. По умолчанию включена. Раз в сутки на 20 мин. надо выставлять на свежий воздух.",
             "pin": "пин получения значений по ШИМ. Esp8266: GPIO 15 - D8, ESP32: GPIO 21, > MHZ19: PWM желтый провод",
             "maxRetriesNotAvailable": "Максимальное количество попыток опроса сенсора по ШИМ. (может задерживать контроллер)"
-        }
+        },
+        "title": "Mhz19 Датчик уровеня концентрации CO2"
     },
     "defActive": false,
     "usedLibs": {
         "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32s2_4mb": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp32cam_4mb": [],
         "esp8266_4mb": []
     }
 }

@@ -1,5 +1,5 @@
 {
-    "menuSection": "Исполнительные устройства",
+    "menuSection": "executive_devices",
     "configItem": [
         {
             "global": 0,
@@ -49,6 +49,8 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32_4mb": []
+        "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32cam_4mb": []
     }
 }

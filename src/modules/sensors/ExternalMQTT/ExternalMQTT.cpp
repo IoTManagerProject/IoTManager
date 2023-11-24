@@ -13,16 +13,28 @@ private:
     int red = 0;
     int offline = 0;
     bool dataFromNode = false;
+    String _topic = "";
+    bool _isJson;
+    bool _debug;
+    bool sendOk = false;
 
 public:
     ExternalMQTT(String parameters) : IoTItem(parameters)
     {
-        _MAC = jsonReadStr(parameters, "MAC");
         _sensor = jsonReadStr(parameters, "sensor");
         jsonRead(parameters, F("orange"), orange);
         jsonRead(parameters, F("red"), red);
         jsonRead(parameters, F("offline"), offline);
+        _topic = jsonReadStr(parameters, "topic");
+        jsonRead(parameters, "isJson", _isJson);
+        //        jsonRead(parameters, "addPrefix", _addPrefix);
+        jsonRead(parameters, "debug", _debug);
         dataFromNode = false;
+        if (mqttIsConnect())
+        {
+            sendOk = true;
+            mqttSubscribeExternal(_topic);
+        }
     }
     char *TimeToString(unsigned long t)
     {
@@ -38,46 +50,71 @@ public:
     {
         if (msg.indexOf("HELLO") == -1)
         {
-
-            //        SerialPrint("i", "onMqttRecive", "Прилетело  " + topic);
-            //        SerialPrint("i", "onMqttRecive", "Прилетело  " + msg);
             String dev = selectToMarkerLast(topic, "/");
             dev.toUpperCase();
             dev.replace(":", "");
-            if (_MAC == "")
+            if (_topic != topic)
             {
-                SerialPrint("i", "onMqttRecive", dev + " -->  " + msg);
-            }
-            DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-            DeserializationError error = deserializeJson(doc, msg);
-            if (error)
-            {
-                SerialPrint("E", F("onMqttRecive"), error.f_str());
-            }
-            JsonObject jsonObject = doc.as<JsonObject>();
-
-            for (JsonPair kv : jsonObject)
-            {
-                String key = kv.key().c_str();
-                String val = kv.value();
-                if (_MAC == dev && _sensor == key)
+                if (_debug)
                 {
-                    dataFromNode = true;
-                    _minutesPassed = 0;
-                    setValue(val);
-                    // setNewWidgetAttributes();
+                    SerialPrint("i", "ExternalMQTT", _id + " not equal: " + topic + " msg: " + msg);
                 }
+                return;
+            }
 
-                //   Serial.println("Key: " + key);
-                //   Serial.println("Value: " + val);
+            if (_isJson)
+            {
+                DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+                DeserializationError error = deserializeJson(doc, msg);
+                if (error)
+                {
+                    SerialPrint("E", F("ExternalMQTT"), error.f_str());
+                }
+                JsonObject jsonObject = doc.as<JsonObject>();
+
+                for (JsonPair kv : jsonObject)
+                {
+                    String key = kv.key().c_str();
+                    String val = kv.value();
+                    if (_debug)
+                    {
+                        SerialPrint("i", "ExternalMQTT", "Received MAC: " + dev + " key=" + key + " val=" + val);
+                    }
+                    if (_sensor == key)
+                    {
+                        dataFromNode = true;
+                        _minutesPassed = 0;
+                        setValue(val);
+                    }
+                }
+            }
+            else
+            {
+                if (_debug)
+                {
+                    SerialPrint("i", "ExternalMQTT", "Received MAC: " + dev + " val=" + msg);
+                }
+                dataFromNode = true;
+                _minutesPassed = 0;
+                setValue(msg);
             }
         }
+    }
+
+    String getMqttExterSub()
+    {
+        return _topic;
     }
 
     void doByInterval()
     {
         _minutesPassed++;
         setNewWidgetAttributes();
+        if (mqttIsConnect() && !sendOk)
+        {
+            sendOk = true;
+            mqttSubscribeExternal(_topic);
+        }
     }
     void onMqttWsAppConnectEvent()
     {
@@ -107,6 +144,7 @@ public:
                 if (_minutesPassed >= offline)
                 {
                     jsonWriteStr(json, F("info"), F("offline"));
+                    SerialPrint("i", "ExternalMQTT", _id + " - offline");
                 }
             }
         }
@@ -116,7 +154,6 @@ public:
         }
         sendSubWidgetsValues(_id, json);
     }
-
     ~ExternalMQTT(){};
 };
 
