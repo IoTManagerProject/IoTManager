@@ -16,7 +16,7 @@ class Loging : public IoTItem {
     int _wsNum = -1;
 
     int points;
-    //int keepdays;
+    // int keepdays;
 
     IoTItem *dateIoTItem;
 
@@ -35,9 +35,9 @@ class Loging : public IoTItem {
             SerialPrint("E", F("Loging"), "'" + id + "' user set more points than allowed, value reset to 300");
         }
         long interval;
-        jsonRead(parameters, F("int"), interval); // в минутах
+        jsonRead(parameters, F("int"), interval);  // в минутах
         setInterval(interval * 60);
-        //jsonRead(parameters, F("keepdays"), keepdays, false);
+        // jsonRead(parameters, F("keepdays"), keepdays, false);
 
         // создадим экземпляр класса даты
         dateIoTItem = (IoTItem *)getAPI_Date("{\"id\": \"" + id + "-date\",\"int\":\"20\",\"subtype\":\"date\"}");
@@ -276,7 +276,7 @@ class Loging : public IoTItem {
     void deleteLastFile() {
         IoTFSInfo tmp = getFSInfo();
         SerialPrint("i", "Loging", String(tmp.freePer) + " % free flash remaining");
-        if (tmp.freePer <= 20.00) {
+        if (tmp.freePer <= 50.00) {
             String dir = "/lg/" + id;
             filesList = getFilesList(dir);
             int i = 0;
@@ -300,9 +300,7 @@ class Loging : public IoTItem {
         _wsNum = wsNum;
     }
 
-    String getValue() {
-        return "";
-    }
+    String getValue() { return ""; }
 
     // void loop() {
     //     if (enableDoByInt) {
@@ -331,14 +329,10 @@ class Loging : public IoTItem {
     }
 
     // просто максимальное количество точек
-    int calculateMaxCount() {
-        return 86400;
-    }
+    int calculateMaxCount() { return 86400; }
 
     // путь вида: /lg/log/1231231.txt
-    unsigned long getFileUnixLocalTime(String path) {
-        return gmtTimeToLocal(selectToMarkerLast(deleteToMarkerLast(path, "."), "/").toInt() + START_DATETIME);
-    }
+    unsigned long getFileUnixLocalTime(String path) { return gmtTimeToLocal(selectToMarkerLast(deleteToMarkerLast(path, "."), "/").toInt() + START_DATETIME); }
     void setValue(const IoTValue &Value, bool genEvent = true) {
         value = Value;
         this->SetDoByInterval(String(value.valD));
@@ -400,6 +394,4 @@ class Date : public IoTItem {
     }
 };
 
-void *getAPI_Date(String param) {
-    return new Date(param);
-}
+void *getAPI_Date(String param) { return new Date(param); }

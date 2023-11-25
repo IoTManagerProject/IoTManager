@@ -23,6 +23,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/virtual/Math",
+                "active": false
+            },
+            {
                 "path": "src/modules/virtual/owmWeather",
                 "active": true
             },
@@ -74,6 +78,14 @@
             },
             {
                 "path": "src/modules/sensors/Ble",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/Ble_part1",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/Ble_part2",
                 "active": false
             },
             {
@@ -307,6 +319,10 @@
             {
                 "path": "src/modules/display/Lcd2004",
                 "active": true
+            },
+            {
+                "path": "src/modules/display/NextionUpload",
+                "active": false
             },
             {
                 "path": "src/modules/display/Oled128",
