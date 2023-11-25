@@ -115,6 +115,9 @@ public:
             _sunsetTime = _sunsetTime + _tzone;
 
             publishNew("main", "temp");
+            publishNew("main", "temp_min");
+            publishNew("main", "temp_max");
+            publishNew("main", "feels_like");
             publishNew("main", "pressure");
             publishNew("main", "humidity");
             publishNew("wind", "speed");
@@ -127,9 +130,9 @@ public:
             publishNew("sys", "sunset");
             publishNew("", "name");
 
-            if (_param == "temp")
+            if (_param == "temp" || _param == "temp_min" || _param == "temp_max" || _param == "feels_like")
             {
-                value.valS = jsonReadStr(Weatherdoc1["main"], "temp", true);
+                value.valS = jsonReadStr(Weatherdoc1["main"], _param, true);
                 regEvent(value.valS, "owmWeather");
             }
             else if (_param == "pressure")
