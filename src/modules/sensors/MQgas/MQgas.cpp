@@ -37,8 +37,8 @@ private:
     float RlR0CleanAirDefault;
     float ppmCleanAir;
     float ppmCleanAirDefault;
-    double aLimit;
-    double bLimit;
+    float aLimit;
+    float bLimit;
     byte sampleTimes = 10;
     byte sampleInterval = 20;
     byte intensity = 5;
@@ -49,14 +49,15 @@ private:
     bool _stateCalibrate = false;
     bool _stateCalibrateTH = false;
     String lastCalibration;
+    unsigned long lastCalibrationMillis;
     float highRs = 0;
     bool enableTempHumCorrection = false;
     float k1;
     float k2;
     float b1;
     float b2;
-    double Hum;
-    double Temp;
+    float Hum;
+    float Temp;
     double tempHumCorrection;
     String _idTempSensor;
     String _idHumSensor;
@@ -248,6 +249,21 @@ public:
         {
             IoTValue valTmp;
             valTmp.isDecimal = false;
+
+            if (lastCalibration == "00.00.00 00:00:00")
+            {
+                unsigned long miliSeconds = millis() - lastCalibrationMillis;
+                unsigned long seconds = miliSeconds / 1000;
+                unsigned long minutes = seconds / 60;
+                unsigned long hours = minutes / 60;
+                unsigned long days = hours / 24;
+               // miliSeconds %= 1000;
+                seconds %= 60;
+                minutes %= 60;
+                hours %= 24;
+                lastCalibration = String(days) + "d " + String(hours) + ":" + String(minutes) + ":" + String(seconds);
+            }
+
             valTmp.valS = lastCalibration;
             String output = "By request: lastCalibration = " + String(valTmp.valS);
             SerialPrint("I", "MQgas", output, _id);
@@ -273,7 +289,7 @@ public:
             String output = "TempHumCorrection()  temperature = " + String(Temp) + "  humidity = " + String(Hum);
             SerialPrint("I", "MQgas", output, _id);
         }
-
+        
         return {}; // команда поддерживает возвращаемое значения. Т.е. по итогу выполнения команды или общения с внешней системой, можно вернуть значение в сценарий для дальнейшей обработки
     }
 
@@ -314,6 +330,7 @@ public:
             _ro = ro; // значение сопративления сенсора на воздухе
             _stateCalibrate = true;
             lastCalibration = getDateTimeDotFormated();
+            lastCalibrationMillis = millis();
             String output = "Calibration successful!  Ro in Clean Air = " + String(_ro);
             Serial.println();
             SerialPrint("I", "MQgas", output, _id);
@@ -335,6 +352,7 @@ public:
         {
             _stateCalibrate = true;
             lastCalibration = getDateTimeDotFormated();
+            lastCalibrationMillis = millis();
             String output = "autoCalibration successful!, R0 =  " + String(_ro);
             Serial.println();
             SerialPrint("I", "MQgas", output, _id);
