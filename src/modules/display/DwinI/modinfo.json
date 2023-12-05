@@ -2,7 +2,6 @@
     "menuSection": "screens",
     "configItem": [
         {
-            "global": 0,
             "name": "LCD Dwin экран",
             "type": "Reading",
             "subtype": "DwinI",
@@ -10,11 +9,11 @@
             "widget": "",
             "page": "",
             "descr": "",
-            "int": 15,
-            "TX": 17,
-            "RX": 16,
+            "tx": 17,
+            "rx": 16,
             "line": 2,
-            "speed": 115200
+            "speed": 9600,
+            "btn-uploadUI": ""
         }
     ],
     "about": {
@@ -28,28 +27,50 @@
             "esp32_4mb": 15,
             "esp8266_4mb": 15
         },
-        "moduleDesc": "Позволяет выводить на графические экраны фирмы Dwin информацию от элементов конфигурации в автоматическом режиме.",
-        "propInfo": {
-            "int": ""
-        },
+        "subTypes": [
+            "DwinI"
+        ],
         "title": "Экраны от компании Dwin",
-        "funcInfo": [
-            {
-                "name": "rrrr",
-                "descr": "rrrr",
-                "params": []
-            }
-        ]
+        "moduleDesc": "Позволяет выводить на графические экраны фирмы Dwin информацию от элементов конфигурации в автоматическом режиме. Отправляться будут события тех элементов, которые имеют суффикс в ИД с указанием адреса VP для записи значения, например ID_5000. Для вывода числа используется суффикс i, для дробных - f, для строк - s",
+        "propInfo": {
+            "tx": "TX пин",
+            "rx": "RX пин",
+            "speed": "Скорость UART",
+            "line": "Актуально только для ESP32: номер линии hardUART. =2 rx=16 tx=17, для SoftwarwSerial в ESP32 line = -1",
+            "btn-uploadUI": "Формирует автоматически графический интерфейс на базе конфигурации и выгружает в экран. Занимает продолжительное время! (в разработке)"
+        }
     },
-    "defActive": false,
+    "defActive": true,
     "usedLibs": {
-        "esp32_4mb": [],
-        "esp32_4mb3f": [],
-        "esp32cam_4mb": [],
-        "esp8266_4mb": [],
-        "esp8266_1mb": [],
-        "esp8266_1mb_ota": [],
-        "esp8285_1mb": [],
-        "esp8285_1mb_ota": []
+        "esp32_4mb": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp32_4mb3f": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp32cam_4mb": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp8266_4mb": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp8266_1mb": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp8266_1mb_ota": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp8266_2mb": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp8266_2mb_ota": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp8285_1mb": [
+            "plerup/EspSoftwareSerial"
+        ],
+        "esp8285_1mb_ota": [
+            "plerup/EspSoftwareSerial"
+        ]
     }
 }

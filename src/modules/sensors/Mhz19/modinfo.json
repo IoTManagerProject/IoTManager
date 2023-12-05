@@ -80,9 +80,7 @@
     "usedLibs": {
         "esp32_4mb": [],
         "esp32_4mb3f": [],
-        "esp32s2_4mb": [
-            "plerup/EspSoftwareSerial"
-        ],
+        "esp32s2_4mb": [],
         "esp32cam_4mb": [],
         "esp8266_4mb": []
     }

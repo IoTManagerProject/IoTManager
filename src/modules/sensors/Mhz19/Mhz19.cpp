@@ -6,8 +6,7 @@
 #include "Global.h"
 #include "classes/IoTItem.h"
 
-//встроена в ядро для 8266, для 32 по этому же имени обращаемся к другой библиотеке plerup/EspSoftwareSerial
-#include <SoftwareSerial.h>
+
 
 extern IoTGpio IoTgpio;
 
@@ -15,7 +14,8 @@ extern IoTGpio IoTgpio;
 int rxPinCO2; // зеленый провод сенсора к прописаному по умолчанию D7 (GPIO13)
 int txPinCO2; // синий провод сенсора к прописаному по умолчанию D6 (GPIO12)
 #ifdef ESP8266
-
+//встроена в ядро для 8266, для 32 по этому же имени обращаемся к другой библиотеке plerup/EspSoftwareSerial
+#include <SoftwareSerial.h>
 SoftwareSerial *swSerialCO2 = nullptr;
 #endif
 #ifdef ESP32
