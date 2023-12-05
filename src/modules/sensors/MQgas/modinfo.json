@@ -1,0 +1,271 @@
+{
+    "menuSection": "sensors",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "MQ газовые анализаторы",
+            "type": "Reading",
+            "subtype": "MQgas",
+            "id": "MQ",
+            "widget": "anydataPpm",
+            "page": "Сенсоры",
+            "descr": "MQ-135",
+            "Series": 135,
+            "Gas": "CO2",
+            "Rl on board": 10,
+            "Ro in clean air": 0,
+            "Rl/Ro in clean air": 0,
+            "PPM in clean air": 397.13,
+            "aLimit": -0.42,
+            "bLimit": 1.92,
+            "Warm up time": 60,
+            "Sample interval": 20,
+            "Sample times": 10,
+            "Calibtation intensity": 5,
+            "autoCalibration": 1,
+            "autoCalib.Period": 24,
+            "TempHum correction" : 1,
+            "temperature": 20,
+            "idTempSensor": "",
+            "humidity": 50,
+            "idHumSensor": "",
+            "k1": 0.00672096284322792,
+            "k2":-0.0159038179354688,
+            "b1":-0.741244323718154,
+            "b2":1.77535862501753,
+            "Debug": 1,
+            "plus": 0,
+            "multiply": 1,
+            "round": 1,
+            "pin-Esp32": 34,
+            "operating voltage": 3.3,
+            "int": 15
+        }
+    ],
+    "about": {
+        "authorName": "Alex K",
+        "authorContact": "https://t.me/cmche",
+        "authorGit": "https://github.com/CHE77/MQ-sensors_IotManager",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "https://github.com/amperka/TroykaMQ",
+        "specialThanks2": "https://forum.amperka.ru/threads/%D0%94%D0%B0%D1%82%D1%87%D0%B8%D0%BA%D0%B8-%D1%81%D0%B5%D1%80%D0%B8%D0%B8-mq-%D0%B8-%D0%B1%D0%B8%D0%B1%D0%BB%D0%B8%D0%BE%D1%82%D0%B5%D0%BA%D0%B0-troykamq.16377/page-7#post-220009",
+        "moduleName": "MQgas",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "MQ газовые анализаторы",
+        "moduleDesc": "Позволяет получить концентрации газов с сенсоров серии MQ, подключаемых на аналоговый вход. Заполните свойства элемента значениями для каждого сенсора и типа газа. ‘Rl on board’, ‘aLimit’, ‘bLimit’ – обязательные для заполнения. И как минимум одно из - ‘Ro in clean air’, ‘Rl/Ro in clean air’, ‘PPM in clean air’. При запуске будет сразу запущена предварительная калибровка для определения базовой характеристики сенсора - сопротивления в чистом воздухе - Ro.  Через ‘Warm up time’ будет произведена повторная калибровка уже слегка прогретого сенсора. Полный прогрев занимает сутки. Дополнительную калибровку можно вызвать из сценария, либо с помощью автоматической калибровки.",
+        "propInfo": {
+            "Series": "Номер серии из линейки сенсоров MQ- (только для обозначения для себя)",
+            "Gas": "Тип исследуемого газа. (только для обозначения для себя) Один сенсор может регистировать концентрацию нескольких газов",
+            "Rl on board": "Фиксированое сопротивление резистора делителя напряжение на плате. [кОм]",
+            "Ro in clean air": "Известное номинальное сопротивление сенсора на чистом воздухе или референсной среде. [кОм]",
+            "Rl/Ro in clean air": "Известное соотношенее сопротивления сенсора делителя напряжения к номинальному на чистом воздухе.",
+            "PPM in clean air": "Известное значение концентрации газа в чистом воздухе. [ppm]",
+            "aLimit": "Табличный коэффициент нижнего предела диапзона",
+            "bLimit": "Табличный коэффициент верхнего предела диапзона",
+            "Warm up time": "Время прогрева для дополнительной калибровки. [сек]",
+            "Sample interval": "Задержка между замерами на аналоговом пине.[мс]",
+            "Sample times": "Количестов замеров в серии для поледующего усреднения",
+            "Calibtation intensity": "Во сколько раз увеличить количество замеров в серии для калибровки",
+            "autoCalibration": "1 - включить Автокалибровку. Для переодически проветриваемых помещений",
+            "autoCalib.Period": "Период Автоколибровки в часах. Будет выбиратся минимальное значение ppm для рачета Сопротивления датчика на чистом воздухе.[ч]",
+            "TempHum correction" : "Включить (1), выключить(0) коррекцию по темературе и влажности",
+            "temperature": "Температутра по умолчанию [*C]. Если нет сенсора, то можно откалибровать с одними значениями, потом использовать с другими",
+            "idTempSensor": "id сенсора Температуры. Значения сенсора в приоритете перед значением по умолчанию",
+            "humidity": "Влажность по умолчанию [%]. Если нет сенсора, то можно откалибровать с одними значениями, потом использовать с другими",
+            "idHumSensor": "id сенсора Влажности. Значения сенсора в приоритете перед значением по умолчанию",
+            "k1":"коэффициент для расчета k_hum = k1 * Hum / 100 + k2 и correction = k_hum * Temp + b_hum",
+            "k2":"коэффициент для расчета k_hum = k1 * Hum / 100 + k2 и correction = k_hum * Temp + b_hum",
+            "b1":"коэффициент для расчета b_hum = b1 * Hum / 100 + b2 и correction = k_hum * Temp + b_hum",
+            "b2":"коэффициент для расчета b_hum = b1 * Hum / 100 + b2 и correction = k_hum * Temp + b_hum",
+            "Debug": "1 - для вывода промежуточных рачетных значений в Лог",
+            "plus": "поправочный коэффиент +c",
+            "multiply": "поправочный коэффиент k*",
+            "round": "округление",
+            "pin-Esp32": "Esp32: Аналоговый GPIO номер, к которому подключен датчик:32, 33, 34, 35, 36, 39. Для Esp8266 указывать не надо.",
+            "operating voltage": "3.3 - если используете согласование уровней на аналоговый вход. 5 - если подключаете датчик напрямую. MQ датчики 5-вольтовые, но диапазон реальных измерений как павило не выходит за 3.3В И даже если и будет превышение (что конечно не рекомендуются) то из практики известно что аналоговый пин это выдерживает. Поэтому можно подкючать напрямую и при этом даже несколько повышается разрешающая способность датчика",
+            "int": "Количество секунд между опросами датчика"
+        },
+        "settings": {
+            "MQ-2": {
+                "Rl on board": 5,
+                "Ro in clean air": 0,
+                "Rl/Ro in clean air": 9.83,
+                "PPM in clean air": 0,
+                "LPG": {
+                    "aLimit": -0.45,
+                    "bLimit": 2.95
+                },
+                "Methane": {
+                    "aLimit": -0.38,
+                    "bLimit": 3.21
+                },
+                "Smoke": {
+                    "aLimit": -0.42,
+                    "bLimit": 3.54
+                },
+                "Hydrogen": {
+                    "aLimit": -0.48,
+                    "bLimit": 3.32
+                }
+            },
+            "MQ-3": {
+                "Gas": "Alcohol",
+                "Rl on board": 200,
+                "Ro in clean air": 0,
+                "Rl/Ro in clean air": 60,
+                "PPM in clean air": 0,
+                "aLimit": -0.66,
+                "bLimit": -0.62,
+                "multiply": 2.2
+            },
+            "MQ-4": {
+                "Gas": "Methane",
+                "Rl on board": 20,
+                "Ro in clean air": 0,
+                "Rl/Ro in clean air": 4.4,
+                "PPM in clean air": 0,
+                "aLimit": -0.36,
+                "bLimit": 2.54
+            },
+            "MQ-5": {
+                "Rl on board": 20,
+                "Ro in clean air": 0,
+                "Rl/Ro in clean air": 6.5,
+                "PPM in clean air": 0,
+                "LPG": {
+                    "aLimit": -0.39,
+                    "bLimit": 1.73
+                },
+                "Methane": {
+                    "aLimit": -0.38,
+                    "bLimit": 1.79
+                }
+            },
+            "MQ-6": {
+                "Gas": "LPG",
+                "Rl on board": 20,
+                "Ro in clean air": 0,
+                "Rl/Ro in clean air": 10,
+                "PPM in clean air": 0,
+                "aLimit": -0.42,
+                "bLimit": 2.91
+            },
+            "MQ-7": {
+                "Gas": "CO",
+                "Rl on board": 10,
+                "Ro in clean air": 0,
+                "Rl/Ro in clean air": 27,
+                "PPM in clean air": 0,
+                "aLimit": -0.77,
+                "bLimit": 3.38
+            },
+            "MQ-8": {
+                "Gas": "H2",
+                "Rl on board": 10,
+                "Ro in clean air": 0,
+                "Rl/Ro in clean air": 27,
+                "PPM in clean air": 0,
+                "aLimit": -1.52,
+                "bLimit": 10.49
+            },
+            "MQ-9": {
+                "Rl on board": 10,
+                "Ro in clean air": 0,
+                "Rl/Ro in clean air": 9.8,
+                "PPM in clean air": 0,
+                "LPG": {
+                    "aLimit": -0.48,
+                    "bLimit": 3.33
+                },
+                "Methane": {
+                    "aLimit": -0.38,
+                    "bLimit": 3.21
+                },
+                "CO": {
+                    "aLimit": -0.48,
+                    "bLimit": 3.10
+                }
+            },
+            "MQ-135": {
+                "Gas": "CO2",
+                "Rl on board": 10,
+                "aLimit": -0.42,
+                "bLimit": 1.92,
+                "Ro in clean air": 0,
+                "Rl/Ro in clean air": 0,
+                "PPM in clean air": 397.13
+            }
+        },
+        "funcInfo": [
+            {
+                "name": "calibrate",
+                "descr": "Калибровка с параметрами по умолчанию"
+            },
+            {
+                "name": "calibrateR0",
+                "descr": "Калибровка с установкой номинального сопротивления сенсора на чистом воздухе ",
+                "params": [
+                    "Ro in clean air"    
+                ]
+            },
+            {
+                "name": "calibrateRlRo",
+                "descr": "Калибровка с установкой соотношения сопротивления делителя напряжения к номинальному на чистом воздухе.",
+                "params": [
+                    "Rl/Ro in clean air"
+                ]
+            },
+            {
+                "name": "calibratePPM",
+                "descr": "Калибровка с установкой значения концентрации газа в чистом воздухе",
+                "params": [
+                    "PPM in clean air"
+                ]
+            },
+            {
+                "name": "setAutoCalibration",
+                "descr": "Включение/Выключение автокалибровки",
+                "params": [
+                    "0 - Выкл.  1 - Вкл."
+                ]
+            },
+            {
+                "name": "runAutoCalibration",
+                "descr": "Принудительная автоматическая калибровка (с обнулением максимального сопротивления сенсора и перезапуском счетчика автокалибровки)"
+            },
+            {
+                "name": "lastCalibration",
+                "descr": "Возврат время последней калибровки"
+            },
+            {
+                "name": "TempHumCorrection",
+                "descr": "Передача значений темературы и влажности для расчета поправки",
+                "params": [
+                    "Temperature",
+                    "Humidity"
+                ]
+            }
+
+        ]
+    },
+    "defActive": true,
+    "usedLibs": {
+        "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32cam_4mb": [],
+        "esp32_16mb": [],
+        "esp32s2_4mb": [],
+        "esp8266_4mb": [],
+        "esp8266_16mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": [],
+        "esp8285_1mb": [],
+        "esp8285_1mb_ota": [],
+        "esp8266_2mb": [],
+        "esp8266_2mb_ota": []
+    }
+}
