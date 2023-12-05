@@ -1,0 +1,176 @@
+{
+    "mark": "iotm",
+    "config": [
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "MQgas",
+            "id": "MQ135",
+            "widget": "anydataPpm",
+            "page": "Сенсоры",
+            "descr": "MQ-135",
+            "Series": 135,
+            "Gas": "CO2",
+            "Rl on board": "10",
+            "Ro in clean air": 0,
+            "Rl/Ro in clean air": "0",
+            "PPM in clean air": "397.13",
+            "aLimit": "-0.42",
+            "bLimit": "1.92",
+            "Warm up time": "60",
+            "Sample interval": 20,
+            "Sample times": "10",
+            "Calibtation intensity": 5,
+            "autoCalibration": 1,
+            "autoCalib.Period": 1,
+            "TempHum correction": 1,
+            "k1": 0.00672096284322792,
+            "k2": -0.0159038179354688,
+            "b1": -0.741244323718154,
+            "b2": 1.77535862501753,
+            "temperature": "20",
+            "idTempSensor": "Tmp",
+            "humidity": "50",
+            "idHumSensor": "Hum",
+            "Debug": 1,
+            "plus": 0,
+            "multiply": 1,
+            "round": 1,
+            "pin-Esp32": 34,
+            "operating voltage": 3.3,
+            "int": 15
+        },
+        {
+            "global": 0,
+            "type": "Writing",
+            "subtype": "Loging",
+            "id": "log",
+            "widget": "chart1",
+            "page": "Графики",
+            "descr": "CO2",
+            "int": "1",
+            "logid": "MQ135",
+            "points": 300
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "VButton",
+            "id": "vbtn",
+            "needSave": 0,
+            "widget": "toggle",
+            "page": "Калибровка",
+            "descr": "Быстрая Калибровка",
+            "int": "0",
+            "val": "0"
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Bme280t",
+            "id": "Tmp",
+            "widget": "anydataTmp",
+            "page": "Сенсоры",
+            "descr": "Температура",
+            "int": 15,
+            "addr": "0x76",
+            "round": 1
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Bme280h",
+            "id": "Hum",
+            "widget": "anydataHum",
+            "page": "Сенсоры",
+            "descr": "Влажность",
+            "int": 15,
+            "addr": "0x76",
+            "round": 1
+        },
+        {
+            "global": 0,
+            "type": "Writing",
+            "subtype": "Timer",
+            "id": "timer0",
+            "widget": "nil",
+            "page": "",
+            "descr": "Таймер",
+            "int": "1",
+            "countDown": 15,
+            "ticker": "0",
+            "repeat": "1",
+            "needSave": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "vout",
+            "needSave": 0,
+            "widget": "anydataDef",
+            "page": "Калибровка",
+            "descr": "Последняя калибровка",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "VButton",
+            "id": "vbtn13",
+            "needSave": 0,
+            "widget": "toggle",
+            "page": "Калибровка",
+            "descr": "Автокалибровка",
+            "int": "0",
+            "val": "1"
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "VButton",
+            "id": "vbtn50",
+            "needSave": 0,
+            "widget": "toggle",
+            "page": "Калибровка",
+            "descr": "Накопительная Калибровка",
+            "int": "0",
+            "val": "0"
+        }
+    ]
+}
+
+scenario=>#запускаем разово калибровку без параметрова или с ними
+if vbtn then {
+MQ135.calibrate();
+#MQ135.calibrateR0(42);
+#MQ135.calibrateRlRo(0.60);
+#MQ135.calibratePPM(400);
+#MQ135.TempHumCorrection(20,55);
+#MQ135.TempHumCorrection(Tmp,Hum);
+ vbtn = 0;}
+
+#обновляем время последней калибровки
+if MQ135 then {
+vout = MQ135.lastCalibration();
+}
+
+
+#влючаем/выключаем автокалибровку
+if vbtn13 == 1 then  MQ135.setAutoCalibration(1)
+if vbtn13 == 0 then  MQ135.setAutoCalibration(0)
+
+
+#принудительно запускаем автокалибровку
+if vbtn50 then {
+MQ135.runAutoCalibration();
+vbtn50 = 0;
+}
+
+#можно по таймеру передавать температуру и влажность в модуль. Но проще сразу вписать id этих элементов в настройки MQ 
+#if timer0 == 0 then MQ135.TempHumCorrection(Tmp,Hum);
