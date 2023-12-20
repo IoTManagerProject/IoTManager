@@ -1,0 +1,159 @@
+{
+    "menuSection": "sensors",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "PZEM 004t Напряжение",
+            "type": "Reading",
+            "subtype": "Pzem004v",
+            "id": "v",
+            "widget": "anydataVlt",
+            "page": "PZEM",
+            "descr": "Напряжение",
+            "int": 15,
+            "addr": "0xF8",
+            "round": 1
+        },
+        {
+            "global": 0,
+            "name": "PZEM 004t Сила тока",
+            "type": "Reading",
+            "subtype": "Pzem004a",
+            "id": "a",
+            "widget": "anydataAmp",
+            "page": "PZEM",
+            "descr": "Сила тока",
+            "int": 15,
+            "addr": "0xF8",
+            "round": 1
+        },
+        {
+            "global": 0,
+            "name": "PZEM 004t Мощность",
+            "type": "Reading",
+            "subtype": "Pzem004w",
+            "id": "w",
+            "widget": "anydataWt",
+            "page": "PZEM",
+            "descr": "Мощность",
+            "int": 15,
+            "addr": "0xF8",
+            "round": 1
+        },
+        {
+            "global": 0,
+            "name": "PZEM 004t Энергия",
+            "type": "Reading",
+            "subtype": "Pzem004wh",
+            "id": "wh",
+            "widget": "anydataWth",
+            "page": "PZEM",
+            "descr": "Энергия",
+            "int": 15,
+            "addr": "0xF8",
+            "round": 1
+        },
+        {
+            "global": 0,
+            "name": "PZEM 004t Частота",
+            "type": "Reading",
+            "subtype": "Pzem004hz",
+            "id": "hz",
+            "widget": "anydataHtz",
+            "page": "PZEM",
+            "descr": "Частота",
+            "int": 15,
+            "addr": "0xF8",
+            "round": 1
+        },
+        {
+            "global": 0,
+            "name": "PZEM 004t Косинус",
+            "type": "Reading",
+            "subtype": "Pzem004pf",
+            "id": "pf",
+            "widget": "anydata",
+            "page": "PZEM",
+            "descr": "Косинус F",
+            "int": 15,
+            "addr": "0xF8",
+            "round": 1
+        },
+        {
+            "global": 0,
+            "name": "PZEM настройка",
+            "type": "Reading",
+            "subtype": "Pzem004cmd",
+            "id": "set",
+            "widget": "nil",
+            "page": "",
+            "descr": "",
+            "int": 15,
+            "addr": "0xF8",
+            "btn-changeaddr": "0x01",
+            "btn-reset": ""
+        },
+        {
+            "global": 0,
+            "name": "PZEM uart",
+            "type": "Reading",
+            "subtype": "Pzem004uart",
+            "id": "upzem",
+            "widget": "nil",
+            "page": "",
+            "descr": "",
+            "tx": 17,
+            "rx": 16,
+            "line": 2,
+            "speed": 9600
+        }
+    ],
+    "about": {
+        "authorName": "Dmitry Borisenko, v2 - Mit4bmw",
+        "authorContact": "https://t.me/Dmitry_Borisenko",
+        "authorGit": "https://github.com/DmitryBorisenko33",
+        "specialThanks": "Serghei Crasnicov @Serghei63",
+        "moduleName": "Pzem004_v2",
+        "moduleVersion": "2.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "subTypes": [
+            "Pzem004v",
+            "Pzem004a",
+            "Pzem004w",
+            "Pzem004wh",
+            "Pzem004hz",
+            "Pzem004pf",
+            "Pzem004cmd",
+            "Pzem004uart"
+        ],
+        "title": "Счетчик электроэнергии PZEM 004 t версии 3.0 (с модбасом)",
+        "moduleDesc": "Считает потраченную электроэнергию, измеряет напряжение, частоту, силу тока и прочие параметры. Возможно подключение трех счетчиков к одной esp для трехфазных сетей. Для этого нужно настроить разные адреса modbus в платах pzem. Для работы обязателен модуль Pzem004uart",
+        "propInfo": {
+            "tx": "TX пин",
+            "rx": "RX пин",
+            "speed": "Скорость UART",
+            "line": "Актуально только для ESP32: номер линии hardUART. =2 rx=16 tx=17, для SoftwarwSerial в ESP32 line = -1",
+            "addr": "Адрес modbus",
+            "int": "Количество секунд между опросами датчика. Желателно устанавливать одинаковые интервалы для параметров (для одного адреса Pzem) что опрос происходил один раз, остальные из 1000мс буфера.",
+            "btn-changeaddr": " Будет установлен адрес указанный в setaddr. Смотрите в логе результат: [i] Pzem address set: 0x01 Новый адрес который нужно назначить",
+            "btn-reset": "pzem будет сброшен к нулю. Смотрите в логе результат: [i] Pzem reset done"
+        }
+    },
+    "defActive": true,
+    "usedLibs": {
+        "esp32_4mb": [],
+        "esp32_4mb3f": [],
+        "esp32cam_4mb": [],
+        "esp32c3m_4mb": [],
+        "esp8266_4mb": [],
+        "esp8266_1mb": [],
+        "esp8266_1mb_ota": [],
+        "esp8285_1mb": [],
+        "esp8285_1mb_ota": [],
+        "esp8266_2mb": [],
+        "esp8266_2mb_ota": []
+    }
+}

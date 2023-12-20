@@ -53,8 +53,8 @@ class ButtonOut : public IoTItem {
 
     void setValue(const IoTValue& Value, bool genEvent = true) {
         value = Value;
-        if ((value.valD == !_inv?1:0) && (_interval != 0)) {
-            value.valD = !_inv?1:0;
+        if ((value.valD == 1) && (_interval != 0)) {
+            // value.valD = !_inv?1:0;
             enableDoByInt = true;
             // SerialPrint("I", "ButtonOut","single pulse start");
             suspendNextDoByInt(_interval);
