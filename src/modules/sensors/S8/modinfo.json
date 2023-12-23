@@ -2,6 +2,7 @@
     "menuSection": "sensors",
     "configItem": [
         {
+            "global": 0,
             "name": "(S8) Cенсор качества воздуха",
             "num": 3,
             "type": "Reading",
