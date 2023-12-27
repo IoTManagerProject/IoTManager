@@ -6,12 +6,14 @@
 #define R_LEN 7
 #define C_LEN 8
 
-byte cmd_s8[8]        = {0xFE, 0x04, 0x00, 0x03, 0x00, 0x01, 0xD5, 0xC5};
-//byte abc_s8[8]        = {0xFE, 0x03, 0x00, 0x1F, 0x00, 0x01, 0xA1, 0xC3};
+
 
 
 class S8co : public IoTItem {
   private:
+    byte cmd_s8[8]        = {0xFE, 0x04, 0x00, 0x03, 0x00, 0x01, 0xD5, 0xC5};
+    //byte abc_s8[8]        = {0xFE, 0x03, 0x00, 0x1F, 0x00, 0x01, 0xA1, 0xC3};
+
     SoftwareSerial* s8Serial;
 
     unsigned int _s8_co2;
@@ -24,6 +26,11 @@ class S8co : public IoTItem {
     byte _response_s8[7]   = {0, 0, 0, 0, 0, 0, 0};
 
     void s8Request(byte cmd[]) {
+      if (!s8Serial) {
+        SerialPrint("E", "Sensor S8_uart", "Serial not found!");
+        return;
+      }
+
       while(!s8Serial->available()) {
         s8Serial->write(cmd, C_LEN); 
         delay(50); 
@@ -45,7 +52,7 @@ class S8co : public IoTItem {
         _response_s8[i] = s8Serial->read(); 
       }
       
-      s8Serial->end();
+      //s8Serial->end();
     }                     
 
     void co2_measure() {
