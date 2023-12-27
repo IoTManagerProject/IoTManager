@@ -104,6 +104,8 @@ void getMqttData() {
     mqttPort = jsonReadInt(settingsFlashJson, F("mqttPort"));
     mqttUser = jsonReadStr(settingsFlashJson, F("mqttUser"));
     mqttPass = jsonReadStr(settingsFlashJson, F("mqttPass"));
+    mqttPrefix = jsonReadStr(settingsFlashJson, F("mqttPrefix"));
+    mqttRootDevice = mqttPrefix + "/" + chipId;
 }
 
 void mqttSubscribe() {
