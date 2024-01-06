@@ -78,10 +78,14 @@
     "defActive": false,
     "usedLibs": {
         "esp32*": [
-            "https://github.com/maxint-rd/TM16xx"
+            "https://github.com/maxint-rd/TM16xx",
+            "https://github.com/adafruit/Adafruit-GFX-Library",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
         "esp82*": [
-            "https://github.com/maxint-rd/TM16xx"
+            "https://github.com/maxint-rd/TM16xx",
+            "https://github.com/adafruit/Adafruit-GFX-Library",
+            "adafruit/Adafruit BusIO @ ^1.13.2"
         ]
     }
 }

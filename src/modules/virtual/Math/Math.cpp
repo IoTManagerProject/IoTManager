@@ -31,6 +31,18 @@ private:
         return mktime(&t);
     }
 
+    bool nowInTimePeriod(String startTime, String endTime) {
+        int h1 = selectToMarker(startTime, ":").toInt();
+        int min1 = selectToMarkerLast(startTime, ":").toInt();
+        int h2 = selectToMarker(endTime, ":").toInt();
+        int min2 = selectToMarkerLast(endTime, ":").toInt();
+
+        int nowMinutes = _time_local.hour * 60 + _time_local.minute;
+
+        return nowMinutes >= h1 * 60 + min1 && nowMinutes <= h2 * 60 + min2;
+    }
+
+
 public:
     IoTMath(String parameters) : IoTItem(parameters) {}
 
@@ -42,7 +54,7 @@ public:
             //SerialPrint("i", F("IoTMath"), F("Mapping value done."));
             return valTmp;
         } else if(command == "convertTime" && param.size() == 5) {
-            time_t unixTime = convertTime(param[0].valD, param[1].valD, param[2].valD, param[3].valD, param[4].valD);
+            uint32_t unixTime = convertTime(param[0].valD, param[1].valD, param[2].valD, param[3].valD, param[4].valD);
 
             if (unixTime == -1) {
                 SerialPrint("E", F("IoTMath"), F("Failed to convert time."));
@@ -51,8 +63,12 @@ public:
 
             IoTValue valTmp;
             valTmp.isDecimal = true;
-            valTmp.valD = unixTime;
-            //SerialPrint("i", F("IoTMath"), F("Time conversion done."));
+            valTmp.valD = static_cast< float > (unixTime);
+            return valTmp;
+        } else if(command == "nowInTimePeriod" && param.size() == 2) {
+            IoTValue valTmp;
+            valTmp.isDecimal = true;
+            valTmp.valD = nowInTimePeriod(param[0].valS, param[1].valS); 
             return valTmp;
         }
 

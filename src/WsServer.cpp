@@ -117,6 +117,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             if (headerStr == "/oiranecs|") {
                 writeFileUint8tByFrames("scenario.txt", payload, length, headerLenth, 256);
                 clearConfigure();
+                globalVarsSync();   // в том числе подгружаем сохраненные значения элементов с флешки
                 configure("/config.json");
                 iotScen.loadScenario("/scenario.txt");
                 // создаем событие завершения конфигурирования для возможности
