@@ -131,7 +131,11 @@ if deviceName == 'esp8266_1mb_ota' or deviceName == 'esp8285_1mb_ota' or deviceN
     copy_tree("data_lite", "data_svelte")
 else:
     copy_tree("data_full", "data_svelte")
-    
+
+deviceType = 'esp32*'
+if not 'esp32' in deviceName:
+    deviceType = 'esp82*'
+
 # генерируем файлы проекта на основе подготовленного профиля
 # заполняем конфигурационный файл прошивки параметрами из профиля
 with open("data_svelte/settings.json", "r", encoding='utf-8') as read_file:
@@ -158,15 +162,28 @@ for section, modules in profJson['modules'].items():
             with open(module['path'] + "/modinfo.json", "r", encoding='utf-8') as read_file:
                 moduleJson = json.load(read_file)
                 if deviceName in moduleJson['usedLibs']:   # проверяем поддерживает ли модуль текущее устройство
-                    activeModulesName.append(moduleJson['about']['moduleName'])     # запоминаем имена для использования на след шагах
-                    includeDirs = includeDirs + "\n+<" + module['path'].replace("src/", "") + ">"  # запоминаем пути к модулям для компиляции
-                    for libPath in moduleJson['usedLibs'][deviceName]:               # запоминаем библиотеки необходимые модулю для текущей платы
-                        allLibs = allLibs + "\n" + libPath       
-                    for configItemsJson in moduleJson['configItem']:
-                        configItemsJson['num'] = itemsCount
-                        configItemsJson['name'] = str(itemsCount) + ". " + configItemsJson['name']
-                        itemsCount = itemsCount + 1
-                        itemsJson.append(configItemsJson)        
+                    if not 'exclude' in moduleJson['usedLibs'][deviceName]: # смотрим не нужно ли исключить данный модуль из указанной платы deviceName
+                        activeModulesName.append(moduleJson['about']['moduleName'])     # запоминаем имена для использования на след шагах
+                        includeDirs = includeDirs + "\n+<" + module['path'].replace("src/", "") + ">"  # запоминаем пути к модулям для компиляции
+                        for libPath in moduleJson['usedLibs'][deviceName]:               # запоминаем библиотеки необходимые модулю для текущей платы
+                            allLibs = allLibs + "\n" + libPath       
+                        for configItemsJson in moduleJson['configItem']:
+                            configItemsJson['num'] = itemsCount
+                            configItemsJson['name'] = str(itemsCount) + ". " + configItemsJson['name']
+                            itemsCount = itemsCount + 1
+                        itemsJson.append(configItemsJson)    
+                else: # В первую очередь ищем по имени deviceName, чтобы для данной платы можно было уточнить либы. Если не нашли плату по имени в usedLibs пробуем найти её по типу deviceType
+                    if deviceType in moduleJson['usedLibs']:   # проверяем поддерживает ли модуль текущее устройство
+                        activeModulesName.append(moduleJson['about']['moduleName'])     # запоминаем имена для использования на след шагах
+                        includeDirs = includeDirs + "\n+<" + module['path'].replace("src/", "") + ">"  # запоминаем пути к модулям для компиляции
+                        for libPath in moduleJson['usedLibs'][deviceType]:               # запоминаем библиотеки необходимые модулю для текущей платы
+                            allLibs = allLibs + "\n" + libPath       
+                        for configItemsJson in moduleJson['configItem']:
+                            configItemsJson['num'] = itemsCount
+                            configItemsJson['name'] = str(itemsCount) + ". " + configItemsJson['name']
+                            itemsCount = itemsCount + 1
+                            itemsJson.append(configItemsJson)    
+
 with open("data_svelte/items.json", "w", encoding='utf-8') as write_file:
     json.dump(itemsJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
 
