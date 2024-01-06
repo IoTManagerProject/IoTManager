@@ -1,0 +1,258 @@
+{
+    "mark": "iotm",
+    "config": [
+        {
+            "global": 0,
+            "type": "Writing",
+            "subtype": "ButtonOut",
+            "needSave": "1",
+            "id": "rel1",
+            "widget": "toggle",
+            "page": "Свет 1",
+            "descr": " Реле 1",
+            "int": 0,
+            "inv": "1",
+            "pin": "32"
+        },
+        {
+            "global": 0,
+            "type": "Writing",
+            "subtype": "ButtonOut",
+            "needSave": "1",
+            "id": "rel2",
+            "widget": "toggle",
+            "page": "Свет 2",
+            "descr": " Реле 2",
+            "int": 0,
+            "inv": "1",
+            "pin": "33"
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "RTC",
+            "id": "rtc",
+            "widget": "anydataDef",
+            "page": "Система",
+            "descr": "Время",
+            "chipCode": "3",
+            "timeFormat": "d-m-Y H:i:s",
+            "RST": -1,
+            "CLK": -1,
+            "DAT": -1,
+            "ticker": 0,
+            "int": 5,
+            "btn-setUTime": "0",
+            "btn-setSysTime": "nil"
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "AnalogBtn",
+            "id": "btn1",
+            "widget": "nil",
+            "page": "Свет 1",
+            "descr": "Кнопка 1",
+            "pin": "34",
+            "aValue": 0,
+            "delta": 50
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "AnalogBtn",
+            "id": "btn2",
+            "widget": "nil",
+            "page": "Свет 2",
+            "descr": "Кнопка 2",
+            "pin": "34",
+            "aValue": "1910",
+            "delta": 50
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "IoTMath",
+            "id": "math",
+            "widget": "anydataValue",
+            "page": "Математика",
+            "descr": ""
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "start11",
+            "needSave": "1",
+            "widget": "inputTm",
+            "page": "Свет 1",
+            "descr": " Старт 1",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "stop11",
+            "needSave": "1",
+            "widget": "inputTm",
+            "page": "Свет 1",
+            "descr": " Стоп 1",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "start12",
+            "needSave": "1",
+            "widget": "inputTm",
+            "page": "Свет 1",
+            "descr": "Старт 2",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "stop12",
+            "needSave": "1",
+            "widget": "inputTm",
+            "page": "Свет 1",
+            "descr": "Стоп 2",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "start21",
+            "needSave": "1",
+            "widget": "inputTm",
+            "page": "Свет 2",
+            "descr": " Старт 1",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "stop21",
+            "needSave": "1",
+            "widget": "inputTm",
+            "page": "Свет 2",
+            "descr": " Стоп 1",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "start22",
+            "needSave": "1",
+            "widget": "inputTm",
+            "page": "Свет 2",
+            "descr": "Старт 2",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "stop22",
+            "needSave": "1",
+            "widget": "inputTm",
+            "page": "Свет 2",
+            "descr": "Стоп 2",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Writing",
+            "subtype": "Cron",
+            "id": "timer",
+            "widget": "anydataRed",
+            "page": "Система",
+            "descr": "Будильник",
+            "int": 1,
+            "val": "0 * * * * *",
+            "formatNextAlarm": "%H:%M:%S",
+            "needSave": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "VButton",
+            "id": "rel1on",
+            "needSave": "1",
+            "widget": "toggle",
+            "page": "Свет 1",
+            "descr": " Работать",
+            "int": "0",
+            "val": "0"
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "VButton",
+            "id": "rel2on",
+            "needSave": "1",
+            "widget": "toggle",
+            "page": "Свет 2",
+            "descr": " Работать",
+            "int": "0",
+            "val": "0"
+        }
+    ]
+}
+
+scenario=>if btn1>0 then rel1 = 1- rel1
+if btn2>0 then rel2 = 1- rel2
+
+if timer == 0 | start11 | stop11 | start12 | stop12 | start21 | stop21 | start22 | stop22 then {
+if rel1on then 
+if math.nowInTimePeriod(start11, stop11) | math.nowInTimePeriod(start12, stop12) then rel1=1 else rel1=0
+
+if rel2on then 
+if math.nowInTimePeriod(start21, stop21) | math.nowInTimePeriod(start22, stop22) then rel2=1 else rel2=0
+}
