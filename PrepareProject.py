@@ -171,7 +171,7 @@ for section, modules in profJson['modules'].items():
                             configItemsJson['num'] = itemsCount
                             configItemsJson['name'] = str(itemsCount) + ". " + configItemsJson['name']
                             itemsCount = itemsCount + 1
-                        itemsJson.append(configItemsJson)    
+                            itemsJson.append(configItemsJson)    
                 else: # В первую очередь ищем по имени deviceName, чтобы для данной платы можно было уточнить либы. Если не нашли плату по имени в usedLibs пробуем найти её по типу deviceType
                     if deviceType in moduleJson['usedLibs']:   # проверяем поддерживает ли модуль текущее устройство
                         activeModulesName.append(moduleJson['about']['moduleName'])     # запоминаем имена для использования на след шагах
