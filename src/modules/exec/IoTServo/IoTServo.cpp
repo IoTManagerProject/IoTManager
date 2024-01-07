@@ -15,12 +15,19 @@ class IoTServo : public IoTItem {
 
     public:
         IoTServo(String parameters): IoTItem(parameters) {
-            int pin, minPulseWidth, maxPulseWidth, neutralPulseWidth;
+            int pin, minPulseWidth, maxPulseWidth, minAngle, maxAngle;
             jsonRead(parameters, "pin", pin);
             jsonRead(parameters, "minPulseWidth", minPulseWidth);
             jsonRead(parameters, "maxPulseWidth", maxPulseWidth);
-            jsonRead(parameters, "neutralPulseWidth", neutralPulseWidth);
-            servObj.attach(pin, minPulseWidth, maxPulseWidth, neutralPulseWidth);
+            jsonRead(parameters, "minAngle", minAngle);
+            jsonRead(parameters, "maxAngle", maxAngle);
+
+#ifdef ESP32
+            servObj.attach(pin, Servo::CHANNEL_NOT_ATTACHED, minAngle, maxAngle, minPulseWidth, maxPulseWidth);
+#endif 
+#ifdef ESP8266
+            servObj.attach(pin, minPulseWidth, maxPulseWidth, value.valD);
+#endif            
 
             // jsonRead(parameters, "apin", _apin);
             // if (_apin >= 0) IoTgpio.pinMode(_apin, INPUT);
