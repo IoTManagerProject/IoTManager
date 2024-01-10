@@ -125,17 +125,9 @@
             "reset": "Поставьте этот параметр равным 1 и pzem будет сброшен к нулю. Смотрите в логе результат: [i] Pzem reset done"
         }
     },
-    "defActive": true,
+    "defActive": false,
     "usedLibs": {
-        "esp32_4mb": [],
-        "esp32_4mb3f": [],
-        "esp32cam_4mb": [],
-        "esp8266_4mb": [],
-        "esp8266_1mb": [],
-        "esp8266_1mb_ota": [],
-        "esp8285_1mb": [],
-        "esp8285_1mb_ota": [],
-        "esp8266_2mb": [],
-        "esp8266_2mb_ota": []
+        "esp32*": [],
+        "esp82*": []
     }
 }
