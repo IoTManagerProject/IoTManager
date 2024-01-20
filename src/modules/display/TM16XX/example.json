@@ -1,0 +1,243 @@
+{
+    "mark": "iotm",
+    "config": [
+        {
+            "global": 0,
+            "type": "Writing",
+            "subtype": "TM16XX",
+            "id": "tm",
+            "widget": "inputDgt",
+            "page": "screens",
+            "descr": "Экран",
+            "round": 0,
+            "chip": "1638",
+            "numDigits": "8",
+            "DIO": "13",
+            "CLK": "14",
+            "STB": "27",
+            "intensity": "5",
+            "on": "1",
+            "id2show": ""
+        },
+        {
+            "global": 0,
+            "type": "Writing",
+            "subtype": "ButtonOut",
+            "needSave": 0,
+            "id": "led",
+            "widget": "toggle",
+            "page": "screens",
+            "descr": "Освещение",
+            "int": 0,
+            "inv": 0,
+            "pin": 2
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "tm_16",
+            "needSave": 0,
+            "widget": "nil",
+            "page": "Вывод",
+            "descr": "Значение",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "tm_18",
+            "needSave": 0,
+            "widget": "nil",
+            "page": "Вывод",
+            "descr": "Значение",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "tm_20",
+            "needSave": 0,
+            "widget": "nil",
+            "page": "Вывод",
+            "descr": "Значение",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "tm_22",
+            "needSave": 0,
+            "widget": "nil",
+            "page": "Вывод",
+            "descr": "Значение",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "tm_17",
+            "needSave": 0,
+            "widget": "nil",
+            "page": "Вывод",
+            "descr": "Значение",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "tm_19",
+            "needSave": 0,
+            "widget": "nil",
+            "page": "Вывод",
+            "descr": "Значение",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "tm_21",
+            "needSave": 0,
+            "widget": "nil",
+            "page": "Вывод",
+            "descr": "Значение",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "tm_23",
+            "needSave": 0,
+            "widget": "nil",
+            "page": "Вывод",
+            "descr": "Значение",
+            "int": "0",
+            "val": "0.0",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Writing",
+            "subtype": "Timer",
+            "id": "timer1",
+            "widget": "anydataDef",
+            "page": "Таймеры",
+            "descr": "Таймер1",
+            "int": 1,
+            "countDown": "1000",
+            "ticker": "1",
+            "repeat": 1,
+            "needSave": 0
+        },
+        {
+            "global": 0,
+            "type": "Writing",
+            "subtype": "Timer",
+            "id": "timer2",
+            "widget": "anydataDef",
+            "page": "Таймеры",
+            "descr": "Таймер2",
+            "int": "15",
+            "countDown": "1000",
+            "ticker": 1,
+            "repeat": 1,
+            "needSave": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "page",
+            "needSave": 0,
+            "widget": "anydataDef",
+            "page": "Таймеры",
+            "descr": "Значение",
+            "int": "0",
+            "val": "1",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        }
+    ]
+}
+
+scenario=>if tm_23 == 1 then tm.offLED(8)  # выкл 8 леда при одном клике на кнопку 23
+if tm_23 == 2 then tm.onLED(8)  # вкл 8 леда при двойном клике на кнопку 23
+if tm_23 == 5 then {  # сброс всех индикаторов при долгом нажатии на кнопку 23
+tm = 0
+tm.setLEDs(0)
+}
+
+if tm_16 == 4 then tm = tm - 100  # уменьшаем на 100 и увеличиваем при длительном нажатии
+if tm_18 == 4 then tm = tm + 100
+
+if tm_16 == 1 then tm = tm - 1
+if tm_18 == 1 then tm = tm + 1
+
+if tm_16 == 2 then tm = tm - 1000
+if tm_18 == 2 then tm = tm + 1000
+
+if timer1 >= 0 then tm.setLEDs(timer1)
+
+if tm_20 == 1 then tm = "HELLO!!"
+
+if tm_22 == 1 then tm.setParamLED(0, 7)
+if tm_17 == 1 then tm.setParamLED(1, 7)
+if tm_17 == 2 then tm.setParamLED(1, 0)
+
+if timer1 >= 0 & page == 1 then tm = "ttt1" + timer1
+if timer2 >= 0 & page == 2 then tm = "ttt2" + timer2
+if timer1 >= 0 | timer2 >= 0 then {
+if page == 3 then tm = timer1 + " " + timer2
+}
+if page == 0 then tm.setParamLED(0, 5)
+if page > 0 then tm.setParamLED(1, 5)
+
+if tm_19 == 1 then page = page - 1
+if tm_21 == 1 then page = page + 1

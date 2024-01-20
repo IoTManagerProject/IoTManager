@@ -1,0 +1,43 @@
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Аналоговая кнопка",
+            "type": "Reading",
+            "subtype": "AnalogBtn",
+            "id": "abtn",
+            "widget": "toggle",
+            "page": "Кнопки",
+            "descr": "Освещение",
+            "pin": 34,
+            "aValue": -1,
+            "delta": 50
+        }
+    ],
+    "about": {
+        "authorName": "Ilya Belyakov",
+        "authorContact": "https://t.me/Biveraxe",
+        "authorGit": "https://github.com/biveraxe",
+        "exampleURL": "https://iotmanager.org/wiki",
+        "specialThanks": "",
+        "moduleName": "AnalogBtn",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 15,
+            "esp8266_4mb": 15
+        },
+        "title": "Аналоговая кнопка",
+        "moduleDesc": "Позволяет получить состояние кнопки на аналоговом пине.",
+        "propInfo": {
+            "pin": "Аналоговый GPIO номер, к которому подключена кнопка.",
+            "aValue": "Значение кнопки в диапазоне от 0 до 1023 (8266) или от 0 до 4095 (esp32). Если =-1 то включается режим отладки и в консоль отправляются значения нажимаемой кнопки.",
+            "delta": "Погрешность срабатывания кнопки в диапазоне +-delta."
+        }
+    },
+    "defActive": true,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": []
+    }
+}
