@@ -52,9 +52,15 @@
     },
     "defActive": true,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
             "https://github.com/RoboticsBrno/ServoESP32#v1.0.3"
         ],
-        "esp82*": []
+        "esp32_4mb3f": [
+            "https://github.com/RoboticsBrno/ServoESP32#v1.0.3"
+        ],
+        "esp32cam_4mb": [
+            "https://github.com/RoboticsBrno/ServoESP32#v1.0.3"
+        ],
+        "esp8266_4mb": []
     }
 }

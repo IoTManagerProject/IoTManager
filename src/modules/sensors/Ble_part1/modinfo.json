@@ -64,11 +64,23 @@
   },
   "defActive": false,
   "usedLibs": {
-    "esp32*": [
+    "esp32_4mb": [
       "https://github.com/Mit4el/NimBLE-Arduino.git"
     ],
-    "esp32s2_4mb": [
-      "exclude"
+    "esp32_16mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32_4mb3f": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32cam_4mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32s3_16mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
+    ],
+    "esp32c3m_4mb": [
+      "https://github.com/Mit4el/NimBLE-Arduino.git"
     ]
   }
 }

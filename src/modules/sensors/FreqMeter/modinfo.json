@@ -84,10 +84,16 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
             "kosme/arduinoFFT@^1.5.6"
         ],
-        "esp82*": [
+        "esp32_4mb3f": [
+            "kosme/arduinoFFT@^1.5.6"
+        ],
+        "esp32cam_4mb": [
+            "kosme/arduinoFFT@^1.5.6"
+        ],
+        "esp8266_4mb": [
             "kosme/arduinoFFT@^1.5.6"
         ]
     }

@@ -61,10 +61,34 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
             "rc-switch @ ^2.6.4"
         ],
-        "esp82*": [
+        "esp32_4mb3f": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp32cam_4mb": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8266_4mb": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8266_1mb": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8266_1mb_ota": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8285_1mb": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8285_1mb_ota": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8266_2mb": [
+            "rc-switch @ ^2.6.4"
+        ],
+        "esp8266_2mb_ota": [
             "rc-switch @ ^2.6.4"
         ]
     }

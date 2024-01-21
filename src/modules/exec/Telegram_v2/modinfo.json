@@ -124,7 +124,19 @@
     "defActive": false,
 
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
+            "gyverlibs/FastBot"
+        ],
+        "esp32_4mb3f": [
+            "gyverlibs/FastBot"
+        ],
+        "esp32cam_4mb": [
+            "gyverlibs/FastBot"
+        ],
+        "esp32s2_4mb": [
+            "gyverlibs/FastBot"
+        ],
+        "esp32_16mb": [
             "gyverlibs/FastBot"
         ],
         "esp8266_4mb": [

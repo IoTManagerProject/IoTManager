@@ -48,10 +48,34 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
             "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
         ],
-        "esp82*": [
+        "esp32_4mb3f": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp32cam_4mb": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8266_4mb": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8266_1mb": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8266_1mb_ota": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8285_1mb": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8285_1mb_ota": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8266_2mb": [
+            "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
+        ],
+        "esp8266_2mb_ota": [
             "sparkfun/SparkFun SGP30 Arduino Library@^1.0.5"
         ]
     }

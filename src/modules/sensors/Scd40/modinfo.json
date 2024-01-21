@@ -70,11 +70,19 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
             "Sensirion I2C SCD4x @0.4.0",
             "Sensirion Core @0.6.0"
         ],
-        "esp82*": [
+        "esp32_4mb3f": [
+            "Sensirion I2C SCD4x @0.4.0",
+            "Sensirion Core @0.6.0"
+        ],
+        "esp32cam_4mb": [
+            "Sensirion I2C SCD4x @0.4.0",
+            "Sensirion Core @0.6.0"            
+        ],
+        "esp8266_4mb": [
             "Sensirion I2C SCD4x @0.4.0",
             "Sensirion Core @0.6.0"
         ]

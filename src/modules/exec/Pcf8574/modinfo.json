@@ -32,10 +32,34 @@
     },
     "defActive": true,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
             "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
-        "esp82*": [
+        "esp32_4mb3f": [
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp32cam_4mb": [
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8266_4mb": [
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8266_1mb": [
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8266_1mb_ota": [
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8285_1mb": [
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8285_1mb_ota": [
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8266_2mb": [
+            "adafruit/Adafruit BusIO @ ^1.13.2"
+        ],
+        "esp8266_2mb_ota": [
             "adafruit/Adafruit BusIO @ ^1.13.2"
         ]
     }

@@ -85,7 +85,10 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
+            "ncmreynolds/ld2410@^0.1.3"
+        ],
+        "esp32_4mb3f": [
             "ncmreynolds/ld2410@^0.1.3"
         ]
     }
