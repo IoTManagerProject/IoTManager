@@ -60,19 +60,11 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32*": [
             "https://github.com/jbechter/arduino-onewire-DS2423",
             "paulstoffregen/OneWire @ ^2.3.7"
         ],
-        "esp32_4mb3f": [
-            "https://github.com/jbechter/arduino-onewire-DS2423",
-            "paulstoffregen/OneWire @ ^2.3.7"
-        ],
-        "esp32cam_4mb": [
-            "https://github.com/jbechter/arduino-onewire-DS2423",
-            "paulstoffregen/OneWire @ ^2.3.7"
-        ],
-        "esp8266_4mb": [
+        "esp82*": [
             "https://github.com/jbechter/arduino-onewire-DS2423",
             "paulstoffregen/OneWire @ ^2.3.7"
         ]
