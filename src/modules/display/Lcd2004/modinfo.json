@@ -119,43 +119,11 @@
     },
     "defActive": true,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32*": [
             "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
             "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
         ],
-        "esp32_4mb3f": [
-            "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
-            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
-        ],
-        "esp32cam_4mb": [
-            "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
-            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
-        ],
-        "esp8266_4mb": [
-            "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
-            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
-        ],
-        "esp8266_1mb": [
-            "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
-            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
-        ],
-        "esp8266_1mb_ota": [
-            "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
-            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
-        ],
-        "esp8285_1mb": [
-            "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
-            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
-        ],
-        "esp8285_1mb_ota": [
-            "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
-            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
-        ],
-        "esp8266_2mb": [
-            "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
-            "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
-        ],
-        "esp8266_2mb_ota": [
+        "esp82*": [
             "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
             "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
         ]

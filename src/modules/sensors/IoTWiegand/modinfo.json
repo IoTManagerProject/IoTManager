@@ -36,13 +36,7 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32_4mb": [
-            "https://github.com/jpliew/Wiegand-NG-Multi-Bit-Wiegand-Library-for-Arduino"
-        ],
-        "esp32_4mb3f": [
-            "https://github.com/jpliew/Wiegand-NG-Multi-Bit-Wiegand-Library-for-Arduino"
-        ],
-        "esp32cam_4mb": [
+        "esp32*": [
             "https://github.com/jpliew/Wiegand-NG-Multi-Bit-Wiegand-Library-for-Arduino"
         ],
         "esp8266_4mb": [

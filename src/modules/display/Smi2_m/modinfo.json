@@ -52,8 +52,6 @@
     },
     "defActive": true,
     "usedLibs": {
-        "esp32_4mb": [],
-        "esp32_4mb3f": [],
-        "esp32cam_4mb": []
+        "esp32*": []
     }
 }

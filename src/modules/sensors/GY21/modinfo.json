@@ -49,16 +49,10 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32*": [
             "https://github.com/JonasGMorsch/GY-21.git"
         ],
-        "esp32_4mb3f": [
-            "https://github.com/JonasGMorsch/GY-21.git"
-        ],
-        "esp32cam_4mb": [
-            "https://github.com/JonasGMorsch/GY-21.git"
-        ],
-        "esp8266_4mb": [
+        "esp82*": [
             "https://github.com/JonasGMorsch/GY-21.git"
         ]
     }
