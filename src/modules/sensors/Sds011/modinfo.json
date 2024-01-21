@@ -66,16 +66,10 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32*": [
             "Nova Fitness Sds dust sensors library@1.5.1"
         ],
-        "esp32_4mb3f": [
-            "Nova Fitness Sds dust sensors library@1.5.1"
-        ],
-        "esp32cam_4mb": [
-            "Nova Fitness Sds dust sensors library@1.5.1"
-        ],
-        "esp8266_4mb": [
+        "esp82*": [
             "Nova Fitness Sds dust sensors library@1.5.1"
         ]
     }
