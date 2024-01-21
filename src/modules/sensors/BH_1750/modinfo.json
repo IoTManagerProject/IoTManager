@@ -34,10 +34,16 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
             "BH1750"
         ],
-        "esp82*": [
+        "esp32_4mb3f": [
+            "BH1750"
+        ],
+        "esp32cam_4mb": [
+            "BH1750"
+        ],
+        "esp8266_4mb": [
             "BH1750"
         ]
     }

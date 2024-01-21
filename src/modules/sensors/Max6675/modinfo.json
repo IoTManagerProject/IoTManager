@@ -38,10 +38,13 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
             "adafruit/MAX6675 library"
         ],
-        "esp82*": [
+        "esp32_4mb3f": [
+            "adafruit/MAX6675 library"
+        ],
+        "esp8266_4mb": [
             "adafruit/MAX6675 library"
         ]
     }

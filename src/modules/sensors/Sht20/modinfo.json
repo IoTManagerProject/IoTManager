@@ -49,10 +49,31 @@
     },
     "defActive": true,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
             "robtillaart/SHT2x@^0.1.1"
         ],
-        "esp82*": [
+        "esp32_4mb3f": [
+            "robtillaart/SHT2x@^0.1.1"
+        ],
+        "esp8266_4mb": [
+            "robtillaart/SHT2x@^0.1.1"
+        ],
+        "esp8266_1mb": [
+            "robtillaart/SHT2x@^0.1.1"
+        ],
+        "esp8266_1mb_ota": [
+            "robtillaart/SHT2x@^0.1.1"
+        ],
+        "esp8285_1mb": [
+            "robtillaart/SHT2x@^0.1.1"
+        ],
+        "esp8285_1mb_ota": [
+            "robtillaart/SHT2x@^0.1.1"
+        ],
+        "esp8266_2mb": [
+            "robtillaart/SHT2x@^0.1.1"
+        ],
+        "esp8266_2mb_ota": [
             "robtillaart/SHT2x@^0.1.1"
         ]
     }

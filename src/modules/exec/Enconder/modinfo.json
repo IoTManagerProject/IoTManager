@@ -43,10 +43,31 @@
     },
     "defActive": true,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
             "gyverlibs/EncButton @ ^2.0"
         ],
-        "esp82*": [
+        "esp32_4mb3f": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp32cam_4mb": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp8266_4mb": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp8266_16mb": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp8266_1mb": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp8266_1mb_ota": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp8285_1mb": [
+            "gyverlibs/EncButton @ ^2.0"
+        ],
+        "esp8285_1mb_ota": [
             "gyverlibs/EncButton @ ^2.0"
         ]
     }

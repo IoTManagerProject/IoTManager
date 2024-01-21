@@ -41,10 +41,16 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32*": [
+        "esp32_4mb": [
             "adafruit/Adafruit ADS1X15 @ ^2.3.0"
         ],
-        "esp82*": [
+        "esp32_4mb3f": [
+            "adafruit/Adafruit ADS1X15 @ ^2.3.0"
+        ],
+        "esp32cam_4mb": [
+            "adafruit/Adafruit ADS1X15 @ ^2.3.0"
+        ],
+        "esp8266_4mb": [
             "adafruit/Adafruit ADS1X15 @ ^2.3.0"
         ]
     }
