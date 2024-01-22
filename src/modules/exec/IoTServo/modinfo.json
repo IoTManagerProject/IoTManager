@@ -13,7 +13,8 @@
             "pin": 12,
             "minPulseWidth": 544,
             "maxPulseWidth": 2400,
-            "neutralPulseWidth": 1500,
+            "minAngle": 0,
+            "maxAngle": 180,
             "trackingID": ""
         }
     ],
@@ -34,7 +35,8 @@
             "pin": "Пин, к которому подключен сервопривод",
             "minPulseWidth": "Минимальная длина импульса",
             "maxPulseWidth": "Максимальная длина импульса",
-            "neutralPulseWidth": "Нейтральная длина импульса",
+            "minAngle": "Минимальное значение угла (имеет значение для ESP32)",
+            "maxAngle": "Максимальное значение угла (имеет значение для ESP32)",
             "trackingID": "Идентификатор отслеживания значения другого элемента конфигурации, например, чтение аналога"
         },
         "retInfo": "Содержит текущее значение поворота",
@@ -50,15 +52,9 @@
     },
     "defActive": true,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32*": [
             "https://github.com/RoboticsBrno/ServoESP32#v1.0.3"
         ],
-        "esp32_4mb3f": [
-            "https://github.com/RoboticsBrno/ServoESP32#v1.0.3"
-        ],
-        "esp32cam_4mb": [
-            "https://github.com/RoboticsBrno/ServoESP32#v1.0.3"
-        ],
-        "esp8266_4mb": []
+        "esp82*": []
     }
 }

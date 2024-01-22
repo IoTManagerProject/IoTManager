@@ -49,34 +49,10 @@
     },
     "defActive": true,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32*": [
             "WEMOS SHT3x@1.0.0"
         ],
-        "esp32_4mb3f": [
-            "WEMOS SHT3x@1.0.0"
-        ],
-        "esp32cam_4mb": [
-            "WEMOS SHT3x@1.0.0"
-        ],
-        "esp8266_4mb": [
-            "WEMOS SHT3x@1.0.0"
-        ],
-        "esp8266_1mb": [
-            "WEMOS SHT3x@1.0.0"
-        ],
-        "esp8266_1mb_ota": [
-            "WEMOS SHT3x@1.0.0"
-        ],
-        "esp8285_1mb": [
-            "WEMOS SHT3x@1.0.0"
-        ],
-        "esp8285_1mb_ota": [
-            "WEMOS SHT3x@1.0.0"
-        ],
-        "esp8266_2mb": [
-            "WEMOS SHT3x@1.0.0"
-        ],
-        "esp8266_2mb_ota": [
+        "esp82*": [
             "WEMOS SHT3x@1.0.0"
         ]
     }

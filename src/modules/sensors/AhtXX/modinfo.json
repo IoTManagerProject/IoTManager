@@ -56,28 +56,10 @@
     },
     "defActive": true,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32*": [
             "https://github.com/enjoyneering/AHTxx.git"
         ],
-        "esp32_4mb3f": [
-            "https://github.com/enjoyneering/AHTxx.git"
-        ],
-        "esp32cam_4mb": [
-            "https://github.com/enjoyneering/AHTxx.git"
-        ],
-        "esp8266_4mb": [
-            "https://github.com/enjoyneering/AHTxx.git"
-        ],
-        "esp8266_1mb": [
-            "https://github.com/enjoyneering/AHTxx.git"
-        ],
-        "esp8266_1mb_ota": [
-            "https://github.com/enjoyneering/AHTxx.git"
-        ],
-        "esp8285_1mb": [
-            "https://github.com/enjoyneering/AHTxx.git"
-        ],
-        "esp8285_1mb_ota": [
+        "esp82*": [
             "https://github.com/enjoyneering/AHTxx.git"
         ]
     }

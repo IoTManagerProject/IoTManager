@@ -36,43 +36,11 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32*": [
             "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
             "adafruit/Adafruit BusIO @ ^1.13.2"
         ],
-        "esp32_4mb3f": [
-            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
-            "adafruit/Adafruit BusIO @ ^1.13.2"
-        ],
-        "esp32cam_4mb": [
-            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
-            "adafruit/Adafruit BusIO @ ^1.13.2"
-        ],
-        "esp8266_4mb": [
-            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
-            "adafruit/Adafruit BusIO @ ^1.13.2"
-        ],
-        "esp8266_1mb": [
-            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
-            "adafruit/Adafruit BusIO @ ^1.13.2"
-        ],
-        "esp8266_1mb_ota": [
-            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
-            "adafruit/Adafruit BusIO @ ^1.13.2"
-        ],
-        "esp8285_1mb": [
-            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
-            "adafruit/Adafruit BusIO @ ^1.13.2"
-        ],
-        "esp8285_1mb_ota": [
-            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
-            "adafruit/Adafruit BusIO @ ^1.13.2"
-        ],
-        "esp8266_2mb": [
-            "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
-            "adafruit/Adafruit BusIO @ ^1.13.2"
-        ],
-        "esp8266_2mb_ota": [
+        "esp82*": [
             "adafruit/Adafruit Mcp23017 Arduino Library@^2.1.0",
             "adafruit/Adafruit BusIO @ ^1.13.2"
         ]

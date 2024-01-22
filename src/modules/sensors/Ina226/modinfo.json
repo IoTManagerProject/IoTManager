@@ -119,22 +119,10 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32*": [
             "https://github.com/GyverLibs/GyverINA"
         ],
-        "esp32_4mb3f": [
-            "https://github.com/GyverLibs/GyverINA"
-        ],
-        "esp32cam_4mb": [
-            "https://github.com/GyverLibs/GyverINA"
-        ],
-        "esp32s2_4mb": [
-            "https://github.com/GyverLibs/GyverINA"
-        ],
-        "esp8266_4mb": [
-            "https://github.com/GyverLibs/GyverINA"
-        ],
-        "esp8266_16mb": [
+        "esp82*": [
             "https://github.com/GyverLibs/GyverINA"
         ]
     }
