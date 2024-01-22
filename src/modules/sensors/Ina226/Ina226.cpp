@@ -89,7 +89,7 @@ public:
     }
     void doByInterval()
     {
-        regEvent(vinstanceIna226(_addr)->getShuntVoltage(), "Ina226shuntvoltage");
+        regEvent(instanceIna226(_addr)->getShuntVoltage(), "Ina226shuntvoltage");
     }
 
     ~Ina226shuntvoltage(){};
