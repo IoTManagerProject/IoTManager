@@ -97,16 +97,10 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32*": [
             "adafruit/Adafruit NeoPixel@^1.10.6"
         ],
-        "esp32_4mb3f": [
-            "adafruit/Adafruit NeoPixel@^1.10.6"
-        ],
-        "esp32cam_4mb": [
-            "adafruit/Adafruit NeoPixel@^1.10.6"
-        ],
-        "esp8266_4mb": [
+        "esp82*": [
             "adafruit/Adafruit NeoPixel@^1.10.6"
         ]
     }

@@ -146,7 +146,7 @@
             },
             {
                 "path": "src/modules/virtual/Math",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/virtual/owmWeather",
@@ -291,11 +291,19 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/MQgas",
+                "active": true
+            },
+            {
                 "path": "src/modules/sensors/Ntc",
                 "active": false
             },
             {
                 "path": "src/modules/sensors/Pzem004t",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/Pzem004t_v2",
                 "active": true
             },
             {
@@ -340,6 +348,10 @@
             }
         ],
         "executive_devices": [
+            {
+                "path": "src/modules/exec/AnalogBtn",
+                "active": true
+            },
             {
                 "path": "src/modules/exec/ButtonIn",
                 "active": true
@@ -436,11 +448,15 @@
         "screens": [
             {
                 "path": "src/modules/display/DwinI",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/display/Lcd2004",
                 "active": true
+            },
+            {
+                "path": "src/modules/display/Nextion",
+                "active": false
             },
             {
                 "path": "src/modules/display/NextionUpload",
@@ -460,7 +476,7 @@
             },
             {
                 "path": "src/modules/display/TM16XX",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/display/Ws2812b",

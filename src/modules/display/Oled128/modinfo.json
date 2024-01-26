@@ -73,16 +73,10 @@
     },
     "defActive": false,
     "usedLibs": {
-        "esp32_4mb": [
+        "esp32*": [
             "gyverlibs/GyverOLED @ 1.4"
         ],
-        "esp32_4mb3f": [
-            "gyverlibs/GyverOLED @ 1.4"
-        ],
-        "esp32_16mb": [
-            "gyverlibs/GyverOLED @ 1.4"
-        ],
-        "esp8266_4mb": [
+        "esp82*": [
             "gyverlibs/GyverOLED @ 1.4"
         ]
     }

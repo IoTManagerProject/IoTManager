@@ -41,34 +41,10 @@
     "defActive": false,
     "usedLibs": {
 
-        "esp32_4mb": [
+        "esp32*": [
             "https://github.com/adafruit/Adafruit_PCF8591"
         ],
-        "esp32_16mb": [
-            "https://github.com/adafruit/Adafruit_PCF8591"
-        ],
-        "esp8266_4mb": [
-            "https://github.com/adafruit/Adafruit_PCF8591"
-        ],
-        "esp8266_16mb": [
-            "https://github.com/adafruit/Adafruit_PCF8591"
-        ],
-        "esp8266_1mb": [
-            "https://github.com/adafruit/Adafruit_PCF8591"
-        ],
-        "esp8266_1mb_ota": [
-            "https://github.com/adafruit/Adafruit_PCF8591"
-        ],
-        "esp8285_1mb": [
-            "https://github.com/adafruit/Adafruit_PCF8591"
-        ],
-        "esp8285_1mb_ota": [
-            "https://github.com/adafruit/Adafruit_PCF8591"
-        ],
-        "esp8266_2mb": [
-            "https://github.com/adafruit/Adafruit_PCF8591"
-        ],
-        "esp8266_2mb_ota": [
+        "esp82*": [
             "https://github.com/adafruit/Adafruit_PCF8591"
         ]
     }
