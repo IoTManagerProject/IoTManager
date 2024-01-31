@@ -32,7 +32,6 @@ import configparser
 import os, json, sys, getopt
 from pathlib import Path
 import shutil
-from distutils.dir_util import copy_tree
 
 
 config = configparser.ConfigParser()  # создаём объекта парсера INI
@@ -128,9 +127,9 @@ deviceName = profJson['projectProp']['platformio']['default_envs']
 
 # заполняем папку /data файлами прошивки в зависимости от устройства
 if deviceName == 'esp8266_1mb_ota' or deviceName == 'esp8285_1mb_ota' or deviceName == 'esp8266_2mb_ota': 
-    copy_tree("data_lite", "data_svelte")
+    shutil.copytree("data_lite", "data_svelte", symlinks=False, ignore=None, ignore_dangling_symlinks=False, dirs_exist_ok=True)
 else:
-    copy_tree("data_full", "data_svelte")
+    shutil.copytree("data_full", "data_svelte", symlinks=False, ignore=None, ignore_dangling_symlinks=False, dirs_exist_ok=True)
 
 deviceType = 'esp32*'
 if not 'esp32' in deviceName:
