@@ -92,8 +92,8 @@ enum TimerTask_t {
     WIFI_SCAN,
     WIFI_MQTT_CONNECTION_CHECK,
     TIME,
-    TIME_SYNC,
-    UPTIME,
+    // TIME_SYNC, // не используется
+    // UPTIME, // не используется
     UDP,    // UDPP
     TIMES,  // периодические секундные проверки
     PTASK,
@@ -101,12 +101,12 @@ enum TimerTask_t {
     END
 };
 
-// задачи которые надо протащить через loop
-enum NotAsyncActions {
-    do_ZERO,
-    do_MQTTPARAMSCHANGED,
-    do_LAST,
-};
+// // задачи которые надо протащить через loop // не используется
+// enum NotAsyncActions {
+    //     do_ZERO,
+    //     do_MQTTPARAMSCHANGED,
+    //     do_LAST
+// };
 
 // состояния обновления
 enum UpdateStates { UPDATE_COMPLETED, UPDATE_FAILED, PATH_ERROR };
@@ -114,7 +114,7 @@ enum UpdateStates { UPDATE_COMPLETED, UPDATE_FAILED, PATH_ERROR };
 enum distination {
     TO_MQTT,
     TO_WS,
-    TO_MQTT_WS,
+    TO_MQTT_WS
 };
 
-#define WS_BROADCAST -1
+// #define WS_BROADCAST -1 // не используется

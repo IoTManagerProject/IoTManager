@@ -23,6 +23,7 @@ void configure(String path) {
                 SerialPrint(F("E"), F("Config"), "json error " + subtype);
                 continue;
             } else {
+                IoTItem* myIoTItem;
                 //(IoTItem*) - getAPI вернула ссылку, что бы ее привести к классу IoTItem используем
                 myIoTItem = (IoTItem*)getAPI(subtype, jsonArrayElement);
                 if (myIoTItem) {
