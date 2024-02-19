@@ -305,14 +305,17 @@ bool publishChartFileToMqtt(String path, String id, int maxCount) {
     return true;
 }
 
-void handleMqttStatus(bool send) {
-    String stateStr = getStateStr(mqtt.state());
-    // Serial.println(stateStr);
-    jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);
-    if (!send) sendStringToWs("errors", errorsHeapJson, -1);
-}
+// void handleMqttStatus(bool send) {
+    //     String stateStr = getStateStr(mqtt.state());
+    //     // Serial.println(stateStr);
+    //     jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);
+    //     if (!send) sendStringToWs("errors", errorsHeapJson, -1);
+// }
 
 void handleMqttStatus(bool send, int state) {
+if (state == -1) {
+            state = mqtt.state();
+    }
     String stateStr = getStateStr(state);
     // Serial.println(stateStr);
     jsonWriteStr_(errorsHeapJson, F("mqtt"), stateStr);

@@ -6,4 +6,4 @@ extern std::list<IoTItem*> IoTItems;  // вектор ссылок базово�
 
 extern void configure(String path);
 void clearConfigure();
-extern IoTItem* myIoTItem;
+// extern IoTItem* myIoTItem; // экономим память, используется в одном месте
