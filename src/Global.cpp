@@ -33,6 +33,8 @@ IoTGpio IoTgpio(0);
 IoTItem* rtcItem = nullptr;
 //IoTItem* camItem = nullptr;
 IoTItem* tlgrmItem = nullptr;
+IoTBench* benchTaskItem = nullptr;
+IoTBench* benchLoadItem = nullptr;
 String settingsFlashJson = "{}";  // переменная в которой хранятся все настройки, находится в оперативной памяти и синхронизированна с flash памятью
 String valuesFlashJson = "{}";    // переменная в которой хранятся все значения элементов, которые необходимо сохранить на flash. Находится в оперативной памяти и синхронизированна с flash памятью
 String errorsHeapJson = "{}";     // переменная в которой хранятся все ошибки, находится в оперативной памяти только

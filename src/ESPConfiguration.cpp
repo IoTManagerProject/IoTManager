@@ -33,6 +33,9 @@ void configure(String path) {
                     if (driver = myIoTItem->getRtcDriver()) rtcItem = (IoTItem*)driver;
                     // пробуем спросить драйвер CAM
                     //if (driver = myIoTItem->getCAMDriver()) camItem = (IoTItem*)driver;
+                    // пробуем спросить драйвер Benchmark
+                    if (driver = myIoTItem->getBenchmarkTask()) benchTaskItem = ((IoTBench*)driver);
+                    if (driver = myIoTItem->getBenchmarkLoad()) benchLoadItem = ((IoTBench*)driver);
                     // пробуем спросить драйвер Telegram_v2
                     if (driver = myIoTItem->getTlgrmDriver()) tlgrmItem = (IoTItem*)driver;
                     IoTItems.push_back(myIoTItem);
@@ -48,7 +51,7 @@ void clearConfigure() {
     Serial.printf("Start clearing config\n");
     rtcItem = nullptr;
     //camItem = nullptr;
-    tlgrmItem = nullptr; 
+    tlgrmItem = nullptr;
     IoTgpio.clearDrivers();
     
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
@@ -58,4 +61,6 @@ void clearConfigure() {
     IoTItems.clear();
 
     valuesFlashJson.clear();
+    benchTaskItem = nullptr; 
+    benchLoadItem = nullptr; 
 }

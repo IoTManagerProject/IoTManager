@@ -7,3 +7,4 @@ extern std::list<IoTItem*> IoTItems;  // вектор ссылок базово�
 extern void configure(String path);
 void clearConfigure();
 extern IoTItem* myIoTItem;
+extern IoTBench* myIoTBernch;

@@ -50,6 +50,7 @@
 #include "utils/StringUtils.h"
 #include "PeriodicTasks.h"
 #include "classes/IoTGpio.h"
+#include "classes/IoTBench.h"
 
 /*********************************************************************************************************************
 *****************************************глобальные объекты классов***************************************************
@@ -58,6 +59,8 @@ extern IoTGpio IoTgpio;
 extern IoTItem* rtcItem;
 //extern IoTItem* camItem;
 extern IoTItem* tlgrmItem;
+extern IoTBench* benchLoadItem;
+extern IoTBench* benchTaskItem;
 
 extern TickerScheduler ts;
 extern WiFiClient espClient;
