@@ -1199,6 +1199,8 @@ namespace _Boiler_v2
             logicPowerOn();
             if (stepMap.find(state.numStepOn) != stepMap.end())
                 setValue(String(stepMap[state.numStepOn].pwr));
+            else
+                setValue("0");
         }
 
         /*
