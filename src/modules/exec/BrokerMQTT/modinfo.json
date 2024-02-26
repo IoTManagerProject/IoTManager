@@ -1,0 +1,42 @@
+{
+  "menuSection": "executive_devices",
+  "configItem": [
+    {
+      "global": 0,
+      "name": "BrokerMQTT",
+      "type": "Reading",
+      "subtype": "BrokerMQTT",
+      "id": "broker",
+      "widget": "",
+      "page": "",
+      "descr": "",
+      "int": 10,
+      "value": "",
+      "port": 1883,
+      "debug": 1
+    }
+  ],
+  "about": {
+    "authorName": "Mikhail Bubnov",
+    "authorContact": "https://t.me/Mit4bmw",
+    "authorGit": "https://github.com/Mit4el",
+    "specialThanks": "Андрей Душин",
+    "moduleName": "BrokerMQTT",
+    "moduleVersion": "0.1",
+    "usedRam": {
+      "esp32_4mb": 15,
+      "esp8266_4mb": 15
+    },
+    "title": "BrokerMQTT",
+    "moduleDesc": "MQTT Брокер на основе Pico Mqtt",
+    "propInfo": {
+      "port":"Порт, по умолчанию 1883"
+    }
+  },
+  "defActive": true,
+  "usedLibs": {
+    "esp32_4mb3f": [],
+    "esp32*": [],
+    "esp82*": []
+  }
+}
