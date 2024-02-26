@@ -48,7 +48,7 @@
     }
   },
 
-  "defActive": true,
+  "defActive": false,
 
   "usedLibs": {
     "esp32_4mb": [],

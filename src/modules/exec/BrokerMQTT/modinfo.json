@@ -33,7 +33,7 @@
       "port":"Порт, по умолчанию 1883"
     }
   },
-  "defActive": true,
+  "defActive": false,
   "usedLibs": {
     "esp32_4mb3f": [],
     "esp32*": [],

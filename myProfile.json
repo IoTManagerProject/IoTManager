@@ -129,6 +129,10 @@
     "modules": {
         "virtual_elments": [
             {
+                "path": "src/modules/virtual/Benchmark",
+                "active": false
+            },
+            {
                 "path": "src/modules/virtual/Cron",
                 "active": true
             },
@@ -290,7 +294,7 @@
                 "path": "src/modules/sensors/Mhz19",
                 "active": false
             },
-            {
+                        {
                 "path": "src/modules/sensors/MQgas",
                 "active": true
             },
@@ -351,6 +355,10 @@
             {
                 "path": "src/modules/exec/AnalogBtn",
                 "active": true
+            },
+            {
+                "path": "src/modules/exec/BrokerMQTT",
+                "active": false
             },
             {
                 "path": "src/modules/exec/ButtonIn",
@@ -418,6 +426,10 @@
             },
             {
                 "path": "src/modules/exec/SDcard",
+                "active": false
+            },
+            {
+                "path": "src/modules/exec/SmartBoiler",
                 "active": false
             },
             {
