@@ -902,7 +902,7 @@ namespace _Boiler_v2
                         //}
                         if (!state.stateDHW) // Если уже включено ГВС, то нечего смотреть на отопление
                         {
-                            if (set.cmd_chEnable)
+                            if (set.cmd_chEnable && stepMap.size()>0)
                             {
                                 SerialPrint("I", "SmartBoiler", " stepMap.size = " + String(stepMap.size()));
                                 publishNew("status", "Штатный режим");
