@@ -24,6 +24,8 @@ void globalVarsSync()
 
     mqttRootDevice = mqttPrefix + "/" + chipId;
 
+    jsonWriteStr_(settingsFlashJson, "ip", WiFi.localIP().toString());
+
     // это не используется - удалить в последствии
     jsonWriteStr_(settingsFlashJson, "root", mqttRootDevice);
 }
