@@ -52,6 +52,10 @@
 #define FIRMWARE_NAME "esp32s3_16mb"
 #endif
 
+#ifdef esp32_wifirep
+#define FIRMWARE_NAME "esp32_wifirep"
+#endif
+
 // Размер буфера json
 #define JSON_BUFFER_SIZE 4096  // держим 2 кб не меняем
 
