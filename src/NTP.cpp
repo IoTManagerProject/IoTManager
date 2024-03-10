@@ -167,6 +167,10 @@ unsigned long strDateToUnix(String date) {
     int numberOfLeepYears = 12;
     int totalNormalYears = year - 1970 - numberOfLeepYears;
     unsigned int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (year%4 == 0) 
+        daysInMonth[1] = {29}; 
+    else  
+        daysInMonth[1] = {28}; 
     int numberOfDaysInPastMonths = 0;
     for (int i = 0; i <= 11; i++) {
         if (i <= month - 2) {
