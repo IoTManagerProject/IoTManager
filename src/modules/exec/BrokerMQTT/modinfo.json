@@ -36,7 +36,6 @@
   "defActive": false,
   "usedLibs": {
     "esp32_4mb3f": [],
-    "esp32*": [],
-    "esp82*": []
+    "esp32*": []
   }
 }
