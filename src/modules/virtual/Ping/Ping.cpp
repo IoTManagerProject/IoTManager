@@ -97,7 +97,7 @@ private:
     int data_size = 0;
     int count = 0;
     int tos = 0;
-    int ttl = 0;
+//    int ttl = 0; //Есть только в новых версиях framwork ПОКА УБРАЛ
 
 public:
     PingIoTM(String parameters) : IoTItem(parameters)
@@ -108,7 +108,7 @@ public:
         jsonRead(parameters, "data_size", data_size);
         jsonRead(parameters, "count", count);
         jsonRead(parameters, "tos", tos);
-        jsonRead(parameters, "ttl", ttl);
+      //  jsonRead(parameters, "ttl", ttl);
 
 #ifdef ESP32
 /*
@@ -130,18 +130,18 @@ public:
             config.count = (uint32_t)(count);
         if (tos > 0)
             config.tos = (uint32_t)(tos);
-        if (ttl > 0)
-            config.ttl = (uint32_t)(ttl);
+     //   if (ttl > 0)
+      //      config.ttl = (uint32_t)(ttl);
 #endif
     }
-
+/*
     void doByInterval()
     {
 #ifdef ESP8266
         regEvent((float)Ping.ping(_ip.c_str()), "ping");
 #endif
     }
-
+*/
     // Основной цикл программы
     void loop()
     {
@@ -216,7 +216,7 @@ public:
                     SerialPrint("I", "Ping", "Ping  success");
                 else
                     SerialPrint("E", "Ping", "Ping  error");
-                regEvent(val, "ping");
+                regEvent(val.valD, "ping");
                 return val;
             }
 #endif
