@@ -157,6 +157,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/virtual/Ping",
+                "active": true
+            },
+            {
                 "path": "src/modules/virtual/Timer",
                 "active": true
             },
@@ -294,7 +298,7 @@
                 "path": "src/modules/sensors/Mhz19",
                 "active": false
             },
-                        {
+            {
                 "path": "src/modules/sensors/MQgas",
                 "active": true
             },
