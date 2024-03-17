@@ -433,6 +433,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/exec/SIM800",
+                "active": false
+            },
+            {
                 "path": "src/modules/exec/SmartBoiler",
                 "active": false
             },
