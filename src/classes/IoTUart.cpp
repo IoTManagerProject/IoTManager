@@ -26,6 +26,7 @@ IoTUart::IoTUart(const String& parameters) : IoTItem(parameters) {
 
 void IoTUart::loop() {
     uartHandle();
+    IoTItem::loop();
 }
 
 void IoTUart::uartHandle() {}
@@ -93,7 +94,7 @@ IoTValue IoTUart::execute(String command, std::vector<IoTValue> &param) {
         if (param.size() == 1) {
             //if (param[0].isDecimal) uartPrint((String)param[0].valD);
             //else uartPrint(param[0].valS);
-            uartPrintln(param[0].valS);
+            uartPrint(param[0].valS);
         }
     } else if (command == "printHex") {
         if (param.size() == 1) {
