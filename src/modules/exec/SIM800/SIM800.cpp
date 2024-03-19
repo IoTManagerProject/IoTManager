@@ -39,7 +39,10 @@ public:
     {
         _printUart(1, "AT+CMGF=1"); // переводим в текстовый режим
         _printUart(1, "AT+CMGS=\"" + num + "\"");
-        _printUart(1, sms + "\r\n" + String((char)26));
+        //_printUart(1, sms + "\r\n" + String((char)26));
+        _myUART->println(sms + "\r\n" + String((char)26));
+            if (_debug)
+                SerialPrint("I", F("SIM800"), "<- println(" + sms + ")");
         // _myUART->print((char)26); // код ctrl+c что является командой передачи сообщения
     }
 
@@ -69,14 +72,9 @@ public:
             if (_inc == '\r')
             {
                 _inStr += _inc;
-                if (_debug)
+                if (_debug && _inStr != "\r")
                     SerialPrint("I", F("SIM800"), "-> " + _inStr);
-                return;
-            }
 
-            if (_inc == '\n')
-            {
-                // SerialPrint("I", F("SIM800"), "-> " + _inStr);
                 if (_inStr.indexOf("CPAS") != -1)
                 {
                     if (_inStr.indexOf("+CPAS: 0") != -1)
@@ -85,6 +83,13 @@ public:
                         setValue("NO");
                     return;
                 }
+                _inStr = "";
+                return;
+            }
+
+            if (_inc == '\n')
+            {
+                // SerialPrint("I", F("SIM800"), "-> " + _inStr);
             }
             else
                 _inStr += _inc;
