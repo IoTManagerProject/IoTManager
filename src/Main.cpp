@@ -2,6 +2,7 @@
 #include <time.h>
 #include "classes/IoTDB.h"
 #include "utils/Statistic.h"
+#include "classes/IoTBench.h"
 #include <Wire.h>
 #if defined(esp32s2_4mb) || defined(esp32s3_16mb)
 #include <USB.h>
@@ -16,8 +17,9 @@ String volStrForSave = "";
 void elementsLoop() {
     // передаем управление каждому элементу конфигурации для выполнения своих функций
     for (std::list<IoTItem *>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
+        if (benchTaskItem) benchTaskItem->preTaskFunction((*it)->getID());
         (*it)->loop();
-
+        if (benchTaskItem) benchTaskItem->postTaskFunction((*it)->getID());
         // if ((*it)->iAmDead) {
         if (!((*it)->iAmLocal) && (*it)->getIntFromNet() == -1) {
             delete *it;
@@ -150,13 +152,13 @@ void setup() {
     iotScen.loadScenario("/scenario.txt");
     // создаем событие завершения инициализации основных моментов для возможности выполнения блока кода при загрузке
     createItemFromNet("onInit", "1", 1);
-    elementsLoop();
+//    elementsLoop(); //Для работы MQTT Брокера перенес ниже, иначе брокер падает если вызван до routerConnect();
 
     stopErrorMarker(SETUPSCEN_ERRORMARKER);
 
     initErrorMarker(SETUPINET_ERRORMARKER);
 
-    // подключаемся к роутеру
+// подключаемся к роутеру
     routerConnect();
 
 // инициализация асинхронного веб сервера и веб сокетов
@@ -179,6 +181,7 @@ void setup() {
 
     initErrorMarker(SETUPLAST_ERRORMARKER);
 
+    elementsLoop();
     // NTP
     ntpInit();
 
@@ -224,31 +227,35 @@ void loop() {
 #ifdef LOOP_DEBUG
     unsigned long st = millis();
 #endif
-
+    if (benchLoadItem) benchLoadItem->preLoadFunction();
+    if (benchTaskItem) benchTaskItem->preTaskFunction("TickerScheduler");
     initErrorMarker(TICKER_ERRORMARKER);
     ts.update();
     stopErrorMarker(TICKER_ERRORMARKER);
-
+    if (benchTaskItem) benchTaskItem->postTaskFunction("TickerScheduler");
+    if (benchTaskItem) benchTaskItem->preTaskFunction("webServer");
 #ifdef STANDARD_WEB_SERVER
     initErrorMarker(HTTP_ERRORMARKER);
     HTTP.handleClient();
     stopErrorMarker(HTTP_ERRORMARKER);
 #endif
-
+    if (benchTaskItem) benchTaskItem->postTaskFunction("webServer");
+    if (benchTaskItem) benchTaskItem->preTaskFunction("webSocket");
 #ifdef STANDARD_WEB_SOCKETS
     initErrorMarker(SOCKETS_ERRORMARKER);
     standWebSocket.loop();
     stopErrorMarker(SOCKETS_ERRORMARKER);
 #endif
-
+    if (benchTaskItem) benchTaskItem->postTaskFunction("webSocket");
+    if (benchTaskItem) benchTaskItem->preTaskFunction("mqtt");
     initErrorMarker(MQTT_ERRORMARKER);
     mqttLoop();
     stopErrorMarker(MQTT_ERRORMARKER);
-
+    if (benchTaskItem) benchTaskItem->postTaskFunction("mqtt");
     initErrorMarker(MODULES_ERRORMARKER);
     elementsLoop();
     stopErrorMarker(MODULES_ERRORMARKER);
-
+    if (benchLoadItem) benchLoadItem->postLoadFunction();
     // #ifdef LOOP_DEBUG
     //     loopPeriod = millis() - st;
     //     if (loopPeriod > 2) Serial.println(loopPeriod);

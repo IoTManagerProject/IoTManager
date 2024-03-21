@@ -58,6 +58,8 @@ extern IoTGpio IoTgpio;
 extern IoTItem* rtcItem;
 //extern IoTItem* camItem;
 extern IoTItem* tlgrmItem;
+extern IoTBench* benchLoadItem;
+extern IoTBench* benchTaskItem;
 
 extern TickerScheduler ts;
 extern WiFiClient espClient;

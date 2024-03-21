@@ -250,7 +250,16 @@ IoTItem* IoTItem::getTlgrmDriver() {
     return nullptr;
 }
 
-unsigned long IoTItem::getRtcUnixTime() {
+IoTBench *IoTItem::getBenchmarkTask()
+{
+    return nullptr;
+}
+IoTBench *IoTItem::getBenchmarkLoad()
+{
+    return nullptr;
+}
+unsigned long IoTItem::getRtcUnixTime()
+{
     return 0;
 }
 

@@ -1,0 +1,52 @@
+{
+    "mark": "iotm",
+    "config": [
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "VButton",
+            "id": "vbtn67",
+            "needSave": 0,
+            "widget": "toggle",
+            "page": "Пинг",
+            "descr": "ping",
+            "int": "0",
+            "val": "0"
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Variable",
+            "id": "vout96",
+            "needSave": 0,
+            "widget": "anydataDef",
+            "page": "Пинг",
+            "descr": "Состояние",
+            "int": "0",
+            "val": "...",
+            "map": "1024,1024,1,100",
+            "plus": 0,
+            "multiply": 1,
+            "round": 0
+        },
+        {
+            "global": 0,
+            "type": "Reading",
+            "subtype": "Ping",
+            "id": "ping21",
+            "needSave": 0,
+            "widget": "anydataDef",
+            "page": "Пинг",
+            "descr": "Статус",
+            "ip": "8.8.8.8",
+            "timeout": 5,
+            "interval": 1,
+            "data_size": 0,
+            "count": 0,
+            "tos": 0
+        }
+    ]
+}
+
+scenario=>if vbtn67==1 then  ping21.ping("8.8.8.8")
+if ping21==0 then vout96 = "нет интернета" else vout96  ="есть интернет"

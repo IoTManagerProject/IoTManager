@@ -1,0 +1,52 @@
+{
+  "menuSection": "executive_devices",
+  "configItem": [
+    {
+      "global": 0,
+      "name": "BrokerMQTT",
+      "type": "Reading",
+      "subtype": "BrokerMQTT",
+      "id": "broker",
+      "widget": "",
+      "page": "",
+      "descr": "",
+      "int": 10,
+      "value": "",
+      "port": 1883,
+      "user": "root",
+      "pass": "4321",
+      "brige":1,
+      "server":"http://iotmanager.org",
+      "srvUser": "rise",
+      "srvPass": "3hostel3",
+      "srvPort": 1883,
+      "debug": 1
+    }
+  ],
+  "about": {
+    "authorName": "Mikhail Bubnov",
+    "authorContact": "https://t.me/Mit4bmw",
+    "authorGit": "https://github.com/Mit4el",
+    "specialThanks": "Андрей Душин",
+    "moduleName": "BrokerMQTT",
+    "moduleVersion": "2.0",
+    "usedRam": {
+      "esp32_4mb": 15,
+      "esp8266_4mb": 15
+    },
+    "title": "BrokerMQTT",
+    "moduleDesc": "MQTT Брокер на основе Pico Mqtt",
+    "propInfo": {
+      "port":"Порт, по умолчанию 1883",
+      "brige":"1 - Использовать режим моста, Брокер будет дублировать все топики в указанные сервер",
+      "server":"Адрес внешнего MQTT брокера/сервера для режима моста",
+      "srvUser": "Пользователь внешнего MQTT брокера",
+      "srvPass": "Пароль внешнего MQTT брокера"
+    }
+  },
+  "defActive": false,
+  "usedLibs": {
+    "esp32_4mb3f": [],
+    "esp32*": []
+  }
+}

@@ -129,6 +129,10 @@
     "modules": {
         "virtual_elments": [
             {
+                "path": "src/modules/virtual/Benchmark",
+                "active": false
+            },
+            {
                 "path": "src/modules/virtual/Cron",
                 "active": true
             },
@@ -150,6 +154,10 @@
             },
             {
                 "path": "src/modules/virtual/owmWeather",
+                "active": true
+            },
+            {
+                "path": "src/modules/virtual/Ping",
                 "active": true
             },
             {
@@ -353,6 +361,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/exec/BrokerMQTT",
+                "active": false
+            },
+            {
                 "path": "src/modules/exec/ButtonIn",
                 "active": true
             },
@@ -418,6 +430,14 @@
             },
             {
                 "path": "src/modules/exec/SDcard",
+                "active": false
+            },
+            {
+                "path": "src/modules/exec/SIM800",
+                "active": false
+            },
+            {
+                "path": "src/modules/exec/SmartBoiler",
                 "active": false
             },
             {

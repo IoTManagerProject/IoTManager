@@ -1,0 +1,57 @@
+{
+  "menuSection": "virtual_elments",
+
+  "configItem": [
+    {
+      "global": 0,
+      "name": "Load Processor",
+      "type": "Reading",
+      "subtype": "loadBench",
+      "id": "bench",
+      "needSave": 0,
+      "widget": "nil",
+      "page": "Benchmark",
+      "descr": "Загруженность процессора",
+      "int": 10,
+      "log": 1
+    },
+    {
+      "global": 0,
+      "name": "Load Task",
+      "type": "Reading",
+      "subtype": "taskBench",
+      "id": "bench",
+      "needSave": 0,
+      "widget": "nil",
+      "page": "Benchmark",
+      "descr": "Загруженность задач",
+      "int": 10,
+      "log": 1
+    }
+  ],
+
+  "about": {
+    "authorName": "Mikhail Bubnov",
+    "authorContact": "https://t.me/Mit4bmw",
+    "authorGit": "https://github.com/Mit4el",
+    "specialThanks": "",
+    "moduleName": "Benchmark",
+    "moduleVersion": "1.0",
+    "usedRam": {
+      "esp32_4mb": 15,
+      "esp8266_4mb": 15
+    },
+    "title": "Производительонсть системы",
+    "moduleDesc": "Оценочные показатели производительности системы и выполнения модулей",
+    "propInfo": {
+      "int": "Интервал подсчета загруженности процессора в секундах"  
+    }
+  },
+
+  "defActive": false,
+
+  "usedLibs": {
+    "esp32*": [],
+    "esp82*": []
+  }
+}

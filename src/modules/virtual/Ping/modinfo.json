@@ -1,0 +1,66 @@
+{
+  "menuSection": "virtual_elments",
+
+  "configItem": [
+    {
+      "global": 0,
+      "name": "Ping",
+      "type": "Reading",
+      "subtype": "Ping",
+      "id": "ping",
+      "needSave": 0,
+      "widget": "nil",
+      "page": "",
+      "descr": "",
+      "ip": "8.8.8.8",
+      "timeout": 5, 
+      "interval": 1,
+      "data_size": 0,
+      "count": 0,
+      "tos": 0   
+    }
+  ],
+
+  "about": {
+    "authorName": "Mikhail Bubnov",
+    "authorContact": "https://t.me/Mit4bmw",
+    "authorGit": "https://github.com/Mit4el",
+    "specialThanks": "",
+    "moduleName": "Ping",
+    "moduleVersion": "1.2",
+    "usedRam": {
+      "esp32_4mb": 15,
+      "esp8266_4mb": 15
+    },
+    "title": "Пинг",
+    "moduleDesc": "Пинг - проверка доступности сетевого адреса",
+    "propInfo": {
+      "ip": "IP адрес (8.8.8.8) или имя хоста (www.google.com) кого пингуем",
+      "timeout": "Тайм-аут. Только для ESP32. Если 0, то пингует со значением по умолчанию", 
+      "interval": "Интервал. Только для ESP32. Если 0, то пингует со значением по умолчанию",
+      "data_size": "Размер пакета. Только для ESP32. Если 0, то пингует со значением по умолчанию",
+      "count": "Количество пакетов. Только для ESP32. Если 0, то пингует со значением по умолчанию",
+      "tos": "Type Of Service. Только для ESP32. Если 0, то пингует со значением по умолчанию"
+    },
+    "funcInfo": [
+      {
+          "name": "ping",
+          "descr": "Проверить пинг. после вызова данной функции из сценария результат будет в значении самого модуля. if ping21==1 then ЕСТЬ_пинг else НЕТ_пинга",
+          "params": [
+            "IP адрес или имя хоста"
+          ]
+      }
+    ]
+  },
+
+  "defActive": true,
+
+    "usedLibs": {
+      "esp32*": [
+          
+      ],
+      "esp82*": [
+          "https://github.com/dancol90/ESP8266Ping"
+      ]
+  }
+}

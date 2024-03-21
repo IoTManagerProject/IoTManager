@@ -1,5 +1,8 @@
 #pragma once
 #include "classes/IoTGpio.h"
+//#include "classes/IoTBench.h"
+
+class IoTBench;
 
 struct IoTValue {
     float valD = 0;
@@ -53,6 +56,9 @@ class IoTItem {
     virtual IoTItem* getRtcDriver();
     //virtual IoTItem* getCAMDriver();
     virtual IoTItem* getTlgrmDriver();
+    //virtual IoTBench* getBenchmark();
+    virtual IoTBench*getBenchmarkTask();
+    virtual IoTBench*getBenchmarkLoad();
     virtual unsigned long getRtcUnixTime();
 
         // делаем доступным модулям отправку сообщений в телеграм
