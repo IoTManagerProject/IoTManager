@@ -38,7 +38,9 @@ public:
     void sendSms(String sms, String num)
     {
         _printUart(1, "AT+CMGF=1"); // переводим в текстовый режим
+        delay(2);
         _printUart(1, "AT+CMGS=\"" + num + "\"");
+        delay(2);
         //_printUart(1, sms + "\r\n" + String((char)26));
         _myUART->println(sms + "\r\n" + String((char)26));
             if (_debug)
@@ -71,8 +73,12 @@ public:
 
             if (_inc == '\r')
             {
-                _inStr += _inc;
-                if (_debug && _inStr != "\r")
+                return;
+            }
+            if (_inc == '\n')
+            {
+                _inStr += "";//_inc;
+                if (_debug && _inStr != "")
                     SerialPrint("I", F("SIM800"), "-> " + _inStr);
 
                 if (_inStr.indexOf("CPAS") != -1)
@@ -81,15 +87,9 @@ public:
                         setValue("OK");
                     else
                         setValue("NO");
-                    return;
                 }
                 _inStr = "";
                 return;
-            }
-
-            if (_inc == '\n')
-            {
-                // SerialPrint("I", F("SIM800"), "-> " + _inStr);
             }
             else
                 _inStr += _inc;
