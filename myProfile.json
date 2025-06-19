@@ -4,7 +4,7 @@
         "apssid": "IoTmanager",
         "appass": "",
         "routerssid": "OpenWert",
-        "routerpass": "83103045",
+        "routerpass": "83045103",
         "timezone": 2,
         "ntp": "pool.ntp.org",
         "weblogin": "admin",
