@@ -5,7 +5,7 @@
         "appass": "",
         "routerssid": "OpenWert",
         "routerpass": "83045103",
-        "timezone": 2,
+        "timezone": 3,
         "ntp": "pool.ntp.org",
         "weblogin": "admin",
         "webpass": "admin",
@@ -434,7 +434,7 @@
             },
             {
                 "path": "src/modules/exec/Pwm8266",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/exec/SDcard",
