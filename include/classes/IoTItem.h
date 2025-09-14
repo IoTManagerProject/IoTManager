@@ -55,7 +55,6 @@ class IoTItem {
     bool enableDoByInt = true;
 
     virtual IoTGpio* getGpioDriver();
-    virtual IoTItem* getRtcDriver();
     //virtual IoTItem* getCAMDriver();
     virtual IoTItem* getTlgrmDriver();
     //virtual IoTBench* getBenchmark();
@@ -63,8 +62,10 @@ class IoTItem {
     virtual IoTBench* getBenchmarkLoad();
     virtual IoTDiscovery* getHADiscovery();
     virtual IoTDiscovery* getHOMEdDiscovery();
+#ifdef mod_RtcDriver
+    virtual IoTItem* getRtcDriver();
     virtual unsigned long getRtcUnixTime();
-
+#endif
         // делаем доступным модулям отправку сообщений в телеграм
     virtual void sendTelegramMsg(bool often, String msg);
     virtual void sendFoto(uint8_t *buf, uint32_t length, const String &name);

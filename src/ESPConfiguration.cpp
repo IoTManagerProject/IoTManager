@@ -35,8 +35,10 @@ void configure(String path) {
                     void* driver;
                     // пробуем спросить драйвер GPIO
                     if (driver = myIoTItem->getGpioDriver()) IoTgpio.regDriver((IoTGpio*)driver);
+#ifdef mod_RtcDriver
                     // пробуем спросить драйвер RTC
                     if (driver = myIoTItem->getRtcDriver()) rtcItem = (IoTItem*)driver;
+#endif
                     // пробуем спросить драйвер CAM
                     //if (driver = myIoTItem->getCAMDriver()) camItem = (IoTItem*)driver;
                     // пробуем спросить драйвер Benchmark
@@ -78,11 +80,12 @@ void configure(String path) {
 
 void clearConfigure() {
     Serial.printf("Start clearing config\n");
+#ifdef mod_RtcDriver
     rtcItem = nullptr;
+#endif
     //camItem = nullptr;
     tlgrmItem = nullptr;
     IoTgpio.clearDrivers();
-    
     for (std::list<IoTItem*>::iterator it = IoTItems.begin(); it != IoTItems.end(); ++it) {
         Serial.printf("Start delete iotitem %s \n", (*it)->getID().c_str());
         if (*it) delete *it;

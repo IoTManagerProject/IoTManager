@@ -66,7 +66,9 @@
 *****************************************глобальные объекты классов***************************************************
 **********************************************************************************************************************/
 extern IoTGpio IoTgpio;
+#ifdef mod_RtcDriver
 extern IoTItem* rtcItem;
+#endif
 //extern IoTItem* camItem;
 extern IoTItem* tlgrmItem;
 extern IoTBench* benchLoadItem;

@@ -31,9 +31,13 @@ void ntpInit() {
                 synchTime();
 
                 // проверяем присутствие RTC с батарейкой и получаем время при наличии
+#ifdef mod_RtcDriver
                 if (rtcItem) {
                     unixTime = rtcItem->getRtcUnixTime();
-                } else return;
+                } 
+                else
+#endif
+                    return; // ToDo разобраться: если нет железных часов дальше ничего не делать ???
             }
 
             unixTimeShort = unixTime - START_DATETIME;

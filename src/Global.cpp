@@ -34,7 +34,9 @@ WebSocketsServer standWebSocket = WebSocketsServer(81);
 ***********************************************глобальные переменные**************************************************
 **********************************************************************************************************************/
 IoTGpio IoTgpio(0);
+#ifdef mod_RtcDriver
 IoTItem* rtcItem = nullptr;
+#endif
 //IoTItem* camItem = nullptr;
 IoTItem* tlgrmItem = nullptr;
 IoTBench* benchTaskItem = nullptr;

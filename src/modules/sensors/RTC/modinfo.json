@@ -28,6 +28,7 @@
         "exampleURL": "https://iotmanager.org/wiki",
         "specialThanks": "",
         "moduleName": "RTC",
+        "moduleType": "mod_RtcDriver",
         "moduleVersion": "1.0",
         "usedRam": {
             "esp32_4mb": 15,

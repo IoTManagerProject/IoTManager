@@ -182,7 +182,8 @@ with open("data_svelte/settings.json", "w", encoding='utf-8') as write_file:
 # параллельно собираем необходимые активным модулям библиотеки для включения в компиляцию для текущего типа устройства (esp8266_4m, esp32_4mb, esp8266_1m, esp8266_1m_ota) 
 activeModulesName = []  # список имен активных модулей
 allLibs = ""            # подборка всех библиотек необходимых модулям для дальнейшей записи в конфигурацию platformio
-itemsCount = 1;
+allDefs = ""            # для каждого модуля создаем глобальный define "-D" + moduleJson['about']['moduleType']
+itemsCount = 1
 includeDirs = ""        # подборка путей ко всем модулям для дальнейшей записи в конфигурацию platformio
 itemsJson = json.loads('[{"name": "Выберите элемент", "num": 0}]')
 for section, modules in profJson['modules'].items():
@@ -191,6 +192,8 @@ for section, modules in profJson['modules'].items():
         if module['active']:
             with open(module['path'] + "/modinfo.json", "r", encoding='utf-8') as read_file:
                 moduleJson = json.load(read_file)
+                if 'moduleType' in moduleJson['about']:
+                    allDefs = allDefs + "\n" + "-D" + moduleJson['about']['moduleType']
                 if deviceName in moduleJson['usedLibs']:   # проверяем поддерживает ли модуль текущее устройство
                     if not 'exclude' in moduleJson['usedLibs'][deviceName]: # смотрим не нужно ли исключить данный модуль из указанной платы deviceName
                         activeModulesName.append(moduleJson['about']['moduleName'])     # запоминаем имена для использования на след шагах
@@ -250,7 +253,10 @@ config.clear()
 config.read("platformio.ini")
 config["env:" + deviceName + "_fromitems"]["lib_deps"] = allLibs
 config["env:" + deviceName + "_fromitems"]["build_src_filter"] = includeDirs
+config["env:" + deviceName + "_fromitems"]["build_flags"] = allDefs
 config["platformio"]["default_envs"] = deviceName
+if "${env:" + deviceName + "_fromitems.build_flags}" not in config["env:" + deviceName]["build_flags"]:
+    config["env:" + deviceName]["build_flags"] += "\n${env:" + deviceName + "_fromitems.build_flags}"
 # config["platformio"]["data_dir"] = profJson['projectProp']['platformio']['data_dir']
 with open("platformio.ini", 'w') as configFile:
     config.write(configFile)

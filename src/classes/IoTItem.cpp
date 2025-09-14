@@ -238,9 +238,12 @@ IoTGpio* IoTItem::getGpioDriver() {
     return nullptr;
 }
 
+#ifdef mod_RtcDriver
 IoTItem* IoTItem::getRtcDriver() {
     return nullptr;
 }
+#endif
+
 /*
 IoTItem* IoTItem::getCAMDriver() {
     return nullptr;
@@ -266,10 +269,12 @@ IoTDiscovery *IoTItem::getHADiscovery()
 {
     return nullptr;
 }
+#ifdef mod_RtcDriver
 unsigned long IoTItem::getRtcUnixTime()
 {
     return 0;
 }
+#endif
 
 // сетевое общение====================================================================================================================================
 
