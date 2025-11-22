@@ -23,9 +23,9 @@
             "username": "",
             "password": "",
             "timeout": 5000,
-            "mqttCommandTopic": "",
+            "mqttCommandTopic": "milight/command",
             "mqttCommandUsePrefix": true,
-            "mqttResponseTopic": "",
+            "mqttResponseTopic": "milight/response",
             "mqttResponseUsePrefix": true
         }
     ],

@@ -396,7 +396,7 @@
             },
             {
                 "path": "src/modules/sensors/RCswitch",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/sensors/RTC",
@@ -482,7 +482,7 @@
             },
             {
                 "path": "src/modules/exec/IRremote",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/exec/Mcp23008",
@@ -494,7 +494,7 @@
             },
             {
                 "path": "src/modules/exec/MilightHub",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/exec/Mp3",
@@ -600,7 +600,7 @@
             },
             {
                 "path": "src/modules/display/TM16XX",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/display/U8g2lib",
@@ -611,34 +611,5 @@
                 "active": false
             }
         ]
-    },
-    "configItem": [
-        {
-            "global": 0,
-            "name": "MiLight Hub",
-            "type": "Writing",
-            "subtype": "MilightHub",
-            "id": "milight",
-            "widget": "",
-            "page": "Исполнители",
-            "descr": "Управление светом через esp8266_milight_hub REST API.",
-            "host": "milight-hub",
-            "port": 80,
-            "targetType": "alias",
-            "alias": "livingroom",
-            "deviceId": "0x0000",
-            "remoteType": "rgb_cct",
-            "groupId": 0,
-            "blockOnQueue": false,
-            "normalizedResponse": false,
-            "storeResponse": true,
-            "username": "",
-            "password": "",
-            "timeout": 5000,
-            "mqttCommandTopic": "milight/command",
-            "mqttCommandUsePrefix": true,
-            "mqttResponseTopic": "milight/response",
-            "mqttResponseUsePrefix": true
-        }
-    ]
+    }
 }
