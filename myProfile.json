@@ -396,7 +396,7 @@
             },
             {
                 "path": "src/modules/sensors/RCswitch",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/RTC",
@@ -482,7 +482,7 @@
             },
             {
                 "path": "src/modules/exec/IRremote",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/exec/Mcp23008",
@@ -494,7 +494,7 @@
             },
             {
                 "path": "src/modules/exec/MilightHub",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/exec/Mp3",
@@ -600,7 +600,7 @@
             },
             {
                 "path": "src/modules/display/TM16XX",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/display/U8g2lib",
