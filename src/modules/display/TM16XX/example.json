@@ -233,7 +233,8 @@ if tm_17 == 2 then tm.setParamLED(1, 0)
 
 if timer1 >= 0 & page == 1 then tm = "ttt1" + timer1
 if timer2 >= 0 & page == 2 then tm = "ttt2" + timer2
-if timer1 >= 0 | timer2 >= 0 then {
+if timer1 >= 0 | timer2 >= 0 then 
+{
 if page == 3 then tm = timer1 + " " + timer2
 }
 if page == 0 then tm.setParamLED(0, 5)
