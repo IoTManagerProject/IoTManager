@@ -1,0 +1,150 @@
+{
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "MiLight Hub",
+            "type": "Writing",
+            "subtype": "MilightHub",
+            "id": "milight",
+            "widget": "",
+            "page": "Исполнители",
+            "descr": "Управление светом через esp8266_milight_hub REST API.",
+            "host": "milight-hub",
+            "port": 80,
+            "targetType": "alias",
+            "alias": "livingroom",
+            "deviceId": "0x0000",
+            "remoteType": "rgb_cct",
+            "groupId": 0,
+            "blockOnQueue": false,
+            "normalizedResponse": false,
+            "storeResponse": true,
+            "username": "",
+            "password": "",
+            "timeout": 5000,
+            "mqttCommandTopic": "milight/command",
+            "mqttCommandUsePrefix": true,
+            "mqttResponseTopic": "milight/response",
+            "mqttResponseUsePrefix": true
+        }
+    ],
+    "about": {
+                "descr": "Если задан mqttCommandTopic, модуль слушает указанный MQTT-топик. Ожидаемый формат сообщения: {\"command\":\"set\", \"params\":[...]} или {\"payload\":{...}}. Также понимает текстовые команды GET/DELETESTATE/command .../raw ...",
+        "authorContact": "https://iotmanager.org",
+        "authorGit": "https://github.com/IoTManagerProject",
+        "specialThanks": "https://github.com/sidoh/esp8266_milight_hub",
+        "moduleName": "MilightHub",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 16,
+            "esp8266_4mb": 16
+        },
+        "title": "ESP8266 MiLight Hub REST",
+        "moduleDesc": "Команды управления устройствами через REST API прошивки esp8266_milight_hub. Дополнительно может слушать MQTT-топик и пересылать ответы обратно в брокер.",
+        "propInfo": {
+            "host": "Имя хоста или IP адрес MiLight Hub.",
+            "port": "TCP порт REST API (по умолчанию 80).",
+            "targetType": "Режим адресации: alias или device.",
+            "alias": "Имя устройства, заданное в MiLight Hub (используется, если выбран режим alias).",
+            "deviceId": "Идентификатор устройства (0-65535 или 0xNNNN) для режима device.",
+            "remoteType": "Тип пульта/лампы (например rgb_cct) для режима device.",
+            "groupId": "Идентификатор группы (0-8) для режима device.",
+            "blockOnQueue": "Ждать отправку пакетов перед ответом (параметр blockOnQueue).",
+            "normalizedResponse": "Добавлять fmt=normalized и получать нормализованный ответ.",
+            "storeResponse": "Сохранять последний ответ в значении элемента.",
+            "username": "Логин для HTTP Basic Auth (если включен в MiLight Hub).",
+            "password": "Пароль для HTTP Basic Auth.",
+            "timeout": "Таймаут HTTP-запроса в миллисекундах.",
+            "mqttCommandTopic": "MQTT-топик, откуда модуль будет получать команды (пусто — без MQTT).",
+            "mqttCommandUsePrefix": "1 — добавлять глобальный mqttPrefix к топику команд, 0 — использовать как указан.",
+            "mqttResponseTopic": "MQTT-топик для публикации HTTP-ответов (пусто — не публиковать).",
+            "mqttResponseUsePrefix": "1 — добавлять глобальный mqttPrefix к топику ответов, 0 — использовать как указан."
+        },
+        "funcInfo": [
+            {
+                "name": "set",
+                "descr": "Отправить JSON с параметрами состояния (PUT /gateways/...). Для простоты поддерживает строки ON/OFF.",
+                "params": [
+                    "payload"
+                ]
+            },
+            {
+                "name": "setField",
+                "descr": "Изменить одно поле состояния (brightness, kelvin и т.п.).",
+                "params": [
+                    "field",
+                    "value"
+                ]
+            },
+            {
+                "name": "command",
+                "descr": "Отправить команду (night_mode, pair и т.п.). Можно передать полный JSON объекта команды.",
+                "params": [
+                    "command"
+                ]
+            },
+            {
+                "name": "commands",
+                "descr": "Отправить массив команд (key commands).",
+                "params": [
+                    "commandsArray"
+                ]
+            },
+            {
+                "name": "get",
+                "descr": "Получить текущее состояние устройства (GET /gateways/...).",
+                "params": []
+            },
+            {
+                "name": "deleteState",
+                "descr": "Удалить сохранённое состояние устройства (DELETE /gateways/...).",
+                "params": []
+            },
+            {
+                "name": "setAlias",
+                "descr": "Изменить alias по умолчанию и включить режим alias.",
+                "params": [
+                    "alias"
+                ]
+            },
+            {
+                "name": "setDevice",
+                "descr": "Изменить deviceId, тип пульта и группу по умолчанию и включить режим device.",
+                "params": [
+                    "deviceId",
+                    "remoteType",
+                    "groupId"
+                ]
+            },
+            {
+                "name": "setBlock",
+                "descr": "Включить или выключить blockOnQueue для последующих запросов.",
+                "params": [
+                    "bool"
+                ]
+            },
+            {
+                "name": "setNormalized",
+                "descr": "Настроить добавление fmt=normalized к запросам.",
+                "params": [
+                    "bool"
+                ]
+            },
+            {
+                "name": "mqttControl",
+                "descr": "Если задан mqttCommandTopic, модуль слушает указанный MQTT-топик. Ожидаемый формат сообщения: {\"command\":\"set\", \"params\":[...]} или {\"payload\":{...}}. Также понимает текстовые команды GET/DELETESTATE/command .../raw ...",
+                "params": [
+                    "command",
+                    "params|payload",
+                    "field/value"
+                ]
+            }
+        ]
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": []
+    }
+}

@@ -1,0 +1,78 @@
+{
+    "menuSection": "sensors",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "DSC Keybus Статус",
+            "type": "Reading",
+            "subtype": "DscKeybus",
+            "id": "dscState",
+            "widget": "anydataDef",
+            "page": "Сенсоры",
+            "descr": "Текущее состояние выбранного раздела системы DSC",
+            "int": 1,
+            "clockPin": "18",
+            "readPin": "19",
+            "writePin": "21",
+            "partition": 1,
+            "writePartition": 1,
+            "mode": "status",
+            "virtualKeypad": false,
+            "processModule": false,
+            "hideDigits": true
+        },
+        {
+            "global": 0,
+            "name": "DSC Keybus Зоны",
+            "type": "Reading",
+            "subtype": "DscKeybus",
+            "id": "dscZones",
+            "widget": "anydataDef",
+            "page": "Сенсоры",
+            "descr": "Перечень открытых зон панели DSC",
+            "int": 3,
+            "clockPin": "18",
+            "readPin": "19",
+            "writePin": "-1",
+            "partition": 1,
+            "mode": "zones",
+            "virtualKeypad": false,
+            "processModule": false,
+            "hideDigits": true
+        }
+    ],
+    "about": {
+        "authorName": "IoTManager Team",
+        "authorContact": "https://iotmanager.org",
+        "authorGit": "https://github.com/IoTManagerProject",
+        "specialThanks": "https://github.com/taligentx/dscKeybusInterface",
+        "moduleName": "DscKeybus",
+        "moduleVersion": "1.0",
+        "usedRam": {
+            "esp32_4mb": 45,
+            "esp8266_4mb": 45
+        },
+        "title": "Интерфейс DSC Keybus",
+        "moduleDesc": "Интеграция с библиотекой dscKeybusInterface для опроса состояния панели DSC, отслеживания зон и отправки команд виртуальной клавиатурой.",
+        "propInfo": {
+            "clockPin": "GPIO, подключённый к линии CLOCK шины Keybus.",
+            "readPin": "GPIO, подключённый к линии DATA (чтение).",
+            "writePin": "GPIO для записи в шину (виртуальная клавиатура). Значение -1 отключает запись.",
+            "partition": "Номер раздела панели DSC (1-8).",
+            "writePartition": "Номер раздела, в который отправляются команды виртуальной клавиатуры.",
+            "mode": "Формат вывода: status, zones, trouble, raw.",
+            "virtualKeypad": "Включает виртуальную клавиатуру и возможность отправки команд.",
+            "processModule": "Обрабатывать сообщения модулей/клавиатуры (при необходимости).",
+            "hideDigits": "Скрывать цифры нажатых клавиш при ведении логов."
+        }
+    },
+    "defActive": false,
+    "usedLibs": {
+        "esp32*": [
+            "https://github.com/taligentx/dscKeybusInterface.git"
+        ],
+        "esp82*": [
+            "https://github.com/taligentx/dscKeybusInterface.git"
+        ]
+    }
+}

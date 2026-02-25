@@ -1,0 +1,59 @@
+Processing esp32c3m_4mb (framework: arduino; board: lolin_c3_mini; platform: espressif32 @6.6.0)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+PLATFORMIO_DIRC:\Users\IT-TehNika\.platformio
+Файл изменён, ОК! C:\Users\IT-TehNika\.platformio\packages\framework-arduinoespressif32\libraries\WiFi\src\WiFiClient.cpp
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/lolin_c3_mini.html
+PLATFORM: Espressif 32 (6.6.0) > WEMOS LOLIN C3 Mini
+HARDWARE: ESP32C3 160MHz, 320KB RAM, 4MB Flash
+DEBUG: Current (esp-prog) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20014.231204 (2.0.14) 
+ - tool-esptoolpy @ 1.40501.0 (4.5.1) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 67 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- ArduinoJson @ 6.18.0
+|-- PubSubClient @ 2.8.0
+|-- EncButton @ 2.0.0
+|-- TM16xx LEDs and Buttons @ 0.7.2503+sha.ab716f4
+|-- Adafruit GFX Library @ 1.12.4+sha.e4df4cc
+|-- Adafruit BusIO @ 1.17.4
+|-- Adafruit BME280 Library @ 2.3.0
+|-- Adafruit BMP280 Library @ 2.6.8
+|-- DHT sensor library for ESPx @ 1.19.0
+|-- MAX6675 library @ 1.1.2
+|-- WS2812FX @ 1.4.5
+|-- dscKeybusInterface @ 3.0.0+sha.ce12e1c
+|-- AHTxx @ 1.2.0+sha.701814c
+|-- DallasTemperature @ 4.0.5
+|-- EspSoftwareSerial @ 8.1.0
+|-- Wire @ 2.0.0
+|-- OneWire @ 2.3.8
+|-- iarduino RTC (часы реального времени) @ 2.0.0
+|-- ESP32 Async UDP @ 2.0.0
+|-- LittleFS @ 2.0.0
+|-- FS @ 2.0.0
+|-- SPIFFS @ 2.0.0
+|-- WiFi @ 2.0.0
+|-- HTTPClient @ 2.0.0
+|-- HTTPUpdate @ 2.0.0
+|-- TickerScheduler
+|-- Update @ 2.0.0
+|-- WebServer @ 2.0.0
+|-- WebSockets @ 2.3.7
+Building in release mode
+Retrieving maximum program size .pio\build\esp32c3m_4mb\firmware.elf
+Checking size .pio\build\esp32c3m_4mb\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]  13.1% (used 42884 bytes from 327680 bytes)
+Flash: [========  ]  77.7% (used 1221944 bytes from 1572864 bytes)
+========================= [SUCCESS] Took 68.72 seconds =========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+esp32c3m_4mb   SUCCESS   00:01:08.724
+========================= 1 succeeded in 00:01:08.724 =========================

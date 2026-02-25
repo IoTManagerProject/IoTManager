@@ -1,0 +1,71 @@
+name: Build ESP32C3M Firmware
+
+on:
+  push:
+    branches: [ ver4dev ]
+    paths:
+      - 'platformio.ini'
+      - 'src/**'
+      - 'include/**'
+      - 'lib/**'
+      - 'data_*/**'
+      - 'bin/**'
+      - 'tools/**'
+      - 'PrepareProject.py'
+      - '.github/workflows/build_esp32c3m.yml'
+  pull_request:
+    branches: [ ver4dev ]
+    paths:
+      - 'platformio.ini'
+      - 'src/**'
+      - 'include/**'
+      - 'lib/**'
+      - 'data_*/**'
+      - 'bin/**'
+      - 'tools/**'
+      - 'PrepareProject.py'
+      - '.github/workflows/build_esp32c3m.yml'
+  workflow_dispatch:
+
+env:
+  BOARD: esp32c3m_4mb
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install PlatformIO
+        run: |
+          python -m pip install --upgrade pip
+          pip install platformio
+
+      - name: Prepare project
+        run: python ./PrepareProject.py -b ${BOARD}
+
+      - name: Build firmware
+        run: platformio run -e ${BOARD}
+
+      - name: Build filesystem image
+        run: platformio run -e ${BOARD} -t buildfs --disable-auto-clean
+
+      - name: Collect artifacts
+        run: |
+          mkdir -p artifacts/${BOARD}
+          find .pio/build/${BOARD} -maxdepth 1 -type f -name '*.bin' -exec cp {} artifacts/${BOARD} \;
+          if [ -f build_${BOARD}.log ]; then cp build_${BOARD}.log artifacts/${BOARD}/; fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${BOARD}-firmware-${{ github.run_number }}
+          path: artifacts/${BOARD}

@@ -14,10 +14,7 @@ jobs:
     steps:
       - name: Prepare matrix JSON Object
         id: set_matrix
-        uses: nickofthyme/object-remap@v2.0.0
-        with:
-          __case: kebab
-          board: ${{ env.BOARDS }}
+        run: echo "json={\"board\":${{ env.BOARDS }}}" >> $GITHUB_OUTPUT
 
   build:
     needs: [ generate-matrix ]

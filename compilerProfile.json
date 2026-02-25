@@ -3,29 +3,37 @@
         "name": "IoTmanagerVer4",
         "apssid": "IoTmanager",
         "appass": "",
-        "routerssid": "iot",
-        "routerpass": "hostel3333",
+        "wifirep_apchanel": 7,
+        "wifirep_apip": "192.168.4.1",
+        "wifirep_staip": "192.168.1.160",
+        "wifirep_netmask": "255.255.255.0",
+        "wifirep_gateway": "192.168.4.1",
+        "wifirep_dns": "192.168.4.1",
+        "routerssid": "HomeNET",
+        "routerpass": "Wi73Jktu0205",
         "timezone": 2,
         "ntp": "pool.ntp.org",
         "weblogin": "admin",
         "webpass": "admin",
-        "mqttServer": "",
-        "mqttPort": 8021,
-        "mqttPrefix": "/risenew",
-        "mqttUser": "rise",
-        "mqttPass": "3hostel3",
+        "mqttServer": "192.168.88.10",
+        "mqttPort": 1883,
+        "mqttPrefix": "/IoTmanager",
+        "mqttUser": "",
+        "mqttPass": "",
         "serverip": "http://iotmanager.org",
+        "serverlocal": "http://192.168.1.2:5500",
         "log": 0,
         "mqttin": 0,
-        "pinSCL": 0,
-        "pinSDA": 0,
+        "pinSCL": 9,
+        "pinSDA": 8,
         "i2cFreq": 100000,
-        "wg": "group1"
+        "wg": "group1",
+        "debugTraceMsgTlgrm": 1
     },
     "projectProp": {
         "platformio": {
-            "default_envs": "esp8266_4mb",
-            "comments_default_envs": "choose from: esp8266_4mb or esp32_4mb or esp32cam_4mb or esp32s2_4mb or esp32_4mb3f or esp32s3_16mb or esp32c3m_4mb or esp8266_1mb or esp8266_1mb_ota or esp8285_1mb or esp8285_1mb_ota",
+            "default_envs": "esp32_4mb3f",
+            "comments_default_envs": "choose from: esp8266_4mb, esp32_4mb, esp32_4mb3f, esp8266_16mb, esp32_16mb, esp32cam_4mb, esp32s2_4mb, esp32s3_16mb, esp32c3m_4mb, esp8266_1mb, esp8266_1mb_ota, esp8266_2mb, esp8266_2mb_ota, esp8285_1mb, esp8285_1mb_ota, esp32c6_4mb, esp32c6_8mb, bk7231n, esp32_wifirep",
             "envs": [
                 {
                     "name": "esp8266_4mb",
@@ -47,6 +55,14 @@
                 },
                 {
                     "name": "esp32_4mb3f",
+                    "boot_app0": "0xe000",
+                    "bootloader_qio_80m": "0x1000",
+                    "firmware": "0x10000",
+                    "partitions": "0x8000",
+                    "littlefs": "0x310000"
+                },
+                {
+                    "name": "esp32_wifirep",
                     "boot_app0": "0xe000",
                     "bootloader_qio_80m": "0x1000",
                     "firmware": "0x10000",
@@ -122,6 +138,22 @@
                     "firmware": "0x10000",
                     "partitions": "0x8000",
                     "littlefs": "0x910000"
+                },
+                {
+                    "name": "esp32c6_4mb",
+                    "boot_app0": "0xe000",
+                    "bootloader_qio_80m": "0x1000",
+                    "firmware": "0x10000",
+                    "partitions": "0x8000",
+                    "littlefs": "0x310000"
+                },
+                {
+                    "name": "esp32c6_8mb",
+                    "boot_app0": "0xe000",
+                    "bootloader_qio_80m": "0x1000",
+                    "firmware": "0x10000",
+                    "partitions": "0x8000",
+                    "littlefs": "0x670000"
                 }
             ]
         }
@@ -137,6 +169,14 @@
                 "active": true
             },
             {
+                "path": "src/modules/virtual/DiscoveryHA",
+                "active": false
+            },
+            {
+                "path": "src/modules/virtual/DiscoveryHomeD",
+                "active": false
+            },
+            {
                 "path": "src/modules/virtual/GoogleSheet",
                 "active": false
             },
@@ -145,7 +185,19 @@
                 "active": true
             },
             {
+                "path": "src/modules/virtual/Loging2",
+                "active": false
+            },
+            {
+                "path": "src/modules/virtual/Loging3",
+                "active": false
+            },
+            {
                 "path": "src/modules/virtual/LogingDaily",
+                "active": true
+            },
+            {
+                "path": "src/modules/virtual/LogingHourly",
                 "active": true
             },
             {
@@ -165,6 +217,10 @@
                 "active": true
             },
             {
+                "path": "src/modules/virtual/UpdateServer",
+                "active": true
+            },
+            {
                 "path": "src/modules/virtual/Variable",
                 "active": true
             },
@@ -179,16 +235,12 @@
         ],
         "sensors": [
             {
-                "path": "src/modules/exec/Pcf8591",
+                "path": "src/modules/sensors/A02Distance",
                 "active": false
             },
             {
-                "path": "src/modules/sensors/A02Distance",
-                "active": true
-            },
-            {
                 "path": "src/modules/sensors/Acs712",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Ads1115",
@@ -208,7 +260,11 @@
             },
             {
                 "path": "src/modules/sensors/BL0937",
-                "active": true
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/BL0942",
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Ble",
@@ -240,6 +296,10 @@
             },
             {
                 "path": "src/modules/sensors/DS2401",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/DscKeybus",
                 "active": false
             },
             {
@@ -307,11 +367,23 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/ModbusRTU",
+                "active": false
+            },
+            {
+                "path": "src/modules/sensors/ModbusRTUasync",
+                "active": false
+            },
+            {
                 "path": "src/modules/sensors/MQgas",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Ntc",
+                "active": true
+            },
+            {
+                "path": "src/modules/sensors/Pcf8591",
                 "active": false
             },
             {
@@ -320,7 +392,7 @@
             },
             {
                 "path": "src/modules/sensors/Pzem004t_v2",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/RCswitch",
@@ -332,7 +404,7 @@
             },
             {
                 "path": "src/modules/sensors/S8",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Scd40",
@@ -348,15 +420,15 @@
             },
             {
                 "path": "src/modules/sensors/Sht20",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Sht30",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Sonar",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/UART",
@@ -382,7 +454,11 @@
             },
             {
                 "path": "src/modules/exec/Buzzer",
-                "active": true
+                "active": false
+            },
+            {
+                "path": "src/modules/exec/EctoControlAdapter",
+                "active": false
             },
             {
                 "path": "src/modules/exec/Enconder",
@@ -402,7 +478,11 @@
             },
             {
                 "path": "src/modules/exec/IoTServo",
-                "active": true
+                "active": false
+            },
+            {
+                "path": "src/modules/exec/IRremote",
+                "active": false
             },
             {
                 "path": "src/modules/exec/Mcp23008",
@@ -410,11 +490,15 @@
             },
             {
                 "path": "src/modules/exec/Mcp23017",
-                "active": true
+                "active": false
+            },
+            {
+                "path": "src/modules/exec/MilightHub",
+                "active": false
             },
             {
                 "path": "src/modules/exec/Mp3",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/exec/Multitouch",
@@ -426,7 +510,7 @@
             },
             {
                 "path": "src/modules/exec/Pcf8574",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/exec/Pwm32",
@@ -434,7 +518,7 @@
             },
             {
                 "path": "src/modules/exec/Pwm8266",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/exec/SDcard",
@@ -453,6 +537,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/exec/Tca9555",
+                "active": false
+            },
+            {
                 "path": "src/modules/exec/Telegram",
                 "active": false
             },
@@ -466,7 +554,7 @@
             },
             {
                 "path": "src/modules/exec/Thermostat",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/sensors/Ds2423",
@@ -476,11 +564,19 @@
         "screens": [
             {
                 "path": "src/modules/display/DwinI",
-                "active": true
+                "active": false
+            },
+            {
+                "path": "src/modules/display/GyverLAMP",
+                "active": false
             },
             {
                 "path": "src/modules/display/Lcd2004",
-                "active": true
+                "active": false
+            },
+            {
+                "path": "src/modules/display/LedFX",
+                "active": false
             },
             {
                 "path": "src/modules/display/Nextion",
@@ -496,14 +592,18 @@
             },
             {
                 "path": "src/modules/display/Oled64",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/display/Smi2_m",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/display/TM16XX",
+                "active": false
+            },
+            {
+                "path": "src/modules/display/U8g2lib",
                 "active": false
             },
             {

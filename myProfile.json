@@ -9,23 +9,23 @@
         "wifirep_netmask": "255.255.255.0",
         "wifirep_gateway": "192.168.4.1",
         "wifirep_dns": "192.168.4.1",
-        "routerssid": "iot",
-        "routerpass": "hostel3333",
+        "routerssid": "HomeNET",
+        "routerpass": "Wi73Jktu0205",
         "timezone": 2,
         "ntp": "pool.ntp.org",
         "weblogin": "admin",
         "webpass": "admin",
-        "mqttServer": "",
-        "mqttPort": 8021,
-        "mqttPrefix": "/risenew",
+        "mqttServer": "192.168.88.10",
+        "mqttPort": 1883,
+        "mqttPrefix": "/IoTmanager",
         "mqttUser": "rise",
         "mqttPass": "3hostel3",
         "serverip": "http://iotmanager.org",
         "serverlocal": "http://192.168.1.2:5500",
         "log": 0,
         "mqttin": 0,
-        "pinSCL": 0,
-        "pinSDA": 0,
+        "pinSCL": 9,
+        "pinSDA": 8,
         "i2cFreq": 100000,
         "wg": "group1",
         "debugTraceMsgTlgrm": 1
@@ -299,6 +299,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/sensors/DscKeybus",
+                "active": true
+            },
+            {
                 "path": "src/modules/sensors/Emon",
                 "active": false
             },
@@ -356,7 +360,7 @@
             },
             {
                 "path": "src/modules/sensors/Max6675",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/sensors/Mhz19",
@@ -372,11 +376,11 @@
             },
             {
                 "path": "src/modules/sensors/MQgas",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/sensors/Ntc",
-                "active": true
+                "active": false
             },
             {
                 "path": "src/modules/sensors/Pcf8591",
@@ -392,7 +396,7 @@
             },
             {
                 "path": "src/modules/sensors/RCswitch",
-                "active": false
+                "active": true
             },
             {
                 "path": "src/modules/sensors/RTC",
@@ -489,6 +493,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/exec/MilightHub",
+                "active":true
+            },
+            {
                 "path": "src/modules/exec/Mp3",
                 "active": false
             },
@@ -567,6 +575,10 @@
                 "active": false
             },
             {
+                "path": "src/modules/display/LedFX",
+                "active": false
+            },
+            {
                 "path": "src/modules/display/Nextion",
                 "active": false
             },
@@ -588,6 +600,10 @@
             },
             {
                 "path": "src/modules/display/TM16XX",
+                "active": false
+            },
+            {
+                "path": "src/modules/display/U8g2lib",
                 "active": false
             },
             {
