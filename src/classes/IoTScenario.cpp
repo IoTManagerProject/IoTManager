@@ -709,13 +709,6 @@ int IoTScenario::gettok() {
     }
 
     NumStr = "";
-    if (LastChar == '-') {
-        LastChar = getLastChar();
-        if (isdigit(LastChar))
-            NumStr = "-";
-        else
-            return '-';
-    }
     if (isdigit(LastChar)) {  // Число: [0-9.]+
         do {
             NumStr += (char)LastChar;
@@ -1009,6 +1002,12 @@ ExprAST *IoTScenario::ParsePrimary(String *IDNames, bool callFromCondition) {
             return ParseQuotesExpr();
         case tok_if:
             return ParseIfExpr(IDNames);
+        case '-': {
+            getNextToken();
+            ExprAST *Operand = ParsePrimary(IDNames, callFromCondition);
+            if (!Operand) return nullptr;
+            return new BinaryExprAST('-', new NumberExprAST("0"), Operand);
+        }
     }
 }
 

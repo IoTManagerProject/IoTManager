@@ -63,6 +63,7 @@ public:
             //Serial.print("adcAverage = " + String(_adcAverage) + " \t");
             //Serial.println("realSteps = " + String(realSteps));
             realSteps = 0;
+            _adcAverage = 0;
         }
         regEvent(value.valD, "AnalogAdc"); // обязательный вызов хотяб один
     }
