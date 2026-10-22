@@ -74,10 +74,10 @@
     "defActive": false,
     "usedLibs": {
         "esp32*": [
-            "gyverlibs/GyverOLED @ 1.6.3"
+            "gyverlibs/GyverOLED @ 1.6"
         ],
         "esp82*": [
-            "gyverlibs/GyverOLED @ 1.6.3"
+            "gyverlibs/GyverOLED @ 1.6"
         ]
     }
 }
