@@ -85,10 +85,6 @@
         "specialThanks": "Дмитрий, Serg, v2.0 - Mitchel @Mit4bmw",
         "moduleName": "Ina219",
         "moduleVersion": "2.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "subTypes": [
             "Ina219curr",
             "Ina219voltage",
@@ -125,5 +121,48 @@
         "esp82*": [
             "https://github.com/GyverLibs/GyverINA"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "2.0",
+            "usedFLASH": {
+                "esp8266_1mb": 7328,
+                "esp32_4mb": 13868,
+                "esp8266_4mb": 7328,
+                "esp32_4mb3f": 13884,
+                "esp8266_16mb": 7328,
+                "esp32cam_4mb": 14384,
+                "esp32s2_4mb": 13812,
+                "esp32s3_16mb": 13772,
+                "esp32c3m_4mb": 14416,
+                "esp8266_1mb_ota": 7344,
+                "esp8266_2mb": 7352,
+                "esp8266_2mb_ota": 7352,
+                "esp8285_1mb": 7328,
+                "esp8285_1mb_ota": 7344,
+                "esp32c6_4mb": 8272,
+                "esp32c6_8mb": 8276,
+                "esp32_16mb": 13864
+            },
+            "usedRAM": {
+                "esp8266_1mb": 292,
+                "esp32_4mb": 56,
+                "esp8266_4mb": 292,
+                "esp32_4mb3f": 56,
+                "esp8266_16mb": 292,
+                "esp32cam_4mb": 56,
+                "esp32s2_4mb": 56,
+                "esp32s3_16mb": 48,
+                "esp32c3m_4mb": 48,
+                "esp8266_1mb_ota": 284,
+                "esp8266_2mb": 276,
+                "esp8266_2mb_ota": 268,
+                "esp8285_1mb": 292,
+                "esp8285_1mb_ota": 284,
+                "esp32c6_4mb": 48,
+                "esp32c6_8mb": 48,
+                "esp32_16mb": 56
+            }
+        }
+    ]
 }

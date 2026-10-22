@@ -20,10 +20,6 @@
         "specialThanks": "",
         "moduleName": "SysExt",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Доп. функции системы (в разработке)",
         "moduleDesc": "Добавляет в систему дополнительные функции. Например, возможность прямого управления GPIO из сценариев.",
         "propInfo": {
@@ -34,5 +30,48 @@
     "usedLibs": {
         "esp32*": [],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 376,
+                "esp8266_1mb_ota": 376,
+                "esp32_4mb": 652,
+                "esp8266_4mb": 376,
+                "esp32_4mb3f": 668,
+                "esp8266_16mb": 376,
+                "esp32cam_4mb": 640,
+                "esp32s2_4mb": 648,
+                "esp32s3_16mb": 656,
+                "esp32c3m_4mb": 628,
+                "esp8266_2mb": 392,
+                "esp8266_2mb_ota": 392,
+                "esp8285_1mb": 392,
+                "esp8285_1mb_ota": 392,
+                "esp32c6_4mb": 662,
+                "esp32c6_8mb": 662,
+                "esp32_16mb": 652
+            },
+            "usedRAM": {
+                "esp8266_1mb": 0,
+                "esp8266_1mb_ota": 0,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 0,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 0,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_2mb": 0,
+                "esp8266_2mb_ota": 0,
+                "esp8285_1mb": 0,
+                "esp8285_1mb_ota": 0,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

@@ -1,2 +1,52 @@
-.pio
-.vscode
+# Virtual environments
+.venv/
+.venv-1/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.log
+
+# IDE & editors
+.vscode/
+.codeassistant/
+.continue/
+.kilo/
+.qodo/
+
+# PlatformIO
+.pio/
+
+# Build output
+data_full — копия/
+iotm/
+lt_littlefs.bin
+# база компиляции для IDE (генерируется `pio run -t compiledb`)
+compile_commands.json
+
+# Project-specific
+data_svelte/settings.json
+tools/magicIoTm/projects/*
+tools/magicIoTm/devices/*
+tools/magicIoTm/utils/__pycache__/
+
+# Генерируемые артефакты
+# API.cpp формирует PrepareProject.py («учёт вызовов модулей») — править модули
+# нужно в src/modules/<тип>/<Модуль>/, а не в сгенерированном файле.
+src/modules/API.cpp
+# data_svelte проекта пересобирается при применении профиля: PrepareProject.py
+# копирует набор из data_full/data_lite и дописывает items.json/flashProfile.json.
+# ВАЖНО: data_full/ и data_lite/ — это ИСХОДНЫЕ наборы веб-данных (собранный UI),
+# их содержимое, включая build/*.gz, должно оставаться в репозитории.
+data_svelte/index.html
+data_svelte/favicon.ico
+data_svelte/items.json
+data_svelte/flashProfile.json
+data_svelte/widgets.json
+data_svelte/build/
+
+# Local documentation — keep in local environment only, do not commit/push
+/AGENTS.md
+# /CHANGELOG.md [DEPRECATED-игнор] — файл версионируется и пушится на GitHub (см. CHANGELOG)
+/KODA.md
+/README.md

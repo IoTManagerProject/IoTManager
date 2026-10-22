@@ -4,7 +4,7 @@
         {
             "global": 0,
             "name": "Math library",
-            "type":  "Reading",
+            "type": "Reading",
             "subtype": "IoTMath",
             "id": "math",
             "widget": "anydataValue",
@@ -20,20 +20,18 @@
         "specialThanks": "Ilya Belyakov",
         "moduleName": "IoTMath",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Модуль Math",
         "moduleDesc": "Модуль для расчета значений с использованием математических функций. Подходит для коррекции показаний датчиков.",
-        "propInfo": {
-        },
+        "propInfo": {},
         "funcInfo": [
             {
                 "name": "map",
                 "descr": "Аналог функции map",
                 "params": [
-                    "Значение1", "Значение2", "Значение3", "Значение4"
+                    "Значение1",
+                    "Значение2",
+                    "Значение3",
+                    "Значение4"
                 ]
             },
             {
@@ -58,5 +56,50 @@
         "esp32*": [],
         "esp82*": [],
         "bk72*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "bk7231n": 1568,
+                "esp8266_1mb": 8612,
+                "esp32_4mb": 2600,
+                "esp8266_4mb": 8612,
+                "esp32_4mb3f": 2600,
+                "esp8266_16mb": 8612,
+                "esp32cam_4mb": 2648,
+                "esp32s2_4mb": 2660,
+                "esp32s3_16mb": 2580,
+                "esp32c3m_4mb": 2672,
+                "esp8266_1mb_ota": 8612,
+                "esp8266_2mb": 8632,
+                "esp8266_2mb_ota": 8632,
+                "esp8285_1mb": 8628,
+                "esp8285_1mb_ota": 8628,
+                "esp32c6_4mb": 2544,
+                "esp32c6_8mb": 2546,
+                "esp32_16mb": 2572
+            },
+            "usedRAM": {
+                "bk7231n": 0,
+                "esp8266_1mb": 176,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 176,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 176,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 184,
+                "esp8266_2mb": 172,
+                "esp8266_2mb_ota": 172,
+                "esp8285_1mb": 176,
+                "esp8285_1mb_ota": 184,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

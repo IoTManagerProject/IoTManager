@@ -27,10 +27,6 @@
         "specialThanks": "@itsid1 @Valiuhaaa Serg @Serghei63",
         "moduleName": "LogingHourly",
         "moduleVersion": "2",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "График часового расхода",
         "moduleDesc": "Расширение позволяющее логировать накопительные величины и видеть их часовое изменение. Графики доступны в мобильном приложении и в веб интерфейсе. Данные графиков хранятся в встроенной памяти esp",
         "propInfo": {
@@ -46,5 +42,50 @@
         "esp32*": [],
         "esp82*": [],
         "bk72*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "2",
+            "usedFLASH": {
+                "bk7231n": 7000,
+                "esp8266_1mb": 6836,
+                "esp32_4mb": 12580,
+                "esp8266_4mb": 6836,
+                "esp32_4mb3f": 12596,
+                "esp8266_16mb": 6836,
+                "esp32cam_4mb": 12884,
+                "esp32s2_4mb": 12748,
+                "esp32s3_16mb": 12644,
+                "esp32c3m_4mb": 14760,
+                "esp8266_1mb_ota": 6836,
+                "esp8266_2mb": 6800,
+                "esp8266_2mb_ota": 6800,
+                "esp8285_1mb": 6836,
+                "esp8285_1mb_ota": 6836,
+                "esp32c6_4mb": 13104,
+                "esp32c6_8mb": 13106,
+                "esp32_16mb": 12560
+            },
+            "usedRAM": {
+                "bk7231n": 0,
+                "esp8266_1mb": 468,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 468,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 468,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 460,
+                "esp8266_2mb": 448,
+                "esp8266_2mb_ota": 448,
+                "esp8285_1mb": 468,
+                "esp8285_1mb_ota": 460,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

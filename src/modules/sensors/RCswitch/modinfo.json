@@ -21,10 +21,6 @@
         "specialThanks": "Valentin Khandriga @Valiuhaaa",
         "moduleName": "RCswitch",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Сканер кнопок 433 MHz",
         "moduleDesc": "Позволяет принимать и передавать байт-коды на частоте 433 MHz от и для простых пультов, кнопок, радиореле",
         "propInfo": {
@@ -67,5 +63,48 @@
         "esp82*": [
             "rc-switch @ ^2.6.4"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 3124,
+                "esp32_4mb": 5780,
+                "esp8266_4mb": 3124,
+                "esp32_4mb3f": 5780,
+                "esp8266_16mb": 3124,
+                "esp32cam_4mb": 5920,
+                "esp32s2_4mb": 5516,
+                "esp32s3_16mb": 5556,
+                "esp32c3m_4mb": 6532,
+                "esp8266_1mb_ota": 3140,
+                "esp8266_2mb": 3076,
+                "esp8266_2mb_ota": 3076,
+                "esp8285_1mb": 3124,
+                "esp8285_1mb_ota": 3140,
+                "esp32c6_4mb": 5760,
+                "esp32c6_8mb": 5762,
+                "esp32_16mb": 5792
+            },
+            "usedRAM": {
+                "esp8266_1mb": 816,
+                "esp32_4mb": 928,
+                "esp8266_4mb": 816,
+                "esp32_4mb3f": 928,
+                "esp8266_16mb": 816,
+                "esp32cam_4mb": 928,
+                "esp32s2_4mb": 1024,
+                "esp32s3_16mb": 1032,
+                "esp32c3m_4mb": 760,
+                "esp8266_1mb_ota": 808,
+                "esp8266_2mb": 796,
+                "esp8266_2mb_ota": 796,
+                "esp8285_1mb": 816,
+                "esp8285_1mb_ota": 808,
+                "esp32c6_4mb": 808,
+                "esp32c6_8mb": 808,
+                "esp32_16mb": 928
+            }
+        }
+    ]
 }

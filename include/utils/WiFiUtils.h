@@ -3,7 +3,7 @@
 #include "Global.h"
 #include "MqttClient.h"
 
-void addPortMap(String TCP_UDP, String maddr, u16_t mport, String daddr, u16_t dport);
+void addPortMap(String TCP_UDP, String maddr, uint16_t mport, String daddr, uint16_t dport);
 
 boolean isNetworkActive();
 uint8_t getNumAPClients();

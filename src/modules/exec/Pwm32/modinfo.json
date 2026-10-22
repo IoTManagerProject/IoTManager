@@ -26,10 +26,6 @@
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "Pwm32",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "PWM ESP32",
         "moduleDesc": "Позволяет управлять Широтно-Импульсной Модуляцией на конкретном пине платы.",
         "retInfo": "Содержит текущее значение ШИМ",
@@ -45,5 +41,32 @@
     "defActive": true,
     "usedLibs": {
         "esp32*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp32_4mb": 8028,
+                "esp32_4mb3f": 8028,
+                "esp32cam_4mb": 8152,
+                "esp32s2_4mb": 7408,
+                "esp32s3_16mb": 7376,
+                "esp32c3m_4mb": 8032,
+                "esp32c6_4mb": 8992,
+                "esp32c6_8mb": 8990,
+                "esp32_16mb": 8008
+            },
+            "usedRAM": {
+                "esp32_4mb": 120,
+                "esp32_4mb3f": 120,
+                "esp32cam_4mb": 120,
+                "esp32s2_4mb": 72,
+                "esp32s3_16mb": 72,
+                "esp32c3m_4mb": 40,
+                "esp32c6_4mb": 32,
+                "esp32c6_8mb": 32,
+                "esp32_16mb": 120
+            }
+        }
+    ]
 }

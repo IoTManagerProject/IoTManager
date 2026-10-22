@@ -35,10 +35,6 @@
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "Bmp280",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "subTypes": [
             "Bmp280t",
             "Bmp280p"
@@ -58,5 +54,48 @@
         "esp82*": [
             "adafruit/Adafruit BMP280 Library"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 9800,
+                "esp32_4mb": 19276,
+                "esp8266_4mb": 9800,
+                "esp32_4mb3f": 19276,
+                "esp8266_16mb": 9804,
+                "esp32cam_4mb": 19932,
+                "esp32s2_4mb": 20016,
+                "esp32s3_16mb": 20100,
+                "esp32c3m_4mb": 17532,
+                "esp8266_1mb_ota": 9804,
+                "esp8266_2mb": 9824,
+                "esp8266_2mb_ota": 9824,
+                "esp8285_1mb": 9804,
+                "esp8285_1mb_ota": 9800,
+                "esp32c6_4mb": 12858,
+                "esp32c6_8mb": 12860,
+                "esp32_16mb": 19248
+            },
+            "usedRAM": {
+                "esp8266_1mb": 192,
+                "esp32_4mb": 112,
+                "esp8266_4mb": 192,
+                "esp32_4mb3f": 112,
+                "esp8266_16mb": 196,
+                "esp32cam_4mb": 112,
+                "esp32s2_4mb": 100,
+                "esp32s3_16mb": 80,
+                "esp32c3m_4mb": 64,
+                "esp8266_1mb_ota": 188,
+                "esp8266_2mb": 176,
+                "esp8266_2mb_ota": 176,
+                "esp8285_1mb": 196,
+                "esp8285_1mb_ota": 192,
+                "esp32c6_4mb": 64,
+                "esp32c6_8mb": 64,
+                "esp32_16mb": 112
+            }
+        }
+    ]
 }

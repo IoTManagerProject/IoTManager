@@ -9,8 +9,9 @@ Import("env")
 # Определите имя таргета
 target_name = "buildfs"
 
-# Получите путь к директории с данными из переменной среды env
-data_dir = env.subst("$PROJECT_DIR") + "/data_svelte"
+# Директория с данными берётся из конфигурации проекта (platformio data_dir).
+# Теперь data_svelte расположена в iotm/<платформа>/data_svelte.
+data_dir = env.subst("$PROJECT_DATA_DIR")
 
 # Получите путь к выходному файлу LittleFS из переменной среды env
 output_file = env.subst("$PROJECT_DIR") + "/lt_littlefs.bin"

@@ -13,18 +13,35 @@
 # Если указан параметр -d или --debug, то выполняется только команда 4 с предварительной компиляцией
 
 import os
+import shutil
 import subprocess
 import sys
 import json
 
 def get_platformio_path():
     """
-    Возвращает путь к PlatformIO в зависимости от операционной системы.
+    Возвращает путь к исполняемому файлу PlatformIO (pio/platformio).
+
+    Сначала ищем команду в PATH, затем резервно — в стандартном каталоге установки.
     """
+    # 1. Поиск в PATH (pio или platformio)
+    for name in ('pio', 'platformio'):
+        found = shutil.which(name)
+        if found:
+            return found
+    # 2. Резерв: стандартный каталог установки PlatformIO
     if os.name == 'nt':  # Windows
-        return os.path.join(os.environ['USERPROFILE'], '.platformio', 'penv', 'Scripts', 'pio.exe')
+        exe_names = ['platformio.exe', 'pio.exe']
+        base = os.path.join(os.environ['USERPROFILE'], '.platformio', 'penv', 'Scripts')
     else:  # Linux/MacOS
-        return os.path.join(os.environ['HOME'], '.platformio', 'penv', 'bin', 'pio')
+        exe_names = ['pio', 'platformio']
+        base = os.path.join(os.environ['HOME'], '.platformio', 'penv', 'bin')
+    for name in exe_names:
+        candidate = os.path.join(base, name)
+        if os.path.isfile(candidate):
+            return candidate
+    # Если ни один не найден — возвращаем дефолт, чтобы вызвать понятную ошибку запуска
+    return os.path.join(base, exe_names[0])
 
 def load_default_envs(profile_path="myProfile.json"):
     """

@@ -1,63 +1,104 @@
 {
-  "menuSection": "virtual_elments",
-  "configItem": [
-    {
-      "global": 0,
-      "name": "График",
-      "type": "Writing",
-      "subtype": "Loging",
-      "id": "log",
-      "widget": "chart2",
-      "page": "Графики",
-      "descr": "Температура",
-      "num": 1,
-      "int": 5,
-      "logid": "t",
-      "daysSave": 5,
-      "daysShow": 0,
-      "points": 300
+    "menuSection": "virtual_elments",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "График",
+            "type": "Writing",
+            "subtype": "Loging",
+            "id": "log",
+            "widget": "chart2",
+            "page": "Графики",
+            "descr": "Температура",
+            "num": 1,
+            "int": 5,
+            "logid": "t",
+            "daysSave": 5,
+            "daysShow": 0,
+            "points": 300
+        },
+        {
+            "global": 0,
+            "name": "График по событию",
+            "type": "Writing",
+            "subtype": "Loging",
+            "id": "log",
+            "widget": "chart2",
+            "page": "Графики",
+            "descr": "Температура",
+            "int": 0,
+            "num": 1,
+            "daysSave": 5,
+            "daysShow": 0,
+            "points": 300
+        }
+    ],
+    "about": {
+        "authorName": "Dmitry Borisenko",
+        "authorContact": "https://t.me/Dmitry_Borisenko",
+        "authorGit": "https://github.com/DmitryBorisenko33",
+        "specialThanks": "@itsid1 @Valiuhaaa Serg",
+        "moduleName": "Loging",
+        "moduleVersion": "4.0",
+        "title": "Логирование в график",
+        "moduleDesc": "Расширение позволяющее логировать любую величину в график. Графики доступны в мобильном приложении и в веб интерфейсе. Данные графиков хранятся в встроенной памяти esp. В окне ввода даты можно выбирать день, историю которого вы хотите посмотреть. Старые файлы будут удаляться автоматически после того как объем оставшейся flesh памяти устройства будет менее 20 процентов",
+        "propInfo": {
+            "int": "Интервал логирования в мнутах, рекомендуется для esp8266 использоать интервал не менее 5-ти минут",
+            "logid": "ID величины которую будем логировать",
+            "points": "Максимальное количество точек в одном файле, может быть не более 300. Не рекомендуется менять этот параметр",
+            "daysSave": "Количество дней за которое надо хранить график",
+            "daysShow": "Какое количество дней отображать на графике, в дополнение к текущему. 0 - за текущие сутки с ноля часов; 1 - вчерашние сутки и сегодняшние, и т.д."
+        }
     },
-    {
-      "global": 0,
-      "name": "График по событию",
-      "type": "Writing",
-      "subtype": "Loging",
-      "id": "log",
-      "widget": "chart2",
-      "page": "Графики",
-      "descr": "Температура",
-      "int": 0,
-      "num": 1,
-      "daysSave": 5,
-      "daysShow": 0,
-      "points": 300
-    }
-  ],
-  "about": {
-    "authorName": "Dmitry Borisenko",
-    "authorContact": "https://t.me/Dmitry_Borisenko",
-    "authorGit": "https://github.com/DmitryBorisenko33",
-    "specialThanks": "@itsid1 @Valiuhaaa Serg",
-    "moduleName": "Loging",
-    "moduleVersion": "4.0",
-    "usedRam": {
-      "esp32_4mb": 15,
-      "esp8266_4mb": 15
+    "defActive": true,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": [],
+        "bk72*": []
     },
-    "title": "Логирование в график",
-    "moduleDesc": "Расширение позволяющее логировать любую величину в график. Графики доступны в мобильном приложении и в веб интерфейсе. Данные графиков хранятся в встроенной памяти esp. В окне ввода даты можно выбирать день, историю которого вы хотите посмотреть. Старые файлы будут удаляться автоматически после того как объем оставшейся flesh памяти устройства будет менее 20 процентов",
-    "propInfo": {
-      "int": "Интервал логирования в мнутах, рекомендуется для esp8266 использоать интервал не менее 5-ти минут",
-      "logid": "ID величины которую будем логировать",
-      "points": "Максимальное количество точек в одном файле, может быть не более 300. Не рекомендуется менять этот параметр",
-      "daysSave": "Количество дней за которое надо хранить график",
-      "daysShow": "Какое количество дней отображать на графике, в дополнение к текущему. 0 - за текущие сутки с ноля часов; 1 - вчерашние сутки и сегодняшние, и т.д."
-    }
-  },
-  "defActive": true,
-  "usedLibs": {
-    "esp32*": [],
-    "esp82*": [],
-    "bk72*": []
-  }
+    "sizeInfo": [
+        {
+            "moduleVersion": "4.0",
+            "usedFLASH": {
+                "bk7231n": 12512,
+                "esp8266_1mb": 11640,
+                "esp32_4mb": 21848,
+                "esp8266_4mb": 11640,
+                "esp32_4mb3f": 21864,
+                "esp8266_16mb": 11640,
+                "esp32cam_4mb": 22260,
+                "esp32s2_4mb": 21688,
+                "esp32s3_16mb": 21780,
+                "esp32c3m_4mb": 23378,
+                "esp8266_1mb_ota": 11640,
+                "esp8266_2mb": 11608,
+                "esp8266_2mb_ota": 11608,
+                "esp8285_1mb": 11656,
+                "esp8285_1mb_ota": 11656,
+                "esp32c6_4mb": 21640,
+                "esp32c6_8mb": 21642,
+                "esp32_16mb": 21860
+            },
+            "usedRAM": {
+                "bk7231n": 0,
+                "esp8266_1mb": 804,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 804,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 804,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 812,
+                "esp8266_2mb": 804,
+                "esp8266_2mb_ota": 796,
+                "esp8285_1mb": 804,
+                "esp8285_1mb_ota": 812,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

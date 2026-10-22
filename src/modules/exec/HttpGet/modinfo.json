@@ -1,55 +1,94 @@
 {
-  "menuSection": "executive_devices",
-  "configItem": [
-    {
-      "global": 0,
-      "name": "HttpGet",
-      "type": "Writing",
-      "subtype": "HttpGet",
-      "id": "http",
-      "widget": "",
-      "page": "",
-      "descr": "",
-      "token": "",
-      "chatID": ""
-    }
-  ],
-  "about": {
-    "authorName": "AVAKS",
-    "authorContact": "https://t.me/@avaks_dev",
-    "authorGit": "https://github.com/avaksru",
-    "specialThanks": "",
-    "moduleName": "HttpGet",
-    "moduleVersion": "1",
-    "usedRam": {
-      "esp32_4mb": 15,
-      "esp8266_4mb": 15
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "HttpGet",
+            "type": "Writing",
+            "subtype": "HttpGet",
+            "id": "http",
+            "widget": "",
+            "page": "",
+            "descr": "",
+            "token": "",
+            "chatID": ""
+        }
+    ],
+    "about": {
+        "authorName": "AVAKS",
+        "authorContact": "https://t.me/@avaks_dev",
+        "authorGit": "https://github.com/avaksru",
+        "specialThanks": "",
+        "moduleName": "HttpGet",
+        "moduleVersion": "1",
+        "title": "Отправка запросов по http",
+        "moduleDesc": "Запросы по протоколу https НЕ РАБОТАЮТ!",
+        "propInfo": {},
+        "retInfo": "",
+        "funcInfo": [
+            {
+                "name": "get",
+                "descr": "Отправить http запрос методом GET.",
+                "params": [
+                    "URL"
+                ]
+            },
+            {
+                "name": "post",
+                "descr": "Отправить http запрос методом POST.",
+                "params": [
+                    "URL",
+                    "message"
+                ]
+            }
+        ]
     },
-    "title": "Отправка запросов по http",
-    "moduleDesc": "Запросы по протоколу https НЕ РАБОТАЮТ!",
-    "propInfo": {},
-    "retInfo": "",
-    "funcInfo": [
-      {
-        "name": "get",
-        "descr": "Отправить http запрос методом GET.",
-        "params": [
-          "URL"
-        ]
-      },
-      {
-        "name": "post",
-        "descr": "Отправить http запрос методом POST.",
-        "params": [
-          "URL",
-          "message"
-        ]
-      }
+    "defActive": false,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": []
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1",
+            "usedFLASH": {
+                "esp8266_1mb": 2180,
+                "esp8266_1mb_ota": 2180,
+                "esp32_4mb": 128408,
+                "esp8266_4mb": 2200,
+                "esp32_4mb3f": 128408,
+                "esp8266_16mb": 2184,
+                "esp32cam_4mb": 128684,
+                "esp32s2_4mb": 126664,
+                "esp32s3_16mb": 124904,
+                "esp32c3m_4mb": 131946,
+                "esp8266_2mb": 2196,
+                "esp8266_2mb_ota": 2196,
+                "esp8285_1mb": 2196,
+                "esp8285_1mb_ota": 2196,
+                "esp32c6_4mb": 94148,
+                "esp32c6_8mb": 94148,
+                "esp32_16mb": 128416
+            },
+            "usedRAM": {
+                "esp8266_1mb": 80,
+                "esp8266_1mb_ota": 80,
+                "esp32_4mb": 960,
+                "esp8266_4mb": 84,
+                "esp32_4mb3f": 960,
+                "esp8266_16mb": 84,
+                "esp32cam_4mb": 960,
+                "esp32s2_4mb": 960,
+                "esp32s3_16mb": 960,
+                "esp32c3m_4mb": 976,
+                "esp8266_2mb": 64,
+                "esp8266_2mb_ota": 64,
+                "esp8285_1mb": 80,
+                "esp8285_1mb_ota": 80,
+                "esp32c6_4mb": 552,
+                "esp32c6_8mb": 552,
+                "esp32_16mb": 960
+            }
+        }
     ]
-  },
-  "defActive": false,
-  "usedLibs": {
-    "esp32*": [],
-    "esp82*": []
-  }
 }

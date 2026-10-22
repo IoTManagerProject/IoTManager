@@ -39,10 +39,6 @@
         "specialThanks": "",
         "moduleName": "Emon",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "subTypes": [
             "I",
             "U"
@@ -65,5 +61,48 @@
         "esp82*": [
             "openenergymonitor/EmonLib@1.1.0"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 2212,
+                "esp32_4mb": 3120,
+                "esp8266_4mb": 2212,
+                "esp32_4mb3f": 3120,
+                "esp8266_16mb": 2212,
+                "esp32cam_4mb": 3288,
+                "esp32s2_4mb": 3060,
+                "esp32s3_16mb": 3084,
+                "esp32c3m_4mb": 3284,
+                "esp8266_1mb_ota": 2212,
+                "esp8266_2mb": 2212,
+                "esp8266_2mb_ota": 2212,
+                "esp8285_1mb": 2212,
+                "esp8285_1mb_ota": 2212,
+                "esp32c6_4mb": 3382,
+                "esp32c6_8mb": 3382,
+                "esp32_16mb": 3096
+            },
+            "usedRAM": {
+                "esp8266_1mb": 244,
+                "esp32_4mb": 192,
+                "esp8266_4mb": 244,
+                "esp32_4mb3f": 192,
+                "esp8266_16mb": 244,
+                "esp32cam_4mb": 192,
+                "esp32s2_4mb": 192,
+                "esp32s3_16mb": 192,
+                "esp32c3m_4mb": 176,
+                "esp8266_1mb_ota": 236,
+                "esp8266_2mb": 220,
+                "esp8266_2mb_ota": 228,
+                "esp8285_1mb": 244,
+                "esp8285_1mb_ota": 236,
+                "esp32c6_4mb": 176,
+                "esp32c6_8mb": 176,
+                "esp32_16mb": 192
+            }
+        }
+    ]
 }

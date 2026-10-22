@@ -23,10 +23,6 @@
         "specialThanks": "",
         "moduleName": "UpdateServer",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Свой сервер обновлений",
         "moduleDesc": "Модуль для получения прошивки из своего сервера обновлений.",
         "propInfo": {
@@ -37,5 +33,48 @@
     "usedLibs": {
         "esp32*": [],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 504,
+                "esp32_4mb": 924,
+                "esp8266_4mb": 504,
+                "esp32_4mb3f": 924,
+                "esp8266_16mb": 504,
+                "esp32cam_4mb": 904,
+                "esp32s2_4mb": 896,
+                "esp32s3_16mb": 928,
+                "esp32c3m_4mb": 904,
+                "esp8266_1mb_ota": 504,
+                "esp8266_2mb": 520,
+                "esp8266_2mb_ota": 520,
+                "esp8285_1mb": 520,
+                "esp8285_1mb_ota": 520,
+                "esp32c6_4mb": 942,
+                "esp32c6_8mb": 944,
+                "esp32_16mb": 900
+            },
+            "usedRAM": {
+                "esp8266_1mb": 48,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 48,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 48,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 48,
+                "esp8266_2mb": 32,
+                "esp8266_2mb_ota": 32,
+                "esp8285_1mb": 48,
+                "esp8285_1mb_ota": 48,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

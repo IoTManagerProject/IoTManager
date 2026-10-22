@@ -27,10 +27,6 @@
         "specialThanks": "",
         "moduleName": "Pcf8591",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Расширитель 4-х аналоговых портов PCF8591",
         "moduleDesc": "Позволяет получить относительную величину напряжения на понижающем трансформаторе.",
         "propInfo": {
@@ -41,12 +37,56 @@
     },
     "defActive": false,
     "usedLibs": {
-
         "esp32*": [
             "https://github.com/adafruit/Adafruit_PCF8591"
         ],
         "esp82*": [
             "https://github.com/adafruit/Adafruit_PCF8591"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 3200,
+                "esp32_4mb": 8640,
+                "esp8266_4mb": 3200,
+                "esp32_4mb3f": 8640,
+                "esp8266_16mb": 3204,
+                "esp32cam_4mb": 8936,
+                "esp32s2_4mb": 8528,
+                "esp32s3_16mb": 8504,
+                "esp32c3m_4mb": 8446,
+                "esp8266_1mb_ota": 3200,
+                "esp8266_2mb": 3216,
+                "esp8266_2mb_ota": 3216,
+                "esp8285_1mb": 3200,
+                "esp8285_1mb_ota": 3200,
+                "esp32c6_4mb": 2278,
+                "esp32c6_8mb": 2278,
+                "esp32_16mb": 8640,
+                "esp32_wifirep": "-"
+            },
+            "usedRAM": {
+                "esp8266_1mb": 112,
+                "esp32_4mb": 8,
+                "esp8266_4mb": 112,
+                "esp32_4mb3f": 8,
+                "esp8266_16mb": 116,
+                "esp32cam_4mb": 8,
+                "esp32s2_4mb": 8,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 112,
+                "esp8266_2mb": 96,
+                "esp8266_2mb_ota": 96,
+                "esp8285_1mb": 112,
+                "esp8285_1mb_ota": 112,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 8,
+                "esp32_wifirep": "-"
+            }
+        }
+    ]
 }

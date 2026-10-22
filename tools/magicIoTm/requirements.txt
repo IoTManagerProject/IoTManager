@@ -1,0 +1,8 @@
+flask>=3.0
+flask-cors>=4.0
+psutil>=5.9
+# esptool — детекция/прошивка ESP-чипов и проверка версии на старте приложения
+esptool>=4.7.1
+# platformio — сборка/прошивка; жёсткой зависимости нет: при отсутствии pio
+# панель предлагает автоустановку (POST /api/tools/platformio/install)
+# platformio>=6.1

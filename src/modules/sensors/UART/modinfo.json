@@ -23,10 +23,6 @@
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "UART",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "subTypes": [
             "SoftUART"
         ],
@@ -80,5 +76,48 @@
         "esp82*": [
             "plerup/EspSoftwareSerial"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 8008,
+                "esp32_4mb": 10812,
+                "esp8266_4mb": 8008,
+                "esp32_4mb3f": 10812,
+                "esp8266_16mb": 8008,
+                "esp32cam_4mb": 11260,
+                "esp32s2_4mb": 19496,
+                "esp32s3_16mb": 10528,
+                "esp32c3m_4mb": 20446,
+                "esp8266_1mb_ota": 8024,
+                "esp8266_2mb": 8012,
+                "esp8266_2mb_ota": 8012,
+                "esp8285_1mb": 8024,
+                "esp8285_1mb_ota": 8024,
+                "esp32c6_4mb": 11372,
+                "esp32c6_8mb": 11370,
+                "esp32_16mb": 10812
+            },
+            "usedRAM": {
+                "esp8266_1mb": 372,
+                "esp32_4mb": 512,
+                "esp8266_4mb": 372,
+                "esp32_4mb3f": 512,
+                "esp8266_16mb": 372,
+                "esp32cam_4mb": 512,
+                "esp32s2_4mb": 592,
+                "esp32s3_16mb": 616,
+                "esp32c3m_4mb": 264,
+                "esp8266_1mb_ota": 380,
+                "esp8266_2mb": 372,
+                "esp8266_2mb_ota": 364,
+                "esp8285_1mb": 372,
+                "esp8285_1mb_ota": 380,
+                "esp32c6_4mb": 376,
+                "esp32c6_8mb": 376,
+                "esp32_16mb": 512
+            }
+        }
+    ]
 }

@@ -1,95 +1,134 @@
 {
-  "menuSection": "screens",
-  "configItem": [
-    {
-      "global": 0,
-      "name": "Nextion",
-      "type": "Reading",
-      "subtype": "Nextion",
-      "id": "nex",
-      "widget": "",
-      "page": "",
-      "descr": "",
-      "host": "192.168.1.10:5500",
-      "url": "nextion.tft",
-      "btn-uploadServer": "",      
-      "tx": 17,
-      "rx": 16,
-      "line": 2,
-      "speed": 9600,
-      "uploadTelegram": 1,
-      "oldProt_v11": 0
-    }
-  ],
-  "about": {
-    "authorName": "Bubnov Mikhail",
-    "authorContact": "https://t.me/Mit4bmw",
-    "authorGit": "https://github.com/Mit4el",
-    "specialThanks": "",
-    "moduleName": "Nextion",
-    "moduleVersion": "2.0",
-    "usedRam": {
-      "esp32_4mb": 152,
-      "esp8266_4mb": 152
+    "menuSection": "screens",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Nextion",
+            "type": "Reading",
+            "subtype": "Nextion",
+            "id": "nex",
+            "widget": "",
+            "page": "",
+            "descr": "",
+            "host": "192.168.1.10:5500",
+            "url": "nextion.tft",
+            "btn-uploadServer": "",
+            "tx": 17,
+            "rx": 16,
+            "line": 2,
+            "speed": 9600,
+            "uploadTelegram": 1,
+            "oldProt_v11": 0
+        }
+    ],
+    "about": {
+        "authorName": "Bubnov Mikhail",
+        "authorContact": "https://t.me/Mit4bmw",
+        "authorGit": "https://github.com/Mit4el",
+        "specialThanks": "",
+        "moduleName": "Nextion",
+        "moduleVersion": "2.0",
+        "title": "Nextion",
+        "moduleDesc": "загрузка прошивки в дисплей Nextion. Команда для запуска обновления дисплея: Nextion.Update(); ",
+        "propInfo": {
+            "tx": "TX пин",
+            "rx": "RX пин",
+            "speed": "Скорость UART",
+            "line": "Актуально только для ESP32: номер линии hardUART. =2 rx=16 tx=17, для SoftwarwSerial в ESP32 line = -1",
+            "host": "Сервер обновления. Можно использовать LiveServer из VisualCode, указывать ip адрес",
+            "url": "файл прошивки экрана, указывать с расширением, например nextion.tft или iotm/test.tft",
+            "uploadTelegram": "1 - разрешает прошивать экран через модуль Telegram_v2",
+            "oldProt_v11": "0 - По умолчанию используется более быстрый протокол версии 1.2 (не официальный), 1 - Использовать старый протокол версии 1.1 для прошивки экрана.",
+            "btn-uploadServer": "Кнопка загрузки прошивки с сервера LiveServer или другого по ip"
+        },
+        "funcInfo": [
+            {
+                "name": "Update",
+                "descr": "Функция сценария для загрузки прошивки с сервера LiveServer или другого по ip",
+                "params": []
+            },
+            {
+                "name": "printFFF",
+                "descr": "Отправить в UART текстовую строку и hex метку 3 байта 0xFF0xFF0xFF. Напимер nex.printFFF(\"auto.val=1\",0)",
+                "params": [
+                    "Строка текста",
+                    "1 - обернуть строку в кавычки, 0 - отправить без кавычек"
+                ]
+            },
+            {
+                "name": "printFFF",
+                "descr": "Отправить в UART текстовую строку и hex метку 3 байта 0xFF0xFF0xFF. Напимер nex.printFFF(\"t1.txt=\", ID_vidget + \" °\", 1);",
+                "params": [
+                    "Строка текста",
+                    "ID Виджета или любое значение",
+                    "1 - обернуть строку в кавычки, 0 - отправить без кавычек"
+                ]
+            },
+            {
+                "name": "printRusFFF",
+                "descr": "Отправить в UART текстовую строку и hex метку 3 байта 0xFF0xFF0xFF. С предварительной конвертацией русских букв (преобразуем в кодировку ISO-8859-5)",
+                "params": [
+                    "Строка текста",
+                    "1 - обернуть строку в кавычки, 0 - отправить без кавычек"
+                ]
+            },
+            {
+                "name": "printRusFFF",
+                "descr": "Отправить в UART текстовую строку и hex метку 3 байта 0xFF0xFF0xFF. С предварительной конвертацией русских букв (преобразуем в кодировку ISO-8859-5)",
+                "params": [
+                    "Строка текста",
+                    "ID Виджета или любое значение",
+                    "1 - обернуть строку в кавычки, 0 - отправить без кавычек"
+                ]
+            }
+        ]
     },
-    "title": "Nextion",
-    "moduleDesc": "загрузка прошивки в дисплей Nextion. Команда для запуска обновления дисплея: Nextion.Update(); ",
-    "propInfo": {
-      "tx": "TX пин",
-      "rx": "RX пин",
-      "speed": "Скорость UART",
-      "line": "Актуально только для ESP32: номер линии hardUART. =2 rx=16 tx=17, для SoftwarwSerial в ESP32 line = -1",
-      "host": "Сервер обновления. Можно использовать LiveServer из VisualCode, указывать ip адрес",
-      "url": "файл прошивки экрана, указывать с расширением, например nextion.tft или iotm/test.tft",
-      "uploadTelegram": "1 - разрешает прошивать экран через модуль Telegram_v2",
-      "oldProt_v11": "0 - По умолчанию используется более быстрый протокол версии 1.2 (не официальный), 1 - Использовать старый протокол версии 1.1 для прошивки экрана.",
-      "btn-uploadServer": "Кнопка загрузки прошивки с сервера LiveServer или другого по ip"
+    "defActive": false,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": []
     },
-    "funcInfo": [
+    "sizeInfo": [
         {
-            "name": "Update",
-            "descr": "Функция сценария для загрузки прошивки с сервера LiveServer или другого по ip",
-            "params": []
-        },
-        {
-            "name": "printFFF",
-            "descr": "Отправить в UART текстовую строку и hex метку 3 байта 0xFF0xFF0xFF. Напимер nex.printFFF(\"auto.val=1\",0)",
-            "params": [
-                "Строка текста",
-                "1 - обернуть строку в кавычки, 0 - отправить без кавычек"
-            ]
-        },
-        {
-          "name": "printFFF",
-          "descr": "Отправить в UART текстовую строку и hex метку 3 байта 0xFF0xFF0xFF. Напимер nex.printFFF(\"t1.txt=\", ID_vidget + \" °\", 1);",
-          "params": [
-              "Строка текста",
-              "ID Виджета или любое значение",
-              "1 - обернуть строку в кавычки, 0 - отправить без кавычек"
-          ]
-        },
-        {
-            "name": "printRusFFF",
-            "descr": "Отправить в UART текстовую строку и hex метку 3 байта 0xFF0xFF0xFF. С предварительной конвертацией русских букв (преобразуем в кодировку ISO-8859-5)",
-            "params": [
-                "Строка текста",
-                "1 - обернуть строку в кавычки, 0 - отправить без кавычек"
-            ]
-        },
-        {
-          "name": "printRusFFF",
-          "descr": "Отправить в UART текстовую строку и hex метку 3 байта 0xFF0xFF0xFF. С предварительной конвертацией русских букв (преобразуем в кодировку ISO-8859-5)",
-          "params": [
-              "Строка текста",
-              "ID Виджета или любое значение",
-              "1 - обернуть строку в кавычки, 0 - отправить без кавычек"
-          ]
+            "moduleVersion": "2.0",
+            "usedFLASH": {
+                "esp8266_1mb": "-",
+                "esp8266_1mb_ota": "-",
+                "esp8266_4mb": "-",
+                "esp32_4mb": 155096,
+                "esp32_4mb3f": 155096,
+                "esp8266_16mb": "-",
+                "esp32cam_4mb": 155988,
+                "esp32s2_4mb": 161672,
+                "esp32s3_16mb": 151124,
+                "esp32c3m_4mb": 169872,
+                "esp8266_2mb": "-",
+                "esp8266_2mb_ota": "-",
+                "esp8285_1mb": "-",
+                "esp8285_1mb_ota": "-",
+                "esp32c6_4mb": "-",
+                "esp32c6_8mb": "-",
+                "esp32_16mb": 155112
+            },
+            "usedRAM": {
+                "esp8266_1mb": "-",
+                "esp8266_1mb_ota": "-",
+                "esp8266_4mb": "-",
+                "esp32_4mb": 1464,
+                "esp32_4mb3f": 1464,
+                "esp8266_16mb": "-",
+                "esp32cam_4mb": 1464,
+                "esp32s2_4mb": 1560,
+                "esp32s3_16mb": 1568,
+                "esp32c3m_4mb": 1256,
+                "esp8266_2mb": "-",
+                "esp8266_2mb_ota": "-",
+                "esp8285_1mb": "-",
+                "esp8285_1mb_ota": "-",
+                "esp32c6_4mb": "-",
+                "esp32c6_8mb": "-",
+                "esp32_16mb": 1464
+            }
         }
     ]
-  },
-  "defActive": false,
-  "usedLibs": {
-    "esp32*": [],
-    "esp82*": []
-  }
 }

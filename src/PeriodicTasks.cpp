@@ -121,7 +121,7 @@ String ESP32GetResetReason(uint32_t cpu_no) {
     }
 }
 #endif
-#if defined(esp32_4mb) || defined(esp32_4mb3f) || defined(esp32_16mb) || defined(esp32cam_4mb)
+#if defined(esp32_4mb) || defined(esp32_4mb3f) || defined(esp32_16mb) || defined(esp32cam_4mb) || defined(esp32_wifirep)
 String ESP_getResetReason(void) {
   //  return ESP32GetResetReason(0);  // CPU 0
     esp_reset_reason_t esp_reason = esp_reset_reason();

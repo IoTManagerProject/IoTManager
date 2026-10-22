@@ -24,10 +24,6 @@
         "specialThanks": "@AVAKS",
         "moduleName": "GoogleSheet",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 10,
-            "esp8266_4mb": 10
-        },
         "title": "Логирование в Google таблицы",
         "moduleDesc": "Расширение позволяющее логировать любую величину в Google таблицы. Инструкция https://drive.google.com/file/d/1VuI06arObNfH3rsOSHKww1tyhfgqXd9F/view?usp=sharing",
         "propInfo": {
@@ -60,5 +56,48 @@
     "usedLibs": {
         "esp32*": [],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 2220,
+                "esp32_4mb": 127620,
+                "esp8266_4mb": 2220,
+                "esp32_4mb3f": 127620,
+                "esp8266_16mb": 2220,
+                "esp32cam_4mb": 127932,
+                "esp32s2_4mb": 125876,
+                "esp32s3_16mb": 124096,
+                "esp32c3m_4mb": 132140,
+                "esp8266_1mb_ota": 2220,
+                "esp8266_2mb": 2332,
+                "esp8266_2mb_ota": 2332,
+                "esp8285_1mb": 2236,
+                "esp8285_1mb_ota": 2236,
+                "esp32c6_4mb": 94406,
+                "esp32c6_8mb": 94406,
+                "esp32_16mb": 127624
+            },
+            "usedRAM": {
+                "esp8266_1mb": 96,
+                "esp32_4mb": 960,
+                "esp8266_4mb": 96,
+                "esp32_4mb3f": 960,
+                "esp8266_16mb": 96,
+                "esp32cam_4mb": 960,
+                "esp32s2_4mb": 960,
+                "esp32s3_16mb": 960,
+                "esp32c3m_4mb": 976,
+                "esp8266_1mb_ota": 96,
+                "esp8266_2mb": 80,
+                "esp8266_2mb_ota": 80,
+                "esp8285_1mb": 96,
+                "esp8285_1mb_ota": 96,
+                "esp32c6_4mb": 552,
+                "esp32c6_8mb": 552,
+                "esp32_16mb": 960
+            }
+        }
+    ]
 }

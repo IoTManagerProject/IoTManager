@@ -35,10 +35,6 @@
         "specialThanks": "",
         "moduleName": "Hdc1080",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "subTypes": [
             "Hdc1080t",
             "Hdc1080h"
@@ -58,5 +54,48 @@
         "esp82*": [
             "ClosedCube HDC1080"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 2876,
+                "esp32_4mb": 8468,
+                "esp8266_4mb": 2876,
+                "esp32_4mb3f": 8484,
+                "esp8266_16mb": 2876,
+                "esp32cam_4mb": 8664,
+                "esp32s2_4mb": 8320,
+                "esp32s3_16mb": 8320,
+                "esp32c3m_4mb": 8354,
+                "esp8266_1mb_ota": 2892,
+                "esp8266_2mb": 2888,
+                "esp8266_2mb_ota": 2888,
+                "esp8285_1mb": 2876,
+                "esp8285_1mb_ota": 2892,
+                "esp32c6_4mb": 2178,
+                "esp32c6_8mb": 2178,
+                "esp32_16mb": 8452
+            },
+            "usedRAM": {
+                "esp8266_1mb": 36,
+                "esp32_4mb": 8,
+                "esp8266_4mb": 36,
+                "esp32_4mb3f": 8,
+                "esp8266_16mb": 36,
+                "esp32cam_4mb": 8,
+                "esp32s2_4mb": 8,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 8,
+                "esp8266_1mb_ota": 44,
+                "esp8266_2mb": 32,
+                "esp8266_2mb_ota": 32,
+                "esp8285_1mb": 36,
+                "esp8285_1mb_ota": 44,
+                "esp32c6_4mb": 8,
+                "esp32c6_8mb": 8,
+                "esp32_16mb": 8
+            }
+        }
+    ]
 }

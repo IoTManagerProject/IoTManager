@@ -1,0 +1,353 @@
+{
+    "esp8266_1mb": [
+        {
+            "FIRMWARE_VERSION": "462.0000",
+            "datetime": "01.09.2026 10:22:25",
+            "baseline_flash": 448947,
+            "baseline_ram": 37276,
+            "total_flash": 761840,
+            "total_ram": 81920,
+            "total_fs": 262144
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:17:03",
+            "baseline_flash": 470459,
+            "baseline_ram": 37720,
+            "total_flash": 761840,
+            "total_ram": 81920,
+            "total_fs": 262144
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:31:08",
+            "baseline_flash": 470459,
+            "baseline_ram": 37720,
+            "total_flash": 761840,
+            "total_ram": 81920,
+            "total_fs": 262144
+        }
+    ],
+    "esp8266_1mb_ota": [
+        {
+            "baseline_flash": 448951,
+            "baseline_ram": 37280,
+            "total_flash": 958448,
+            "total_ram": 81920,
+            "total_fs": 65536
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:15:33",
+            "baseline_flash": 470463,
+            "baseline_ram": 37724,
+            "total_flash": 958448,
+            "total_ram": 81920,
+            "total_fs": 65536
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:34:04",
+            "baseline_flash": 470463,
+            "baseline_ram": 37724,
+            "total_flash": 958448,
+            "total_ram": 81920,
+            "total_fs": 65536
+        }
+    ],
+    "esp8266_4mb": [
+        {
+            "baseline_flash": 448947,
+            "baseline_ram": 37276,
+            "total_flash": 1044464,
+            "total_ram": 81920,
+            "total_fs": 2072576
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:39:16",
+            "baseline_flash": 470459,
+            "baseline_ram": 37720,
+            "total_flash": 1044464,
+            "total_ram": 81920,
+            "total_fs": 1024000
+        }
+    ],
+    "esp32_4mb": [
+        {
+            "baseline_flash": 1078401,
+            "baseline_ram": 49244,
+            "total_flash": 1310720,
+            "total_ram": 327680,
+            "total_fs": 1441792
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:41:26",
+            "baseline_flash": 1119205,
+            "baseline_ram": 48400,
+            "total_flash": 1310720,
+            "total_ram": 327680,
+            "total_fs": 1441792
+        }
+    ],
+    "esp32_4mb3f": [
+        {
+            "baseline_flash": 1078401,
+            "baseline_ram": 49244,
+            "total_flash": 1572864,
+            "total_ram": 327680,
+            "total_fs": 983040
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:42:56",
+            "baseline_flash": 1119205,
+            "baseline_ram": 48400,
+            "total_flash": 1572864,
+            "total_ram": 327680,
+            "total_fs": 983040
+        }
+    ],
+    "esp8266_16mb": [
+        {
+            "baseline_flash": 448951,
+            "baseline_ram": 37280,
+            "total_flash": 1044464,
+            "total_ram": 81920,
+            "total_fs": 14655488
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:40:02",
+            "baseline_flash": 470459,
+            "baseline_ram": 37720,
+            "total_flash": 1044464,
+            "total_ram": 81920,
+            "total_fs": 14655488
+        }
+    ],
+    "esp32cam_4mb": [
+        {
+            "baseline_flash": 1096661,
+            "baseline_ram": 49332,
+            "total_flash": 3145728,
+            "total_ram": 327680,
+            "total_fs": 917504
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:44:36",
+            "baseline_flash": 1139153,
+            "baseline_ram": 48488,
+            "total_flash": 3145728,
+            "total_ram": 327680,
+            "total_fs": 917504
+        }
+    ],
+    "esp32s2_4mb": [
+        {
+            "baseline_flash": 1024226,
+            "baseline_ram": 55232,
+            "total_flash": 1310720,
+            "total_ram": 327680,
+            "total_fs": 1441792
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:47:32",
+            "baseline_flash": 1065058,
+            "baseline_ram": 54396,
+            "total_flash": 1310720,
+            "total_ram": 327680,
+            "total_fs": 1441792
+        }
+    ],
+    "esp32s3_16mb": [
+        {
+            "baseline_flash": 1054833,
+            "baseline_ram": 60556,
+            "total_flash": 4718592,
+            "total_ram": 327680,
+            "total_fs": 7208960
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:51:48",
+            "baseline_flash": 1095801,
+            "baseline_ram": 59720,
+            "total_flash": 4718592,
+            "total_ram": 327680,
+            "total_fs": 7208960
+        }
+    ],
+    "esp32c3m_4mb": [
+        {
+            "baseline_flash": 1021590,
+            "baseline_ram": 42244,
+            "total_flash": 1572864,
+            "total_ram": 327680,
+            "total_fs": 983040
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:49:03",
+            "baseline_flash": 1068062,
+            "baseline_ram": 41404,
+            "total_flash": 1572864,
+            "total_ram": 327680,
+            "total_fs": 983040
+        }
+    ],
+    "esp8266_2mb": [
+        {
+            "baseline_flash": 453203,
+            "baseline_ram": 37412,
+            "total_flash": 1044464,
+            "total_ram": 81920,
+            "total_fs": 1024000
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:36:24",
+            "baseline_flash": 474431,
+            "baseline_ram": 37828,
+            "total_flash": 1044464,
+            "total_ram": 81920,
+            "total_fs": 1024000
+        }
+    ],
+    "esp8266_2mb_ota": [
+        {
+            "baseline_flash": 453207,
+            "baseline_ram": 37416,
+            "total_flash": 1044464,
+            "total_ram": 81920,
+            "total_fs": 241664
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:37:47",
+            "baseline_flash": 474435,
+            "baseline_ram": 37840,
+            "total_flash": 1044464,
+            "total_ram": 81920,
+            "total_fs": 241664
+        }
+    ],
+    "esp8285_1mb": [
+        {
+            "baseline_flash": 448963,
+            "baseline_ram": 37276,
+            "total_flash": 761840,
+            "total_ram": 81920,
+            "total_fs": 262144
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:38:31",
+            "baseline_flash": 470475,
+            "baseline_ram": 37720,
+            "total_flash": 761840,
+            "total_ram": 81920,
+            "total_fs": 262144
+        }
+    ],
+    "esp8285_1mb_ota": [
+        {
+            "baseline_flash": 448967,
+            "baseline_ram": 37280,
+            "total_flash": 958448,
+            "total_ram": 81920,
+            "total_fs": 65536
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:34:53",
+            "baseline_flash": 470479,
+            "baseline_ram": 37724,
+            "total_flash": 958448,
+            "total_ram": 81920,
+            "total_fs": 65536
+        }
+    ],
+    "esp32c6_4mb": [
+        {
+            "baseline_flash": 1247460,
+            "baseline_ram": 40460,
+            "total_flash": 1572864,
+            "total_ram": 327680,
+            "total_fs": 983040
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 11:20:33",
+            "baseline_flash": 1284266,
+            "baseline_ram": 39964,
+            "total_flash": 1572864,
+            "total_ram": 327680,
+            "total_fs": 983040
+        }
+    ],
+    "esp32c6_8mb": [
+        {
+            "baseline_flash": 1247462,
+            "baseline_ram": 40460,
+            "total_flash": 3072000,
+            "total_ram": 327680,
+            "total_fs": 1536000
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 11:23:53",
+            "baseline_flash": 1284268,
+            "baseline_ram": 39964,
+            "total_flash": 3072000,
+            "total_ram": 327680,
+            "total_fs": 1536000
+        }
+    ],
+    "bk7231n": {
+        "baseline_flash": 822232,
+        "baseline_ram": 96364,
+        "total_flash": 1083136,
+        "total_ram": 262144,
+        "total_fs": 151552
+    },
+    "esp32_16mb": [
+        {
+            "baseline_flash": 1078401,
+            "baseline_ram": 49244,
+            "total_flash": 4718592,
+            "total_ram": 327680,
+            "total_fs": 7208960
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:53:26",
+            "baseline_flash": 1119205,
+            "baseline_ram": 48400,
+            "total_flash": 4718592,
+            "total_ram": 327680,
+            "total_fs": 7208960
+        }
+    ],
+    "esp32_wifirep": [
+        {
+            "baseline_flash": 768125,
+            "baseline_ram": 40496,
+            "total_flash": 1572864,
+            "total_ram": 327680,
+            "total_fs": 983040
+        },
+        {
+            "FIRMWARE_VERSION": "463.2226",
+            "datetime": "21.09.2026 10:59:36",
+            "baseline_flash": 798009,
+            "baseline_ram": 39644,
+            "total_flash": 1572864,
+            "total_ram": 327680,
+            "total_fs": 983040
+        }
+    ]
+}

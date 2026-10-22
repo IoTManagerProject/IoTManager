@@ -1,50 +1,89 @@
 {
-  "menuSection": "sensors",
-  "configItem": [
-    {
-      "global": 0,
-      "name": "Аналоговый счетчик импульсов",
-      "type": "Writing",
-      "subtype": "Impulse",
-      "id": "impulse",
-      "widget": "anydataDef",
-      "page": "Счетчики",
-      "descr": "Импульсов",
-      "needSave": 0,
-      "int": 1,
-      "pin": 16,
-      "pinMode": "INPUT",
-      "debounceDelay": 3,
-      "multiply": 1,
-      "count": 0,
-      "timeORcount":0
-    }
-  ],
-  "about": {
-    "authorName": "AVAKS",
-    "authorContact": "https://t.me/@avaks_dev",
-    "authorGit": "https://github.com/avaksru",
-    "specialThanks": "",
-    "moduleName": "Impulse",
-    "moduleVersion": "3.0",
-    "usedRam": {
-      "esp32_4mb": 15,
-      "esp8266_4mb": 15
+    "menuSection": "sensors",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Аналоговый счетчик импульсов",
+            "type": "Writing",
+            "subtype": "Impulse",
+            "id": "impulse",
+            "widget": "anydataDef",
+            "page": "Счетчики",
+            "descr": "Импульсов",
+            "needSave": 0,
+            "int": 1,
+            "pin": 16,
+            "pinMode": "INPUT",
+            "debounceDelay": 3,
+            "multiply": 1,
+            "count": 0,
+            "timeORcount": 0
+        }
+    ],
+    "about": {
+        "authorName": "AVAKS",
+        "authorContact": "https://t.me/@avaks_dev",
+        "authorGit": "https://github.com/avaksru",
+        "specialThanks": "",
+        "moduleName": "Impulse",
+        "moduleVersion": "3.0",
+        "title": "Аналоговый счетчик импульсов. Датчик Холла ",
+        "moduleDesc": "Считает количество импульсов за период времени",
+        "propInfo": {
+            "int": "Период сбора импульсов  в секундах",
+            "pin": "Укажите GPIO номер пина для чтения импульсов",
+            "pinMode": "Может быть INPUT_PULLUP INPUT_PULLDOWN INPUT",
+            "debounceDelay": "Время обработки дребезга (миллисекунд)",
+            "count": "количество импульсов для выработки события c 1(единицей в данных). По событию можно прибавлять к другой переменной, так же домножить на multiply. Например 32имп = 0.1кВт => count=32, multiply=0.1",
+            "timeORcount": "0 - выдает количество импульсов за int секунд; 1 - выдает событие с 1 когда количество импульсов наберется равным count"
+        }
     },
-    "title": "Аналоговый счетчик импульсов. Датчик Холла ",
-    "moduleDesc": "Считает количество импульсов за период времени",
-    "propInfo": {
-      "int": "Период сбора импульсов  в секундах",
-      "pin": "Укажите GPIO номер пина для чтения импульсов",
-      "pinMode": "Может быть INPUT_PULLUP INPUT_PULLDOWN INPUT",
-      "debounceDelay": "Время обработки дребезга (миллисекунд)",
-      "count": "количество импульсов для выработки события c 1(единицей в данных). По событию можно прибавлять к другой переменной, так же домножить на multiply. Например 32имп = 0.1кВт => count=32, multiply=0.1",
-      "timeORcount": "0 - выдает количество импульсов за int секунд; 1 - выдает событие с 1 когда количество импульсов наберется равным count"
-    }
-  },
-  "defActive": true,
-  "usedLibs": {
-    "esp32*": [],
-    "esp82*": []
-  }
+    "defActive": true,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": []
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "3.0",
+            "usedFLASH": {
+                "esp8266_1mb": 1160,
+                "esp32_4mb": 1932,
+                "esp8266_4mb": 1160,
+                "esp32_4mb3f": 1932,
+                "esp8266_16mb": 1160,
+                "esp32cam_4mb": 1984,
+                "esp32s2_4mb": 1880,
+                "esp32s3_16mb": 1960,
+                "esp32c3m_4mb": 1950,
+                "esp8266_1mb_ota": 1160,
+                "esp8266_2mb": 1160,
+                "esp8266_2mb_ota": 1160,
+                "esp8285_1mb": 1160,
+                "esp8285_1mb_ota": 1160,
+                "esp32c6_4mb": 1990,
+                "esp32c6_8mb": 1988,
+                "esp32_16mb": 1936
+            },
+            "usedRAM": {
+                "esp8266_1mb": 0,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 0,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 0,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 0,
+                "esp8266_2mb": 0,
+                "esp8266_2mb_ota": 0,
+                "esp8285_1mb": 0,
+                "esp8285_1mb_ota": 0,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

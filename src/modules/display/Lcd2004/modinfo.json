@@ -40,10 +40,6 @@
         "specialThanks": "Sergey @Serghei63",
         "moduleName": "Lcd2004",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "moduleDesc": "Позволяет выводить на символьные экраны по указанным позициям значения других элементов конфигурации.",
         "propInfo": {
             "addr": "Адрес устройства на шине, обычно 0x27. Установите пустую строку для включения режима сканирования адресов на шине (результат в консоли).",
@@ -127,5 +123,48 @@
             "https://github.com/robotclass/RobotClass_LiquidCrystal_I2C",
             "marcoschwartz/LiquidCrystal_I2C@^1.1.4"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 5984,
+                "esp8266_1mb_ota": 6000,
+                "esp32_4mb": 11156,
+                "esp8266_4mb": 6000,
+                "esp32_4mb3f": 11172,
+                "esp8266_16mb": 5984,
+                "esp32cam_4mb": 11516,
+                "esp32s2_4mb": 11148,
+                "esp32s3_16mb": 11048,
+                "esp32c3m_4mb": 10516,
+                "esp8266_2mb": 6000,
+                "esp8266_2mb_ota": 6000,
+                "esp8285_1mb": 5984,
+                "esp8285_1mb_ota": 6000,
+                "esp32c6_4mb": 6890,
+                "esp32c6_8mb": 6896,
+                "esp32_16mb": 11168
+            },
+            "usedRAM": {
+                "esp8266_1mb": 216,
+                "esp8266_1mb_ota": 216,
+                "esp32_4mb": 16,
+                "esp8266_4mb": 216,
+                "esp32_4mb3f": 16,
+                "esp8266_16mb": 216,
+                "esp32cam_4mb": 16,
+                "esp32s2_4mb": 16,
+                "esp32s3_16mb": 8,
+                "esp32c3m_4mb": 8,
+                "esp8266_2mb": 200,
+                "esp8266_2mb_ota": 200,
+                "esp8285_1mb": 216,
+                "esp8285_1mb_ota": 216,
+                "esp32c6_4mb": 8,
+                "esp32c6_8mb": 8,
+                "esp32_16mb": 16
+            }
+        }
+    ]
 }

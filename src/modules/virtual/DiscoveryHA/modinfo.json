@@ -1,40 +1,80 @@
 {
-  "menuSection": "virtual_elments",
-  "configItem": [
-    {
-      "global": 0,
-      "name": "Discovery of HA",
-      "type": "Reading",
-      "subtype": "DiscoveryHA",
-      "id": "ha",
-      "widget": "",
-      "page": "",
-      "descr": "",
-      "topic": "homeassistant"
-    }
-  ],
-  "about": {
-    "authorName": "Bubnov Mikhail",
-    "authorContact": "https://t.me/Mit4bmw",
-    "authorGit": "https://github.com/Mit4el",
-    "specialThanks": "@AVAKS",
-    "moduleName": "DiscoveryHA",
-    "moduleVersion": "1.0",
-    "usedRam": {
-      "esp32_4mb": 15,
-      "esp8266_4mb": 15
+    "menuSection": "virtual_elments",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Discovery of HA",
+            "type": "Reading",
+            "subtype": "DiscoveryHA",
+            "id": "ha",
+            "widget": "",
+            "page": "",
+            "descr": "",
+            "topic": "homeassistant"
+        }
+    ],
+    "about": {
+        "authorName": "Bubnov Mikhail",
+        "authorContact": "https://t.me/Mit4bmw",
+        "authorGit": "https://github.com/Mit4el",
+        "specialThanks": "@AVAKS",
+        "moduleName": "DiscoveryHA",
+        "moduleVersion": "1.0",
+        "title": "DiscoveryHA",
+        "moduleDesc": "Модуль проброса данных в MQTT для HomeAssistant",
+        "propInfo": {
+            "topic": "Топик HomeAssistant"
+        }
     },
-    "title": "DiscoveryHA",
-    "moduleDesc": "Модуль проброса данных в MQTT для HomeAssistant",
-    "propInfo": {
-      "topic":"Топик HomeAssistant"
-    }
-    
-  },
-  "defActive": false,
-  "usedLibs": {
-    "esp32*": [],
-    "esp82*": [],
-    "bk72*": []
-  }
+    "defActive": false,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": [],
+        "bk72*": []
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "bk7231n": 9432,
+                "esp8266_1mb": 8192,
+                "esp32_4mb": 11016,
+                "esp8266_4mb": 8192,
+                "esp32_4mb3f": 11032,
+                "esp8266_16mb": 8192,
+                "esp32cam_4mb": 11156,
+                "esp32s2_4mb": 11144,
+                "esp32s3_16mb": 11040,
+                "esp32c3m_4mb": 9646,
+                "esp8266_1mb_ota": 8192,
+                "esp8266_2mb": 8140,
+                "esp8266_2mb_ota": 8140,
+                "esp8285_1mb": 8192,
+                "esp8285_1mb_ota": 8192,
+                "esp32c6_4mb": 10358,
+                "esp32c6_8mb": 10360,
+                "esp32_16mb": 11020
+            },
+            "usedRAM": {
+                "bk7231n": 0,
+                "esp8266_1mb": 932,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 932,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 932,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 924,
+                "esp8266_2mb": 912,
+                "esp8266_2mb_ota": 912,
+                "esp8285_1mb": 932,
+                "esp8285_1mb_ota": 924,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

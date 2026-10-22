@@ -28,12 +28,11 @@
         "exampleURL": "https://iotmanager.org/wiki",
         "specialThanks": "",
         "moduleName": "RTC",
-        "moduleDefines": ["mod_RtcDriver", "hardRTC=1"],
+        "moduleDefines": [
+            "mod_RtcDriver",
+            "hardRTC=1"
+        ],
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Часы реального времени",
         "moduleDesc": "Позволяет хранить и получать время из модуля с батарейкой.",
         "propInfo": {
@@ -60,7 +59,12 @@
                 "name": "setTime",
                 "descr": "Установить время через сценарии в формате сек, мин, час, день, мес, год.",
                 "params": [
-                    "сек", "мин", "час", "день", "мес", "год"
+                    "сек",
+                    "мин",
+                    "час",
+                    "день",
+                    "мес",
+                    "год"
                 ]
             },
             {
@@ -83,5 +87,48 @@
     "usedLibs": {
         "esp32*": [],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 9876,
+                "esp32_4mb": 16360,
+                "esp8266_4mb": 9876,
+                "esp32_4mb3f": 16376,
+                "esp8266_16mb": 9880,
+                "esp32cam_4mb": 17056,
+                "esp32s2_4mb": 16292,
+                "esp32s3_16mb": 16216,
+                "esp32c3m_4mb": 16016,
+                "esp8266_1mb_ota": 9876,
+                "esp8266_2mb": 9924,
+                "esp8266_2mb_ota": 9924,
+                "esp8285_1mb": 9892,
+                "esp8285_1mb_ota": 9892,
+                "esp32c6_4mb": 9370,
+                "esp32c6_8mb": 9372,
+                "esp32_16mb": 16356
+            },
+            "usedRAM": {
+                "esp8266_1mb": 216,
+                "esp32_4mb": 16,
+                "esp8266_4mb": 216,
+                "esp32_4mb3f": 16,
+                "esp8266_16mb": 220,
+                "esp32cam_4mb": 16,
+                "esp32s2_4mb": 8,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 8,
+                "esp8266_1mb_ota": 216,
+                "esp8266_2mb": 232,
+                "esp8266_2mb_ota": 232,
+                "esp8285_1mb": 216,
+                "esp8285_1mb_ota": 216,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 16
+            }
+        }
+    ]
 }

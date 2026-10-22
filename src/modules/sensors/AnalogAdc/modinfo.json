@@ -27,10 +27,6 @@
         "specialThanks": "",
         "moduleName": "AnalogAdc",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Аналоговый сенсор",
         "moduleDesc": "Позволяет получить текущее значение на аналоговом GPIO или усредненное для avgSteps измерений каждого вызова loop.",
         "propInfo": {
@@ -44,5 +40,50 @@
         "esp32*": [],
         "esp82*": [],
         "bk72*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "bk7231n": 672,
+                "esp8266_1mb": 708,
+                "esp32_4mb": 1240,
+                "esp8266_4mb": 708,
+                "esp32_4mb3f": 1256,
+                "esp8266_16mb": 708,
+                "esp32cam_4mb": 1280,
+                "esp32s2_4mb": 1232,
+                "esp32s3_16mb": 1272,
+                "esp32c3m_4mb": 1256,
+                "esp8266_1mb_ota": 708,
+                "esp8266_2mb": 724,
+                "esp8266_2mb_ota": 724,
+                "esp8285_1mb": 724,
+                "esp8285_1mb_ota": 724,
+                "esp32c6_4mb": 1292,
+                "esp32c6_8mb": 1296,
+                "esp32_16mb": 1232
+            },
+            "usedRAM": {
+                "bk7231n": 0,
+                "esp8266_1mb": 32,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 32,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 32,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 32,
+                "esp8266_2mb": 16,
+                "esp8266_2mb_ota": 16,
+                "esp8285_1mb": 32,
+                "esp8285_1mb_ota": 32,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

@@ -21,10 +21,6 @@
     "about": {
         "moduleName": "Smi2_m",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "moduleDesc": "Позволяет вывести индикацию на семисегментный индикатор по Modbus (Работает в Slave режиме, Read Holding Registers 0х03)",
         "propInfo": {
             "int": "Период времени в секундах обновления информации на экране по конкретному элементу.",
@@ -53,5 +49,32 @@
     "defActive": false,
     "usedLibs": {
         "esp32*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp32_4mb": 2516,
+                "esp32_4mb3f": 2516,
+                "esp32cam_4mb": 2612,
+                "esp32s2_4mb": 11648,
+                "esp32s3_16mb": 2480,
+                "esp32c3m_4mb": 11930,
+                "esp32c6_4mb": 2048,
+                "esp32c6_8mb": 2048,
+                "esp32_16mb": 2512
+            },
+            "usedRAM": {
+                "esp32_4mb": 64,
+                "esp32_4mb3f": 64,
+                "esp32cam_4mb": 64,
+                "esp32s2_4mb": 64,
+                "esp32s3_16mb": 64,
+                "esp32c3m_4mb": 56,
+                "esp32c6_4mb": 56,
+                "esp32c6_8mb": 56,
+                "esp32_16mb": 64
+            }
+        }
+    ]
 }

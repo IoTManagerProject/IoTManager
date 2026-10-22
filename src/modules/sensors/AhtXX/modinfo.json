@@ -37,10 +37,6 @@
         "specialThanks": "Sergey @Serghei63, @avaks_dev",
         "moduleName": "AhtXX",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "subTypes": [
             "AhtXXt",
             "AhtXXh"
@@ -62,5 +58,48 @@
         "esp82*": [
             "https://github.com/enjoyneering/AHTxx.git"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 5980,
+                "esp32_4mb": 11944,
+                "esp8266_4mb": 5780,
+                "esp32_4mb3f": 11960,
+                "esp8266_16mb": 5780,
+                "esp32cam_4mb": 12228,
+                "esp32s2_4mb": 11816,
+                "esp32s3_16mb": 11800,
+                "esp32c3m_4mb": 11974,
+                "esp8266_1mb_ota": 5780,
+                "esp8266_2mb": 5804,
+                "esp8266_2mb_ota": 5804,
+                "esp8285_1mb": 5780,
+                "esp8285_1mb_ota": 5780,
+                "esp32c6_4mb": 5806,
+                "esp32c6_8mb": 5816,
+                "esp32_16mb": 11940
+            },
+            "usedRAM": {
+                "esp8266_1mb": 204,
+                "esp32_4mb": 32,
+                "esp8266_4mb": 172,
+                "esp32_4mb3f": 32,
+                "esp8266_16mb": 172,
+                "esp32cam_4mb": 32,
+                "esp32s2_4mb": 32,
+                "esp32s3_16mb": 24,
+                "esp32c3m_4mb": 16,
+                "esp8266_1mb_ota": 180,
+                "esp8266_2mb": 156,
+                "esp8266_2mb_ota": 164,
+                "esp8285_1mb": 172,
+                "esp8285_1mb_ota": 180,
+                "esp32c6_4mb": 16,
+                "esp32c6_8mb": 16,
+                "esp32_16mb": 32
+            }
+        }
+    ]
 }

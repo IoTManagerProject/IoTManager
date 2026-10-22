@@ -23,10 +23,6 @@
         "specialThanks": "",
         "moduleName": "EspCam",
         "moduleVersion": "3.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Camera OV2640 (ESPcam)",
         "moduleDesc": "Предназначен для специальной платы esp32 со встроенной камерой. Добавляет в прошивку функцию создания фото и сохранения на SD при наличии. По адресу /getpic можно получить текущее фото (работает в том числе без SD карты). Отправка фото в телеграмм через модуль Telegram_v2",
         "propInfo": {
@@ -41,16 +37,20 @@
                 "descr": "Сохранить снимок на SD",
                 "params": []
             },
-            {   
+            {
                 "name": "sendFoto",
                 "descr": "Отправить фото с esp-CAM в телеграмм",
-                "params": [""]
+                "params": [
+                    ""
+                ]
             },
-            {   
+            {
                 "name": "editFoto",
                 "descr": "Отредактировать последнее отправленное фото в телеграмм",
-                "params": [""]
-            }, 
+                "params": [
+                    ""
+                ]
+            },
             {
                 "name": "flashOn",
                 "descr": "Включить вспышку",
@@ -68,5 +68,16 @@
         "esp32cam_4mb": [
             "espressif/esp32-camera @ ^2.0.0"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "3.0",
+            "usedFLASH": {
+                "esp32cam_4mb": 125184
+            },
+            "usedRAM": {
+                "esp32cam_4mb": 4988
+            }
+        }
+    ]
 }

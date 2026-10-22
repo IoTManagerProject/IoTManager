@@ -72,5 +72,48 @@
         "esp82*": [
             "Nova Fitness Sds dust sensors library@1.5.1"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "2.0 - можно переназначать пины, за один опрос - обновляются два элемента",
+            "usedFLASH": {
+                "esp8266_1mb": 11840,
+                "esp32_4mb": 8948,
+                "esp8266_4mb": 11840,
+                "esp32_4mb3f": 8948,
+                "esp8266_16mb": 11840,
+                "esp32cam_4mb": 9348,
+                "esp32s2_4mb": 17964,
+                "esp32s3_16mb": 8960,
+                "esp32c3m_4mb": 18650,
+                "esp8266_1mb_ota": 11856,
+                "esp8266_2mb": 11836,
+                "esp8266_2mb_ota": 11836,
+                "esp8285_1mb": 11856,
+                "esp8285_1mb_ota": 11856,
+                "esp32c6_4mb": 9082,
+                "esp32c6_8mb": 9082,
+                "esp32_16mb": 8944
+            },
+            "usedRAM": {
+                "esp8266_1mb": 1180,
+                "esp32_4mb": 400,
+                "esp8266_4mb": 1180,
+                "esp32_4mb3f": 400,
+                "esp8266_16mb": 1180,
+                "esp32cam_4mb": 400,
+                "esp32s2_4mb": 416,
+                "esp32s3_16mb": 400,
+                "esp32c3m_4mb": 408,
+                "esp8266_1mb_ota": 1180,
+                "esp8266_2mb": 1148,
+                "esp8266_2mb_ota": 1148,
+                "esp8285_1mb": 1180,
+                "esp8285_1mb_ota": 1180,
+                "esp32c6_4mb": 384,
+                "esp32c6_8mb": 384,
+                "esp32_16mb": 400
+            }
+        }
+    ]
 }

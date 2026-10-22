@@ -26,10 +26,6 @@
         "specialThanks": "",
         "moduleName": "Ads1115",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Датчик напряжения ADS1115",
         "moduleDesc": "Позволяет получить относительную величину напряжения на понижающем трансформаторе.",
         "propInfo": {
@@ -47,5 +43,48 @@
         "esp82*": [
             "adafruit/Adafruit ADS1X15 @ ^2.3.0"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 3504,
+                "esp32_4mb": 9140,
+                "esp8266_4mb": 3504,
+                "esp32_4mb3f": 9140,
+                "esp8266_16mb": 3504,
+                "esp32cam_4mb": 9408,
+                "esp32s2_4mb": 9020,
+                "esp32s3_16mb": 8996,
+                "esp32c3m_4mb": 8786,
+                "esp8266_1mb_ota": 3520,
+                "esp8266_2mb": 3520,
+                "esp8266_2mb_ota": 3520,
+                "esp8285_1mb": 3504,
+                "esp8285_1mb_ota": 3520,
+                "esp32c6_4mb": 2622,
+                "esp32c6_8mb": 2624,
+                "esp32_16mb": 9100
+            },
+            "usedRAM": {
+                "esp8266_1mb": 80,
+                "esp32_4mb": 8,
+                "esp8266_4mb": 80,
+                "esp32_4mb3f": 8,
+                "esp8266_16mb": 80,
+                "esp32cam_4mb": 8,
+                "esp32s2_4mb": 8,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 80,
+                "esp8266_2mb": 64,
+                "esp8266_2mb_ota": 64,
+                "esp8285_1mb": 80,
+                "esp8285_1mb_ota": 80,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 8
+            }
+        }
+    ]
 }

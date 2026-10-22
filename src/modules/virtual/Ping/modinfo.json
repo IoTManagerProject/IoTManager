@@ -1,66 +1,99 @@
 {
-  "menuSection": "virtual_elments",
-
-  "configItem": [
-    {
-      "global": 0,
-      "name": "Ping",
-      "type": "Reading",
-      "subtype": "Ping",
-      "id": "ping",
-      "needSave": 0,
-      "widget": "nil",
-      "page": "",
-      "descr": "",
-      "ip": "8.8.8.8",
-      "timeout": 5, 
-      "interval": 1,
-      "data_size": 0,
-      "count": 0,
-      "tos": 0   
-    }
-  ],
-
-  "about": {
-    "authorName": "Mikhail Bubnov",
-    "authorContact": "https://t.me/Mit4bmw",
-    "authorGit": "https://github.com/Mit4el",
-    "specialThanks": "",
-    "moduleName": "Ping",
-    "moduleVersion": "1.2",
-    "usedRam": {
-      "esp32_4mb": 15,
-      "esp8266_4mb": 15
+    "menuSection": "virtual_elments",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Ping",
+            "type": "Reading",
+            "subtype": "Ping",
+            "id": "ping",
+            "needSave": 0,
+            "widget": "nil",
+            "page": "",
+            "descr": "",
+            "ip": "8.8.8.8",
+            "timeout": 5,
+            "interval": 1,
+            "data_size": 0,
+            "count": 0,
+            "tos": 0
+        }
+    ],
+    "about": {
+        "authorName": "Mikhail Bubnov",
+        "authorContact": "https://t.me/Mit4bmw",
+        "authorGit": "https://github.com/Mit4el",
+        "specialThanks": "",
+        "moduleName": "Ping",
+        "moduleVersion": "1.2",
+        "title": "Пинг",
+        "moduleDesc": "Пинг - проверка доступности сетевого адреса",
+        "propInfo": {
+            "ip": "IP адрес (8.8.8.8) или имя хоста (www.google.com) кого пингуем",
+            "timeout": "Тайм-аут. Только для ESP32. Если 0, то пингует со значением по умолчанию",
+            "interval": "Интервал. Только для ESP32. Если 0, то пингует со значением по умолчанию",
+            "data_size": "Размер пакета. Только для ESP32. Если 0, то пингует со значением по умолчанию",
+            "count": "Количество пакетов. Только для ESP32. Если 0, то пингует со значением по умолчанию",
+            "tos": "Type Of Service. Только для ESP32. Если 0, то пингует со значением по умолчанию"
+        },
+        "funcInfo": [
+            {
+                "name": "ping",
+                "descr": "Проверить пинг. после вызова данной функции из сценария результат будет в значении самого модуля. if ping21==1 then ЕСТЬ_пинг else НЕТ_пинга",
+                "params": [
+                    "IP адрес или имя хоста"
+                ]
+            }
+        ]
     },
-    "title": "Пинг",
-    "moduleDesc": "Пинг - проверка доступности сетевого адреса",
-    "propInfo": {
-      "ip": "IP адрес (8.8.8.8) или имя хоста (www.google.com) кого пингуем",
-      "timeout": "Тайм-аут. Только для ESP32. Если 0, то пингует со значением по умолчанию", 
-      "interval": "Интервал. Только для ESP32. Если 0, то пингует со значением по умолчанию",
-      "data_size": "Размер пакета. Только для ESP32. Если 0, то пингует со значением по умолчанию",
-      "count": "Количество пакетов. Только для ESP32. Если 0, то пингует со значением по умолчанию",
-      "tos": "Type Of Service. Только для ESP32. Если 0, то пингует со значением по умолчанию"
-    },
-    "funcInfo": [
-      {
-          "name": "ping",
-          "descr": "Проверить пинг. после вызова данной функции из сценария результат будет в значении самого модуля. if ping21==1 then ЕСТЬ_пинг else НЕТ_пинга",
-          "params": [
-            "IP адрес или имя хоста"
-          ]
-      }
-    ]
-  },
-
-  "defActive": true,
-
+    "defActive": true,
     "usedLibs": {
-      "esp32*": [
-          
-      ],
-      "esp82*": [
-          "https://github.com/dancol90/ESP8266Ping"
-      ]
-  }
+        "esp32*": [],
+        "esp82*": [
+            "https://github.com/dancol90/ESP8266Ping"
+        ]
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.2",
+            "usedFLASH": {
+                "esp8266_1mb": 3464,
+                "esp32_4mb": 9948,
+                "esp8266_4mb": 3464,
+                "esp32_4mb3f": 9948,
+                "esp8266_16mb": 3464,
+                "esp32cam_4mb": 10064,
+                "esp32s2_4mb": 9536,
+                "esp32s3_16mb": 9524,
+                "esp32c3m_4mb": 9754,
+                "esp8266_1mb_ota": 3480,
+                "esp8266_2mb": 3648,
+                "esp8266_2mb_ota": 3648,
+                "esp8285_1mb": 3464,
+                "esp8285_1mb_ota": 3480,
+                "esp32c6_4mb": 8730,
+                "esp32c6_8mb": 8730,
+                "esp32_16mb": 9952
+            },
+            "usedRAM": {
+                "esp8266_1mb": 112,
+                "esp32_4mb": 120,
+                "esp8266_4mb": 112,
+                "esp32_4mb3f": 120,
+                "esp8266_16mb": 112,
+                "esp32cam_4mb": 120,
+                "esp32s2_4mb": 120,
+                "esp32s3_16mb": 120,
+                "esp32c3m_4mb": 120,
+                "esp8266_1mb_ota": 112,
+                "esp8266_2mb": 208,
+                "esp8266_2mb_ota": 208,
+                "esp8285_1mb": 112,
+                "esp8285_1mb_ota": 112,
+                "esp32c6_4mb": 120,
+                "esp32c6_8mb": 120,
+                "esp32_16mb": 120
+            }
+        }
+    ]
 }

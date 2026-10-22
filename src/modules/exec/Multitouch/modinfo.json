@@ -1,49 +1,88 @@
 {
-  "menuSection": "executive_devices",
-  "configItem": [
-    {
-      "global": 0,
-      "name": "Сенсорная кнопка",
-      "type": "Writing",
-      "subtype": "Multitouch",
-      "id": "impulse",
-      "widget": "anydataDef",
-      "page": "Кнопки",
-      "descr": "Количество нажатий",
-      "needSave": 0,
-      "int": 300,
-      "inv": 1,
-      "pin": 16,
-      "pinMode": "INPUT",
-      "debounceDelay": 50,
-      "PWMDelay": 500
-    }
-  ],
-  "about": {
-    "authorName": "AVAKS",
-    "authorContact": "https://t.me/@avaks_dev",
-    "authorGit": "https://github.com/avaksru",
-    "specialThanks": "",
-    "moduleName": "Multitouch",
-    "moduleVersion": "2.0",
-    "usedRam": {
-      "esp32_4mb": 15,
-      "esp8266_4mb": 15
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Сенсорная кнопка",
+            "type": "Writing",
+            "subtype": "Multitouch",
+            "id": "impulse",
+            "widget": "anydataDef",
+            "page": "Кнопки",
+            "descr": "Количество нажатий",
+            "needSave": 0,
+            "int": 300,
+            "inv": 1,
+            "pin": 16,
+            "pinMode": "INPUT",
+            "debounceDelay": 50,
+            "PWMDelay": 500
+        }
+    ],
+    "about": {
+        "authorName": "AVAKS",
+        "authorContact": "https://t.me/@avaks_dev",
+        "authorGit": "https://github.com/avaksru",
+        "specialThanks": "",
+        "moduleName": "Multitouch",
+        "moduleVersion": "2.0",
+        "title": "Модуль чтения состояния GPIO (pin)",
+        "moduleDesc": "Считает количество нажатий на выключатель без фиксации или сенсорную кнопку. При удержании кнопки нажатой - считает длительность нажатия. Позволяет реализовать логику работы: включения различных устройств в зависимости от количества нажатий, диммировать яркость удержанием выключателя нажатым, а так же счетчик импульсов,  дверной звонок, сенсорный выключатель, концевой выключатель, датчик открытия окна, и т.п.",
+        "propInfo": {
+            "int": "Интервал отправки времени удержания кнопки (миллисекунд)",
+            "pin": "Укажите GPIO номер пина для чтения состояний подключенной кнопки",
+            "inv": "Инверсия GPIO",
+            "pinMode": "Может быть INPUT_PULLUP INPUT_PULLDOWN INPUT",
+            "debounceDelay": "Время обработки дребезга (миллисекунд)",
+            "PWMDelay": "Время ожидания повторного нажатия. И время после которого начитается отсчет длительности непрерывного ражатия (миллисекунд)"
+        }
     },
-    "title": "Модуль чтения состояния GPIO (pin)",
-    "moduleDesc": "Считает количество нажатий на выключатель без фиксации или сенсорную кнопку. При удержании кнопки нажатой - считает длительность нажатия. Позволяет реализовать логику работы: включения различных устройств в зависимости от количества нажатий, диммировать яркость удержанием выключателя нажатым, а так же счетчик импульсов,  дверной звонок, сенсорный выключатель, концевой выключатель, датчик открытия окна, и т.п.",
-    "propInfo": {
-      "int": "Интервал отправки времени удержания кнопки (миллисекунд)",
-      "pin": "Укажите GPIO номер пина для чтения состояний подключенной кнопки",
-      "inv": "Инверсия GPIO",
-      "pinMode": "Может быть INPUT_PULLUP INPUT_PULLDOWN INPUT",
-      "debounceDelay": "Время обработки дребезга (миллисекунд)",
-      "PWMDelay": "Время ожидания повторного нажатия. И время после которого начитается отсчет длительности непрерывного ражатия (миллисекунд)"
-    }
-  },
-  "defActive": true,
-  "usedLibs": {
-    "esp32*": [],
-    "esp82*": []
-  }
+    "defActive": true,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": []
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "2.0",
+            "usedFLASH": {
+                "esp8266_1mb": 1652,
+                "esp8266_1mb_ota": 1448,
+                "esp32_4mb": 2492,
+                "esp8266_4mb": 1464,
+                "esp32_4mb3f": 2492,
+                "esp8266_16mb": 1448,
+                "esp32cam_4mb": 2556,
+                "esp32s2_4mb": 2440,
+                "esp32s3_16mb": 2456,
+                "esp32c3m_4mb": 2492,
+                "esp8266_2mb": 1464,
+                "esp8266_2mb_ota": 1464,
+                "esp8285_1mb": 1464,
+                "esp8285_1mb_ota": 1464,
+                "esp32c6_4mb": 2532,
+                "esp32c6_8mb": 2532,
+                "esp32_16mb": 2492
+            },
+            "usedRAM": {
+                "esp8266_1mb": 112,
+                "esp8266_1mb_ota": 92,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 84,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 84,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_2mb": 84,
+                "esp8266_2mb_ota": 76,
+                "esp8285_1mb": 84,
+                "esp8285_1mb_ota": 92,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

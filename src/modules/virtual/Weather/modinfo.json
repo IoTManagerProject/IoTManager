@@ -1,45 +1,84 @@
 {
-  "menuSection": "virtual_elments",
-  "configItem": [
-    {
-      "global": 0,
-      "name": "Погода",
-      "type": "Reading",
-      "subtype": "Weather",
-      "id": "Weather",
-      "needSave": 0,
-      "widget": "anydataDef",
-      "page": "Погода",
-      "descr": "",
-      "int": 3,
-      "location": "Moscow",
-      "param": "temp_C",
-      "round": 0,
-      "val": "..."
-    }
-  ],
-  "about": {
-    "authorName": "AVAKS",
-    "authorContact": "https://t.me/@avaks_dev",
-    "authorGit": "https://github.com/avaksru",
-    "specialThanks": "",
-    "moduleName": "Weather",
-    "moduleVersion": "1",
-    "usedRam": {
-      "esp32_4mb": 15,
-      "esp8266_4mb": 15
+    "menuSection": "virtual_elments",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Погода",
+            "type": "Reading",
+            "subtype": "Weather",
+            "id": "Weather",
+            "needSave": 0,
+            "widget": "anydataDef",
+            "page": "Погода",
+            "descr": "",
+            "int": 3,
+            "location": "Moscow",
+            "param": "temp_C",
+            "round": 0,
+            "val": "..."
+        }
+    ],
+    "about": {
+        "authorName": "AVAKS",
+        "authorContact": "https://t.me/@avaks_dev",
+        "authorGit": "https://github.com/avaksru",
+        "specialThanks": "",
+        "moduleName": "Weather",
+        "moduleVersion": "1",
+        "title": "Погода",
+        "moduleDesc": "Получение погоды из интернет",
+        "propInfo": {
+            "location": "Город.",
+            "param": "temp_C - температура, humidity - влажность, weatherCode - погодный код, sunrise - рассвет, sunset - закат, rangetempC - (-3...-10 C), temp_C_tomorrow - температура завтра, rangetempC_tomorrow - (-3...-10 C) на завтра",
+            "int": "Интервал запроса погоды в часах"
+        }
     },
-    "title": "Погода",
-    "moduleDesc": "Получение погоды из интернет",
-    "propInfo": {
-      "location": "Город.",
-      "param": "temp_C - температура, humidity - влажность, weatherCode - погодный код, sunrise - рассвет, sunset - закат, rangetempC - (-3...-10 C), temp_C_tomorrow - температура завтра, rangetempC_tomorrow - (-3...-10 C) на завтра",
-      "int": "Интервал запроса погоды в часах"
-    }
-  },
-  "defActive": false,
-  "usedLibs": {
-    "esp32*": [],
-    "esp82*": []
-  }
+    "defActive": false,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": []
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1",
+            "usedFLASH": {
+                "esp8266_1mb": 3876,
+                "esp32_4mb": 5984,
+                "esp8266_4mb": 3876,
+                "esp32_4mb3f": 5984,
+                "esp8266_16mb": 3876,
+                "esp32cam_4mb": 6104,
+                "esp32s2_4mb": 6016,
+                "esp32s3_16mb": 5984,
+                "esp32c3m_4mb": 5296,
+                "esp8266_1mb_ota": 3876,
+                "esp8266_2mb": 3968,
+                "esp8266_2mb_ota": 3968,
+                "esp8285_1mb": 3892,
+                "esp8285_1mb_ota": 3892,
+                "esp32c6_4mb": 5816,
+                "esp32c6_8mb": 5816,
+                "esp32_16mb": 5988
+            },
+            "usedRAM": {
+                "esp8266_1mb": 248,
+                "esp32_4mb": 8,
+                "esp8266_4mb": 248,
+                "esp32_4mb3f": 8,
+                "esp8266_16mb": 248,
+                "esp32cam_4mb": 8,
+                "esp32s2_4mb": 8,
+                "esp32s3_16mb": 8,
+                "esp32c3m_4mb": 8,
+                "esp8266_1mb_ota": 248,
+                "esp8266_2mb": 228,
+                "esp8266_2mb_ota": 236,
+                "esp8285_1mb": 248,
+                "esp8285_1mb_ota": 248,
+                "esp32c6_4mb": 8,
+                "esp32c6_8mb": 8,
+                "esp32_16mb": 8
+            }
+        }
+    ]
 }

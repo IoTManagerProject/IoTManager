@@ -13,10 +13,22 @@
 #include <Update.h>
 #include <vector>
 #include <typedef.h>
+#include <WiFi.h>
 #ifdef STANDARD_WEB_SERVER
 #include <WebServer.h>
 #endif 
 #include <HTTPClient.h>
+#endif
+
+// ВАЖНО (ESP8266): блок ASYNC_WEB_SERVER подключается ДО ESP8266WiFi.h.
+// ESPAsyncWebServer.h включает <lwip/tcpbase.h> (enum tcp_state: CLOSED, LISTEN, ...), а
+// esp8266-core объявляет такой же enum wl_tcp_state в wl_definitions.h только если
+// lwip/tcpbase.h ещё не подключён (guard LWIP_HDR_TCPBASE_H). Если ESP8266WiFi.h подключить
+// первым, сборка падает с "error: 'CLOSED' conflicts with a previous declaration".
+#ifdef ASYNC_WEB_SERVER
+#include <ESPAsyncWebServer.h>
+#include "WebServerCompat.h"  // обёртка HTTP с интерфейсом синхронного сервера (для StandWebServer.cpp и модулей)
+#include "AsyncWebServer.h"   // asyncWebServerInit/asyncWebSocketsInit + транспорт WS
 #endif
 
 #ifdef ESP32
@@ -28,11 +40,6 @@
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
 #include <ESP8266httpUpdate.h>
-#endif
-
-#ifdef ASYNC_WEB_SERVER
-#include <ESPAsyncWebServer.h>
-#include "AsyncWebServer.h"
 #endif
 
 #ifdef STANDARD_WEB_SERVER

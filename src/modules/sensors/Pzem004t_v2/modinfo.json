@@ -115,10 +115,6 @@
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "Pzem004_v2",
         "moduleVersion": "2.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "subTypes": [
             "Pzem004v",
             "Pzem004a",
@@ -146,5 +142,48 @@
     "usedLibs": {
         "esp32*": [],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "2.0",
+            "usedFLASH": {
+                "esp8266_1mb": 14308,
+                "esp32_4mb": 21128,
+                "esp8266_4mb": 14308,
+                "esp32_4mb3f": 21128,
+                "esp8266_16mb": 14312,
+                "esp32cam_4mb": 21944,
+                "esp32s2_4mb": 29588,
+                "esp32s3_16mb": 20808,
+                "esp32c3m_4mb": 31710,
+                "esp8266_1mb_ota": 14308,
+                "esp8266_2mb": 14320,
+                "esp8266_2mb_ota": 14320,
+                "esp8285_1mb": 14324,
+                "esp8285_1mb_ota": 14324,
+                "esp32c6_4mb": 22286,
+                "esp32c6_8mb": 22286,
+                "esp32_16mb": 21116
+            },
+            "usedRAM": {
+                "esp8266_1mb": 592,
+                "esp32_4mb": 544,
+                "esp8266_4mb": 592,
+                "esp32_4mb3f": 544,
+                "esp8266_16mb": 596,
+                "esp32cam_4mb": 544,
+                "esp32s2_4mb": 640,
+                "esp32s3_16mb": 648,
+                "esp32c3m_4mb": 312,
+                "esp8266_1mb_ota": 592,
+                "esp8266_2mb": 576,
+                "esp8266_2mb_ota": 576,
+                "esp8285_1mb": 592,
+                "esp8285_1mb_ota": 592,
+                "esp32c6_4mb": 424,
+                "esp32c6_8mb": 424,
+                "esp32_16mb": 544
+            }
+        }
+    ]
 }

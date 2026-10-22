@@ -22,10 +22,6 @@
         "specialThanks": "",
         "moduleName": "Bh1750",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Cенсор освещённости",
         "moduleDesc": "Позволяет получить текущее значение освещённости в LUX.",
         "propInfo": {
@@ -40,5 +36,48 @@
         "esp82*": [
             "BH1750"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 3140,
+                "esp32_4mb": 8396,
+                "esp8266_4mb": 3140,
+                "esp32_4mb3f": 8396,
+                "esp8266_16mb": 3144,
+                "esp32cam_4mb": 8612,
+                "esp32s2_4mb": 8264,
+                "esp32s3_16mb": 8248,
+                "esp32c3m_4mb": 8548,
+                "esp8266_1mb_ota": 3144,
+                "esp8266_2mb": 3160,
+                "esp8266_2mb_ota": 3160,
+                "esp8285_1mb": 3144,
+                "esp8285_1mb_ota": 3140,
+                "esp32c6_4mb": 2240,
+                "esp32c6_8mb": 2232,
+                "esp32_16mb": 8392
+            },
+            "usedRAM": {
+                "esp8266_1mb": 20,
+                "esp32_4mb": 8,
+                "esp8266_4mb": 20,
+                "esp32_4mb3f": 8,
+                "esp8266_16mb": 16,
+                "esp32cam_4mb": 8,
+                "esp32s2_4mb": 8,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 16,
+                "esp8266_2mb": 16,
+                "esp8266_2mb_ota": 16,
+                "esp8285_1mb": 16,
+                "esp8285_1mb_ota": 12,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 8
+            }
+        }
+    ]
 }

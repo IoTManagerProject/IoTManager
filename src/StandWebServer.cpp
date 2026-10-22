@@ -1,5 +1,9 @@
 #include "StandWebServer.h"
-#ifdef STANDARD_WEB_SERVER
+// Общий код обработчиков для обоих вариантов HTTP: STANDARD_WEB_SERVER и ASYNC_WEB_SERVER.
+// В ASYNC все вызовы HTTP.* уходят в обёртку AsyncWebServerCompat (см. WebServerCompat.h),
+// поэтому обработчики (/set, /status, /list, /edit, /localota, /update, статики) собираются
+// без изменений для обеих реализаций.
+#if defined(STANDARD_WEB_SERVER) || defined(ASYNC_WEB_SERVER)
 
 File uploadFile;
 String unsupportedFiles = String();
@@ -198,6 +202,16 @@ void handleCors() {
     {
         typeOTAfile = FILESYSTEM;
     }
+    #ifdef LIBRETINY
+    // LibreTiny (bk7231n): Update.begin() принимает только U_FLASH — OTA образа ФС
+    // невозможна в принципе. Отвергаем явно, чтобы не было невнятной ошибки ниже.
+    if (typeOTAfile == FILESYSTEM && upload.status == UPLOAD_FILE_START)
+    {
+        SerialPrint("E", F("OTA"), "FS OTA не поддерживается на LibreTiny (bk7231n): используйте copy или USB (ltchiptool)");
+        HTTP.send(500, "text/plain", "FS OTA не поддерживается на LibreTiny (bk7231n)");
+        return;
+    }
+    #endif
     #ifdef ESP8266
     size_t size = upload.totalSize;
     int updatePartition = (typeOTAfile == FIRMWARE)? U_FLASH : U_FS; //U_FS
@@ -239,7 +253,12 @@ void handleCors() {
   }
 void handleLocalOTA_Handler() {
     String serverValue = HTTP.arg("server");
-    upgrade_firmware(3,serverValue);
+    // тип обновления: 1=только прошивка, 2=только ФС, иначе (по умолчанию) полная
+    int type = HTTP.arg("type").toInt();
+    if (type != 1 && type != 2) {
+        type = 3;
+    }
+    upgrade_firmware(type, serverValue);
 }
 
 #ifdef ESP32
@@ -288,11 +307,16 @@ bool handleFileRead(String path) {
     if (HTTP.hasArg("download")) {
         contentType = F("application/octet-stream");
     } else {
+#ifdef ASYNC_WEB_SERVER
+        // в ASYNC mime::getContentType ядра недоступна — используем таблицу обёртки
+        contentType = HTTP.getContentType(path);
+#else
 #ifdef ESP32
         contentType = getContentType(path);
 #endif
 #ifdef ESP8266
         contentType = mime::getContentType(path);
+#endif
 #endif
     }
 
@@ -742,6 +766,9 @@ FileFS.open(path.c_str());
    and if it fails, return a 404 page with debug information
 */
 void handleNotFound() {
+#ifdef ASYNC_WEB_SERVER
+    String uri = HTTP.urlDecode(HTTP.uri());  // required to read paths with blanks
+#else
 #ifdef ESP8266
     String uri = ESP8266WebServer::urlDecode(HTTP.uri());  // required to read paths with blanks
 #endif
@@ -750,6 +777,7 @@ void handleNotFound() {
 #endif
 #ifdef LIBRETINY
     String uri = WebServer::urlDecode(HTTP.uri());  // required to read paths with blanks
+#endif
 #endif
     if (handleFileRead(uri)) {
         return;

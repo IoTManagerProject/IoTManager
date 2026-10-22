@@ -24,7 +24,6 @@
         "specialThanks": "",
         "moduleName": "S8",
         "moduleVersion": "2.1",
-        "usedRam": 15,
         "subTypes": [
             "S8co"
         ],
@@ -38,5 +37,48 @@
     "usedLibs": {
         "esp32*": [],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "2.1",
+            "usedFLASH": {
+                "esp8266_1mb": 6720,
+                "esp32_4mb": 8856,
+                "esp8266_4mb": 6720,
+                "esp32_4mb3f": 8872,
+                "esp8266_16mb": 6720,
+                "esp32cam_4mb": 9276,
+                "esp32s2_4mb": 8600,
+                "esp32s3_16mb": 8576,
+                "esp32c3m_4mb": 8930,
+                "esp8266_1mb_ota": 6720,
+                "esp8266_2mb": 6724,
+                "esp8266_2mb_ota": 6724,
+                "esp8285_1mb": 6736,
+                "esp8285_1mb_ota": 6736,
+                "esp32c6_4mb": 9222,
+                "esp32c6_8mb": 9224,
+                "esp32_16mb": 8848
+            },
+            "usedRAM": {
+                "esp8266_1mb": 388,
+                "esp32_4mb": 504,
+                "esp8266_4mb": 388,
+                "esp32_4mb3f": 504,
+                "esp8266_16mb": 388,
+                "esp32cam_4mb": 504,
+                "esp32s2_4mb": 584,
+                "esp32s3_16mb": 608,
+                "esp32c3m_4mb": 256,
+                "esp8266_1mb_ota": 380,
+                "esp8266_2mb": 364,
+                "esp8266_2mb_ota": 372,
+                "esp8285_1mb": 388,
+                "esp8285_1mb_ota": 380,
+                "esp32c6_4mb": 368,
+                "esp32c6_8mb": 368,
+                "esp32_16mb": 504
+            }
+        }
+    ]
 }

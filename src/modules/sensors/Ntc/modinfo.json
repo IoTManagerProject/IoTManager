@@ -29,10 +29,6 @@
         "specialThanks": "https://t.me/Mit4bmw",
         "moduleName": "Ntc",
         "moduleVersion": "1.1",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "subTypes": [
             "Ntc"
         ],
@@ -52,5 +48,48 @@
     "usedLibs": {
         "esp32*": [],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.1",
+            "usedFLASH": {
+                "esp8266_1mb": 2292,
+                "esp32_4mb": 2816,
+                "esp8266_4mb": 2292,
+                "esp32_4mb3f": 2816,
+                "esp8266_16mb": 2296,
+                "esp32cam_4mb": 2864,
+                "esp32s2_4mb": 3076,
+                "esp32s3_16mb": 2812,
+                "esp32c3m_4mb": 3436,
+                "esp8266_1mb_ota": 2292,
+                "esp8266_2mb": 2292,
+                "esp8266_2mb_ota": 2292,
+                "esp8285_1mb": 2292,
+                "esp8285_1mb_ota": 2292,
+                "esp32c6_4mb": 3480,
+                "esp32c6_8mb": 3480,
+                "esp32_16mb": 2816
+            },
+            "usedRAM": {
+                "esp8266_1mb": 48,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 48,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 52,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 48,
+                "esp8266_2mb": 48,
+                "esp8266_2mb_ota": 48,
+                "esp8285_1mb": 48,
+                "esp8285_1mb_ota": 48,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

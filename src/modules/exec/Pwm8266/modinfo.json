@@ -24,10 +24,6 @@
         "specialThanks": "Serghei Crasnicov @Serghei63",
         "moduleName": "Pwm8266",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "PWM ESP8266",
         "moduleDesc": "Позволяет управлять Широтно-Импульсной Модуляцией на конкретном пине платы.",
         "retInfo": "Содержит текущее значение ШИМ",
@@ -41,5 +37,30 @@
     "defActive": false,
     "usedLibs": {
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 968,
+                "esp8266_1mb_ota": 968,
+                "esp8266_4mb": 968,
+                "esp8266_16mb": 972,
+                "esp8266_2mb": 968,
+                "esp8266_2mb_ota": 968,
+                "esp8285_1mb": 968,
+                "esp8285_1mb_ota": 968
+            },
+            "usedRAM": {
+                "esp8266_1mb": 16,
+                "esp8266_1mb_ota": 16,
+                "esp8266_4mb": 16,
+                "esp8266_16mb": 20,
+                "esp8266_2mb": 16,
+                "esp8266_2mb_ota": 16,
+                "esp8285_1mb": 16,
+                "esp8285_1mb_ota": 16
+            }
+        }
+    ]
 }

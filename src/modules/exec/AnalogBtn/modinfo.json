@@ -23,10 +23,6 @@
         "specialThanks": "",
         "moduleName": "AnalogBtn",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Аналоговая кнопка",
         "moduleDesc": "Позволяет получить состояние кнопки на аналоговом пине.",
         "propInfo": {
@@ -40,5 +36,52 @@
         "esp32*": [],
         "esp82*": [],
         "bk72*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "bk7231n": 736,
+                "esp8266_1mb": 760,
+                "esp8266_1mb_ota": 760,
+                "esp32_4mb": 1400,
+                "esp8266_4mb": 760,
+                "esp32_4mb3f": 1400,
+                "esp8266_16mb": 760,
+                "esp32cam_4mb": 1436,
+                "esp32s2_4mb": 1388,
+                "esp32s3_16mb": 1424,
+                "esp32c3m_4mb": 1448,
+                "esp8266_2mb": 760,
+                "esp8266_2mb_ota": 760,
+                "esp8285_1mb": 760,
+                "esp8285_1mb_ota": 760,
+                "esp32c6_4mb": 1490,
+                "esp32c6_8mb": 1492,
+                "esp32_16mb": 1400,
+                "esp32_wifirep": 800
+            },
+            "usedRAM": {
+                "bk7231n": 0,
+                "esp8266_1mb": 36,
+                "esp8266_1mb_ota": 28,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 36,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 36,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_2mb": 20,
+                "esp8266_2mb_ota": 28,
+                "esp8285_1mb": 36,
+                "esp8285_1mb_ota": 28,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0,
+                "esp32_wifirep": 0
+            }
+        }
+    ]
 }

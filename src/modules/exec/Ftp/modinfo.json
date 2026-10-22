@@ -21,10 +21,6 @@
         "specialThanks": "",
         "moduleName": "FTPModule",
         "moduleVersion": "0.1",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "FTP-сервер",
         "moduleDesc": "Запускает FTP-сервер на плате esp",
         "propInfo": {
@@ -36,5 +32,48 @@
     "usedLibs": {
         "esp32*": [],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "0.1",
+            "usedFLASH": {
+                "esp8266_1mb": 24712,
+                "esp8266_1mb_ota": 24712,
+                "esp32_4mb": 16824,
+                "esp8266_4mb": 24712,
+                "esp32_4mb3f": 16824,
+                "esp8266_16mb": 24712,
+                "esp32cam_4mb": 17372,
+                "esp32s2_4mb": 16840,
+                "esp32s3_16mb": 16764,
+                "esp32c3m_4mb": 20390,
+                "esp8266_2mb": 24656,
+                "esp8266_2mb_ota": 24656,
+                "esp8285_1mb": 24712,
+                "esp8285_1mb_ota": 24712,
+                "esp32c6_4mb": 20806,
+                "esp32c6_8mb": 20806,
+                "esp32_16mb": 16832
+            },
+            "usedRAM": {
+                "esp8266_1mb": 1024,
+                "esp8266_1mb_ota": 1032,
+                "esp32_4mb": 108,
+                "esp8266_4mb": 1024,
+                "esp32_4mb3f": 108,
+                "esp8266_16mb": 1024,
+                "esp32cam_4mb": 108,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_2mb": 1024,
+                "esp8266_2mb_ota": 1032,
+                "esp8285_1mb": 1024,
+                "esp8285_1mb_ota": 1032,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 108
+            }
+        }
+    ]
 }

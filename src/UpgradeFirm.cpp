@@ -39,7 +39,14 @@ void upgrade_firmware(int type, String path) {
 
 bool upgradeFS(String path) {
     bool ret = false;
-#ifndef LIBRETINY   
+#ifdef LIBRETINY
+    // LibreTiny (bk7231n): Update.begin() принимает только U_FLASH — OTA образа
+    // ФС невозможна в принципе. ФС обновляется пофайловым копированием (POST /edit)
+    // либо по USB через ltchiptool (таргет flashfs, tools/lt_fsflash.py).
+    SerialPrint("!!!", F("Update"), "FS OTA не поддерживается на LibreTiny (bk7231n), путь: " + path);
+    saveUpdeteStatus("fs", PATH_ERROR);
+    return ret;
+#else
     WiFiClient wifiClient;
     SerialPrint("!!!", F("Update"), "Start upgrade FS... " + path);
 
@@ -81,7 +88,66 @@ bool upgradeFS(String path) {
 
 bool upgradeBuild(String path) {
     bool ret = false;
-#ifndef LIBRETINY     
+#ifdef LIBRETINY
+    // LibreTiny (bk7231n): качаем firmware.bin (UF2) сами по HTTP и пишем через Update.
+    // Update.begin() принимает только U_FLASH, входной поток — UF2 (сигнатура «UF2\n»),
+    // после Update.end(true) активация образа происходит в загрузчике при перезагрузке.
+    WiFiClient wifiClient;
+    SerialPrint("!!!", F("Update"), "Start upgrade BUILD (LibreTiny)... " + path);
+
+    if (path == "") {
+        SerialPrint("E", F("Update"), F("Build Path error"));
+        saveUpdeteStatus("build", PATH_ERROR);
+        return ret;
+    }
+
+    HTTPClient http;
+    if (!http.begin(wifiClient, path + "/firmware.bin")) {
+        SerialPrint("E", F("Update"), F("HTTP begin error"));
+        saveUpdeteStatus("build", PATH_ERROR);
+        return ret;
+    }
+    int httpCode = http.GET();
+    if (httpCode != HTTP_CODE_OK) {
+        SerialPrint("E", F("Update"), "HTTP GET error: " + String(httpCode));
+        saveUpdeteStatus("build", PATH_ERROR);
+        http.end();
+        return ret;
+    }
+    int size = http.getSize();
+    if (size <= 0) {
+        SerialPrint("E", F("Update"), F("Неизвестный размер файла (нет Content-Length)"));
+        saveUpdeteStatus("build", PATH_ERROR);
+        http.end();
+        return ret;
+    }
+    if (!Update.begin((size_t)size, U_FLASH)) {
+        Update.end();
+        SerialPrint("E", F("Update"), F("Update.begin failed"));
+        saveUpdeteStatus("build", PATH_ERROR);
+        http.end();
+        return ret;
+    }
+    // writeStream() читает поток до конца; при паузе дольше UPDATE_TIMEOUT_MS (30 с)
+    // прерывает обновление с UPDATE_ERROR_STREAM.
+    size_t written = Update.writeStream(http.getStream());
+    if (written != (size_t)size) {
+        Update.end();
+        SerialPrint("E", F("Update"), "Записано " + String(written) + " из " + String(size));
+        saveUpdeteStatus("build", PATH_ERROR);
+        http.end();
+        return ret;
+    }
+    if (Update.end(true)) {
+        SerialPrint("!!!", F("Update"), F("BUILD upgrade done!"));
+        saveUpdeteStatus("build", UPDATE_COMPLETED);
+        ret = true;
+    } else {
+        SerialPrint("E", F("Update"), "Update.end error: " + String((int)Update.getError()));
+        saveUpdeteStatus("build", UPDATE_FAILED);
+    }
+    http.end();
+#else
     WiFiClient wifiClient;
     SerialPrint("!!!", F("Update"), "Start upgrade BUILD... " + path);
 

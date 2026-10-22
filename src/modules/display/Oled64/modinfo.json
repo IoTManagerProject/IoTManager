@@ -25,10 +25,6 @@
         "specialThanks": "Valentin Khandriga @Valiuhaaa",
         "moduleName": "Oled64",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Модуль отображения на экранах OLED 64*48",
         "moduleDesc": "Позволяет выводить на OLED экраны по указанным позициям значения других элементов конфигурации.",
         "propInfo": {
@@ -85,5 +81,48 @@
             "https://github.com/stblassitude/Adafruit_SSD1306_Wemos_OLED",
             "https://github.com/adafruit/Adafruit-GFX-Library"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 11720,
+                "esp8266_1mb_ota": 11720,
+                "esp32_4mb": 19300,
+                "esp8266_4mb": 11720,
+                "esp32_4mb3f": 19316,
+                "esp8266_16mb": 11720,
+                "esp32cam_4mb": 19908,
+                "esp32s2_4mb": 20196,
+                "esp32s3_16mb": 20156,
+                "esp32c3m_4mb": 17804,
+                "esp8266_2mb": 11744,
+                "esp8266_2mb_ota": 11744,
+                "esp8285_1mb": 11720,
+                "esp8285_1mb_ota": 11720,
+                "esp32c6_4mb": 15080,
+                "esp32c6_8mb": 15086,
+                "esp32_16mb": 19304
+            },
+            "usedRAM": {
+                "esp8266_1mb": 620,
+                "esp8266_1mb_ota": 628,
+                "esp32_4mb": 536,
+                "esp8266_4mb": 620,
+                "esp32_4mb3f": 536,
+                "esp8266_16mb": 620,
+                "esp32cam_4mb": 536,
+                "esp32s2_4mb": 524,
+                "esp32s3_16mb": 504,
+                "esp32c3m_4mb": 480,
+                "esp8266_2mb": 604,
+                "esp8266_2mb_ota": 612,
+                "esp8285_1mb": 620,
+                "esp8285_1mb_ota": 628,
+                "esp32c6_4mb": 480,
+                "esp32c6_8mb": 480,
+                "esp32_16mb": 536
+            }
+        }
+    ]
 }

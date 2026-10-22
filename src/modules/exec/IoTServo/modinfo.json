@@ -25,10 +25,6 @@
         "specialThanks": "Oleg @Threedreality, Sergey @Serghei63",
         "moduleName": "IoTServo",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Сервопривод",
         "moduleDesc": "Предназначен для управления сервоприводом по уровню аналогово сигнала.",
         "propInfo": {
@@ -56,5 +52,48 @@
             "https://github.com/RoboticsBrno/ServoESP32#v1.0.3"
         ],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 1468,
+                "esp8266_1mb_ota": 1468,
+                "esp32_4mb": 8444,
+                "esp8266_4mb": 1488,
+                "esp32_4mb3f": 8460,
+                "esp8266_16mb": 1472,
+                "esp32cam_4mb": 8584,
+                "esp32s2_4mb": 7804,
+                "esp32s3_16mb": 7808,
+                "esp32c3m_4mb": 8340,
+                "esp8266_2mb": 1468,
+                "esp8266_2mb_ota": 1468,
+                "esp8285_1mb": 1484,
+                "esp8285_1mb_ota": 1484,
+                "esp32c6_4mb": "-",
+                "esp32c6_8mb": "-",
+                "esp32_16mb": 8436
+            },
+            "usedRAM": {
+                "esp8266_1mb": 72,
+                "esp8266_1mb_ota": 72,
+                "esp32_4mb": 120,
+                "esp8266_4mb": 76,
+                "esp32_4mb3f": 120,
+                "esp8266_16mb": 76,
+                "esp32cam_4mb": 120,
+                "esp32s2_4mb": 72,
+                "esp32s3_16mb": 72,
+                "esp32c3m_4mb": 48,
+                "esp8266_2mb": 64,
+                "esp8266_2mb_ota": 64,
+                "esp8285_1mb": 72,
+                "esp8285_1mb_ota": 72,
+                "esp32c6_4mb": "-",
+                "esp32c6_8mb": "-",
+                "esp32_16mb": 120
+            }
+        }
+    ]
 }

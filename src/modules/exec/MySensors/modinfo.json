@@ -33,10 +33,6 @@
         "specialThanks": "",
         "moduleName": "MySensorsGate",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 0
-        },
         "title": "Гейт MySensors",
         "moduleDesc": "Устройство состоит из esp32 и подключенному к нему радиомодулю NRF24L01. Вместе в связке они образуют гейт, способный принимать данные датчиков. Датчики способны работать до нескольких лет на батарейках. Датчики делаются на базе nrf52832 от holyiot. Батарейки подключаются напрямик к nrf52832",
         "retInfo": "",
@@ -56,5 +52,32 @@
             "exclude"
         ],
         "esp32*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp32_4mb": 25552,
+                "esp32_4mb3f": 25552,
+                "esp32cam_4mb": 26460,
+                "esp32s2_4mb": "-",
+                "esp32s3_16mb": 26536,
+                "esp32c3m_4mb": "-",
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 25548
+            },
+            "usedRAM": {
+                "esp32_4mb": 656,
+                "esp32_4mb3f": 656,
+                "esp32cam_4mb": 656,
+                "esp32s2_4mb": "-",
+                "esp32s3_16mb": 624,
+                "esp32c3m_4mb": "-",
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 656
+            }
+        }
+    ]
 }

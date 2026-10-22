@@ -1,84 +1,123 @@
 {
-  "menuSection": "executive_devices",
-  "configItem": [
-    {
-      "global": 0,
-      "name": "SIM800",
-      "type": "Reading",
-      "subtype": "sim800",
-      "id": "sim",
-      "widget": "anydataDef",
-      "page": "Состояние",
-      "descr": "Sim в сети",  
-      "int": 5, 
-      "tx": 17,
-      "rx": 16,
-      "line": 2,
-      "speed": 115200,
-      "number": "+71234567890",
-      "debug": 0
-    }
-  ],
-  "about": {
-    "authorName": "Bubnov Mikhail",
-    "authorContact": "https://t.me/Mit4bmw",
-    "authorGit": "https://github.com/Mit4el",
-    "specialThanks": "",
-    "moduleName": "SIM800",
-    "moduleVersion": "1.0",
-    "usedRam": {
-      "esp32_4mb": 15,
-      "esp8266_4mb": 15
+    "menuSection": "executive_devices",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "SIM800",
+            "type": "Reading",
+            "subtype": "sim800",
+            "id": "sim",
+            "widget": "anydataDef",
+            "page": "Состояние",
+            "descr": "Sim в сети",
+            "int": 5,
+            "tx": 17,
+            "rx": 16,
+            "line": 2,
+            "speed": 115200,
+            "number": "+71234567890",
+            "debug": 0
+        }
+    ],
+    "about": {
+        "authorName": "Bubnov Mikhail",
+        "authorContact": "https://t.me/Mit4bmw",
+        "authorGit": "https://github.com/Mit4el",
+        "specialThanks": "",
+        "moduleName": "SIM800",
+        "moduleVersion": "1.0",
+        "title": "SIM800",
+        "moduleDesc": "Оправка AT-команд в модуль SIM800L. Отправка sms сообщений через модуль",
+        "propInfo": {
+            "int": "Период опроса состояния модуля SIM800",
+            "tx": "TX пин",
+            "rx": "RX пин",
+            "speed": "Скорость UART",
+            "line": "Актуально только для ESP32: номер линии hardUART. =2 rx=16 tx=17, для SoftwarwSerial в ESP32 line = -1",
+            "number": "Номер телефона для отправки sms сообщения"
+        },
+        "funcInfo": [
+            {
+                "name": "sms",
+                "descr": "Отправить sms сообщение. Например sim.sms(\"сообщение\") или sim.sms(\"сообщение\", \"+7999999\")",
+                "params": [
+                    "Строка текста",
+                    "Номер телефона, если не указывать будет отправлено на номер number из конфигурации"
+                ]
+            },
+            {
+                "name": "print",
+                "descr": "Отправить в UART строку текста (AT-команду). Например sim.print(\"AT\",0)",
+                "params": [
+                    "Строка текста",
+                    "ID Виджета или любое значение, не обязательно",
+                    "1 - обернуть строку в кавычки, 0 - отправить без кавычек (При наличии второго параметра оборачивает только его)"
+                ]
+            },
+            {
+                "name": "println",
+                "descr": "Отправить в UART строку текста (AT-команду) и признак завершения строки (перевод строки). Например sim.println(\"AT+CMGS=\", \"+799999\", 1);",
+                "params": [
+                    "Строка текста",
+                    "ID Виджета или любое значение, не обязательно",
+                    "1 - обернуть строку в кавычки, 0 - отправить без кавычек (Пр наличии второго параметра оборачивает только его)"
+                ]
+            },
+            {
+                "name": "printHex",
+                "descr": "Отправить в UART HEX-строку.",
+                "params": [
+                    "HEX-строка."
+                ]
+            }
+        ]
     },
-    "title": "SIM800",
-    "moduleDesc": "Оправка AT-команд в модуль SIM800L. Отправка sms сообщений через модуль",
-    "propInfo": {
-      "int": "Период опроса состояния модуля SIM800",
-      "tx": "TX пин",
-      "rx": "RX пин",
-      "speed": "Скорость UART",
-      "line": "Актуально только для ESP32: номер линии hardUART. =2 rx=16 tx=17, для SoftwarwSerial в ESP32 line = -1",
-      "number": "Номер телефона для отправки sms сообщения"
+    "defActive": false,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": []
     },
-    "funcInfo": [
+    "sizeInfo": [
         {
-            "name": "sms",
-            "descr": "Отправить sms сообщение. Например sim.sms(\"сообщение\") или sim.sms(\"сообщение\", \"+7999999\")",
-            "params": [
-              "Строка текста",
-              "Номер телефона, если не указывать будет отправлено на номер number из конфигурации"
-            ]
-        },
-        {
-            "name": "print",
-            "descr": "Отправить в UART строку текста (AT-команду). Например sim.print(\"AT\",0)",
-            "params": [
-              "Строка текста",
-              "ID Виджета или любое значение, не обязательно",
-              "1 - обернуть строку в кавычки, 0 - отправить без кавычек (При наличии второго параметра оборачивает только его)"
-            ]
-        },
-        {
-          "name": "println",
-          "descr": "Отправить в UART строку текста (AT-команду) и признак завершения строки (перевод строки). Например sim.println(\"AT+CMGS=\", \"+799999\", 1);",
-          "params": [
-            "Строка текста",
-            "ID Виджета или любое значение, не обязательно",
-            "1 - обернуть строку в кавычки, 0 - отправить без кавычек (Пр наличии второго параметра оборачивает только его)"
-          ]
-        },
-        {
-          "name": "printHex",
-          "descr": "Отправить в UART HEX-строку.",
-          "params": [
-              "HEX-строка."
-          ]
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 8768,
+                "esp8266_1mb_ota": 8768,
+                "esp32_4mb": 12408,
+                "esp8266_4mb": 8768,
+                "esp32_4mb3f": 12408,
+                "esp8266_16mb": 8768,
+                "esp32cam_4mb": 12820,
+                "esp32s2_4mb": 21064,
+                "esp32s3_16mb": 12112,
+                "esp32c3m_4mb": 22414,
+                "esp8266_2mb": 8772,
+                "esp8266_2mb_ota": 8772,
+                "esp8285_1mb": 8784,
+                "esp8285_1mb_ota": 8784,
+                "esp32c6_4mb": 13064,
+                "esp32c6_8mb": 13066,
+                "esp32_16mb": 12420
+            },
+            "usedRAM": {
+                "esp8266_1mb": 420,
+                "esp8266_1mb_ota": 428,
+                "esp32_4mb": 488,
+                "esp8266_4mb": 420,
+                "esp32_4mb3f": 488,
+                "esp8266_16mb": 420,
+                "esp32cam_4mb": 488,
+                "esp32s2_4mb": 584,
+                "esp32s3_16mb": 592,
+                "esp32c3m_4mb": 256,
+                "esp8266_2mb": 412,
+                "esp8266_2mb_ota": 404,
+                "esp8285_1mb": 420,
+                "esp8285_1mb_ota": 428,
+                "esp32c6_4mb": 368,
+                "esp32c6_8mb": 368,
+                "esp32_16mb": 488
+            }
         }
     ]
-  },
-  "defActive": false,
-  "usedLibs": {
-    "esp32*": [],
-    "esp82*": []
-  }
 }

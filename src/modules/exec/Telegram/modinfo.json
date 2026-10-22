@@ -24,10 +24,6 @@
         "specialThanks": "",
         "moduleName": "Telegram",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Телеграм-Бот",
         "moduleDesc": "Добавляет возможность отправлять сообщения от имени бота контакту в Телеграм-чате и получать команды.",
         "propInfo": {
@@ -61,5 +57,34 @@
         "esp8266_4mb": [
             "CTBot @2.1.9"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_4mb": "-",
+                "esp32_4mb": "-",
+                "esp32_4mb3f": "-",
+                "esp32cam_4mb": "-",
+                "esp32s2_4mb": "-",
+                "esp32s3_16mb": "-",
+                "esp32c3m_4mb": "-",
+                "esp32c6_4mb": "-",
+                "esp32c6_8mb": "-",
+                "esp32_16mb": "-"
+            },
+            "usedRAM": {
+                "esp8266_4mb": "-",
+                "esp32_4mb": "-",
+                "esp32_4mb3f": "-",
+                "esp32cam_4mb": "-",
+                "esp32s2_4mb": "-",
+                "esp32s3_16mb": "-",
+                "esp32c3m_4mb": "-",
+                "esp32c6_4mb": "-",
+                "esp32c6_8mb": "-",
+                "esp32_16mb": "-"
+            }
+        }
+    ]
 }

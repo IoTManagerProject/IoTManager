@@ -10,7 +10,6 @@
             "widget": "",
             "page": "",
             "descr": "",
-
             "mktype": 55,
             "addr": "0x20",
             "index": 1
@@ -23,10 +22,6 @@
         "specialThanks": "",
         "moduleName": "Tca9555",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Расширитель портов Tca9555",
         "moduleDesc": "Добавляет в систему дополнительные GPIO для элементов, которые поддерживают такую функцию.",
         "propInfo": {
@@ -43,5 +38,48 @@
         "esp82*": [
             "https://github.com/RobTillaart/TCA9555"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 3720,
+                "esp8266_1mb_ota": 3724,
+                "esp32_4mb": 9472,
+                "esp8266_4mb": 3720,
+                "esp32_4mb3f": 9472,
+                "esp8266_16mb": 3724,
+                "esp32cam_4mb": 9820,
+                "esp32s2_4mb": 9408,
+                "esp32s3_16mb": 9340,
+                "esp32c3m_4mb": 9262,
+                "esp8266_2mb": 3740,
+                "esp8266_2mb_ota": 3740,
+                "esp8285_1mb": 3724,
+                "esp8285_1mb_ota": 3720,
+                "esp32c6_4mb": 3092,
+                "esp32c6_8mb": 3092,
+                "esp32_16mb": 9488
+            },
+            "usedRAM": {
+                "esp8266_1mb": 116,
+                "esp8266_1mb_ota": 128,
+                "esp32_4mb": 8,
+                "esp8266_4mb": 116,
+                "esp32_4mb3f": 8,
+                "esp8266_16mb": 128,
+                "esp32cam_4mb": 8,
+                "esp32s2_4mb": 8,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_2mb": 112,
+                "esp8266_2mb_ota": 112,
+                "esp8285_1mb": 128,
+                "esp8285_1mb_ota": 124,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 8
+            }
+        }
+    ]
 }

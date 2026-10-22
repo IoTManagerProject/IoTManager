@@ -23,10 +23,6 @@
         "specialThanks": "",
         "moduleName": "Max6675",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Cенсор температуры MAX6675",
         "moduleDesc": "Позволяет получить значения температуры с Max6675 и термопары.",
         "propInfo": {
@@ -44,5 +40,48 @@
         "esp82*": [
             "adafruit/MAX6675 library"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 996,
+                "esp32_4mb": 1736,
+                "esp8266_4mb": 996,
+                "esp32_4mb3f": 1736,
+                "esp8266_16mb": 1000,
+                "esp32cam_4mb": 1776,
+                "esp32s2_4mb": 1688,
+                "esp32s3_16mb": 1752,
+                "esp32c3m_4mb": 1768,
+                "esp8266_1mb_ota": 1016,
+                "esp8266_2mb": 1000,
+                "esp8266_2mb_ota": 1000,
+                "esp8285_1mb": 1000,
+                "esp8285_1mb_ota": 1012,
+                "esp32c6_4mb": 1826,
+                "esp32c6_8mb": 1826,
+                "esp32_16mb": 1744
+            },
+            "usedRAM": {
+                "esp8266_1mb": 40,
+                "esp32_4mb": 8,
+                "esp8266_4mb": 40,
+                "esp32_4mb3f": 8,
+                "esp8266_16mb": 44,
+                "esp32cam_4mb": 8,
+                "esp32s2_4mb": 8,
+                "esp32s3_16mb": 8,
+                "esp32c3m_4mb": 8,
+                "esp8266_1mb_ota": 36,
+                "esp8266_2mb": 20,
+                "esp8266_2mb_ota": 28,
+                "esp8285_1mb": 44,
+                "esp8285_1mb_ota": 40,
+                "esp32c6_4mb": 8,
+                "esp32c6_8mb": 8,
+                "esp32_16mb": 8
+            }
+        }
+    ]
 }

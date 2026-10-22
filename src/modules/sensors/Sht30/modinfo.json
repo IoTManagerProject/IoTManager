@@ -35,10 +35,6 @@
         "specialThanks": "",
         "moduleName": "Sht30",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "subTypes": [
             "Sht30t",
             "Sht30h"
@@ -57,5 +53,48 @@
         "esp82*": [
             "WEMOS SHT3x@1.0.0"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 3912,
+                "esp32_4mb": 9936,
+                "esp8266_4mb": 3912,
+                "esp32_4mb3f": 9952,
+                "esp8266_16mb": 3912,
+                "esp32cam_4mb": 10212,
+                "esp32s2_4mb": 9852,
+                "esp32s3_16mb": 9784,
+                "esp32c3m_4mb": 10318,
+                "esp8266_1mb_ota": 3928,
+                "esp8266_2mb": 3940,
+                "esp8266_2mb_ota": 3940,
+                "esp8285_1mb": 3912,
+                "esp8285_1mb_ota": 3928,
+                "esp32c6_4mb": 4154,
+                "esp32c6_8mb": 4160,
+                "esp32_16mb": 9940
+            },
+            "usedRAM": {
+                "esp8266_1mb": 160,
+                "esp32_4mb": 24,
+                "esp8266_4mb": 160,
+                "esp32_4mb3f": 24,
+                "esp8266_16mb": 160,
+                "esp32cam_4mb": 24,
+                "esp32s2_4mb": 24,
+                "esp32s3_16mb": 16,
+                "esp32c3m_4mb": 16,
+                "esp8266_1mb_ota": 160,
+                "esp8266_2mb": 148,
+                "esp8266_2mb_ota": 140,
+                "esp8285_1mb": 160,
+                "esp8285_1mb_ota": 160,
+                "esp32c6_4mb": 16,
+                "esp32c6_8mb": 16,
+                "esp32_16mb": 24
+            }
+        }
+    ]
 }

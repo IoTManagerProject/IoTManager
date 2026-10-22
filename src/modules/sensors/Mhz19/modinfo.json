@@ -83,5 +83,48 @@
             "plerup/EspSoftwareSerial"
         ],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "2.0  - можно переназначать пины",
+            "usedFLASH": {
+                "esp8266_1mb": 10240,
+                "esp32_4mb": 7212,
+                "esp8266_4mb": 10240,
+                "esp32_4mb3f": 7212,
+                "esp8266_16mb": 10240,
+                "esp32cam_4mb": 7428,
+                "esp32s2_4mb": 16260,
+                "esp32s3_16mb": 7192,
+                "esp32c3m_4mb": 16856,
+                "esp8266_1mb_ota": 10240,
+                "esp8266_2mb": 10260,
+                "esp8266_2mb_ota": 10260,
+                "esp8285_1mb": 10272,
+                "esp8285_1mb_ota": 10272,
+                "esp32c6_4mb": 7168,
+                "esp32c6_8mb": 7168,
+                "esp32_16mb": 7208
+            },
+            "usedRAM": {
+                "esp8266_1mb": 1160,
+                "esp32_4mb": 112,
+                "esp8266_4mb": 1160,
+                "esp32_4mb3f": 112,
+                "esp8266_16mb": 1160,
+                "esp32cam_4mb": 112,
+                "esp32s2_4mb": 128,
+                "esp32s3_16mb": 112,
+                "esp32c3m_4mb": 128,
+                "esp8266_1mb_ota": 1160,
+                "esp8266_2mb": 1136,
+                "esp8266_2mb_ota": 1136,
+                "esp8285_1mb": 1160,
+                "esp8285_1mb_ota": 1160,
+                "esp32c6_4mb": 104,
+                "esp32c6_8mb": 104,
+                "esp32_16mb": 112
+            }
+        }
+    ]
 }

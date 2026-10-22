@@ -21,7 +21,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 
         case WStype_DISCONNECTED: {
             Serial.printf("[%u] Disconnected!\n", num);
-            standWebSocket.disconnect(num);
+            webSocketDisconnectClient(num);
         } break;
 
         case WStype_CONNECTED: {
@@ -39,6 +39,55 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
         } break;
 
         case WStype_TEXT: {
+            handleWsTextMessage(num, payload, length);
+        } break;
+
+        case WStype_BIN: {
+            Serial.printf("[%u] get binary length: %u\n", num, length);
+            // hexdump(payload, length);
+            // standWebSocket.sendBIN(num, payload, length);
+        } break;
+
+        case WStype_FRAGMENT_TEXT_START: {
+            Serial.printf("[%u] fragment test start: %u\n", num, length);
+        } break;
+
+        case WStype_FRAGMENT_BIN_START: {
+            Serial.printf("[%u] fragment bin start: %u\n", num, length);
+        } break;
+
+        case WStype_FRAGMENT: {
+            Serial.printf("[%u] fragment: %u\n", num, length);
+        } break;
+
+        case WStype_FRAGMENT_FIN: {
+            Serial.printf("[%u] fragment finish: %u\n", num, length);
+        } break;
+
+        case WStype_PING: {
+            Serial.printf("[%u] ping: %u\n", num, length);
+        } break;
+
+        case WStype_PONG: {
+            Serial.printf("[%u] pong: %u\n", num, length);
+        } break;
+
+        default: {
+            Serial.printf("[%u] not recognized: %u\n", num, length);
+        } break;
+    }
+}
+#endif // STANDARD_WEB_SOCKETS
+
+// =====================================================================================
+// Общий обработчик текстовых команд веб-интерфейса.
+// Один и тот же код обслуживает STANDARD_WEB_SOCKETS (webSocketEvent) и
+// ASYNC_WEB_SOCKETS (asyncWebSocketsLoop -> handleWsTextMessage).
+// num — номер клиента: в STANDARD_WEB_SOCKETS это номер WebSocketsServer,
+// в ASYNC_WEB_SOCKETS — номер слота (см. asyncWebSocketSlotAdd).
+// =====================================================================================
+void handleWsTextMessage(uint8_t num, uint8_t* payload, size_t length) {
+    {
             bool endOfHeaderFound = false;
             size_t maxAllowedHeaderSize = 15;  // максимальное количество символов заголовка
             size_t headerLenth = 0;
@@ -60,8 +109,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             // Страница веб интерфейса dashboard
             //----------------------------------------------------------------------//
             if (headerStr == "/pi|") {
-                standWebSocket.sendTXT(num, "/po|");
-                Serial.printf("Ping client: %u\n", num);
+                webSocketSendText(num, "/po|");
+                // [DEPRECATED] Отладочная печать на каждый /pi| засоряет COM-порт
+                // Serial.printf("Ping client: %u\n", num);
                 ws_clients[num]=1;
             }
             // публикация всех виджетов
@@ -322,11 +372,25 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 cleanLogs();
             }
 
-            // команда обновления прошивки esp
+            // команда обновления прошивки esp (полная: ФС + прошивка)
             if (headerStr == "/update|") {
                 String path;
                 writeUint8tToString(payload, length, headerLenth, path);
                 upgrade_firmware(3, path);
+            }
+
+            // команда обновления только прошивки (без ФС)
+            if (headerStr == "/update1|") {
+                String path;
+                writeUint8tToString(payload, length, headerLenth, path);
+                upgrade_firmware(1, path);
+            }
+
+            // команда обновления только файловой системы
+            if (headerStr == "/update2|") {
+                String path;
+                writeUint8tToString(payload, length, headerLenth, path);
+                upgrade_firmware(2, path);
             }
 
             // Прием команд control c dashboard
@@ -340,7 +404,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             }
 
             if (headerStr == "/tst|") {
-                standWebSocket.sendTXT(num, "/tstr|");
+                webSocketSendText(num, "/tstr|");
             }
 
             // получаем команду посланную из модуля
@@ -361,44 +425,71 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                     }
                 }
             }
-
-        } break;
-
-        case WStype_BIN: {
-            Serial.printf("[%u] get binary length: %u\n", num, length);
-            // hexdump(payload, length);
-            // standWebSocket.sendBIN(num, payload, length);
-        } break;
-
-        case WStype_FRAGMENT_TEXT_START: {
-            Serial.printf("[%u] fragment test start: %u\n", num, length);
-        } break;
-
-        case WStype_FRAGMENT_BIN_START: {
-            Serial.printf("[%u] fragment bin start: %u\n", num, length);
-        } break;
-
-        case WStype_FRAGMENT: {
-            Serial.printf("[%u] fragment: %u\n", num, length);
-        } break;
-
-        case WStype_FRAGMENT_FIN: {
-            Serial.printf("[%u] fragment finish: %u\n", num, length);
-        } break;
-
-        case WStype_PING: {
-            Serial.printf("[%u] ping: %u\n", num, length);
-        } break;
-
-        case WStype_PONG: {
-            Serial.printf("[%u] pong: %u\n", num, length);
-        } break;
-
-        default: {
-            Serial.printf("[%u] not recognized: %u\n", num, length);
-        } break;
     }
 }
+
+// ==============================================================================
+// Транспорт веб-сокетов: единый интерфейс для STANDARD_WEB_SOCKETS и
+// ASYNC_WEB_SOCKETS. Реализация выбирается по define, код обработчиков
+// (sendFileToWsByFrames, sendStringToWs и т.д.) не зависит от варианта.
+// ==============================================================================
+#ifdef STANDARD_WEB_SOCKETS
+// отправка текстового сообщения клиенту num
+// (sendTXT библиотеки WebSockets принимает неконстантную ссылку на String)
+void webSocketSendText(uint8_t num, const String& msg) {
+    String payload = msg;
+    standWebSocket.sendTXT(num, payload);
+}
+// отправка бинарного фрейма (с fin/continuation — как в протоколе WebSocketsServer)
+void webSocketSendBin(uint8_t num, uint8_t* data, size_t size, bool fin, bool continuation) {
+    standWebSocket.sendBIN(num, data, size, fin, continuation);
+}
+// отправка бинарного фрейма всем клиентам
+void webSocketSendBinAll(uint8_t* data, size_t size, bool fin, bool continuation) {
+    // Шлём только клиентам, отвечающим на пинги (/pi|): веб-интерфейс шлёт их
+    // каждые ~2 сек, поэтому ws_clients[i]==1 означает живого клиента.
+    // Синхронная запись (WiFiClient::write) в клиента, потерявшего WiFi, блокирует
+    // loop() на секунды (select-таймаут × write-retry), замораживая таймеры и
+    // сценарии — особенно заметно на одноядерном ESP32-S2. Непингующий клиент
+    // фрейм всё равно не примет, а PiWS-таймер отключит его через цикл проверки.
+    for (uint8_t i = 0; i < WEBSOCKETS_CLIENT_MAX; i++) {
+        if (ws_clients[i] != 1) continue;
+        standWebSocket.sendBIN(i, data, size, fin, continuation);
+    }
+}
+// отключение клиента по номеру
+void webSocketDisconnectClient(uint8_t num) {
+    standWebSocket.disconnect(num);
+}
+// количество подключённых клиентов
+int webSocketConnectedClients() {
+    return standWebSocket.connectedClients(false);
+}
+#endif
+
+#ifdef ASYNC_WEB_SOCKETS
+// отправка текстового сообщения клиенту num (num — номер слота, см. AsyncWebServer.cpp)
+void webSocketSendText(uint8_t num, const String& msg) {
+    asyncWebSocketSendText(num, msg);
+}
+// отправка бинарного фрейма (fin/continuation — совместимый с WebSocketsServer протокол,
+// реализация ручной отправки фреймов см. AsyncWebServer.cpp)
+void webSocketSendBin(uint8_t num, uint8_t* data, size_t size, bool fin, bool continuation) {
+    asyncWebSocketSendBin(num, data, size, fin, continuation);
+}
+// отправка бинарного фрейма всем клиентам
+void webSocketSendBinAll(uint8_t* data, size_t size, bool fin, bool continuation) {
+    asyncWebSocketSendBinAll(data, size, fin, continuation);
+}
+// отключение клиента по номеру
+void webSocketDisconnectClient(uint8_t num) {
+    asyncWebSocketDisconnect(num);
+}
+// количество подключённых клиентов
+int webSocketConnectedClients() {
+    return asyncWebSocketCount();
+}
+#endif
 
 // публикация статус сообщений в ws (недостаток в том что делаем бродкаст всем
 // клиентам поднятым в свелте!!!)
@@ -442,7 +533,6 @@ void hexdump(const void* mem, uint32_t len, uint8_t cols = 16) {
     Serial.printf("\n");
 }
 #endif
-#endif
 
 void sendFileToWsByFrames(const String& filename, const String& header, const String& json, int client_id, size_t frameSize) {
     if (header.length() != 6) {
@@ -452,9 +542,9 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
 
     auto path = filepath(filename);
     auto file = FileFS.open(path, "r");
-    //SerialPrint("I", "sendFileToWsByFrames", ("reed file: ")+ path);
+    // SerialPrint("I", "sendFileToWsByFrames", ("reed file: ") + path);
     if (!file) {
-        SerialPrint("E", "FS", F("reed file error"));
+        SerialPrint("E", "FS", "reed file error " + path);
         return;
     }
 
@@ -503,22 +593,11 @@ void sendFileToWsByFrames(const String& filename, const String& header, const St
 //             Serial.println(String(i) + ") " + "ws: " + String(client_id) + " fr sz: " 
 //             + String(size) + " fin: " + String(fin) + " cnt: " +
 //             String(continuation));
-#ifdef ASYNC_WEB_SOCKETS
             if (client_id == -1) {
-                //ws.broadcastBIN(frameBuf, size, fin, continuation);
-                ws.binaryAll(frameBuf, size);
+                webSocketSendBinAll(frameBuf, size, fin, continuation);
             } else {
-                //ws.sendBIN(client_id, frameBuf, size, fin, continuation);
-                ws.binary(client_id,frameBuf, size);
+                webSocketSendBin((uint8_t)client_id, frameBuf, size, fin, continuation);
             }
-#elif defined (STANDARD_WEB_SOCKETS)
-            if (client_id == -1) {
-                standWebSocket.broadcastBIN(frameBuf, size, fin, continuation);
-
-            } else {
-                standWebSocket.sendBIN(client_id, frameBuf, size, fin, continuation);
-            }
-#endif
         }
         i++;
     }
@@ -549,24 +628,16 @@ void sendStringToWs(const String& header, String& payload, int client_id) {
    // SerialPrint("E", "sendStringToWs", msg);
     char dataArray[totalSize];
     msg.toCharArray(dataArray, totalSize + 1);
-#ifdef ASYNC_WEB_SOCKETS
     if (client_id == -1) {
-        ws.binaryAll((uint8_t*)dataArray, totalSize);
+        webSocketSendBinAll((uint8_t*)dataArray, totalSize, true, false);
     } else {
-        ws.binary(client_id, (uint8_t*)dataArray, totalSize);
+        webSocketSendBin((uint8_t)client_id, (uint8_t*)dataArray, totalSize, true, false);
     }
-#elif defined (STANDARD_WEB_SOCKETS)
-    if (client_id == -1) {
-        standWebSocket.broadcastBIN((uint8_t*)dataArray, totalSize);
-    } else {
-        standWebSocket.sendBIN(client_id, (uint8_t*)dataArray, totalSize);
-    }
-#endif
 }
 
 void disconnectWSClient(uint8_t client_id)
 {
-    standWebSocket.disconnect(client_id);
+    webSocketDisconnectClient(client_id);
     Serial.printf("[WS] Client %u -disconnected\n", client_id);
 }
 

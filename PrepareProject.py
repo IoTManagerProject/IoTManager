@@ -68,12 +68,9 @@ def updateModulesInProfile(profJson):
             if fname == "modinfo.json":
                 with open(os.path.join(root, fname), "r", encoding='utf-8') as read_file:
                     modinfoJson = json.load(read_file)
-                    # проверяем есть ли уже узловой элемент и если нет, то создаем
-                    if not modinfoJson['menuSection'] in profJson["modules"]:
-                        listFromFirstElement = {modinfoJson['menuSection']: []}
-                        listFromFirstElement.update(profJson["modules"])
-                        profJson["modules"] = listFromFirstElement
                     # добавляем информацию о модуле в узловой элемент
+                    if modinfoJson['menuSection'] not in profJson["modules"]:
+                        profJson["modules"][modinfoJson['menuSection']] = []
                     profJson["modules"][modinfoJson['menuSection']].append({
                         'path': os.path.normpath(root).replace("\\", "/"),
                         'active': modinfoJson['defActive']
@@ -124,7 +121,7 @@ if Path(profile).is_file():
         # print(profJson)
         
         with open(profile, "w", encoding='utf-8') as write_file:
-            json.dump(profJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
+            json.dump(profJson, write_file, ensure_ascii=False, indent=4)
 else:
     # если файла нет - создаем по образу настроек из проекта
     profJson = json.loads('{}')
@@ -141,7 +138,7 @@ else:
     updateModulesInProfile(profJson)
     # сохраняем новый профиль
     with open(profile, "w", encoding='utf-8') as write_file:
-        json.dump(profJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
+        json.dump(profJson, write_file, ensure_ascii=False, indent=4)
 
 deviceName = ''
 if selectDevice == '':
@@ -173,7 +170,7 @@ with open("data_svelte/settings.json", "r", encoding='utf-8') as read_file:
 for key, value in profJson['iotmSettings'].items():
     iotmJson[key] = value
 with open("data_svelte/settings.json", "w", encoding='utf-8') as write_file:
-    json.dump(iotmJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
+    json.dump(iotmJson, write_file, ensure_ascii=False, indent=4)
 
 
         
@@ -220,7 +217,7 @@ for section, modules in profJson['modules'].items():
                             configItemsJson['moduleName'] = moduleJson['about']['moduleName']     
 
 with open("data_svelte/items.json", "w", encoding='utf-8') as write_file:
-    json.dump(itemsJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
+    json.dump(itemsJson, write_file, ensure_ascii=False, indent=4)
 
 
 # учитываем вызовы модулей в API.cpp
@@ -272,7 +269,7 @@ shortProfJson['projectProp'] = {
     }
 shortProfJson['modules'] = profJson['modules']
 with open("data_svelte/flashProfile.json", "w", encoding='utf-8') as write_file:
-    json.dump(shortProfJson, write_file, ensure_ascii=False, indent=4, sort_keys=False)
+    json.dump(shortProfJson, write_file, ensure_ascii=False, indent=4)
     
     
 # import ctypes  # An included library with Python install.   

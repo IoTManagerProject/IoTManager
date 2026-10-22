@@ -1,50 +1,91 @@
 {
-  "menuSection": "virtual_elments",
-  "configItem": [
-    {
-      "global": 0,
-      "name": "График дневного расхода",
-      "type": "Writing",
-      "subtype": "LogingDaily",
-      "id": "log",
-      "widget": "chart3",
-      "page": "Графики",
-      "descr": "Температура",
-      "num": 1,
-      "int": 1,
-      "logid": "t",
-      "points": 365,
-      "telegram": 0,
-      "test": 0,
-      "btn-defvalue": 0,
-      "btn-reset": "nil"
-    }
-  ],
-  "about": {
-    "authorName": "Dmitry Borisenko",
-    "authorContact": "https://t.me/Dmitry_Borisenko",
-    "authorGit": "https://github.com/DmitryBorisenko33",
-    "specialThanks": "@itsid1 @Valiuhaaa Serg",
-    "moduleName": "LogingDaily",
-    "moduleVersion": "3.1",
-    "usedRam": {
-      "esp32_4mb": 15,
-      "esp8266_4mb": 15
+    "menuSection": "virtual_elments",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "График дневного расхода",
+            "type": "Writing",
+            "subtype": "LogingDaily",
+            "id": "log",
+            "widget": "chart3",
+            "page": "Графики",
+            "descr": "Температура",
+            "num": 1,
+            "int": 1,
+            "logid": "t",
+            "points": 365,
+            "telegram": 0,
+            "test": 0,
+            "btn-defvalue": 0,
+            "btn-reset": "nil"
+        }
+    ],
+    "about": {
+        "authorName": "Dmitry Borisenko",
+        "authorContact": "https://t.me/Dmitry_Borisenko",
+        "authorGit": "https://github.com/DmitryBorisenko33",
+        "specialThanks": "@itsid1 @Valiuhaaa Serg",
+        "moduleName": "LogingDaily",
+        "moduleVersion": "3.1",
+        "title": "График дневного расхода",
+        "moduleDesc": "Расширение позволяющее логировать накопительные величины и видеть их дневное изменение. Графики доступны в мобильном приложении и в веб интерфейсе. Данные графиков хранятся в встроенной памяти esp",
+        "propInfo": {
+            "int": "Интервал логирования в мнутах, частота проверки смены суток в минутах. Не рекомендуется менять",
+            "logid": "ID накопительной величины которую будем логировать",
+            "points": "Максимальное количество точек",
+            "telegram": "График будет отправлять в телеграм репорт с расходами каждый день",
+            "test": "Параметр необходим для разработчиков. Режим тестирования. График будет обновляться не раз в сутки, а кадый заданный в int интервал."
+        }
     },
-    "title": "График дневного расхода",
-    "moduleDesc": "Расширение позволяющее логировать накопительные величины и видеть их дневное изменение. Графики доступны в мобильном приложении и в веб интерфейсе. Данные графиков хранятся в встроенной памяти esp",
-    "propInfo": {
-      "int": "Интервал логирования в мнутах, частота проверки смены суток в минутах. Не рекомендуется менять",
-      "logid": "ID накопительной величины которую будем логировать",
-      "points": "Максимальное количество точек",
-      "telegram": "График будет отправлять в телеграм репорт с расходами каждый день",
-      "test": "Параметр необходим для разработчиков. Режим тестирования. График будет обновляться не раз в сутки, а кадый заданный в int интервал."
-    }
-  },
-  "defActive": true,
-  "usedLibs": {
-    "esp32*": [],
-    "esp82*": [],
-    "bk72*": []
-  }
+    "defActive": true,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": [],
+        "bk72*": []
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "3.1",
+            "usedFLASH": {
+                "bk7231n": 7240,
+                "esp8266_1mb": 6908,
+                "esp32_4mb": 12660,
+                "esp8266_4mb": 6908,
+                "esp32_4mb3f": 12660,
+                "esp8266_16mb": 6908,
+                "esp32cam_4mb": 12948,
+                "esp32s2_4mb": 12828,
+                "esp32s3_16mb": 12708,
+                "esp32c3m_4mb": 14856,
+                "esp8266_1mb_ota": 6908,
+                "esp8266_2mb": 6892,
+                "esp8266_2mb_ota": 6892,
+                "esp8285_1mb": 6908,
+                "esp8285_1mb_ota": 6908,
+                "esp32c6_4mb": 13170,
+                "esp32c6_8mb": 13170,
+                "esp32_16mb": 12624
+            },
+            "usedRAM": {
+                "bk7231n": 0,
+                "esp8266_1mb": 512,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 512,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 512,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 512,
+                "esp8266_2mb": 496,
+                "esp8266_2mb_ota": 496,
+                "esp8285_1mb": 512,
+                "esp8285_1mb_ota": 512,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

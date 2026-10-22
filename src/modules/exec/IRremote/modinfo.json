@@ -1,19 +1,18 @@
-{   
+{
     "menuSection": "executive_devices",
-
-    "configItem": [{
-
-        "global": 0,
-        "name": "Управление кондиционером",
-        "type": "Reading",
-        "subtype": "IRremote",
-        "id": "ir",
-        "pinTx": 4,
-        "set_id": "",
-        "int": 1,
-        "prot": 15
-    }],
-    
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Управление кондиционером",
+            "type": "Reading",
+            "subtype": "IRremote",
+            "id": "ir",
+            "pinTx": 4,
+            "set_id": "",
+            "int": 1,
+            "prot": 15
+        }
+    ],
     "about": {
         "authorName": "Serghei Crasnicov",
         "authorContact": "https://t.me/Serghei63",
@@ -21,10 +20,6 @@
         "specialThanks": "Mikhail Bubnov https://t.me/Mit4bmw , Олег Астахов https://t.me/Threedreality  , Valentin Khandriga @Valiuhaaa",
         "moduleName": "IRremote",
         "moduleVersion": "2.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Эмулятор IR пульта",
         "moduleDesc": "Позволяет управлять кондиционером и другой техникой по IR каналу",
         "propInfo": {
@@ -34,39 +29,39 @@
         },
         "funcInfo": [
             {
-               "name": "on",
-               "descr": "Включить конциционер",
-               "params": []
+                "name": "on",
+                "descr": "Включить конциционер",
+                "params": []
             },
             {
-               "name": "off",
-               "descr": "Выключить конциционер",
-               "params": []
+                "name": "off",
+                "descr": "Выключить конциционер",
+                "params": []
             },
             {
-               "name": "cool",
-               "descr": "Режим охлаждения",
-               "params": []
+                "name": "cool",
+                "descr": "Режим охлаждения",
+                "params": []
             },
             {
-               "name": "heat",
-               "descr": "Режим нагрева",
-               "params": []
+                "name": "heat",
+                "descr": "Режим нагрева",
+                "params": []
             },
             {
-               "name": "dry",
-               "descr": "Режим осушения",
-               "params": []
+                "name": "dry",
+                "descr": "Режим осушения",
+                "params": []
             },
             {
-               "name": "speedmin",
-               "descr": "Минимальная скорость вентилятора",
-               "params": []
+                "name": "speedmin",
+                "descr": "Минимальная скорость вентилятора",
+                "params": []
             },
             {
-               "name": "speedmed",
-               "descr": "Средняя скорость вентилятора",
-               "params": []
+                "name": "speedmed",
+                "descr": "Средняя скорость вентилятора",
+                "params": []
             },
             {
                 "name": "speedmh",
@@ -74,9 +69,9 @@
                 "params": []
             },
             {
-               "name": "speedhigh",
-               "descr": "Высокая скорость вентилятора",
-               "params": []
+                "name": "speedhigh",
+                "descr": "Высокая скорость вентилятора",
+                "params": []
             },
             {
                 "name": "speedmax",
@@ -84,10 +79,10 @@
                 "params": []
             },
             {
-               "name": "setTemp",
-               "descr": "Установленная температура",
-               "params": []
-            },            
+                "name": "setTemp",
+                "descr": "Установленная температура",
+                "params": []
+            },
             {
                 "name": "swing",
                 "descr": "Управление шторкой вентилятора",
@@ -95,9 +90,7 @@
             }
         ]
     },
-
     "defActive": false,
-
     "usedLibs": {
         "esp32*": [
             "https://github.com/crankyoldgit/IRremoteESP8266"
@@ -105,5 +98,48 @@
         "esp82*": [
             "https://github.com/crankyoldgit/IRremoteESP8266"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "2.0",
+            "usedFLASH": {
+                "esp8266_1mb": 99184,
+                "esp8266_1mb_ota": 99200,
+                "esp32_4mb": 124780,
+                "esp8266_4mb": 99200,
+                "esp32_4mb3f": 124780,
+                "esp8266_16mb": 99184,
+                "esp32cam_4mb": 131000,
+                "esp32s2_4mb": 124436,
+                "esp32s3_16mb": 124548,
+                "esp32c3m_4mb": 99106,
+                "esp8266_2mb": 99216,
+                "esp8266_2mb_ota": 99216,
+                "esp8285_1mb": 99184,
+                "esp8285_1mb_ota": 99200,
+                "esp32c6_4mb": 99058,
+                "esp32c6_8mb": 99060,
+                "esp32_16mb": 124784
+            },
+            "usedRAM": {
+                "esp8266_1mb": 2124,
+                "esp8266_1mb_ota": 2132,
+                "esp32_4mb": 8,
+                "esp8266_4mb": 2124,
+                "esp32_4mb3f": 8,
+                "esp8266_16mb": 2124,
+                "esp32cam_4mb": 8,
+                "esp32s2_4mb": 16,
+                "esp32s3_16mb": 8,
+                "esp32c3m_4mb": 8,
+                "esp8266_2mb": 2132,
+                "esp8266_2mb_ota": 2124,
+                "esp8285_1mb": 2124,
+                "esp8285_1mb_ota": 2132,
+                "esp32c6_4mb": 8,
+                "esp32c6_8mb": 8,
+                "esp32_16mb": 8
+            }
+        }
+    ]
 }

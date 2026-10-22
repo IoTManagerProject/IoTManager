@@ -22,10 +22,6 @@
         "specialThanks": "",
         "moduleName": "Mp3",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "MP3 плеер",
         "moduleDesc": "Позволяет управлять модулем проигрывания MP3 файлов с SD-карты по serial интерфейсу (DFplayer mini).",
         "propInfo": {
@@ -101,5 +97,48 @@
         "esp82*": [
             "dfrobot/DFRobotDFPlayerMini @ ^1.0.5"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 8280,
+                "esp8266_1mb_ota": 8296,
+                "esp32_4mb": 11220,
+                "esp8266_4mb": 8296,
+                "esp32_4mb3f": 11220,
+                "esp8266_16mb": 8280,
+                "esp32cam_4mb": 11816,
+                "esp32s2_4mb": 10964,
+                "esp32s3_16mb": 10916,
+                "esp32c3m_4mb": 10116,
+                "esp8266_2mb": 8284,
+                "esp8266_2mb_ota": 8284,
+                "esp8285_1mb": 8296,
+                "esp8285_1mb_ota": 8296,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 11220
+            },
+            "usedRAM": {
+                "esp8266_1mb": 368,
+                "esp8266_1mb_ota": 368,
+                "esp32_4mb": 504,
+                "esp8266_4mb": 368,
+                "esp32_4mb3f": 504,
+                "esp8266_16mb": 368,
+                "esp32cam_4mb": 504,
+                "esp32s2_4mb": 584,
+                "esp32s3_16mb": 608,
+                "esp32c3m_4mb": 256,
+                "esp8266_2mb": 360,
+                "esp8266_2mb_ota": 360,
+                "esp8285_1mb": 368,
+                "esp8285_1mb_ota": 368,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 504
+            }
+        }
+    ]
 }

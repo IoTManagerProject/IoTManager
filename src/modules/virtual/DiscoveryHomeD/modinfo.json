@@ -1,41 +1,81 @@
 {
-  "menuSection": "virtual_elments",
-  "configItem": [
-    {
-      "global": 0,
-      "name": "Discovery of HomeD",
-      "type": "Reading",
-      "subtype": "DiscoveryHomeD",
-      "id": "homed",
-      "widget": "",
-      "page": "",
-      "descr": "",
-      "topic": "homed",
-      "names":1
-    }
-  ],
-  "about": {
-    "authorName": "Bubnov Mikhail",
-    "authorContact": "https://t.me/Mit4bmw",
-    "authorGit": "https://github.com/Mit4el",
-    "specialThanks": "@AVAKS",
-    "moduleName": "DiscoveryHomeD",
-    "moduleVersion": "1.0",
-    "usedRam": {
-      "esp32_4mb": 15,
-      "esp8266_4mb": 15
+    "menuSection": "virtual_elments",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Discovery of HomeD",
+            "type": "Reading",
+            "subtype": "DiscoveryHomeD",
+            "id": "homed",
+            "widget": "",
+            "page": "",
+            "descr": "",
+            "topic": "homed",
+            "names": 1
+        }
+    ],
+    "about": {
+        "authorName": "Bubnov Mikhail",
+        "authorContact": "https://t.me/Mit4bmw",
+        "authorGit": "https://github.com/Mit4el",
+        "specialThanks": "@AVAKS",
+        "moduleName": "DiscoveryHomeD",
+        "moduleVersion": "1.0",
+        "title": "DiscoveryHomeD",
+        "moduleDesc": "Модуль проброса данных в MQTT для HOMEd-Custom",
+        "propInfo": {
+            "topic": "Топик службы HOMEd-Custom, например /myRoom/homed"
+        }
     },
-    "title": "DiscoveryHomeD",
-    "moduleDesc": "Модуль проброса данных в MQTT для HOMEd-Custom",
-    "propInfo": {
-      "topic":"Топик службы HOMEd-Custom, например /myRoom/homed"
-    }
-    
-  },
-  "defActive": false,
-  "usedLibs": {
-    "esp32*": [],
-    "esp82*": [],
-    "bk72*": []
-  }
+    "defActive": false,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": [],
+        "bk72*": []
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "bk7231n": 6992,
+                "esp8266_1mb": 8184,
+                "esp32_4mb": 11376,
+                "esp8266_4mb": 8184,
+                "esp32_4mb3f": 11376,
+                "esp8266_16mb": 8188,
+                "esp32cam_4mb": 11596,
+                "esp32s2_4mb": 11516,
+                "esp32s3_16mb": 11424,
+                "esp32c3m_4mb": 12072,
+                "esp8266_1mb_ota": 8184,
+                "esp8266_2mb": 8116,
+                "esp8266_2mb_ota": 8116,
+                "esp8285_1mb": 8200,
+                "esp8285_1mb_ota": 8200,
+                "esp32c6_4mb": 11522,
+                "esp32c6_8mb": 11522,
+                "esp32_16mb": 11392
+            },
+            "usedRAM": {
+                "bk7231n": 0,
+                "esp8266_1mb": 592,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 592,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 596,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 592,
+                "esp8266_2mb": 580,
+                "esp8266_2mb_ota": 572,
+                "esp8285_1mb": 592,
+                "esp8285_1mb_ota": 592,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

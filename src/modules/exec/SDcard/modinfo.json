@@ -20,10 +20,6 @@
         "specialThanks": "",
         "moduleName": "SDcard",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "SD карта (в разработке)",
         "moduleDesc": "Предназначен для специальной платы esp32 со встроенной камерой. Добавляет в прошивку функцию сохранения фото из оперативной памяти. Работает в паре с EspCam. Это экспериментальные модули и в будущем планируется пересобрать их.",
         "propInfo": {
@@ -35,5 +31,32 @@
         "esp32*": [
             "espressif/esp32-camera @ ^2.0.0"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp32_4mb": 58504,
+                "esp32_4mb3f": 58504,
+                "esp32cam_4mb": 58196,
+                "esp32s2_4mb": "-",
+                "esp32s3_16mb": 55892,
+                "esp32c3m_4mb": "-",
+                "esp32c6_4mb": "-",
+                "esp32c6_8mb": "-",
+                "esp32_16mb": 58500
+            },
+            "usedRAM": {
+                "esp32_4mb": 504,
+                "esp32_4mb3f": 504,
+                "esp32cam_4mb": 488,
+                "esp32s2_4mb": "-",
+                "esp32s3_16mb": 420,
+                "esp32c3m_4mb": "-",
+                "esp32c6_4mb": "-",
+                "esp32c6_8mb": "-",
+                "esp32_16mb": 504
+            }
+        }
+    ]
 }

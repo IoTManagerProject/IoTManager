@@ -10,7 +10,7 @@ const String getThisDevice() {
     // приложение svelte хранит свой список и в нем поддерживает корректные статусы, а при получении этого списка
     // лишь изменяет в своем те элементы массива которые добавились новые, не трогая остальные
     jsonWriteBool_(thisDevice, F("status"), false);
-    jsonWriteInt_(thisDevice, F("fv"), FIRMWARE_VERSION);
+    jsonWriteStr_(thisDevice, F("fv"), String(FIRMWARE_VERSION));
     thisDevice = "[" + thisDevice + "]";
     return thisDevice;
 }

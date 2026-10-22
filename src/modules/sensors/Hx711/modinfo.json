@@ -26,10 +26,6 @@
         "specialThanks": "",
         "moduleName": "Hx711",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "HX711 Cенсор весов",
         "moduleDesc": "Позволяет получить вес в килограммах с датчика Hx711",
         "propInfo": {
@@ -67,5 +63,48 @@
         "esp82*": [
             "GyverHX711@1.2"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 1216,
+                "esp32_4mb": 1892,
+                "esp8266_4mb": 1216,
+                "esp32_4mb3f": 1892,
+                "esp8266_16mb": 1220,
+                "esp32cam_4mb": 1964,
+                "esp32s2_4mb": 1832,
+                "esp32s3_16mb": 1864,
+                "esp32c3m_4mb": 1926,
+                "esp8266_1mb_ota": 1220,
+                "esp8266_2mb": 1220,
+                "esp8266_2mb_ota": 1220,
+                "esp8285_1mb": 1220,
+                "esp8285_1mb_ota": 1216,
+                "esp32c6_4mb": 1976,
+                "esp32c6_8mb": 1974,
+                "esp32_16mb": 1896
+            },
+            "usedRAM": {
+                "esp8266_1mb": 48,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 48,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 52,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 44,
+                "esp8266_2mb": 36,
+                "esp8266_2mb_ota": 44,
+                "esp8285_1mb": 52,
+                "esp8285_1mb_ota": 48,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

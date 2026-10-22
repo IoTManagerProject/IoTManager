@@ -38,5 +38,48 @@
         "esp82*": [
             "adafruit/Adafruit BusIO @ ^1.13.2"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 3796,
+                "esp8266_1mb_ota": 3812,
+                "esp32_4mb": 9272,
+                "esp8266_4mb": 3796,
+                "esp32_4mb3f": 9272,
+                "esp8266_16mb": 3796,
+                "esp32cam_4mb": 9592,
+                "esp32s2_4mb": 9212,
+                "esp32s3_16mb": 9144,
+                "esp32c3m_4mb": 9276,
+                "esp8266_2mb": 3812,
+                "esp8266_2mb_ota": 3812,
+                "esp8285_1mb": 3796,
+                "esp8285_1mb_ota": 3812,
+                "esp32c6_4mb": 3130,
+                "esp32c6_8mb": 3132,
+                "esp32_16mb": 9292
+            },
+            "usedRAM": {
+                "esp8266_1mb": 244,
+                "esp8266_1mb_ota": 236,
+                "esp32_4mb": 8,
+                "esp8266_4mb": 244,
+                "esp32_4mb3f": 8,
+                "esp8266_16mb": 244,
+                "esp32cam_4mb": 8,
+                "esp32s2_4mb": 8,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_2mb": 228,
+                "esp8266_2mb_ota": 236,
+                "esp8285_1mb": 244,
+                "esp8285_1mb_ota": 236,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 8
+            }
+        }
+    ]
 }

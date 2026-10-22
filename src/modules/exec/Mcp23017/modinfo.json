@@ -22,10 +22,6 @@
         "specialThanks": "",
         "moduleName": "Mcp23017",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Расширитель портов Mcp23017",
         "moduleDesc": "Добавляет в систему дополнительные GPIO для элементов, которые поддерживают такую функцию.",
         "propInfo": {
@@ -44,5 +40,48 @@
             "adafruit/Adafruit MCP23017 Arduino Library@^2.1.0",
             "adafruit/Adafruit BusIO @ ^1.13.2"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 7256,
+                "esp8266_1mb_ota": 7272,
+                "esp32_4mb": 15984,
+                "esp8266_4mb": 7272,
+                "esp32_4mb3f": 16000,
+                "esp8266_16mb": 7256,
+                "esp32cam_4mb": 16508,
+                "esp32s2_4mb": 16420,
+                "esp32s3_16mb": 16400,
+                "esp32c3m_4mb": 12890,
+                "esp8266_2mb": 7284,
+                "esp8266_2mb_ota": 7284,
+                "esp8285_1mb": 7256,
+                "esp8285_1mb_ota": 7272,
+                "esp32c6_4mb": 6776,
+                "esp32c6_8mb": 6768,
+                "esp32_16mb": 15984
+            },
+            "usedRAM": {
+                "esp8266_1mb": 188,
+                "esp8266_1mb_ota": 180,
+                "esp32_4mb": 40,
+                "esp8266_4mb": 188,
+                "esp32_4mb3f": 40,
+                "esp8266_16mb": 188,
+                "esp32cam_4mb": 40,
+                "esp32s2_4mb": 40,
+                "esp32s3_16mb": 32,
+                "esp32c3m_4mb": 32,
+                "esp8266_2mb": 168,
+                "esp8266_2mb_ota": 168,
+                "esp8285_1mb": 188,
+                "esp8285_1mb_ota": 180,
+                "esp32c6_4mb": 32,
+                "esp32c6_8mb": 32,
+                "esp32_16mb": 40
+            }
+        }
+    ]
 }

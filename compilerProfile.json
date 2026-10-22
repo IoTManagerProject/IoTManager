@@ -179,7 +179,7 @@
         ],
         "sensors": [
             {
-                "path": "src/modules/exec/Pcf8591",
+                "path": "src/modules/sensors/Pcf8591",
                 "active": false
             },
             {

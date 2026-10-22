@@ -45,10 +45,6 @@
         "specialThanks": "Bubnov Mikhail @Mit4bmw",
         "moduleName": "Ds2423",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Cчетчик ds2423",
         "moduleDesc": "Позволяет получить значения с Ds2423.",
         "propInfo": {
@@ -68,5 +64,48 @@
             "https://github.com/jbechter/arduino-onewire-DS2423",
             "paulstoffregen/OneWire @ ^2.3.7"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 5448,
+                "esp32_4mb": 7372,
+                "esp8266_4mb": 5448,
+                "esp32_4mb3f": 7372,
+                "esp8266_16mb": 5448,
+                "esp32cam_4mb": 7700,
+                "esp32s2_4mb": 7408,
+                "esp32s3_16mb": 7372,
+                "esp32c3m_4mb": 6428,
+                "esp8266_1mb_ota": 5448,
+                "esp8266_2mb": 5440,
+                "esp8266_2mb_ota": 5440,
+                "esp8285_1mb": 5448,
+                "esp8285_1mb_ota": 5448,
+                "esp32c6_4mb": "-",
+                "esp32c6_8mb": "-",
+                "esp32_16mb": 7356
+            },
+            "usedRAM": {
+                "esp8266_1mb": 152,
+                "esp32_4mb": 24,
+                "esp8266_4mb": 152,
+                "esp32_4mb3f": 24,
+                "esp8266_16mb": 152,
+                "esp32cam_4mb": 24,
+                "esp32s2_4mb": 24,
+                "esp32s3_16mb": 24,
+                "esp32c3m_4mb": 16,
+                "esp8266_1mb_ota": 152,
+                "esp8266_2mb": 136,
+                "esp8266_2mb_ota": 136,
+                "esp8285_1mb": 152,
+                "esp8285_1mb_ota": 152,
+                "esp32c6_4mb": "-",
+                "esp32c6_8mb": "-",
+                "esp32_16mb": 24
+            }
+        }
+    ]
 }

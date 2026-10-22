@@ -37,10 +37,6 @@
         "specialThanks": "",
         "moduleName": "ExampleModule",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Название модуля",
         "moduleDesc": "Описание модуля. Что позволяет получить. Особенности работы",
         "propInfo": {
@@ -77,5 +73,48 @@
     "usedLibs": {
         "esp32*": [],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 1864,
+                "esp32_4mb": 2960,
+                "esp8266_4mb": 1864,
+                "esp32_4mb3f": 2976,
+                "esp8266_16mb": 1864,
+                "esp32cam_4mb": 3032,
+                "esp32s2_4mb": 2908,
+                "esp32s3_16mb": 2940,
+                "esp32c3m_4mb": 3008,
+                "esp8266_1mb_ota": 1864,
+                "esp8266_2mb": 1864,
+                "esp8266_2mb_ota": 1864,
+                "esp8285_1mb": 1864,
+                "esp8285_1mb_ota": 1864,
+                "esp32c6_4mb": 3142,
+                "esp32c6_8mb": 3142,
+                "esp32_16mb": 2964
+            },
+            "usedRAM": {
+                "esp8266_1mb": 120,
+                "esp32_4mb": 8,
+                "esp8266_4mb": 120,
+                "esp32_4mb3f": 8,
+                "esp8266_16mb": 120,
+                "esp32cam_4mb": 8,
+                "esp32s2_4mb": 8,
+                "esp32s3_16mb": 8,
+                "esp32c3m_4mb": 16,
+                "esp8266_1mb_ota": 120,
+                "esp8266_2mb": 120,
+                "esp8266_2mb_ota": 120,
+                "esp8285_1mb": 120,
+                "esp8285_1mb_ota": 120,
+                "esp32c6_4mb": 16,
+                "esp32c6_8mb": 16,
+                "esp32_16mb": 8
+            }
+        }
+    ]
 }

@@ -23,10 +23,6 @@
         "specialThanks": "",
         "moduleName": "Sonar",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Сонар HC-SR04",
         "moduleDesc": "Позволяет получить значение расстояния до препятствия с использованием ультразвукового датчика (в сантиметрах).",
         "propInfo": {
@@ -39,5 +35,48 @@
     "usedLibs": {
         "esp32*": [],
         "esp82*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 944,
+                "esp32_4mb": 1828,
+                "esp8266_4mb": 944,
+                "esp32_4mb3f": 1828,
+                "esp8266_16mb": 948,
+                "esp32cam_4mb": 1852,
+                "esp32s2_4mb": 1776,
+                "esp32s3_16mb": 1844,
+                "esp32c3m_4mb": 1988,
+                "esp8266_1mb_ota": 944,
+                "esp8266_2mb": 944,
+                "esp8266_2mb_ota": 944,
+                "esp8285_1mb": 960,
+                "esp8285_1mb_ota": 960,
+                "esp32c6_4mb": 2016,
+                "esp32c6_8mb": 2016,
+                "esp32_16mb": 1832
+            },
+            "usedRAM": {
+                "esp8266_1mb": 32,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 32,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 36,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 32,
+                "esp8266_2mb": 16,
+                "esp8266_2mb_ota": 16,
+                "esp8285_1mb": 32,
+                "esp8285_1mb_ota": 32,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

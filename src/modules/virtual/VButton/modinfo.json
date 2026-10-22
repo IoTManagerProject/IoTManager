@@ -22,10 +22,6 @@
         "specialThanks": "",
         "moduleName": "VButton",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Виртуальная кнопка",
         "moduleDesc": "Специальный системный модуль для добавления виртуальной кнопки. Существует только в интерфейсе управления.",
         "propInfo": {
@@ -38,5 +34,50 @@
         "esp32*": [],
         "esp82*": [],
         "bk72*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "bk7231n": 464,
+                "esp8266_1mb": 496,
+                "esp32_4mb": 888,
+                "esp8266_4mb": 496,
+                "esp32_4mb3f": 904,
+                "esp8266_16mb": 496,
+                "esp32cam_4mb": 876,
+                "esp32s2_4mb": 864,
+                "esp32s3_16mb": 892,
+                "esp32c3m_4mb": 854,
+                "esp8266_1mb_ota": 496,
+                "esp8266_2mb": 496,
+                "esp8266_2mb_ota": 496,
+                "esp8285_1mb": 496,
+                "esp8285_1mb_ota": 496,
+                "esp32c6_4mb": 880,
+                "esp32c6_8mb": 880,
+                "esp32_16mb": 864
+            },
+            "usedRAM": {
+                "bk7231n": 0,
+                "esp8266_1mb": 16,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 16,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 16,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 16,
+                "esp8266_2mb": 0,
+                "esp8266_2mb_ota": 0,
+                "esp8285_1mb": 16,
+                "esp8285_1mb_ota": 16,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

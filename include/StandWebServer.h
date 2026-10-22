@@ -1,7 +1,10 @@
 #pragma once
 #include "Global.h"
 
-#ifdef STANDARD_WEB_SERVER
+// Регистрация обработчиков и сами обработчики общие для обоих вариантов сервера:
+// в асинхронной сборке (ASYNC_WEB_SERVER) объект HTTP — обёртка AsyncWebServerCompat,
+// повторяющая интерфейс синхронного сервера (см. WebServerCompat.h)
+#if defined(STANDARD_WEB_SERVER) || defined(ASYNC_WEB_SERVER)
 extern void standWebServerInit();
 extern bool handleFileRead(String path);
 //extern String getContentType(String filename);
@@ -22,3 +25,4 @@ extern void handleNotFound ();
 
 //#endif
 #endif
+

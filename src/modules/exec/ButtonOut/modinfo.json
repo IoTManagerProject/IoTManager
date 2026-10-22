@@ -23,10 +23,6 @@
         "specialThanks": "",
         "moduleName": "ButtonOut",
         "moduleVersion": "1.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "title": "Управление пином",
         "moduleDesc": "Управляем состоянием конкретного пина по модели реле.",
         "propInfo": {
@@ -43,7 +39,9 @@
             {
                 "name": "pulse",
                 "descr": "Генерирует одиночный импульс",
-                "params": ["Длительность (ms)"]
+                "params": [
+                    "Длительность (ms)"
+                ]
             }
         ]
     },
@@ -52,5 +50,50 @@
         "esp32*": [],
         "esp82*": [],
         "bk72*": []
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "bk7231n": 1136,
+                "esp8266_1mb": 1396,
+                "esp8266_1mb_ota": 1196,
+                "esp32_4mb": 1948,
+                "esp8266_4mb": 1212,
+                "esp32_4mb3f": 1948,
+                "esp8266_16mb": 1196,
+                "esp32cam_4mb": 2028,
+                "esp32s2_4mb": 1948,
+                "esp32s3_16mb": 1960,
+                "esp32c3m_4mb": 2020,
+                "esp8266_2mb": 1212,
+                "esp8266_2mb_ota": 1212,
+                "esp8285_1mb": 1212,
+                "esp8285_1mb_ota": 1212,
+                "esp32c6_4mb": 2102,
+                "esp32c6_8mb": 2104,
+                "esp32_16mb": 1952
+            },
+            "usedRAM": {
+                "bk7231n": 0,
+                "esp8266_1mb": 64,
+                "esp8266_1mb_ota": 32,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 32,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 32,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_2mb": 32,
+                "esp8266_2mb_ota": 32,
+                "esp8285_1mb": 32,
+                "esp8285_1mb_ota": 32,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

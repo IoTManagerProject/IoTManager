@@ -1,9 +1,11 @@
 #pragma once
 #include "BuildTime.h"
 
-// Версия прошивки
-
-#define FIRMWARE_VERSION 462
+// Версия прошивки "<ручная часть>.<счётчик коммитов git>", например "463.2225".
+// Первое число поднимается вручную при значимых изменениях, второе перезаписывается
+// автоматически pre-скриптом tools/version_bump.py при каждой сборке прошивки —
+// править вручную нужно только первое число (и то не обязательно).
+#define FIRMWARE_VERSION "463.2240"
 
 #ifdef esp8266_1mb_ota
 #define FIRMWARE_NAME "esp8266_1mb_ota"
@@ -86,11 +88,74 @@ WEB_SOCKETS_FRAME_SIZE создан для того что бы не загру�
 
 // #define LOOP_DEBUG
 
-// выбор сервера
-// #define ASYNC_WEB_SERVER
-// #define ASYNC_WEB_SOCKETS
+// выбор сервера и веб-сокетов
+//   асинхронный вариант: ESPAsyncWebServer + AsyncWebSocket
+//   стандартный вариант: WebServer/ESP8266WebServer + WebSocketsServer — резервный
+//
+// Единый переключатель для всех окружений: раскомментирован — асинхронный,
+// закомментирован — стандартный. Флагов -DASYNC_* в platformio.ini больше нет;
+// точечно вариант можно переопределить флагами конкретного окружения
+// (-DASYNC_WEB_SERVER или -DSTANDARD_WEB_SERVER, пара *_SOCKETS) — тогда
+// ветка ниже не участвует. Для LibreTiny асинхронный вариант требует esphome-форки
+// библиотек в lib_deps окружения (см. docs/articles/async-web-server.md, раздел 6.1).
+#define LT_ASYNC_WEB_SERVER    // ← закомментировать для стандартного стека (LT_WebSockets)
+
+// если вариант сервера задан флагами -D окружения, значения по умолчанию не применяются
+#if !defined(ASYNC_WEB_SERVER) && !defined(STANDARD_WEB_SERVER)
+#ifdef LT_ASYNC_WEB_SERVER
+#define ASYNC_WEB_SERVER
+#define ASYNC_WEB_SOCKETS
+#else
 #define STANDARD_WEB_SERVER
 #define STANDARD_WEB_SOCKETS
+#endif
+#endif
+
+// взаимозависимости вариантов: асинхронные сокеты работают на объекте асинхронного сервера
+#if defined(ASYNC_WEB_SOCKETS) && !defined(ASYNC_WEB_SERVER)
+#define ASYNC_WEB_SERVER
+#endif
+
+// проверка недопустимых сочетаний (в коде поддержаны оба варианта, но вместе они не собираются)
+// [DEPRECATED] Раньше здесь стоял безусловный запрет «ASYNC не поддерживается для LIBRETINY»;
+// он снят 2026-10: поддержка появилась в ESPAsyncWebServer 3.7.8 (PR ESP32Async/187),
+// см. docs/articles/async-web-server.md (раздел 6.1).
+// Гвард ловит случай, когда на LIBRETINY ASYNC пришёл флагом -D из ESP-окружения,
+// а переключатель LT_ASYNC_WEB_SERVER выключен: esphome-форки в lib_deps, скорее всего,
+// не выставлены — и сборка упала бы невнятной ошибкой literals.h/emptyString.
+#if defined(LIBRETINY) && defined(ASYNC_WEB_SERVER) && !defined(LT_ASYNC_WEB_SERVER)
+#error "ASYNC на LIBRETINY: не копируйте -DASYNC_* из ESP-окружений — включайте переключателем LT_ASYNC_WEB_SERVER в include/Const.h (нужны esphome-форки, см. docs/articles/async-web-server.md)"
+#endif
+#if defined(ASYNC_WEB_SERVER) && defined(STANDARD_WEB_SERVER)
+#error "Выберите один веб-сервер: ASYNC_WEB_SERVER или STANDARD_WEB_SERVER (оба занимают порт 80)"
+#endif
+#if defined(ASYNC_WEB_SOCKETS) && defined(STANDARD_WEB_SOCKETS)
+#error "Выберите один вариант веб-сокетов: ASYNC_WEB_SOCKETS или STANDARD_WEB_SOCKETS (оба занимают порт 81)"
+#endif
+#if !defined(ASYNC_WEB_SOCKETS) && !defined(STANDARD_WEB_SOCKETS)
+#error "Нужен один из вариантов веб-сокетов: STANDARD_WEB_SOCKETS или ASYNC_WEB_SOCKETS (веб-интерфейс работает только через веб-сокеты)"
+#endif
+
+// [DEPRECATED] Старый таймаут (3000 мс) ожидания окна TCP при отправке фрейма веб-сокета:
+// синхронное ожидание в loop() замораживало сценарии и таймеры на секунды, когда клиент
+// терял WiFi (окно не освобождается без ACK — см. лог "frame DROP: canSend timeout" и
+// «взрыв» событий после дисконнекта). Заменён на короткий бюджет отправки +
+// автозакрытие «застрявших» клиентов (см. src/AsyncWebServer.cpp).
+#define ASYNC_WEB_SOCKETS_SEND_TIMEOUT 3000
+
+// максимальное суммарное время (мс) ожидания освобождения TCP-окна на один фрейм
+// веб-сокета: по истечении бюджета фрейм дропается (статусы волатильны), а клиент
+// помечается «застрявшим» и закрывается через ASYNC_WEB_SOCKETS_STUCK_CLOSE_MS.
+// 100 мс — компромисс: короткая пауза на переполненном TCP-окне (поток файлов /config|)
+// не роняет мелкие файлы одним фреймом (scenario.txt ~157 Б), но и не замораживает loop()
+#define ASYNC_WEB_SOCKETS_SEND_BUDGET_MS 100
+// фреймы файлов и крупных JSON (>= этого размера в байтах) получают расширенный бюджет,
+// чтобы здоровый клиент успел подтвердить приём при потоковой отправке
+#define ASYNC_WEB_SOCKETS_SEND_BUDGET_FILES_BYTES 256
+#define ASYNC_WEB_SOCKETS_SEND_BUDGET_FILES_MS 200
+// время (мс) «застревания» клиента, после которого asyncWebSocketsLoop() принудительно
+// закрывает его соединение (клиент не отдаёт ACK — потерял WiFi)
+#define ASYNC_WEB_SOCKETS_STUCK_CLOSE_MS 2000
 
 //#ifndef LIBRETINY
 #define UDP_ENABLED

@@ -20,7 +20,7 @@ IPAddress stringToIp(String strIp)
   return ip;
 }
 #endif
-void addPortMap(String TCP_UDP, String maddr, u16_t mport, String daddr, u16_t dport)
+void addPortMap(String TCP_UDP, String maddr, uint16_t mport, String daddr, uint16_t dport)
 {
 #if defined(esp32_wifirep)
   uint8_t tcp_udp;

@@ -140,14 +140,20 @@ void setup() {
 
     initErrorMarker(SETUPCONF_ERRORMARKER);
 
+#ifndef LIBRETINY
     // настраиваем i2c шину
-    int i2c, pinSCL, pinSDA, i2cFreq;
+    // ВАЖНО: jsonRead при ошибке чтения НЕ меняет переменную (см. utils/JsonUtils.cpp),
+    // поэтому при недоступном settings.json сюда попадает мусор со стека. Инициализируем
+    // значениями по умолчанию и проверяем валидность пинов перед Wire.begin().
+    // Для LibreTiny (bk72xx) шины I2C в Arduino-ядре нет: Wire.h не подключается,
+    // макросы SCL/SDA не определены, вызовы Wire.* ниже и так только под ESP32/ESP8266.
+    int i2c = 0, pinSCL = SCL, pinSDA = SDA, i2cFreq = 100000;
     jsonRead(settingsFlashJson, "pinSCL", pinSCL, false);
     jsonRead(settingsFlashJson, "pinSDA", pinSDA, false);
     jsonRead(settingsFlashJson, "i2cFreq", i2cFreq, false);
     jsonRead(settingsFlashJson, "i2c", i2c, false);
     //jsonWriteStr_(ssidListHeapJson, "0", "Scaning...");
-    if (i2c != 0) {
+    if (i2c != 0 && pinSCL >= 0 && pinSDA >= 0 && pinSCL != pinSDA && i2cFreq >= 10000) {
 #ifdef ESP32
         Wire.end();
         Wire.begin(pinSDA, pinSCL, (uint32_t)i2cFreq);
@@ -156,7 +162,20 @@ void setup() {
         Wire.setClock(i2cFreq);
 #endif
         SerialPrint("i", "i2c", F("i2c pins overriding done"));
+    } else if (i2c != 0) {
+        // защита от невалидных пинов (scl==sda или мусор из-за отсутствия settings.json):
+        // инициализируем шину пинами по умолчанию, чтобы датчики продолжали работать
+        SerialPrint("E", "i2c", F("i2c pins invalid (scl==sda or out of range), using defaults"));
+#ifdef ESP32
+        Wire.end();
+        Wire.begin(SDA, SCL, 100000);
+#elif defined(ESP8266)
+        Wire.begin(SDA, SCL);
+        Wire.setClock(100000);
+#endif
     }
+#endif  // !LIBRETINY
+
 #if defined(RESTART_DEBUG_INFO)
   esp_reset_reason_t esp_reason = esp_reset_reason();
   if (esp_reason == ESP_RST_UNKNOWN || esp_reason == ESP_RST_POWERON) 
@@ -340,6 +359,13 @@ void loop() {
 #ifdef STANDARD_WEB_SOCKETS
     initErrorMarker(SOCKETS_ERRORMARKER);
     standWebSocket.loop();
+    stopErrorMarker(SOCKETS_ERRORMARKER);
+#endif
+#ifdef ASYNC_WEB_SOCKETS
+    // асинхронный сервер обслуживает соединения сам (в прерываниях AsyncTCP),
+    // здесь только разбор накопленных сообщений и служебные операции
+    initErrorMarker(SOCKETS_ERRORMARKER);
+    asyncWebSocketsLoop();
     stopErrorMarker(SOCKETS_ERRORMARKER);
 #endif
     if (benchTaskItem) benchTaskItem->postTaskFunction("webSocket");

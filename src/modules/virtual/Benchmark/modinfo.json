@@ -1,57 +1,92 @@
 {
-  "menuSection": "virtual_elments",
-
-  "configItem": [
-    {
-      "global": 0,
-      "name": "Load Processor",
-      "type": "Reading",
-      "subtype": "loadBench",
-      "id": "bench",
-      "needSave": 0,
-      "widget": "nil",
-      "page": "Benchmark",
-      "descr": "Загруженность процессора",
-      "int": 10,
-      "log": 1
+    "menuSection": "virtual_elments",
+    "configItem": [
+        {
+            "global": 0,
+            "name": "Load Processor",
+            "type": "Reading",
+            "subtype": "loadBench",
+            "id": "bench",
+            "needSave": 0,
+            "widget": "nil",
+            "page": "Benchmark",
+            "descr": "Загруженность процессора",
+            "int": 10,
+            "log": 1
+        },
+        {
+            "global": 0,
+            "name": "Load Task",
+            "type": "Reading",
+            "subtype": "taskBench",
+            "id": "bench",
+            "needSave": 0,
+            "widget": "nil",
+            "page": "Benchmark",
+            "descr": "Загруженность задач",
+            "int": 10,
+            "log": 1
+        }
+    ],
+    "about": {
+        "authorName": "Mikhail Bubnov",
+        "authorContact": "https://t.me/Mit4bmw",
+        "authorGit": "https://github.com/Mit4el",
+        "specialThanks": "",
+        "moduleName": "Benchmark",
+        "moduleVersion": "1.0",
+        "title": "Производительонсть системы",
+        "moduleDesc": "Оценочные показатели производительности системы и выполнения модулей",
+        "propInfo": {
+            "int": "Интервал подсчета загруженности процессора в секундах"
+        }
     },
-    {
-      "global": 0,
-      "name": "Load Task",
-      "type": "Reading",
-      "subtype": "taskBench",
-      "id": "bench",
-      "needSave": 0,
-      "widget": "nil",
-      "page": "Benchmark",
-      "descr": "Загруженность задач",
-      "int": 10,
-      "log": 1
-    }
-  ],
-
-  "about": {
-    "authorName": "Mikhail Bubnov",
-    "authorContact": "https://t.me/Mit4bmw",
-    "authorGit": "https://github.com/Mit4el",
-    "specialThanks": "",
-    "moduleName": "Benchmark",
-    "moduleVersion": "1.0",
-    "usedRam": {
-      "esp32_4mb": 15,
-      "esp8266_4mb": 15
+    "defActive": false,
+    "usedLibs": {
+        "esp32*": [],
+        "esp82*": []
     },
-    "title": "Производительонсть системы",
-    "moduleDesc": "Оценочные показатели производительности системы и выполнения модулей",
-    "propInfo": {
-      "int": "Интервал подсчета загруженности процессора в секундах"  
-    }
-  },
-
-  "defActive": false,
-
-  "usedLibs": {
-    "esp32*": [],
-    "esp82*": []
-  }
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.0",
+            "usedFLASH": {
+                "esp8266_1mb": 3508,
+                "esp32_4mb": 4448,
+                "esp8266_4mb": 3508,
+                "esp32_4mb3f": 4448,
+                "esp8266_16mb": 3512,
+                "esp32cam_4mb": 4612,
+                "esp32s2_4mb": 4452,
+                "esp32s3_16mb": 4416,
+                "esp32c3m_4mb": 4284,
+                "esp8266_1mb_ota": 3508,
+                "esp8266_2mb": 3524,
+                "esp8266_2mb_ota": 3524,
+                "esp8285_1mb": 3524,
+                "esp8285_1mb_ota": 3524,
+                "esp32c6_4mb": 4362,
+                "esp32c6_8mb": 4362,
+                "esp32_16mb": 4456
+            },
+            "usedRAM": {
+                "esp8266_1mb": 112,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 112,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 116,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_1mb_ota": 112,
+                "esp8266_2mb": 112,
+                "esp8266_2mb_ota": 112,
+                "esp8285_1mb": 112,
+                "esp8285_1mb_ota": 112,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }

@@ -49,10 +49,6 @@
         "specialThanks": "Bubnov Mikhail @Mit4bmw",
         "moduleName": "Scd40",
         "moduleVersion": "0.0",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "subTypes": [
             "Scd40co2",
             "Scd40t",
@@ -78,5 +74,48 @@
             "Sensirion I2C SCD4x @0.4.0",
             "Sensirion Core @0.6.0"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "0.0",
+            "usedFLASH": {
+                "esp8266_1mb": 8992,
+                "esp32_4mb": 16520,
+                "esp8266_4mb": 8992,
+                "esp32_4mb3f": 16520,
+                "esp8266_16mb": 8992,
+                "esp32cam_4mb": 16944,
+                "esp32s2_4mb": 16404,
+                "esp32s3_16mb": 16388,
+                "esp32c3m_4mb": 20720,
+                "esp8266_1mb_ota": 8992,
+                "esp8266_2mb": 9008,
+                "esp8266_2mb_ota": 9008,
+                "esp8285_1mb": 8992,
+                "esp8285_1mb_ota": 8992,
+                "esp32c6_4mb": 10336,
+                "esp32c6_8mb": 10346,
+                "esp32_16mb": 16516
+            },
+            "usedRAM": {
+                "esp8266_1mb": 1768,
+                "esp32_4mb": 272,
+                "esp8266_4mb": 1768,
+                "esp32_4mb3f": 272,
+                "esp8266_16mb": 1768,
+                "esp32cam_4mb": 272,
+                "esp32s2_4mb": 272,
+                "esp32s3_16mb": 264,
+                "esp32c3m_4mb": 264,
+                "esp8266_1mb_ota": 1768,
+                "esp8266_2mb": 1768,
+                "esp8266_2mb_ota": 1768,
+                "esp8285_1mb": 1768,
+                "esp8285_1mb_ota": 1768,
+                "esp32c6_4mb": 264,
+                "esp32c6_8mb": 264,
+                "esp32_16mb": 272
+            }
+        }
+    ]
 }

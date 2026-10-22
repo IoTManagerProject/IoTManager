@@ -25,10 +25,6 @@
         "specialThanks": "",
         "moduleName": "Encoder",
         "moduleVersion": "1.5",
-        "usedRam": {
-            "esp32_4mb": 15,
-            "esp8266_4mb": 15
-        },
         "subTypes": [
             "Encoder"
         ],
@@ -49,5 +45,48 @@
         "esp82*": [
             "gyverlibs/EncButton @ ^2.0"
         ]
-    }
+    },
+    "sizeInfo": [
+        {
+            "moduleVersion": "1.5",
+            "usedFLASH": {
+                "esp8266_1mb": 2020,
+                "esp8266_1mb_ota": 2024,
+                "esp32_4mb": 3024,
+                "esp8266_4mb": 2024,
+                "esp32_4mb3f": 3040,
+                "esp8266_16mb": 2024,
+                "esp32cam_4mb": 3268,
+                "esp32s2_4mb": 3008,
+                "esp32s3_16mb": 3020,
+                "esp32c3m_4mb": 2960,
+                "esp8266_2mb": 2024,
+                "esp8266_2mb_ota": 2024,
+                "esp8285_1mb": 2024,
+                "esp8285_1mb_ota": 2020,
+                "esp32c6_4mb": 2964,
+                "esp32c6_8mb": 2974,
+                "esp32_16mb": 3028
+            },
+            "usedRAM": {
+                "esp8266_1mb": 84,
+                "esp8266_1mb_ota": 80,
+                "esp32_4mb": 0,
+                "esp8266_4mb": 80,
+                "esp32_4mb3f": 0,
+                "esp8266_16mb": 80,
+                "esp32cam_4mb": 0,
+                "esp32s2_4mb": 0,
+                "esp32s3_16mb": 0,
+                "esp32c3m_4mb": 0,
+                "esp8266_2mb": 80,
+                "esp8266_2mb_ota": 80,
+                "esp8285_1mb": 80,
+                "esp8285_1mb_ota": 76,
+                "esp32c6_4mb": 0,
+                "esp32c6_8mb": 0,
+                "esp32_16mb": 0
+            }
+        }
+    ]
 }
